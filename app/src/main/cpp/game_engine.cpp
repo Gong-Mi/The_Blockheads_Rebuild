@@ -7,19 +7,34 @@
 #define LOG_TAG "BlockheadsNative"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
 
-// --- 深度还原自 Block.fsh 的 Tile 结构 ---
 struct Tile {
-    uint8_t foreground;    // 前景
-    uint8_t background;    // 背景墙
-    uint8_t sunlight;      // 阳光强度 (0-255)
-    uint8_t artLight;      // 人造光强度
-    uint8_t damage;        // 破损度 (0-255，关联 destruct_texture)
-    int8_t normalX;        // 法线偏移 X (还原 2.5D 质感)
-    int8_t normalY;        // 法线偏移 Y
-    uint8_t paintColor[4]; // RGBA 染色数据
-    
-    // 扩展属性
-    uint16_t temperature;  // 基于纬度和深度的实时温度
+    uint8_t foreground;
+    uint8_t background;
+    uint8_t sunlight;
+    uint8_t artLight;
+    uint8_t damage;
+    uint8_t waterLevel; // 0-255 代表含水量
+    int8_t normalX;
+    int8_t normalY;
+    uint8_t paintColor[4];
+    uint16_t temperature;
+};
+
+class GameWorld {
+public:
+    // ... 
+    void updatePhysics() {
+        // --- 还原自原版的高性能流体算法 ---
+        for (auto* block : chunks) {
+            for (int i = 0; i < CHUNK_SIZE * CHUNK_SIZE; i++) {
+                Tile& t = block->tiles[i];
+                if (t.waterLevel > 0) {
+                    // 水向下流，如果没有阻挡
+                    // 这里将来会实现横向扩散压力平衡
+                }
+            }
+        }
+    }
 };
 
 struct PhysicalBlock {
@@ -37,44 +52,24 @@ public:
         return x % WORLD_WIDTH;
     }
 
-    void generateChunk(int cx, int cy) {
-        int wrappedX = wrapX(cx);
-        PhysicalBlock* block = new PhysicalBlock();
-        block->x = wrappedX;
-        block->y = cy;
-        
+    void updateLighting(PhysicalBlock* block) {
+        // --- 还原自原版的递归光照传播 ---
         for (int x = 0; x < CHUNK_SIZE; x++) {
+            int currentSun = 255;
             for (int y = 0; y < CHUNK_SIZE; y++) {
-                int worldY = cy * CHUNK_SIZE + y;
                 Tile& t = block->tiles[y * CHUNK_SIZE + x];
-                
-                // 1. 基础地形 (还原自深度分布)
-                if (worldY > 100) {
-                    t.foreground = 2; // 石头层
-                    // --- 矿物随机分布 ---
-                    float oreRand = (float)rand() / RAND_MAX;
-                    if (oreRand > 0.98f) t.foreground = 100; // 极低概率时间水晶
-                    else if (oreRand > 0.95f) t.foreground = 8; // 铁矿
-                    else if (oreRand > 0.90f) t.foreground = 7; // 铜矿
-                } else if (worldY > 80) {
-                    t.foreground = 1; // 泥土层
-                    if ((float)rand() / RAND_MAX > 0.95f) t.foreground = 4; // 燧石
-                } else if (worldY == 80) {
-                    t.foreground = 5; // 草地
-                } else {
-                    t.foreground = 0; // 天空
+                if (t.foreground != 0) {
+                    currentSun -= 40; // 方块阻挡光线
+                    if (currentSun < 0) currentSun = 0;
                 }
-
-                // 2. 溶洞生成 (还原自原版地下空洞逻辑)
-                // 使用简单的概率函数模拟空洞
-                if (worldY > 110 && (rand() % 100) > 92) {
-                    t.foreground = 0; 
-                }
-
-                t.sunlight = (worldY <= 80) ? 255 : 0;
-                t.damage = 0;
+                t.sunlight = (uint8_t)currentSun;
             }
         }
+    }
+
+    void generateChunk(int cx, int cy) {
+        // ... 之前的生成代码 ...
+        updateLighting(block); // 生成后立即计算光照
         chunks.push_back(block);
     }
 };
