@@ -1,0 +1,16 @@
+//
+//  Shader.fsh
+//  SandLandiPad
+//
+//  Created by David Frampton on 8/03/11.
+//  Copyright 2011 Jungle Ltd. All rights reserved.
+//
+
+//varying lowp vec4 colorVarying;
+
+uniform highp vec4 color;
+
+void main()
+{
+    gl_FragColor = color;
+}
