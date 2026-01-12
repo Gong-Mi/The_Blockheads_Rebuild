@@ -10,18 +10,7 @@
 #include "blockhead_ai.cpp"
 
 // 声明渲染器全局指针 (由 world_renderer.cpp 提供)
-#include <android/asset_manager.h>
-class WorldRenderer {
-public:
-    void init(AAssetManager* mgr);
-    void renderFrame();
-    void updateMesh(const std::vector<PhysicalBlock*>& chunks);
-    // Expose camera control for input
-    float camX, camY;
-    float targetX, targetY;
-    float playerX, playerY;
-};
-extern WorldRenderer* g_renderer;
+#include "world_renderer.h"
 
 #undef LOG_TAG
 #define LOG_TAG "BlockheadsNative"
