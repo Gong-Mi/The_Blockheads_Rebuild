@@ -97,8 +97,34 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handleTouchNative(JNIEnv* en
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* env, jobject obj) {
     if (g_renderer && g_world && g_entities) {
-        g_entities->update(0.005f); // 物理步进
-        // ... 传递实体给渲染器 ...
+        g_entities->update(0.005f);
+        
+        std::vector<Vertex> vertices;
+        // 1. 渲染 Chunk
+        if (!g_world->chunks.empty()) {
+            PhysicalBlock* b = g_world->chunks[0];
+            for (int x = 0; x < CHUNK_SIZE; x++) {
+                for (int y = 0; y < CHUNK_SIZE; y++) {
+                    Tile& t = b->tiles[y * CHUNK_SIZE + x];
+                    g_renderer->pushBlock(vertices, x*0.1f, -y*0.1f, t.foreground, t.damage / 255.0f);
+                }
+            }
+        }
+
+        // 2. 渲染掉落物 (Entities)
+        for (auto& e : g_entities->dropItems) {
+            g_renderer->pushEntity(vertices, e.x, e.y, e.type, e.rotation);
+        }
+
+        // 3. 渲染主角 (Player)
+        g_renderer->drawPlayer(vertices, g_entities->player.x, g_entities->player.y, std::abs(g_entities->player.vx) > 0.01f);
+
+        g_renderer->renderFrame();
+        
+        // 绑定缓冲区并绘制
+        glBindBuffer(GL_ARRAY_BUFFER, g_renderer->vbo);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STREAM_DRAW);
+        glDrawArrays(GL_TRIANGLES, 0, vertices.size());
     }
 }
 
