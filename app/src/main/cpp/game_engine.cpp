@@ -19,9 +19,11 @@ public:
     // Expose camera control for input
     float camX, camY;
     float targetX, targetY;
+    float playerX, playerY;
 };
 extern WorldRenderer* g_renderer;
 
+#undef LOG_TAG
 #define LOG_TAG "BlockheadsNative"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
 
