@@ -49,7 +49,11 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_handleActionNative(JNIEnv* env, jobject obj, jint actionType) {
-    LOGI("Action: %d", actionType);
+    // actionType is slot index (0-9) from Java loop
+    if (g_entities && actionType >= 0 && actionType < 10) {
+        g_entities->player.selectedSlot = actionType;
+        LOGI("Selected Slot: %d (Item: %d)", actionType, g_entities->player.slots[actionType]);
+    }
 }
 
 extern "C" JNIEXPORT void JNICALL
@@ -58,8 +62,53 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handleCraftNative(JNIEnv* en
 }
 
 extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_GameActivity_onSurfaceChangedNative(JNIEnv* env, jobject obj, jint width, jint height) {
+    if (g_renderer) {
+        g_renderer->resize(width, height);
+    }
+}
+
+extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_handleTouchNative(JNIEnv* env, jobject obj, jfloat x, jfloat y) {
-    if (g_ai) g_ai->addAction(ACTION_MINE, (int)(x/100.0f), (int)(y/100.0f));
+    if (!g_renderer || !g_ai || !g_world || !g_entities) return;
+
+    // Convert Screen (x,y) -> NDC (-1..1) -> World
+    // Screen X: 0..W -> NDC: -1..1
+    float ndcX = (x / (float)g_renderer->screenW) * 2.0f - 1.0f;
+    // Screen Y: 0..H -> NDC: 1..-1 (flipped because screen Y is down)
+    float ndcY = 1.0f - (y / (float)g_renderer->screenH) * 2.0f;
+
+    // Unproject using Ortho params (-2, 2) width and (-2*aspect, 2*aspect) height
+    float aspect = (float)g_renderer->screenH / (float)g_renderer->screenW;
+    float worldX_rel = ndcX * 2.0f; // Width is 4 units (-2 to 2)
+    float worldY_rel = ndcY * (2.0f * aspect); 
+
+    // Apply Camera position
+    float worldX = g_renderer->camX + worldX_rel;
+    float worldY = g_renderer->camY + worldY_rel;
+
+    // Convert world float coords to block integer coords
+    // 1 block = 0.1f world units
+    int blockX = (int)(worldX * 10.0f);
+    int blockY = (int)(worldY * 10.0f);
+
+    // Decision: Mine or Place?
+    Tile* t = g_world->getTile(blockX, blockY);
+    bool targetHasBlock = (t && t->foreground != 0);
+    
+    // Check if we have an item selected to place
+    int slot = g_entities->player.selectedSlot;
+    int item = g_entities->player.slots[slot];
+    
+    if (targetHasBlock) {
+        g_ai->addAction(ACTION_MINE, blockX, blockY);
+    } else if (item > 0 && g_entities->player.counts[slot] > 0) {
+        // Place block
+        g_ai->addAction(ACTION_PLACE, blockX, blockY);
+    } else {
+        // Just walk
+        g_ai->addAction(ACTION_WALK, blockX, blockY);
+    }
 }
 
 extern "C" JNIEXPORT void JNICALL
@@ -79,9 +128,25 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handlePanNative(JNIEnv* env,
 // 包含绘制逻辑
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* env, jobject obj) {
+    static int frameCount = 0;
+    frameCount++;
+
     if (g_world && g_entities && g_ai) {
         g_ai->update(g_entities->player.x, g_entities->player.y, g_world, g_entities);
         g_entities->update(0.005f);
+        
+        // Sync Inventory to Java UI
+        if (g_entities->inventoryDirty) {
+            jclass cls = env->GetObjectClass(obj);
+            jmethodID mid = env->GetMethodID(cls, "updateHotbarSlot", "(III)V");
+            if (mid) {
+                for (int i = 0; i < 10; i++) {
+                    env->CallVoidMethod(obj, mid, i, g_entities->player.slots[i], g_entities->player.counts[i]);
+                }
+            }
+            g_entities->inventoryDirty = false;
+        }
+
         if (g_renderer) {
             // Sync player position to renderer
             g_renderer->playerX = g_entities->player.x;
@@ -98,6 +163,23 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
             g_renderer->updateMesh(g_world->chunks);
             
             g_renderer->renderFrame();
+
+            // Debug Info Overlay (every 30 frames)
+            if (frameCount % 30 == 0) {
+                jclass cls = env->GetObjectClass(obj);
+                jmethodID mid = env->GetMethodID(cls, "updateDebugInfo", "(Ljava/lang/String;)V");
+                if (mid) {
+                    char buf[256];
+                    sprintf(buf, "Cam: %.2f, %.2f\nPlayer: %.2f, %.2f\nVerts: %d\nSlot: %d", 
+                        g_renderer->camX, g_renderer->camY,
+                        g_entities->player.x, g_entities->player.y,
+                        g_renderer->vertexCount,
+                        g_entities->player.selectedSlot);
+                    jstring str = env->NewStringUTF(buf);
+                    env->CallVoidMethod(obj, mid, str);
+                    env->DeleteLocalRef(str);
+                }
+            }
         }
     }
 }

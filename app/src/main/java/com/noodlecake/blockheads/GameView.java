@@ -23,7 +23,7 @@ public class GameView extends GLSurfaceView {
 
             @Override
             public void onSurfaceChanged(GL10 gl, int width, int height) {
-                // 处理窗口尺寸变化
+                ((GameActivity)context).onSurfaceChangedNative(width, height);
             }
 
             @Override

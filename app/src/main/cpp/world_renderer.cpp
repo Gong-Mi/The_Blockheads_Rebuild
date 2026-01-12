@@ -44,6 +44,12 @@ void WorldRenderer::init(AAssetManager* mgr) {
     vertexCount = 0;
 }
 
+void WorldRenderer::resize(int w, int h) {
+    screenW = w;
+    screenH = h;
+    glViewport(0, 0, w, h);
+}
+
 GLuint WorldRenderer::loadTex(AAssetManager* mgr, const char* name) {
     AAsset* asset = AAssetManager_open(mgr, name, AASSET_MODE_BUFFER);
     if(!asset) {
@@ -122,7 +128,9 @@ void WorldRenderer::renderFrame() {
     glUniform1i(glGetUniformLocation(program, "uDestruct"), 2);
 
     float matrix[16];
-    Matrix::ortho(matrix, -2.0f, 2.0f, -2.0f * (9.0f/16.0f), 2.0f * (9.0f/16.0f), -1.0f, 1.0f);
+    float aspect = (float)screenW / (float)screenH;
+    // Fix height to 4 units (-2 to 2), scale width
+    Matrix::ortho(matrix, -2.0f * aspect, 2.0f * aspect, -2.0f, 2.0f, -1.0f, 1.0f);
     Matrix::translate(matrix, -camX, -camY, 0);
     glUniformMatrix4fv(uMatrix, 1, GL_FALSE, matrix);
     

@@ -41,6 +41,33 @@ public class GameActivity extends Activity {
         }
     }
 
+    private android.widget.ImageButton[] mHotbarSlots = new android.widget.ImageButton[10];
+    private android.widget.TextView mDebugText;
+
+    public void updateDebugInfo(String info) {
+        runOnUiThread(() -> {
+            if (mDebugText != null) {
+                mDebugText.setText(info);
+            }
+        });
+    }
+
+    public void updateHotbarSlot(int index, int type, int count) {
+        if (index < 0 || index >= 10) return;
+        
+        runOnUiThread(() -> {
+            // Simple mapping: 1=Dirt (brown), 2=Stone (gray)
+            // Real implementation needs texture regions
+            int color = 0x00000000;
+            if (type == 1) color = 0xFF8B4513; // Brown
+            if (type == 2) color = 0xFF808080; // Gray
+            
+            mHotbarSlots[index].setColorFilter(color);
+            // Ideally set text for count, but ImageButton doesn't support text directly
+            // Just color feedback for now to prove it works
+        });
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +122,8 @@ public class GameActivity extends Activity {
                 slot.setPadding(10, 10, 10, 10);
                 slot.setScaleType(android.widget.ImageView.ScaleType.CENTER_INSIDE);
                 
+                mHotbarSlots[i] = slot;
+
                 final int slotId = i;
                 slot.setOnClickListener(v -> {
                     playSound("click.wav");
@@ -113,6 +142,20 @@ public class GameActivity extends Activity {
         hotbarParams.bottomMargin = 30;
         
         layout.addView(hotbar, hotbarParams);
+        
+        // --- Debug Info Overlay ---
+        mDebugText = new android.widget.TextView(this);
+        mDebugText.setTextColor(0xFFFFFFFF);
+        mDebugText.setTextSize(16);
+        mDebugText.setText("Initializing...");
+        mDebugText.setShadowLayer(2, 1, 1, 0xFF000000);
+        android.widget.FrameLayout.LayoutParams debugParams = new android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
+                android.widget.FrameLayout.LayoutParams.WRAP_CONTENT);
+        debugParams.gravity = android.view.Gravity.TOP | android.view.Gravity.LEFT;
+        debugParams.topMargin = 20;
+        debugParams.leftMargin = 20;
+        layout.addView(mDebugText, debugParams);
         
         // --- 合成引擎联动测试 ---
         android.widget.Button craftBtn = new android.widget.Button(this);
@@ -138,6 +181,7 @@ public class GameActivity extends Activity {
 
     public native void initNative();
     public native void onSurfaceCreatedNative(android.content.res.AssetManager assetMgr);
+    public native void onSurfaceChangedNative(int width, int height);
     public native void onDrawFrameNative();
     public native void handleActionNative(int actionType);
     public native void handleTouchNative(float x, float y);

@@ -36,8 +36,11 @@ public:
 
     int vertexCount = 0;
     bool meshDirty = false;
+    
+    int screenW = 1920, screenH = 1080;
 
     void init(AAssetManager* mgr);
+    void resize(int w, int h);
     GLuint loadTex(AAssetManager* mgr, const char* name);
     GLuint createProgram(const char* vs, const char* fs);
     void pushBlock(std::vector<Vertex>& buffer, float x, float y, int type, float damage);
