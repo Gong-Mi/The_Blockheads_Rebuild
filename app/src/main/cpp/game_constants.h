@@ -13,9 +13,10 @@ const int EQUATOR_2 = 7500;       // 第二个赤道
 const int POLE_SOUTH = 11250;     // 南极
 
 // --- 物理参数 ---
-const float GRAVITY = 0.5f;
-const float WALK_SPEED = 2.5f;
-const float JUMP_FORCE = -10.0f;
+const float PLAYER_WIDTH = 0.06f;
+const float PLAYER_HEIGHT = 0.12f;
+const float HUNGER_DECAY = 0.001f;
+const float ENERGY_DECAY = 0.0005f;
 
 // --- 物品 ID 定义 (部分还原) ---
 enum ItemID {

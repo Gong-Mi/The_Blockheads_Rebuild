@@ -9,9 +9,32 @@ struct Entity {
     bool onGround;
 };
 
+class Player {
+public:
+    float x, y;
+    float vx, vy;
+    bool grounded;
+
+    Player() : x(0), y(0), vx(0), vy(0), grounded(false) {}
+
+    void update(float gravity) {
+        vy += gravity;
+        y += vy;
+        
+        // 简单模拟落地：地表在 Y=0
+        if (y > 0) {
+            y = 0;
+            vy = 0;
+            grounded = true;
+        }
+    }
+};
+
 class EntityManager {
 public:
+    Player player;
     std::vector<Entity> dropItems;
+    // ...
 
     void spawnDrop(float x, float y, int type) {
         Entity e;

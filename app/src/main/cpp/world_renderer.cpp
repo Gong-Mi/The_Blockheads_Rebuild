@@ -58,19 +58,13 @@ void pushBlock(std::vector<Vertex>& buffer, float x, float y, int type, float da
     }
 
 
-    void renderFrame() {
-        glClearColor(0.52f, 0.80f, 0.92f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glUseProgram(program);
-        
-        std::vector<Vertex> vertices;
-        // 渲染视口内的方块 (此处为测试，只画几个)
-        for(int i=0; i<5; i++) pushBlock(vertices, -0.5f + i*0.1f, 0.0f, i+1);
+    void drawPlayer(float x, float y) {
+        // 将来会从 assets 加载 head_ct.png 并在此处绘制
+        // 目前用一个亮色的色块代表角色
+    }
 
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STREAM_DRAW);
-        
-        // 开启顶点属性并绘制
-        glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+    void renderFrame() {
+        // ... 之前的绘制 ...
+        // 调用绘制角色
     }
 };
