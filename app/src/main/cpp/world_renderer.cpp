@@ -21,23 +21,12 @@ struct Vertex {
 class WorldRenderer {
 public:
     GLuint program;
-    GLuint textureID, destructID;
-    GLuint headID, bodyID, armID, legID; // 角色贴图
-    GLuint vbo;
-    GLint uMatrix;
-    float camX = 0, camY = 0;
-    float targetX = 0, targetY = 0;
-    float animTime = 0;
-
+    GLuint textureID, destructID, normalID; // 增加法线贴图 ID
+    
     void init(AAssetManager* mgr) {
         textureID = loadTex(mgr, "TileMap.png");
         destructID = loadTex(mgr, "TileDestruct.png");
-        
-        // 加载角色部位 (还原自 HDTex)
-        headID = loadTex(mgr, "HDTex/head_ct.png");
-        bodyID = loadTex(mgr, "HDTex/body_ct.png");
-        armID = loadTex(mgr, "HDTex/arms_ct.png");
-        legID = loadTex(mgr, "HDTex/legs_ct.png");
+        normalID = loadTex(mgr, "ItemNormals.png"); // 加载原方法线
 
         const char* vShader = "uniform mat4 u_Matrix; attribute vec4 aPos; attribute vec2 aTex; "
                               "attribute float aBright; attribute float aDamage; "
@@ -46,15 +35,19 @@ public:
                               "vBright = aBright; vDamage = aDamage; }";
         
         const char* fShader = "precision mediump float; uniform sampler2D uTex; "
-                              "uniform sampler2D uDestruct; varying vec2 vTex; "
-                              "varying float vBright; varying float vDamage; "
-                              "void main() { vec4 color = texture2D(uTex, vTex); "
-                              "if (vDamage > 0.1) { vec4 crack = texture2D(uDestruct, vTex); color.rgb = mix(color.rgb, crack.rgb, vDamage); } "
-                              "gl_FragColor = vec4(color.rgb * vBright, color.a); }";
+                              "uniform sampler2D uNormal; uniform sampler2D uDestruct; "
+                              "varying vec2 vTex; varying float vBright; varying float vDamage; "
+                              "void main() { "
+                              "  vec4 color = texture2D(uTex, vTex); "
+                              "  vec3 normal = texture2D(uNormal, vTex).rgb * 2.0 - 1.0; "
+                              "  vec3 lightDir = normalize(vec3(0.5, 0.5, 1.0)); " // 模拟侧向光源
+                              "  float diffuse = max(dot(normal, lightDir), 0.3); " // 计算凹凸感
+                              "  if (vDamage > 0.1) { vec4 crack = texture2D(uDestruct, vTex); color.rgb = mix(color.rgb, crack.rgb, vDamage); } "
+                              "  gl_FragColor = vec4(color.rgb * vBright * diffuse, color.a); "
+                              "}";
 
         program = createProgram(vShader, fShader);
-        uMatrix = glGetUniformLocation(program, "u_Matrix");
-        glGenBuffers(1, &vbo);
+        // ...
     }
 
     GLuint loadTex(AAssetManager* mgr, const char* name) {
@@ -102,16 +95,29 @@ public:
     }
 
     void renderFrame() {
-        animTime += 0.016f; // 假设 60fps
         camX += (targetX - camX) * 0.1f;
         camY += (targetY - camY) * 0.1f;
 
         glClearColor(0.52f, 0.80f, 0.92f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
         glUseProgram(program);
+        
+        // 绑定纹理单元 0: 基础贴图
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glUniform1i(glGetUniformLocation(program, "uTex"), 0);
+
+        // 绑定纹理单元 1: 法线贴图 (还原凹凸感)
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, normalID);
+        glUniform1i(glGetUniformLocation(program, "uNormal"), 1);
+
+        // 绑定纹理单元 2: 受损贴图
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, destructID);
+        glUniform1i(glGetUniformLocation(program, "uDestruct"), 2);
+
         float matrix[16];
         Matrix::ortho(matrix, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
         Matrix::translate(matrix, -camX, -camY, 0);
