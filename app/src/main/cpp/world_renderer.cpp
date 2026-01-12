@@ -21,12 +21,17 @@ struct Vertex {
 class WorldRenderer {
 public:
     GLuint program;
-    GLuint textureID, destructID, normalID; // 增加法线贴图 ID
-    
+    GLuint textureID, destructID, normalID;
+    GLuint vbo;
+    GLint uMatrix;
+    float camX = 0, camY = 0;
+    float targetX = 0, targetY = 0;
+    float animTime = 0;
+
     void init(AAssetManager* mgr) {
         textureID = loadTex(mgr, "TileMap.png");
         destructID = loadTex(mgr, "TileDestruct.png");
-        normalID = loadTex(mgr, "ItemNormals.png"); // 加载原方法线
+        normalID = loadTex(mgr, "ItemNormals.png");
 
         const char* vShader = "uniform mat4 u_Matrix; attribute vec4 aPos; attribute vec2 aTex; "
                               "attribute float aBright; attribute float aDamage; "
@@ -40,26 +45,27 @@ public:
                               "void main() { "
                               "  vec4 color = texture2D(uTex, vTex); "
                               "  vec3 normal = texture2D(uNormal, vTex).rgb * 2.0 - 1.0; "
-                              "  vec3 lightDir = normalize(vec3(0.5, 0.5, 1.0)); " // 模拟侧向光源
-                              "  float diffuse = max(dot(normal, lightDir), 0.3); " // 计算凹凸感
+                              "  vec3 lightDir = normalize(vec3(0.5, 0.5, 1.0)); "
+                              "  float diffuse = max(dot(normal, lightDir), 0.3); "
                               "  if (vDamage > 0.1) { vec4 crack = texture2D(uDestruct, vTex); color.rgb = mix(color.rgb, crack.rgb, vDamage); } "
                               "  gl_FragColor = vec4(color.rgb * vBright * diffuse, color.a); "
                               "}";
 
         program = createProgram(vShader, fShader);
-        // ...
+        uMatrix = glGetUniformLocation(program, "u_Matrix");
+        glGenBuffers(1, &vbo);
     }
 
     GLuint loadTex(AAssetManager* mgr, const char* name) {
         AAsset* asset = AAssetManager_open(mgr, name, AASSET_MODE_BUFFER);
-        if(!asset) { LOGI("Failed to load: %s", name); return 0; }
+        if(!asset) return 0;
         int w, h, n;
         unsigned char* d = stbi_load_from_memory((unsigned char*)AAsset_getBuffer(asset), AAsset_getLength(asset), &w, &h, &n, 4);
         GLuint id;
         glGenTextures(1, &id);
         glBindTexture(GL_TEXTURE_2D, id);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, d);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         stbi_image_free(d);
         AAsset_close(asset);
         return id;
@@ -75,48 +81,31 @@ public:
         return p;
     }
 
-    // 绘制角色肢体 (带旋转)
-    void pushPart(std::vector<Vertex>& buffer, float x, float y, float w, float h, float angle) {
-        // 简化版：目前先作为矩形渲染，将来引入局部旋转矩阵
-        buffer.push_back({x, y, 0, 0, 1.0f, 0.0f});
-        buffer.push_back({x+w, y, 1, 0, 1.0f, 0.0f});
-        buffer.push_back({x, y-h, 0, 1, 1.0f, 0.0f});
-        buffer.push_back({x+w, y, 1, 0, 1.0f, 0.0f});
-        buffer.push_back({x+w, y-h, 1, 1, 1.0f, 0.0f});
-        buffer.push_back({x, y-h, 0, 1, 1.0f, 0.0f});
-    }
-
-    void drawPlayer(std::vector<Vertex>& buffer, float px, float py, bool walking) {
-        float swing = walking ? sin(animTime * 10.0f) * 0.5f : 0;
-        
-        // 绘制顺序：后腿 -> 后手 -> 身体 -> 头 -> 前腿 -> 前手 (模拟 2.5D 遮挡)
-        pushPart(buffer, px, py, 0.06f, 0.08f, 0); // 身体
-        pushPart(buffer, px+0.01f, py+0.04f, 0.04f, 0.04f, 0); // 头
+    void pushBlock(std::vector<Vertex>& buffer, float x, float y, int type, float damage) {
+        if (type == 0) return;
+        float ts = 32.0f/512.0f;
+        float tx = (float)((type-1)%16)*ts; float ty = (float)((type-1)/16)*ts;
+        float s = 0.1f;
+        buffer.push_back({x, y, tx, ty, 1.0f, damage});
+        buffer.push_back({x+s, y, tx+ts, ty, 1.0f, damage});
+        buffer.push_back({x, y-s, tx, ty+ts, 1.0f, damage});
+        buffer.push_back({x+s, y, tx+ts, ty, 1.0f, damage});
+        buffer.push_back({x+s, y-s, tx+ts, ty+ts, 1.0f, damage});
+        buffer.push_back({x, y-s, tx, ty+ts, 1.0f, damage});
     }
 
     void renderFrame() {
+        animTime += 0.016f;
         camX += (targetX - camX) * 0.1f;
         camY += (targetY - camY) * 0.1f;
 
         glClearColor(0.52f, 0.80f, 0.92f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
         glUseProgram(program);
         
-        // 绑定纹理单元 0: 基础贴图
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        glUniform1i(glGetUniformLocation(program, "uTex"), 0);
-
-        // 绑定纹理单元 1: 法线贴图 (还原凹凸感)
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, normalID);
-        glUniform1i(glGetUniformLocation(program, "uNormal"), 1);
-
-        // 绑定纹理单元 2: 受损贴图
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, destructID);
-        glUniform1i(glGetUniformLocation(program, "uDestruct"), 2);
+        glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, textureID);
+        glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, normalID);
+        glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, destructID);
 
         float matrix[16];
         Matrix::ortho(matrix, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
@@ -124,3 +113,11 @@ public:
         glUniformMatrix4fv(uMatrix, 1, GL_FALSE, matrix);
     }
 };
+
+WorldRenderer* g_renderer = nullptr;
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_GameActivity_onSurfaceCreatedNative(JNIEnv* env, jobject obj, jobject assetMgr) {
+    g_renderer = new WorldRenderer();
+    g_renderer->init(AAssetManager_fromJava(env, assetMgr));
+}
