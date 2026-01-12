@@ -17,6 +17,7 @@ add_library(native-lib SHARED
             command_processor.cpp
             item_manager.cpp
             compression_manager.cpp
+            crafting_manager.cpp
             ${ZSTD_SOURCES}
             ${LZ4_SOURCES})
 
