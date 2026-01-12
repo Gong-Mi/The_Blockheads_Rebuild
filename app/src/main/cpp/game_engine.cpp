@@ -48,24 +48,34 @@ public:
                 int worldY = cy * CHUNK_SIZE + y;
                 Tile& t = block->tiles[y * CHUNK_SIZE + x];
                 
-                // --- 还原自原版生成逻辑 ---
+                // 1. 基础地形 (还原自深度分布)
                 if (worldY > 100) {
-                    t.foreground = 2; // 石头
+                    t.foreground = 2; // 石头层
+                    // --- 矿物随机分布 ---
+                    float oreRand = (float)rand() / RAND_MAX;
+                    if (oreRand > 0.98f) t.foreground = 100; // 极低概率时间水晶
+                    else if (oreRand > 0.95f) t.foreground = 8; // 铁矿
+                    else if (oreRand > 0.90f) t.foreground = 7; // 铜矿
                 } else if (worldY > 80) {
-                    t.foreground = 1; // 泥土
+                    t.foreground = 1; // 泥土层
+                    if ((float)rand() / RAND_MAX > 0.95f) t.foreground = 4; // 燧石
                 } else if (worldY == 80) {
-                    t.foreground = 5; // 草
+                    t.foreground = 5; // 草地
                 } else {
                     t.foreground = 0; // 天空
                 }
-                
+
+                // 2. 溶洞生成 (还原自原版地下空洞逻辑)
+                // 使用简单的概率函数模拟空洞
+                if (worldY > 110 && (rand() % 100) > 92) {
+                    t.foreground = 0; 
+                }
+
                 t.sunlight = (worldY <= 80) ? 255 : 0;
                 t.damage = 0;
             }
         }
-        
         chunks.push_back(block);
-        LOGI("World Generated at Chunk X:%d, Y:%d", wrappedX, cy);
     }
 };
 
