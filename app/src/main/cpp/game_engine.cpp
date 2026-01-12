@@ -29,20 +29,29 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
     g_entities = new EntityManager();
     g_ai = new BlockheadAI();
     
-    // Generate surface chunks (y=80 is ground, so we need chunks at cy=2, cx=0...3)
-    g_world->generateChunk(0, 2); // y: 64-95
-    g_world->generateChunk(0, 3); // y: 96-127
+    // Generate a wider area of chunks (5x5 grid around origin)
+    // Vertical: 0-150 range covers underground to sky
+    for (int cx = -2; cx <= 2; cx++) {
+        for (int cy = 0; cy <= 4; cy++) {
+            g_world->generateChunk(cx, cy);
+        }
+    }
     
     // Position player and camera at the ground level
-    g_entities->player.x = 1.0f;
-    g_entities->player.y = 8.1f; // Just above ground (8.0)
+    // Calculate ground height at x=0
+    float h = Noise::fbm(0.0f, 3);
+    int surfaceY = 80 + (int)(h * 20.0f);
+    float spawnY = (surfaceY + 2) * 0.1f; // Spawn slightly above ground
+
+    g_entities->player.x = 0.0f;
+    g_entities->player.y = spawnY;
     
     if (g_renderer) {
         g_renderer->updateMesh(g_world->chunks);
-        g_renderer->targetX = 1.0f;
-        g_renderer->targetY = 8.0f;
-        g_renderer->camX = 1.0f;
-        g_renderer->camY = 8.0f;
+        g_renderer->targetX = 0.0f;
+        g_renderer->targetY = spawnY;
+        g_renderer->camX = 0.0f;
+        g_renderer->camY = spawnY;
     }
     LOGI("Native Engine Ready");
 }

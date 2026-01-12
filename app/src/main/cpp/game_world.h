@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "game_constants.h"
+#include "noise_utils.h"
 
 class GameWorld {
 public:
@@ -49,13 +50,44 @@ public:
         block->y = cy;
         
         for (int i = 0; i < CHUNK_SIZE * CHUNK_SIZE; i++) {
-            int worldY = cy * CHUNK_SIZE + (i / CHUNK_SIZE);
+            int lx = i % CHUNK_SIZE;
+            int ly = i / CHUNK_SIZE;
+            
+            // Absolute World Coordinates
+            int worldX = wrappedX * CHUNK_SIZE + lx;
+            int worldY = cy * CHUNK_SIZE + ly;
+            
             Tile& t = block->tiles[i];
-            if (worldY > 100) t.foreground = 2; // Stone
-            else if (worldY > 80) t.foreground = 1; // Dirt
-            else if (worldY == 80) t.foreground = 5; // Grass
-            else t.foreground = 0; // Air
             t.damage = 0;
+            
+            // 1. Terrain Height (1D Noise)
+            // Scale: 0.01 implies terrain features over 100 blocks
+            // Amplitude: 20 blocks variation
+            // Base height: 80
+            float heightNoise = Noise::fbm(worldX * 0.02f, 3); 
+            int surfaceHeight = 80 + (int)(heightNoise * 20.0f);
+            
+            // 2. Cave Generation (2D Noise)
+            float caveNoise = Noise::noise2d(worldX * 0.05f, worldY * 0.05f);
+            bool isCave = (caveNoise > 0.6f); // Threshold for caves
+
+            if (worldY > surfaceHeight) {
+                t.foreground = 0; // Air above ground
+            } else if (worldY == surfaceHeight) {
+                t.foreground = 5; // Grass on top
+            } else if (worldY > surfaceHeight - 5) {
+                t.foreground = 1; // Dirt layer
+            } else {
+                t.foreground = 2; // Stone below
+            }
+            
+            // Carve caves (only underground)
+            if (worldY < surfaceHeight && isCave) {
+                t.foreground = 0; 
+            }
+            
+            // Bedrock at bottom
+            if (worldY == 0) t.foreground = 2; 
         }
         updateLighting(block);
         chunks.push_back(block);
