@@ -3,7 +3,9 @@ cmake_minimum_required(VERSION 3.4.1)
 add_library(native-lib SHARED
             game_engine.cpp
             world_renderer.cpp
-            blockhead_ai.cpp)
+            blockhead_ai.cpp
+            command_processor.cpp
+            item_manager.cpp)
 
 find_library(log-lib log)
 find_library(android-lib android)
