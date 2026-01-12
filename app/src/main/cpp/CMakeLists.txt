@@ -4,6 +4,7 @@ include_directories(external)
 
 # --- Zstd 编译配置 ---
 set(ZSTD_DIR external/zstd/lib)
+add_definitions(-DZSTD_DISABLE_ASM) # 禁用汇编以确保 Android 兼容性
 include_directories(${ZSTD_DIR} ${ZSTD_DIR}/common)
 file(GLOB ZSTD_SOURCES ${ZSTD_DIR}/common/*.c ${ZSTD_DIR}/compress/*.c ${ZSTD_DIR}/decompress/*.c)
 
