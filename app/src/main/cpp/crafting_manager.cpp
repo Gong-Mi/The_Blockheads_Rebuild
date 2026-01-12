@@ -8,11 +8,13 @@ struct Ingredient {
 };
 
 struct Recipe {
+    std::string name;
     int resultItemId;
     int resultCount;
-    int requiredWorkbench; // 0 为手工，10 为基础工作台...
+    int workbenchId; // 10:Portal, 11:Tool, 12:Craft, 13:Furnace...
+    int workbenchLevel;
     std::vector<Ingredient> ingredients;
-    int craftTime; // 对应我们之前挖掘出的 time 字段
+    int duration; // 帧数
 };
 
 class CraftingManager {
@@ -20,36 +22,32 @@ public:
     std::vector<Recipe> recipes;
 
     void init() {
-        // --- 基于原版逻辑的手动还原示例 ---
-        
-        // 示例：合成火把 (假设 ID 20 是火把)
-        // 材料：1个木头 (ID 3) + 1个煤炭 (ID 5)
-        Recipe torch;
-        torch.resultItemId = 20;
-        torch.resultCount = 3;
-        torch.requiredWorkbench = 10; // 需要工作台
-        torch.ingredients = {{3, 1}, {5, 1}};
-        torch.craftTime = 60;
-        recipes.push_back(torch);
+        // --- 1. 传送门基础合成 (Portal Level 1) ---
+        recipes.push_back({"Dirt Workbench", 10, 1, 0, 0, {{1, 1}}, 30});
 
-        // 示例：合成石镐 (假设 ID 50 是石镐)
-        // 材料：2个树枝 (ID 6) + 1个石头 (ID 2)
-        Recipe stonePickaxe;
-        stonePickaxe.resultItemId = 50;
-        stonePickaxe.resultCount = 1;
-        stonePickaxe.requiredWorkbench = 10;
-        stonePickaxe.ingredients = {{6, 2}, {2, 1}};
-        stonePickaxe.craftTime = 120;
-        recipes.push_back(stonePickaxe);
+        // --- 2. 工具台合成 (Tool Bench Level 1) ---
+        recipes.push_back({"Flint Pickaxe", 50, 1, 11, 1, {{6, 2}, {4, 1}}, 120});
+        recipes.push_back({"Flint Axe", 51, 1, 11, 1, {{6, 2}, {4, 1}}, 100});
+        recipes.push_back({"Flint Spade", 52, 1, 11, 1, {{6, 1}, {4, 1}}, 80});
+
+        // --- 3. 基础材料加工 (Craft Bench Level 1) ---
+        recipes.push_back({"Wood Planks", 3, 4, 12, 1, {{3, 1}}, 60});
+        recipes.push_back({"Torch", 20, 3, 12, 1, {{6, 1}, {5, 1}}, 40});
+
+        // --- 4. 冶炼系统 (Furnace Level 1) ---
+        recipes.push_back({"Copper Ingot", 70, 1, 13, 1, {{7, 3}, {5, 1}}, 300});
+        recipes.push_back({"Iron Ingot", 71, 1, 13, 1, {{8, 3}, {5, 2}}, 400});
+
+        // --- 5. 纺织与裁剪 (Tailor Bench) ---
+        recipes.push_back({"Linen Cloth", 80, 1, 14, 1, {{85, 5}}, 200});
+        
+        // ... 此处可以根据 items_data.json 继续扩充至数百个 ...
     }
 
-    // 检查玩家是否拥有足够材料
-    bool canCraft(const Recipe& recipe, const std::map<int, int>& playerInventory) {
-        for (const auto& ing : recipe.ingredients) {
-            if (!playerInventory.count(ing.itemId) || playerInventory.at(ing.itemId) < ing.count) {
-                return false;
-            }
+    Recipe* getRecipeForResult(int itemId) {
+        for (auto& r : recipes) {
+            if (r.resultItemId == itemId) return &r;
         }
-        return true;
+        return nullptr;
     }
 };

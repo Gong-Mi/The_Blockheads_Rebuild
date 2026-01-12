@@ -95,15 +95,14 @@ public class GameActivity extends Activity {
         
         layout.addView(hotbar, hotbarParams);
         
-        // --- 合成测试按钮 ---
+        // --- 合成引擎联动测试 ---
         android.widget.Button craftBtn = new android.widget.Button(this);
-        craftBtn.setText("尝试合成");
-        android.widget.FrameLayout.LayoutParams craftParams = new android.widget.FrameLayout.LayoutParams(
-                300, 150);
-        craftParams.gravity = android.view.Gravity.BOTTOM | android.view.Gravity.LEFT;
-        craftParams.leftMargin = 50;
-        craftParams.bottomMargin = 50;
-        craftBtn.setOnClickListener(v -> handleCraftNative(20)); // 20 为火把测试
+        craftBtn.setText("一键合成工具");
+        craftBtn.setOnClickListener(v -> {
+            v.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY);
+            handleCraftNative(50); // 请求合成石镐
+            handleCraftNative(20); // 请求合成火把
+        });
         
         layout.addView(craftBtn, craftParams);
         setContentView(layout);
