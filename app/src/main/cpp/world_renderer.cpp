@@ -15,25 +15,28 @@ struct Vertex {
     float x, y;
     float u, v;
     float brightness;
-    float damage; // 0.0 - 1.0
+    float damage;
 };
 
-void pushBlock(std::vector<Vertex>& buffer, float x, float y, int type, float damage) {
-    // ... 计算 UV ...
-    // 在 push 顶点时加入 damage 参数
-    buffer.push_back({x, y, tx, ty, 1.0f, damage});
-    // ...
-}
-        // ... 原有的纹理加载 ...
-        
-        // 加载受损贴图 (还原自原版 TileDestruct.png)
-        AAsset* dAsset = AAssetManager_open(mgr, "TileDestruct.png", AASSET_MODE_BUFFER);
-        unsigned char* dData = stbi_load_from_memory((unsigned char*)AAsset_getBuffer(dAsset), AAsset_getLength(dAsset), &w, &h, &n, 4);
-        glGenTextures(1, &destructTextureID);
-        glBindTexture(GL_TEXTURE_2D, destructTextureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, dData);
-        // ... 过滤设置 ...
+class WorldRenderer {
+public:
+    GLuint program;
+    GLuint textureID, destructID;
+    GLuint vbo;
+    GLint uMatrix;
+    float camX = 0, camY = 0;
+    float targetX = 0, targetY = 0;
 
+    void init(AAssetManager* mgr) {
+        textureID = loadTex(mgr, "TileMap.png");
+        destructID = loadTex(mgr, "TileDestruct.png");
+
+        const char* vShader = "uniform mat4 u_Matrix; attribute vec4 aPos; attribute vec2 aTex; "
+                              "attribute float aBright; attribute float aDamage; "
+                              "varying vec2 vTex; varying float vBright; varying float vDamage; "
+                              "void main() { gl_Position = u_Matrix * aPos; vTex = aTex; "
+                              "vBright = aBright; vDamage = aDamage; }";
+        
         const char* fShader = "precision mediump float; uniform sampler2D uTex; "
                               "uniform sampler2D uDestruct; varying vec2 vTex; "
                               "varying float vBright; varying float vDamage; "
@@ -41,30 +44,61 @@ void pushBlock(std::vector<Vertex>& buffer, float x, float y, int type, float da
                               "vec4 crack = texture2D(uDestruct, vTex); "
                               "vec3 finalColor = mix(color.rgb, crack.rgb, vDamage); "
                               "gl_FragColor = vec4(finalColor * vBright, color.a); }";
-        // ... 编译逻辑 ...
+
+        program = createProgram(vShader, fShader);
+        uMatrix = glGetUniformLocation(program, "u_Matrix");
+        glGenBuffers(1, &vbo);
     }
 
-    void pushEntity(std::vector<Vertex>& buffer, float x, float y, int type, float rot) {
-        float ts = 32.0f / 512.0f;
-        float tx = (float)((type - 1) % 16) * ts;
-        float ty = (float)((type - 1) / 16) * ts;
-        float size = 0.04f; // 掉落物比普通方块小
-
-        // 简单的旋转模拟 (暂不引入完整矩阵，仅偏移顶点)
-        buffer.push_back({x, y, tx, ty, 1.0f, 0.0f});
-        buffer.push_back({x+size, y, tx+ts, ty, 1.0f, 0.0f});
-        buffer.push_back({x, y-size, tx, ty+ts, 1.0f, 0.0f});
-        // ... 其他顶点 ...
+    GLuint loadTex(AAssetManager* mgr, const char* name) {
+        AAsset* asset = AAssetManager_open(mgr, name, AASSET_MODE_BUFFER);
+        int w, h, n;
+        unsigned char* d = stbi_load_from_memory((unsigned char*)AAsset_getBuffer(asset), AAsset_getLength(asset), &w, &h, &n, 4);
+        GLuint id;
+        glGenTextures(1, &id);
+        glBindTexture(GL_TEXTURE_2D, id);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, d);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        stbi_image_free(d);
+        AAsset_close(asset);
+        return id;
     }
 
+    GLuint createProgram(const char* vs, const char* fs) {
+        GLuint v = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(v, 1, &vs, NULL); glCompileShader(v);
+        GLuint f = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(f, 1, &fs, NULL); glCompileShader(f);
+        GLuint p = glCreateProgram();
+        glAttachShader(p, v); glAttachShader(p, f); glLinkProgram(p);
+        return p;
+    }
 
-    void drawPlayer(float x, float y) {
-        // 将来会从 assets 加载 head_ct.png 并在此处绘制
-        // 目前用一个亮色的色块代表角色
+    void pushBlock(std::vector<Vertex>& buffer, float x, float y, int type, float damage) {
+        if (type == 0) return;
+        float ts = 32.0f/512.0f;
+        float tx = (float)((type-1)%16)*ts; float ty = (float)((type-1)/16)*ts;
+        float s = 0.1f;
+        buffer.push_back({x, y, tx, ty, 1.0f, damage});
+        buffer.push_back({x+s, y, tx+ts, ty, 1.0f, damage});
+        buffer.push_back({x, y-s, tx, ty+ts, 1.0f, damage});
+        buffer.push_back({x+s, y, tx+ts, ty, 1.0f, damage});
+        buffer.push_back({x+s, y-s, tx+ts, ty+ts, 1.0f, damage});
+        buffer.push_back({x, y-s, tx, ty+ts, 1.0f, damage});
     }
 
     void renderFrame() {
-        // ... 之前的绘制 ...
-        // 调用绘制角色
+        camX += (targetX - camX) * 0.1f;
+        camY += (targetY - camY) * 0.1f;
+
+        glClearColor(0.52f, 0.80f, 0.92f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glUseProgram(program);
+
+        float matrix[16];
+        Matrix::ortho(matrix, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+        Matrix::translate(matrix, -camX, -camY, 0);
+        glUniformMatrix4fv(uMatrix, 1, GL_FALSE, matrix);
+        // 后续调用 glDrawArrays...
     }
 };
