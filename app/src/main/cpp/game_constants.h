@@ -1,10 +1,30 @@
 #ifndef GAME_CONSTANTS_H
 #define GAME_CONSTANTS_H
 
+#include <stdint.h>
+
 // --- 世界规模 (还原自指令集) ---
 const int WORLD_WIDTH = 15000;    // 环球一周 15000 块
 const int WORLD_DEPTH = 500;      // 地下深度 500 块
 const int CHUNK_SIZE = 32;        // 每个物理块 32x32
+
+struct Tile {
+    uint8_t foreground;
+    uint8_t background;
+    uint8_t sunlight;
+    uint8_t artLight;
+    uint8_t damage;
+    uint8_t waterLevel;
+    int8_t normalX;
+    int8_t normalY;
+    uint8_t paintColor[4];
+    uint16_t temperature;
+};
+
+struct PhysicalBlock {
+    int x, y;
+    Tile tiles[CHUNK_SIZE * CHUNK_SIZE];
+};
 
 // --- 地理坐标 (基于纬度模拟) ---
 const int EQUATOR_1 = 0;          // 第一个赤道

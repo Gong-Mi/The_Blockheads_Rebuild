@@ -4,6 +4,7 @@
 #include <android/asset_manager_jni.h>
 #include <android/log.h>
 #include "matrix_utils.h"
+#include "game_constants.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "external/stb_image.h"
@@ -21,19 +22,24 @@ struct Vertex {
 class WorldRenderer {
 public:
     GLuint program;
-    GLuint textureID, destructID, normalID;
+    GLuint textureID, destructID, normalID, playerTexID;
     GLuint vbo;
     GLint uMatrix;
     float camX = 0, camY = 0;
     float targetX = 0, targetY = 0;
     float animTime = 0;
+    
+    // Player position (updated from game_engine)
+    float playerX = 0, playerY = 0;
 
     int vertexCount = 0;
+    bool meshDirty = false;
 
     void init(AAssetManager* mgr) {
         textureID = loadTex(mgr, "TileMap.png");
         destructID = loadTex(mgr, "TileDestruct.png");
         normalID = loadTex(mgr, "ItemNormals.png");
+        playerTexID = loadTex(mgr, "BlockheadBody.png");
 
         const char* vShader = "uniform mat4 u_Matrix; attribute vec4 aPos; attribute vec2 aTex; "
                               "attribute float aBright; attribute float aDamage; "
@@ -56,22 +62,40 @@ public:
         program = createProgram(vShader, fShader);
         uMatrix = glGetUniformLocation(program, "u_Matrix");
         glGenBuffers(1, &vbo);
+        
+        // Initial empty mesh
+        vertexCount = 0;
+    }
 
-        // --- TEST DATA ---
-        std::vector<Vertex> testData;
-        // Draw a 10x10 grid of blocks
-        for(int x=-5; x<5; x++) {
-            for(int y=-5; y<5; y++) {
-                pushBlock(testData, (float)x * 0.1f, (float)y * 0.1f, (abs(x+y)%3)+1, 0.0f);
+    // Called from game loop when world data changes
+    void updateMesh(const std::vector<PhysicalBlock*>& chunks) {
+        std::vector<Vertex> vertices;
+        for (PhysicalBlock* chunk : chunks) {
+            if (!chunk) continue;
+            // Iterate all tiles in the chunk
+            for (int i = 0; i < CHUNK_SIZE * CHUNK_SIZE; i++) {
+                Tile& t = chunk->tiles[i];
+                if (t.foreground == 0) continue; // Skip empty air
+
+                int lx = i % CHUNK_SIZE;
+                int ly = i / CHUNK_SIZE;
+                // Calculate world coordinates
+                // Note: chunk->x is already wrapped world coordinate
+                float wx = (chunk->x * CHUNK_SIZE + lx) * 0.1f; // 0.1f is block scale
+                // Flip Y for rendering? Engine uses Y=0 at bottom (bedrock) to Y=500 (space)
+                // Let's assume standard Y-up
+                float wy = (chunk->y * CHUNK_SIZE + ly) * 0.1f;
+
+                pushBlock(vertices, wx, wy, t.foreground, t.damage > 0 ? (float)t.damage / 255.0f : 0.0f);
             }
         }
-        vertexCount = testData.size();
         
+        // Upload to GPU
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, testData.size() * sizeof(Vertex), testData.data(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_DYNAMIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         
-        LOGI("Initialized with %d vertices", vertexCount);
+        vertexCount = vertices.size();
     }
 
     GLuint loadTex(AAssetManager* mgr, const char* name) {
@@ -178,6 +202,45 @@ public:
         glDrawArrays(GL_TRIANGLES, 0, vertexCount);
         
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+        
+        // --- Draw Player ---
+        // Simple immediate mode style for player (using a separate small array)
+        if (playerTexID != 0) {
+            glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, playerTexID);
+            // Disable other textures for the player to avoid weird mixing (shader expects them)
+            // Ideally we should use a different shader, but let's hack it:
+            // Just bind the same texture to normal/destruct slots so math doesn't break
+            glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, playerTexID);
+            glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, 0); // No destruction overlay
+
+            float w = 0.15f; // Player width
+            float h = 0.3f;  // Player height
+            float px = playerX;
+            float py = playerY;
+            
+            // Quad vertices: x, y, u, v, bright, damage
+            Vertex pVerts[] = {
+                {px - w/2, py,       0.0f, 1.0f, 1.0f, 0.0f},
+                {px + w/2, py,       1.0f, 1.0f, 1.0f, 0.0f},
+                {px - w/2, py + h,   0.0f, 0.0f, 1.0f, 0.0f},
+                {px + w/2, py,       1.0f, 1.0f, 1.0f, 0.0f},
+                {px + w/2, py + h,   1.0f, 0.0f, 1.0f, 0.0f},
+                {px - w/2, py + h,   0.0f, 0.0f, 1.0f, 0.0f}
+            };
+            
+            // Enable attribs again (just in case)
+            glEnableVertexAttribArray(posLoc);
+            glEnableVertexAttribArray(texLoc);
+            if(brightLoc >= 0) glEnableVertexAttribArray(brightLoc);
+            if(dmgLoc >= 0) glEnableVertexAttribArray(dmgLoc);
+
+            glVertexAttribPointer(posLoc, 2, GL_FLOAT, GL_FALSE, stride, &pVerts[0].x);
+            glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, stride, &pVerts[0].u);
+            if(brightLoc >= 0) glVertexAttribPointer(brightLoc, 1, GL_FLOAT, GL_FALSE, stride, &pVerts[0].brightness);
+            if(dmgLoc >= 0) glVertexAttribPointer(dmgLoc, 1, GL_FLOAT, GL_FALSE, stride, &pVerts[0].damage);
+            
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
     }
 };
 

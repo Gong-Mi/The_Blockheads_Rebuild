@@ -54,11 +54,30 @@ public class GameActivity extends Activity {
         layout.addView(mGameView);
 
         // --- 全屏触控层 ---
-        mGameView.setOnTouchListener((v, event) -> {
-            if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                handleTouchNative(event.getX(), event.getY());
+        mGameView.setOnTouchListener(new android.view.View.OnTouchListener() {
+            private float lastX, lastY;
+            
+            @Override
+            public boolean onTouch(android.view.View v, android.view.MotionEvent event) {
+                float x = event.getX();
+                float y = event.getY();
+                
+                switch (event.getAction()) {
+                    case android.view.MotionEvent.ACTION_DOWN:
+                        lastX = x;
+                        lastY = y;
+                        handleTouchNative(x, y); // AI Walk/Interaction
+                        break;
+                    case android.view.MotionEvent.ACTION_MOVE:
+                        float dx = x - lastX;
+                        float dy = y - lastY;
+                        handlePanNative(dx, dy);
+                        lastX = x;
+                        lastY = y;
+                        break;
+                }
+                return true;
             }
-            return true;
         });
 
         // --- 还原原版底部 10 格快捷栏 ---
@@ -122,5 +141,6 @@ public class GameActivity extends Activity {
     public native void onDrawFrameNative();
     public native void handleActionNative(int actionType);
     public native void handleTouchNative(float x, float y);
+    public native void handlePanNative(float dx, float dy);
     public native void handleCraftNative(int targetItemId);
 }

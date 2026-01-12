@@ -4,32 +4,22 @@
 #include <android/log.h>
 #include "game_constants.h"
 
-// 先声明基础结构
-struct Tile {
-    uint8_t foreground;
-    uint8_t background;
-    uint8_t sunlight;
-    uint8_t artLight;
-    uint8_t damage;
-    uint8_t waterLevel;
-    int8_t normalX;
-    int8_t normalY;
-    uint8_t paintColor[4];
-    uint16_t temperature;
-};
-
-struct PhysicalBlock {
-    int x, y;
-    Tile tiles[CHUNK_SIZE * CHUNK_SIZE];
-};
-
 // 引入子模块源码 (这些文件必须存在)
 #include "compression_manager.cpp"
 #include "entity_manager.cpp"
 #include "blockhead_ai.cpp"
 
 // 声明渲染器全局指针 (由 world_renderer.cpp 提供)
-class WorldRenderer;
+#include <android/asset_manager.h>
+class WorldRenderer {
+public:
+    void init(AAssetManager* mgr);
+    void renderFrame();
+    void updateMesh(const std::vector<PhysicalBlock*>& chunks);
+    // Expose camera control for input
+    float camX, camY;
+    float targetX, targetY;
+};
 extern WorldRenderer* g_renderer;
 
 #define LOG_TAG "BlockheadsNative"
@@ -89,7 +79,11 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
     g_world = new GameWorld();
     g_entities = new EntityManager();
     g_ai = new BlockheadAI();
-    g_world->generateChunk(0, 0);
+    g_world->generateChunk(0, 0); // Generates block at 0,0
+    // Manually force mesh update after world gen
+    if (g_renderer) {
+        g_renderer->updateMesh(g_world->chunks);
+    }
     LOGI("Native Engine Ready");
 }
 
@@ -108,12 +102,31 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handleTouchNative(JNIEnv* en
     if (g_ai) g_ai->addAction(ACTION_MINE, (int)(x/100.0f), (int)(y/100.0f));
 }
 
+extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_GameActivity_handlePanNative(JNIEnv* env, jobject obj, jfloat dx, jfloat dy) {
+    if (g_renderer) {
+        // Pixel to world unit conversion (approximate)
+        // Dragging right (positive dx) should move camera left (decrease camX)
+        g_renderer->targetX -= dx * 0.005f;
+        g_renderer->targetY += dy * 0.005f; // Screen Y is down, world Y is up? Need to check.
+        // If Y is inverted in renderer, dy needs sign flip. 
+        // Renderer uses Matrix::translate(-camX, -camY, 0).
+        // If I drag up (dy < 0), I want to see lower (camY decreases).
+        // So targetY += dy is correct if screen Y is down.
+    }
+}
+
 // 包含绘制逻辑
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* env, jobject obj) {
     if (g_world && g_entities && g_ai) {
         g_ai->update(g_entities->player.x, g_entities->player.y);
         g_entities->update(0.005f);
-        if (g_renderer) g_renderer->renderFrame();
+        if (g_renderer) {
+            // Sync player position to renderer
+            g_renderer->playerX = g_entities->player.x;
+            g_renderer->playerY = g_entities->player.y;
+            g_renderer->renderFrame();
+        }
     }
 }
