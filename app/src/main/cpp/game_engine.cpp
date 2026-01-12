@@ -4,37 +4,18 @@
 #include <android/log.h>
 #include "game_constants.h"
 
-#define LOG_TAG "BlockheadsNative"
-#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
-
+// 先声明基础结构
 struct Tile {
     uint8_t foreground;
     uint8_t background;
     uint8_t sunlight;
     uint8_t artLight;
     uint8_t damage;
-    uint8_t waterLevel; // 0-255 代表含水量
+    uint8_t waterLevel;
     int8_t normalX;
     int8_t normalY;
     uint8_t paintColor[4];
     uint16_t temperature;
-};
-
-class GameWorld {
-public:
-    // ... 
-    void updatePhysics() {
-        // --- 还原自原版的高性能流体算法 ---
-        for (auto* block : chunks) {
-            for (int i = 0; i < CHUNK_SIZE * CHUNK_SIZE; i++) {
-                Tile& t = block->tiles[i];
-                if (t.waterLevel > 0) {
-                    // 水向下流，如果没有阻挡
-                    // 这里将来会实现横向扩散压力平衡
-                }
-            }
-        }
-    }
 };
 
 struct PhysicalBlock {
@@ -42,24 +23,34 @@ struct PhysicalBlock {
     Tile tiles[CHUNK_SIZE * CHUNK_SIZE];
 };
 
+// 引入子模块源码 (这些文件必须存在)
+#include "compression_manager.cpp"
+#include "entity_manager.cpp"
+#include "blockhead_ai.cpp"
+
+// 声明渲染器全局指针 (由 world_renderer.cpp 提供)
+class WorldRenderer;
+extern WorldRenderer* g_renderer;
+
+#define LOG_TAG "BlockheadsNative"
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
+
 class GameWorld {
 public:
     std::vector<PhysicalBlock*> chunks;
 
-    // --- 核心：环形世界坐标转换 (还原自 15000 块周长设定) ---
     int wrapX(int x) {
         if (x < 0) return (x % WORLD_WIDTH) + WORLD_WIDTH;
         return x % WORLD_WIDTH;
     }
 
     void updateLighting(PhysicalBlock* block) {
-        // --- 还原自原版的递归光照传播 ---
         for (int x = 0; x < CHUNK_SIZE; x++) {
             int currentSun = 255;
             for (int y = 0; y < CHUNK_SIZE; y++) {
                 Tile& t = block->tiles[y * CHUNK_SIZE + x];
                 if (t.foreground != 0) {
-                    currentSun -= 40; // 方块阻挡光线
+                    currentSun -= 40;
                     if (currentSun < 0) currentSun = 0;
                 }
                 t.sunlight = (uint8_t)currentSun;
@@ -68,18 +59,28 @@ public:
     }
 
     void generateChunk(int cx, int cy) {
-        // ... 之前的生成代码 ...
-        updateLighting(block); // 生成后立即计算光照
+        int wrappedX = wrapX(cx);
+        PhysicalBlock* block = new PhysicalBlock();
+        block->x = wrappedX;
+        block->y = cy;
+        
+        for (int i = 0; i < CHUNK_SIZE * CHUNK_SIZE; i++) {
+            int worldY = cy * CHUNK_SIZE + (i / CHUNK_SIZE);
+            Tile& t = block->tiles[i];
+            if (worldY > 100) t.foreground = 2;
+            else if (worldY > 80) t.foreground = 1;
+            else if (worldY == 80) t.foreground = 5;
+            else t.foreground = 0;
+            t.damage = 0;
+        }
+        updateLighting(block);
         chunks.push_back(block);
     }
 };
 
+// 全局实例
 static GameWorld* g_world = nullptr;
-
-#include "entity_manager.cpp"
-
-#include "blockhead_ai.cpp"
-
+EntityManager* g_entities = nullptr;
 BlockheadAI* g_ai = nullptr;
 
 extern "C" JNIEXPORT void JNICALL
@@ -89,26 +90,30 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
     g_entities = new EntityManager();
     g_ai = new BlockheadAI();
     g_world->generateChunk(0, 0);
+    LOGI("Native Engine Ready");
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_GameActivity_handleActionNative(JNIEnv* env, jobject obj, jint actionType) {
+    LOGI("Action: %d", actionType);
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_GameActivity_handleCraftNative(JNIEnv* env, jobject obj, jint targetItemId) {
+    LOGI("Craft: %d", targetItemId);
 }
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_handleTouchNative(JNIEnv* env, jobject obj, jfloat x, jfloat y) {
-    int tx = (int)(x / 100.0f);
-    int ty = (int)(y / 100.0f);
-    
-    // 发送挖掘指令给 AI
-    if (g_ai) g_ai->addAction(ACTION_MINE, tx, ty);
+    if (g_ai) g_ai->addAction(ACTION_MINE, (int)(x/100.0f), (int)(y/100.0f));
 }
 
+// 包含绘制逻辑
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* env, jobject obj) {
-    if (g_renderer && g_world && g_entities && g_ai) {
-        // 更新 AI 逻辑
+    if (g_world && g_entities && g_ai) {
         g_ai->update(g_entities->player.x, g_entities->player.y);
         g_entities->update(0.005f);
-        
-        // ... 后续渲染逻辑保持不变 ...
+        // 此处渲染由 world_renderer 处理
     }
 }
-
-
