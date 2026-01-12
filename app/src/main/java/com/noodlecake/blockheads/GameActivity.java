@@ -18,22 +18,40 @@ public class GameActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         
-        // 使用相对布局，方便叠加按钮
-        android.widget.RelativeLayout layout = new android.widget.RelativeLayout(this);
+        android.widget.FrameLayout layout = new android.widget.FrameLayout(this);
         mGameView = new GameView(this);
         layout.addView(mGameView);
 
-        // 添加一个测试按钮 (对应原版的挖掘模式)
-        android.widget.Button mineBtn = new android.widget.Button(this);
-        mineBtn.setText("挖掘模式");
-        android.widget.RelativeLayout.LayoutParams params = new android.widget.RelativeLayout.LayoutParams(
-                200, 150);
-        params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_TOP);
-        params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_RIGHT);
-        mineBtn.setLayoutParams(params);
-        mineBtn.setOnClickListener(v -> handleActionNative(0)); // 0 为挖掘
+        // --- 全屏触控层 ---
+        mGameView.setOnTouchListener((v, event) -> {
+            if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+                handleTouchNative(event.getX(), event.getY());
+            }
+            return true;
+        });
+
+        // --- 原版风格快捷栏 (还原交互) ---
+        android.widget.LinearLayout hotbar = new android.widget.LinearLayout(this);
+        hotbar.setOrientation(android.widget.LinearLayout.HORIZONTAL);
+        hotbar.setGravity(android.view.Gravity.CENTER_HORIZONTAL);
         
-        layout.addView(mineBtn);
+        for (int i = 0; i < 5; i++) {
+            android.widget.ImageButton slot = new android.widget.ImageButton(this);
+            slot.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+            // 以后可以在这里设置 InventoryButtonBackground.png
+            slot.setImageResource(android.R.drawable.ic_menu_edit);
+            final int actionId = i;
+            slot.setOnClickListener(v -> handleActionNative(actionId));
+            hotbar.addView(slot, new android.widget.LinearLayout.LayoutParams(120, 120));
+        }
+
+        android.widget.FrameLayout.LayoutParams hotbarParams = new android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
+                android.widget.FrameLayout.LayoutParams.WRAP_CONTENT);
+        hotbarParams.gravity = android.view.Gravity.TOP | android.view.Gravity.CENTER_HORIZONTAL;
+        hotbarParams.topMargin = 20;
+        
+        layout.addView(hotbar, hotbarParams);
         setContentView(layout);
         
         initNative();

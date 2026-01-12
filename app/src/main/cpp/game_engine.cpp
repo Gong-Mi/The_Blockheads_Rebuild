@@ -57,4 +57,17 @@ extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobject obj) {
     g_world = new GameWorld();
     g_world->generateChunk(0, 0);
+    LOGI("Native Engine Initialized");
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_GameActivity_handleActionNative(JNIEnv* env, jobject obj, jint actionType) {
+    LOGI("Action Received: %d", actionType);
+    // 这里将来会调用 command_processor.cpp 里的逻辑
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_GameActivity_handleTouchNative(JNIEnv* env, jobject obj, jfloat x, jfloat y) {
+    LOGI("Touch at: %f, %f", x, y);
+    // 这里将来会触发 BlockheadAI 的寻路
 }
