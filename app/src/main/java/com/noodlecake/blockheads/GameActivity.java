@@ -61,26 +61,39 @@ public class GameActivity extends Activity {
             return true;
         });
 
-        // --- 原版风格快捷栏 (还原交互) ---
+        // --- 还原原版底部 10 格快捷栏 ---
         android.widget.LinearLayout hotbar = new android.widget.LinearLayout(this);
         hotbar.setOrientation(android.widget.LinearLayout.HORIZONTAL);
         hotbar.setGravity(android.view.Gravity.CENTER_HORIZONTAL);
         
-        for (int i = 0; i < 5; i++) {
-            android.widget.ImageButton slot = new android.widget.ImageButton(this);
-            slot.setBackgroundColor(android.graphics.Color.TRANSPARENT);
-            // 以后可以在这里设置 InventoryButtonBackground.png
-            slot.setImageResource(android.R.drawable.ic_menu_edit);
-            final int actionId = i;
-            slot.setOnClickListener(v -> handleActionNative(actionId));
-            hotbar.addView(slot, new android.widget.LinearLayout.LayoutParams(120, 120));
+        try {
+            android.graphics.Bitmap bgBtn = android.graphics.BitmapFactory.decodeStream(getAssets().open("InventoryButtonBackground.png"));
+            android.graphics.drawable.BitmapDrawable drawable = new android.graphics.drawable.BitmapDrawable(getResources(), bgBtn);
+
+            for (int i = 0; i < 10; i++) {
+                android.widget.ImageButton slot = new android.widget.ImageButton(this);
+                slot.setBackground(drawable);
+                slot.setPadding(10, 10, 10, 10);
+                slot.setScaleType(android.widget.ImageView.ScaleType.CENTER_INSIDE);
+                
+                final int slotId = i;
+                slot.setOnClickListener(v -> {
+                    playSound("click.wav");
+                    handleActionNative(slotId);
+                });
+                hotbar.addView(slot, new android.widget.LinearLayout.LayoutParams(140, 140));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         android.widget.FrameLayout.LayoutParams hotbarParams = new android.widget.FrameLayout.LayoutParams(
                 android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
                 android.widget.FrameLayout.LayoutParams.WRAP_CONTENT);
-        hotbarParams.gravity = android.view.Gravity.TOP | android.view.Gravity.CENTER_HORIZONTAL;
-        hotbarParams.topMargin = 20;
+        hotbarParams.gravity = android.view.Gravity.BOTTOM | android.view.Gravity.CENTER_HORIZONTAL;
+        hotbarParams.bottomMargin = 30;
+        
+        layout.addView(hotbar, hotbarParams);
         
         // --- 合成测试按钮 ---
         android.widget.Button craftBtn = new android.widget.Button(this);

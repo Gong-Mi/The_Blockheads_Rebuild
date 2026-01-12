@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.4.1)
 
+include_directories(external)
+
 # --- Zstd 编译配置 ---
 set(ZSTD_DIR external/zstd/lib)
 include_directories(${ZSTD_DIR} ${ZSTD_DIR}/common)
