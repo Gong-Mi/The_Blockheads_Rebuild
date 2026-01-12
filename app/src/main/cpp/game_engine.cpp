@@ -71,58 +71,35 @@ public:
 
 static GameWorld* g_world = nullptr;
 
+#include "entity_manager.cpp"
+
+EntityManager* g_entities = nullptr;
+
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobject obj) {
-    CompressionManager::init(); // 检测 CPU 架构
+    CompressionManager::init();
     g_world = new GameWorld();
+    g_entities = new EntityManager();
     g_world->generateChunk(0, 0);
-    LOGI("Native Engine Initialized with adaptive compression");
-}
-
-extern "C" JNIEXPORT void JNICALL
-Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* env, jobject obj) {
-    if (g_renderer && g_world) {
-        std::vector<Vertex> vertices;
-        // 渲染加载的第一个 Chunk (示例)
-        if (!g_world->chunks.empty()) {
-            PhysicalBlock* b = g_world->chunks[0];
-            for (int x = 0; x < CHUNK_SIZE; x++) {
-                for (int y = 0; y < CHUNK_SIZE; y++) {
-                    int type = b->tiles[y * CHUNK_SIZE + x].foreground;
-                    g_renderer->pushBlock(vertices, x*0.1f, -y*0.1f, type);
-                }
-            }
-        }
-        g_renderer->renderFrame();
-    }
-}
-
-extern "C" JNIEXPORT void JNICALL
-Java_com_noodlecake_blockheads_rebuild_GameActivity_handleCraftNative(JNIEnv* env, jobject obj, jint targetItemId) {
-    LOGI("Crafting Request for Item ID: %d", targetItemId);
 }
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_handleTouchNative(JNIEnv* env, jobject obj, jfloat x, jfloat y) {
-    LOGI("Touch at: %f, %f", x, y);
-    
-    // --- 还原自原版的点击坐标转换 ---
-    // 将点击位置映射到 Chunk 内的 tx, ty
-    int tx = (int)(x / 100.0f); // 临时映射比例
-    int ty = (int)(y / 100.0f);
-
-    if (g_world && !g_world->chunks.empty()) {
-        PhysicalBlock* b = g_world->chunks[0];
-        if (tx >= 0 && tx < CHUNK_SIZE && ty >= 0 && ty < CHUNK_SIZE) {
-            Tile& t = b->tiles[ty * CHUNK_SIZE + tx];
-            if (t.foreground != 0) {
-                t.damage += 50; // 每次点击增加受损度
-                LOGI("Tile damaged: %d", t.damage);
-                if (t.damage >= 255) {
-                    t.foreground = 0; // 方块碎裂
-                    LOGI("Tile destroyed!");
-                }
-            }
-        }
+    // ... 之前的挖掘逻辑 ...
+    if (t.damage >= 255) {
+        int oldType = t.foreground;
+        t.foreground = 0;
+        // 产生物理掉落物
+        g_entities->spawnDrop(tx * 0.1f, -ty * 0.1f, oldType);
     }
 }
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* env, jobject obj) {
+    if (g_renderer && g_world && g_entities) {
+        g_entities->update(0.005f); // 物理步进
+        // ... 传递实体给渲染器 ...
+    }
+}
+
+

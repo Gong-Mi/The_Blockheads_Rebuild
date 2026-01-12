@@ -44,33 +44,19 @@ void pushBlock(std::vector<Vertex>& buffer, float x, float y, int type, float da
         // ... 编译逻辑 ...
     }
 
-    void pushBlock(std::vector<Vertex>& buffer, float x, float y, int type) {
-        if (type == 0) return;
+    void pushEntity(std::vector<Vertex>& buffer, float x, float y, int type, float rot) {
         float ts = 32.0f / 512.0f;
         float tx = (float)((type - 1) % 16) * ts;
         float ty = (float)((type - 1) / 16) * ts;
+        float size = 0.04f; // 掉落物比普通方块小
 
-        float size = 0.1f;
-        float depth = 0.02f; // 2.5D 边缘的厚度
-
-        // --- 1. 正面渲染 (亮度 1.0) ---
-        buffer.push_back({x, y, tx, ty, 1.0f});
-        buffer.push_back({x+size, y, tx+ts, ty, 1.0f});
-        buffer.push_back({x, y-size, tx, ty+ts, 1.0f});
-        buffer.push_back({x+size, y, tx+ts, ty, 1.0f});
-        buffer.push_back({x+size, y-size, tx+ts, ty+ts, 1.0f});
-        buffer.push_back({x, y-size, tx, ty+ts, 1.0f});
-
-        // --- 2. 侧面阴影 (亮度 0.6，模拟 2.5D 厚度) ---
-        // 原版通过在方块底部绘制一个斜向下的色块来实现立体感
-        buffer.push_back({x, y-size, tx, ty+ts, 0.6f});
-        buffer.push_back({x+size, y-size, tx+ts, ty+ts, 0.6f});
-        buffer.push_back({x+depth, y-size-depth, tx, ty+ts, 0.6f});
-        
-        buffer.push_back({x+size, y-size, tx+ts, ty+ts, 0.6f});
-        buffer.push_back({x+size+depth, y-size-depth, tx+ts, ty+ts, 0.6f});
-        buffer.push_back({x+depth, y-size-depth, tx, ty+ts, 0.6f});
+        // 简单的旋转模拟 (暂不引入完整矩阵，仅偏移顶点)
+        buffer.push_back({x, y, tx, ty, 1.0f, 0.0f});
+        buffer.push_back({x+size, y, tx+ts, ty, 1.0f, 0.0f});
+        buffer.push_back({x, y-size, tx, ty+ts, 1.0f, 0.0f});
+        // ... 其他顶点 ...
     }
+
 
     void renderFrame() {
         glClearColor(0.52f, 0.80f, 0.92f, 1.0f);
