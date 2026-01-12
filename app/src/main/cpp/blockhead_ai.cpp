@@ -24,7 +24,7 @@ public:
         actionQueue.push(a);
     }
 
-    void update(float& outX, float& outY) {
+    void update(float& outX, float& outY, GameWorld* world) {
         if (actionQueue.empty()) {
             currentStatus = ACTION_IDLE;
             return;
@@ -42,6 +42,28 @@ public:
             if (current.type == ACTION_MINE) {
                 currentStatus = ACTION_MINE;
                 current.progress += 2.0f; // 工作进度
+                
+                // --- Mining Logic ---
+                if (world) {
+                    // Map float coord to tile index
+                    // Player is at posX (world unit). 1 block = 0.1f.
+                    // Tile X = current.tx
+                    // Tile Y = current.ty
+                    Tile* t = world->getTile(current.tx, current.ty);
+                    if (t && t->foreground != 0) {
+                        if (t->damage < 240) {
+                            t->damage += 5; // Visual crack
+                        } else {
+                            t->foreground = 0; // Destroy block
+                            t->damage = 0;
+                            // Trigger mesh update? GameEngine should handle this check or we need a callback
+                        }
+                    } else {
+                        // Empty or invalid, job done
+                        current.progress = 100.0f;
+                    }
+                }
+
                 if (current.progress >= 100.0f) actionQueue.pop();
             } else {
                 actionQueue.pop();
