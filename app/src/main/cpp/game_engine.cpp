@@ -88,5 +88,9 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handleActionNative(JNIEnv* e
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_handleCraftNative(JNIEnv* env, jobject obj, jint targetItemId) {
     LOGI("Crafting Request for Item ID: %d", targetItemId);
-    // 这里将来会调用 crafting_manager.cpp 检查材料并扣除，同时产生新物品
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_GameActivity_handleTouchNative(JNIEnv* env, jobject obj, jfloat x, jfloat y) {
+    LOGI("Touch at: %f, %f", x, y);
 }
