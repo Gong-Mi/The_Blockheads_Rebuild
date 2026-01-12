@@ -73,9 +73,10 @@ static GameWorld* g_world = nullptr;
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobject obj) {
+    CompressionManager::init(); // 检测 CPU 架构
     g_world = new GameWorld();
     g_world->generateChunk(0, 0);
-    LOGI("Native Engine Initialized");
+    LOGI("Native Engine Initialized with adaptive compression");
 }
 
 extern "C" JNIEXPORT void JNICALL
