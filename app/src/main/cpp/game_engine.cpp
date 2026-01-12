@@ -133,7 +133,7 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
 
     if (g_world && g_entities && g_ai) {
         g_ai->update(g_entities->player.x, g_entities->player.y, g_world, g_entities);
-        g_entities->update(0.005f);
+        g_entities->update(0.005f, g_world); // Pass world for physics
         
         // Sync Inventory to Java UI
         if (g_entities->inventoryDirty) {
