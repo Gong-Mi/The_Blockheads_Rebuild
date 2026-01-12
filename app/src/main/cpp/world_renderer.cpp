@@ -14,6 +14,7 @@
 struct Vertex {
     float x, y;
     float u, v;
+    float brightness; // 用于模拟侧边阴影
 };
 
 class WorldRenderer {
@@ -26,53 +27,44 @@ public:
     float targetX = 0, targetY = 0;
 
     void init(AAssetManager* mgr) {
-        // ... 加载纹理逻辑保持不变 ...
+        // ... 纹理加载代码 ...
         const char* vShader = "uniform mat4 u_Matrix; attribute vec4 aPos; attribute vec2 aTex; "
-                              "varying vec2 vTex; void main() { "
-                              "gl_Position = u_Matrix * aPos; vTex = aTex; }";
-        // ... 片元着色器保持不变 ...
+                              "attribute float aBright; varying vec2 vTex; varying float vBright; "
+                              "void main() { gl_Position = u_Matrix * aPos; vTex = aTex; vBright = aBright; }";
+        const char* fShader = "precision mediump float; uniform sampler2D uTex; "
+                              "varying vec2 vTex; varying float vBright; "
+                              "void main() { vec4 color = texture2D(uTex, vTex); "
+                              "gl_FragColor = vec4(color.rgb * vBright, color.a); }";
         
-        program = glCreateProgram();
-        // 编译代码并获取 uMatrix 位置
-        uMatrix = glGetUniformLocation(program, "u_Matrix");
-        glGenBuffers(1, &vbo);
+        // ... 编译逻辑 ...
     }
 
-    void updateCamera() {
-        // --- 还原自原版的平滑跟踪逻辑 (Lerp) ---
-        camX += (targetX - camX) * 0.1f;
-        camY += (targetY - camY) * 0.1f;
-    }
-
-    void renderFrame(int screenW, int screenY) {
-        updateCamera();
-        glClearColor(0.52f, 0.80f, 0.92f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glUseProgram(program);
-
-        float matrix[16];
-        Matrix::ortho(matrix, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
-        Matrix::translate(matrix, -camX, -camY, 0); // 摄像机平移
-        glUniformMatrix4fv(uMatrix, 1, GL_FALSE, matrix);
-
-        // 绘制逻辑...
-    }
-};
-
-    // 根据方块类型计算 TileMap.png (512x512) 中的 UV
     void pushBlock(std::vector<Vertex>& buffer, float x, float y, int type) {
         if (type == 0) return;
-        float ts = 32.0f / 512.0f; // 假设每个 Tile 是 32 像素
+        float ts = 32.0f / 512.0f;
         float tx = (float)((type - 1) % 16) * ts;
         float ty = (float)((type - 1) / 16) * ts;
 
-        // 两个三角形拼成一个方块
-        buffer.push_back({x, y, tx, ty});
-        buffer.push_back({x+0.1f, y, tx+ts, ty});
-        buffer.push_back({x, y-0.1f, tx, ty+ts});
-        buffer.push_back({x+0.1f, y, tx+ts, ty});
-        buffer.push_back({x+0.1f, y-0.1f, tx+ts, ty+ts});
-        buffer.push_back({x, y-0.1f, tx, ty+ts});
+        float size = 0.1f;
+        float depth = 0.02f; // 2.5D 边缘的厚度
+
+        // --- 1. 正面渲染 (亮度 1.0) ---
+        buffer.push_back({x, y, tx, ty, 1.0f});
+        buffer.push_back({x+size, y, tx+ts, ty, 1.0f});
+        buffer.push_back({x, y-size, tx, ty+ts, 1.0f});
+        buffer.push_back({x+size, y, tx+ts, ty, 1.0f});
+        buffer.push_back({x+size, y-size, tx+ts, ty+ts, 1.0f});
+        buffer.push_back({x, y-size, tx, ty+ts, 1.0f});
+
+        // --- 2. 侧面阴影 (亮度 0.6，模拟 2.5D 厚度) ---
+        // 原版通过在方块底部绘制一个斜向下的色块来实现立体感
+        buffer.push_back({x, y-size, tx, ty+ts, 0.6f});
+        buffer.push_back({x+size, y-size, tx+ts, ty+ts, 0.6f});
+        buffer.push_back({x+depth, y-size-depth, tx, ty+ts, 0.6f});
+        
+        buffer.push_back({x+size, y-size, tx+ts, ty+ts, 0.6f});
+        buffer.push_back({x+size+depth, y-size-depth, tx+ts, ty+ts, 0.6f});
+        buffer.push_back({x+depth, y-size-depth, tx, ty+ts, 0.6f});
     }
 
     void renderFrame() {

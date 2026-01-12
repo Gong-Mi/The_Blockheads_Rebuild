@@ -80,9 +80,21 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_noodlecake_blockheads_rebuild_GameActivity_handleActionNative(JNIEnv* env, jobject obj, jint actionType) {
-    LOGI("Action Received: %d", actionType);
-    // 这里将来会调用 command_processor.cpp 里的逻辑
+Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* env, jobject obj) {
+    if (g_renderer && g_world) {
+        std::vector<Vertex> vertices;
+        // 渲染加载的第一个 Chunk (示例)
+        if (!g_world->chunks.empty()) {
+            PhysicalBlock* b = g_world->chunks[0];
+            for (int x = 0; x < CHUNK_SIZE; x++) {
+                for (int y = 0; y < CHUNK_SIZE; y++) {
+                    int type = b->tiles[y * CHUNK_SIZE + x].foreground;
+                    g_renderer->pushBlock(vertices, x*0.1f, -y*0.1f, type);
+                }
+            }
+        }
+        g_renderer->renderFrame();
+    }
 }
 
 extern "C" JNIEXPORT void JNICALL
