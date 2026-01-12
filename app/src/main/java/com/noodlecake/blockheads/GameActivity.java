@@ -104,6 +104,13 @@ public class GameActivity extends Activity {
             handleCraftNative(20); // 请求合成火把
         });
         
+        android.widget.FrameLayout.LayoutParams craftParams = new android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
+                android.widget.FrameLayout.LayoutParams.WRAP_CONTENT);
+        craftParams.gravity = android.view.Gravity.TOP | android.view.Gravity.RIGHT;
+        craftParams.topMargin = 50;
+        craftParams.rightMargin = 50;
+        
         layout.addView(craftBtn, craftParams);
         setContentView(layout);
         
