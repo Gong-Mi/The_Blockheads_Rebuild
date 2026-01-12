@@ -114,6 +114,6 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
     if (g_world && g_entities && g_ai) {
         g_ai->update(g_entities->player.x, g_entities->player.y);
         g_entities->update(0.005f);
-        // 此处渲染由 world_renderer 处理
+        if (g_renderer) g_renderer->renderFrame();
     }
 }
