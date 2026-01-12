@@ -1,16 +1,25 @@
 cmake_minimum_required(VERSION 3.4.1)
 
+# --- Zstd 编译配置 ---
+set(ZSTD_DIR external/zstd/lib)
+include_directories(${ZSTD_DIR})
+include_directories(${ZSTD_DIR}/common)
+
+# 收集 zstd 核心源码 (common, compress, decompress)
+file(GLOB ZSTD_SOURCES
+    ${ZSTD_DIR}/common/*.c
+    ${ZSTD_DIR}/compress/*.c
+    ${ZSTD_DIR}/decompress/*.c
+)
+
 add_library(native-lib SHARED
             game_engine.cpp
             world_renderer.cpp
             blockhead_ai.cpp
             command_processor.cpp
             item_manager.cpp
-            compression_manager.cpp)
-
-# 寻找系统预装的 zstd 或者通过外部库引入
-# 这里我们假设通过 vcpkg 或直接源码包含
-find_library(zstd-lib zstd)
+            compression_manager.cpp
+            ${ZSTD_SOURCES})
 
 find_library(log-lib log)
 find_library(android-lib android)
