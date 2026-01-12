@@ -105,4 +105,24 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handleCraftNative(JNIEnv* en
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_handleTouchNative(JNIEnv* env, jobject obj, jfloat x, jfloat y) {
     LOGI("Touch at: %f, %f", x, y);
+    
+    // --- 还原自原版的点击坐标转换 ---
+    // 将点击位置映射到 Chunk 内的 tx, ty
+    int tx = (int)(x / 100.0f); // 临时映射比例
+    int ty = (int)(y / 100.0f);
+
+    if (g_world && !g_world->chunks.empty()) {
+        PhysicalBlock* b = g_world->chunks[0];
+        if (tx >= 0 && tx < CHUNK_SIZE && ty >= 0 && ty < CHUNK_SIZE) {
+            Tile& t = b->tiles[ty * CHUNK_SIZE + tx];
+            if (t.foreground != 0) {
+                t.damage += 50; // 每次点击增加受损度
+                LOGI("Tile damaged: %d", t.damage);
+                if (t.damage >= 255) {
+                    t.foreground = 0; // 方块碎裂
+                    LOGI("Tile destroyed!");
+                }
+            }
+        }
+    }
 }

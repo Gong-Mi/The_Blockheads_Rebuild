@@ -14,28 +14,33 @@
 struct Vertex {
     float x, y;
     float u, v;
-    float brightness; // 用于模拟侧边阴影
+    float brightness;
+    float damage; // 0.0 - 1.0
 };
 
-class WorldRenderer {
-public:
-    GLuint program;
-    GLuint textureID;
-    GLuint vbo;
-    GLint uMatrix;
-    float camX = 0, camY = 0;
-    float targetX = 0, targetY = 0;
-
-    void init(AAssetManager* mgr) {
-        // ... 纹理加载代码 ...
-        const char* vShader = "uniform mat4 u_Matrix; attribute vec4 aPos; attribute vec2 aTex; "
-                              "attribute float aBright; varying vec2 vTex; varying float vBright; "
-                              "void main() { gl_Position = u_Matrix * aPos; vTex = aTex; vBright = aBright; }";
-        const char* fShader = "precision mediump float; uniform sampler2D uTex; "
-                              "varying vec2 vTex; varying float vBright; "
-                              "void main() { vec4 color = texture2D(uTex, vTex); "
-                              "gl_FragColor = vec4(color.rgb * vBright, color.a); }";
+void pushBlock(std::vector<Vertex>& buffer, float x, float y, int type, float damage) {
+    // ... 计算 UV ...
+    // 在 push 顶点时加入 damage 参数
+    buffer.push_back({x, y, tx, ty, 1.0f, damage});
+    // ...
+}
+        // ... 原有的纹理加载 ...
         
+        // 加载受损贴图 (还原自原版 TileDestruct.png)
+        AAsset* dAsset = AAssetManager_open(mgr, "TileDestruct.png", AASSET_MODE_BUFFER);
+        unsigned char* dData = stbi_load_from_memory((unsigned char*)AAsset_getBuffer(dAsset), AAsset_getLength(dAsset), &w, &h, &n, 4);
+        glGenTextures(1, &destructTextureID);
+        glBindTexture(GL_TEXTURE_2D, destructTextureID);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, dData);
+        // ... 过滤设置 ...
+
+        const char* fShader = "precision mediump float; uniform sampler2D uTex; "
+                              "uniform sampler2D uDestruct; varying vec2 vTex; "
+                              "varying float vBright; varying float vDamage; "
+                              "void main() { vec4 color = texture2D(uTex, vTex); "
+                              "vec4 crack = texture2D(uDestruct, vTex); "
+                              "vec3 finalColor = mix(color.rgb, crack.rgb, vDamage); "
+                              "gl_FragColor = vec4(finalColor * vBright, color.a); }";
         // ... 编译逻辑 ...
     }
 
