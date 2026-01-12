@@ -43,11 +43,29 @@ public:
         block->x = wrappedX;
         block->y = cy;
         
-        // 计算当前块的纬度温度 (还原自 POLE/EQUATOR 设定)
-        float distToEquator = std::min(std::abs(wrappedX - EQUATOR_1), std::abs(wrappedX - EQUATOR_2));
-        // 简单模拟：越靠近极点越冷
+        for (int x = 0; x < CHUNK_SIZE; x++) {
+            for (int y = 0; y < CHUNK_SIZE; y++) {
+                int worldY = cy * CHUNK_SIZE + y;
+                Tile& t = block->tiles[y * CHUNK_SIZE + x];
+                
+                // --- 还原自原版生成逻辑 ---
+                if (worldY > 100) {
+                    t.foreground = 2; // 石头
+                } else if (worldY > 80) {
+                    t.foreground = 1; // 泥土
+                } else if (worldY == 80) {
+                    t.foreground = 5; // 草
+                } else {
+                    t.foreground = 0; // 天空
+                }
+                
+                t.sunlight = (worldY <= 80) ? 255 : 0;
+                t.damage = 0;
+            }
+        }
+        
         chunks.push_back(block);
-        LOGI("Chunk generated at wrapped X: %d, Y: %d", wrappedX, cy);
+        LOGI("World Generated at Chunk X:%d, Y:%d", wrappedX, cy);
     }
 };
 

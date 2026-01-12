@@ -11,9 +11,40 @@ public class GameActivity extends Activity {
 
     private GameView mGameView;
 
+    private android.media.SoundPool mSoundPool;
+    private java.util.HashMap<String, Integer> mSoundMap = new java.util.HashMap<>();
+
+    private void initSoundEngine() {
+        mSoundPool = new android.media.SoundPool.Builder()
+                .setMaxStreams(10)
+                .setAudioAttributes(new android.media.AudioAttributes.Builder()
+                        .setUsage(android.media.AudioAttributes.USAGE_GAME)
+                        .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .build())
+                .build();
+        
+        // 预加载几个核心音效 (还原自 assets)
+        try {
+            String[] sounds = {"dig.wav", "pickaxe.wav", "place.wav"};
+            for (String s : sounds) {
+                android.content.res.AssetFileDescriptor afd = getAssets().openFd(s);
+                mSoundMap.put(s, mSoundPool.load(afd, 1));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void playSound(String name) {
+        if (mSoundMap.containsKey(name)) {
+            mSoundPool.play(mSoundMap.get(name), 1.0f, 1.0f, 1, 0, 1.0f);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initSoundEngine();
         
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
