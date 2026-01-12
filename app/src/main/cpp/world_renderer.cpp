@@ -10,67 +10,74 @@
 #define LOG_TAG "BlockheadsRenderer"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
 
+struct Vertex {
+    float x, y;
+    float u, v;
+};
+
 class WorldRenderer {
 public:
     GLuint program;
     GLuint textureID;
-    GLint posAttrib, texAttrib, uMatrix;
+    GLuint vbo;
+    GLint posAttrib, texAttrib;
 
     void init(AAssetManager* mgr) {
-        // --- 1. 加载 TileMap.png ---
+        // --- 1. 加载纹理 (NEAREST 过滤以保留像素感) ---
         AAsset* asset = AAssetManager_open(mgr, "TileMap.png", AASSET_MODE_BUFFER);
-        off_t length = AAsset_getLength(asset);
-        unsigned char* buffer = (unsigned char*)AAsset_getBuffer(asset);
-        
         int w, h, n;
-        unsigned char* data = stbi_load_from_memory(buffer, length, &w, &h, &n, 4);
-        
+        unsigned char* data = stbi_load_from_memory((unsigned char*)AAsset_getBuffer(asset), AAsset_getLength(asset), &w, &h, &n, 4);
         glGenTextures(1, &textureID);
         glBindTexture(GL_TEXTURE_2D, textureID);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); // 保持像素感
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        
         stbi_image_free(data);
         AAsset_close(asset);
 
-        // --- 2. 编译着色器 ---
-        const char* vShader = 
-            "attribute vec4 a_Position; attribute vec2 a_TexCoord; "
-            "varying vec2 v_TexCoord; "
-            "void main() { gl_Position = a_Position; v_TexCoord = a_TexCoord; }";
-        const char* fShader = 
-            "precision mediump float; uniform sampler2D u_Texture; "
-            "varying vec2 v_TexCoord; "
-            "void main() { gl_FragColor = texture2D(u_Texture, v_TexCoord); }";
-
+        // --- 2. 编译核心渲染着色器 ---
+        const char* vShader = "attribute vec4 aPos; attribute vec2 aTex; "
+                              "varying vec2 vTex; void main() { "
+                              "gl_Position = aPos; vTex = aTex; }";
+        const char* fShader = "precision mediump float; uniform sampler2D uTex; "
+                              "varying vec2 vTex; void main() { "
+                              "gl_FragColor = texture2D(uTex, vTex); }";
+        
         program = glCreateProgram();
-        // (简化处理：实际应调用 glCompileShader)
-        LOGI("Renderer Initialized with Texture: %dx%d", w, h);
+        // ... 此处省略 glCompileShader 的样板代码 ...
+        
+        glGenBuffers(1, &vbo);
     }
 
-    void drawBlock(float x, float y, int type) {
-        // 这里将来会实现批量渲染逻辑
-        // 根据 type 计算 UV 坐标 (32x32 分割)
+    // 根据方块类型计算 TileMap.png (512x512) 中的 UV
+    void pushBlock(std::vector<Vertex>& buffer, float x, float y, int type) {
+        if (type == 0) return;
+        float ts = 32.0f / 512.0f; // 假设每个 Tile 是 32 像素
+        float tx = (float)((type - 1) % 16) * ts;
+        float ty = (float)((type - 1) / 16) * ts;
+
+        // 两个三角形拼成一个方块
+        buffer.push_back({x, y, tx, ty});
+        buffer.push_back({x+0.1f, y, tx+ts, ty});
+        buffer.push_back({x, y-0.1f, tx, ty+ts});
+        buffer.push_back({x+0.1f, y, tx+ts, ty});
+        buffer.push_back({x+0.1f, y-0.1f, tx+ts, ty+ts});
+        buffer.push_back({x, y-0.1f, tx, ty+ts});
     }
 
     void renderFrame() {
         glClearColor(0.52f, 0.80f, 0.92f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glUseProgram(program);
-        // 渲染流程...
+        
+        std::vector<Vertex> vertices;
+        // 渲染视口内的方块 (此处为测试，只画几个)
+        for(int i=0; i<5; i++) pushBlock(vertices, -0.5f + i*0.1f, 0.0f, i+1);
+
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STREAM_DRAW);
+        
+        // 开启顶点属性并绘制
+        glDrawArrays(GL_TRIANGLES, 0, vertices.size());
     }
 };
-
-static WorldRenderer* g_renderer = nullptr;
-
-extern "C" JNIEXPORT void JNICALL
-Java_com_noodlecake_blockheads_rebuild_GameActivity_onSurfaceCreatedNative(JNIEnv* env, jobject obj, jobject assetMgr) {
-    g_renderer = new WorldRenderer();
-    g_renderer->init(AAssetManager_fromJava(env, assetMgr));
-}
-
-extern "C" JNIEXPORT void JNICALL
-Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* env, jobject obj) {
-    if (g_renderer) g_renderer->renderFrame();
-}
