@@ -5,7 +5,12 @@ add_library(native-lib SHARED
             world_renderer.cpp
             blockhead_ai.cpp
             command_processor.cpp
-            item_manager.cpp)
+            item_manager.cpp
+            compression_manager.cpp)
+
+# 寻找系统预装的 zstd 或者通过外部库引入
+# 这里我们假设通过 vcpkg 或直接源码包含
+find_library(zstd-lib zstd)
 
 find_library(log-lib log)
 find_library(android-lib android)
