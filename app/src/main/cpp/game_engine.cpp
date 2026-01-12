@@ -80,12 +80,18 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handlePanNative(JNIEnv* env,
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* env, jobject obj) {
     if (g_world && g_entities && g_ai) {
-        g_ai->update(g_entities->player.x, g_entities->player.y, g_world);
+        g_ai->update(g_entities->player.x, g_entities->player.y, g_world, g_entities);
         g_entities->update(0.005f);
         if (g_renderer) {
             // Sync player position to renderer
             g_renderer->playerX = g_entities->player.x;
             g_renderer->playerY = g_entities->player.y;
+            
+            // Sync drop items
+            g_renderer->dropItems.clear();
+            for (const auto& e : g_entities->dropItems) {
+                g_renderer->dropItems.push_back({e.x, e.y, e.type});
+            }
             
             // For prototype: brute-force update mesh every frame to show mining damage
             // In production: only update when dirty

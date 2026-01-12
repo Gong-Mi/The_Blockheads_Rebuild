@@ -24,7 +24,7 @@ public:
         actionQueue.push(a);
     }
 
-    void update(float& outX, float& outY, GameWorld* world) {
+    void update(float& outX, float& outY, GameWorld* world, EntityManager* entities) {
         if (actionQueue.empty()) {
             currentStatus = ACTION_IDLE;
             return;
@@ -41,22 +41,27 @@ public:
             // 到达位置，开始工作
             if (current.type == ACTION_MINE) {
                 currentStatus = ACTION_MINE;
-                current.progress += 2.0f; // 工作进度
+                current.progress += 5.0f; // Speed up mining for testing (was 2.0f)
                 
                 // --- Mining Logic ---
                 if (world) {
-                    // Map float coord to tile index
-                    // Player is at posX (world unit). 1 block = 0.1f.
-                    // Tile X = current.tx
-                    // Tile Y = current.ty
                     Tile* t = world->getTile(current.tx, current.ty);
                     if (t && t->foreground != 0) {
                         if (t->damage < 240) {
-                            t->damage += 5; // Visual crack
+                            t->damage += 10; // Faster damage (was 5)
                         } else {
+                            // Drop item before destroying
+                            if (entities) {
+                                // Convert tile coordinates to world float coordinates
+                                // +0.05f to center in the block (block is 0.1f wide)
+                                float dropX = current.tx * 0.1f + 0.05f;
+                                float dropY = current.ty * 0.1f + 0.05f;
+                                // Drop the item type matching the foreground block (simplified)
+                                entities->spawnDrop(dropX, dropY, t->foreground);
+                            }
+
                             t->foreground = 0; // Destroy block
                             t->damage = 0;
-                            // Trigger mesh update? GameEngine should handle this check or we need a callback
                         }
                     } else {
                         // Empty or invalid, job done

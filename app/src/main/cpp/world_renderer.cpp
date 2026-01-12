@@ -18,6 +18,7 @@ void WorldRenderer::init(AAssetManager* mgr) {
     destructID = loadTex(mgr, "TileDestruct.png");
     normalID = loadTex(mgr, "ItemNormals.png");
     playerTexID = loadTex(mgr, "BlockheadBody.png");
+    itemsTexID = loadTex(mgr, "Items.png");
 
     const char* vShader = "uniform mat4 u_Matrix; attribute vec4 aPos; attribute vec2 aTex; "
                           "attribute float aBright; attribute float aDamage; "
@@ -164,6 +165,38 @@ void WorldRenderer::renderFrame() {
         if(dmgLoc >= 0) glVertexAttribPointer(dmgLoc, 1, GL_FLOAT, GL_FALSE, stride, &pVerts[0].damage);
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
+    
+    // --- Draw Drop Items ---
+    if (itemsTexID != 0 && !dropItems.empty()) {
+        glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, itemsTexID);
+        glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, itemsTexID);
+        glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, 0);
+        
+        for (const auto& item : dropItems) {
+            float w = 0.1f, h = 0.1f;
+            // Simple UV mapping for test: just use the first icon (0,0) -> (1/16, 1/16)
+            // Real logic needs to map item.type to UV
+            float u0 = 0.0f, v0 = 0.0f;
+            float u1 = 1.0f/16.0f, v1 = 1.0f/16.0f;
+            
+            Vertex iVerts[] = {
+                {item.x - w/2, item.y,       u0, v1, 1.0f, 0.0f},
+                {item.x + w/2, item.y,       u1, v1, 1.0f, 0.0f},
+                {item.x - w/2, item.y + h,   u0, v0, 1.0f, 0.0f},
+                {item.x + w/2, item.y,       u1, v1, 1.0f, 0.0f},
+                {item.x + w/2, item.y + h,   u1, v0, 1.0f, 0.0f},
+                {item.x - w/2, item.y + h,   u0, v0, 1.0f, 0.0f}
+            };
+            
+            glVertexAttribPointer(posLoc, 2, GL_FLOAT, GL_FALSE, stride, &iVerts[0].x);
+            glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, stride, &iVerts[0].u);
+            if(brightLoc >= 0) glVertexAttribPointer(brightLoc, 1, GL_FLOAT, GL_FALSE, stride, &iVerts[0].brightness);
+            if(dmgLoc >= 0) glVertexAttribPointer(dmgLoc, 1, GL_FLOAT, GL_FALSE, stride, &iVerts[0].damage);
+            
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
+    }
+    
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 

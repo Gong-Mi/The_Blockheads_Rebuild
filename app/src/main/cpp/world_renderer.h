@@ -13,10 +13,15 @@ struct Vertex {
     float damage;
 };
 
+struct EntityRenderData {
+    float x, y;
+    int type; // Item ID (e.g., 1=Dirt, 2=Stone)
+};
+
 class WorldRenderer {
 public:
     GLuint program;
-    GLuint textureID, destructID, normalID, playerTexID;
+    GLuint textureID, destructID, normalID, playerTexID, itemsTexID;
     GLuint vbo;
     GLint uMatrix;
     float camX = 0, camY = 0;
@@ -25,6 +30,9 @@ public:
     
     // Player position
     float playerX = 0, playerY = 0;
+    
+    // Drop items to render
+    std::vector<EntityRenderData> dropItems;
 
     int vertexCount = 0;
     bool meshDirty = false;
