@@ -44,10 +44,46 @@ void WorldRenderer::init(AAssetManager* mgr) {
 
     uMatrix = glGetUniformLocation(program, "mvp_matrix");
     
+    char* cVSource = loadShaderSource(mgr, "BlockheadBody.vsh");
+    char* cFSource = loadShaderSource(mgr, "BlockheadBody.fsh");
+    if (cVSource && cFSource) {
+        charProgram = createProgram(cVSource, cFSource);
+        free(cVSource); free(cFSource);
+    }
+
+    actionSquareTexID = loadTex(mgr, "actionSquare.png");
+
+    char* asVSource = loadShaderSource(mgr, "ActionSquare.vsh");
+    char* asFSource = loadShaderSource(mgr, "ActionSquare.fsh");
+    if (asVSource && asFSource) {
+        actionSquareProgram = createProgram(asVSource, asFSource);
+        free(asVSource); free(asFSource);
+    }
+
     headTexID = loadTex(mgr, "head_ct.png");
     bodyTexID = loadTex(mgr, "body_ct.png");
     armsTexID = loadTex(mgr, "arms_ct.png");
     legsTexID = loadTex(mgr, "legs_ct.png");
+
+    // --- DEBUG SHADER (Inline) ---
+    const char* debugVS = 
+        "attribute vec4 position;\n"
+        "attribute vec2 texCoord;\n"
+        "varying vec2 v_texCoord;\n"
+        "uniform mat4 mvp_matrix;\n"
+        "void main() {\n"
+        "  gl_Position = mvp_matrix * position;\n"
+        "  v_texCoord = texCoord;\n"
+        "}\n";
+    const char* debugFS = 
+        "precision mediump float;\n"
+        "varying vec2 v_texCoord;\n"
+        "uniform sampler2D texture;\n"
+        "void main() {\n"
+        "  gl_FragColor = texture2D(texture, v_texCoord);\n"
+        "  if(gl_FragColor.a < 0.1) discard;\n"
+        "}\n";
+    debugProgram = createProgram(debugVS, debugFS);
 }
 
 void WorldRenderer::resize(int w, int h) {
@@ -222,37 +258,125 @@ void WorldRenderer::renderFrame() {
     int stride = 16 * sizeof(float);
 
     if (menuMode) {
-        if (bodyTexID != 0) {
+        if (bodyTexID != 0 && charProgram != 0) {
+            glUseProgram(charProgram);
             float breath = std::sin(animTime * 2.0f) * 0.05f;
-            float scale = 8.0f; 
+            
+            // --- FINAL ADJUSTMENT SETTINGS ---
+            // Scale 0.35 should be ~1/3 of screen height (assuming ortho height is 2.0)
+            float scale = 0.35f;
+            // Position: -aspect is left edge, -1.0 is bottom edge
+            // Moving up (-0.5) and right (+0.6)
+            float baseX = -aspect + 0.6f; 
+            float baseY = -0.5f;
+            
+            static bool logged = false;
+            if(!logged) {
+                LOGE("RenderChar: FINAL ADJUSTMENT - Scale: %f, Pos: %f,%f", scale, baseX, baseY);
+                logged = true;
+            }
+
             float m_menu[16];
             Matrix::ortho(m_menu, -aspect, aspect, -1.0f, 1.0f, -1.0f, 1.0f);
-            
-            auto drawM = [&](GLuint tex, float dx, float dy, float pw, float ph) {
+
+            // High ambient light for menu display
+            glUniform4f(glGetUniformLocation(charProgram, "daylight"), 1.2f, 1.2f, 1.2f, 1.0f);
+            glUniform4f(glGetUniformLocation(charProgram, "artificalLight"), 0.5f, 0.5f, 0.5f, 1.0f);
+            glUniform4f(glGetUniformLocation(charProgram, "skinColor"), 1.0f, 0.85f, 0.7f, 1.0f);
+            glUniform4f(glGetUniformLocation(charProgram, "clothingColorA"), 1.0f, 1.0f, 1.0f, 1.0f);
+            glUniform4f(glGetUniformLocation(charProgram, "clothingColorB"), 0.9f, 0.9f, 0.9f, 1.0f);
+            glUniform3f(glGetUniformLocation(charProgram, "artificialLightDirection"), 0.5f, 0.5f, 1.0f);
+            glUniform4f(glGetUniformLocation(charProgram, "lightPosition"), 0.0f, 0.0f, 10.0f, 1.0f);
+
+            // Helper to draw a cube (w, h, d)
+            auto drawCube = [&](GLuint tex, float x, float y, float z, float w, float h, float d, float u1, float v1, float u2, float v2) {
                 glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, tex);
+                glUniform1i(glGetUniformLocation(charProgram, "texture"), 0);
+
                 float m_part[16]; std::copy(m_menu, m_menu + 16, m_part);
-                Matrix::translate(m_part, -aspect * 0.5f + dx, -0.7f + dy + breath, 0);
-                Matrix::scale(m_part, scale, scale, 1.0f);
-                glUniformMatrix4fv(uMatrix, 1, GL_FALSE, m_part);
                 
-                float w2 = pw/2, h2 = ph/2;
+                Matrix::translate(m_part, baseX + x, baseY + y + breath, 0.5f + z);
+                Matrix::scale(m_part, scale * w, scale * h, scale * d); 
+                glUniformMatrix4fv(glGetUniformLocation(charProgram, "mvp_matrix"), 1, GL_FALSE, m_part);
+                
+                // Normal matrix
+                float m_norm[16]; 
+                m_norm[0]=1; m_norm[1]=0; m_norm[2]=0; m_norm[3]=0;
+                m_norm[4]=0; m_norm[5]=1; m_norm[6]=0; m_norm[7]=0;
+                m_norm[8]=0; m_norm[9]=0; m_norm[10]=1; m_norm[11]=0;
+                m_norm[12]=0; m_norm[13]=0; m_norm[14]=0; m_norm[15]=1;
+                glUniformMatrix4fv(glGetUniformLocation(charProgram, "normal_matrix"), 1, GL_FALSE, m_norm);
+
+                // Front Face (Normal 0,0,1)
                 float pV[] = {
-                    -w2, -h2, 0, 0,  0, 255, 255, 0,  255, 0, 0, 0,  1, 1, 1, 1,
-                     w2, -h2, 0, 0,  255, 255, 255, 0,  255, 0, 0, 0,  1, 1, 1, 1,
-                    -w2,  h2, 0, 0,  0, 0, 255, 0,  255, 0, 0, 0,  1, 1, 1, 1,
-                     w2, -h2, 0, 0,  255, 255, 255, 0,  255, 0, 0, 0,  1, 1, 1, 1,
-                     w2,  h2, 0, 0,  255, 0, 255, 0,  255, 0, 0, 0,  1, 1, 1, 1,
-                    -w2,  h2, 0, 0,  0, 0, 255, 0,  255, 0, 0, 0,  1, 1, 1, 1
+                    -0.5f, -0.5f, 0.5f,  u1, v2,  0, 0, 1,
+                     0.5f, -0.5f, 0.5f,  u2, v2,  0, 0, 1,
+                    -0.5f,  0.5f, 0.5f,  u1, v1,  0, 0, 1,
+                     0.5f, -0.5f, 0.5f,  u2, v2,  0, 0, 1,
+                     0.5f,  0.5f, 0.5f,  u2, v1,  0, 0, 1,
+                    -0.5f,  0.5f, 0.5f,  u1, v1,  0, 0, 1
                 };
-                glBindBuffer(GL_ARRAY_BUFFER, 0);
-                glVertexAttribPointer(posLoc, 4, GL_FLOAT, GL_FALSE, stride, &pV[0]);
-                glVertexAttribPointer(texLoc, 4, GL_FLOAT, GL_FALSE, stride, &pV[4]);
-                glVertexAttribPointer(otherLoc, 4, GL_FLOAT, GL_FALSE, stride, &pV[8]);
-                glVertexAttribPointer(paintLoc, 4, GL_FLOAT, GL_FALSE, stride, &pV[12]);
+
+                GLint pLoc = glGetAttribLocation(charProgram, "position");
+                GLint tLoc = glGetAttribLocation(charProgram, "texCoord");
+                GLint nLoc = glGetAttribLocation(charProgram, "normal");
+                glEnableVertexAttribArray(pLoc);
+                glEnableVertexAttribArray(tLoc);
+                glEnableVertexAttribArray(nLoc);
+                
+                glVertexAttribPointer(pLoc, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), &pV[0]);
+                glVertexAttribPointer(tLoc, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), &pV[3]);
+                glVertexAttribPointer(nLoc, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), &pV[5]);
+                
                 glDrawArrays(GL_TRIANGLES, 0, 6);
             };
-            drawM(bodyTexID, 0, 0.15f, 0.15f, 0.25f);
-            drawM(headTexID, 0, 0.35f, 0.12f, 0.12f);
+
+            // Draw Body (Center)
+            drawCube(bodyTexID, 0.0f, 0.0f, 0.0f, 0.15f, 0.25f, 0.1f, 0.0f, 0.0f, 1.0f, 1.0f);
+            
+            // Draw Head (Top)
+            float lookX = (menuTouchX / (float)screenW) * 2.0f - 1.0f;
+            float lookY = 1.0f - (menuTouchY / (float)screenH) * 2.0f;
+            
+            // Calculate rotations based on look target (simple clamping for natural feel)
+            float headYaw = lookX * 45.0f; // Max 45 degrees left/right
+            float headPitch = lookY * 30.0f; // Max 30 degrees up/down
+
+            auto drawHead = [&](GLuint tex, float x, float y, float z, float w, float h, float d, float u1, float v1, float u2, float v2) {
+                glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, tex);
+                glUniform1i(glGetUniformLocation(charProgram, "texture"), 0);
+
+                float m_part[16]; std::copy(m_menu, m_menu + 16, m_part);
+                Matrix::translate(m_part, baseX + x, baseY + y + breath, 0.5f + z);
+                
+                // Apply look rotation
+                Matrix::rotate(m_part, headYaw, 0, 1, 0);
+                Matrix::rotate(m_part, -headPitch, 1, 0, 0);
+
+                Matrix::scale(m_part, scale * w, scale * h, scale * d); 
+                glUniformMatrix4fv(glGetUniformLocation(charProgram, "mvp_matrix"), 1, GL_FALSE, m_part);
+                
+                float m_norm[16]; Matrix::setIdentity(m_norm);
+                glUniformMatrix4fv(glGetUniformLocation(charProgram, "normal_matrix"), 1, GL_FALSE, m_norm);
+
+                float pV[] = { -0.5f,-0.5f,0.5f, u1,v2, 0,0,1, 0.5f,-0.5f,0.5f, u2,v2, 0,0,1, -0.5f,0.5f,0.5f, u1,v1, 0,0,1,
+                                0.5f,-0.5f,0.5f, u2,v2, 0,0,1, 0.5f,0.5f,0.5f, u2,v1, 0,0,1, -0.5f,0.5f,0.5f, u1,v1, 0,0,1 };
+                glVertexAttribPointer(glGetAttribLocation(charProgram, "position"), 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), &pV[0]);
+                glVertexAttribPointer(glGetAttribLocation(charProgram, "texCoord"), 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), &pV[3]);
+                glVertexAttribPointer(glGetAttribLocation(charProgram, "normal"), 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), &pV[5]);
+                glDrawArrays(GL_TRIANGLES, 0, 6);
+            };
+
+            drawHead(headTexID, 0.0f, 0.22f, 0.0f, 0.18f, 0.18f, 0.18f, 0.25f, 0.5f, 0.5f, 1.0f);
+
+            // Draw Legs (Bottom)
+            drawCube(legsTexID, -0.05f, -0.25f, 0.0f, 0.05f, 0.25f, 0.05f, 0.0f, 0.0f, 1.0f, 1.0f);
+            drawCube(legsTexID,  0.05f, -0.25f, 0.0f, 0.05f, 0.25f, 0.05f, 0.0f, 0.0f, 1.0f, 1.0f);
+
+            // Draw Arms (Sides)
+            float armSwing = std::sin(animTime * 3.0f) * 0.1f;
+            drawCube(armsTexID, -0.13f, 0.0f + armSwing, 0.0f, 0.05f, 0.25f, 0.05f, 0.0f, 0.0f, 1.0f, 1.0f);
+            drawCube(armsTexID,  0.13f, 0.0f - armSwing, 0.0f, 0.05f, 0.25f, 0.05f, 0.0f, 0.0f, 1.0f, 1.0f);
         }
         return; 
     }
@@ -280,6 +404,75 @@ void WorldRenderer::renderFrame() {
         }
     }
 
+    // --- Render Player Character (In Game) ---
+    if (charProgram != 0 && bodyTexID != 0) {
+        glUseProgram(charProgram);
+        glUniform4f(glGetUniformLocation(charProgram, "daylight"), 1.0f, 1.0f, 1.0f, 1.0f);
+        glUniform4f(glGetUniformLocation(charProgram, "skinColor"), 1.0f, 0.85f, 0.7f, 1.0f);
+        glUniform4f(glGetUniformLocation(charProgram, "clothingColorA"), 1.0f, 1.0f, 1.0f, 1.0f);
+        glUniform4f(glGetUniformLocation(charProgram, "clothingColorB"), 0.9f, 0.9f, 0.9f, 1.0f);
+        glUniform3f(glGetUniformLocation(charProgram, "artificialLightDirection"), 0.5f, 0.5f, 1.0f);
+        
+        // Helper to draw a cube (same as menu but with game matrix)
+        auto drawCharCube = [&](GLuint tex, float x, float y, float z, float w, float h, float d, float u1, float v1, float u2, float v2) {
+            glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, tex);
+            glUniform1i(glGetUniformLocation(charProgram, "texture"), 0);
+
+            float m_part[16]; std::copy(matrix, matrix + 16, m_part);
+            Matrix::translate(m_part, playerX + x, playerY + y + 0.5f, z);
+            Matrix::scale(m_part, w, h, d); 
+            glUniformMatrix4fv(glGetUniformLocation(charProgram, "mvp_matrix"), 1, GL_FALSE, m_part);
+            
+            float m_norm[16]; Matrix::setIdentity(m_norm);
+            glUniformMatrix4fv(glGetUniformLocation(charProgram, "normal_matrix"), 1, GL_FALSE, m_norm);
+
+            float pV[] = { -0.5f,-0.5f,0.5f, u1,v2, 0,0,1, 0.5f,-0.5f,0.5f, u2,v2, 0,0,1, -0.5f,0.5f,0.5f, u1,v1, 0,0,1,
+                            0.5f,-0.5f,0.5f, u2,v2, 0,0,1, 0.5f,0.5f,0.5f, u2,v1, 0,0,1, -0.5f,0.5f,0.5f, u1,v1, 0,0,1 };
+            glVertexAttribPointer(glGetAttribLocation(charProgram, "position"), 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), &pV[0]);
+            glVertexAttribPointer(glGetAttribLocation(charProgram, "texCoord"), 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), &pV[3]);
+            glVertexAttribPointer(glGetAttribLocation(charProgram, "normal"), 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), &pV[5]);
+            glEnableVertexAttribArray(glGetAttribLocation(charProgram, "position"));
+            glEnableVertexAttribArray(glGetAttribLocation(charProgram, "texCoord"));
+            glEnableVertexAttribArray(glGetAttribLocation(charProgram, "normal"));
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        };
+
+        // Render character with walking animation in game
+        float walkAnim = std::sin(animTime * 10.0f);
+        
+        // Body
+        drawCharCube(bodyTexID, 0, 0.25f, 0, 0.4f, 0.6f, 0.2f, 0, 0, 1, 1);
+        // Head
+        drawCharCube(headTexID, 0, 0.75f, 0, 0.5f, 0.5f, 0.5f, 0.25f, 0.5f, 0.5f, 1.0f);
+        // Legs
+        drawCharCube(legsTexID, -0.1f, -0.2f + (walkAnim > 0 ? walkAnim*0.1f : 0), 0, 0.15f, 0.5f, 0.15f, 0, 0, 1, 1);
+        drawCharCube(legsTexID,  0.1f, -0.2f + (walkAnim < 0 ? -walkAnim*0.1f : 0), 0, 0.15f, 0.5f, 0.15f, 0, 0, 1, 1);
+        // Arms
+        drawCharCube(armsTexID, -0.25f, 0.25f, 0, 0.12f, 0.5f, 0.12f, 0, 0, 1, 1);
+        drawCharCube(armsTexID,  0.25f, 0.25f, 0, 0.12f, 0.5f, 0.12f, 0, 0, 1, 1);
+    }
+
+    // --- Render Drop Items ---
+    if (program != 0 && itemsTexID != 0) {
+        glUseProgram(program);
+        glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, itemsTexID);
+        for (const auto& item : dropItems) {
+            float m_item[16]; std::copy(matrix, matrix + 16, m_item);
+            Matrix::translate(m_item, item.x, item.y + 0.2f, 0.1f);
+            Matrix::scale(m_item, 0.4f, 0.4f, 1.0f);
+            glUniformMatrix4fv(uMatrix, 1, GL_FALSE, m_item);
+            
+            float itX = (float)((item.type - 1) % 32);
+            float itY = (float)((item.type - 1) / 32);
+            glUniform4f(glGetAttribLocation(program, "other"), 0, 0, itY, 0); // Hacky pass of UV Y
+
+            float iV[] = { 0,0, itX, 1, 1,0, itX, 1, 0,1, itX, 1, 1,0, itX, 1, 1,1, itX, 1, 0,1, itX, 1 };
+            glVertexAttribPointer(posLoc, 2, GL_FLOAT, GL_FALSE, 4*sizeof(float), &iV[0]);
+            glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, 4*sizeof(float), &iV[2]);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
+    }
+
     // --- Draw ActionSquare (Original Logic) ---
     if (showActionSquare && actionSquareProgram != 0) {
         glUseProgram(actionSquareProgram);
@@ -295,7 +488,8 @@ void WorldRenderer::renderFrame() {
         float s_ext = 1.1f;
         float offset = -0.05f;
         Matrix::translate(m_sq, (float)targetBlockX + offset, (float)targetBlockY + offset, 0.2f);
-        glUniformMatrix4fv(glGetUniformLocation(actionSquareProgram, "mvp_matrix"), 1, GL_FALSE, m_sq);
+        GLint asMatrix = glGetUniformLocation(actionSquareProgram, "mvp_matrix");
+        glUniformMatrix4fv(asMatrix, 1, GL_FALSE, m_sq);
 
         float sqVerts[] = {
             0,     0,     0, 1,  0, 1,
@@ -311,9 +505,8 @@ void WorldRenderer::renderFrame() {
         glEnableVertexAttribArray(tL);
         glVertexAttribPointer(pL, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(float), &sqVerts[0]);
         glVertexAttribPointer(tL, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), &sqVerts[4]);
-                glDrawArrays(GL_TRIANGLES, 0, 6);
-            }
-            
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-        }
-        
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}

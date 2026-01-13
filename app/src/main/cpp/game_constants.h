@@ -50,6 +50,7 @@ enum ItemID {
     ITEM_TORCH = 20,
     ITEM_FLINT = 21,
     ITEM_STICK = 22,
+    ITEM_CAMPFIRE = 23,
     ITEM_PICKAXE = 50
 };
 

@@ -35,7 +35,7 @@ void onSurfaceCreatedInternal(JNIEnv* env, jobject assetMgr) {
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_noodlecake_blockheads_rebuild_MainMenuActivity_onSurfaceCreatedNative(JNIEnv* env, jobject obj, jobject assetMgr) {
+Java_com_noodlecake_blockheads_rebuild_MainMenuActivity_onSurfaceCreatedNativeInternal(JNIEnv* env, jobject obj, jobject assetMgr) {
     onSurfaceCreatedInternal(env, assetMgr);
 }
 
@@ -52,6 +52,14 @@ Java_com_noodlecake_blockheads_rebuild_MainMenuActivity_onDrawFrameNative(JNIEnv
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_MainMenuActivity_setMenuModeNative(JNIEnv* env, jobject obj, jboolean mode) {
     if (g_renderer) g_renderer->menuMode = mode;
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_MainMenuActivity_handleMenuTouchNative(JNIEnv* env, jobject obj, jfloat x, jfloat y) {
+    if (g_renderer) {
+        g_renderer->menuTouchX = x;
+        g_renderer->menuTouchY = y;
+    }
 }
 
 extern "C" JNIEXPORT void JNICALL
@@ -79,6 +87,12 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
         }
         g_entities->player.x = 0.0f;
         g_entities->player.y = 100.0f;
+        
+        // Initial supplies for logic verification
+        g_entities->player.addItem(ITEM_STICK, 10);
+        g_entities->player.addItem(ITEM_FLINT, 10);
+        g_entities->player.addItem(BLOCK_WOOD, 10);
+        g_entities->inventoryDirty = true;
     }
     LOGI("Native Engine Ready");
 }
@@ -168,10 +182,76 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
     if (g_world && g_entities && g_ai) {
         if (g_ai->update(g_entities->player.x, g_entities->player.y, g_world, g_entities)) g_world->updateLighting();
         g_entities->update(0.05f, g_world); 
+
+        // Sync Inventory to Java
+        if (g_entities->inventoryDirty) {
+            jclass clazz = env->GetObjectClass(obj);
+            jmethodID mid = env->GetMethodID(clazz, "updateHotbarSlot", "(III)V");
+            for (int i = 0; i < 10; i++) {
+                env->CallVoidMethod(obj, mid, i, g_entities->player.slots[i], g_entities->player.counts[i]);
+            }
+            g_entities->inventoryDirty = false;
+        }
+
+        // Sync Status UI (Health/Hunger)
+        static int statusTick = 0;
+        if (statusTick++ % 10 == 0) { // Sync every 10 frames to save JNI overhead
+            jclass clazz = env->GetObjectClass(obj);
+            jmethodID mid = env->GetMethodID(clazz, "updateStatusUI", "(FF)V");
+            if (mid) env->CallVoidMethod(obj, mid, g_entities->player.health, g_entities->player.hunger);
+        }
+
+        // Process Sound Events
+        if (!g_entities->soundEvents.empty()) {
+            jclass clazz = env->GetObjectClass(obj);
+            jmethodID mid = env->GetMethodID(clazz, "playSound", "(Ljava/lang/String;)V");
+            for (const auto& sound : g_entities->soundEvents) {
+                jstring jStr = env->NewStringUTF(sound.c_str());
+                env->CallVoidMethod(obj, mid, jStr);
+                env->DeleteLocalRef(jStr);
+            }
+            g_entities->soundEvents.clear();
+        }
+
         if (g_renderer) {
             if (g_renderer->followingPlayer) { g_renderer->targetX = g_entities->player.x; g_renderer->targetY = g_entities->player.y; }
             g_world->updateChunks(g_renderer->camX, g_renderer->camY);
+            
+            // Ambient Sounds Logic
+            static int ambientTick = 0;
+            if (ambientTick++ % 300 == 0) { // Check every ~5 seconds
+                float t = g_renderer->worldTime;
+                bool isDay = (t > 0.25f && t < 0.75f);
+                if (rand() % 100 < 30) { // 30% chance for an ambient event
+                    if (isDay) {
+                        int birdIdx = 1 + (rand() % 14);
+                        g_entities->queueSound("bird" + std::to_string(birdIdx) + ".wav");
+                    } else {
+                        g_entities->queueSound(rand() % 2 == 0 ? "crickets1.wav" : "crickets2.wav");
+                    }
+                }
+            }
+            
+            // BGM Logic
+            float t = g_renderer->worldTime;
+            const char* desiredMusic = (t > 0.25f && t < 0.75f) ? "morning.mp4" : "nightFall.mp4";
+            static std::string lastMusic = "";
+            if (lastMusic != desiredMusic) {
+                 jclass clazz = env->GetObjectClass(obj);
+                 jmethodID mid = env->GetMethodID(clazz, "playMusic", "(Ljava/lang/String;)V");
+                 jstring jStr = env->NewStringUTF(desiredMusic);
+                 env->CallVoidMethod(obj, mid, jStr);
+                 env->DeleteLocalRef(jStr);
+                 lastMusic = desiredMusic;
+            }
             g_renderer->playerX = g_entities->player.x; g_renderer->playerY = g_entities->player.y;
+            
+            // Sync drop items for rendering
+            g_renderer->dropItems.clear();
+            for (const auto& e : g_entities->dropItems) {
+                g_renderer->dropItems.push_back({e.x, e.y, e.type});
+            }
+
             { std::lock_guard<std::mutex> lock(g_world->chunksMutex); g_renderer->updateMesh(g_world->chunks); }
             g_renderer->renderFrame();
         }

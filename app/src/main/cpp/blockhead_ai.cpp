@@ -56,15 +56,38 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
         
         if (current.type == ACTION_MINE) {
             currentStatus = ACTION_MINE;
-            current.progress += 5.0f; 
             
+            float baseSpeed = 2.0f; // Very slow hand digging
             if (world) {
                 Tile* t = world->getTile(current.tx, current.ty);
                 if (t && t->foreground != ITEM_EMPTY) {
+                    int selectedItem = entities->player.slots[entities->player.selectedSlot];
+                    
+                    // --- Tool Efficiency Logic ---
+                    if (t->foreground == ITEM_STONE || t->foreground == 7 || t->foreground == 8) {
+                        if (selectedItem == ITEM_PICKAXE) baseSpeed = 20.0f;
+                    } else if (t->foreground == ITEM_DIRT || t->foreground == BLOCK_GRASS) {
+                        if (selectedItem == 52) baseSpeed = 25.0f; // Flint Spade
+                    } else if (t->foreground == BLOCK_WOOD) {
+                        if (selectedItem == 51) baseSpeed = 15.0f; // Flint Axe
+                    }
+                    
+                    // Periodic hit sound (every ~20% progress or so, simplified here to start/end or random?)
+                    // For now, let's play sound when block breaks
+                    
+                    current.progress += baseSpeed; 
+                    
                     if (t->damage < 240) {
-                        t->damage += 15; 
+                        t->damage = (uint8_t)std::min(255.0f, (float)t->damage + baseSpeed / 2.0f); 
                     } else {
                         entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, t->foreground);
+                        
+                        // Play break sound
+                        if (t->foreground == ITEM_STONE || t->foreground == 7 || t->foreground == 8) 
+                            entities->queueSound("pickaxe.wav");
+                        else 
+                            entities->queueSound("dig.wav");
+
                         t->foreground = ITEM_EMPTY; 
                         t->damage = 0;
                         changed = true;
@@ -88,6 +111,7 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                         entities->player.counts[slot]--;
                         if (entities->player.counts[slot] <= 0) entities->player.slots[slot] = 0;
                         entities->inventoryDirty = true;
+                        entities->queueSound("place.wav");
                         changed = true;
                     }
                 }

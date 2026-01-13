@@ -32,6 +32,8 @@ public:
     GLuint textureID, destructID, normalID, itemsTexID;
     GLuint headTexID, bodyTexID, armsTexID, legsTexID;
     GLuint actionSquareTexID, actionSquareProgram;
+    GLuint charProgram;
+    GLuint debugProgram; // For debugging char render
     
     int targetBlockX = -1, targetBlockY = -1;
     bool showActionSquare = false;
@@ -47,6 +49,7 @@ public:
     float worldTime = 0; 
     bool followingPlayer = true;
     bool menuMode = false;
+    float menuTouchX = 0, menuTouchY = 0;
     
     float playerX = 0, playerY = 0;
     std::vector<EntityRenderData> dropItems;

@@ -15,6 +15,9 @@ public class GameActivity extends Activity {
     private android.media.SoundPool mSoundPool;
     private java.util.HashMap<String, Integer> mSoundMap = new java.util.HashMap<>();
 
+    private android.media.MediaPlayer mMusicPlayer;
+    private String mCurrentMusic = "";
+
     private void initSoundEngine() {
         mSoundPool = new android.media.SoundPool.Builder()
                 .setMaxStreams(10)
@@ -24,9 +27,13 @@ public class GameActivity extends Activity {
                         .build())
                 .build();
         
-        // 预加载几个核心音效 (还原自 assets)
+        // Load core sound effects
         try {
-            String[] sounds = {"dig.wav", "pickaxe.wav", "place.wav", "click.wav"};
+            String[] sounds = {
+                "dig.wav", "pickaxe.wav", "place.wav", "click.wav",
+                "crunch.wav", "craftCreate.wav", "manOuch.wav", "splash.wav",
+                "pop.wav", "toolBreak.wav"
+            };
             for (String s : sounds) {
                 android.content.res.AssetFileDescriptor afd = getAssets().openFd(s);
                 mSoundMap.put(s, mSoundPool.load(afd, 1));
@@ -42,8 +49,52 @@ public class GameActivity extends Activity {
         }
     }
 
+    public void playMusic(String name) {
+        if (name.equals(mCurrentMusic) && mMusicPlayer != null && mMusicPlayer.isPlaying()) return;
+        
+        try {
+            if (mMusicPlayer != null) {
+                mMusicPlayer.stop();
+                mMusicPlayer.release();
+                mMusicPlayer = null;
+            }
+
+            if (name == null || name.isEmpty()) return;
+
+            android.content.res.AssetFileDescriptor afd = getAssets().openFd(name);
+            mMusicPlayer = new android.media.MediaPlayer();
+            mMusicPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+            mMusicPlayer.setLooping(true);
+            mMusicPlayer.setVolume(0.5f, 0.5f);
+            mMusicPlayer.prepare();
+            mMusicPlayer.start();
+            mCurrentMusic = name;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private android.widget.ImageButton[] mHotbarSlots = new android.widget.ImageButton[10];
     private android.widget.TextView mDebugText;
+    private android.widget.LinearLayout mHealthRow;
+    private android.widget.ImageView mHungerBar;
+
+    public void updateStatusUI(float health, float hunger) {
+        runOnUiThread(() -> {
+            if (mHealthRow != null) {
+                for (int i = 0; i < 5; i++) {
+                    android.view.View heart = mHealthRow.getChildAt(i);
+                    float threshold = (i + 1) / 5.0f;
+                    if (heart != null) heart.setAlpha(health >= (threshold - 0.1f) ? 1.0f : 0.2f);
+                }
+            }
+            if (mHungerBar != null) {
+                android.widget.FrameLayout.LayoutParams lp = (android.widget.FrameLayout.LayoutParams) mHungerBar.getLayoutParams();
+                lp.width = (int) (300 * hunger);
+                mHungerBar.setLayoutParams(lp);
+            }
+        });
+    }
 
     public void updateDebugInfo(String info) {
         runOnUiThread(() -> {
@@ -53,18 +104,38 @@ public class GameActivity extends Activity {
         });
     }
 
+    private android.graphics.Bitmap mItemsAtlas;
+
     public void updateHotbarSlot(int index, int type, int count) {
         if (index < 0 || index >= 10) return;
         
         runOnUiThread(() -> {
             if (mHotbarSlots[index] == null) return;
             
-            // Simple mapping: 1=Dirt (brown), 2=Stone (gray)
-            int color = 0x00000000;
-            if (type == 1) color = 0xFF8B4513; 
-            if (type == 2) color = 0xFF808080; 
-            
-            mHotbarSlots[index].setColorFilter(color);
+            if (type == 0) {
+                mHotbarSlots[index].setImageDrawable(null);
+            } else {
+                if (mItemsAtlas == null) {
+                    try {
+                        mItemsAtlas = android.graphics.BitmapFactory.decodeStream(getAssets().open("Items.png"));
+                    } catch (Exception e) {}
+                }
+
+                if (mItemsAtlas != null) {
+                    int idx = type - 1;
+                    int row = idx / 32;
+                    int col = idx % 32;
+                    int size = mItemsAtlas.getWidth() / 32;
+                    
+                    try {
+                        android.graphics.Bitmap icon = android.graphics.Bitmap.createBitmap(mItemsAtlas, col * size, row * size, size, size);
+                        mHotbarSlots[index].setImageBitmap(icon);
+                    } catch (Exception e) {
+                        // Fallback to color if crop fails
+                        mHotbarSlots[index].setColorFilter(0xFF888888);
+                    }
+                }
+            }
         });
     }
 
@@ -179,18 +250,19 @@ public class GameActivity extends Activity {
             android.graphics.Bitmap hungerBg = android.graphics.BitmapFactory.decodeStream(getAssets().open("hungerBackground.png"));
             
             // Health row
-            android.widget.LinearLayout healthRow = new android.widget.LinearLayout(this);
+            mHealthRow = new android.widget.LinearLayout(this);
             for(int i=0; i<5; i++) {
                 android.widget.ImageView heart = new android.widget.ImageView(this);
                 heart.setImageBitmap(heartImg);
-                healthRow.addView(heart, new android.widget.LinearLayout.LayoutParams(60, 60));
+                mHealthRow.addView(heart, new android.widget.LinearLayout.LayoutParams(60, 60));
             }
-            statusArea.addView(healthRow);
+            statusArea.addView(mHealthRow);
             
             // Hunger bar
-            android.widget.ImageView hungerBar = new android.widget.ImageView(this);
-            hungerBar.setImageBitmap(hungerBg);
-            statusArea.addView(hungerBar, new android.widget.LinearLayout.LayoutParams(300, 40));
+            mHungerBar = new android.widget.ImageView(this);
+            mHungerBar.setImageBitmap(hungerBg);
+            mHungerBar.setScaleType(android.widget.ImageView.ScaleType.FIT_XY);
+            statusArea.addView(mHungerBar, new android.widget.LinearLayout.LayoutParams(300, 40));
             
         } catch (Exception e) {}
 

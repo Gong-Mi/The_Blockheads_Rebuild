@@ -11,7 +11,6 @@ public:
         return instance;
     }
 
-    // --- Original Settings Keys ---
     static constexpr const char* KEY_MUSIC_ENABLED = "music_enabled";
     static constexpr const char* KEY_SOUND_ENABLED = "sound_enabled";
     static constexpr const char* KEY_HD_TEXTURES = "hd_textures";

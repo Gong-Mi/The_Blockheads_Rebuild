@@ -89,6 +89,12 @@ public:
             fread(&chunk->y, sizeof(int), 1, f);
             fread(chunk->tiles, sizeof(Tile), CHUNK_SIZE * CHUNK_SIZE, f);
             world->chunks.push_back(chunk);
+            
+            // CRITICAL: Update the grid
+            int wrappedX = world->wrapChunkX(chunk->x);
+            if (chunk->y >= 0 && chunk->y < GameWorld::MAX_CHUNKS_Y) {
+                world->chunkGrid[wrappedX][chunk->y] = chunk;
+            }
         }
 
         fclose(f);

@@ -28,50 +28,68 @@ public class MainMenuActivity extends Activity {
         mGameView = new GameView(this);
         root.addView(mGameView);
 
-        LinearLayout menu = new LinearLayout(this);
-        menu.setOrientation(LinearLayout.VERTICAL);
-        menu.setGravity(Gravity.CENTER);
-        
-        // ... rest of menu logic ...
+        mGameView.setOnTouchListener((v, event) -> {
+            if (event.getAction() == android.view.MotionEvent.ACTION_DOWN || event.getAction() == android.view.MotionEvent.ACTION_MOVE) {
+                handleMenuTouchNative(event.getX(), event.getY());
+            }
+            return true;
+        });
 
-        // --- Title Placeholder ---
+        // --- Title Top-Left (Original Position) ---
         TextView title = new TextView(this);
         title.setText("THE BLOCKHEADS");
-        title.setTextSize(48);
-        title.setTextColor(0xFF222244);
-        title.setGravity(Gravity.CENTER);
-        title.setPadding(0, 0, 0, 100);
-        menu.addView(title);
-
-        String[] buttons = {"SINGLE PLAYER", "MULTIPLAYER", "OPTIONS"};
-        for (String txt : buttons) {
-            Button btn = new Button(this);
-            btn.setText(txt);
-            btn.setTextSize(24);
-            btn.setBackgroundColor(0xAAFFFFFF);
-            btn.setPadding(40, 20, 40, 20);
-            
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(600, -2);
-            lp.setMargins(0, 20, 0, 20);
-            
-            btn.setOnClickListener(v -> {
-                if (txt.equals("SINGLE PLAYER")) {
-                    setMenuModeNative(false);
-                    startActivity(new Intent(this, GameActivity.class));
-                }
-            });
-            menu.addView(btn, lp);
-        }
-
-        root.addView(menu);
-        setContentView(root);
+        title.setTextSize(44);
+        title.setTextColor(0xFF333366); // Dark blue-purple like original
+        title.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
         
-        // Wait for surface and set mode
-        new android.os.Handler().postDelayed(() -> setMenuModeNative(true), 500);
+        FrameLayout.LayoutParams titleParams = new FrameLayout.LayoutParams(-2, -2);
+        titleParams.leftMargin = 100; titleParams.topMargin = 100;
+        root.addView(title, titleParams);
+
+        // --- Buttons Right-Side (Original Position) ---
+        LinearLayout menu = new LinearLayout(this);
+        menu.setOrientation(LinearLayout.VERTICAL);
+        menu.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+        menu.setPadding(0, 0, 100, 0);
+
+        try {
+            android.graphics.Bitmap btnBg = android.graphics.BitmapFactory.decodeStream(getAssets().open("InventoryButtonBackground.png"));
+            android.graphics.drawable.BitmapDrawable btnDrawable = new android.graphics.drawable.BitmapDrawable(getResources(), btnBg);
+
+            String[] buttons = {"SINGLE PLAYER", "MULTIPLAYER", "OPTIONS"};
+            for (String txt : buttons) {
+                Button btn = new Button(this);
+                btn.setText(txt);
+                btn.setTextSize(22);
+                btn.setTextColor(0xFFFFFFFF);
+                btn.setBackground(btnDrawable); // Use original metal background
+                btn.setPadding(60, 30, 60, 30);
+                
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(550, -2);
+                lp.setMargins(0, 15, 0, 15);
+                
+                btn.setOnClickListener(v -> {
+                    if (txt.equals("SINGLE PLAYER")) {
+                        setMenuModeNative(false);
+                        startActivity(new Intent(this, GameActivity.class));
+                    }
+                });
+                menu.addView(btn, lp);
+            }
+        } catch (Exception e) {}
+
+        root.addView(menu, new FrameLayout.LayoutParams(-1, -1));
+        setContentView(root);
+    }
+
+    public void onSurfaceCreatedNative(android.content.res.AssetManager assetMgr) {
+        onSurfaceCreatedNativeInternal(assetMgr);
+        setMenuModeNative(true); // Ensure menu mode is set as soon as surface is ready
     }
 
     public native void setMenuModeNative(boolean mode);
-    public native void onSurfaceCreatedNative(android.content.res.AssetManager assetMgr);
+    public native void handleMenuTouchNative(float x, float y);
+    public native void onSurfaceCreatedNativeInternal(android.content.res.AssetManager assetMgr);
     public native void onSurfaceChangedNative(int width, int height);
     public native void onDrawFrameNative();
 }

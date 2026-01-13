@@ -5,6 +5,11 @@
 
 class Matrix {
 public:
+    static void setIdentity(float* m) {
+        for (int i = 0; i < 16; i++) m[i] = 0;
+        m[0] = m[5] = m[10] = m[15] = 1.0f;
+    }
+
     static void ortho(float* m, float left, float right, float bottom, float top, float near, float far) {
         float r_l = right - left;
         float t_b = top - bottom;

@@ -22,17 +22,25 @@ void Player::addItem(int type, int count) {
 }
 
 bool Player::checkCollision(float newX, float newY, GameWorld* world) {
-    float w = 0.15f; 
+    float w = 0.3f; // Slightly wider for better feel
     int blX = (int)floor((newX - w/2));
     int brX = (int)floor((newX + w/2));
     int feetY = (int)floor(newY); 
+    int headY = (int)floor(newY + 1.8f); // ~2 blocks high
     
     if (feetY < 0) return true;
 
+    // Check feet level
     Tile* t1 = world->getTile(blX, feetY);
     Tile* t2 = world->getTile(brX, feetY);
-    
-    return ((t1 && t1->foreground != ITEM_EMPTY) || (t2 && t2->foreground != ITEM_EMPTY));
+    if ((t1 && t1->foreground != ITEM_EMPTY) || (t2 && t2->foreground != ITEM_EMPTY)) return true;
+
+    // Check head level
+    Tile* t3 = world->getTile(blX, headY);
+    Tile* t4 = world->getTile(brX, headY);
+    if ((t3 && t3->foreground != ITEM_EMPTY) || (t4 && t4->foreground != ITEM_EMPTY)) return true;
+
+    return false;
 }
 
 void Player::update(float gravity, GameWorld* world) {
@@ -96,6 +104,7 @@ void EntityManager::update(float gravity, GameWorld* world) {
         if (distSq < 0.2f) { 
             player.addItem(e.type, 1);
             inventoryDirty = true;
+            queueSound("pop.wav");
             e.markForDelete = true;
             continue;
         }
