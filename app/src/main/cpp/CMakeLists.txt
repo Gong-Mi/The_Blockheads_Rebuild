@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.4.1)
+project("TheBlockheads")
 
 include_directories(external)
 
@@ -15,7 +16,14 @@ file(GLOB LZ4_SOURCES ${LZ4_DIR}/*.c)
 
 add_library(native-lib SHARED
             game_engine.cpp
+            game_world.cpp
+            entity_manager.cpp
+            blockhead_ai.cpp
             world_renderer.cpp
+            compression_manager.cpp
+            command_processor.cpp
+            item_manager.cpp
+            settings_manager.cpp
             ${ZSTD_SOURCES}
             ${LZ4_SOURCES})
 

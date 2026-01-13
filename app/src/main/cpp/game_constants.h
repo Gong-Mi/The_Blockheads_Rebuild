@@ -2,17 +2,20 @@
 #define GAME_CONSTANTS_H
 
 #include <stdint.h>
+#include <vector>
+#include <mutex>
 
-// --- 世界规模 (还原自指令集) ---
-const int WORLD_WIDTH = 15000;    // 环球一周 15000 块
-const int WORLD_DEPTH = 500;      // 地下深度 500 块
-const int CHUNK_SIZE = 32;        // 每个物理块 32x32
+
+// --- 世界规模 ---
+const int WORLD_WIDTH = 15000;    
+const int WORLD_DEPTH = 500;      
+const int CHUNK_SIZE = 32;        
 
 struct Tile {
     uint8_t foreground;
     uint8_t background;
-    uint8_t sunlight;
-    uint8_t artLight;
+    uint8_t sunlight;    // 0-255
+    uint8_t artLight;    // 0-255 (Torches, etc.)
     uint8_t damage;
     uint8_t waterLevel;
     int8_t normalX;
@@ -21,33 +24,33 @@ struct Tile {
     uint16_t temperature;
 };
 
+#include <vector>
+
+struct Vertex; // Forward declaration
+
 struct PhysicalBlock {
     int x, y;
     Tile tiles[CHUNK_SIZE * CHUNK_SIZE];
+    bool dirty = true;
+    bool lightingDirty = true;
+    bool meshReady = false;
+    std::vector<float> vertexCache; // Staging buffer for async building
+    std::mutex dataMutex;
 };
 
-// --- 地理坐标 (基于纬度模拟) ---
-const int EQUATOR_1 = 0;          // 第一个赤道
-const int POLE_NORTH = 3750;      // 北极
-const int EQUATOR_2 = 7500;       // 第二个赤道
-const int POLE_SOUTH = 11250;     // 南极
-
-// --- 物理参数 ---
-const int MAX_WATER_LEVEL = 255;
-const int FREEZING_POINT = 32;    // 华氏度模拟
-const int BOILING_POINT = 212;
-const float TEMP_CONVECTION = 0.05f; // 温度对流系数
-const float WATER_FLOW_SPEED = 0.2f;
-
-// --- 物品 ID 定义 (部分还原) ---
 enum ItemID {
     ITEM_EMPTY = 0,
     ITEM_DIRT = 1,
     ITEM_STONE = 2,
-    ITEM_FLINT = 4,   // 挖掘泥土掉落
-    ITEM_STICK = 6,   // 砍树掉落
+    BLOCK_WOOD = 3,
+    BLOCK_LEAVES = 4,
+    BLOCK_GRASS = 5,
     ITEM_WORKBENCH = 10,
-    ITEM_TIME_CRYSTAL = 100
+    ITEM_TOOLBENCH = 11,
+    ITEM_TORCH = 20,
+    ITEM_FLINT = 21,
+    ITEM_STICK = 22,
+    ITEM_PICKAXE = 50
 };
 
 #endif

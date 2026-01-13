@@ -18,17 +18,26 @@ public class GameView extends GLSurfaceView {
         renderer = new Renderer() {
             @Override
             public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-                ((GameActivity)context).onSurfaceCreatedNative(assetManager);
+                if (context instanceof GameActivity)
+                    ((GameActivity)context).onSurfaceCreatedNative(assetManager);
+                else if (context instanceof MainMenuActivity)
+                    ((MainMenuActivity)context).onSurfaceCreatedNative(assetManager);
             }
 
             @Override
             public void onSurfaceChanged(GL10 gl, int width, int height) {
-                ((GameActivity)context).onSurfaceChangedNative(width, height);
+                if (context instanceof GameActivity)
+                    ((GameActivity)context).onSurfaceChangedNative(width, height);
+                else if (context instanceof MainMenuActivity)
+                    ((MainMenuActivity)context).onSurfaceChangedNative(width, height);
             }
 
             @Override
             public void onDrawFrame(GL10 gl) {
-                ((GameActivity)context).onDrawFrameNative();
+                if (context instanceof GameActivity)
+                    ((GameActivity)context).onDrawFrameNative();
+                else if (context instanceof MainMenuActivity)
+                    ((MainMenuActivity)context).onDrawFrameNative();
             }
         };
         

@@ -3,49 +3,65 @@
 
 #include <GLES2/gl2.h>
 #include <vector>
+#include <mutex>
 #include <android/asset_manager.h>
 #include "game_constants.h"
 
 struct Vertex {
-    float x, y;
-    float u, v;
-    float brightness;
-    float damage;
+    float x, y, z, w; // w is texIndex.x
+    uint8_t u, v, s, t; // vsh expects 0-255
+    float otherX, otherY, otherZ, otherW; // other.z is texIndex.y
+    uint8_t r, g, b, a; // paintColor
+};
+
+struct ChunkRenderData {
+    GLuint vbo = 0;
+    int vertexCount = 0;
+    bool active = false;
+    int cx, cy;
 };
 
 struct EntityRenderData {
     float x, y;
-    int type; // Item ID (e.g., 1=Dirt, 2=Stone)
+    int type; 
 };
 
 class WorldRenderer {
 public:
     GLuint program;
-    GLuint textureID, destructID, normalID, playerTexID, itemsTexID;
-    GLuint vbo;
+    GLuint textureID, destructID, normalID, itemsTexID;
+    GLuint headTexID, bodyTexID, armsTexID, legsTexID;
+    GLuint actionSquareTexID, actionSquareProgram;
+    
+    int targetBlockX = -1, targetBlockY = -1;
+    bool showActionSquare = false;
+
+    std::vector<ChunkRenderData> chunkMeshes;
+    std::mutex meshMutex;
+
     GLint uMatrix;
     float camX = 0, camY = 0;
     float targetX = 0, targetY = 0;
+    float camZoom = 1.0f; 
     float animTime = 0;
+    float worldTime = 0; 
+    bool followingPlayer = true;
+    bool menuMode = false;
     
-    // Player position
     float playerX = 0, playerY = 0;
-    
-    // Drop items to render
     std::vector<EntityRenderData> dropItems;
 
-    int vertexCount = 0;
-    bool meshDirty = false;
-    
+    int totalVertexCount = 0;
     int screenW = 1920, screenH = 1080;
 
     void init(AAssetManager* mgr);
     void resize(int w, int h);
     GLuint loadTex(AAssetManager* mgr, const char* name);
     GLuint createProgram(const char* vs, const char* fs);
-    void pushBlock(std::vector<Vertex>& buffer, float x, float y, int type, float damage);
+    void pushBlock(std::vector<Vertex>& buffer, float x, float y, int type, float damage, float sun, float art);
     void updateMesh(const std::vector<PhysicalBlock*>& chunks);
     void renderFrame();
+    char* loadShaderSource(AAssetManager* mgr, const char* name);
 };
 
 extern WorldRenderer* g_renderer;
