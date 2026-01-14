@@ -7,6 +7,8 @@
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
+#include <map>
+#include <cstdint>
 #include "game_constants.h"
 #include "noise_utils.h"
 
@@ -14,11 +16,28 @@ struct LightNode {
     int x, y;
 };
 
+struct ContainerData {
+    int slots[16]; // 4x4 Chest
+    int counts[16];
+    ContainerData() {
+        for(int i=0; i<16; i++) { slots[i]=0; counts[i]=0; }
+    }
+};
+
+// Global helper for world wrapping
+inline int wrapX(int x) {
+    if (x < 0) return (x % 15000) + 15000;
+    return x % 15000;
+}
+
 class GameWorld {
 public:
     static const int MAX_CHUNKS_X = 15000 / CHUNK_SIZE + 1;
     static const int MAX_CHUNKS_Y = WORLD_DEPTH / CHUNK_SIZE + 1;
     
+    std::map<uint64_t, ContainerData> containers;
+    uint64_t getContainerKey(int x, int y) { return ((uint64_t)wrapX(x) << 32) | (uint64_t)y; }
+
     PhysicalBlock* chunkGrid[MAX_CHUNKS_X][MAX_CHUNKS_Y];
     std::vector<PhysicalBlock*> chunks; 
     std::mutex chunksMutex;
@@ -45,11 +64,5 @@ public:
     void updateElectricity();
     void updateVegetation();
 };
-
-// Global helper for world wrapping
-inline int wrapX(int x) {
-    if (x < 0) return (x % 15000) + 15000;
-    return x % 15000;
-}
 
 #endif

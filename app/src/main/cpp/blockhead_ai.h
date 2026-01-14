@@ -20,6 +20,8 @@ public:
     ActionType currentStatus = ACTION_IDLE;
     float posX = 0, posY = 0;
     int pendingInteractionBenchId = -1; 
+    int pendingInteractionX = 0;
+    int pendingInteractionY = 0;
     
     void addAction(ActionType type, int tx, int ty);
     bool update(float& outX, float& outY, GameWorld* world, EntityManager* entities);

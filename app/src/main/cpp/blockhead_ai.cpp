@@ -1,4 +1,6 @@
 #include "blockhead_ai.h"
+#include "item_manager.h"
+#include "world_renderer.h"
 #include <algorithm>
 
 void BlockheadAI::addAction(ActionType type, int tx, int ty) {
@@ -88,6 +90,8 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                             if (rand() % 100 < 30) entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_TIME_CRYSTAL);
                         } else {
                             entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, t->foreground);
+                            std::string name = ItemManager::getInstance().getName(t->foreground);
+                            entities->queueFloatingText((float)current.tx + 0.5f, (float)current.ty + 0.5f, "+1 " + name, 0xFFFFFFFF);
                         }
                         
                         auto def = ItemManager::getInstance().getDef(t->foreground);
@@ -100,6 +104,7 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                             entities->queueSound("dig.wav");
                         }
 
+                        if (g_renderer) g_renderer->spawnBlockBreakParticles(current.tx, current.ty, t->foreground);
                         t->foreground = ITEM_EMPTY; 
                         t->damage = 0;
                         changed = true;
@@ -135,6 +140,8 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                 Tile* t = world->getTile(current.tx, current.ty);
                 if (t && t->foreground != ITEM_EMPTY) {
                     pendingInteractionBenchId = t->foreground;
+                    pendingInteractionX = current.tx;
+                    pendingInteractionY = current.ty;
                     if (t->foreground == ITEM_PORTAL) {
                         entities->queueSound("portalInteraction.wav");
                     }

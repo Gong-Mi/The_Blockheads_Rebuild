@@ -2,17 +2,22 @@
 #include <algorithm>
 
 Player::Player() : x(0), y(0), vx(0), vy(0), grounded(false), selectedSlot(0) {
-    for(int i=0; i<10; i++) { slots[i] = 0; counts[i] = 0; }
+    for(int i=0; i<INVENTORY_SIZE; i++) { slots[i] = 0; counts[i] = 0; }
 }
 
 void Player::addItem(int type, int count) {
-    for(int i=0; i<10; i++) {
+    // 1. Try to stack
+    for(int i=0; i<INVENTORY_SIZE; i++) {
         if (slots[i] == type && counts[i] < 99) {
-            counts[i] += count;
-            return;
+            int space = 99 - counts[i];
+            int add = std::min(space, count);
+            counts[i] += add;
+            count -= add;
+            if (count == 0) return;
         }
     }
-    for(int i=0; i<10; i++) {
+    // 2. Try to fill empty slots
+    for(int i=0; i<INVENTORY_SIZE; i++) {
         if (slots[i] == 0) {
             slots[i] = type;
             counts[i] = count;

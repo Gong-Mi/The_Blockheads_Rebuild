@@ -25,61 +25,54 @@ EntityManager* g_entities = nullptr;
 BlockheadAI* g_ai = nullptr;
 CraftingManager* g_crafting = nullptr;
 std::string g_storagePath;
+FILE* g_logFile = nullptr;
+
+void logToFile(const char* fmt, ...) {
+    if(!g_logFile) return;
+    va_list args;
+    va_start(args, fmt);
+    vfprintf(g_logFile, fmt, args);
+    va_end(args);
+    fprintf(g_logFile, "\n");
+    fflush(g_logFile);
+}
 
 // --- Shared Helper for Surface Created ---
 void onSurfaceCreatedInternal(JNIEnv* env, jobject assetMgr) {
+    logToFile("onSurfaceCreatedInternal called");
     if (!g_renderer) {
         g_renderer = new WorldRenderer();
-    }
-    g_renderer->init(AAssetManager_fromJava(env, assetMgr));
-}
-
-extern "C" JNIEXPORT void JNICALL
-Java_com_noodlecake_blockheads_rebuild_MainMenuActivity_onSurfaceCreatedNativeInternal(JNIEnv* env, jobject obj, jobject assetMgr) {
-    onSurfaceCreatedInternal(env, assetMgr);
-}
-
-extern "C" JNIEXPORT void JNICALL
-Java_com_noodlecake_blockheads_rebuild_MainMenuActivity_onSurfaceChangedNative(JNIEnv* env, jobject obj, jint width, jint height) {
-    if (g_renderer) g_renderer->resize(width, height);
-}
-
-extern "C" JNIEXPORT void JNICALL
-Java_com_noodlecake_blockheads_rebuild_MainMenuActivity_onDrawFrameNative(JNIEnv* env, jobject obj) {
-    if (g_renderer) g_renderer->renderFrame();
-}
-
-extern "C" JNIEXPORT void JNICALL
-Java_com_noodlecake_blockheads_rebuild_MainMenuActivity_setMenuModeNative(JNIEnv* env, jobject obj, jboolean mode) {
-    if (g_renderer) g_renderer->menuMode = mode;
-}
-
-extern "C" JNIEXPORT void JNICALL
-Java_com_noodlecake_blockheads_rebuild_MainMenuActivity_handleMenuTouchNative(JNIEnv* env, jobject obj, jfloat x, jfloat y) {
-    if (g_renderer) {
-        g_renderer->menuTouchX = x;
-        g_renderer->menuTouchY = y;
+        g_renderer->init(AAssetManager_fromJava(env, assetMgr));
+        logToFile("Renderer created and initialized");
+    } else {
+        logToFile("Renderer already exists, skipping re-init");
     }
 }
 
-extern "C" JNIEXPORT void JNICALL
-Java_com_noodlecake_blockheads_rebuild_GameActivity_onSurfaceCreatedNative(JNIEnv* env, jobject obj, jobject assetMgr) {
-    onSurfaceCreatedInternal(env, assetMgr);
-}
+// ... (skip MainMenu methods)
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobject obj, jstring storageDir) {
-    CompressionManager::init();
     const char *path = env->GetStringUTFChars(storageDir, 0);
     g_storagePath = std::string(path);
     env->ReleaseStringUTFChars(storageDir, path);
+    
+    // Init Logging
+    std::string logPath = g_storagePath + "/game_log.txt";
+    g_logFile = fopen(logPath.c_str(), "w");
+    logToFile("Native Init Start. Storage: %s", g_storagePath.c_str());
+
+    CompressionManager::init();
     
     if (!g_world) g_world = new GameWorld();
     if (!g_entities) g_entities = new EntityManager();
     if (!g_ai) g_ai = new BlockheadAI();
     if (!g_crafting) g_crafting = new CraftingManager();
     
+    logToFile("Managers allocated");
+
     if (!PersistenceManager::loadWorld(g_storagePath.c_str(), g_world, g_entities)) {
+        logToFile("No save found or load failed, generating new world...");
         for (int cx = -2; cx <= 2; cx++) {
             for (int cy = 0; cy <= 4; cy++) {
                 g_world->generateChunkSync(cx, cy);
@@ -93,8 +86,11 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
         g_entities->player.addItem(ITEM_FLINT, 10);
         g_entities->player.addItem(BLOCK_WOOD, 10);
         g_entities->inventoryDirty = true;
+    } else {
+        logToFile("World loaded successfully");
     }
     LOGI("Native Engine Ready");
+    logToFile("Native Init Complete");
 }
 
 extern "C" JNIEXPORT void JNICALL
@@ -116,9 +112,23 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handleActionNative(JNIEnv* e
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_noodlecake_blockheads_rebuild_GameActivity_handleCraftNative(JNIEnv* env, jobject obj, jint recipeId) {
+Java_com_noodlecake_blockheads_rebuild_GameActivity_handleCraftNative(JNIEnv* env, jobject obj, jint recipeId, jint tx, jint ty) {
     if (g_crafting && g_entities) {
-        if (g_crafting->craft(&g_entities->player, recipeId)) g_entities->inventoryDirty = true;
+        if (g_crafting->startCraft(&g_entities->player, recipeId, tx, ty)) {
+            g_entities->inventoryDirty = true;
+            g_entities->queueSound("craftCreate.wav");
+        }
+    }
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_GameActivity_handleSwapInventoryItemNative(JNIEnv* env, jobject obj, jint fromSlot, jint toSlot) {
+    if (g_entities) {
+        if (fromSlot >= 0 && fromSlot < 30 && toSlot >= 0 && toSlot < 30) {
+            std::swap(g_entities->player.slots[fromSlot], g_entities->player.slots[toSlot]);
+            std::swap(g_entities->player.counts[fromSlot], g_entities->player.counts[toSlot]);
+            g_entities->inventoryDirty = true;
+        }
     }
 }
 
@@ -139,7 +149,7 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handleTouchNative(JNIEnv* en
     g_renderer->targetBlockX = blockX; g_renderer->targetBlockY = blockY;
     g_renderer->showActionSquare = true; g_renderer->followingPlayer = true; 
     Tile* t = g_world->getTile(blockX, blockY);
-    if (t && (t->foreground == 10 || t->foreground == 11 || t->foreground == 15 || t->foreground == 23)) g_ai->addAction(ACTION_INTERACT, blockX, blockY);
+    if (t && (t->foreground == 10 || t->foreground == 11 || t->foreground == 15 || t->foreground == 23 || t->foreground == 19)) g_ai->addAction(ACTION_INTERACT, blockX, blockY);
     else if (t && t->foreground != ITEM_EMPTY) g_ai->addAction(ACTION_MINE, blockX, blockY);
     else {
         int slot = g_entities->player.selectedSlot;
@@ -189,15 +199,33 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handleZoomNative(JNIEnv* env
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* env, jobject obj) {
+    static int frameLog = 0;
+    if (frameLog++ % 600 == 0) logToFile("Frame %d", frameLog);
+
     if (g_world && g_entities && g_ai) {
         if (g_ai->update(g_entities->player.x, g_entities->player.y, g_world, g_entities)) g_world->updateLighting();
+        
+        if (g_crafting) g_crafting->update(0.05f, &g_entities->player);
+
+        if (g_ai->pendingInteractionBenchId != -1) {
+            jclass clazz = env->GetObjectClass(obj);
+            if (g_ai->pendingInteractionBenchId == 19) { // Chest
+                 jmethodID mid = env->GetMethodID(clazz, "openContainer", "(II)V"); 
+                 if (mid) env->CallVoidMethod(obj, mid, g_ai->pendingInteractionX, g_ai->pendingInteractionY);
+            } else {
+                 jmethodID mid = env->GetMethodID(clazz, "openCraftingMenu", "(I)V");
+                 if (mid) env->CallVoidMethod(obj, mid, g_ai->pendingInteractionBenchId);
+            }
+            g_ai->pendingInteractionBenchId = -1;
+        }
+
         g_entities->update(0.05f, g_world); 
 
         // Sync Inventory to Java
         if (g_entities->inventoryDirty) {
             jclass clazz = env->GetObjectClass(obj);
             jmethodID mid = env->GetMethodID(clazz, "updateHotbarSlot", "(III)V");
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 30; i++) {
                 env->CallVoidMethod(obj, mid, i, g_entities->player.slots[i], g_entities->player.counts[i]);
             }
             g_entities->inventoryDirty = false;
@@ -211,6 +239,18 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
             if (mid) env->CallVoidMethod(obj, mid, g_entities->player.health, g_entities->player.hunger);
         }
 
+        // Sync Name Tag Position
+        static int nameTagTick = 0;
+        if (g_renderer && nameTagTick++ % 2 == 0) { // Update every 2 frames
+            float screenX, screenY;
+            // Position tag above player's head (character is ~1.5 blocks tall)
+            g_renderer->projectWorldToScreen(g_entities->player.x, g_entities->player.y + 1.8f, screenX, screenY);
+            
+            jclass clazz = env->GetObjectClass(obj);
+            jmethodID mid = env->GetMethodID(clazz, "updateNameTagPosition", "(FF)V");
+            if (mid) env->CallVoidMethod(obj, mid, screenX, screenY);
+        }
+
         // Process Sound Events
         if (!g_entities->soundEvents.empty()) {
             jclass clazz = env->GetObjectClass(obj);
@@ -221,6 +261,21 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
                 env->DeleteLocalRef(jStr);
             }
             g_entities->soundEvents.clear();
+        }
+
+        // Process Floating Text
+        if (!g_entities->textEvents.empty()) {
+            jclass clazz = env->GetObjectClass(obj);
+            jmethodID mid = env->GetMethodID(clazz, "showFloatingText", "(FFLjava/lang/String;I)V");
+            for (const auto& evt : g_entities->textEvents) {
+                float sx, sy;
+                g_renderer->projectWorldToScreen(evt.x, evt.y, sx, sy);
+                
+                jstring jStr = env->NewStringUTF(evt.text.c_str());
+                env->CallVoidMethod(obj, mid, sx, sy, jStr, (jint)evt.color);
+                env->DeleteLocalRef(jStr);
+            }
+            g_entities->textEvents.clear();
         }
 
         if (g_renderer) {

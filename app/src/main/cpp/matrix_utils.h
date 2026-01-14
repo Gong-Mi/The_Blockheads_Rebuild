@@ -56,6 +56,12 @@ public:
         m[4] *= sy; m[5] *= sy; m[6] *= sy; m[7] *= sy;
         m[8] *= sz; m[9] *= sz; m[10] *= sz; m[11] *= sz;
     }
+
+    static void multiplyVec4(float* out, const float* m, const float* v) {
+        for (int i = 0; i < 4; i++) {
+            out[i] = m[i*4 + 0] * v[0] + m[i*4 + 1] * v[1] + m[i*4 + 2] * v[2] + m[i*4 + 3] * v[3];
+        }
+    }
 };
 
 #endif

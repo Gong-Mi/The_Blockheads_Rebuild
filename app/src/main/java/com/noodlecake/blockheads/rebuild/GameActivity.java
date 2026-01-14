@@ -6,7 +6,13 @@ import android.view.WindowManager;
 
 public class GameActivity extends Activity {
     static {
-        System.loadLibrary("native-lib");
+        try {
+            android.util.Log.e("BlockheadsJava", "Loading native-lib...");
+            System.loadLibrary("native-lib");
+            android.util.Log.e("BlockheadsJava", "native-lib loaded successfully.");
+        } catch (UnsatisfiedLinkError e) {
+            android.util.Log.e("BlockheadsJava", "Failed to load native-lib: " + e.getMessage());
+        }
     }
 
     private GameView mGameView;
@@ -75,9 +81,46 @@ public class GameActivity extends Activity {
     }
 
     private android.widget.ImageButton[] mHotbarSlots = new android.widget.ImageButton[10];
+    private android.widget.ImageButton[] mInventorySlots = new android.widget.ImageButton[30];
+    private android.widget.FrameLayout mInventoryOverlay;
+    private int mSelectedInventorySlot = -1;
     private android.widget.TextView mDebugText;
+    private android.widget.TextView mPlayerNameTag;
     private android.widget.LinearLayout mHealthRow;
     private android.widget.ImageView mHungerBar;
+
+    public void updateNameTagPosition(float x, float y) {
+        runOnUiThread(() -> {
+            if (mPlayerNameTag == null) return;
+            // Center the tag above the position
+            mPlayerNameTag.setX(x - mPlayerNameTag.getWidth() / 2.0f);
+            mPlayerNameTag.setY(y - mPlayerNameTag.getHeight());
+        });
+    }
+
+    public void showFloatingText(float x, float y, String text, int color) {
+        runOnUiThread(() -> {
+            final android.widget.TextView tv = new android.widget.TextView(this);
+            tv.setText(text);
+            tv.setTextColor(color);
+            tv.setTextSize(16);
+            tv.setTypeface(null, android.graphics.Typeface.BOLD);
+            tv.setShadowLayer(3, 1, 1, 0xFF000000);
+            
+            tv.setX(x);
+            tv.setY(y);
+            
+            ((android.widget.FrameLayout)findViewById(android.R.id.content)).addView(tv, 
+                new android.widget.FrameLayout.LayoutParams(-2, -2)); 
+            
+            tv.animate()
+                .translationYBy(-150)
+                .alpha(0.0f)
+                .setDuration(2000)
+                .withEndAction(() -> ((android.view.ViewGroup)tv.getParent()).removeView(tv))
+                .start();
+        });
+    }
 
     public void updateStatusUI(float health, float hunger) {
         runOnUiThread(() -> {
@@ -107,36 +150,46 @@ public class GameActivity extends Activity {
     private android.graphics.Bitmap mItemsAtlas;
 
     public void updateHotbarSlot(int index, int type, int count) {
-        if (index < 0 || index >= 10) return;
+        if (index < 0 || index >= 30) return;
         
         runOnUiThread(() -> {
-            if (mHotbarSlots[index] == null) return;
+            // Update Hotbar UI (first 10 slots)
+            if (index < 10 && mHotbarSlots[index] != null) {
+                updateSlotImage(mHotbarSlots[index], type);
+            }
             
-            if (type == 0) {
-                mHotbarSlots[index].setImageDrawable(null);
-            } else {
-                if (mItemsAtlas == null) {
-                    try {
-                        mItemsAtlas = android.graphics.BitmapFactory.decodeStream(getAssets().open("Items.png"));
-                    } catch (Exception e) {}
-                }
-
-                if (mItemsAtlas != null) {
-                    int idx = type - 1;
-                    int row = idx / 32;
-                    int col = idx % 32;
-                    int size = mItemsAtlas.getWidth() / 32;
-                    
-                    try {
-                        android.graphics.Bitmap icon = android.graphics.Bitmap.createBitmap(mItemsAtlas, col * size, row * size, size, size);
-                        mHotbarSlots[index].setImageBitmap(icon);
-                    } catch (Exception e) {
-                        // Fallback to color if crop fails
-                        mHotbarSlots[index].setColorFilter(0xFF888888);
-                    }
-                }
+            // Update Inventory UI (all slots)
+            if (mInventorySlots[index] != null) {
+                updateSlotImage(mInventorySlots[index], type);
+                // Optional: Update count text if I add it later
             }
         });
+    }
+
+    private void updateSlotImage(android.widget.ImageButton slot, int type) {
+        if (type == 0) {
+            slot.setImageDrawable(null);
+        } else {
+            if (mItemsAtlas == null) {
+                try {
+                    mItemsAtlas = android.graphics.BitmapFactory.decodeStream(getAssets().open("Items.png"));
+                } catch (Exception e) {}
+            }
+
+            if (mItemsAtlas != null) {
+                int idx = type - 1;
+                int row = idx / 32;
+                int col = idx % 32;
+                int size = mItemsAtlas.getWidth() / 32;
+                
+                try {
+                    android.graphics.Bitmap icon = android.graphics.Bitmap.createBitmap(mItemsAtlas, col * size, row * size, size, size);
+                    slot.setImageBitmap(icon);
+                } catch (Exception e) {
+                    slot.setColorFilter(0xFF888888);
+                }
+            }
+        }
     }
 
     private android.view.GestureDetector mGestureDetector;
@@ -149,6 +202,8 @@ public class GameActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         
+        initNative(getExternalFilesDir(null).getAbsolutePath());
+
         android.widget.FrameLayout layout = new android.widget.FrameLayout(this);
         mGameView = new GameView(this);
         layout.addView(mGameView);
@@ -240,6 +295,77 @@ public class GameActivity extends Activity {
         hotbarParams.bottomMargin = 20;
         
         layout.addView(hotbar, hotbarParams);
+
+        // --- Basket Button (Open Inventory) ---
+        android.widget.ImageButton basketBtn = new android.widget.ImageButton(this);
+        try {
+            android.graphics.Bitmap basketImg = android.graphics.BitmapFactory.decodeStream(getAssets().open("chestBackground.png")); // Placeholder
+            basketBtn.setImageBitmap(basketImg); 
+        } catch(Exception e) { basketBtn.setBackgroundColor(0xFF8B4513); }
+        
+        basketBtn.setOnClickListener(v -> {
+            if (mInventoryOverlay != null) {
+                mInventoryOverlay.setVisibility(mInventoryOverlay.getVisibility() == android.view.View.VISIBLE ? android.view.View.GONE : android.view.View.VISIBLE);
+                playSound("click.wav");
+                // Reset selection on close
+                if (mSelectedInventorySlot != -1 && mInventorySlots[mSelectedInventorySlot] != null) {
+                    mInventorySlots[mSelectedInventorySlot].clearColorFilter();
+                    mSelectedInventorySlot = -1;
+                }
+            }
+        });
+        
+        android.widget.FrameLayout.LayoutParams basketParams = new android.widget.FrameLayout.LayoutParams(120, 120);
+        basketParams.gravity = android.view.Gravity.BOTTOM | android.view.Gravity.RIGHT;
+        basketParams.rightMargin = 30; basketParams.bottomMargin = 30;
+        layout.addView(basketBtn, basketParams);
+
+        // --- Inventory Overlay ---
+        mInventoryOverlay = new android.widget.FrameLayout(this);
+        mInventoryOverlay.setVisibility(android.view.View.GONE);
+        mInventoryOverlay.setBackgroundColor(0xCC000000); // Darker background
+        mInventoryOverlay.setOnClickListener(v -> {}); // Consume clicks
+
+        android.widget.GridLayout invGrid = new android.widget.GridLayout(this);
+        invGrid.setColumnCount(6);
+        invGrid.setRowCount(5);
+        
+        try {
+            android.graphics.Bitmap slotBg = android.graphics.BitmapFactory.decodeStream(getAssets().open("InventoryButtonBackground.png"));
+            android.graphics.drawable.BitmapDrawable slotDrawable = new android.graphics.drawable.BitmapDrawable(getResources(), slotBg);
+
+            for(int i=0; i<30; i++) {
+                final int slotIdx = i;
+                android.widget.FrameLayout f = new android.widget.FrameLayout(this);
+                android.widget.ImageButton b = new android.widget.ImageButton(this);
+                b.setBackground(slotDrawable);
+                b.setPadding(10,10,10,10);
+                b.setScaleType(android.widget.ImageView.ScaleType.FIT_CENTER);
+                mInventorySlots[i] = b;
+                
+                b.setOnClickListener(v -> {
+                    playSound("click.wav");
+                    if (mSelectedInventorySlot == -1) {
+                        mSelectedInventorySlot = slotIdx;
+                        b.setColorFilter(0xFF00FF00); // Highlight selected
+                    } else {
+                        handleSwapInventoryItemNative(mSelectedInventorySlot, slotIdx);
+                        if (mInventorySlots[mSelectedInventorySlot] != null)
+                             mInventorySlots[mSelectedInventorySlot].clearColorFilter();
+                        mSelectedInventorySlot = -1;
+                    }
+                });
+                
+                f.addView(b, new android.widget.FrameLayout.LayoutParams(140, 140));
+                
+                android.widget.GridLayout.LayoutParams gp = new android.widget.GridLayout.LayoutParams();
+                gp.setMargins(10, 10, 10, 10);
+                invGrid.addView(f, gp);
+            }
+        } catch(Exception e) {}
+        
+        mInventoryOverlay.addView(invGrid, new android.widget.FrameLayout.LayoutParams(-2, -2, android.view.Gravity.CENTER));
+        layout.addView(mInventoryOverlay);
         
         // --- 复刻左上角状态栏 (生命值 & 饥饿度) ---
         android.widget.LinearLayout statusArea = new android.widget.LinearLayout(this);
@@ -284,6 +410,17 @@ public class GameActivity extends Activity {
         debugParams.leftMargin = 20;
         layout.addView(mDebugText, debugParams);
         
+        // --- Player Name Tag ---
+        mPlayerNameTag = new android.widget.TextView(this);
+        mPlayerNameTag.setText("Player");
+        mPlayerNameTag.setTextColor(0xFFFFFFFF);
+        mPlayerNameTag.setTextSize(18);
+        mPlayerNameTag.setShadowLayer(3, 2, 2, 0xFF000000);
+        // Position will be updated from native code, add with default params
+        layout.addView(mPlayerNameTag, new android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
+                android.widget.FrameLayout.LayoutParams.WRAP_CONTENT));
+
         // --- 合成引擎联动测试 ---
         android.widget.Button craftBtn = new android.widget.Button(this);
         craftBtn.setText("手动合成");
@@ -419,64 +556,114 @@ public class GameActivity extends Activity {
         }
     }
 
-    public void openCraftingMenu(int benchId) {
+    private int mCurrentInteractionX, mCurrentInteractionY;
+
+    public void openCraftingMenu(int benchId, int x, int y) {
+        mCurrentInteractionX = x; mCurrentInteractionY = y;
         runOnUiThread(() -> showCraftingMenu(benchId));
+    }
+
+    public void openContainer(int x, int y) {
+        mCurrentInteractionX = x; mCurrentInteractionY = y;
+        runOnUiThread(() -> {
+            if (mInventoryOverlay != null) {
+                mInventoryOverlay.setVisibility(android.view.View.VISIBLE);
+                android.widget.Toast.makeText(this, "Opened Chest at " + x + "," + y, android.widget.Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void showCraftingMenu(int benchId) {
         String jsonStr = getRecipesNative(benchId);
         
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        String title = "Crafting";
-        if (benchId == 0) title = "Hand Crafting";
-        if (benchId == 10) title = "Workbench";
-        if (benchId == 11) title = "Tool Bench";
-        
-        builder.setTitle(title);
+        android.widget.LinearLayout layout = new android.widget.LinearLayout(this);
+        layout.setOrientation(android.widget.LinearLayout.VERTICAL);
+        layout.setPadding(40, 40, 40, 40);
+        layout.setBackgroundColor(0xEE333333);
 
-        final java.util.ArrayList<String> names = new java.util.ArrayList<>();
-        final java.util.ArrayList<Integer> ids = new java.util.ArrayList<>();
+        android.widget.TextView title = new android.widget.TextView(this);
+        title.setText("CRAFTING - " + (benchId == 0 ? "HAND" : "BENCH"));
+        title.setTextColor(0xFFFFFFFF);
+        title.setTextSize(20);
+        layout.addView(title);
+
+        android.widget.ScrollView scroll = new android.widget.ScrollView(this);
+        android.widget.LinearLayout list = new android.widget.LinearLayout(this);
+        list.setOrientation(android.widget.LinearLayout.VERTICAL);
 
         try {
             org.json.JSONArray arr = new org.json.JSONArray(jsonStr);
-            if (arr.length() == 0) {
-                names.add("No recipes available.");
-            } else {
-                for (int i = 0; i < arr.length(); i++) {
-                    org.json.JSONObject obj = arr.getJSONObject(i);
-                    int id = obj.getInt("id");
-                    String name = obj.getString("name");
-                    int outCount = obj.getInt("outCount");
-                    
-                    String label = name + " x" + outCount;
-                    
-                    org.json.JSONArray cost = obj.getJSONArray("cost");
-                    label += " (";
-                    for(int j=0; j<cost.length(); j++) {
-                        org.json.JSONObject c = cost.getJSONObject(j);
-                        if(j>0) label += ", ";
-                        label += c.getInt("n") + " x ID:" + c.getInt("id");
-                    }
-                    label += ")";
+            for (int i = 0; i < arr.length(); i++) {
+                final org.json.JSONObject obj = arr.getJSONObject(i);
+                final int recipeId = obj.getInt("id");
+                
+                android.widget.LinearLayout row = new android.widget.LinearLayout(this);
+                row.setOrientation(android.widget.LinearLayout.HORIZONTAL);
+                row.setPadding(20, 20, 20, 20);
+                row.setBackgroundColor(0x33FFFFFF);
+                
+                // Icon
+                android.widget.ImageView icon = new android.widget.ImageView(this);
+                int outId = obj.getInt("outId");
+                updateSlotImageDirect(icon, outId);
+                row.addView(icon, new android.widget.LinearLayout.LayoutParams(120, 120));
 
-                    names.add(label);
-                    ids.add(id);
+                android.widget.LinearLayout info = new android.widget.LinearLayout(this);
+                info.setOrientation(android.widget.LinearLayout.VERTICAL);
+                info.setPadding(20, 0, 0, 0);
+
+                android.widget.TextView name = new android.widget.TextView(this);
+                name.setText(obj.getString("name") + " x" + obj.getInt("outCount"));
+                name.setTextColor(0xFFFFFFFF);
+                info.addView(name);
+
+                android.widget.TextView cost = new android.widget.TextView(this);
+                org.json.JSONArray costArr = obj.getJSONArray("cost");
+                String costStr = "Cost: ";
+                for(int j=0; j<costArr.length(); j++) {
+                    if(j>0) costStr += ", ";
+                    costStr += costArr.getJSONObject(j).getInt("n") + "x";
                 }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            names.add("Error parsing recipes");
-        }
+                cost.setText(costStr);
+                cost.setTextColor(0xFFAAAAAA);
+                info.addView(cost);
 
-        builder.setItems(names.toArray(new String[0]), (dialog, which) -> {
-            if (which < ids.size()) {
-                int recipeId = ids.get(which);
-                handleCraftNative(recipeId);
+                row.addView(info, new android.widget.LinearLayout.LayoutParams(0, -2, 1.0f));
+
+                android.widget.Button btn = new android.widget.Button(this);
+                btn.setText("CRAFT");
+                btn.setOnClickListener(v -> {
+                    handleCraftNative(recipeId, mCurrentInteractionX, mCurrentInteractionY);
+                    playSound("click.wav");
+                });
+                row.addView(btn);
+
+                android.widget.LinearLayout.LayoutParams lp = new android.widget.LinearLayout.LayoutParams(-1, -2);
+                lp.setMargins(0, 10, 0, 10);
+                list.addView(row, lp);
             }
-        });
-        
-        builder.setNegativeButton("Close", null);
-        builder.show();
+        } catch (Exception e) {}
+
+        scroll.addView(list);
+        layout.addView(scroll, new android.widget.LinearLayout.LayoutParams(-1, 800));
+
+        android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(this)
+            .setView(layout)
+            .setNegativeButton("Close", null)
+            .create();
+        dialog.show();
+    }
+
+    private void updateSlotImageDirect(android.widget.ImageView view, int type) {
+        if (mItemsAtlas == null) {
+            try { mItemsAtlas = android.graphics.BitmapFactory.decodeStream(getAssets().open("Items.png")); } catch (Exception e) {}
+        }
+        if (mItemsAtlas != null && type > 0) {
+            int idx = type - 1;
+            int size = mItemsAtlas.getWidth() / 32;
+            android.graphics.Bitmap icon = android.graphics.Bitmap.createBitmap(mItemsAtlas, (idx%32)*size, (idx/32)*size, size, size);
+            view.setImageBitmap(icon);
+        }
     }
 
     @Override
@@ -494,6 +681,8 @@ public class GameActivity extends Activity {
     public native void handleTouchNative(float x, float y);
     public native void handlePanNative(float dx, float dy);
     public native void handleZoomNative(float scaleFactor);
-    public native void handleCraftNative(int recipeId);
+    public native void handleCraftNative(int recipeId, int tx, int ty);
+    public native void handleSwapInventoryItemNative(int fromSlot, int toSlot);
     public native String getRecipesNative(int benchId);
 }
+    

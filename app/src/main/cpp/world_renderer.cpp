@@ -1,4 +1,9 @@
 #include "world_renderer.h"
+#include "item_manager.h"
+#include "crafting_manager.h"
+#include <GLES2/gl2.h>
+
+extern CraftingManager* g_crafting;
 #include <android/asset_manager_jni.h>
 #include <android/log.h>
 #include <cmath>
@@ -19,7 +24,15 @@ char* WorldRenderer::loadShaderSource(AAssetManager* mgr, const char* name) {
     AAsset* asset = AAssetManager_open(mgr, name, AASSET_MODE_BUFFER);
     if (!asset) return nullptr;
     off_t size = AAsset_getLength(asset);
+    if (size <= 0 || size > 1024 * 1024) { // Max 1MB
+        AAsset_close(asset);
+        return nullptr;
+    }
     char* buf = (char*)malloc(size + 1);
+    if (!buf) {
+        AAsset_close(asset);
+        return nullptr;
+    }
     AAsset_read(asset, buf, size);
     buf[size] = '\0';
     AAsset_close(asset);
@@ -201,6 +214,19 @@ void WorldRenderer::updateMesh(const std::vector<PhysicalBlock*>& chunks) {
             glBindBuffer(GL_ARRAY_BUFFER, data->vbo);
             glBufferData(GL_ARRAY_BUFFER, chunk->vertexCache.size() * sizeof(float), chunk->vertexCache.data(), GL_STATIC_DRAW);
             data->vertexCount = chunk->vertexCache.size() / 16; 
+
+            // Scan for emitters
+            data->emitters.clear();
+            for(int i=0; i<32*32; i++) {
+                int type = chunk->tiles[i].foreground;
+                if (type == 23 || type == 16) { // ITEM_CAMPFIRE(23), ITEM_FURNACE(16)
+                    Emitter e;
+                    e.x = i % 32;
+                    e.y = i / 32;
+                    e.type = type;
+                    data->emitters.push_back(e);
+                }
+            }
         }
         
         data->active = (data->vertexCount > 0);
@@ -234,9 +260,22 @@ void WorldRenderer::renderFrame() {
         if (rand() % 10 < 8) {
             float px = camX + (rand() % 40 - 20);
             float py = camY + 15.0f;
-            rainParticles.push_back({px, py, 0, (weatherState==1 ? -0.8f : -0.2f), 1.0f});
+            Particle p;
+            p.type = PARTICLE_WEATHER; // 0
+            p.x = px;
+            p.y = py;
+            p.vx = (weatherState == 2) ? (rand()%100 - 50) * 0.005f : 0;
+            p.vy = (weatherState == 1) ? -0.8f : -0.2f;
+            p.life = 3.0f;
+            p.maxLife = 3.0f;
+            p.size = (weatherState == 1) ? 0.1f : 0.2f;
+            p.r = 1.0f; p.g = 1.0f; p.b = 1.0f; p.a = 0.8f;
+            p.u = 0; p.v = 0;
+            particles.push_back(p);
         }
     }
+
+    updateParticles();
 
     glClearColor(skyR, skyG, skyB, 1.0f); 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -402,6 +441,13 @@ void WorldRenderer::renderFrame() {
             
             glDrawArrays(GL_TRIANGLES, 0, m.vertexCount);
             totalVertexCount += m.vertexCount;
+            
+            // Process Emitters (Smoke)
+            for (const auto& e : m.emitters) {
+                if (rand() % 100 < 2) {
+                    spawnSmoke(m.cx * 32.0f + e.x, m.cy * 32.0f + e.y);
+                }
+            }
         }
     }
 
@@ -543,44 +589,220 @@ void WorldRenderer::renderFrame() {
         glVertexAttribPointer(tL, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), &sqVerts[4]);
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
+    
+    // --- Render Particles (New System) ---
+    renderParticles();
 
-    // --- Render Weather Particles ---
-    if (weatherState > 0 && actionSquareProgram != 0) {
-        glUseProgram(actionSquareProgram);
-        glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, whiteTex); 
-        glUniform1i(glGetUniformLocation(actionSquareProgram, "texture"), 0);
-        glUniform4f(glGetUniformLocation(actionSquareProgram, "light"), 1.0f, 1.0f, 1.0f, 0.5f);
-
-        for (auto& p : rainParticles) {
-            p.x += p.vx; p.y += p.vy; p.life -= 0.01f;
-            if (p.life <= 0) continue;
-            
-            float m_p[16]; std::copy(matrix, matrix + 16, m_p);
-            Matrix::translate(m_p, p.x, p.y, 0.5f);
-            float pSize = (weatherState == 1) ? 0.1f : 0.2f;
-            Matrix::scale(m_p, pSize * 0.5f, pSize, 1.0f);
-            glUniformMatrix4fv(glGetUniformLocation(actionSquareProgram, "mvp_matrix"), 1, GL_FALSE, m_p);
-            
-            float qVerts[] = {
-                -0.5f, -0.5f, 0, 1,  0, 0,
-                 0.5f, -0.5f, 0, 1,  1, 0,
-                -0.5f,  0.5f, 0, 1,  0, 1,
-                 0.5f, -0.5f, 0, 1,  1, 0,
-                 0.5f,  0.5f, 0, 1,  1, 1,
-                -0.5f,  0.5f, 0, 1,  0, 1
-            };
-            
-            GLint pL = glGetAttribLocation(actionSquareProgram, "position");
-            GLint tL = glGetAttribLocation(actionSquareProgram, "texCoord");
-            glEnableVertexAttribArray(pL);
-            glEnableVertexAttribArray(tL);
-            glVertexAttribPointer(pL, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(float), &qVerts[0]);
-            glVertexAttribPointer(tL, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), &qVerts[4]);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
+    // --- Render Crafting Progress ---
+    if (g_crafting) {
+        std::lock_guard<std::mutex> lock(g_crafting->craftMutex);
+        for (auto const& pair : g_crafting->activeCrafts) {
+            uint64_t key = pair.first;
+            const auto& ac = pair.second;
+            float tx = (float)(key >> 32);
+            float ty = (float)(key & 0xFFFFFFFF);
+            renderCraftingProgress(tx, ty, ac.progress);
         }
-        rainParticles.erase(std::remove_if(rainParticles.begin(), rainParticles.end(), 
-             [](const Particle& p){ return p.life <= 0; }), rainParticles.end());
     }
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+// --- Particle System ---
+
+void WorldRenderer::spawnBlockBreakParticles(int x, int y, int blockType) {
+    if (blockType == 0) return;
+    auto def = ItemManager::getInstance().getDef(blockType);
+    int texRow = def ? def->texRow : (blockType - 1) / 32;
+    int texCol = def ? def->texCol : (blockType - 1) % 32;
+    
+    float tileUVSize = 1.0f / 32.0f;
+    float uBase = texCol * tileUVSize;
+    float vBase = texRow * tileUVSize;
+    float subSize = 0.25f; // Visual size (1/4 block)
+    float uvStep = subSize * tileUVSize; 
+
+    for(int i=0; i<4; i++) {
+        for(int j=0; j<4; j++) {
+            Particle p;
+            p.type = PARTICLE_BLOCK_DEBRIS;
+            p.x = (float)x + i * 0.25f + 0.125f;
+            p.y = (float)y + (3-j) * 0.25f + 0.125f; // Flip Y for visual consistency
+            p.vx = (rand()%100 - 50) * 0.003f; // Slightly faster spread
+            p.vy = (rand()%100) * 0.001f + 0.05f; 
+            p.life = 0.5f + (rand()%10)*0.05f; // Short life
+            p.maxLife = p.life;
+            p.size = subSize; 
+            p.u = uBase + i * uvStep; 
+            p.v = vBase + j * uvStep; 
+            p.r = 1; p.g = 1; p.b = 1; p.a = 1;
+            particles.push_back(p);
+        }
+    }
+}
+
+void WorldRenderer::spawnSmoke(float x, float y) {
+    Particle p;
+    p.type = PARTICLE_SMOKE;
+    p.x = x + 0.5f;
+    p.y = y + 0.5f;
+    p.vx = (rand()%100 - 50) * 0.0003f;
+    p.vy = 0.01f + (rand()%100)*0.0002f;
+    p.life = 2.0f;
+    p.maxLife = 2.0f;
+    p.size = 0.2f; 
+    p.r = 0.9f; p.g = 0.9f; p.b = 0.9f; p.a = 0.4f;
+    p.u = 0; p.v = 0; // Not used for white texture
+    particles.push_back(p);
+}
+
+void WorldRenderer::updateParticles() {
+    for(auto& p : particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.015f; 
+        
+        if (p.type == PARTICLE_BLOCK_DEBRIS) {
+            p.vy -= 0.003f; // Stronger Gravity
+            p.a = std::min(1.0f, p.life * 3.0f); 
+        } else if (p.type == PARTICLE_SMOKE) {
+            p.size += 0.001f; // Grow
+            p.a = (p.life / p.maxLife) * 0.4f; // Fade
+        }
+        // Weather physics handled implicitly by constant velocity
+    }
+    
+    // Remove dead
+    particles.erase(std::remove_if(particles.begin(), particles.end(), 
+         [](const Particle& p){ return p.life <= 0; }), particles.end());
+}
+
+void WorldRenderer::renderParticles() {
+    if (particles.empty() || actionSquareProgram == 0) return; 
+    
+    glUseProgram(actionSquareProgram);
+    
+    GLint pLoc = glGetAttribLocation(actionSquareProgram, "position");
+    GLint tLoc = glGetAttribLocation(actionSquareProgram, "texCoord");
+    glEnableVertexAttribArray(pLoc);
+    glEnableVertexAttribArray(tLoc);
+
+    // Common Matrix Setup
+    float matrix[16];
+    float aspect = (float)screenW / (float)screenH;
+    float h_cam = 10.0f * camZoom; 
+    float w_cam = h_cam * aspect;
+    Matrix::ortho(matrix, -w_cam, w_cam, -h_cam, h_cam, -10.0f, 10.0f);
+    Matrix::translate(matrix, -camX, -camY, 0);
+
+    auto drawQuad = [&](const Particle& p, GLuint tex) {
+        float m_p[16]; std::copy(matrix, matrix + 16, m_p);
+        Matrix::translate(m_p, p.x, p.y, 0.6f); // In front of blocks
+        Matrix::scale(m_p, p.size, p.size, 1.0f);
+        glUniformMatrix4fv(glGetUniformLocation(actionSquareProgram, "mvp_matrix"), 1, GL_FALSE, m_p);
+        glUniform4f(glGetUniformLocation(actionSquareProgram, "light"), p.r, p.g, p.b, p.a);
+
+        float u1 = p.u; 
+        float v1 = p.v;
+        float u2 = p.u + (p.type==PARTICLE_BLOCK_DEBRIS ? (0.25f/32.0f) : 1.0f);
+        float v2 = p.v + (p.type==PARTICLE_BLOCK_DEBRIS ? (0.25f/32.0f) : 1.0f);
+        
+        // Quad vertices (centered)
+        float qVerts[] = {
+            -0.5f, -0.5f, 0, 1,  u1, v2,
+             0.5f, -0.5f, 0, 1,  u2, v2,
+            -0.5f,  0.5f, 0, 1,  u1, v1,
+             0.5f, -0.5f, 0, 1,  u2, v2,
+             0.5f,  0.5f, 0, 1,  u2, v1,
+            -0.5f,  0.5f, 0, 1,  u1, v1
+        };
+        glVertexAttribPointer(pLoc, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(float), &qVerts[0]);
+        glVertexAttribPointer(tLoc, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), &qVerts[4]);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    };
+
+    // Pass 1: Block Debris
+    glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, textureID);
+    glUniform1i(glGetUniformLocation(actionSquareProgram, "texture"), 0);
+    for (const auto& p : particles) {
+        if (p.type == PARTICLE_BLOCK_DEBRIS) drawQuad(p, textureID);
+    }
+
+    // Pass 2: White Texture (Smoke/Weather)
+    static GLuint whiteTex = 0;
+    if (whiteTex == 0) {
+        uint32_t px = 0xFFFFFFFF;
+        glGenTextures(1, &whiteTex);
+        glBindTexture(GL_TEXTURE_2D, whiteTex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &px);
+    }
+    
+    glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, whiteTex);
+    for (const auto& p : particles) {
+        if (p.type != PARTICLE_BLOCK_DEBRIS) drawQuad(p, whiteTex);
+    }
+}
+void WorldRenderer::projectWorldToScreen(float worldX, float worldY, float& outScreenX, float& outScreenY) {
+    // 1. Recreate the same MVP matrix used in renderFrame
+    float matrix[16];
+    float aspect = (float)screenW / (float)screenH;
+    float h_cam = 10.0f * camZoom; 
+    float w_cam = h_cam * aspect;
+    Matrix::ortho(matrix, -w_cam, w_cam, -h_cam, h_cam, -10.0f, 10.0f);
+    Matrix::translate(matrix, -camX, -camY, 0);
+
+    // 2. Transform world coordinates to clip space (-1 to 1)
+    float worldPos[4] = {worldX, worldY, 0.0f, 1.0f}; 
+    float clipPos[4];
+    Matrix::multiplyVec4(clipPos, matrix, worldPos);
+    
+    // Perspective division (not strictly necessary for ortho, but good practice)
+    if (clipPos[3] != 0.0f) {
+        clipPos[0] /= clipPos[3];
+        clipPos[1] /= clipPos[3];
+    }
+
+    // 3. Transform clip space to screen space (pixels)
+    outScreenX = (clipPos[0] + 1.0f) * 0.5f * screenW;
+    outScreenY = (1.0f - clipPos[1]) * 0.5f * screenH; // Y is inverted from GL to screen
+}
+
+void WorldRenderer::renderCraftingProgress(float x, float y, float progress) {
+    if (actionSquareProgram == 0) return;
+    glUseProgram(actionSquareProgram);
+    
+    static GLuint whiteTex = 0;
+    if (whiteTex == 0) {
+        uint32_t px = 0xFFFFFFFF;
+        glGenTextures(1, &whiteTex);
+        glBindTexture(GL_TEXTURE_2D, whiteTex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &px);
+    }
+    glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, whiteTex);
+
+    float matrix[16];
+    float aspect = (float)screenW / (float)screenH;
+    float h_cam = 10.0f * camZoom; 
+    float w_cam = h_cam * aspect;
+    Matrix::ortho(matrix, -w_cam, w_cam, -h_cam, h_cam, -10.0f, 10.0f);
+    Matrix::translate(matrix, -camX, -camY, 0);
+
+    GLint pLoc = glGetAttribLocation(actionSquareProgram, "position");
+    GLint tLoc = glGetAttribLocation(actionSquareProgram, "texCoord");
+    glEnableVertexAttribArray(pLoc);
+    glEnableVertexAttribArray(tLoc);
+
+    auto drawBar = [&](float dx, float dy, float dw, float dh, float r, float g, float b, float a) {
+        float m_p[16]; std::copy(matrix, matrix + 16, m_p);
+        Matrix::translate(m_p, x + dx, y + dy, 0.7f);
+        Matrix::scale(m_p, dw, dh, 1.0f);
+        glUniformMatrix4fv(glGetUniformLocation(actionSquareProgram, "mvp_matrix"), 1, GL_FALSE, m_p);
+        glUniform4f(glGetUniformLocation(actionSquareProgram, "light"), r, g, b, a);
+        float qVerts[] = { -0.5f,-0.5f,0,1, 0,0, 0.5f,-0.5f,0,1, 1,0, -0.5f,0.5f,0,1, 0,1, 0.5f,-0.5f,0,1, 1,0, 0.5f,0.5f,0,1, 1,1, -0.5f,0.5f,0,1, 0,1 };
+        glVertexAttribPointer(pLoc, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(float), &qVerts[0]);
+        glVertexAttribPointer(tLoc, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), &qVerts[4]);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    };
+
+    drawBar(0.5f, 1.2f, 0.8f, 0.15f, 0.2f, 0.2f, 0.2f, 0.8f);
+    drawBar(0.5f - (1.0f-progress)*0.4f, 1.2f, 0.8f * progress, 0.1f, 0.0f, 1.0f, 0.0f, 1.0f);
 }

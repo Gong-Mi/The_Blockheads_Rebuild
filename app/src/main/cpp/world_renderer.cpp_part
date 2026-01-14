@@ -1,0 +1,134 @@
+// --- Particle System ---
+
+void WorldRenderer::spawnBlockBreakParticles(int x, int y, int blockType) {
+    if (blockType == 0) return;
+    auto def = ItemManager::getInstance().getDef(blockType);
+    int texRow = def ? def->texRow : (blockType - 1) / 32;
+    int texCol = def ? def->texCol : (blockType - 1) % 32;
+    
+    float tileUVSize = 1.0f / 32.0f;
+    float uBase = texCol * tileUVSize;
+    float vBase = texRow * tileUVSize;
+    float subSize = 0.25f; // Visual size (1/4 block)
+    float uvStep = subSize * tileUVSize; 
+
+    for(int i=0; i<4; i++) {
+        for(int j=0; j<4; j++) {
+            Particle p;
+            p.type = PARTICLE_BLOCK_DEBRIS;
+            p.x = (float)x + i * 0.25f + 0.125f;
+            p.y = (float)y + (3-j) * 0.25f + 0.125f; // Flip Y for visual consistency
+            p.vx = (rand()%100 - 50) * 0.003f; // Slightly faster spread
+            p.vy = (rand()%100) * 0.001f + 0.05f; 
+            p.life = 0.5f + (rand()%10)*0.05f; // Short life
+            p.maxLife = p.life;
+            p.size = subSize; 
+            p.u = uBase + i * uvStep; 
+            p.v = vBase + j * uvStep; 
+            p.r = 1; p.g = 1; p.b = 1; p.a = 1;
+            particles.push_back(p);
+        }
+    }
+}
+
+void WorldRenderer::spawnSmoke(float x, float y) {
+    Particle p;
+    p.type = PARTICLE_SMOKE;
+    p.x = x + 0.5f;
+    p.y = y + 0.5f;
+    p.vx = (rand()%100 - 50) * 0.0003f;
+    p.vy = 0.01f + (rand()%100)*0.0002f;
+    p.life = 2.0f;
+    p.maxLife = 2.0f;
+    p.size = 0.2f; 
+    p.r = 0.9f; p.g = 0.9f; p.b = 0.9f; p.a = 0.4f;
+    p.u = 0; p.v = 0; // Not used for white texture
+    particles.push_back(p);
+}
+
+void WorldRenderer::updateParticles() {
+    for(auto& p : particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.015f; 
+        
+        if (p.type == PARTICLE_BLOCK_DEBRIS) {
+            p.vy -= 0.003f; // Stronger Gravity
+            p.a = std::min(1.0f, p.life * 3.0f); 
+        } else if (p.type == PARTICLE_SMOKE) {
+            p.size += 0.001f; // Grow
+            p.a = (p.life / p.maxLife) * 0.4f; // Fade
+        }
+        // Weather physics handled implicitly by constant velocity
+    }
+    
+    // Remove dead
+    particles.erase(std::remove_if(particles.begin(), particles.end(), 
+         [](const Particle& p){ return p.life <= 0; }), particles.end());
+}
+
+void WorldRenderer::renderParticles() {
+    if (particles.empty() || actionSquareProgram == 0) return;
+    
+    glUseProgram(actionSquareProgram);
+    
+    GLint pLoc = glGetAttribLocation(actionSquareProgram, "position");
+    GLint tLoc = glGetAttribLocation(actionSquareProgram, "texCoord");
+    glEnableVertexAttribArray(pLoc);
+    glEnableVertexAttribArray(tLoc);
+
+    // Common Matrix Setup
+    float matrix[16];
+    float aspect = (float)screenW / (float)screenH;
+    float h_cam = 10.0f * camZoom; 
+    float w_cam = h_cam * aspect;
+    Matrix::ortho(matrix, -w_cam, w_cam, -h_cam, h_cam, -10.0f, 10.0f);
+    Matrix::translate(matrix, -camX, -camY, 0);
+
+    auto drawQuad = [&](const Particle& p, GLuint tex) {
+        float m_p[16]; std::copy(matrix, matrix + 16, m_p);
+        Matrix::translate(m_p, p.x, p.y, 0.6f); // In front of blocks
+        Matrix::scale(m_p, p.size, p.size, 1.0f);
+        glUniformMatrix4fv(glGetUniformLocation(actionSquareProgram, "mvp_matrix"), 1, GL_FALSE, m_p);
+        glUniform4f(glGetUniformLocation(actionSquareProgram, "light"), p.r, p.g, p.b, p.a);
+
+        float u1 = p.u; 
+        float v1 = p.v;
+        float u2 = p.u + (p.type==PARTICLE_BLOCK_DEBRIS ? (0.25f/32.0f) : 1.0f);
+        float v2 = p.v + (p.type==PARTICLE_BLOCK_DEBRIS ? (0.25f/32.0f) : 1.0f);
+        
+        // Quad vertices (centered)
+        float qVerts[] = {
+            -0.5f, -0.5f, 0, 1,  u1, v2,
+             0.5f, -0.5f, 0, 1,  u2, v2,
+            -0.5f,  0.5f, 0, 1,  u1, v1,
+             0.5f, -0.5f, 0, 1,  u2, v2,
+             0.5f,  0.5f, 0, 1,  u2, v1,
+            -0.5f,  0.5f, 0, 1,  u1, v1
+        };
+        glVertexAttribPointer(pLoc, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(float), &qVerts[0]);
+        glVertexAttribPointer(tLoc, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), &qVerts[4]);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    };
+
+    // Pass 1: Block Debris
+    glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, textureID);
+    glUniform1i(glGetUniformLocation(actionSquareProgram, "texture"), 0);
+    for (const auto& p : particles) {
+        if (p.type == PARTICLE_BLOCK_DEBRIS) drawQuad(p, textureID);
+    }
+
+    // Pass 2: White Texture (Smoke/Weather)
+    static GLuint whiteTex = 0;
+    if (whiteTex == 0) {
+        uint32_t px = 0xFFFFFFFF;
+        glGenTextures(1, &whiteTex);
+        glBindTexture(GL_TEXTURE_2D, whiteTex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &px);
+    }
+    
+    glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, whiteTex);
+    for (const auto& p : particles) {
+        if (p.type != PARTICLE_BLOCK_DEBRIS) drawQuad(p, whiteTex);
+    }
+}

@@ -15,6 +15,12 @@ struct Entity {
     bool markForDelete; 
 };
 
+struct FloatingTextEvent {
+    float x, y;
+    std::string text;
+    unsigned int color; // ARGB or similar
+};
+
 class Player {
 public:
     float x, y;
@@ -28,8 +34,9 @@ public:
     int clothingHead = 0;
     int clothingLegs = 0;
 
-    int slots[10];
-    int counts[10];
+    static const int INVENTORY_SIZE = 30;
+    int slots[INVENTORY_SIZE];
+    int counts[INVENTORY_SIZE];
     int selectedSlot;
 
     Player();
@@ -45,9 +52,14 @@ public:
     std::vector<Entity> mobs;
     bool inventoryDirty = false;
     std::vector<std::string> soundEvents;
+    std::vector<FloatingTextEvent> textEvents;
 
     void queueSound(const std::string& name) {
         soundEvents.push_back(name);
+    }
+    
+    void queueFloatingText(float x, float y, std::string text, unsigned int color) {
+        textEvents.push_back({x, y, text, color});
     }
 
     void spawnDrop(float x, float y, int type);

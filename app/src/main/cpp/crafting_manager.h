@@ -4,54 +4,39 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <map>
+#include <cstdint>
+#include <mutex>
 #include "entity_manager.h"
+#include "game_recipe_data.h"
+#include "game_item_ids.h"
 
-struct Recipe {
-    int id;
-    std::string name;
-    int outType;
-    int outCount;
-    std::vector<std::pair<int, int>> ingredients; 
-    int requiredBench; 
-    float time; 
+struct ActiveCraft {
+    int recipeId;
+    float progress; // 0.0 to 1.0
+    float totalTime;
+    bool finished;
 };
 
 class CraftingManager {
 public:
-    std::vector<Recipe> recipes;
+    // Key is (x << 32 | y)
+    std::map<uint64_t, ActiveCraft> activeCrafts;
+    std::mutex craftMutex;
 
-    CraftingManager() {
-        // Hand Crafting (Bench 0)
-        recipes.push_back({100, "Workbench", ITEM_WORKBENCH, 1, {{ITEM_DIRT, 1}}, 0, 1.0f});
-        recipes.push_back({101, "Campfire", ITEM_CAMPFIRE, 1, {{ITEM_STICK, 5}}, 0, 5.0f});
-        recipes.push_back({1, "Stick", ITEM_STICK, 1, {{BLOCK_WOOD, 1}}, 0, 1.0f});
-        recipes.push_back({2, "Torch", ITEM_TORCH, 2, {{ITEM_STICK, 1}, {ITEM_FLINT, 1}}, 0, 2.0f});
-        
-        // Workbench (Bench 10)
-        recipes.push_back({20, "Toolbench", ITEM_TOOLBENCH, 1, {{ITEM_STICK, 1}, {ITEM_FLINT, 1}}, 10, 10.0f});
-        recipes.push_back({21, "Craftbench", ITEM_CRAFTBENCH, 1, {{BLOCK_WOOD, 1}, {ITEM_DIRT, 1}}, 10, 10.0f});
-        recipes.push_back({22, "Wire", ITEM_COPPER_WIRE, 5, {{ITEM_COPPER_ORE, 1}}, 10, 5.0f});
-        recipes.push_back({23, "Generator", ITEM_COAL_GENERATOR, 1, {{ITEM_COPPER_WIRE, 10}, {ITEM_STONE, 5}}, 10, 20.0f});
-        recipes.push_back({24, "Furnace", ITEM_FURNACE, 1, {{ITEM_STONE, 5}, {ITEM_DIRT, 1}}, 10, 10.0f});
-        recipes.push_back({25, "Wood Door", ITEM_WOOD_DOOR, 1, {{BLOCK_WOOD, 5}}, 10, 10.0f});
-        recipes.push_back({26, "Trapdoor", ITEM_WOOD_TRAPDOOR, 1, {{BLOCK_WOOD, 3}}, 10, 10.0f});
-        recipes.push_back({27, "Ladder", ITEM_LADDER, 5, {{ITEM_STICK, 10}}, 10, 5.0f});
-        recipes.push_back({28, "Portal", ITEM_PORTAL, 1, {{BLOCK_WOOD, 1}, {ITEM_STONE, 1}}, 10, 5.0f});
-
-        // Campfire (Bench 23)
-        recipes.push_back({30, "Glass", 14, 1, {{BLOCK_SAND, 5}}, 23, 10.0f}); 
-        recipes.push_back({31, "Charcoal", ITEM_COAL, 1, {{BLOCK_WOOD, 1}}, 23, 5.0f}); 
-    }
+    CraftingManager() {}
 
     bool canCraft(Player* p, int recipeId) {
-        for (const auto& r : recipes) {
+        for (int i = 0; i < g_recipeCount; ++i) {
+            const auto& r = g_recipeData[i];
             if (r.id == recipeId) {
-                for (const auto& ing : r.ingredients) {
+                for (int j = 0; j < r.ingredientCount; ++j) {
+                    const auto& ing = r.ingredients[j];
                     int found = 0;
-                    for (int i = 0; i < 10; i++) {
-                        if (p->slots[i] == ing.first) found += p->counts[i];
+                    for (int slot = 0; slot < 30; slot++) { // Full inventory
+                        if (p->slots[slot] == ing.itemId) found += p->counts[slot];
                     }
-                    if (found < ing.second) return false;
+                    if (found < ing.count) return false;
                 }
                 return true;
             }
@@ -59,43 +44,86 @@ public:
         return false;
     }
 
-    bool craft(Player* p, int recipeId) {
-        for (const auto& r : recipes) {
+    bool startCraft(Player* p, int recipeId, int tx, int ty) {
+        std::lock_guard<std::mutex> lock(craftMutex);
+        uint64_t key = ((uint64_t)tx << 32) | (uint64_t)ty;
+        if (activeCrafts.count(key)) return false; // Already working
+
+        for (int i = 0; i < g_recipeCount; ++i) {
+            const auto& r = g_recipeData[i];
             if (r.id == recipeId) {
                 if (!canCraft(p, recipeId)) return false;
-                for (const auto& ing : r.ingredients) {
-                    int remaining = ing.second;
-                    for (int i = 0; i < 10; i++) {
-                        if (p->slots[i] == ing.first) {
-                            int take = std::min(remaining, p->counts[i]);
-                            p->counts[i] -= take;
+                
+                // Consume ingredients
+                for (int j = 0; j < r.ingredientCount; ++j) {
+                    const auto& ing = r.ingredients[j];
+                    int remaining = ing.count;
+                    for (int slot = 0; slot < 30; slot++) {
+                        if (p->slots[slot] == ing.itemId) {
+                            int take = std::min(remaining, p->counts[slot]);
+                            p->counts[slot] -= take;
                             remaining -= take;
-                            if (p->counts[i] == 0) p->slots[i] = 0;
+                            if (p->counts[slot] == 0) p->slots[slot] = ITEM_EMPTY;
                             if (remaining == 0) break;
                         }
                     }
                 }
-                p->addItem(r.outType, r.outCount);
+                
+                ActiveCraft ac;
+                ac.recipeId = recipeId;
+                ac.progress = 0.0f;
+                ac.totalTime = r.time;
+                ac.finished = false;
+                activeCrafts[key] = ac;
                 return true;
             }
         }
         return false;
+    }
+
+    void update(float dt, Player* p) {
+        std::lock_guard<std::mutex> lock(craftMutex);
+        auto it = activeCrafts.begin();
+        while (it != activeCrafts.end()) {
+            ActiveCraft& ac = it->second;
+            ac.progress += dt / ac.totalTime;
+            
+            if (ac.progress >= 1.0f) {
+                ac.progress = 1.0f;
+                if (!ac.finished) {
+                    // Find recipe to get output
+                    for (int i = 0; i < g_recipeCount; i++) {
+                        if (g_recipeData[i].id == ac.recipeId) {
+                            p->addItem(g_recipeData[i].outType, g_recipeData[i].outCount);
+                            break;
+                        }
+                    }
+                    ac.finished = true;
+                }
+                it = activeCrafts.erase(it); // Remove after finishing (one-shot for now)
+            } else {
+                ++it;
+            }
+        }
     }
 
     std::string getRecipesJson(int benchId) {
         std::string json = "[";
         bool firstRecipe = true;
-        for (const auto& r : recipes) {
+        for (int i = 0; i < g_recipeCount; ++i) {
+            const auto& r = g_recipeData[i];
             if (r.requiredBench == benchId) {
                 if (!firstRecipe) json += ",";
                 json += "{\"id\":" + std::to_string(r.id);
-                json += ",\"name\":\"" + r.name + "\"";
+                json += ",\"name\":\"" + std::string(r.name) + "\"";
+                json += ",\"outId\":" + std::to_string(r.outType);
                 json += ",\"outCount\":" + std::to_string(r.outCount);
+                json += ",\"time\":" + std::to_string(r.time);
                 json += ",\"cost\":[";
-                for (size_t j=0; j<r.ingredients.size(); j++) {
+                for (int j = 0; j < r.ingredientCount; ++j) {
                     if (j > 0) json += ",";
-                    json += "{\"id\":" + std::to_string(r.ingredients[j].first);
-                    json += ",\"n\":" + std::to_string(r.ingredients[j].second) + "}";
+                    json += "{\"id\":" + std::to_string(r.ingredients[j].itemId);
+                    json += ",\"n\":" + std::to_string(r.ingredients[j].count) + "}";
                 }
                 json += "]}";
                 firstRecipe = false;

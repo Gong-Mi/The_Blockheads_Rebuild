@@ -1,4 +1,5 @@
 #include "game_world.h"
+#include "item_manager.h"
 #include <cmath>
 #include <algorithm>
 

@@ -14,11 +14,17 @@ struct Vertex {
     uint8_t r, g, b, a; // paintColor
 };
 
+struct Emitter {
+    uint8_t x, y; 
+    int type;
+};
+
 struct ChunkRenderData {
     GLuint vbo = 0;
     int vertexCount = 0;
     bool active = false;
     int cx, cy;
+    std::vector<Emitter> emitters;
 };
 
 struct EntityRenderData {
@@ -61,8 +67,24 @@ public:
     // Weather
     float skyR=0.5f, skyG=0.7f, skyB=1.0f;
     int weatherState = 0; // 0: Clear, 1: Rain, 2: Snow
-    struct Particle { float x, y, vx, vy, life; };
-    std::vector<Particle> rainParticles;
+    
+    enum ParticleType {
+        PARTICLE_WEATHER = 0,
+        PARTICLE_BLOCK_DEBRIS = 1,
+        PARTICLE_SMOKE = 2
+    };
+
+    struct Particle { 
+        float x, y;
+        float vx, vy;
+        float life;
+        float maxLife;
+        float size;
+        int type;
+        float r, g, b, a;
+        float u, v; // Texture coords
+    };
+    std::vector<Particle> particles;
 
     int totalVertexCount = 0;
     int screenW = 1920, screenH = 1080;
@@ -74,6 +96,15 @@ public:
     void pushBlock(std::vector<Vertex>& buffer, float x, float y, int type, float damage, float sun, float art);
     void updateMesh(const std::vector<PhysicalBlock*>& chunks);
     void renderFrame();
+    
+    // Particle System
+    void updateParticles();
+    void renderParticles();
+    void spawnBlockBreakParticles(int x, int y, int blockType);
+    void spawnSmoke(float x, float y);
+    void projectWorldToScreen(float worldX, float worldY, float& outScreenX, float& outScreenY);
+    void renderCraftingProgress(float x, float y, float progress);
+    
     char* loadShaderSource(AAssetManager* mgr, const char* name);
 };
 
