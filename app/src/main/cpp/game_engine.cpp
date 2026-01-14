@@ -259,7 +259,7 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
             // Sync drop items for rendering
             g_renderer->dropItems.clear();
             for (const auto& e : g_entities->dropItems) {
-                g_renderer->dropItems.push_back({e.x, e.y, e.type});
+                g_renderer->dropItems.push_back({e.x, e.y, e.itemId});
             }
             
             // Sync mobs

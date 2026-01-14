@@ -131,12 +131,13 @@ void Player::update(float gravity, GameWorld* world) {
     }
 }
 
-void EntityManager::spawnDrop(float x, float y, int type) {
+void EntityManager::spawnDrop(float x, float y, int itemType) {
     Entity e;
     e.x = x; e.y = y;
     e.vx = ((float)rand() / (float)RAND_MAX - 0.5f) * 0.5f; 
     e.vy = 0.8f; 
-    e.type = type;
+    e.type = ENTITY_DROP_ITEM;
+    e.itemId = itemType;
     e.rotation = 0;
     e.onGround = false;
     e.markForDelete = false;
@@ -148,6 +149,7 @@ void EntityManager::spawnMob(float x, float y, int type) {
     e.x = x; e.y = y;
     e.vx = 0; e.vy = 0;
     e.type = type;
+    e.itemId = 0;
     e.rotation = 0;
     e.onGround = false;
     e.markForDelete = false;
@@ -225,7 +227,7 @@ void EntityManager::update(float gravity, GameWorld* world) {
         }
         
         if (distSq < 0.2f) { 
-            player.addItem(e.type, 1);
+            player.addItem(e.itemId, 1);
             inventoryDirty = true;
             queueSound("pop.wav");
             e.markForDelete = true;

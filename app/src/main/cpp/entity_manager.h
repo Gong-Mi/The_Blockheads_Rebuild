@@ -8,7 +8,8 @@
 struct Entity {
     float x, y;
     float vx, vy;
-    int type;
+    int type; // Entity Type (e.g., ENTITY_DODO, ENTITY_DROP_ITEM)
+    int itemId; // For drops: Item ID
     float rotation;
     bool onGround;
     bool markForDelete; 

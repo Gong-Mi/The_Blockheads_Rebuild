@@ -66,7 +66,8 @@ enum ItemID {
     ITEM_PICKAXE = 50,
     ITEM_LINEN_CAP = 60,
     ITEM_LINEN_PANTS = 61,
-    ENTITY_DODO = 100
+    ENTITY_DODO = 100,
+    ENTITY_DROP_ITEM = 101
 };
 
 #endif
