@@ -137,36 +137,20 @@ GLuint WorldRenderer::createProgram(const char* vs, const char* fs) {
 }
 
 void WorldRenderer::pushBlock(std::vector<Vertex>& buffer, float x, float y, int type, float damage, float sun, float art) {
-    if (type == 0) return; 
+    if (type == 0) return;
     
     int texRow = 0, texCol = 0;
-    if (type == ITEM_DIRT) { texRow = 0; texCol = 0; } 
-    else if (type == ITEM_STONE) { texRow = 0; texCol = 1; } 
-    else if (type == BLOCK_WOOD) { texRow = 0; texCol = 2; } 
-    else if (type == BLOCK_LEAVES) { texRow = 0; texCol = 3; } 
-    else if (type == BLOCK_GRASS) { texRow = 0; texCol = 4; } 
-    else if (type == BLOCK_SAND) { texRow = 1; texCol = 0; } 
-    else if (type == ITEM_COPPER_ORE) { texRow = 1; texCol = 1; } 
-    else if (type == ITEM_TIN_ORE) { texRow = 1; texCol = 2; } 
-    else if (type == BLOCK_SNOW) { texRow = 1; texCol = 3; } 
-    else if (type == BLOCK_ICE) { texRow = 1; texCol = 4; } 
-    else if (type == BLOCK_CACTUS) { texRow = 1; texCol = 5; } 
-    else if (type == BLOCK_GLASS) { texRow = 1; texCol = 6; } 
-    else if (type == ITEM_FUR) { texRow = 1; texCol = 7; } 
-    else if (type == ITEM_WORKBENCH) { texRow = 2; texCol = 0; } 
-    else if (type == ITEM_TOOLBENCH) { texRow = 2; texCol = 1; } 
-    else if (type == ITEM_CRAFTBENCH) { texRow = 2; texCol = 2; } 
-    else if (type == ITEM_LINEN_CAP) { texRow = 2; texCol = 3; } 
-    else if (type == ITEM_LINEN_PANTS) { texRow = 2; texCol = 4; } 
-    else if (type == ITEM_TORCH) { texRow = 3; texCol = 0; } 
-    else {
+    auto def = ItemManager::getInstance().getDef(type);
+    if (def) {
+        texRow = def->texRow;
+        texCol = def->texCol;
+    } else {
         texCol = (type - 1) % 32;
         texRow = (type - 1) / 32;
     }
 
     float tx = (float)texCol;
-    float ty = (float)texRow;
-    float s = 1.0f;
+    float ty = (float)texRow;    float s = 1.0f;
     
     auto pushV = [&](float vx, float vy, uint8_t vu, uint8_t vv) {
         Vertex v_out;
