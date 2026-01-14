@@ -61,7 +61,8 @@ enum ItemID {
     ITEM_CHILI = 30,
     ITEM_DODO_MEAT = 31,
     ITEM_COCONUT = 32,
-    ITEM_PICKAXE = 50
+    ITEM_PICKAXE = 50,
+    ENTITY_DODO = 100
 };
 
 #endif

@@ -134,8 +134,60 @@ void EntityManager::spawnDrop(float x, float y, int type) {
     dropItems.push_back(e);
 }
 
+void EntityManager::spawnMob(float x, float y, int type) {
+    Entity e;
+    e.x = x; e.y = y;
+    e.vx = 0; e.vy = 0;
+    e.type = type;
+    e.rotation = 0;
+    e.onGround = false;
+    e.markForDelete = false;
+    mobs.push_back(e);
+}
+
 void EntityManager::update(float gravity, GameWorld* world) {
     player.update(gravity, world);
+
+    // --- Mob AI (Dodos) ---
+    for (auto& m : mobs) {
+        if (m.type == ENTITY_DODO) {
+            // Random walk
+            if (rand() % 100 < 2) m.vx = (float)(rand() % 3 - 1) * 0.05f;
+            
+            m.vy -= gravity * 0.5f;
+            m.x += m.vx;
+            m.y += m.vy;
+
+            if (world) {
+                int bx = (int)floor(m.x);
+                int by = (int)floor(m.y);
+                Tile* t = world->getTile(bx, by);
+                if (t && t->foreground != ITEM_EMPTY) {
+                    m.y = (float)(by + 1);
+                    m.vy = 0;
+                    m.onGround = true;
+                    if (rand() % 50 < 1) m.vy = 0.3f; // Hop
+                } else {
+                    m.onGround = false;
+                }
+            }
+
+            // World wrap
+            if (m.x < 0) m.x += 15000.0f;
+            if (m.x >= 15000.0f) m.x -= 15000.0f;
+
+            // Player Interaction (Kill Dodo)
+            float dx = player.x - m.x;
+            float dy = player.y - m.y;
+            if (dx*dx + dy*dy < 1.0f && rand() % 100 < 5) { // Simple overlap check
+                 m.markForDelete = true;
+                 spawnDrop(m.x, m.y, ITEM_DODO_MEAT);
+                 queueSound("dodoDie.wav");
+            }
+        }
+    }
+    mobs.erase(std::remove_if(mobs.begin(), mobs.end(), 
+        [](const Entity& e){ return e.markForDelete; }), mobs.end());
 
     for (auto& e : dropItems) {
         float dx = player.x - e.x;

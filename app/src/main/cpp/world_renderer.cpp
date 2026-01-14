@@ -64,6 +64,9 @@ void WorldRenderer::init(AAssetManager* mgr) {
     bodyTexID = loadTex(mgr, "body_ct.png");
     armsTexID = loadTex(mgr, "arms_ct.png");
     legsTexID = loadTex(mgr, "legs_ct.png");
+    dodoBodyTexID = loadTex(mgr, "dodoBody.png");
+    dodoHeadTexID = loadTex(mgr, "dodoHead.png");
+    dodoLegTexID = loadTex(mgr, "dodoLeg.png");
 
     // --- DEBUG SHADER (Inline) ---
     const char* debugVS = 
@@ -470,6 +473,42 @@ void WorldRenderer::renderFrame() {
         // Arms
         drawCharCube(armsTexID, -0.25f, 0.25f, 0, 0.12f, 0.5f, 0.12f, 0, 0, 1, 1);
         drawCharCube(armsTexID,  0.25f, 0.25f, 0, 0.12f, 0.5f, 0.12f, 0, 0, 1, 1);
+    }
+
+    // --- Render Mobs ---
+    if (charProgram != 0 && dodoBodyTexID != 0) {
+        glUseProgram(charProgram);
+        // Reuse uniforms from player render (light etc is global-ish)
+        
+        auto drawMobPart = [&](GLuint tex, float mx, float my, float x, float y, float z, float w, float h, float d) {
+            glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, tex);
+            glUniform1i(glGetUniformLocation(charProgram, "texture"), 0);
+            float m_part[16]; std::copy(matrix, matrix + 16, m_part);
+            Matrix::translate(m_part, mx + x, my + y, z);
+            Matrix::scale(m_part, w, h, d); 
+            glUniformMatrix4fv(glGetUniformLocation(charProgram, "mvp_matrix"), 1, GL_FALSE, m_part);
+            float m_norm[16]; Matrix::setIdentity(m_norm);
+            glUniformMatrix4fv(glGetUniformLocation(charProgram, "normal_matrix"), 1, GL_FALSE, m_norm);
+            float pV[] = { -0.5f,-0.5f,0.5f, 0,1, 0,0,1, 0.5f,-0.5f,0.5f, 1,1, 0,0,1, -0.5f,0.5f,0.5f, 0,0, 0,0,1,
+                            0.5f,-0.5f,0.5f, 1,1, 0,0,1, 0.5f,0.5f,0.5f, 1,0, 0,0,1, -0.5f,0.5f,0.5f, 0,0, 0,0,1 };
+            glVertexAttribPointer(glGetAttribLocation(charProgram, "position"), 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), &pV[0]);
+            glVertexAttribPointer(glGetAttribLocation(charProgram, "texCoord"), 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), &pV[3]);
+            glVertexAttribPointer(glGetAttribLocation(charProgram, "normal"), 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), &pV[5]);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        };
+
+        for (const auto& mob : mobs) {
+            if (mob.type == ENTITY_DODO) {
+                float wAnim = std::sin(animTime * 15.0f + mob.x * 10.0f);
+                // Body
+                drawMobPart(dodoBodyTexID, mob.x, mob.y + 0.3f, 0, 0, 0, 0.4f, 0.3f, 0.2f);
+                // Head
+                drawMobPart(dodoHeadTexID, mob.x, mob.y + 0.3f, 0.25f, 0.2f, 0, 0.2f, 0.2f, 0.2f);
+                // Legs
+                drawMobPart(dodoLegTexID, mob.x, mob.y + 0.3f, -0.05f, -0.2f + (wAnim>0?wAnim*0.1f:0), 0, 0.05f, 0.2f, 0.05f);
+                drawMobPart(dodoLegTexID, mob.x, mob.y + 0.3f, 0.05f, -0.2f + (wAnim<0?-wAnim*0.1f:0), 0, 0.05f, 0.2f, 0.05f);
+            }
+        }
     }
 
     // --- Render Drop Items ---

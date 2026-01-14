@@ -31,6 +31,7 @@ public:
     GLuint program;
     GLuint textureID, destructID, normalID, itemsTexID;
     GLuint headTexID, bodyTexID, armsTexID, legsTexID;
+    GLuint dodoBodyTexID, dodoHeadTexID, dodoLegTexID;
     GLuint actionSquareTexID, actionSquareProgram;
     GLuint charProgram;
     GLuint debugProgram; // For debugging char render
@@ -53,6 +54,7 @@ public:
     
     float playerX = 0, playerY = 0;
     std::vector<EntityRenderData> dropItems;
+    std::vector<EntityRenderData> mobs;
 
     int totalVertexCount = 0;
     int screenW = 1920, screenH = 1080;

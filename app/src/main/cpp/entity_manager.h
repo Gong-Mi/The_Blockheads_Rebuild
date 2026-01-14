@@ -38,6 +38,7 @@ class EntityManager {
 public:
     Player player;
     std::vector<Entity> dropItems;
+    std::vector<Entity> mobs;
     bool inventoryDirty = false;
     std::vector<std::string> soundEvents;
 
@@ -46,6 +47,7 @@ public:
     }
 
     void spawnDrop(float x, float y, int type);
+    void spawnMob(float x, float y, int type);
     void update(float gravity, GameWorld* world);
 };
 

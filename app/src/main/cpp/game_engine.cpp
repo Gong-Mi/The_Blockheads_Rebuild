@@ -251,6 +251,12 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
             for (const auto& e : g_entities->dropItems) {
                 g_renderer->dropItems.push_back({e.x, e.y, e.type});
             }
+            
+            // Sync mobs
+            g_renderer->mobs.clear();
+            for (const auto& m : g_entities->mobs) {
+                g_renderer->mobs.push_back({m.x, m.y, m.type});
+            }
 
             { std::lock_guard<std::mutex> lock(g_world->chunksMutex); g_renderer->updateMesh(g_world->chunks); }
             g_renderer->renderFrame();
