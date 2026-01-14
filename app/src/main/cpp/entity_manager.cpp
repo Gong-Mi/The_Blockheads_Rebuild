@@ -26,26 +26,46 @@ bool Player::checkCollision(float newX, float newY, GameWorld* world) {
     int blX = (int)floor((newX - w/2));
     int brX = (int)floor((newX + w/2));
     int feetY = (int)floor(newY); 
-    int headY = (int)floor(newY + 1.8f); // ~2 blocks high
+    int headY = (int)floor(newY + 1.8f); 
     
     if (feetY < 0) return true;
 
-    // Check feet level
-    Tile* t1 = world->getTile(blX, feetY);
-    Tile* t2 = world->getTile(brX, feetY);
-    if ((t1 && t1->foreground != ITEM_EMPTY) || (t2 && t2->foreground != ITEM_EMPTY)) return true;
+    auto isSolid = [&](int x, int y) {
+        Tile* t = world->getTile(x, y);
+        if (!t || t->foreground == ITEM_EMPTY) return false;
+        // Architectural items are non-solid for movement
+        if (t->foreground == ITEM_WOOD_DOOR || t->foreground == ITEM_WOOD_TRAPDOOR || t->foreground == ITEM_LADDER) return false;
+        return true;
+    };
 
-    // Check head level
-    Tile* t3 = world->getTile(blX, headY);
-    Tile* t4 = world->getTile(brX, headY);
-    if ((t3 && t3->foreground != ITEM_EMPTY) || (t4 && t4->foreground != ITEM_EMPTY)) return true;
+    if (isSolid(blX, feetY) || isSolid(brX, feetY)) return true;
+    if (isSolid(blX, headY) || isSolid(brX, headY)) return true;
 
     return false;
 }
 
 void Player::update(float gravity, GameWorld* world) {
+    // Ladder Logic
+    bool onLadder = false;
+    if (world) {
+        Tile* t = world->getTile((int)floor(x), (int)floor(y + 0.5f));
+        if (t && t->foreground == ITEM_LADDER) {
+            onLadder = true;
+            vx *= 0.5f; // Slow down on ladder
+            if (vy < -0.1f) vy = -0.1f; // Slow descent
+        }
+    }
+
     x += vx;
-    vy -= gravity; 
+    if (onLadder) {
+        // Vertical movement on ladder if player is "trying to move"? 
+        // For now, ladders just counteract gravity and allow "floating"
+        vy *= 0.8f; 
+        vy += 0.01f; // Neutral buoyancy on ladder
+    } else {
+        vy -= gravity; 
+    }
+    
     float nextY = y + vy;
     
     if (world) {

@@ -54,6 +54,10 @@ void ItemManager::init() {
     items[71] = {71, "Wire", 6, 1, true, false, 0, 0};
     items[72] = {72, "Generator", 6, 2, true, false, 0, 0};
     items[73] = {73, "Electric Lamp", 6, 3, true, false, 0, 0};
+
+    items[80] = {80, "Wood Door", 10, 0, true, false, 0, 0};
+    items[81] = {81, "Trapdoor", 10, 1, true, false, 0, 0};
+    items[82] = {82, "Ladder", 10, 2, true, false, 0, 0};
 }
 
 const ItemManager::ItemDef* ItemManager::getDef(int id) {
