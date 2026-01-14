@@ -32,16 +32,15 @@ public:
         recipes.push_back({21, "Craftbench", ITEM_CRAFTBENCH, 1, {{BLOCK_WOOD, 1}, {ITEM_DIRT, 1}}, 10, 10.0f});
         recipes.push_back({22, "Wire", ITEM_COPPER_WIRE, 5, {{ITEM_COPPER_ORE, 1}}, 10, 5.0f});
         recipes.push_back({23, "Generator", ITEM_COAL_GENERATOR, 1, {{ITEM_COPPER_WIRE, 10}, {ITEM_STONE, 5}}, 10, 20.0f});
+        recipes.push_back({24, "Furnace", ITEM_FURNACE, 1, {{ITEM_STONE, 5}, {ITEM_DIRT, 1}}, 10, 10.0f});
         
         // Toolbench (Bench 11)
-        recipes.push_back({10, "Flint Pickaxe", ITEM_PICKAXE, 1, {{ITEM_STICK, 1}, {ITEM_FLINT, 2}}, 11, 5.0f});
-        recipes.push_back({11, "Flint Axe", 51, 1, {{ITEM_STICK, 1}, {ITEM_FLINT, 2}}, 11, 5.0f});
-        recipes.push_back({12, "Flint Spade", 52, 1, {{ITEM_STICK, 1}, {ITEM_FLINT, 2}}, 11, 5.0f});
-
-        // Craftbench (Bench 15)
-        recipes.push_back({60, "Fur Cap", ITEM_LINEN_CAP, 1, {{ITEM_FUR, 3}}, 15, 10.0f});
-        recipes.push_back({61, "Fur Pants", ITEM_LINEN_PANTS, 1, {{ITEM_FUR, 5}}, 15, 10.0f});
-        recipes.push_back({62, "Electric Lamp", ITEM_ELECTRIC_LAMP, 1, {{ITEM_COPPER_WIRE, 2}, {BLOCK_GLASS, 1}}, 15, 10.0f});
+        // ...
+        
+        // Furnace (Bench 16)
+        recipes.push_back({40, "Copper Ingot", ITEM_COPPER_INGOT, 1, {{ITEM_COPPER_ORE, 1}, {ITEM_COAL, 1}}, 16, 10.0f});
+        recipes.push_back({41, "Tin Ingot", ITEM_TIN_INGOT, 1, {{ITEM_TIN_ORE, 1}, {ITEM_COAL, 1}}, 16, 10.0f});
+        recipes.push_back({42, "Iron Ingot", ITEM_IRON_INGOT, 1, {{ITEM_IRON_ORE, 1}, {ITEM_COAL, 1}}, 16, 15.0f});
 
         // Campfire (Bench 23)
         // Note: ID 14 is Glass block (reusing/defining it implicitly if not in constants yet, 

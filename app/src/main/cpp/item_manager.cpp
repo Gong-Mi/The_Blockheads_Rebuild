@@ -19,8 +19,15 @@ void ItemManager::init() {
     items[10] = {10, "Workbench", 2, 0, true, false, 0, 0};
     items[11] = {11, "Toolbench", 2, 1, true, false, 0, 0};
     items[15] = {15, "Craftbench", 2, 2, true, false, 0, 0};
+    items[16] = {16, "Furnace", 2, 5, true, false, 0, 0};
     items[60] = {60, "Fur Cap", 2, 3, false, false, 0, 0};
-    items[61] = {61, "Fur Pants", 2, 4, false, false, 0, 0};
+    
+    // ... Ingots (row 7)
+    items[40] = {40, "Copper Ingot", 7, 0, false, false, 0, 0};
+    items[41] = {41, "Tin Ingot", 7, 1, false, false, 0, 0};
+    items[42] = {42, "Iron Ingot", 7, 2, false, false, 0, 0};
+    items[43] = {43, "Steel Ingot", 7, 3, false, false, 0, 0};
+    items[44] = {44, "Bronze Ingot", 7, 4, false, false, 0, 0};
 
     items[20] = {20, "Torch", 3, 0, true, false, 0, 0};
     items[21] = {21, "Flint", 3, 1, false, false, 0, 0};
