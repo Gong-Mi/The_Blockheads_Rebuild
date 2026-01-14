@@ -125,6 +125,30 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                 }
             }
             actionQueue.pop();
+        } else if (current.type == ACTION_EAT) {
+            currentStatus = ACTION_EAT;
+            if (entities) {
+                int slot = entities->player.selectedSlot;
+                int item = entities->player.slots[slot];
+                
+                // Eat logic
+                if (item == ITEM_CHILI || item == ITEM_DODO_MEAT || item == ITEM_COCONUT) {
+                    float hungerRestore = 0.2f; // Default
+                    if (item == ITEM_DODO_MEAT) hungerRestore = 0.35f;
+                    if (item == ITEM_COCONUT) hungerRestore = 0.25f;
+
+                    entities->player.hunger += hungerRestore;
+                    if (entities->player.hunger > 1.0f) entities->player.hunger = 1.0f;
+                    
+                    entities->player.counts[slot]--;
+                    if (entities->player.counts[slot] <= 0) entities->player.slots[slot] = 0;
+                    entities->inventoryDirty = true;
+                    
+                    entities->queueSound("crunch.wav"); // Reuse existing sound or add eat.wav
+                    changed = true;
+                }
+            }
+            actionQueue.pop();
         } else {
             actionQueue.pop();
         }

@@ -22,6 +22,7 @@ public:
     
     float health = 1.0f; // 0.0 to 1.0
     float hunger = 1.0f; // 0.0 to 1.0
+    float breath = 1.0f; // 0.0 to 1.0
 
     int slots[10];
     int counts[10];

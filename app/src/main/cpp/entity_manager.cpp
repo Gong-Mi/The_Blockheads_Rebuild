@@ -85,6 +85,41 @@ void Player::update(float gravity, GameWorld* world) {
     // World wrap
     if (x < 0) x += 15000.0f;
     if (x >= 15000.0f) x -= 15000.0f;
+
+    // --- Status Updates ---
+    if (world) {
+        // Hunger decay
+        hunger -= 0.00002f; 
+        if (hunger < 0) hunger = 0;
+        if (hunger <= 0) health -= 0.0001f; // Starvation damage
+
+        // Drowning logic
+        int headX = (int)floor(x);
+        int headY = (int)floor(y + 1.5f);
+        Tile* headTile = world->getTile(headX, headY);
+        if (headTile && headTile->waterLevel > 150) {
+            breath -= 0.002f;
+            if (breath < 0) breath = 0;
+            if (breath <= 0) health -= 0.005f;
+        } else {
+            breath += 0.01f;
+            if (breath > 1.0f) breath = 1.0f;
+        }
+
+        // Temperature damage
+        Tile* feetTile = world->getTile((int)floor(x), (int)floor(y));
+        if (feetTile) {
+            if (feetTile->temperature < 15000) health -= 0.0002f; // Too cold
+            else if (feetTile->temperature > 55000) health -= 0.0002f; // Too hot
+        }
+
+        // Regeneration
+        if (hunger > 0.8f && health < 1.0f && health > 0) {
+            health += 0.0001f;
+        }
+        
+        if (health < 0) health = 0;
+    }
 }
 
 void EntityManager::spawnDrop(float x, float y, int type) {

@@ -58,6 +58,9 @@ enum ItemID {
     ITEM_FLINT = 21,
     ITEM_STICK = 22,
     ITEM_CAMPFIRE = 23,
+    ITEM_CHILI = 30,
+    ITEM_DODO_MEAT = 31,
+    ITEM_COCONUT = 32,
     ITEM_PICKAXE = 50
 };
 
