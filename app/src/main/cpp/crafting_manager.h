@@ -34,6 +34,12 @@ public:
         recipes.push_back({10, "Flint Pickaxe", ITEM_PICKAXE, 1, {{ITEM_STICK, 1}, {ITEM_FLINT, 2}}, 11, 5.0f});
         recipes.push_back({11, "Flint Axe", 51, 1, {{ITEM_STICK, 1}, {ITEM_FLINT, 2}}, 11, 5.0f});
         recipes.push_back({12, "Flint Spade", 52, 1, {{ITEM_STICK, 1}, {ITEM_FLINT, 2}}, 11, 5.0f});
+
+        // Campfire (Bench 23)
+        // Note: ID 14 is Glass block (reusing/defining it implicitly if not in constants yet, 
+        // assuming standard ID or adding it. Let's assume 14 for Glass).
+        // Sand is BLOCK_SAND (6).
+        recipes.push_back({30, "Glass", 14, 1, {{BLOCK_SAND, 5}}, 23, 10.0f}); 
     }
 
     bool canCraft(Player* p, int recipeId) {

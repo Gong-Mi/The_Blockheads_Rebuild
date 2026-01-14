@@ -67,7 +67,19 @@ void Player::update(float gravity, GameWorld* world) {
         if (y < 0) { y = 0; vy = 0; grounded = true; }
     }
 
-    if (grounded) vx *= 0.8f;
+    if (grounded) {
+        float friction = 0.8f;
+        if (world) {
+             int bx = (int)floor(x);
+             int by = (int)floor(y - 0.5f);
+             Tile* t = world->getTile(bx, by);
+             if (t) {
+                 if (t->foreground == BLOCK_ICE) friction = 0.98f; // Very slippery
+                 else if (t->foreground == BLOCK_SNOW) friction = 0.92f; // Somewhat slippery
+             }
+        }
+        vx *= friction;
+    }
     else vx *= 0.98f;
     
     // World wrap

@@ -136,9 +136,30 @@ GLuint WorldRenderer::createProgram(const char* vs, const char* fs) {
 void WorldRenderer::pushBlock(std::vector<Vertex>& buffer, float x, float y, int type, float damage, float sun, float art) {
     if (type == 0) return;
     
-    int idx = type - 1;
-    float tx = (float)(idx % 32); 
-    float ty = (float)(idx / 32);
+            // Texture mapping (row, col) in 32x32 atlas
+            int texRow = 0, texCol = 0;
+            if (t.foreground == ITEM_DIRT) { texRow = 0; texCol = 0; }
+            else if (t.foreground == ITEM_STONE) { texRow = 0; texCol = 1; }
+            else if (t.foreground == BLOCK_WOOD) { texRow = 0; texCol = 2; }
+            else if (t.foreground == BLOCK_LEAVES) { texRow = 0; texCol = 3; }
+            else if (t.foreground == BLOCK_GRASS) { texRow = 0; texCol = 4; }
+            else if (t.foreground == BLOCK_SAND) { texRow = 1; texCol = 0; }
+            else if (t.foreground == ITEM_COPPER_ORE) { texRow = 1; texCol = 1; }
+            else if (t.foreground == ITEM_TIN_ORE) { texRow = 1; texCol = 2; }
+            else if (t.foreground == BLOCK_SNOW) { texRow = 1; texCol = 3; }
+            else if (t.foreground == BLOCK_ICE) { texRow = 1; texCol = 4; }
+            else if (t.foreground == BLOCK_CACTUS) { texRow = 1; texCol = 5; }
+            else if (t.foreground == BLOCK_GLASS) { texRow = 1; texCol = 6; }
+            else if (t.foreground == ITEM_WORKBENCH) { texRow = 2; texCol = 0; }
+            else if (t.foreground == ITEM_TOOLBENCH) { texRow = 2; texCol = 1; }
+            else if (t.foreground == ITEM_TORCH) { texRow = 3; texCol = 0; }
+            
+            // Background overrides
+            if (t.foreground == 0 && t.background != 0) {
+                if (t.background == ITEM_DIRT) { texRow = 0; texCol = 0; }
+                else if (t.background == ITEM_STONE) { texRow = 0; texCol = 1; }
+                else if (t.background == BLOCK_SAND) { texRow = 1; texCol = 0; }
+            }
     float s = 1.0f;
     
     auto pushV = [&](float vx, float vy, uint8_t vu, uint8_t vv) {

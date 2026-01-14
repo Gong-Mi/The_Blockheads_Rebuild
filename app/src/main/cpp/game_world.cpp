@@ -249,6 +249,11 @@ void GameWorld::generateChunkSync(int cx, int cy) {
         t.damage = 0; t.sunlight = 0; t.artLight = 0;
         
         float h = Noise::fbm(worldX * 0.02f, 3); 
+        
+        // --- Biome Logic ---
+        float temperature = Noise::fbm(worldX * 0.0005f + 1000.0f, 2); // Large scale temperature
+        t.temperature = (uint16_t)((temperature + 1.0f) * 0.5f * 65535.0f); // Store for later
+        
         int surfaceHeight = 80 + (int)(h * 20.0f);
         
         if (worldY > surfaceHeight) {
@@ -256,8 +261,16 @@ void GameWorld::generateChunkSync(int cx, int cy) {
             t.background = ITEM_EMPTY;
         } else {
             int type = ITEM_STONE;
-            if (worldY > surfaceHeight - 5) type = ITEM_DIRT;
-            if (worldY == surfaceHeight) type = BLOCK_GRASS;
+            if (worldY > surfaceHeight - 5) {
+                if (temperature < -0.2f) type = BLOCK_SNOW;      // Cold -> Snow
+                else if (temperature > 0.4f) type = BLOCK_SAND;  // Hot -> Sand
+                else type = ITEM_DIRT;                           // Normal -> Dirt
+            }
+            if (worldY == surfaceHeight) {
+                if (temperature < -0.2f) type = BLOCK_SNOW;
+                else if (temperature > 0.4f) type = BLOCK_SAND;
+                else type = BLOCK_GRASS;
+            }
             
             float caveNoise = Noise::noise2d(worldX * 0.08f, worldY * 0.08f);
             float caveDensity = 0.55f; 
@@ -269,13 +282,16 @@ void GameWorld::generateChunkSync(int cx, int cy) {
                 t.foreground = type;
                 float oreNoise = Noise::noise2d(worldX * 0.2f, worldY * 0.2f);
                 if (oreNoise > 0.75f) {
-                    if (worldY < 60 && worldY > 30) t.foreground = 7;
-                    if (worldY < 40) t.foreground = 8;
+                    if (worldY < 60 && worldY > 30) t.foreground = ITEM_COPPER_ORE;
+                    if (worldY < 40) t.foreground = ITEM_TIN_ORE;
                 }
             }
             t.background = (worldY > surfaceHeight - 10) ? ITEM_DIRT : ITEM_STONE;
+            if (temperature > 0.4f && t.background == ITEM_DIRT) t.background = BLOCK_SAND; // Sand background for desert
+
             if (worldY < 85 && t.foreground == ITEM_EMPTY) {
-                t.waterLevel = 255;
+                if (temperature < -0.4f) t.foreground = BLOCK_ICE; // Freeze water if very cold
+                else t.waterLevel = 255;
             } else {
                 t.waterLevel = 0;
             }
@@ -290,14 +306,30 @@ void GameWorld::generateChunkSync(int cx, int cy) {
         
         if (cy * CHUNK_SIZE <= surfaceHeight && (cy + 1) * CHUNK_SIZE > surfaceHeight) {
             int localY = surfaceHeight % CHUNK_SIZE;
-            if (block->tiles[localY * CHUNK_SIZE + i].foreground == BLOCK_GRASS) {
+            Tile& surfaceTile = block->tiles[localY * CHUNK_SIZE + i];
+            
+            if (surfaceTile.foreground == BLOCK_SAND) {
+                 // Cactus Generation
+                 if ((worldX * 731) % 100 < 5) { 
+                    int cactusH = 3 + (worldX % 3);
+                    for (int ty = 1; ty <= cactusH; ty++) {
+                        int targetY = surfaceHeight + ty;
+                        if (targetY / CHUNK_SIZE == cy) {
+                            int ly = targetY % CHUNK_SIZE;
+                            block->tiles[ly * CHUNK_SIZE + i].foreground = BLOCK_CACTUS;
+                        }
+                    }
+                 }
+            } else if (surfaceTile.foreground == BLOCK_GRASS || surfaceTile.foreground == BLOCK_SNOW) {
+                // Tree Generation
                 if ((worldX * 731) % 100 < 15) { 
                     int treeH = 4 + (worldX % 4);
                     for (int ty = 1; ty <= treeH; ty++) {
                         int targetY = surfaceHeight + ty;
                         if (targetY / CHUNK_SIZE == cy) {
                             int ly = targetY % CHUNK_SIZE;
-                            block->tiles[ly * CHUNK_SIZE + i].foreground = BLOCK_WOOD;
+                            Tile& t = block->tiles[ly * CHUNK_SIZE + i];
+                            t.foreground = BLOCK_WOOD;
                             if (ty > treeH - 2) {
                                 if (i > 0) block->tiles[ly * CHUNK_SIZE + i - 1].foreground = BLOCK_LEAVES;
                                 if (i < CHUNK_SIZE - 1) block->tiles[ly * CHUNK_SIZE + i + 1].foreground = BLOCK_LEAVES;
