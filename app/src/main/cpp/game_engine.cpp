@@ -102,6 +102,10 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
     std::string logPath = g_storagePath + "/game_log.txt";
     g_logFile = fopen(logPath.c_str(), "w");
     logToFile("Native Init Start. Storage: %s", g_storagePath.c_str());
+
+    SettingsManager::getInstance().load(g_storagePath + "/settings.ini");
+
+    CompressionManager::init();
     
     if (!g_world) g_world = new GameWorld();
     if (!g_entities) g_entities = new EntityManager();

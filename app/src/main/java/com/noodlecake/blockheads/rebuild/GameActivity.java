@@ -50,12 +50,26 @@ public class GameActivity extends Activity {
     }
 
     public void playSound(String name) {
+        if (!getSettingNative("sound_enabled", true)) return;
         if (mSoundMap.containsKey(name)) {
             mSoundPool.play(mSoundMap.get(name), 1.0f, 1.0f, 1, 0, 1.0f);
         }
     }
 
     public void playMusic(String name) {
+        boolean musicEnabled = getSettingNative("music_enabled", true);
+        
+        if (!musicEnabled) {
+             if (mMusicPlayer != null && mMusicPlayer.isPlaying()) {
+                 try {
+                    mMusicPlayer.stop();
+                    mMusicPlayer.release();
+                    mMusicPlayer = null;
+                 } catch (Exception e) {}
+             }
+             return;
+        }
+
         if (name.equals(mCurrentMusic) && mMusicPlayer != null && mMusicPlayer.isPlaying()) return;
         
         try {

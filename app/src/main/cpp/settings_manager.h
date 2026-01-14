@@ -22,9 +22,13 @@ public:
     void setFloat(const std::string& key, float value);
     float getFloat(const std::string& key, float defaultValue = 1.0f);
 
+    void load(const std::string& path);
+    void save();
+
 private:
     SettingsManager() {}
     std::map<std::string, std::string> cache; 
+    std::string storagePath;
 };
 
 #endif
