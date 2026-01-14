@@ -170,6 +170,16 @@ void EntityManager::update(float gravity, GameWorld* world) {
             m.y += m.vy;
 
             if (world) {
+                // Check forward collision for jumping
+                if (m.vx != 0) {
+                    int nextX = (int)floor(m.x + m.vx * 10.0f); // Look ahead
+                    int currY = (int)floor(m.y);
+                    Tile* wall = world->getTile(nextX, currY);
+                    if (wall && wall->foreground != ITEM_EMPTY && m.onGround) {
+                        m.vy = 0.35f; // Jump over block
+                    }
+                }
+
                 int bx = (int)floor(m.x);
                 int by = (int)floor(m.y);
                 Tile* t = world->getTile(bx, by);
@@ -177,7 +187,6 @@ void EntityManager::update(float gravity, GameWorld* world) {
                     m.y = (float)(by + 1);
                     m.vy = 0;
                     m.onGround = true;
-                    if (rand() % 50 < 1) m.vy = 0.3f; // Hop
                 } else {
                     m.onGround = false;
                 }
