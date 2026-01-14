@@ -109,8 +109,17 @@ void Player::update(float gravity, GameWorld* world) {
         // Temperature damage
         Tile* feetTile = world->getTile((int)floor(x), (int)floor(y));
         if (feetTile) {
-            if (feetTile->temperature < 15000) health -= 0.0002f; // Too cold
-            else if (feetTile->temperature > 55000) health -= 0.0002f; // Too hot
+            uint16_t temp = feetTile->temperature;
+            // Clothing insulation
+            if (clothingHead == ITEM_LINEN_CAP) {
+                if (temp < 15000) temp += 10000;
+            }
+            if (clothingLegs == ITEM_LINEN_PANTS) {
+                if (temp < 15000) temp += 10000;
+            }
+
+            if (temp < 15000) health -= 0.0002f; // Too cold
+            else if (temp > 55000) health -= 0.0002f; // Too hot
         }
 
         // Regeneration

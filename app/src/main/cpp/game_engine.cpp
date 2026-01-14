@@ -139,9 +139,19 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handleTouchNative(JNIEnv* en
     g_renderer->targetBlockX = blockX; g_renderer->targetBlockY = blockY;
     g_renderer->showActionSquare = true; g_renderer->followingPlayer = true; 
     Tile* t = g_world->getTile(blockX, blockY);
-    if (t && (t->foreground == 10 || t->foreground == 11)) g_ai->addAction(ACTION_INTERACT, blockX, blockY);
+    if (t && (t->foreground == 10 || t->foreground == 11 || t->foreground == 15 || t->foreground == 23)) g_ai->addAction(ACTION_INTERACT, blockX, blockY);
     else if (t && t->foreground != ITEM_EMPTY) g_ai->addAction(ACTION_MINE, blockX, blockY);
-    else g_ai->addAction(ACTION_PLACE, blockX, blockY);
+    else {
+        int slot = g_entities->player.selectedSlot;
+        int item = g_entities->player.slots[slot];
+        if (item == ITEM_CHILI || item == ITEM_DODO_MEAT || item == ITEM_COCONUT) {
+            g_ai->addAction(ACTION_EAT, blockX, blockY);
+        } else if (item == ITEM_LINEN_CAP || item == ITEM_LINEN_PANTS) {
+            g_ai->addAction(ACTION_WEAR, blockX, blockY);
+        } else {
+            g_ai->addAction(ACTION_PLACE, blockX, blockY);
+        }
+    }
 }
 
 extern "C" JNIEXPORT void JNICALL

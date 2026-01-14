@@ -149,6 +149,30 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                 }
             }
             actionQueue.pop();
+        } else if (current.type == ACTION_WEAR) {
+            currentStatus = ACTION_WEAR;
+            if (entities) {
+                int slot = entities->player.selectedSlot;
+                int item = entities->player.slots[slot];
+                
+                bool wore = false;
+                if (item == ITEM_LINEN_CAP) {
+                    entities->player.clothingHead = item;
+                    wore = true;
+                } else if (item == ITEM_LINEN_PANTS) {
+                    entities->player.clothingLegs = item;
+                    wore = true;
+                }
+                
+                if (wore) {
+                    entities->player.counts[slot]--;
+                    if (entities->player.counts[slot] <= 0) entities->player.slots[slot] = 0;
+                    entities->inventoryDirty = true;
+                    entities->queueSound("place.wav"); // Use place sound for wear
+                    changed = true;
+                }
+            }
+            actionQueue.pop();
         } else {
             actionQueue.pop();
         }

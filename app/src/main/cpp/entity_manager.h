@@ -24,6 +24,9 @@ public:
     float hunger = 1.0f; // 0.0 to 1.0
     float breath = 1.0f; // 0.0 to 1.0
 
+    int clothingHead = 0;
+    int clothingLegs = 0;
+
     int slots[10];
     int counts[10];
     int selectedSlot;

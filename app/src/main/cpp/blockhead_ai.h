@@ -6,7 +6,7 @@
 #include "game_world.h"
 #include "entity_manager.h"
 
-enum ActionType { ACTION_WALK, ACTION_MINE, ACTION_PLACE, ACTION_IDLE, ACTION_INTERACT, ACTION_EAT };
+enum ActionType { ACTION_WALK, ACTION_MINE, ACTION_PLACE, ACTION_IDLE, ACTION_INTERACT, ACTION_EAT, ACTION_WEAR };
 
 struct Action {
     ActionType type;
