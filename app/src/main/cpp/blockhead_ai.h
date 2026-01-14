@@ -6,7 +6,7 @@
 #include "game_world.h"
 #include "entity_manager.h"
 
-enum ActionType { ACTION_WALK, ACTION_MINE, ACTION_PLACE, ACTION_IDLE, ACTION_INTERACT, ACTION_EAT, ACTION_WEAR };
+enum ActionType { ACTION_WALK, ACTION_MINE, ACTION_PLACE, ACTION_IDLE, ACTION_INTERACT, ACTION_EAT, ACTION_WEAR, ACTION_SLEEP };
 
 struct Action {
     ActionType type;
@@ -22,6 +22,7 @@ public:
     int pendingInteractionBenchId = -1; 
     int pendingInteractionX = 0;
     int pendingInteractionY = 0;
+    bool isSleeping = false;
     
     void addAction(ActionType type, int tx, int ty);
     bool update(float& outX, float& outY, GameWorld* world, EntityManager* entities);

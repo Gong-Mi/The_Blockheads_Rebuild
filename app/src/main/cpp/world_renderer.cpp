@@ -236,7 +236,7 @@ void WorldRenderer::updateMesh(const std::vector<PhysicalBlock*>& chunks) {
 
 void WorldRenderer::renderFrame() {
     animTime += 0.05f; 
-    worldTime += 0.0001f; 
+    worldTime += 0.0001f * timeScale; 
     if (worldTime > 1.0f) worldTime = 0;
 
     camX += (targetX - camX) * 0.1f;

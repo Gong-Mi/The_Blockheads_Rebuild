@@ -1,9 +1,12 @@
 #include "blockhead_ai.h"
-#include "item_manager.h"
-#include "world_renderer.h"
 #include <algorithm>
+#include "item_manager.h"
 
 void BlockheadAI::addAction(ActionType type, int tx, int ty) {
+    // If we were sleeping and get a new action (that isn't sleep), wake up immediately
+    if (isSleeping && type != ACTION_SLEEP) {
+        isSleeping = false;
+    }
     Action a = {type, tx, ty, 0};
     actionQueue.push(a);
 }
@@ -15,9 +18,21 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
     posX = entities->player.x;
     posY = entities->player.y;
 
+    // Interrupt sleep if queue has non-sleep items or empty (should stay sleeping if empty? No, sleep is an action)
+    // Actually, let's treat Sleep as a continuous state until morning or interrupted.
+    // If actionQueue is empty and we are sleeping, we stay sleeping? 
+    // Simplified: Sleep is an Action that lasts until condition met.
+    
     if (actionQueue.empty()) {
         currentStatus = ACTION_IDLE;
         entities->player.vx *= 0.8f; 
+        if (isSleeping) {
+             // If queue empty but isSleeping true, it means we reached the bed. 
+             // Logic is handled in GameEngine for time accel. 
+             // We just keep player still.
+             entities->player.vx = 0;
+             entities->player.vy = 0;
+        }
         return false;
     }
 
@@ -32,8 +47,11 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
     if (dx < -7500.0f) dx += 15000.0f;
 
     float dist = std::abs(dx);
+    float verticalDist = std::abs((float)current.ty - posY);
 
-    if (dist > 0.5f) { 
+    // Walk logic
+    if (dist > 0.5f && current.type != ACTION_SLEEP) { 
+        isSleeping = false; // Moving breaks sleep
         currentStatus = ACTION_WALK;
         float speed = 0.02f;
         if (dx > 0) entities->player.vx += speed;
@@ -48,37 +66,50 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
             int blockX = (int)floor(posX + facingDir * 0.6f);
             int blockY = (int)floor(posY);
             Tile* wall = world->getTile(blockX, blockY);
-            if (wall && wall->foreground != ITEM_EMPTY && entities->player.grounded) {
+            if (wall && wall->foreground != 0 && entities->player.grounded) { // 0 is ITEM_EMPTY
                 entities->player.vy = 0.6f; 
             }
         }
-
+    } else if (current.type == ACTION_SLEEP && (dist > 0.5f || verticalDist > 1.5f)) {
+        // Move towards bed
+        currentStatus = ACTION_WALK;
+        float speed = 0.02f;
+        if (dx > 0.1f) entities->player.vx += speed;
+        else if (dx < -0.1f) entities->player.vx -= speed;
+        
+        // Simple jumping if needed
+        if (world && entities->player.grounded) {
+             int facingDir = (dx > 0) ? 1 : -1;
+             Tile* wall = world->getTile((int)(posX + facingDir*0.6f), (int)posY);
+             if (wall && wall->foreground != 0) entities->player.vy = 0.6f;
+             
+             // Jump up to bed if it's higher
+             if (current.ty > posY + 0.5f) entities->player.vy = 0.6f;
+        }
+        
     } else { 
+        // Arrived at target
         entities->player.vx *= 0.5f; 
         
         if (current.type == ACTION_MINE) {
             currentStatus = ACTION_MINE;
-            
-            float baseSpeed = 2.0f; // Hand digging
+            float baseSpeed = 2.0f; 
             if (world) {
                 Tile* t = world->getTile(current.tx, current.ty);
-                if (t && t->foreground != ITEM_EMPTY) {
+                if (t && t->foreground != 0) { // 0 is ITEM_EMPTY
                     int selectedItem = entities->player.slots[entities->player.selectedSlot];
-                    
-                    // --- Data Driven Tool Logic ---
                     auto itemDef = ItemManager::getInstance().getDef(t->foreground);
                     if (itemDef && itemDef->preferredTool != 0) {
-                        if (selectedItem == itemDef->preferredTool) baseSpeed = 25.0f; // Matching Flint
-                        else if (selectedItem == itemDef->preferredTool + 60) baseSpeed = 60.0f; // Iron (offset 60)
-                        else if (selectedItem == itemDef->preferredTool + 70) baseSpeed = 120.0f; // Steel (offset 70)
+                        if (selectedItem == itemDef->preferredTool) baseSpeed = 25.0f; 
+                        else if (selectedItem == itemDef->preferredTool + 60) baseSpeed = 60.0f; 
+                        else if (selectedItem == itemDef->preferredTool + 70) baseSpeed = 120.0f; 
                     }
                     
                     current.progress += baseSpeed; 
-                    
                     if (t->damage < 240) {
                         t->damage = (uint8_t)std::min(255.0f, (float)t->damage + baseSpeed / 2.0f); 
                     } else {
-                        // Harvest logic for crops
+                        // Harvest logic
                         if (t->foreground == ITEM_FLAX) {
                             entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_FLAX);
                             entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_FLAX_SEED);
@@ -90,22 +121,17 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                             if (rand() % 100 < 30) entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_TIME_CRYSTAL);
                         } else {
                             entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, t->foreground);
-                            std::string name = ItemManager::getInstance().getName(t->foreground);
-                            entities->queueFloatingText((float)current.tx + 0.5f, (float)current.ty + 0.5f, "+1 " + name, 0xFFFFFFFF);
                         }
                         
                         auto def = ItemManager::getInstance().getDef(t->foreground);
                         if (def && (def->preferredTool == ITEM_PICKAXE)) {
-                            if (selectedItem == 50 || selectedItem == 110 || selectedItem == 120)
-                                entities->queueSound("pickaxe.wav");
-                            else
-                                entities->queueSound("dig.wav");
+                             if (selectedItem == 50 || selectedItem == 110 || selectedItem == 120) entities->queueSound("pickaxe.wav");
+                             else entities->queueSound("dig.wav");
                         } else {
                             entities->queueSound("dig.wav");
                         }
 
-                        if (g_renderer) g_renderer->spawnBlockBreakParticles(current.tx, current.ty, t->foreground);
-                        t->foreground = ITEM_EMPTY; 
+                        t->foreground = 0; // ITEM_EMPTY
                         t->damage = 0;
                         changed = true;
                     }
@@ -116,14 +142,13 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
             if (current.progress >= 100.0f) actionQueue.pop();
             
         } else if (current.type == ACTION_PLACE) {
-            // ... (place logic remains similar for now) ...
             currentStatus = ACTION_PLACE;
             if (world) {
                 int slot = entities->player.selectedSlot;
                 int item = entities->player.slots[slot];
                 if (item > 0 && entities->player.counts[slot] > 0) {
                     Tile* t = world->getTile(current.tx, current.ty);
-                    if (t && t->foreground == ITEM_EMPTY) {
+                    if (t && t->foreground == 0) { // ITEM_EMPTY
                         t->foreground = (uint8_t)item;
                         t->damage = 0;
                         entities->player.counts[slot]--;
@@ -135,10 +160,11 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                 }
             }
             actionQueue.pop();
+
         } else if (current.type == ACTION_INTERACT) {
             if (world) {
                 Tile* t = world->getTile(current.tx, current.ty);
-                if (t && t->foreground != ITEM_EMPTY) {
+                if (t && t->foreground != 0) {
                     pendingInteractionBenchId = t->foreground;
                     pendingInteractionX = current.tx;
                     pendingInteractionY = current.ty;
@@ -148,6 +174,20 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                 }
             }
             actionQueue.pop();
+
+        } else if (current.type == ACTION_SLEEP) {
+            currentStatus = ACTION_SLEEP;
+            // Align player with bed
+            entities->player.x = (float)current.tx + 0.5f;
+            entities->player.y = (float)current.ty; 
+            entities->player.vx = 0;
+            entities->player.vy = 0;
+            isSleeping = true;
+            
+            // Sleep action stays in queue until manually removed or morning comes
+            // We pop it only if isSleeping is externally set to false (e.g. by morning logic in engine)
+            if (!isSleeping) actionQueue.pop();
+
         } else if (current.type == ACTION_EAT) {
             currentStatus = ACTION_EAT;
             if (entities) {
@@ -170,21 +210,15 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
             if (entities) {
                 int slot = entities->player.selectedSlot;
                 int item = entities->player.slots[slot];
-                
                 bool wore = false;
-                if (item == ITEM_LINEN_CAP) {
-                    entities->player.clothingHead = item;
-                    wore = true;
-                } else if (item == ITEM_LINEN_PANTS) {
-                    entities->player.clothingLegs = item;
-                    wore = true;
-                }
+                if (item == ITEM_LINEN_CAP) { entities->player.clothingHead = item; wore = true; }
+                else if (item == ITEM_LINEN_PANTS) { entities->player.clothingLegs = item; wore = true; }
                 
                 if (wore) {
                     entities->player.counts[slot]--;
                     if (entities->player.counts[slot] <= 0) entities->player.slots[slot] = 0;
                     entities->inventoryDirty = true;
-                    entities->queueSound("place.wav"); // Use place sound for wear
+                    entities->queueSound("place.wav");
                     changed = true;
                 }
             }

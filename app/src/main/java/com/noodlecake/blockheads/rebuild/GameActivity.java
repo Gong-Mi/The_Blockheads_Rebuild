@@ -616,8 +616,9 @@ public class GameActivity extends Activity {
             android.widget.Button sleepBtn = new android.widget.Button(this);
             sleepBtn.setText("SLEEP");
             sleepBtn.setOnClickListener(v -> {
-               // TODO: Implement Sleep Logic (Time acceleration)
-               android.widget.Toast.makeText(this, "Zzz...", android.widget.Toast.LENGTH_SHORT).show();
+               handleSleepNative();
+               if (dialog != null) dialog.dismiss();
+               android.widget.Toast.makeText(this, "Sleeping...", android.widget.Toast.LENGTH_SHORT).show();
             });
             layout.addView(sleepBtn);
         }
@@ -725,5 +726,6 @@ public class GameActivity extends Activity {
     public native void handleZoomNative(float scaleFactor);
     public native void handleCraftNative(int recipeId, int tx, int ty);
     public native void handleSwapInventoryItemNative(int fromSlot, int toSlot);
+    public native void handleSleepNative();
     public native String getRecipesNative(int benchId);
 }

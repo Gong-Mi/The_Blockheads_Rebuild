@@ -56,6 +56,7 @@ public:
     float camZoom = 1.0f; 
     float animTime = 0;
     float worldTime = 0; 
+    float timeScale = 1.0f;
     bool followingPlayer = true;
     bool menuMode = false;
     float menuTouchX = 0, menuTouchY = 0;
