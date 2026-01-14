@@ -137,28 +137,28 @@ GLuint WorldRenderer::createProgram(const char* vs, const char* fs) {
 }
 
 void WorldRenderer::pushBlock(std::vector<Vertex>& buffer, float x, float y, int type, float damage, float sun, float art) {
-    if (type == 0) return;
+    if (type == 0) return; 
     
     int texRow = 0, texCol = 0;
-    if (type == ITEM_DIRT) { texRow = 0; texCol = 0; }
-    else if (type == ITEM_STONE) { texRow = 0; texCol = 1; }
-    else if (type == BLOCK_WOOD) { texRow = 0; texCol = 2; }
-    else if (type == BLOCK_LEAVES) { texRow = 0; texCol = 3; }
-    else if (type == BLOCK_GRASS) { texRow = 0; texCol = 4; }
-    else if (type == BLOCK_SAND) { texRow = 1; texCol = 0; }
-    else if (type == ITEM_COPPER_ORE) { texRow = 1; texCol = 1; }
-    else if (type == ITEM_TIN_ORE) { texRow = 1; texCol = 2; }
-    else if (type == BLOCK_SNOW) { texRow = 1; texCol = 3; }
-    else if (type == BLOCK_ICE) { texRow = 1; texCol = 4; }
-    else if (type == BLOCK_CACTUS) { texRow = 1; texCol = 5; }
-    else if (type == BLOCK_GLASS) { texRow = 1; texCol = 6; }
-    else if (type == ITEM_FUR) { texRow = 1; texCol = 7; }
-    else if (type == ITEM_WORKBENCH) { texRow = 2; texCol = 0; }
-    else if (type == ITEM_TOOLBENCH) { texRow = 2; texCol = 1; }
-    else if (type == ITEM_CRAFTBENCH) { texRow = 2; texCol = 2; }
-    else if (type == ITEM_LINEN_CAP) { texRow = 2; texCol = 3; }
-    else if (type == ITEM_LINEN_PANTS) { texRow = 2; texCol = 4; }
-    else if (type == ITEM_TORCH) { texRow = 3; texCol = 0; }
+    if (type == ITEM_DIRT) { texRow = 0; texCol = 0; } 
+    else if (type == ITEM_STONE) { texRow = 0; texCol = 1; } 
+    else if (type == BLOCK_WOOD) { texRow = 0; texCol = 2; } 
+    else if (type == BLOCK_LEAVES) { texRow = 0; texCol = 3; } 
+    else if (type == BLOCK_GRASS) { texRow = 0; texCol = 4; } 
+    else if (type == BLOCK_SAND) { texRow = 1; texCol = 0; } 
+    else if (type == ITEM_COPPER_ORE) { texRow = 1; texCol = 1; } 
+    else if (type == ITEM_TIN_ORE) { texRow = 1; texCol = 2; } 
+    else if (type == BLOCK_SNOW) { texRow = 1; texCol = 3; } 
+    else if (type == BLOCK_ICE) { texRow = 1; texCol = 4; } 
+    else if (type == BLOCK_CACTUS) { texRow = 1; texCol = 5; } 
+    else if (type == BLOCK_GLASS) { texRow = 1; texCol = 6; } 
+    else if (type == ITEM_FUR) { texRow = 1; texCol = 7; } 
+    else if (type == ITEM_WORKBENCH) { texRow = 2; texCol = 0; } 
+    else if (type == ITEM_TOOLBENCH) { texRow = 2; texCol = 1; } 
+    else if (type == ITEM_CRAFTBENCH) { texRow = 2; texCol = 2; } 
+    else if (type == ITEM_LINEN_CAP) { texRow = 2; texCol = 3; } 
+    else if (type == ITEM_LINEN_PANTS) { texRow = 2; texCol = 4; } 
+    else if (type == ITEM_TORCH) { texRow = 3; texCol = 0; } 
     else {
         texCol = (type - 1) % 32;
         texRow = (type - 1) / 32;
@@ -300,96 +300,18 @@ void WorldRenderer::renderFrame() {
     int stride = 16 * sizeof(float);
 
     if (menuMode) {
-        // ... (Menu rendering logic remains) ...
-        if (bodyTexID != 0 && charProgram != 0) {
-            // ... (Menu char rendering) ...
-            // Simplified for brevity, assume existing block is here
-             glUseProgram(charProgram);
-            float breath = std::sin(animTime * 2.0f) * 0.05f;
-            // ... (rest of menu render)
-            // Need to make sure I don't break the existing menu code structure in the replace.
-            // I will target the TOP of renderFrame to insert the Sky/Weather logic update.
-            // But wait, the replace tool needs exact string match.
-            // I'll replace the beginning of renderFrame up to the glClearColor.
-        }
-    }
-    
-    // ... (rest of function) ...
-    
-    // Render Rain/Snow (Simple using ActionSquare shader for now as it's untextured or solid color)
-    if (weatherState > 0 && actionSquareProgram != 0) {
-        glUseProgram(actionSquareProgram);
-        glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, whiteTex); // Use white texture
-        glUniform1i(glGetUniformLocation(actionSquareProgram, "texture"), 0);
-        glUniform4f(glGetUniformLocation(actionSquareProgram, "light"), 1.0f, 1.0f, 1.0f, 0.5f); // Semi-transparent
-
-        for (auto& p : rainParticles) {
-            p.x += p.vx; p.y += p.vy; p.life -= 0.01f;
-            if (p.life <= 0) continue;
-            
-            float m_p[16]; std::copy(matrix, matrix + 16, m_p);
-            Matrix::translate(m_p, p.x, p.y, 0.5f);
-            float pSize = (weatherState == 1) ? 0.1f : 0.2f;
-            Matrix::scale(m_p, pSize * 0.5f, pSize, 1.0f);
-            glUniformMatrix4fv(glGetUniformLocation(actionSquareProgram, "mvp_matrix"), 1, GL_FALSE, m_p);
-            
-            // Draw Quad (reusing sqVerts from actionSquare if accessible or defining here)
-            float pVerts[] = { 0,0,0,0,0, 1,0,0,1,0, 0,1,0,0,1, 1,0,0,1,0, 1,1,0,1,1, 0,1,0,0,1 }; 
-            // Warning: ActionSquare shader expects 4 floats for pos? No, check init.
-            // "attribute vec4 position;\n attribute vec2 texCoord;\n"
-            // So 4 floats pos, 2 floats tex.
-            // My pVerts above has 5?
-            // ActionSquare: 
-            // glVertexAttribPointer(pL, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(float), &sqVerts[0]);
-            // glVertexAttribPointer(tL, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), &sqVerts[4]);
-            // Stride 6. 
-            // Verts: x,y,z,w, u,v
-            
-            float qVerts[] = {
-                -0.5f, -0.5f, 0, 1,  0, 0,
-                 0.5f, -0.5f, 0, 1,  1, 0,
-                -0.5f,  0.5f, 0, 1,  0, 1,
-                 0.5f, -0.5f, 0, 1,  1, 0,
-                 0.5f,  0.5f, 0, 1,  1, 1,
-                -0.5f,  0.5f, 0, 1,  0, 1
-            };
-            
-            GLint pL = glGetAttribLocation(actionSquareProgram, "position");
-            GLint tL = glGetAttribLocation(actionSquareProgram, "texCoord");
-            glEnableVertexAttribArray(pL);
-            glEnableVertexAttribArray(tL);
-            glVertexAttribPointer(pL, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(float), &qVerts[0]);
-            glVertexAttribPointer(tL, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), &qVerts[4]);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
-        }
-        
-        // Cleanup dead particles
-        rainParticles.erase(std::remove_if(rainParticles.begin(), rainParticles.end(), 
-             [](const Particle& p){ return p.life <= 0; }), rainParticles.end());
-    }
-}
         if (bodyTexID != 0 && charProgram != 0) {
             glUseProgram(charProgram);
             float breath = std::sin(animTime * 2.0f) * 0.05f;
             
             // --- FINAL ADJUSTMENT SETTINGS ---
-            // Scale 0.35 should be ~1/3 of screen height (assuming ortho height is 2.0)
             float scale = 0.35f;
-            // Position: -aspect is left edge, -1.0 is bottom edge
-            // Moving up (-0.5) and right (+0.6)
             float baseX = -aspect + 0.6f; 
             float baseY = -0.5f;
             
-            static bool logged = false;
-            if(!logged) {
-                LOGE("RenderChar: FINAL ADJUSTMENT - Scale: %f, Pos: %f,%f", scale, baseX, baseY);
-                logged = true;
-            }
-
             float m_menu[16];
             Matrix::ortho(m_menu, -aspect, aspect, -1.0f, 1.0f, -1.0f, 1.0f);
 
-            // High ambient light for menu display
             glUniform4f(glGetUniformLocation(charProgram, "daylight"), 1.2f, 1.2f, 1.2f, 1.0f);
             glUniform4f(glGetUniformLocation(charProgram, "artificalLight"), 0.5f, 0.5f, 0.5f, 1.0f);
             glUniform4f(glGetUniformLocation(charProgram, "skinColor"), 1.0f, 0.85f, 0.7f, 1.0f);
@@ -398,18 +320,15 @@ void WorldRenderer::renderFrame() {
             glUniform3f(glGetUniformLocation(charProgram, "artificialLightDirection"), 0.5f, 0.5f, 1.0f);
             glUniform4f(glGetUniformLocation(charProgram, "lightPosition"), 0.0f, 0.0f, 10.0f, 1.0f);
 
-            // Helper to draw a cube (w, h, d)
             auto drawCube = [&](GLuint tex, float x, float y, float z, float w, float h, float d, float u1, float v1, float u2, float v2) {
                 glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, tex);
                 glUniform1i(glGetUniformLocation(charProgram, "texture"), 0);
 
                 float m_part[16]; std::copy(m_menu, m_menu + 16, m_part);
-                
                 Matrix::translate(m_part, baseX + x, baseY + y + breath, 0.5f + z);
                 Matrix::scale(m_part, scale * w, scale * h, scale * d); 
                 glUniformMatrix4fv(glGetUniformLocation(charProgram, "mvp_matrix"), 1, GL_FALSE, m_part);
                 
-                // Normal matrix
                 float m_norm[16]; 
                 m_norm[0]=1; m_norm[1]=0; m_norm[2]=0; m_norm[3]=0;
                 m_norm[4]=0; m_norm[5]=1; m_norm[6]=0; m_norm[7]=0;
@@ -417,7 +336,6 @@ void WorldRenderer::renderFrame() {
                 m_norm[12]=0; m_norm[13]=0; m_norm[14]=0; m_norm[15]=1;
                 glUniformMatrix4fv(glGetUniformLocation(charProgram, "normal_matrix"), 1, GL_FALSE, m_norm);
 
-                // Front Face (Normal 0,0,1)
                 float pV[] = {
                     -0.5f, -0.5f, 0.5f,  u1, v2,  0, 0, 1,
                      0.5f, -0.5f, 0.5f,  u2, v2,  0, 0, 1,
@@ -433,42 +351,30 @@ void WorldRenderer::renderFrame() {
                 glEnableVertexAttribArray(pLoc);
                 glEnableVertexAttribArray(tLoc);
                 glEnableVertexAttribArray(nLoc);
-                
                 glVertexAttribPointer(pLoc, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), &pV[0]);
                 glVertexAttribPointer(tLoc, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), &pV[3]);
                 glVertexAttribPointer(nLoc, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), &pV[5]);
-                
                 glDrawArrays(GL_TRIANGLES, 0, 6);
             };
 
-            // Draw Body (Center)
             drawCube(bodyTexID, 0.0f, 0.0f, 0.0f, 0.15f, 0.25f, 0.1f, 0.0f, 0.0f, 1.0f, 1.0f);
             
-            // Draw Head (Top)
             float lookX = (menuTouchX / (float)screenW) * 2.0f - 1.0f;
             float lookY = 1.0f - (menuTouchY / (float)screenH) * 2.0f;
-            
-            // Calculate rotations based on look target (simple clamping for natural feel)
-            float headYaw = lookX * 45.0f; // Max 45 degrees left/right
-            float headPitch = lookY * 30.0f; // Max 30 degrees up/down
+            float headYaw = lookX * 45.0f;
+            float headPitch = lookY * 30.0f;
 
             auto drawHead = [&](GLuint tex, float x, float y, float z, float w, float h, float d, float u1, float v1, float u2, float v2) {
                 glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, tex);
                 glUniform1i(glGetUniformLocation(charProgram, "texture"), 0);
-
                 float m_part[16]; std::copy(m_menu, m_menu + 16, m_part);
                 Matrix::translate(m_part, baseX + x, baseY + y + breath, 0.5f + z);
-                
-                // Apply look rotation
                 Matrix::rotate(m_part, headYaw, 0, 1, 0);
                 Matrix::rotate(m_part, -headPitch, 1, 0, 0);
-
                 Matrix::scale(m_part, scale * w, scale * h, scale * d); 
                 glUniformMatrix4fv(glGetUniformLocation(charProgram, "mvp_matrix"), 1, GL_FALSE, m_part);
-                
                 float m_norm[16]; Matrix::setIdentity(m_norm);
                 glUniformMatrix4fv(glGetUniformLocation(charProgram, "normal_matrix"), 1, GL_FALSE, m_norm);
-
                 float pV[] = { -0.5f,-0.5f,0.5f, u1,v2, 0,0,1, 0.5f,-0.5f,0.5f, u2,v2, 0,0,1, -0.5f,0.5f,0.5f, u1,v1, 0,0,1,
                                 0.5f,-0.5f,0.5f, u2,v2, 0,0,1, 0.5f,0.5f,0.5f, u2,v1, 0,0,1, -0.5f,0.5f,0.5f, u1,v1, 0,0,1 };
                 glVertexAttribPointer(glGetAttribLocation(charProgram, "position"), 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), &pV[0]);
@@ -478,12 +384,8 @@ void WorldRenderer::renderFrame() {
             };
 
             drawHead(headTexID, 0.0f, 0.22f, 0.0f, 0.18f, 0.18f, 0.18f, 0.25f, 0.5f, 0.5f, 1.0f);
-
-            // Draw Legs (Bottom)
             drawCube(legsTexID, -0.05f, -0.25f, 0.0f, 0.05f, 0.25f, 0.05f, 0.0f, 0.0f, 1.0f, 1.0f);
             drawCube(legsTexID,  0.05f, -0.25f, 0.0f, 0.05f, 0.25f, 0.05f, 0.0f, 0.0f, 1.0f, 1.0f);
-
-            // Draw Arms (Sides)
             float armSwing = std::sin(animTime * 3.0f) * 0.1f;
             drawCube(armsTexID, -0.13f, 0.0f + armSwing, 0.0f, 0.05f, 0.25f, 0.05f, 0.0f, 0.0f, 1.0f, 1.0f);
             drawCube(armsTexID,  0.13f, 0.0f - armSwing, 0.0f, 0.05f, 0.25f, 0.05f, 0.0f, 0.0f, 1.0f, 1.0f);
@@ -523,19 +425,15 @@ void WorldRenderer::renderFrame() {
         glUniform4f(glGetUniformLocation(charProgram, "clothingColorB"), 0.9f, 0.9f, 0.9f, 1.0f);
         glUniform3f(glGetUniformLocation(charProgram, "artificialLightDirection"), 0.5f, 0.5f, 1.0f);
         
-        // Helper to draw a cube (same as menu but with game matrix)
         auto drawCharCube = [&](GLuint tex, float x, float y, float z, float w, float h, float d, float u1, float v1, float u2, float v2) {
             glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, tex);
             glUniform1i(glGetUniformLocation(charProgram, "texture"), 0);
-
             float m_part[16]; std::copy(matrix, matrix + 16, m_part);
             Matrix::translate(m_part, playerX + x, playerY + y + 0.5f, z);
             Matrix::scale(m_part, w, h, d); 
             glUniformMatrix4fv(glGetUniformLocation(charProgram, "mvp_matrix"), 1, GL_FALSE, m_part);
-            
             float m_norm[16]; Matrix::setIdentity(m_norm);
             glUniformMatrix4fv(glGetUniformLocation(charProgram, "normal_matrix"), 1, GL_FALSE, m_norm);
-
             float pV[] = { -0.5f,-0.5f,0.5f, u1,v2, 0,0,1, 0.5f,-0.5f,0.5f, u2,v2, 0,0,1, -0.5f,0.5f,0.5f, u1,v1, 0,0,1,
                             0.5f,-0.5f,0.5f, u2,v2, 0,0,1, 0.5f,0.5f,0.5f, u2,v1, 0,0,1, -0.5f,0.5f,0.5f, u1,v1, 0,0,1 };
             glVertexAttribPointer(glGetAttribLocation(charProgram, "position"), 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), &pV[0]);
@@ -547,17 +445,11 @@ void WorldRenderer::renderFrame() {
             glDrawArrays(GL_TRIANGLES, 0, 6);
         };
 
-        // Render character with walking animation in game
         float walkAnim = std::sin(animTime * 10.0f);
-        
-        // Body
         drawCharCube(bodyTexID, 0, 0.25f, 0, 0.4f, 0.6f, 0.2f, 0, 0, 1, 1);
-        // Head
         drawCharCube(headTexID, 0, 0.75f, 0, 0.5f, 0.5f, 0.5f, 0.25f, 0.5f, 0.5f, 1.0f);
-        // Legs
         drawCharCube(legsTexID, -0.1f, -0.2f + (walkAnim > 0 ? walkAnim*0.1f : 0), 0, 0.15f, 0.5f, 0.15f, 0, 0, 1, 1);
         drawCharCube(legsTexID,  0.1f, -0.2f + (walkAnim < 0 ? -walkAnim*0.1f : 0), 0, 0.15f, 0.5f, 0.15f, 0, 0, 1, 1);
-        // Arms
         drawCharCube(armsTexID, -0.25f, 0.25f, 0, 0.12f, 0.5f, 0.12f, 0, 0, 1, 1);
         drawCharCube(armsTexID,  0.25f, 0.25f, 0, 0.12f, 0.5f, 0.12f, 0, 0, 1, 1);
     }
@@ -565,8 +457,6 @@ void WorldRenderer::renderFrame() {
     // --- Render Mobs ---
     if (charProgram != 0 && dodoBodyTexID != 0) {
         glUseProgram(charProgram);
-        // Reuse uniforms from player render (light etc is global-ish)
-        
         auto drawMobPart = [&](GLuint tex, float mx, float my, float x, float y, float z, float w, float h, float d) {
             glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, tex);
             glUniform1i(glGetUniformLocation(charProgram, "texture"), 0);
@@ -587,11 +477,8 @@ void WorldRenderer::renderFrame() {
         for (const auto& mob : mobs) {
             if (mob.type == ENTITY_DODO) {
                 float wAnim = std::sin(animTime * 15.0f + mob.x * 10.0f);
-                // Body
                 drawMobPart(dodoBodyTexID, mob.x, mob.y + 0.3f, 0, 0, 0, 0.4f, 0.3f, 0.2f);
-                // Head
                 drawMobPart(dodoHeadTexID, mob.x, mob.y + 0.3f, 0.25f, 0.2f, 0, 0.2f, 0.2f, 0.2f);
-                // Legs
                 drawMobPart(dodoLegTexID, mob.x, mob.y + 0.3f, -0.05f, -0.2f + (wAnim>0?wAnim*0.1f:0), 0, 0.05f, 0.2f, 0.05f);
                 drawMobPart(dodoLegTexID, mob.x, mob.y + 0.3f, 0.05f, -0.2f + (wAnim<0?-wAnim*0.1f:0), 0, 0.05f, 0.2f, 0.05f);
             }
@@ -610,7 +497,7 @@ void WorldRenderer::renderFrame() {
             
             float itX = (float)((item.type - 1) % 32);
             float itY = (float)((item.type - 1) / 32);
-            glUniform4f(glGetAttribLocation(program, "other"), 0, 0, itY, 0); // Hacky pass of UV Y
+            glUniform4f(glGetAttribLocation(program, "other"), 0, 0, itY, 0); 
 
             float iV[] = { 0,0, itX, 1, 1,0, itX, 1, 0,1, itX, 1, 1,0, itX, 1, 1,1, itX, 1, 0,1, itX, 1 };
             glVertexAttribPointer(posLoc, 2, GL_FLOAT, GL_FALSE, 4*sizeof(float), &iV[0]);
@@ -619,7 +506,7 @@ void WorldRenderer::renderFrame() {
         }
     }
 
-    // --- Draw ActionSquare (Original Logic) ---
+    // --- Render ActionSquare ---
     if (showActionSquare && actionSquareProgram != 0) {
         glUseProgram(actionSquareProgram);
         glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, actionSquareTexID);
@@ -630,12 +517,10 @@ void WorldRenderer::renderFrame() {
         
         float m_sq[16];
         std::copy(matrix, matrix + 16, m_sq);
-        // Slightly larger than block (1.1x) and offset to center
         float s_ext = 1.1f;
         float offset = -0.05f;
         Matrix::translate(m_sq, (float)targetBlockX + offset, (float)targetBlockY + offset, 0.2f);
-        GLint asMatrix = glGetUniformLocation(actionSquareProgram, "mvp_matrix");
-        glUniformMatrix4fv(asMatrix, 1, GL_FALSE, m_sq);
+        glUniformMatrix4fv(glGetUniformLocation(actionSquareProgram, "mvp_matrix"), 1, GL_FALSE, m_sq);
 
         float sqVerts[] = {
             0,     0,     0, 1,  0, 1,
@@ -652,6 +537,44 @@ void WorldRenderer::renderFrame() {
         glVertexAttribPointer(pL, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(float), &sqVerts[0]);
         glVertexAttribPointer(tL, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), &sqVerts[4]);
         glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+
+    // --- Render Weather Particles ---
+    if (weatherState > 0 && actionSquareProgram != 0) {
+        glUseProgram(actionSquareProgram);
+        glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, whiteTex); 
+        glUniform1i(glGetUniformLocation(actionSquareProgram, "texture"), 0);
+        glUniform4f(glGetUniformLocation(actionSquareProgram, "light"), 1.0f, 1.0f, 1.0f, 0.5f);
+
+        for (auto& p : rainParticles) {
+            p.x += p.vx; p.y += p.vy; p.life -= 0.01f;
+            if (p.life <= 0) continue;
+            
+            float m_p[16]; std::copy(matrix, matrix + 16, m_p);
+            Matrix::translate(m_p, p.x, p.y, 0.5f);
+            float pSize = (weatherState == 1) ? 0.1f : 0.2f;
+            Matrix::scale(m_p, pSize * 0.5f, pSize, 1.0f);
+            glUniformMatrix4fv(glGetUniformLocation(actionSquareProgram, "mvp_matrix"), 1, GL_FALSE, m_p);
+            
+            float qVerts[] = {
+                -0.5f, -0.5f, 0, 1,  0, 0,
+                 0.5f, -0.5f, 0, 1,  1, 0,
+                -0.5f,  0.5f, 0, 1,  0, 1,
+                 0.5f, -0.5f, 0, 1,  1, 0,
+                 0.5f,  0.5f, 0, 1,  1, 1,
+                -0.5f,  0.5f, 0, 1,  0, 1
+            };
+            
+            GLint pL = glGetAttribLocation(actionSquareProgram, "position");
+            GLint tL = glGetAttribLocation(actionSquareProgram, "texCoord");
+            glEnableVertexAttribArray(pL);
+            glEnableVertexAttribArray(tL);
+            glVertexAttribPointer(pL, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(float), &qVerts[0]);
+            glVertexAttribPointer(tL, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), &qVerts[4]);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
+        rainParticles.erase(std::remove_if(rainParticles.begin(), rainParticles.end(), 
+             [](const Particle& p){ return p.life <= 0; }), rainParticles.end());
     }
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
