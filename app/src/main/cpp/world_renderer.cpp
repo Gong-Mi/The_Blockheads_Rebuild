@@ -67,6 +67,9 @@ void WorldRenderer::init(AAssetManager* mgr) {
     dodoBodyTexID = loadTex(mgr, "dodoBody.png");
     dodoHeadTexID = loadTex(mgr, "dodoHead.png");
     dodoLegTexID = loadTex(mgr, "dodoLeg.png");
+    yakBodyTexID = loadTex(mgr, "yakBody.png");
+    yakHeadTexID = loadTex(mgr, "yakHead.png");
+    yakLegTexID = loadTex(mgr, "yakLeg.png");
 
     // --- DEBUG SHADER (Inline) ---
     const char* debugVS = 
@@ -465,6 +468,17 @@ void WorldRenderer::renderFrame() {
                 drawMobPart(dodoHeadTexID, mob.x, mob.y + 0.3f, 0.25f, 0.2f, 0, 0.2f, 0.2f, 0.2f);
                 drawMobPart(dodoLegTexID, mob.x, mob.y + 0.3f, -0.05f, -0.2f + (wAnim>0?wAnim*0.1f:0), 0, 0.05f, 0.2f, 0.05f);
                 drawMobPart(dodoLegTexID, mob.x, mob.y + 0.3f, 0.05f, -0.2f + (wAnim<0?-wAnim*0.1f:0), 0, 0.05f, 0.2f, 0.05f);
+            } else if (mob.type == ENTITY_YAK) {
+                float wAnim = std::sin(animTime * 10.0f + mob.x * 5.0f);
+                // Yak is larger (body 0.8x0.6)
+                drawMobPart(yakBodyTexID, mob.x, mob.y + 0.5f, 0, 0, 0, 0.8f, 0.6f, 0.4f);
+                // Head
+                drawMobPart(yakHeadTexID, mob.x, mob.y + 0.5f, 0.45f, 0.2f, 0, 0.3f, 0.3f, 0.3f);
+                // Legs (4 legs for Yak)
+                drawMobPart(yakLegTexID, mob.x, mob.y + 0.5f, -0.25f, -0.4f + (wAnim>0?wAnim*0.15f:0), 0.15f, 0.1f, 0.4f, 0.1f);
+                drawMobPart(yakLegTexID, mob.x, mob.y + 0.5f, 0.25f, -0.4f + (wAnim<0?-wAnim*0.15f:0), 0.15f, 0.1f, 0.4f, 0.1f);
+                drawMobPart(yakLegTexID, mob.x, mob.y + 0.5f, -0.25f, -0.4f + (wAnim<0?-wAnim*0.15f:0), -0.15f, 0.1f, 0.4f, 0.1f);
+                drawMobPart(yakLegTexID, mob.x, mob.y + 0.5f, 0.25f, -0.4f + (wAnim>0?wAnim*0.15f:0), -0.15f, 0.1f, 0.4f, 0.1f);
             }
         }
     }

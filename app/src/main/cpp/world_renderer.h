@@ -32,6 +32,7 @@ public:
     GLuint textureID, destructID, normalID, itemsTexID;
     GLuint headTexID, bodyTexID, armsTexID, legsTexID;
     GLuint dodoBodyTexID, dodoHeadTexID, dodoLegTexID;
+    GLuint yakBodyTexID, yakHeadTexID, yakLegTexID;
     GLuint actionSquareTexID, actionSquareProgram;
     GLuint charProgram;
     GLuint debugProgram; // For debugging char render

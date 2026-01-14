@@ -159,24 +159,24 @@ void EntityManager::spawnMob(float x, float y, int type) {
 void EntityManager::update(float gravity, GameWorld* world) {
     player.update(gravity, world);
 
-    // --- Mob AI (Dodos) ---
+    // --- Mob AI ---
     for (auto& m : mobs) {
-        if (m.type == ENTITY_DODO) {
+        if (m.type == ENTITY_DODO || m.type == ENTITY_YAK) {
             // Random walk
-            if (rand() % 100 < 2) m.vx = (float)(rand() % 3 - 1) * 0.05f;
+            if (rand() % 100 < 2) m.vx = (float)(rand() % 3 - 1) * (m.type == ENTITY_YAK ? 0.03f : 0.05f);
             
-            m.vy -= gravity * 0.5f;
+            m.vy -= gravity * (m.type == ENTITY_YAK ? 0.8f : 0.5f);
             m.x += m.vx;
             m.y += m.vy;
 
             if (world) {
                 // Check forward collision for jumping
                 if (m.vx != 0) {
-                    int nextX = (int)floor(m.x + m.vx * 10.0f); // Look ahead
+                    int nextX = (int)floor(m.x + m.vx * 10.0f);
                     int currY = (int)floor(m.y);
                     Tile* wall = world->getTile(nextX, currY);
                     if (wall && wall->foreground != ITEM_EMPTY && m.onGround) {
-                        m.vy = 0.35f; // Jump over block
+                        m.vy = (m.type == ENTITY_YAK ? 0.45f : 0.35f); 
                     }
                 }
 
@@ -196,31 +196,40 @@ void EntityManager::update(float gravity, GameWorld* world) {
             if (m.x < 0) m.x += 15000.0f;
             if (m.x >= 15000.0f) m.x -= 15000.0f;
 
-            // Player Interaction (Kill Dodo)
+            // Player Interaction (Kill)
             float dx = player.x - m.x;
             float dy = player.y - m.y;
-            if (dx*dx + dy*dy < 1.0f && rand() % 100 < 5) { // Simple overlap check
+            if (dx*dx + dy*dy < 1.5f && rand() % 100 < 5) { 
                  m.markForDelete = true;
-                 spawnDrop(m.x, m.y, ITEM_DODO_MEAT);
-                 if (rand() % 100 < 20) spawnDrop(m.x, m.y, ITEM_FUR);
-                 queueSound("dodoDie.wav");
+                 if (m.type == ENTITY_DODO) {
+                     spawnDrop(m.x, m.y, ITEM_DODO_MEAT);
+                     if (rand() % 100 < 20) spawnDrop(m.x, m.y, ITEM_FUR);
+                     queueSound("dodoDie.wav");
+                 } else {
+                     spawnDrop(m.x, m.y, ITEM_DODO_MEAT); // Use Meat for both for now
+                     spawnDrop(m.x, m.y, ITEM_FUR);
+                     spawnDrop(m.x, m.y, ITEM_FUR);
+                     queueSound("yakDie.wav"); // Assuming this exists or falls back
+                 }
             }
             
             // Random sound
-            if (rand() % 1000 < 2) queueSound("dodoCluck1.wav");
+            if (m.type == ENTITY_DODO && rand() % 1000 < 2) queueSound("dodoCluck1.wav");
+            if (m.type == ENTITY_YAK && rand() % 1500 < 2) queueSound("yakMoo.wav");
         }
     }
     mobs.erase(std::remove_if(mobs.begin(), mobs.end(), 
         [](const Entity& e){ return e.markForDelete; }), mobs.end());
 
     // Spawning logic
-    if (world && mobs.size() < 10 && rand() % 1000 < 5) {
-        int sx = (int)floor(player.x) + (rand() % 40 - 20);
+    if (world && mobs.size() < 15 && rand() % 1000 < 8) {
+        int sx = (int)floor(player.x) + (rand() % 60 - 30);
         int sy = (int)floor(player.y) + (rand() % 20 - 10);
         Tile* t = world->getTile(sx, sy);
         Tile* below = world->getTile(sx, sy-1);
-        if (t && t->foreground == ITEM_EMPTY && below && below->foreground == BLOCK_GRASS) {
-            spawnMob((float)sx + 0.5f, (float)sy + 0.5f, ENTITY_DODO);
+        if (t && t->foreground == ITEM_EMPTY && below) {
+            if (below->foreground == BLOCK_GRASS) spawnMob((float)sx + 0.5f, (float)sy + 0.5f, ENTITY_DODO);
+            else if (below->foreground == BLOCK_SNOW) spawnMob((float)sx + 0.5f, (float)sy + 0.5f, ENTITY_YAK);
         }
     }
 
