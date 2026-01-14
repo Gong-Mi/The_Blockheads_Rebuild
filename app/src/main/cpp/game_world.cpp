@@ -350,6 +350,7 @@ void GameWorld::generateChunkSync(int cx, int cy) {
                 if (oreNoise > 0.75f) {
                     if (worldY < 60 && worldY > 30) t.foreground = ITEM_COPPER_ORE;
                     if (worldY < 40) t.foreground = ITEM_TIN_ORE;
+                    if (worldY < 100 && worldY > 60) t.foreground = ITEM_COAL; 
                 }
             }
             t.background = (worldY > surfaceHeight - 10) ? ITEM_DIRT : ITEM_STONE;
