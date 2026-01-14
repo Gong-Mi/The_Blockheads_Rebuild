@@ -42,6 +42,7 @@ public:
     void generateChunkSync(int cx, int cy);
     void updateChunks(float camX, float camY);
     void updateFluids();
+    void updateElectricity();
 };
 
 // Global helper for world wrapping

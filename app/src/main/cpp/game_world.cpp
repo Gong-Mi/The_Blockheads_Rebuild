@@ -43,6 +43,10 @@ void GameWorld::updateLighting() {
                 t.artLight = 255; 
                 artQueue.push({wx, wy}); 
             }
+            if (t.foreground == ITEM_ELECTRIC_LAMP && t.powerLevel > 0) {
+                t.artLight = 255;
+                artQueue.push({wx, wy});
+            }
         }
     }
 
@@ -138,11 +142,51 @@ void GameWorld::updateFluids() {
     }
 }
 
+void GameWorld::updateElectricity() {
+    std::lock_guard<std::mutex> lock(chunksMutex);
+    
+    // Pass 1: Reset and find sources
+    std::queue<LightNode> powerQueue;
+    for (auto chunk : chunks) {
+        for (int i = 0; i < CHUNK_SIZE * CHUNK_SIZE; i++) {
+            Tile& t = chunk->tiles[i];
+            t.powerLevel = 0;
+            if (t.foreground == ITEM_COAL_GENERATOR) {
+                t.powerLevel = 255;
+                int wx = chunk->x * CHUNK_SIZE + (i % CHUNK_SIZE);
+                int wy = chunk->y * CHUNK_SIZE + (i / CHUNK_SIZE);
+                powerQueue.push({wx, wy});
+            }
+        }
+    }
+
+    // Pass 2: Propagate through wires
+    int dx[] = {1, -1, 0, 0}; int dy[] = {0, 0, 1, -1};
+    while(!powerQueue.empty()) {
+        LightNode n = powerQueue.front(); powerQueue.pop();
+        Tile* curr = getTileInternal(n.x, n.y);
+        if(!curr || curr->powerLevel <= 10) continue;
+
+        for(int i=0; i<4; i++) {
+            int nx = n.x + dx[i]; int ny = n.y + dy[i];
+            Tile* next = getTileInternal(nx, ny);
+            if(next && (next->foreground == ITEM_COPPER_WIRE || next->foreground == ITEM_ELECTRIC_LAMP)) {
+                int nextPower = curr->powerLevel - 5; // Power loss over distance
+                if(nextPower > next->powerLevel) {
+                    next->powerLevel = (uint8_t)nextPower;
+                    powerQueue.push({nx, ny});
+                }
+            }
+        }
+    }
+}
+
 void GameWorld::workerLoop() {
     int tick = 0;
     while (!stopThread) {
         tick++;
         if (tick % 10 == 0) updateFluids(); 
+        if (tick % 30 == 0) updateElectricity(); 
         
         std::pair<int, int> task;
         {

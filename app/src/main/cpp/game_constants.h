@@ -22,6 +22,7 @@ struct Tile {
     int8_t normalY;
     uint8_t paintColor[4];
     uint16_t temperature;
+    uint8_t powerLevel; // 0-255
 };
 
 #include <vector>
@@ -66,6 +67,10 @@ enum ItemID {
     ITEM_PICKAXE = 50,
     ITEM_LINEN_CAP = 60,
     ITEM_LINEN_PANTS = 61,
+    ITEM_COAL = 70,
+    ITEM_COPPER_WIRE = 71,
+    ITEM_COAL_GENERATOR = 72,
+    ITEM_ELECTRIC_LAMP = 73,
     ENTITY_DODO = 100,
     ENTITY_DROP_ITEM = 101
 };
