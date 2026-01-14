@@ -174,9 +174,30 @@ void GameWorld::buildMeshCache(PhysicalBlock* block) {
         auto pushPart = [&](int type, float x, float y, float size, uint8_t sun, uint8_t art) {
             if (type == 0) return;
             
-            int idx = type - 1;
-            float tx = (float)(idx % 32); 
-            float ty = (float)(idx / 32);
+            // Texture mapping (row, col) in 32x32 atlas
+            int texRow = 0, texCol = 0;
+            if (type == ITEM_DIRT) { texRow = 0; texCol = 0; }
+            else if (type == ITEM_STONE) { texRow = 0; texCol = 1; }
+            else if (type == BLOCK_WOOD) { texRow = 0; texCol = 2; }
+            else if (type == BLOCK_LEAVES) { texRow = 0; texCol = 3; }
+            else if (type == BLOCK_GRASS) { texRow = 0; texCol = 4; }
+            else if (type == BLOCK_SAND) { texRow = 1; texCol = 0; }
+            else if (type == ITEM_COPPER_ORE) { texRow = 1; texCol = 1; }
+            else if (type == ITEM_TIN_ORE) { texRow = 1; texCol = 2; }
+            else if (type == BLOCK_SNOW) { texRow = 1; texCol = 3; }
+            else if (type == BLOCK_ICE) { texRow = 1; texCol = 4; }
+            else if (type == BLOCK_CACTUS) { texRow = 1; texCol = 5; }
+            else if (type == BLOCK_GLASS) { texRow = 1; texCol = 6; }
+            else if (type == ITEM_WORKBENCH) { texRow = 2; texCol = 0; }
+            else if (type == ITEM_TOOLBENCH) { texRow = 2; texCol = 1; }
+            else if (type == ITEM_TORCH) { texRow = 3; texCol = 0; }
+            else {
+                texCol = (type - 1) % 32;
+                texRow = (type - 1) / 32;
+            }
+
+            float tx = (float)texCol;
+            float ty = (float)texRow;
             float thick = 0.3f; // Original-like thickness
 
             auto pushV = [&](float vx, float vy, float vz, float vw, float vu, float vv, float oz, float brightnessMult) {
