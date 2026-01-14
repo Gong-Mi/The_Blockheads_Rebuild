@@ -165,11 +165,26 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
             if (world) {
                 Tile* t = world->getTile(current.tx, current.ty);
                 if (t && t->foreground != 0) {
-                    pendingInteractionBenchId = t->foreground;
-                    pendingInteractionX = current.tx;
-                    pendingInteractionY = current.ty;
-                    if (t->foreground == ITEM_PORTAL) {
-                        entities->queueSound("portalInteraction.wav");
+                    if (t->foreground == 72) { // Generator
+                        int slot = entities->player.selectedSlot;
+                        int item = entities->player.slots[slot];
+                        if (item == 70 || item == 3) { // Coal or Wood
+                           if (t->growth < 250) {
+                               int fuelVal = (item == 70) ? 50 : 10;
+                               t->growth = (uint8_t)std::min(255, t->growth + fuelVal);
+                               entities->player.counts[slot]--;
+                               if (entities->player.counts[slot] <= 0) entities->player.slots[slot] = 0;
+                               entities->inventoryDirty = true;
+                               entities->queueSound("place.wav");
+                           }
+                        }
+                    } else {
+                        pendingInteractionBenchId = t->foreground;
+                        pendingInteractionX = current.tx;
+                        pendingInteractionY = current.ty;
+                        if (t->foreground == 150) { // Portal
+                            entities->queueSound("portalInteraction.wav");
+                        }
                     }
                 }
             }

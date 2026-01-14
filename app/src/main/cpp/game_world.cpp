@@ -153,10 +153,13 @@ void GameWorld::updateElectricity() {
             Tile& t = chunk->tiles[i];
             t.powerLevel = 0;
             if (t.foreground == ITEM_COAL_GENERATOR) {
-                t.powerLevel = 255;
-                int wx = chunk->x * CHUNK_SIZE + (i % CHUNK_SIZE);
-                int wy = chunk->y * CHUNK_SIZE + (i / CHUNK_SIZE);
-                powerQueue.push({wx, wy});
+                if (t.growth > 0) {
+                    t.powerLevel = 255;
+                    t.growth--; 
+                    int wx = chunk->x * CHUNK_SIZE + (i % CHUNK_SIZE);
+                    int wy = chunk->y * CHUNK_SIZE + (i / CHUNK_SIZE);
+                    powerQueue.push({wx, wy});
+                }
             }
         }
     }
