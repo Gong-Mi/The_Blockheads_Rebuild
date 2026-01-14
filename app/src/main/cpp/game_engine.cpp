@@ -1,6 +1,7 @@
 #include <jni.h>
 #include <string>
 #include <vector>
+#include <mutex>
 #include <android/log.h>
 #include <android/asset_manager_jni.h>
 #include "game_constants.h"
@@ -25,6 +26,7 @@ EntityManager* g_entities = nullptr;
 BlockheadAI* g_ai = nullptr;
 CraftingManager* g_crafting = nullptr;
 std::string g_storagePath;
+std::recursive_mutex g_engineMutex;
 FILE* g_logFile = nullptr;
 
 void logToFile(const char* fmt, ...) {
@@ -49,10 +51,49 @@ void onSurfaceCreatedInternal(JNIEnv* env, jobject assetMgr) {
     }
 }
 
-// ... (skip MainMenu methods)
+extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_MainMenuActivity_onSurfaceCreatedNativeInternal(JNIEnv* env, jobject obj, jobject assetMgr) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
+    onSurfaceCreatedInternal(env, assetMgr);
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_MainMenuActivity_onSurfaceChangedNative(JNIEnv* env, jobject obj, jint width, jint height) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
+    if (g_renderer) g_renderer->resize(width, height);
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_MainMenuActivity_onDrawFrameNative(JNIEnv* env, jobject obj) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
+    if (g_renderer) g_renderer->renderFrame();
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_MainMenuActivity_setMenuModeNative(JNIEnv* env, jobject obj, jboolean mode) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
+    if (g_renderer) g_renderer->menuMode = mode;
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_MainMenuActivity_handleMenuTouchNative(JNIEnv* env, jobject obj, jfloat x, jfloat y) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
+    if (g_renderer) {
+        g_renderer->menuTouchX = x;
+        g_renderer->menuTouchY = y;
+    }
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_GameActivity_onSurfaceCreatedNative(JNIEnv* env, jobject obj, jobject assetMgr) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
+    onSurfaceCreatedInternal(env, assetMgr);
+}
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobject obj, jstring storageDir) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
+    CompressionManager::init();
     const char *path = env->GetStringUTFChars(storageDir, 0);
     g_storagePath = std::string(path);
     env->ReleaseStringUTFChars(storageDir, path);
@@ -61,8 +102,6 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
     std::string logPath = g_storagePath + "/game_log.txt";
     g_logFile = fopen(logPath.c_str(), "w");
     logToFile("Native Init Start. Storage: %s", g_storagePath.c_str());
-
-    CompressionManager::init();
     
     if (!g_world) g_world = new GameWorld();
     if (!g_entities) g_entities = new EntityManager();
@@ -95,6 +134,7 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_saveGameNative(JNIEnv* env, jobject obj) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
     if (g_world && g_entities && !g_storagePath.empty()) {
         PersistenceManager::saveWorld(g_storagePath.c_str(), g_world, g_entities);
     }
@@ -102,17 +142,20 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_saveGameNative(JNIEnv* env, 
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_getRecipesNative(JNIEnv* env, jobject obj, jint benchId) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
     if (g_crafting) return env->NewStringUTF(g_crafting->getRecipesJson(benchId).c_str());
     return env->NewStringUTF("[]");
 }
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_handleActionNative(JNIEnv* env, jobject obj, jint actionType) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
     if (g_entities && actionType >= 0 && actionType < 10) g_entities->player.selectedSlot = actionType;
 }
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_handleCraftNative(JNIEnv* env, jobject obj, jint recipeId, jint tx, jint ty) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
     if (g_crafting && g_entities) {
         if (g_crafting->startCraft(&g_entities->player, recipeId, tx, ty)) {
             g_entities->inventoryDirty = true;
@@ -123,6 +166,7 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handleCraftNative(JNIEnv* en
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_handleSwapInventoryItemNative(JNIEnv* env, jobject obj, jint fromSlot, jint toSlot) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
     if (g_entities) {
         if (fromSlot >= 0 && fromSlot < 30 && toSlot >= 0 && toSlot < 30) {
             std::swap(g_entities->player.slots[fromSlot], g_entities->player.slots[toSlot]);
@@ -134,11 +178,13 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handleSwapInventoryItemNativ
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_onSurfaceChangedNative(JNIEnv* env, jobject obj, jint width, jint height) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
     if (g_renderer) g_renderer->resize(width, height);
 }
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_handleTouchNative(JNIEnv* env, jobject obj, jfloat x, jfloat y) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
     if (!g_renderer || !g_ai || !g_world || !g_entities) return;
     float aspect = (float)g_renderer->screenW / (float)g_renderer->screenH;
     float h_cam = 10.0f * g_renderer->camZoom;
@@ -166,6 +212,7 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handleTouchNative(JNIEnv* en
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_handlePanNative(JNIEnv* env, jobject obj, jfloat dx, jfloat dy) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
     if (g_renderer) {
         g_renderer->followingPlayer = false; 
         g_renderer->targetX -= dx * 0.02f * g_renderer->camZoom;
@@ -175,6 +222,7 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handlePanNative(JNIEnv* env,
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_setSettingNative(JNIEnv* env, jobject obj, jstring key, jboolean value) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
     const char *k = env->GetStringUTFChars(key, 0);
     SettingsManager::getInstance().setBool(k, value);
     env->ReleaseStringUTFChars(key, k);
@@ -182,6 +230,7 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_setSettingNative(JNIEnv* env
 
 extern "C" JNIEXPORT jboolean JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_getSettingNative(JNIEnv* env, jobject obj, jstring key, jboolean defaultValue) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
     const char *k = env->GetStringUTFChars(key, 0);
     bool val = SettingsManager::getInstance().getBool(k, defaultValue);
     env->ReleaseStringUTFChars(key, k);
@@ -190,6 +239,7 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_getSettingNative(JNIEnv* env
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_handleZoomNative(JNIEnv* env, jobject obj, jfloat scaleFactor) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
     if (g_renderer) {
         g_renderer->camZoom /= scaleFactor; 
         if (g_renderer->camZoom < 0.1f) g_renderer->camZoom = 0.1f; 
@@ -199,6 +249,7 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handleZoomNative(JNIEnv* env
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* env, jobject obj) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
     static int frameLog = 0;
     if (frameLog++ % 600 == 0) logToFile("Frame %d", frameLog);
 

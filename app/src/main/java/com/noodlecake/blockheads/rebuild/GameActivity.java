@@ -161,7 +161,6 @@ public class GameActivity extends Activity {
             // Update Inventory UI (all slots)
             if (mInventorySlots[index] != null) {
                 updateSlotImage(mInventorySlots[index], type);
-                // Optional: Update count text if I add it later
             }
         });
     }
@@ -173,7 +172,9 @@ public class GameActivity extends Activity {
             if (mItemsAtlas == null) {
                 try {
                     mItemsAtlas = android.graphics.BitmapFactory.decodeStream(getAssets().open("Items.png"));
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             if (mItemsAtlas != null) {
@@ -186,6 +187,7 @@ public class GameActivity extends Activity {
                     android.graphics.Bitmap icon = android.graphics.Bitmap.createBitmap(mItemsAtlas, col * size, row * size, size, size);
                     slot.setImageBitmap(icon);
                 } catch (Exception e) {
+                    // Fallback to color if crop fails
                     slot.setColorFilter(0xFF888888);
                 }
             }
@@ -669,7 +671,14 @@ public class GameActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        if (mGameView != null) mGameView.onPause();
         saveGameNative();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mGameView != null) mGameView.onResume();
     }
 
     public native void initNative(String storageDir);
@@ -685,4 +694,3 @@ public class GameActivity extends Activity {
     public native void handleSwapInventoryItemNative(int fromSlot, int toSlot);
     public native String getRecipesNative(int benchId);
 }
-    

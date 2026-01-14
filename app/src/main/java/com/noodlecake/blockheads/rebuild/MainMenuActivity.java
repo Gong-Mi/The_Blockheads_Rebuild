@@ -76,10 +76,24 @@ public class MainMenuActivity extends Activity {
                 });
                 menu.addView(btn, lp);
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         root.addView(menu, new FrameLayout.LayoutParams(-1, -1));
         setContentView(root);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mGameView != null) mGameView.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mGameView != null) mGameView.onResume();
     }
 
     public void onSurfaceCreatedNative(android.content.res.AssetManager assetMgr) {
