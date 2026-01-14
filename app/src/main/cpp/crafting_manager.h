@@ -29,11 +29,16 @@ public:
         
         // Workbench (Bench 10)
         recipes.push_back({20, "Toolbench", ITEM_TOOLBENCH, 1, {{ITEM_STICK, 1}, {ITEM_FLINT, 1}}, 10, 10.0f});
+        recipes.push_back({21, "Craftbench", ITEM_CRAFTBENCH, 1, {{BLOCK_WOOD, 1}, {ITEM_DIRT, 1}}, 10, 10.0f});
         
         // Toolbench (Bench 11)
         recipes.push_back({10, "Flint Pickaxe", ITEM_PICKAXE, 1, {{ITEM_STICK, 1}, {ITEM_FLINT, 2}}, 11, 5.0f});
         recipes.push_back({11, "Flint Axe", 51, 1, {{ITEM_STICK, 1}, {ITEM_FLINT, 2}}, 11, 5.0f});
         recipes.push_back({12, "Flint Spade", 52, 1, {{ITEM_STICK, 1}, {ITEM_FLINT, 2}}, 11, 5.0f});
+
+        // Craftbench (Bench 15)
+        recipes.push_back({60, "Fur Cap", ITEM_LINEN_CAP, 1, {{ITEM_FUR, 3}}, 15, 10.0f});
+        recipes.push_back({61, "Fur Pants", ITEM_LINEN_PANTS, 1, {{ITEM_FUR, 5}}, 15, 10.0f});
 
         // Campfire (Bench 23)
         // Note: ID 14 is Glass block (reusing/defining it implicitly if not in constants yet, 

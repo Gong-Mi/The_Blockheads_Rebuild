@@ -182,6 +182,7 @@ void EntityManager::update(float gravity, GameWorld* world) {
             if (dx*dx + dy*dy < 1.0f && rand() % 100 < 5) { // Simple overlap check
                  m.markForDelete = true;
                  spawnDrop(m.x, m.y, ITEM_DODO_MEAT);
+                 if (rand() % 100 < 20) spawnDrop(m.x, m.y, ITEM_FUR);
                  queueSound("dodoDie.wav");
             }
         }

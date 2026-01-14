@@ -54,6 +54,7 @@ enum ItemID {
     BLOCK_ICE = 12,
     BLOCK_CACTUS = 13,
     BLOCK_GLASS = 14,
+    ITEM_CRAFTBENCH = 15,
     ITEM_TORCH = 20,
     ITEM_FLINT = 21,
     ITEM_STICK = 22,
@@ -61,7 +62,10 @@ enum ItemID {
     ITEM_CHILI = 30,
     ITEM_DODO_MEAT = 31,
     ITEM_COCONUT = 32,
+    ITEM_FUR = 33,
     ITEM_PICKAXE = 50,
+    ITEM_LINEN_CAP = 60,
+    ITEM_LINEN_PANTS = 61,
     ENTITY_DODO = 100
 };
 
