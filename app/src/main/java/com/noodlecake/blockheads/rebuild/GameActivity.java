@@ -132,7 +132,7 @@ public class GameActivity extends Activity {
                 }
             }
             if (mHungerBar != null) {
-                android.widget.FrameLayout.LayoutParams lp = (android.widget.FrameLayout.LayoutParams) mHungerBar.getLayoutParams();
+                android.widget.LinearLayout.LayoutParams lp = (android.widget.LinearLayout.LayoutParams) mHungerBar.getLayoutParams();
                 lp.width = (int) (300 * hunger);
                 mHungerBar.setLayoutParams(lp);
             }
