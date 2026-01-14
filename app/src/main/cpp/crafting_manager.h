@@ -35,7 +35,19 @@ public:
         recipes.push_back({24, "Furnace", ITEM_FURNACE, 1, {{ITEM_STONE, 5}, {ITEM_DIRT, 1}}, 10, 10.0f});
         
         // Toolbench (Bench 11)
-        // ...
+        recipes.push_back({10, "Flint Pickaxe", ITEM_PICKAXE, 1, {{ITEM_STICK, 1}, {ITEM_FLINT, 2}}, 11, 5.0f});
+        recipes.push_back({11, "Flint Axe", 51, 1, {{ITEM_STICK, 1}, {ITEM_FLINT, 2}}, 11, 5.0f});
+        recipes.push_back({12, "Flint Spade", 52, 1, {{ITEM_STICK, 1}, {ITEM_FLINT, 2}}, 11, 5.0f});
+        
+        recipes.push_back({110, "Iron Pickaxe", ITEM_IRON_PICKAXE, 1, {{ITEM_STICK, 1}, {ITEM_IRON_INGOT, 2}}, 11, 15.0f});
+        recipes.push_back({111, "Iron Axe", ITEM_IRON_AXE, 1, {{ITEM_STICK, 1}, {ITEM_IRON_INGOT, 2}}, 11, 15.0f});
+        recipes.push_back({112, "Iron Spade", ITEM_IRON_SPADE, 1, {{ITEM_STICK, 1}, {ITEM_IRON_INGOT, 2}}, 11, 15.0f});
+
+        recipes.push_back({120, "Steel Pickaxe", ITEM_STEEL_PICKAXE, 1, {{ITEM_STICK, 1}, {ITEM_STEEL_INGOT, 2}}, 11, 25.0f});
+        recipes.push_back({121, "Steel Axe", ITEM_STEEL_AXE, 1, {{ITEM_STICK, 1}, {ITEM_STEEL_INGOT, 2}}, 11, 25.0f});
+        recipes.push_back({122, "Steel Spade", ITEM_STEEL_SPADE, 1, {{ITEM_STICK, 1}, {ITEM_STEEL_INGOT, 2}}, 11, 25.0f});
+
+        // Craftbench (Bench 15)
         
         // Furnace (Bench 16)
         recipes.push_back({40, "Copper Ingot", ITEM_COPPER_INGOT, 1, {{ITEM_COPPER_ORE, 1}, {ITEM_COAL, 1}}, 16, 10.0f});

@@ -42,6 +42,14 @@ void ItemManager::init() {
     items[51] = {51, "Axe", 5, 1, false, false, 0, 0};
     items[52] = {52, "Spade", 5, 2, false, false, 0, 0};
 
+    items[110] = {110, "Iron Pickaxe", 8, 0, false, false, 0, 0};
+    items[111] = {111, "Iron Axe", 8, 1, false, false, 0, 0};
+    items[112] = {112, "Iron Spade", 8, 2, false, false, 0, 0};
+    
+    items[120] = {120, "Steel Pickaxe", 9, 0, false, false, 0, 0};
+    items[121] = {121, "Steel Axe", 9, 1, false, false, 0, 0};
+    items[122] = {122, "Steel Spade", 9, 2, false, false, 0, 0};
+
     items[70] = {70, "Coal", 6, 0, false, false, 0, 0};
     items[71] = {71, "Wire", 6, 1, true, false, 0, 0};
     items[72] = {72, "Generator", 6, 2, true, false, 0, 0};

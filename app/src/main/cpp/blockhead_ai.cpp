@@ -65,8 +65,10 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                     
                     // --- Data Driven Tool Logic ---
                     auto itemDef = ItemManager::getInstance().getDef(t->foreground);
-                    if (itemDef && itemDef->preferredTool == selectedItem) {
-                        baseSpeed = 25.0f; 
+                    if (itemDef && itemDef->preferredTool != 0) {
+                        if (selectedItem == itemDef->preferredTool) baseSpeed = 25.0f; // Matching Flint
+                        else if (selectedItem == itemDef->preferredTool + 60) baseSpeed = 60.0f; // Iron (offset 60)
+                        else if (selectedItem == itemDef->preferredTool + 70) baseSpeed = 120.0f; // Steel (offset 70)
                     }
                     
                     current.progress += baseSpeed; 
@@ -77,10 +79,14 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                         entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, t->foreground);
                         
                         auto def = ItemManager::getInstance().getDef(t->foreground);
-                        if (def && (def->preferredTool == ITEM_PICKAXE)) 
-                            entities->queueSound("pickaxe.wav");
-                        else 
+                        if (def && (def->preferredTool == ITEM_PICKAXE)) {
+                            if (selectedItem == 50 || selectedItem == 110 || selectedItem == 120)
+                                entities->queueSound("pickaxe.wav");
+                            else
+                                entities->queueSound("dig.wav");
+                        } else {
                             entities->queueSound("dig.wav");
+                        }
 
                         t->foreground = ITEM_EMPTY; 
                         t->damage = 0;
