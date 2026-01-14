@@ -36,6 +36,19 @@ public:
         fwrite(&entities->player.y, sizeof(float), 1, f);
         fwrite(entities->player.slots, sizeof(int), 10, f);
         fwrite(entities->player.counts, sizeof(int), 10, f);
+        // New status fields
+        fwrite(&entities->player.health, sizeof(float), 1, f);
+        fwrite(&entities->player.hunger, sizeof(float), 1, f);
+        fwrite(&entities->player.breath, sizeof(float), 1, f);
+        fwrite(&entities->player.clothingHead, sizeof(int), 1, f);
+        fwrite(&entities->player.clothingLegs, sizeof(int), 1, f);
+
+        // 2.5 Mobs
+        uint32_t mobCount = entities->mobs.size();
+        fwrite(&mobCount, sizeof(uint32_t), 1, f);
+        if (mobCount > 0) {
+            fwrite(entities->mobs.data(), sizeof(Entity), mobCount, f);
+        }
 
         // 3. Chunks
         uint32_t chunkCount = world->chunks.size();
@@ -74,8 +87,24 @@ public:
         fread(entities->player.slots, sizeof(int), 10, f);
         fread(entities->player.counts, sizeof(int), 10, f);
         
+        // Load status
+        fread(&entities->player.health, sizeof(float), 1, f);
+        fread(&entities->player.hunger, sizeof(float), 1, f);
+        fread(&entities->player.breath, sizeof(float), 1, f);
+        fread(&entities->player.clothingHead, sizeof(int), 1, f);
+        fread(&entities->player.clothingLegs, sizeof(int), 1, f);
+        
         // Notify UI update needed
         entities->inventoryDirty = true;
+
+        // Load Mobs
+        uint32_t mobCount;
+        if (fread(&mobCount, sizeof(uint32_t), 1, f) == 1) {
+            entities->mobs.resize(mobCount);
+            if (mobCount > 0) {
+                fread(entities->mobs.data(), sizeof(Entity), mobCount, f);
+            }
+        }
 
         // Load Chunks
         uint32_t chunkCount;

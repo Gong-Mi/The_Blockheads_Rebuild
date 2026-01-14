@@ -61,6 +61,7 @@ void GameWorld::updateLighting() {
                 if(!next) continue;
                 
                 int loss = (next->foreground != ITEM_EMPTY) ? 60 : 15;
+                if (next->waterLevel > 0) loss += (next->waterLevel / 10); // Water blocks light
                 int nextVal = val - loss;
                 if(nextVal < 0) nextVal = 0;
                 
@@ -92,6 +93,8 @@ Tile* GameWorld::getTileInternal(int x, int y) {
 
 void GameWorld::updateFluids() {
     std::lock_guard<std::mutex> lock(chunksMutex);
+    // Use a temp buffer or careful ordering to avoid "infinite speed" flow in one tick
+    // For a prototype, simple sweep is okay
     for (auto chunk : chunks) {
         bool changed = false;
         for (int i = 0; i < CHUNK_SIZE * CHUNK_SIZE; i++) {
@@ -100,21 +103,31 @@ void GameWorld::updateFluids() {
                 int wx = chunk->x * CHUNK_SIZE + (i % CHUNK_SIZE);
                 int wy = chunk->y * CHUNK_SIZE + (i / CHUNK_SIZE);
                 
-                // Flow down
+                // 1. Evaporation (Only at surface if sunlight is high)
+                if (t.sunlight > 200 && rand() % 500 < 1) {
+                    t.waterLevel--;
+                    changed = true;
+                    continue;
+                }
+
+                // 2. Flow down
                 Tile* below = getTileInternal(wx, wy - 1);
                 if (below && below->foreground == ITEM_EMPTY && below->waterLevel < 255) {
-                    int flow = std::min((int)t.waterLevel, 255 - below->waterLevel);
+                    int canTake = 255 - below->waterLevel;
+                    int flow = std::min((int)t.waterLevel, canTake);
                     below->waterLevel += flow;
                     t.waterLevel -= flow;
                     changed = true;
-                } else {
-                    // Flow sideways
-                    Tile* side = getTileInternal(wx + (rand()%2?1:-1), wy);
+                } else if (t.waterLevel > 1) {
+                    // 3. Flow sideways
+                    int dir = (rand() % 2 == 0) ? 1 : -1;
+                    Tile* side = getTileInternal(wx + dir, wy);
                     if (side && side->foreground == ITEM_EMPTY && side->waterLevel < t.waterLevel) {
                         int diff = t.waterLevel - side->waterLevel;
                         if (diff > 1) {
-                            side->waterLevel += diff / 2;
-                            t.waterLevel -= diff / 2;
+                            int flow = diff / 2;
+                            side->waterLevel += flow;
+                            t.waterLevel -= flow;
                             changed = true;
                         }
                     }
@@ -296,7 +309,7 @@ void GameWorld::generateChunkSync(int cx, int cy) {
                 }
             }
             t.background = (worldY > surfaceHeight - 10) ? ITEM_DIRT : ITEM_STONE;
-            if (temperature > 0.4f && t.background == ITEM_DIRT) t.background = BLOCK_SAND; // Sand background for desert
+            if (temperature > 0.4f && worldY <= surfaceHeight) t.background = BLOCK_SAND; 
 
             if (worldY < 85 && t.foreground == ITEM_EMPTY) {
                 if (temperature < -0.4f) t.foreground = BLOCK_ICE; // Freeze water if very cold
