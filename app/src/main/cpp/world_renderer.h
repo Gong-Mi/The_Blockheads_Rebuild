@@ -55,6 +55,12 @@ public:
     float playerX = 0, playerY = 0;
     std::vector<EntityRenderData> dropItems;
     std::vector<EntityRenderData> mobs;
+    
+    // Weather
+    float skyR=0.5f, skyG=0.7f, skyB=1.0f;
+    int weatherState = 0; // 0: Clear, 1: Rain, 2: Snow
+    struct Particle { float x, y, vx, vy, life; };
+    std::vector<Particle> rainParticles;
 
     int totalVertexCount = 0;
     int screenW = 1920, screenH = 1080;
