@@ -63,6 +63,10 @@ void ItemManager::init() {
     items[91] = {91, "Flax", 11, 1, false, false, 0, 0};
     items[92] = {92, "Sunflower Seed", 11, 2, true, false, 0, 0};
     items[93] = {93, "Sunflower", 11, 3, false, false, 0, 0};
+    items[94] = {94, "Spinning Wheel", 13, 0, true, false, 0, 0};
+    items[96] = {96, "Linen", 13, 1, false, false, 0, 0};
+    items[97] = {97, "Linen Cap", 13, 2, false, false, 0, 0};
+    items[98] = {98, "Linen Pants", 13, 3, false, false, 0, 0};
 
     items[95] = {95, "Time Crystal", 12, 0, false, false, 0, 0};
     items[130] = {130, "Portal", 12, 1, true, false, 0, 0};
