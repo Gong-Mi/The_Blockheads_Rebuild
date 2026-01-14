@@ -86,7 +86,8 @@ enum ItemID {
     ITEM_LADDER = 82,
     ENTITY_DODO = 100,
     ENTITY_DROP_ITEM = 101,
-    ENTITY_YAK = 102
+    ENTITY_YAK = 102,
+    ENTITY_DROPBEAR = 103
 };
 
 #endif

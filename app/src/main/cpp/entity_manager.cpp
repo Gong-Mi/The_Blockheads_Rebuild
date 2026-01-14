@@ -236,13 +236,45 @@ void EntityManager::update(float gravity, GameWorld* world) {
             // Random sound
             if (m.type == ENTITY_DODO && rand() % 1000 < 2) queueSound("dodoCluck1.wav");
             if (m.type == ENTITY_YAK && rand() % 1500 < 2) queueSound("yakMoo.wav");
+        } else if (m.type == ENTITY_DROPBEAR) {
+            // Dropbear AI: Stationary on trees, drops when player is near
+            float dx = player.x - m.x;
+            float dy = player.y - m.y;
+            float distSq = dx*dx + dy*dy;
+
+            if (distSq < 9.0f) { // Aggro range
+                m.vy -= gravity * 0.8f; // Falling/Attacking
+                m.vx = (dx > 0 ? 1 : -1) * 0.08f;
+                if (distSq < 0.5f) {
+                    player.health -= 0.01f; // Damage player
+                    if (rand() % 5 == 0) queueSound("crunch.wav");
+                }
+            } else {
+                m.vx = 0; m.vy = 0; // Stay on tree
+            }
+
+            m.x += m.vx; m.y += m.vy;
+            if (world) {
+                int bx = (int)floor(m.x); int by = (int)floor(m.y);
+                Tile* t = world->getTile(bx, by);
+                if (t && t->foreground != ITEM_EMPTY) {
+                    m.y = (float)(by + 1); m.vy = 0; m.onGround = true;
+                }
+            }
+
+            if (distSq < 1.0f && rand() % 100 < 5) { // Can be killed
+                m.markForDelete = true;
+                spawnDrop(m.x, m.y, ITEM_DODO_MEAT);
+                spawnDrop(m.x, m.y, ITEM_FUR);
+                queueSound("dropbearDie.wav");
+            }
         }
     }
     mobs.erase(std::remove_if(mobs.begin(), mobs.end(), 
         [](const Entity& e){ return e.markForDelete; }), mobs.end());
 
     // Spawning logic
-    if (world && mobs.size() < 15 && rand() % 1000 < 8) {
+    if (world && mobs.size() < 20 && rand() % 1000 < 10) {
         int sx = (int)floor(player.x) + (rand() % 60 - 30);
         int sy = (int)floor(player.y) + (rand() % 20 - 10);
         Tile* t = world->getTile(sx, sy);
@@ -250,6 +282,7 @@ void EntityManager::update(float gravity, GameWorld* world) {
         if (t && t->foreground == ITEM_EMPTY && below) {
             if (below->foreground == BLOCK_GRASS) spawnMob((float)sx + 0.5f, (float)sy + 0.5f, ENTITY_DODO);
             else if (below->foreground == BLOCK_SNOW) spawnMob((float)sx + 0.5f, (float)sy + 0.5f, ENTITY_YAK);
+            else if (below->foreground == BLOCK_LEAVES) spawnMob((float)sx + 0.5f, (float)sy + 0.5f, ENTITY_DROPBEAR);
         }
     }
 

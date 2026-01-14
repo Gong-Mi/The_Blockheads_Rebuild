@@ -70,6 +70,8 @@ void WorldRenderer::init(AAssetManager* mgr) {
     yakBodyTexID = loadTex(mgr, "yakBody.png");
     yakHeadTexID = loadTex(mgr, "yakHead.png");
     yakLegTexID = loadTex(mgr, "yakLeg.png");
+    dropbearBodyTexID = loadTex(mgr, "dropbearBody.png");
+    dropbearHeadTexID = loadTex(mgr, "dropbearHead.png");
 
     // --- DEBUG SHADER (Inline) ---
     const char* debugVS = 
@@ -477,8 +479,13 @@ void WorldRenderer::renderFrame() {
                 // Legs (4 legs for Yak)
                 drawMobPart(yakLegTexID, mob.x, mob.y + 0.5f, -0.25f, -0.4f + (wAnim>0?wAnim*0.15f:0), 0.15f, 0.1f, 0.4f, 0.1f);
                 drawMobPart(yakLegTexID, mob.x, mob.y + 0.5f, 0.25f, -0.4f + (wAnim<0?-wAnim*0.15f:0), 0.15f, 0.1f, 0.4f, 0.1f);
-                drawMobPart(yakLegTexID, mob.x, mob.y + 0.5f, -0.25f, -0.4f + (wAnim<0?-wAnim*0.15f:0), -0.15f, 0.1f, 0.4f, 0.1f);
-                drawMobPart(yakLegTexID, mob.x, mob.y + 0.5f, 0.25f, -0.4f + (wAnim>0?wAnim*0.15f:0), -0.15f, 0.1f, 0.4f, 0.1f);
+                drawMobPart(yakLegTexID, mob.x, mob.y + 0.5f, -0.25f, -0.4f + (wAnim<0?-0.15f:0), -0.15f, 0.1f, 0.4f, 0.1f);
+                drawMobPart(yakLegTexID, mob.x, mob.y + 0.5f, 0.25f, -0.4f + (wAnim>0?0.15f:0), -0.15f, 0.1f, 0.4f, 0.1f);
+            } else if (mob.type == ENTITY_DROPBEAR) {
+                float wAnim = std::sin(animTime * 12.0f + mob.x);
+                // Dropbear is more compact (dark fur)
+                drawMobPart(dropbearBodyTexID, mob.x, mob.y + 0.25f, 0, 0, 0, 0.35f, 0.45f, 0.3f);
+                drawMobPart(dropbearHeadTexID, mob.x, mob.y + 0.25f, 0, 0.35f, 0, 0.3f, 0.3f, 0.3f);
             }
         }
     }
