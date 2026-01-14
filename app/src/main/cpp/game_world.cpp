@@ -181,12 +181,35 @@ void GameWorld::updateElectricity() {
     }
 }
 
+void GameWorld::updateVegetation() {
+    std::lock_guard<std::mutex> lock(chunksMutex);
+    for (auto chunk : chunks) {
+        bool changed = false;
+        for (int i = 0; i < CHUNK_SIZE * CHUNK_SIZE; i++) {
+            Tile& t = chunk->tiles[i];
+            if (t.foreground == ITEM_FLAX_SEED || t.foreground == ITEM_SUNFLOWER_SEED) {
+                if (t.growth < 255) {
+                    t.growth += 1; // Grow slowly
+                    if (t.growth == 255) {
+                        // Mature
+                        if (t.foreground == ITEM_FLAX_SEED) t.foreground = ITEM_FLAX;
+                        else if (t.foreground == ITEM_SUNFLOWER_SEED) t.foreground = ITEM_SUNFLOWER;
+                        changed = true;
+                    }
+                }
+            }
+        }
+        if (changed) chunk->dirty = true;
+    }
+}
+
 void GameWorld::workerLoop() {
     int tick = 0;
     while (!stopThread) {
         tick++;
         if (tick % 10 == 0) updateFluids(); 
         if (tick % 30 == 0) updateElectricity(); 
+        if (tick % 100 == 0) updateVegetation(); 
         
         std::pair<int, int> task;
         {

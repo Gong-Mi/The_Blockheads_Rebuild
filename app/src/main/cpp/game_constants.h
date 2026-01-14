@@ -23,6 +23,7 @@ struct Tile {
     uint8_t paintColor[4];
     uint16_t temperature;
     uint8_t powerLevel; // 0-255
+    uint8_t growth;     // 0-255 (Plant growth)
 };
 
 #include <vector>
@@ -84,6 +85,10 @@ enum ItemID {
     ITEM_WOOD_DOOR = 80,
     ITEM_WOOD_TRAPDOOR = 81,
     ITEM_LADDER = 82,
+    ITEM_FLAX_SEED = 90,
+    ITEM_FLAX = 91,
+    ITEM_SUNFLOWER_SEED = 92,
+    ITEM_SUNFLOWER = 93,
     ENTITY_DODO = 100,
     ENTITY_DROP_ITEM = 101,
     ENTITY_YAK = 102,

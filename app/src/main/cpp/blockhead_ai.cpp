@@ -76,7 +76,16 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                     if (t->damage < 240) {
                         t->damage = (uint8_t)std::min(255.0f, (float)t->damage + baseSpeed / 2.0f); 
                     } else {
-                        entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, t->foreground);
+                        // Harvest logic for crops
+                        if (t->foreground == ITEM_FLAX) {
+                            entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_FLAX);
+                            entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_FLAX_SEED);
+                        } else if (t->foreground == ITEM_SUNFLOWER) {
+                            entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_SUNFLOWER);
+                            entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_SUNFLOWER_SEED);
+                        } else {
+                            entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, t->foreground);
+                        }
                         
                         auto def = ItemManager::getInstance().getDef(t->foreground);
                         if (def && (def->preferredTool == ITEM_PICKAXE)) {

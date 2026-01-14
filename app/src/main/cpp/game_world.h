@@ -43,6 +43,7 @@ public:
     void updateChunks(float camX, float camY);
     void updateFluids();
     void updateElectricity();
+    void updateVegetation();
 };
 
 // Global helper for world wrapping

@@ -58,6 +58,11 @@ void ItemManager::init() {
     items[80] = {80, "Wood Door", 10, 0, true, false, 0, 0};
     items[81] = {81, "Trapdoor", 10, 1, true, false, 0, 0};
     items[82] = {82, "Ladder", 10, 2, true, false, 0, 0};
+
+    items[90] = {90, "Flax Seed", 11, 0, true, false, 0, 0};
+    items[91] = {91, "Flax", 11, 1, false, false, 0, 0};
+    items[92] = {92, "Sunflower Seed", 11, 2, true, false, 0, 0};
+    items[93] = {93, "Sunflower", 11, 3, false, false, 0, 0};
 }
 
 const ItemManager::ItemDef* ItemManager::getDef(int id) {
