@@ -199,7 +199,7 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handleTouchNative(JNIEnv* en
     g_renderer->targetBlockX = blockX; g_renderer->targetBlockY = blockY;
     g_renderer->showActionSquare = true; g_renderer->followingPlayer = true; 
     Tile* t = g_world->getTile(blockX, blockY);
-    if (t && (t->foreground == 10 || t->foreground == 11 || t->foreground == 15 || t->foreground == 23 || t->foreground == 19)) g_ai->addAction(ACTION_INTERACT, blockX, blockY);
+    if (t && (t->foreground == 11 || t->foreground == 12 || t->foreground == 16 || t->foreground == 17 || t->foreground == 19 || t->foreground == 23 || t->foreground == 110)) g_ai->addAction(ACTION_INTERACT, blockX, blockY);
     else if (t && t->foreground != ITEM_EMPTY) g_ai->addAction(ACTION_MINE, blockX, blockY);
     else {
         int slot = g_entities->player.selectedSlot;

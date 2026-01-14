@@ -598,10 +598,29 @@ public class GameActivity extends Activity {
         layout.setBackgroundColor(0xEE333333);
 
         android.widget.TextView title = new android.widget.TextView(this);
-        title.setText("CRAFTING - " + (benchId == 0 ? "HAND" : "BENCH"));
+        String benchName = "BENCH";
+        if (benchId == 0) benchName = "HAND CRAFTING";
+        else if (benchId == 11) benchName = "WORKBENCH";
+        else if (benchId == 12) benchName = "TOOLBENCH";
+        else if (benchId == 16) benchName = "CRAFTBENCH";
+        else if (benchId == 17) benchName = "FURNACE";
+        else if (benchId == 110) benchName = "BED";
+        
+        title.setText(benchName);
         title.setTextColor(0xFFFFFFFF);
         title.setTextSize(20);
         layout.addView(title);
+
+        if (benchId == 110) {
+            // Special UI for Bed
+            android.widget.Button sleepBtn = new android.widget.Button(this);
+            sleepBtn.setText("SLEEP");
+            sleepBtn.setOnClickListener(v -> {
+               // TODO: Implement Sleep Logic (Time acceleration)
+               android.widget.Toast.makeText(this, "Zzz...", android.widget.Toast.LENGTH_SHORT).show();
+            });
+            layout.addView(sleepBtn);
+        }
 
         android.widget.ScrollView scroll = new android.widget.ScrollView(this);
         android.widget.LinearLayout list = new android.widget.LinearLayout(this);
