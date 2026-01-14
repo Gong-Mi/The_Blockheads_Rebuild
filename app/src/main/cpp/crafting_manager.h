@@ -36,6 +36,7 @@ public:
         recipes.push_back({25, "Wood Door", ITEM_WOOD_DOOR, 1, {{BLOCK_WOOD, 5}}, 10, 10.0f});
         recipes.push_back({26, "Trapdoor", ITEM_WOOD_TRAPDOOR, 1, {{BLOCK_WOOD, 3}}, 10, 10.0f});
         recipes.push_back({27, "Ladder", ITEM_LADDER, 5, {{ITEM_STICK, 10}}, 10, 5.0f});
+        recipes.push_back({28, "Portal", ITEM_PORTAL, 1, {{BLOCK_WOOD, 1}, {ITEM_STONE, 1}}, 10, 5.0f});
 
         // Campfire (Bench 23)
         recipes.push_back({30, "Glass", 14, 1, {{BLOCK_SAND, 5}}, 23, 10.0f}); 

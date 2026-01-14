@@ -83,6 +83,9 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                         } else if (t->foreground == ITEM_SUNFLOWER) {
                             entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_SUNFLOWER);
                             entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_SUNFLOWER_SEED);
+                        } else if (t->foreground == BLOCK_TC_ORE) {
+                            entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_TIME_CRYSTAL);
+                            if (rand() % 100 < 30) entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_TIME_CRYSTAL);
                         } else {
                             entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, t->foreground);
                         }
@@ -132,6 +135,9 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                 Tile* t = world->getTile(current.tx, current.ty);
                 if (t && t->foreground != ITEM_EMPTY) {
                     pendingInteractionBenchId = t->foreground;
+                    if (t->foreground == ITEM_PORTAL) {
+                        entities->queueSound("portalInteraction.wav");
+                    }
                 }
             }
             actionQueue.pop();
