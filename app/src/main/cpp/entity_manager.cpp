@@ -194,10 +194,24 @@ void EntityManager::update(float gravity, GameWorld* world) {
                  if (rand() % 100 < 20) spawnDrop(m.x, m.y, ITEM_FUR);
                  queueSound("dodoDie.wav");
             }
+            
+            // Random sound
+            if (rand() % 1000 < 2) queueSound("dodoCluck1.wav");
         }
     }
     mobs.erase(std::remove_if(mobs.begin(), mobs.end(), 
         [](const Entity& e){ return e.markForDelete; }), mobs.end());
+
+    // Spawning logic
+    if (world && mobs.size() < 10 && rand() % 1000 < 5) {
+        int sx = (int)floor(player.x) + (rand() % 40 - 20);
+        int sy = (int)floor(player.y) + (rand() % 20 - 10);
+        Tile* t = world->getTile(sx, sy);
+        Tile* below = world->getTile(sx, sy-1);
+        if (t && t->foreground == ITEM_EMPTY && below && below->foreground == BLOCK_GRASS) {
+            spawnMob((float)sx + 0.5f, (float)sy + 0.5f, ENTITY_DODO);
+        }
+    }
 
     for (auto& e : dropItems) {
         float dx = player.x - e.x;
