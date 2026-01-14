@@ -2,7 +2,7 @@
 #define ITEM_MANAGER_H
 
 #include <string>
-#include <map>
+#include "game_item_ids.h" // Generated Enums
 
 class ItemManager {
 public:
@@ -14,18 +14,20 @@ public:
         bool isBlock;
         bool isFood;
         float hungerRestore;
-        int preferredTool; // e.g., ITEM_PICKAXE
+        int preferredTool;
     };
 
-    std::map<int, ItemDef> items;
     static ItemManager& getInstance() {
         static ItemManager instance;
         return instance;
     }
 
-    void init();
+    // Now pure lookup, no init needed
     const ItemDef* getDef(int id);
     std::string getName(int id);
 };
+
+// Extern generated data
+extern ItemManager::ItemDef g_itemDefs[ITEM_COUNT_MAX];
 
 #endif

@@ -2,6 +2,20 @@ cmake_minimum_required(VERSION 3.4.1)
 project("TheBlockheads")
 
 include_directories(external)
+include_directories(generated) # Generated headers
+
+# --- Code Generation ---
+find_package(Python3 REQUIRED)
+set(TOOL_DIR ${CMAKE_SOURCE_DIR}/../../../tools)
+set(ASSET_DIR ${CMAKE_SOURCE_DIR}/../../assets/gamedata)
+set(GEN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/generated)
+
+add_custom_command(
+    OUTPUT ${GEN_DIR}/game_item_ids.h ${GEN_DIR}/game_item_data.cpp
+    COMMAND ${Python3_EXECUTABLE} ${TOOL_DIR}/process_items.py ${ASSET_DIR}/items.json ${GEN_DIR}/game_item_ids.h ${GEN_DIR}/game_item_data.cpp
+    DEPENDS ${TOOL_DIR}/process_items.py ${ASSET_DIR}/items.json
+    COMMENT "Generating Item Data from JSON"
+)
 
 # --- Zstd 编译配置 ---
 set(ZSTD_DIR external/zstd/lib)
@@ -23,6 +37,7 @@ add_library(native-lib SHARED
             compression_manager.cpp
             command_processor.cpp
             item_manager.cpp
+            generated/game_item_data.cpp
             settings_manager.cpp
             ${ZSTD_SOURCES}
             ${LZ4_SOURCES})
