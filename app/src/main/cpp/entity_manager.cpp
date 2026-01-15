@@ -54,23 +54,38 @@ bool Player::checkCollision(float newX, float newY, GameWorld* world) {
 }
 
 void Player::update(float gravity, GameWorld* world) {
-    // Ladder Logic
+    // Ladder & Elevator Logic
     bool onLadder = false;
+    bool inElevator = false;
     if (world) {
         Tile* t = world->getTile((int)floor(x), (int)floor(y + 0.5f));
-        if (t && t->foreground == ITEM_LADDER) {
+        if (t && t->foreground == 82) { // ITEM_LADDER
             onLadder = true;
-            vx *= 0.5f; // Slow down on ladder
-            if (vy < -0.1f) vy = -0.1f; // Slow descent
+            vx *= 0.5f;
+            if (vy < -0.1f) vy = -0.1f;
+        } else if (t && t->foreground == 271) { // ITEM_ELEVATOR_SHAFT
+            // Scan UP for motor
+            for (int dy = 1; dy < 50; dy++) {
+                Tile* mt = world->getTile((int)floor(x), (int)floor(y) + dy);
+                if (!mt || mt->foreground == 0) continue;
+                if (mt->foreground == 270) { // ITEM_ELEVATOR_MOTOR
+                    if (mt->powerLevel > 0) {
+                        inElevator = true;
+                        vy = 0.4f; // Ascend!
+                    }
+                    break;
+                }
+                if (mt->foreground != 271) break; // Blocked or not shaft
+            }
         }
     }
 
     x += vx;
     if (onLadder) {
-        // Vertical movement on ladder if player is "trying to move"? 
-        // For now, ladders just counteract gravity and allow "floating"
         vy *= 0.8f; 
-        vy += 0.01f; // Neutral buoyancy on ladder
+        vy += 0.01f;
+    } else if (inElevator) {
+        // vy is already set
     } else {
         vy -= gravity; 
     }

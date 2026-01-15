@@ -199,7 +199,7 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handleTouchNative(JNIEnv* en
     g_renderer->targetBlockX = blockX; g_renderer->targetBlockY = blockY;
     g_renderer->showActionSquare = true; g_renderer->followingPlayer = true; 
     Tile* t = g_world->getTile(blockX, blockY);
-    if (t && (t->foreground == 11 || t->foreground == 12 || t->foreground == 16 || t->foreground == 17 || t->foreground == 19 || t->foreground == 23 || t->foreground == 110 || t->foreground == 72 || t->foreground == 150)) g_ai->addAction(ACTION_INTERACT, blockX, blockY);
+    if (t && (t->foreground == 11 || t->foreground == 12 || t->foreground == 16 || t->foreground == 17 || t->foreground == 19 || t->foreground == 23 || t->foreground == 110 || t->foreground == 72 || t->foreground == 150 || t->foreground == 270 || t->foreground == 272)) g_ai->addAction(ACTION_INTERACT, blockX, blockY);
     else if (t && t->foreground != ITEM_EMPTY) g_ai->addAction(ACTION_MINE, blockX, blockY);
     else {
         int slot = g_entities->player.selectedSlot;
@@ -249,6 +249,37 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handleZoomNative(JNIEnv* env
         if (g_renderer->camZoom < 0.1f) g_renderer->camZoom = 0.1f; 
         if (g_renderer->camZoom > 15.0f) g_renderer->camZoom = 15.0f; 
     }
+}
+
+extern "C" JNIEXPORT jint JNICALL
+Java_com_noodlecake_blockheads_rebuild_GameActivity_getContainerItemTypeNative(JNIEnv* env, jobject obj, jint x, jint y, jint slot) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
+    if (!g_world) return 0;
+    uint64_t key = g_world->getContainerKey(x, y);
+    if (g_world->containers.count(key)) {
+        return g_world->containers[key].slots[slot];
+    }
+    return 0;
+}
+
+extern "C" JNIEXPORT jint JNICALL
+Java_com_noodlecake_blockheads_rebuild_GameActivity_getContainerItemCountNative(JNIEnv* env, jobject obj, jint x, jint y, jint slot) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
+    if (!g_world) return 0;
+    uint64_t key = g_world->getContainerKey(x, y);
+    if (g_world->containers.count(key)) {
+        return g_world->containers[key].counts[slot];
+    }
+    return 0;
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_GameActivity_setContainerItemNative(JNIEnv* env, jobject obj, jint x, jint y, jint slot, jint type, jint count) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
+    if (!g_world) return;
+    uint64_t key = g_world->getContainerKey(x, y);
+    g_world->containers[key].slots[slot] = type;
+    g_world->containers[key].counts[slot] = count;
 }
 
 extern "C" JNIEXPORT void JNICALL

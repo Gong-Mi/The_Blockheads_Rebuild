@@ -604,6 +604,8 @@ public class GameActivity extends Activity {
         else if (benchId == 12) benchName = "TOOLBENCH";
         else if (benchId == 16) benchName = "CRAFTBENCH";
         else if (benchId == 17) benchName = "FURNACE";
+        else if (benchId == 272) benchName = "ELECTRIC FURNACE";
+        else if (benchId == 270) benchName = "ELEVATOR MOTOR";
         else if (benchId == 110) benchName = "BED";
         
         title.setText(benchName);
