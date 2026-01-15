@@ -15,6 +15,7 @@ public:
         bool isFood;
         float hungerRestore;
         int preferredTool;
+        int renderType;
     };
 
     static ItemManager& getInstance() {

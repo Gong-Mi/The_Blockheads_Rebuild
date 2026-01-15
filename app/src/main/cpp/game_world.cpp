@@ -260,9 +260,11 @@ void GameWorld::buildMeshCache(PhysicalBlock* block) {
             
             int texRow = 0, texCol = 0;
             auto def = ItemManager::getInstance().getDef(type);
+            int renderType = 0;
             if (def) {
                 texRow = def->texRow;
                 texCol = def->texCol;
+                renderType = def->renderType;
             } else {
                 texCol = (type - 1) % 32;
                 texRow = (type - 1) / 32;
@@ -290,6 +292,17 @@ void GameWorld::buildMeshCache(PhysicalBlock* block) {
                 block->vertexCache.push_back(1.0f);
                 block->vertexCache.push_back(1.0f);
             };
+            
+            if (renderType == 1) { // Plant (Flat Quad)
+                float z = -0.15f;
+                pushV(x,      y,      z, tx, 0.0f,   255.0f, ty, 1.0f);
+                pushV(x+size, y,      z, tx, 255.0f, 255.0f, ty, 1.0f);
+                pushV(x,      y+size, z, tx, 0.0f,   0.0f,   ty, 1.0f);
+                pushV(x+size, y,      z, tx, 255.0f, 255.0f, ty, 1.0f);
+                pushV(x+size, y+size, z, tx, 255.0f, 0.0f,   ty, 1.0f);
+                pushV(x,      y+size, z, tx, 0.0f,   0.0f,   ty, 1.0f);
+                return;
+            }
 
             // 1. FRONT FACE (Z = 0.0)
             pushV(x,      y,      0.0f, tx, 0.0f,   255.0f, ty, 1.0f);
@@ -378,7 +391,16 @@ void GameWorld::generateChunkSync(int cx, int cy) {
                     if (worldY < 60 && worldY > 30) t.foreground = ITEM_COPPER_ORE;
                     if (worldY < 40) t.foreground = ITEM_TIN_ORE;
                     if (worldY < 100 && worldY > 60) t.foreground = ITEM_COAL; 
-                    if (worldY < 30 && oreNoise > 0.92f) t.foreground = BLOCK_TC_ORE; 
+                    
+                    if (worldY < 50 && worldY > 10 && oreNoise > 0.85f) t.foreground = 18; // Iron
+                    if (worldY < 30 && oreNoise > 0.90f) t.foreground = ITEM_GOLD_ORE;
+
+                    if (worldY < 20 && oreNoise > 0.94f) {
+                         int r = rand() % 5;
+                         t.foreground = 220 + r; // 220-224 Gems
+                    }
+
+                    if (worldY < 30 && oreNoise > 0.96f) t.foreground = BLOCK_TC_ORE; 
                 }
             }
             t.background = (worldY > surfaceHeight - 10) ? ITEM_DIRT : ITEM_STONE;
@@ -430,6 +452,24 @@ void GameWorld::generateChunkSync(int cx, int cy) {
                                 if (i < CHUNK_SIZE - 1) block->tiles[ly * CHUNK_SIZE + i + 1].foreground = BLOCK_LEAVES;
                             }
                         }
+                    }
+                }
+                
+                // Plant Generation
+                int aboveY = (localY + 1);
+                if (aboveY < CHUNK_SIZE) { 
+                    if (surfaceTile.foreground == BLOCK_GRASS && (worldX * 37) % 100 < 10) {
+                        int pr = (worldX * 13) % 3;
+                        int plantType = 92; // Sunflower
+                        if (pr == 1) plantType = 214; // Corn
+                        else if (pr == 2) plantType = 215; // Carrot
+                        
+                        block->tiles[aboveY * CHUNK_SIZE + i].foreground = plantType;
+                        block->tiles[aboveY * CHUNK_SIZE + i].growth = 200;
+                    }
+                    if (surfaceTile.foreground == BLOCK_SNOW && (worldX * 37) % 100 < 8) {
+                        block->tiles[aboveY * CHUNK_SIZE + i].foreground = 90; // Flax
+                        block->tiles[aboveY * CHUNK_SIZE + i].growth = 200;
                     }
                 }
             }

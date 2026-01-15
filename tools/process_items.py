@@ -53,14 +53,15 @@ def generate_code(items_json_path, recipes_json_path, item_header_path, item_sou
         for i in range(array_size):
             item = full_list[i]
             if item is None:
-                c.write(f"    {{ {i}, \"Unknown\", 0, 0, false, false, 0.0f, 0 }},\n")
+                c.write(f"    {{ {i}, \"Unknown\", 0, 0, false, false, 0.0f, 0, 0 }},\n")
             else:
                 is_block = "true" if item.get('isBlock', False) else "false"
                 is_food = "true" if item.get('isFood', False) else "false"
                 hunger = item.get('hunger', 0.0)
                 tool_power = item.get('tool', 0)
+                render_type = item.get('renderType', 0)
                 c.write(f"    {{ {item['id']}, \"{item['name']}\", {item['texRow']}, {item['texCol']}, ")
-                c.write(f"{is_block}, {is_food}, {hunger}f, {tool_power} }},\n")
+                c.write(f"{is_block}, {is_food}, {hunger}f, {tool_power}, {render_type} }},\n")
             
         c.write("};\n")
 
