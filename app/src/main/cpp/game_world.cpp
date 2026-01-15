@@ -206,12 +206,71 @@ void GameWorld::updateVegetation() {
     }
 }
 
+void GameWorld::updateTemperature() {
+    std::lock_guard<std::mutex> lock(chunksMutex);
+    
+    float timeFactor = 0.0f;
+    // Simple day/night cycle logic for temperature
+    // Day (0.25-0.75): Warm (+5000), Night: Cold (-5000)
+    if (worldTime > 0.25f && worldTime < 0.75f) {
+        timeFactor = 5000.0f * sinf((worldTime - 0.25f) * 3.14159f * 2.0f); 
+    } else {
+        timeFactor = -5000.0f;
+    }
+
+    for (auto chunk : chunks) {
+        bool changed = false;
+        for (int i = 0; i < CHUNK_SIZE * CHUNK_SIZE; i++) {
+            Tile& t = chunk->tiles[i];
+            int wx = chunk->x * CHUNK_SIZE + (i % CHUNK_SIZE);
+            int wy = chunk->y * CHUNK_SIZE + (i / CHUNK_SIZE);
+            
+            // Base Temperature from Noise (Simulated)
+            // Re-evaluating noise is expensive, so we approximate base using altitude
+            // Higher = Colder. Sea level (80) = ~20000 (0.3 in -1..1 scale mapped to uint16)
+            
+            // Map -1.0 to 1.0 -> 0 to 65535. 0.0 -> 32767.
+            // Altitude lapse rate: -100 units per block up
+            float altitudeFactor = (float)(wy - 80) * 150.0f; 
+            
+            // We use the stored temperature as "Biome Base" if we assume it doesn't change
+            // But currently generateChunkSync calculates it. 
+            // Let's just recalculate a simple dynamic temp on top of a base "climate"
+            
+            // Recover approximate base from current value? No, that drifts.
+            // Let's assume t.temperature was set during gen as the Biome Baseline.
+            // We will modify a *copy* or use a separate "heat" field? 
+            // The structure only has 'temperature'. 
+            // If we modify it, we lose the baseline.
+            // SOLUTION: Re-calculate biome noise here? Or just apply deltas to a fixed "Climate" value?
+            // For now, let's just assume t.temperature is the CURRENT temp, and we drift it towards target.
+            
+            float targetTemp = 32000.0f - altitudeFactor + timeFactor;
+            
+            // Heat Sources
+            if (t.artLight > 200) targetTemp += 10000.0f; // Nearby light warms you
+            
+            // Check direct heat sources
+            if (t.foreground == ITEM_CAMPFIRE || t.foreground == ITEM_FURNACE) targetTemp += 20000.0f;
+            
+            // Smooth transition (thermal inertia)
+            float current = (float)t.temperature;
+            float diff = targetTemp - current;
+            t.temperature = (uint16_t)(current + diff * 0.1f); 
+            
+            // Clamp
+            if (t.temperature < 0) t.temperature = 0; // Underflow protection not needed for uint16 if logic is right, but cast protects
+        }
+    }
+}
+
 void GameWorld::workerLoop() {
     int tick = 0;
     while (!stopThread) {
         tick++;
         if (tick % 10 == 0) updateFluids(); 
         if (tick % 30 == 0) updateElectricity(); 
+        if (tick % 60 == 0) updateTemperature(); // Update temperature every ~1 sec
         if (tick % 100 == 0) updateVegetation(); 
         
         std::pair<int, int> task;
@@ -294,12 +353,16 @@ void GameWorld::buildMeshCache(PhysicalBlock* block) {
             
             if (renderType == 1) { // Plant (Flat Quad)
                 float z = -0.15f;
+                float growthFactor = (float)t.growth / 255.0f;
+                if (growthFactor < 0.2f) growthFactor = 0.2f; // Min size
+                float h = size * growthFactor;
+
                 pushV(x,      y,      z, tx, 0.0f,   255.0f, ty, 1.0f);
                 pushV(x+size, y,      z, tx, 255.0f, 255.0f, ty, 1.0f);
-                pushV(x,      y+size, z, tx, 0.0f,   0.0f,   ty, 1.0f);
+                pushV(x,      y+h,    z, tx, 0.0f,   0.0f,   ty, 1.0f);
                 pushV(x+size, y,      z, tx, 255.0f, 255.0f, ty, 1.0f);
-                pushV(x+size, y+size, z, tx, 255.0f, 0.0f,   ty, 1.0f);
-                pushV(x,      y+size, z, tx, 0.0f,   0.0f,   ty, 1.0f);
+                pushV(x+size, y+h,    z, tx, 255.0f, 0.0f,   ty, 1.0f);
+                pushV(x,      y+h,    z, tx, 0.0f,   0.0f,   ty, 1.0f);
                 return;
             }
 

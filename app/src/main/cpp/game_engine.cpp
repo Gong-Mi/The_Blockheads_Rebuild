@@ -314,7 +314,7 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
 
         if (g_ai->update(g_entities->player.x, g_entities->player.y, g_world, g_entities)) g_world->updateLighting();
         
-        if (g_crafting) g_crafting->update(0.05f * timeSpeed, &g_entities->player); // Crafting also speeds up? Maybe.
+        if (g_crafting) g_crafting->update(0.05f * timeSpeed, &g_entities->player);
 
         if (g_ai->pendingInteractionBenchId != -1) {
             jclass clazz = env->GetObjectClass(obj);
@@ -322,12 +322,120 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
                  jmethodID mid = env->GetMethodID(clazz, "openContainer", "(II)V"); 
                  if (mid) env->CallVoidMethod(obj, mid, g_ai->pendingInteractionX, g_ai->pendingInteractionY);
             } else {
-                 jmethodID mid = env->GetMethodID(clazz, "openCraftingMenu", "(III)V"); // Updated signature
+                 jmethodID mid = env->GetMethodID(clazz, "openCraftingMenu", "(III)V");
                  if (mid) env->CallVoidMethod(obj, mid, g_ai->pendingInteractionBenchId, g_ai->pendingInteractionX, g_ai->pendingInteractionY);
             }
             g_ai->pendingInteractionBenchId = -1;
         }
 
-        g_entities->update(0.05f * timeSpeed, g_world); // Entities update faster too
+        g_entities->update(0.05f * timeSpeed, g_world);
 
-        // ... (rest of the function)
+        // Sync Inventory to Java
+        if (g_entities->inventoryDirty) {
+            jclass clazz = env->GetObjectClass(obj);
+            jmethodID mid = env->GetMethodID(clazz, "updateHotbarSlot", "(III)V");
+            for (int i = 0; i < 30; i++) {
+                env->CallVoidMethod(obj, mid, i, g_entities->player.slots[i], g_entities->player.counts[i]);
+            }
+            g_entities->inventoryDirty = false;
+        }
+
+        // Sync Status UI
+        static int statusTick = 0;
+        if (statusTick++ % 10 == 0) {
+            jclass clazz = env->GetObjectClass(obj);
+            jmethodID mid = env->GetMethodID(clazz, "updateStatusUI", "(FF)V");
+            if (mid) env->CallVoidMethod(obj, mid, g_entities->player.health, g_entities->player.hunger);
+        }
+
+        // Sync Name Tag Position
+        static int nameTagTick = 0;
+        if (g_renderer && nameTagTick++ % 2 == 0) {
+            float screenX, screenY;
+            g_renderer->projectWorldToScreen(g_entities->player.x, g_entities->player.y + 1.8f, screenX, screenY);
+            jclass clazz = env->GetObjectClass(obj);
+            jmethodID mid = env->GetMethodID(clazz, "updateNameTagPosition", "(FF)V");
+            if (mid) env->CallVoidMethod(obj, mid, screenX, screenY);
+        }
+
+        // Process Sound Events
+        if (!g_entities->soundEvents.empty()) {
+            jclass clazz = env->GetObjectClass(obj);
+            jmethodID mid = env->GetMethodID(clazz, "playSound", "(Ljava/lang/String;)V");
+            for (const auto& sound : g_entities->soundEvents) {
+                jstring jStr = env->NewStringUTF(sound.c_str());
+                env->CallVoidMethod(obj, mid, jStr);
+                env->DeleteLocalRef(jStr);
+            }
+            g_entities->soundEvents.clear();
+        }
+
+        // Process Floating Text
+        if (!g_entities->textEvents.empty()) {
+            jclass clazz = env->GetObjectClass(obj);
+            jmethodID mid = env->GetMethodID(clazz, "showFloatingText", "(FFLjava/lang/String;I)V");
+            for (const auto& evt : g_entities->textEvents) {
+                float sx, sy;
+                g_renderer->projectWorldToScreen(evt.x, evt.y, sx, sy);
+                jstring jStr = env->NewStringUTF(evt.text.c_str());
+                env->CallVoidMethod(obj, mid, sx, sy, jStr, (jint)evt.color);
+                env->DeleteLocalRef(jStr);
+            }
+            g_entities->textEvents.clear();
+        }
+
+        if (g_renderer) {
+            if (g_renderer->followingPlayer) { g_renderer->targetX = g_entities->player.x; g_renderer->targetY = g_entities->player.y; }
+            g_world->updateChunks(g_renderer->camX, g_renderer->camY);
+            
+            // Sync Time to World for Simulation (Temperature, etc)
+            g_world->worldTime = g_renderer->worldTime;
+            
+            // Sync Clothing for Rendering
+            g_renderer->clothingHead = g_entities->player.clothingHead;
+            g_renderer->clothingLegs = g_entities->player.clothingLegs;
+            
+            // Ambient Sounds
+            static int ambientTick = 0;
+            if (ambientTick++ % 300 == 0) {
+                float t = g_renderer->worldTime;
+                bool isDay = (t > 0.25f && t < 0.75f);
+                if (rand() % 100 < 30) {
+                    if (isDay) {
+                        int birdIdx = 1 + (rand() % 14);
+                        g_entities->queueSound("bird" + std::to_string(birdIdx) + ".wav");
+                    } else {
+                        g_entities->queueSound(rand() % 2 == 0 ? "crickets1.wav" : "crickets2.wav");
+                    }
+                }
+            }
+            
+            // BGM
+            float t = g_renderer->worldTime;
+            const char* desiredMusic = (t > 0.25f && t < 0.75f) ? "morning.mp4" : "nightFall.mp4";
+            static std::string lastMusic = "";
+            if (lastMusic != desiredMusic) {
+                 jclass clazz = env->GetObjectClass(obj);
+                 jmethodID mid = env->GetMethodID(clazz, "playMusic", "(Ljava/lang/String;)V");
+                 jstring jStr = env->NewStringUTF(desiredMusic);
+                 env->CallVoidMethod(obj, mid, jStr);
+                 env->DeleteLocalRef(jStr);
+                 lastMusic = desiredMusic;
+            }
+            g_renderer->playerX = g_entities->player.x; g_renderer->playerY = g_entities->player.y;
+            
+            g_renderer->dropItems.clear();
+            for (const auto& e : g_entities->dropItems) {
+                g_renderer->dropItems.push_back({e.x, e.y, e.itemId});
+            }
+            
+            g_renderer->mobs.clear();
+            for (const auto& m : g_entities->mobs) {
+                g_renderer->mobs.push_back({m.x, m.y, m.type});
+            }
+
+            { std::lock_guard<std::mutex> lock(g_world->chunksMutex); g_renderer->updateMesh(g_world->chunks); }
+            g_renderer->renderFrame();
+        }
+    }
+}

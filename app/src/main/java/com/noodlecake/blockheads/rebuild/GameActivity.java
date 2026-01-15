@@ -591,6 +591,7 @@ public class GameActivity extends Activity {
 
     private void showCraftingMenu(int benchId) {
         String jsonStr = getRecipesNative(benchId);
+        final android.app.AlertDialog[] dialogHolder = new android.app.AlertDialog[1];
         
         android.widget.LinearLayout layout = new android.widget.LinearLayout(this);
         layout.setOrientation(android.widget.LinearLayout.VERTICAL);
@@ -619,7 +620,7 @@ public class GameActivity extends Activity {
             sleepBtn.setText("SLEEP");
             sleepBtn.setOnClickListener(v -> {
                handleSleepNative();
-               if (dialog != null) dialog.dismiss();
+               if (dialogHolder[0] != null) dialogHolder[0].dismiss();
                android.widget.Toast.makeText(this, "Sleeping...", android.widget.Toast.LENGTH_SHORT).show();
             });
             layout.addView(sleepBtn);
@@ -685,11 +686,11 @@ public class GameActivity extends Activity {
         scroll.addView(list);
         layout.addView(scroll, new android.widget.LinearLayout.LayoutParams(-1, 800));
 
-        android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(this)
+        dialogHolder[0] = new android.app.AlertDialog.Builder(this)
             .setView(layout)
             .setNegativeButton("Close", null)
             .create();
-        dialog.show();
+        dialogHolder[0].show();
     }
 
     private void updateSlotImageDirect(android.widget.ImageView view, int type) {

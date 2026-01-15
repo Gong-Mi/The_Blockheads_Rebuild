@@ -85,6 +85,11 @@ void WorldRenderer::init(AAssetManager* mgr) {
     yakLegTexID = loadTex(mgr, "yakLeg.png");
     dropbearBodyTexID = loadTex(mgr, "dropbearBody.png");
     dropbearHeadTexID = loadTex(mgr, "dropbearHead.png");
+    
+    clothingTex[0] = loadTex(mgr, "clothing0.png");
+    clothingTex[1] = loadTex(mgr, "clothing1.png");
+    clothingTex[2] = loadTex(mgr, "clothing2.png");
+    clothingTex[3] = loadTex(mgr, "clothing3.png");
 
     // --- DEBUG SHADER (Inline) ---
     const char* debugVS = 
@@ -487,6 +492,15 @@ void WorldRenderer::renderFrame() {
         drawCharCube(legsTexID,  0.1f, -0.2f + (walkAnim < 0 ? -walkAnim*0.1f : 0), 0, 0.15f, 0.5f, 0.15f, 0, 0, 1, 1);
         drawCharCube(armsTexID, -0.25f, 0.25f, 0, 0.12f, 0.5f, 0.12f, 0, 0, 1, 1);
         drawCharCube(armsTexID,  0.25f, 0.25f, 0, 0.12f, 0.5f, 0.12f, 0, 0, 1, 1);
+        
+        // --- Clothing Overlays ---
+        if (clothingHead == 97) { // Linen Cap
+             drawCharCube(clothingTex[0], 0, 0.76f, 0, 0.52f, 0.52f, 0.52f, 0, 0, 1, 1);
+        }
+        if (clothingLegs == 98) { // Linen Pants
+             drawCharCube(clothingTex[1], -0.1f, -0.2f + (walkAnim > 0 ? walkAnim*0.1f : 0), 0, 0.16f, 0.51f, 0.16f, 0, 0, 1, 1);
+             drawCharCube(clothingTex[1],  0.1f, -0.2f + (walkAnim < 0 ? -walkAnim*0.1f : 0), 0, 0.16f, 0.51f, 0.16f, 0, 0, 1, 1);
+        }
     }
 
     // --- Render Mobs ---

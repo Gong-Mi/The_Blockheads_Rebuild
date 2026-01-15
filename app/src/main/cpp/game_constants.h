@@ -11,9 +11,10 @@ const int WORLD_WIDTH = 15000;
 const int WORLD_DEPTH = 500;      
 const int CHUNK_SIZE = 32;        
 
+#pragma pack(push, 1)
 struct Tile {
-    uint8_t foreground;
-    uint8_t background;
+    uint16_t foreground;
+    uint16_t background;
     uint8_t sunlight;    // 0-255
     uint8_t artLight;    // 0-255 (Torches, etc.)
     uint8_t damage;
@@ -25,6 +26,7 @@ struct Tile {
     uint8_t powerLevel; // 0-255
     uint8_t growth;     // 0-255 (Plant growth)
 };
+#pragma pack(pop)
 
 #include <vector>
 #include "game_item_ids.h"

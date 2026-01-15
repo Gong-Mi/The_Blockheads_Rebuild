@@ -28,22 +28,25 @@ public:
         }
 
         // 1. Header
-        uint32_t version = 2; // Upgraded version
+        uint32_t version = 3; // Upgraded version (Tile size changed)
         fwrite(&version, sizeof(uint32_t), 1, f);
 
-        // 2. Player Data
+        // 2. Player
         fwrite(&entities->player.x, sizeof(float), 1, f);
         fwrite(&entities->player.y, sizeof(float), 1, f);
-        fwrite(entities->player.slots, sizeof(int), 30, f); // Upgraded to 30
-        fwrite(entities->player.counts, sizeof(int), 30, f);
-        // Status fields
+        
+        int invSize = 30;
+        fwrite(entities->player.slots, sizeof(int), invSize, f);
+        fwrite(entities->player.counts, sizeof(int), invSize, f);
+        
+        // 2.5 Status
         fwrite(&entities->player.health, sizeof(float), 1, f);
         fwrite(&entities->player.hunger, sizeof(float), 1, f);
         fwrite(&entities->player.breath, sizeof(float), 1, f);
         fwrite(&entities->player.clothingHead, sizeof(int), 1, f);
         fwrite(&entities->player.clothingLegs, sizeof(int), 1, f);
 
-        // 2.5 Mobs
+        // 2.6 Mobs
         uint32_t mobCount = entities->mobs.size();
         fwrite(&mobCount, sizeof(uint32_t), 1, f);
         if (mobCount > 0) {
@@ -64,18 +67,15 @@ public:
         // 3. Chunks
         uint32_t chunkCount = world->chunks.size();
         fwrite(&chunkCount, sizeof(uint32_t), 1, f);
-
         for (PhysicalBlock* chunk : world->chunks) {
             fwrite(&chunk->x, sizeof(int), 1, f);
             fwrite(&chunk->y, sizeof(int), 1, f);
-            // Save tiles (Currently simple struct dump, compression later)
             fwrite(chunk->tiles, sizeof(Tile), CHUNK_SIZE * CHUNK_SIZE, f);
         }
 
         fclose(f);
-        LOGS("World saved to %s", path.c_str());
+        LOGS("World saved successfully!");
     }
-
     static bool loadWorld(const char* rootDir, GameWorld* world, EntityManager* entities) {
         std::string path = getSavePath(rootDir);
         FILE* f = fopen(path.c_str(), "rb");
@@ -87,8 +87,14 @@ public:
         uint32_t version = 0;
         if (fread(&version, sizeof(uint32_t), 1, f) != 1) { fclose(f); return false; }
         
-        if (version < 1 || version > 2) {
+        if (version < 1 || version > 3) {
             LOGS("Unsupported save version: %u", version);
+            fclose(f);
+            return false;
+        }
+        
+        if (version < 3) {
+            LOGS("Legacy save version %u detected. Forcing new world due to Tile format change.", version);
             fclose(f);
             return false;
         }

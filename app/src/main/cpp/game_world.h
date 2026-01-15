@@ -63,6 +63,9 @@ public:
     void updateFluids();
     void updateElectricity();
     void updateVegetation();
+    void updateTemperature();
+    
+    float worldTime = 0.0f;
 };
 
 #endif

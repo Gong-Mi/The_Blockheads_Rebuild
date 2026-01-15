@@ -117,19 +117,32 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                     } else {
                         // Harvest logic
                         if (t->foreground == 90) { // Flax Plant
-                            entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 91); // Flax
+                            if (t->growth >= 200) entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 91); // Flax
                             entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 90); // Seed
                         } else if (t->foreground == 92) { // Sunflower Plant
-                            entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 93); // Sunflower
+                            if (t->growth >= 200) entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 93); // Sunflower
                             entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 92); // Seed
                         } else if (t->foreground == 214) { // Corn
-                             entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 214);
-                             if (rand()%10 < 5) entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 214);
+                             if (t->growth >= 200) {
+                                 entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 214);
+                                 if (rand()%10 < 5) entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 214);
+                             } else {
+                                 entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 214);
+                             }
                         } else if (t->foreground == 215) { // Carrot
-                             entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 215);
-                             if (rand()%10 < 5) entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 215);
+                             if (t->growth >= 200) {
+                                 entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 215);
+                                 if (rand()%10 < 5) entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 215);
+                             } else {
+                                 entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 215);
+                             }
                         } else if (t->foreground == 30) { // Chili
-                             entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 30);
+                             if (t->growth >= 200) {
+                                 entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 30);
+                                 if (rand()%10 < 5) entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 30);
+                             } else {
+                                 entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 30);
+                             }
                         } else if (t->foreground == BLOCK_TC_ORE) {
                             entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_TIME_CRYSTAL);
                             if (rand() % 100 < 30) entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_TIME_CRYSTAL);
@@ -163,13 +176,25 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                 if (item > 0 && entities->player.counts[slot] > 0) {
                     Tile* t = world->getTile(current.tx, current.ty);
                     if (t && t->foreground == 0) { // ITEM_EMPTY
-                        t->foreground = (uint8_t)item;
-                        t->damage = 0;
-                        entities->player.counts[slot]--;
-                        if (entities->player.counts[slot] <= 0) entities->player.slots[slot] = 0;
-                        entities->inventoryDirty = true;
-                        entities->queueSound("place.wav");
-                        changed = true;
+                        // Planting Check
+                        bool canPlace = true;
+                        if (item == 90 || item == 92 || item == 214 || item == 215 || item == 30) { // Seeds/Crops
+                            Tile* below = world->getTile(current.tx, current.ty - 1);
+                            if (!below || (below->foreground != 1 && below->foreground != 5 && below->foreground != 23)) { // Dirt(1), Grass(5), Campfire(23)? No just dirt/grass/compost
+                                canPlace = false; 
+                            }
+                        }
+
+                        if (canPlace) {
+                            t->foreground = (uint8_t)item;
+                            t->damage = 0;
+                            t->growth = 0; // Reset growth
+                            entities->player.counts[slot]--;
+                            if (entities->player.counts[slot] <= 0) entities->player.slots[slot] = 0;
+                            entities->inventoryDirty = true;
+                            entities->queueSound("place.wav");
+                            changed = true;
+                        }
                     }
                 }
             }
