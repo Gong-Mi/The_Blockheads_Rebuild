@@ -191,13 +191,12 @@ void GameWorld::updateVegetation() {
         bool changed = false;
         for (int i = 0; i < CHUNK_SIZE * CHUNK_SIZE; i++) {
             Tile& t = chunk->tiles[i];
-            if (t.foreground == ITEM_FLAX_SEED || t.foreground == ITEM_SUNFLOWER_SEED) {
+            int id = t.foreground;
+            if (id == 90 || id == 92 || id == 214 || id == 215 || id == 30) {
                 if (t.growth < 255) {
-                    t.growth += 1; // Grow slowly
-                    if (t.growth == 255) {
-                        // Mature
-                        if (t.foreground == ITEM_FLAX_SEED) t.foreground = ITEM_FLAX;
-                        else if (t.foreground == ITEM_SUNFLOWER_SEED) t.foreground = ITEM_SUNFLOWER;
+                    t.growth += 2; // Grow slightly faster
+                    if (t.growth >= 255) {
+                        t.growth = 255;
                         changed = true;
                     }
                 }
