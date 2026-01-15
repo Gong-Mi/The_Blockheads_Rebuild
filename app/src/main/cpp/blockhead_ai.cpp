@@ -100,9 +100,15 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                     int selectedItem = entities->player.slots[entities->player.selectedSlot];
                     auto itemDef = ItemManager::getInstance().getDef(t->foreground);
                     if (itemDef && itemDef->preferredTool != 0) {
-                        if (selectedItem == itemDef->preferredTool) baseSpeed = 25.0f; 
-                        else if (selectedItem == itemDef->preferredTool + 60) baseSpeed = 60.0f; 
-                        else if (selectedItem == itemDef->preferredTool + 70) baseSpeed = 120.0f; 
+                        int p = itemDef->preferredTool;
+                        int s = selectedItem;
+                        if (s == p) baseSpeed = 25.0f; // Flint
+                        // Check Bronze (230-232)
+                        else if ((p==50 && s==230) || (p==51 && s==231) || (p==52 && s==232)) baseSpeed = 40.0f;
+                        // Check Iron (240-242)
+                        else if ((p==50 && s==240) || (p==51 && s==241) || (p==52 && s==242)) baseSpeed = 60.0f;
+                        // Check Gold (260-262)
+                        else if ((p==50 && s==260) || (p==51 && s==261) || (p==52 && s==262)) baseSpeed = 120.0f;
                     }
                     
                     current.progress += baseSpeed; 
