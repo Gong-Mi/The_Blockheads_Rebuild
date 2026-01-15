@@ -37,9 +37,13 @@ bool Player::checkCollision(float newX, float newY, GameWorld* world) {
 
     auto isSolid = [&](int x, int y) {
         Tile* t = world->getTile(x, y);
-        if (!t || t->foreground == ITEM_EMPTY) return false;
-        // Architectural items are non-solid for movement
-        if (t->foreground == ITEM_WOOD_DOOR || t->foreground == ITEM_WOOD_TRAPDOOR || t->foreground == ITEM_LADDER) return false;
+        if (!t || t->foreground == 0) return false;
+        // Passable items
+        int id = t->foreground;
+        if (id == 80 || id == 81 || id == 82 || id == 200) return false; // Door, Trapdoor, Ladder, Platform
+        if (id == 20 || id == 73) return false; // Torch, Lamp
+        if (id == 30 || id == 90 || id == 92 || id == 214 || id == 215) return false; // Plants
+        if (id == 205 || id == 206) return false; // Iron Door/Trapdoor
         return true;
     };
 

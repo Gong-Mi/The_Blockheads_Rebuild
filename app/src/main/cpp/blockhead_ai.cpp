@@ -116,12 +116,20 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                         t->damage = (uint8_t)std::min(255.0f, (float)t->damage + baseSpeed / 2.0f); 
                     } else {
                         // Harvest logic
-                        if (t->foreground == ITEM_FLAX) {
-                            entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_FLAX);
-                            entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_FLAX_SEED);
-                        } else if (t->foreground == ITEM_SUNFLOWER) {
-                            entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_SUNFLOWER);
-                            entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_SUNFLOWER_SEED);
+                        if (t->foreground == 90) { // Flax Plant
+                            entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 91); // Flax
+                            entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 90); // Seed
+                        } else if (t->foreground == 92) { // Sunflower Plant
+                            entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 93); // Sunflower
+                            entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 92); // Seed
+                        } else if (t->foreground == 214) { // Corn
+                             entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 214);
+                             if (rand()%10 < 5) entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 214);
+                        } else if (t->foreground == 215) { // Carrot
+                             entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 215);
+                             if (rand()%10 < 5) entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 215);
+                        } else if (t->foreground == 30) { // Chili
+                             entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, 30);
                         } else if (t->foreground == BLOCK_TC_ORE) {
                             entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_TIME_CRYSTAL);
                             if (rand() % 100 < 30) entities->spawnDrop((float)current.tx + 0.5f, (float)current.ty + 0.5f, ITEM_TIME_CRYSTAL);
