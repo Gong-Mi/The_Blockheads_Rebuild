@@ -5,6 +5,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 RENDERER = (ROOT / "app/src/main/cpp/world_renderer.cpp").read_text()
+WORLD = (ROOT / "app/src/main/cpp/game_world.cpp").read_text()
 BLOCK = (ROOT / "app/src/main/assets/Block.vsh").read_text()
 ITEM = (ROOT / "app/src/main/assets/Item.fsh").read_text()
 
@@ -27,6 +28,10 @@ require("outTexIndex.x" in BLOCK and "/ 255.0" in BLOCK,
         "block shader atlas-index contract must remain explicit")
 require("texture2D(texture, outTexCoord.xy)" in ITEM,
         "item shader must consume normalized UVs directly")
+require("queueCV.wait_for" in WORLD and "std::chrono::milliseconds(50)" in WORLD,
+        "world worker must wake on a timer when the chunk queue is idle")
+require("queueCV.wait(lock, [this]" not in WORLD,
+        "world worker must not block simulation indefinitely on an empty queue")
 for name in ("Item.vsh", "Item.fsh", "Items.png", "ItemNormals.png", "yakLegs.png"):
     require((ROOT / "app/src/main/assets" / name).exists(), f"missing runtime asset: {name}")
 
