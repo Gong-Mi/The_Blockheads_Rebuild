@@ -170,6 +170,27 @@ Recovered direct examples include TileType 4→110 `(14,3)`, 7/8→65 `(1,2)`,
 9→196 `(4,6)`, 10→33 `(1,1)`, 48→97 `(1,3)`, 49→98 `(2,3)`, and
 53–57→112–116 `(16–20,3)`.
 
+[A/C+] A second `reloadDrawBlock` jump table at `0x00a221f4` dispatches on
+Tile byte 3 values 3..123 and initializes the middle-pass draw-image pair.
+`tools/extract_original_tile_content_render_map.py` extracts its constants to
+`original_tile_content_render_map.tsv`. Numeric values, image indices,
+addresses and atlas cells are A-grade original ELF evidence. Candidate content
+names are separately marked C+ and come from the independent save-analysis
+project `medioqrity/TheBlockheadsTools` at commit
+`c9bc7eea11ecdefa7de47000bfe70b14be374f3c`, not an original developer header.
+Cross-checks include PineTreeTrunk `7 -> image 192 (0,6)` and PineTreeLeaf
+`6 -> image 237 (13,7)`.
+
+[A/C+] That independent enum source correlates original TileType values with
+Stone=1, Air=2, Water=3, Ice=4, Snow=5, Dirt=6, DesertSand=7,
+BeachSand=8, Wood=9, GrassDirt=27 and SnowDirt=28. Names remain C+; switch
+values and image assignments are A-grade ELF facts. The rebuild's basic cells
+now use the field-sensitive original cases: Stone/content0 image 32,
+Dirt/content0 image 64, GrassDirt/content0 image 160, CopperOre content61
+image 1, TinOre content62 image 3, IronOre content63 image 2, and GoldNuggets
+content77 image 84. These replace visual guesses while retaining the rebuild's
+temporary custom item IDs.
+
 [C] The current rebuild's small semantic IDs and hand-authored item definitions
 are not the original TileType or ItemType namespace. They remain a replacement
 compatibility layer until the direct renderer-side mappings used by
@@ -201,9 +222,9 @@ Outstanding evidence-backed gaps:
 3. [A/C] Transparent/background/water/object passes remain collapsed or absent.
 4. [A] Character drawing uses only the body program and flat six-vertex faces;
    clothing, face, hair, multi-texture composition, and cuboid geometry remain.
-5. [A] Nine TileType→free-block conversion cases, the `foreground_arg != 0`
-   conversion path, and the renderer-side mappings in
-   `WorldHelper +reloadDrawBlock:...` still require field-sensitive extraction.
+5. [A] Dynamic painting/column/stairs objects and some renderer-side
+   `WorldHelper +reloadDrawBlock:...` cases still require runtime/world-state
+   resolution; static Tile[0], Tile[3], and Tile[11] tables are now extracted.
 6. [A] Shader compile/link/validation diagnostics are incomplete.
 7. [A/C] Sky and weather are prototypes rather than recovered original passes.
 

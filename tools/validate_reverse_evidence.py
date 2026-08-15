@@ -219,6 +219,34 @@ def main() -> None:
             "77\tdirect\t746\t10\t23",
         ],
     )
+    require(
+        ROOT / "tools/extract_original_tile_content_render_map.py",
+        [
+            "TABLE_VA = 0x00A221F4",
+            "FIRST_CONTENT = 3",
+            "LAST_CONTENT = 123",
+            "DRAW_SLOT = 1344",
+            "c9bc7eea11ecdefa7de47000bfe70b14be374f3c",
+        ],
+    )
+    content_render_map = NATIVE / "original_tile_content_render_map.tsv"
+    content_render_lines = content_render_map.read_text(encoding="utf-8").splitlines()
+    if len(content_render_lines) != 62:
+        raise SystemExit(
+            f"original Tile content render map count changed: {len(content_render_lines) - 1}"
+        )
+    require(
+        content_render_map,
+        [
+            "content_value\tcandidate_name\tdraw_image\tdraw_col\tdraw_row",
+            "3\tAppleTreeLeaf\t256\t0\t8",
+            "6\tPineTreeLeaf\t237\t13\t7",
+            "7\tPineTreeTrunk\t192\t0\t6\t193\t1\t6",
+            "43\tCactus\t234\t10\t7",
+            "110\tAmethystTreeLeaf\t570\t26\t17",
+            "123\tDiamondTreeTrunkLeaf\t606\t30\t18",
+        ],
+    )
     print("reverse-evidence-contract: PASS")
 
 

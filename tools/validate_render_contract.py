@@ -44,18 +44,18 @@ require("(type - 1) % 32" not in RENDERER and "(item.type - 1) % 32" not in REND
 require("ItemManager::getInstance().getDef(item.type)" in RENDERER,
         "drop items must resolve through the item definition table")
 # These are semantic cells in the original APK TileMap.png, not sequential IDs.
-# In particular, (2,0) and (3,0) are ore cells, so assigning them to wood
-# and leaves reproduces the device-visible corruption this contract prevents.
+# They are pinned to reloadDrawBlock field-sensitive cases rather than atlas
+# appearance. Wood/leaves use PineTreeTrunk/PineTreeLeaf Tile[3] cases.
 semantic_atlas_cells = {
-    "ITEM_DIRT": (0, 3),
-    "ITEM_STONE": (3, 2),
+    "ITEM_DIRT": (0, 2),
+    "ITEM_STONE": (0, 1),
     "BLOCK_WOOD": (0, 6),
-    "BLOCK_LEAVES": (0, 7),
-    "BLOCK_GRASS": (2, 3),
+    "BLOCK_LEAVES": (13, 7),
+    "BLOCK_GRASS": (0, 5),
     "BLOCK_SAND": (1, 2),
-    "ITEM_COPPER_ORE": (2, 0),
+    "ITEM_COPPER_ORE": (1, 0),
     "ITEM_TIN_ORE": (3, 0),
-    "ITEM_IRON_ORE": (19, 2),
+    "ITEM_IRON_ORE": (2, 0),
     "ITEM_GOLD_ORE": (20, 2),
 }
 for string_id, expected_cell in semantic_atlas_cells.items():
