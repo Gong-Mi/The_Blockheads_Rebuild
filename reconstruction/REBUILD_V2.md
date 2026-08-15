@@ -51,8 +51,10 @@ build error, not a runtime fallback.
 - The hotbar originally referenced `SelectionBox40.png`, but the APK uses the
   case-sensitive path `selectionBox40.png`. The Java reference is now aligned
   and the original asset is present in the app assets root.
-- `dropbearBody.png`, `dropbearHead.png`, and `yakLeg.png` are referenced but
-  absent; the APK uses other names/parts (`yakLegs.png`, etc.).
+- The old renderer referenced `dropbearBody.png` and `dropbearHead.png`, but
+  the APK's `DropBear` class uses the `grizratBodyFront.png` and
+  `grizratHead.png` sprite family. The renderer now follows those APK paths;
+  `yakLeg.png` is similarly corrected to `yakLegs.png`.
 - `loadTex()` always calls `glGenerateMipmap()` and selects a mipmapped min
   filter, even for small/non-atlas textures. This is not the original shader
   contract and can produce incomplete-texture failures on GLES paths.

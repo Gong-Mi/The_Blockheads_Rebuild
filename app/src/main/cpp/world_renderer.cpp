@@ -92,8 +92,10 @@ void WorldRenderer::init(AAssetManager* mgr) {
     yakBodyTexID = loadTex(mgr, "yakBody.png");
     yakHeadTexID = loadTex(mgr, "yakHead.png");
     yakLegTexID = loadTex(mgr, "yakLegs.png");
-    dropbearBodyTexID = loadTex(mgr, "dropbearBody.png");
-    dropbearHeadTexID = loadTex(mgr, "dropbearHead.png");
+    // The native DropBear class uses the grizrat-named sprite family in the
+    // 1.7.6 APK. There are no dropbearBody.png/dropbearHead.png entries.
+    dropbearBodyTexID = loadTex(mgr, "grizratBodyFront.png");
+    dropbearHeadTexID = loadTex(mgr, "grizratHead.png");
     
     clothingTex[0] = loadTex(mgr, "clothing0.png");
     clothingTex[1] = loadTex(mgr, "clothing1.png");
