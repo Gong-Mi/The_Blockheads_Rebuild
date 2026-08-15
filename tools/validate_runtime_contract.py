@@ -67,6 +67,8 @@ require("delete g_renderer;" in helper_body and "g_renderer = new WorldRenderer(
         "surface creation must replace renderer resources for the current EGL context")
 require("if (!g_renderer)" not in helper_body and "skipping re-init" not in helper_body,
         "surface creation still permits stale cross-context GL resources")
+require("g_world->chunksMutex" in helper_body and "chunk->meshReady = true" in helper_body,
+        "EGL context replacement does not schedule cached chunk meshes for VBO re-upload")
 
 surface_start = engine.index("Java_com_noodlecake_blockheads_rebuild_GameActivity_onSurfaceCreatedNative")
 surface_end = engine.index("extern \"C\" JNIEXPORT", surface_start + 20)

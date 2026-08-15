@@ -50,6 +50,16 @@ void onSurfaceCreatedInternal(JNIEnv* env, jobject assetMgr) {
     delete g_renderer;
     g_renderer = new WorldRenderer();
     g_renderer->init(AAssetManager_fromJava(env, assetMgr));
+
+    // updateMesh() clears meshReady after uploading a chunk to a VBO.  Those
+    // VBOs belonged to the discarded context, while vertexCache remains valid
+    // CPU data.  Queue every cached chunk for upload into the new context.
+    if (g_world) {
+        std::lock_guard<std::mutex> chunksLock(g_world->chunksMutex);
+        for (PhysicalBlock* chunk : g_world->chunks) {
+            if (chunk) chunk->meshReady = true;
+        }
+    }
     logToFile("Renderer replaced and initialized for current EGL context");
 }
 
