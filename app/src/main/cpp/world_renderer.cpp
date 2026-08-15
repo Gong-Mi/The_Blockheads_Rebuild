@@ -42,10 +42,10 @@ char* WorldRenderer::loadShaderSource(AAssetManager* mgr, const char* name) {
 void WorldRenderer::init(AAssetManager* mgr) {
     // Use the original 1.7.6 high-definition atlases directly. Their 32x32
     // logical grid is identical to the SD atlases; only cell resolution differs.
-    textureID = loadTex(mgr, "GameResources/HDTex/TileMap.png");
-    destructID = loadTex(mgr, "GameResources/HDTex/TileDestruct.png");
+    textureID = loadTex(mgr, "HDTex/TileMap.png");
+    destructID = loadTex(mgr, "HDTex/TileDestruct.png");
     normalID = loadTex(mgr, "ItemNormals.png");
-    itemsTexID = loadTex(mgr, "GameResources/HDTex/Items.png");
+    itemsTexID = loadTex(mgr, "HDTex/Items.png");
     whiteTexID = loadTex(mgr, "white.png");
     
     char* vSource = loadShaderSource(mgr, "Block.vsh");

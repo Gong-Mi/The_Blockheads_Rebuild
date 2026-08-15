@@ -23,13 +23,13 @@ def require(condition: bool, message: str) -> None:
 
 require("Item.vsh" in RENDERER and "Item.fsh" in RENDERER,
         "renderer must compile the original Item shader pair")
-require('loadTex(mgr, "GameResources/HDTex/TileMap.png")' in RENDERER,
+require('loadTex(mgr, "HDTex/TileMap.png")' in RENDERER,
         "terrain must use the original APK HD TileMap directly")
-require('loadTex(mgr, "GameResources/HDTex/TileDestruct.png")' in RENDERER,
+require('loadTex(mgr, "HDTex/TileDestruct.png")' in RENDERER,
         "terrain destruction must use the original APK HD atlas directly")
-require('loadTex(mgr, "GameResources/HDTex/Items.png")' in RENDERER,
+require('loadTex(mgr, "HDTex/Items.png")' in RENDERER,
         "world items must use the original APK HD atlas directly")
-require('getAssets().open("GameResources/HDTex/Items.png")' in GAME_ACTIVITY,
+require('getAssets().open("HDTex/Items.png")' in GAME_ACTIVITY,
         "inventory UI must use the original APK HD item atlas directly")
 require('loadTex(mgr, "white.png")' in RENDERER and "whiteTexID" in RENDERER,
         "solid-white draws must use the original APK white.png asset")
@@ -86,16 +86,17 @@ require('glGetUniformLocation(charProgram, "lightPosition")' in player_pass,
         "in-game character pass must initialize the shader's lightPosition uniform")
 require("glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, whiteTexID);" in RENDERER,
         "light sampler must bind the original APK white texture until real block lightmaps are restored")
+ASSET_ROOT = ROOT / "assets"
 for name in ("Item.vsh", "Item.fsh", "Items.png", "ItemNormals.png", "white.png", "yakLegs.png", "selectionBox40.png"):
-    require((ROOT / "app/src/main/assets" / name).exists(), f"missing runtime asset: {name}")
+    require((ASSET_ROOT / name).exists(), f"missing packaged runtime asset: {name}")
 original_asset_hashes = {
-    "GameResources/HDTex/TileMap.png": "69b238ba31507217edf0b4bd72ec33a295f36c368c02fad066007e614b1a84a1",
-    "GameResources/HDTex/TileDestruct.png": "8541a14da0eae3996ddd2ac552e2368dc09bff9a617b40c347dd281a5a5c2b84",
-    "GameResources/HDTex/Items.png": "92907535ff7b7f5d3fe58a08bd67b44573e66bf1faf49c8a86dad5f14bc9efa5",
+    "HDTex/TileMap.png": "69b238ba31507217edf0b4bd72ec33a295f36c368c02fad066007e614b1a84a1",
+    "HDTex/TileDestruct.png": "8541a14da0eae3996ddd2ac552e2368dc09bff9a617b40c347dd281a5a5c2b84",
+    "HDTex/Items.png": "92907535ff7b7f5d3fe58a08bd67b44573e66bf1faf49c8a86dad5f14bc9efa5",
     "white.png": "22067ea4ca01ce5c8c655ca6956f10480257250e06babd1facc32b095f78d1c1",
 }
 for relative, expected_hash in original_asset_hashes.items():
-    asset = ROOT / "app/src/main/assets" / relative
+    asset = ASSET_ROOT / relative
     require(asset.exists(), f"missing original APK asset: {relative}")
     if asset.exists():
         actual_hash = hashlib.sha256(asset.read_bytes()).hexdigest()

@@ -185,7 +185,7 @@ public class GameActivity extends Activity {
         } else {
             if (mItemsAtlas == null) {
                 try {
-                    mItemsAtlas = android.graphics.BitmapFactory.decodeStream(getAssets().open("GameResources/HDTex/Items.png"));
+                    mItemsAtlas = android.graphics.BitmapFactory.decodeStream(getAssets().open("HDTex/Items.png"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -695,7 +695,7 @@ public class GameActivity extends Activity {
 
     private void updateSlotImageDirect(android.widget.ImageView view, int type) {
         if (mItemsAtlas == null) {
-            try { mItemsAtlas = android.graphics.BitmapFactory.decodeStream(getAssets().open("GameResources/HDTex/Items.png")); } catch (Exception e) {}
+            try { mItemsAtlas = android.graphics.BitmapFactory.decodeStream(getAssets().open("HDTex/Items.png")); } catch (Exception e) {}
         }
         if (mItemsAtlas != null && type > 0) {
             int idx = type - 1;
