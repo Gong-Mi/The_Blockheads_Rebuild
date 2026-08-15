@@ -44,9 +44,9 @@ basename. Representative pairs are:
 | `arms_ct.png` / `legs_ct.png` | 16×16 | 64×64 |
 
 [A] The rebuild contains byte-identical copies of all 723 resources after
-removing the original `GameResources/` prefix. Current runtime calls open
-root-relative names such as `TileMap.png`; this is a compatibility layout, not
-an exact reproduction of the original APK path namespace.
+removing the original `GameResources/` prefix. Runtime now selects the original
+`HDTex/TileMap.png`, `HDTex/TileDestruct.png`, and `HDTex/Items.png` directly;
+CI and the packaged-APK contract pin their original SHA-256 values.
 
 ## Native renderer topology
 
@@ -123,6 +123,59 @@ produces transparent output. It is not a mode of the opaque fragment shader.
 
 The original spelling `artificalLight` is part of the character shader ABI.
 
+## Tile conversion and direct contents-image mapping
+
+[A] `itemTypeFromTileIsForegorund(Tile*, intpair, signed char, World*)` is a
+3496-byte ARM function at `0x00a18044`. Call sites include
+`DynamicWorld -createFreeBlockAtPosition:forForegroundContents:forTile:...`
+and `randomBonusItemTypeForTile`; it converts a Tile into the corresponding
+collectible/free-block ItemType. It is not itself the terrain renderer. The
+`foreground_arg == 0` path switches on Tile byte 0 for TileTypes 1 through 77
+using the jump table at `0x00a1868c`. Most cases assign a distinct ItemType;
+nine entries additionally inspect Tile fields or call world/tree helpers.
+
+[A] `tools/extract_original_tile_item_map.py` extracts direct assignments only
+when the case has the exact `movw r0; str r0,[fp,#-4]; b return` shape. It marks
+all other entries `conditional` rather than guessing. Its output is
+`original_tile_item_map.tsv`. Joining it with `original_item_image_map.tsv`
+provides a semantic cross-reference for placeable/free-block items, not proof
+that the terrain renderer obtains its UVs through this call chain. Examples:
+
+| TileType | ItemType | item image index | atlas `(col,row)` |
+|---:|---:|---:|---:|
+| 4 | 1060 | 110 | (14,3) |
+| 7/8 | 1051 | 65 | (1,2) |
+| 9 | 1049 | 196 | (4,6) |
+| 10 | 1024 | 33 | (1,1) |
+| 11 | 1026 | 34 | (2,1) |
+| 53–57 | 1066–1070 | 112–116 | (16–20,3) |
+
+[A] The renderer-side helper
+`imageIndexForTileContents(Tile*, World*, intpair)` is a separate 640-byte
+function at `0x00a13e6c`. It directly returns atlas image indices from Tile
+byte 11 when `tileIsAirWaterOrSnow()` is true and otherwise falls back to Tile
+byte 3. `tools/extract_original_tile_contents_image_map.py` recovers its two
+jump tables and explicit cases into `original_tile_contents_image_map.tsv`.
+Examples include byte 11 values 67–74 mapping to image indices 239–244 and
+byte 3 values 103/104 mapping to image index 116.
+
+[A] The main base-tile mapping is embedded in
+`WorldHelper +reloadDrawBlock:world:waterAnimationIndex:...` at `0x00a1d730`.
+Its Tile byte 0 switch uses the 77-entry table at `0x00a20ef0` and writes image
+indices into the three later draw-pass slots. The draw loop at `0x00a27d5c`
+selects those slots before applying `% 32` and `/ 32` atlas addressing.
+`tools/extract_original_reload_drawblock_map.py` records constants assigned
+before field-sensitive branches in `original_reload_drawblock_map.tsv`.
+Recovered direct examples include TileType 4→110 `(14,3)`, 7/8→65 `(1,2)`,
+9→196 `(4,6)`, 10→33 `(1,1)`, 48→97 `(1,3)`, 49→98 `(2,3)`, and
+53–57→112–116 `(16–20,3)`.
+
+[C] The current rebuild's small semantic IDs and hand-authored item definitions
+are not the original TileType or ItemType namespace. They remain a replacement
+compatibility layer until the direct renderer-side mappings used by
+`WorldHelper +reloadDrawBlock:...` are fully recovered and wired into the world
+representation.
+
 ## Rebuild conformance ledger
 
 Verified in current source and CI:
@@ -131,7 +184,10 @@ Verified in current source and CI:
 - the terrain VBO is unbound before client-side character arrays;
 - a new EGL context recreates renderer-owned GL objects and requeues cached
   chunk meshes for VBO upload;
-- the fallback 1×1 light texture has non-mipmapped filters and clamp wrapping;
+- original HD terrain/destruction/item atlases are loaded directly and pinned by
+  source and packaged-APK SHA-256 contracts;
+- the original `white.png` is used for untextured solid-color draws while a real
+  per-block lightmap remains outstanding;
 - gameplay initializes `artificalLight` and `lightPosition`;
 - unpainted generated vertices use paint alpha zero;
 - shaders pass `glslangValidator` and source contract checks run in CI.
@@ -140,11 +196,14 @@ Outstanding evidence-backed gaps:
 
 1. [A] `texCoord.z` and `other.xy` are not populated as a real per-block
    artificial-light/lightmap contract.
-2. [A] The fallback light texture is not a real physical-block lightmap.
+2. [A] The original `white.png` currently substitutes for a real physical-block
+   lightmap; it is an original asset but not the original lightmap behavior.
 3. [A/C] Transparent/background/water/object passes remain collapsed or absent.
 4. [A] Character drawing uses only the body program and flat six-vertex faces;
    clothing, face, hair, multi-texture composition, and cuboid geometry remain.
-5. [A] Runtime always selects SD root assets; HD selection is absent.
+5. [A] Nine TileType→free-block conversion cases, the `foreground_arg != 0`
+   conversion path, and the renderer-side mappings in
+   `WorldHelper +reloadDrawBlock:...` still require field-sensitive extraction.
 6. [A] Shader compile/link/validation diagnostics are incomplete.
 7. [A/C] Sky and weather are prototypes rather than recovered original passes.
 

@@ -145,6 +145,80 @@ def main() -> None:
             "1104\t742\t6\t23\t743\t7\t23\t0x004d7528",
         ],
     )
+    require(
+        ROOT / "tools/extract_original_tile_item_map.py",
+        [
+            "FUNCTION_VA = 0x00A18044",
+            "TABLE_BASE_VA = 0x00A1868C",
+            "LAST_TILE_TYPE = 77",
+            "direct_item_type",
+        ],
+    )
+    tile_item_map = NATIVE / "original_tile_item_map.tsv"
+    tile_item_lines = tile_item_map.read_text(encoding="utf-8").splitlines()
+    if len(tile_item_lines) != 78:
+        raise SystemExit(f"original TileType map count changed: {len(tile_item_lines) - 1}")
+    require(
+        tile_item_map,
+        [
+            "foreground_arg\ttile_type\tresolution\titem_type\timage_dataA0",
+            "0\t4\tdirect\t1060\t110\t14\t3\t0x00a18d7c",
+            "0\t9\tdirect\t1049\t196\t4\t6\t0x00a18d04",
+            "0\t53\tdirect\t1066\t112\t16\t3\t0x00a18cc8",
+            "0\t77\tdirect\t1105\t746\t10\t23\t0x00a18c44",
+            "0\t2\tconditional",
+        ],
+    )
+    require(
+        ROOT / "tools/extract_original_tile_contents_image_map.py",
+        [
+            "FUNCTION_VA = 0x00A13E6C",
+            "FUNCTION_SIZE = 640",
+            "CONTENTS_TABLE_VA = 0x00A13F10",
+            "FALLBACK_TABLE_VA = 0x00A14090",
+            "direct_image",
+        ],
+    )
+    contents_map = NATIVE / "original_tile_contents_image_map.tsv"
+    contents_lines = contents_map.read_text(encoding="utf-8").splitlines()
+    if len(contents_lines) != 31:
+        raise SystemExit(f"original Tile contents image map count changed: {len(contents_lines) - 1}")
+    require(
+        contents_map,
+        [
+            "tile_offset\ttile_value\timage_index\tcol\trow\tcase_target",
+            "3\t96\t112\t16\t3\t0x00a140b4",
+            "3\t103\t116\t20\t3\t0x00a140c8",
+            "11\t67\t239\t15\t7\t0x00a13fa0",
+            "11\t124\t446\t30\t13\t0x00a1403c",
+            "11\t148\t762\t26\t23\t0x00a13fe8",
+        ],
+    )
+    require(
+        ROOT / "tools/extract_original_reload_drawblock_map.py",
+        [
+            "METHOD_VA = 0x00A1D730",
+            "TABLE_VA = 0x00A20EF0",
+            "LAST_TILE_TYPE = 77",
+            "constant_slot_prefix",
+        ],
+    )
+    drawblock_map = NATIVE / "original_reload_drawblock_map.tsv"
+    drawblock_lines = drawblock_map.read_text(encoding="utf-8").splitlines()
+    if len(drawblock_lines) != 78:
+        raise SystemExit(f"original reloadDrawBlock map count changed: {len(drawblock_lines) - 1}")
+    require(
+        drawblock_map,
+        [
+            "tile_type\tresolution\tprimary_image\tprimary_col\tprimary_row",
+            "4\tdirect\t110\t14\t3",
+            "7\tdirect\t65\t1\t2",
+            "9\tdirect\t196\t4\t6",
+            "49\tdirect\t98\t2\t3",
+            "57\tdirect\t116\t20\t3",
+            "77\tdirect\t746\t10\t23",
+        ],
+    )
     print("reverse-evidence-contract: PASS")
 
 
