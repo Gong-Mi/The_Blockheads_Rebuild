@@ -107,6 +107,26 @@ def main() -> None:
             "inflateInit2(&stream, MAX_WBITS + 16)",
         ],
     )
+    require(
+        NATIVE / "STATIC_RENDER_CONTRACT.md",
+        [
+            "723 files",
+            "32×32 atlas",
+            "BlockTransparent",
+            "lightmap UV",
+            "Evidence levels",
+        ],
+    )
+    require(
+        NATIVE / "STATIC_LIFECYCLE_CONTRACT.md",
+        [
+            "VerdeApplication",
+            "singleTask",
+            "context validity",
+            "nativeHandleUri",
+            "Evidence levels",
+        ],
+    )
     print("reverse-evidence-contract: PASS")
 
 
