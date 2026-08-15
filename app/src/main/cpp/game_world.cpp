@@ -359,7 +359,7 @@ void GameWorld::buildMeshCache(PhysicalBlock* block) {
                 block->vertexCache.push_back(1.0f);
                 block->vertexCache.push_back(1.0f);
                 block->vertexCache.push_back(1.0f);
-                block->vertexCache.push_back(1.0f);
+                block->vertexCache.push_back(0.0f); // Unpainted: paint alpha must be zero
             };
             
             if (renderType == 1) { // Plant (Flat Quad)

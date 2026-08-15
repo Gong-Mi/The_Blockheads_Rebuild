@@ -26,6 +26,8 @@ require("ItemManager::getInstance().getDef(item.type)" in RENDERER,
         "drop items must resolve through the item definition table")
 require("outTexIndex.x" in BLOCK and "/ 255.0" in BLOCK,
         "block shader atlas-index contract must remain explicit")
+require("block->vertexCache.push_back(0.0f); // Unpainted: paint alpha must be zero" in WORLD,
+        "unpainted block vertices must not set paint alpha to fully painted")
 require("texture2D(texture, outTexCoord.xy)" in ITEM,
         "item shader must consume normalized UVs directly")
 require("queueCV.wait_for" in WORLD and "std::chrono::milliseconds(50)" in WORLD,
