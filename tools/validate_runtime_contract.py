@@ -56,6 +56,18 @@ require("Native Init Complete" in init_body,
 require("updateDebugInfo" in init_body and '"Ready"' in init_body,
         "GameActivity loading overlay is never transitioned to Ready")
 
+# MainMenuActivity and GameActivity own distinct GLSurfaceView/EGL contexts.
+# GL object names from one context cannot be reused in the next Activity.  Every
+# surface creation must therefore replace and initialize the native renderer;
+# merely checking that g_renderer is non-null leaves stale programs/textures/VBOs.
+helper_start = engine.index("void onSurfaceCreatedInternal")
+helper_end = engine.index("extern \"C\" JNIEXPORT", helper_start)
+helper_body = engine[helper_start:helper_end]
+require("delete g_renderer;" in helper_body and "g_renderer = new WorldRenderer();" in helper_body,
+        "surface creation must replace renderer resources for the current EGL context")
+require("if (!g_renderer)" not in helper_body and "skipping re-init" not in helper_body,
+        "surface creation still permits stale cross-context GL resources")
+
 surface_start = engine.index("Java_com_noodlecake_blockheads_rebuild_GameActivity_onSurfaceCreatedNative")
 surface_end = engine.index("extern \"C\" JNIEXPORT", surface_start + 20)
 surface_body = engine[surface_start:surface_end]

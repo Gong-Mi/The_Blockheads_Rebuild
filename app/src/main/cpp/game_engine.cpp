@@ -42,13 +42,15 @@ void logToFile(const char* fmt, ...) {
 // --- Shared Helper for Surface Created ---
 void onSurfaceCreatedInternal(JNIEnv* env, jobject assetMgr) {
     logToFile("onSurfaceCreatedInternal called");
-    if (!g_renderer) {
-        g_renderer = new WorldRenderer();
-        g_renderer->init(AAssetManager_fromJava(env, assetMgr));
-        logToFile("Renderer created and initialized");
-    } else {
-        logToFile("Renderer already exists, skipping re-init");
-    }
+
+    // MainMenuActivity and GameActivity each create their own GLSurfaceView and
+    // EGL context.  Program, texture and VBO names from the previous context are
+    // invalid here even though the C++ pointer survives the Activity transition.
+    // Rebuild the renderer and all context-owned resources for this surface.
+    delete g_renderer;
+    g_renderer = new WorldRenderer();
+    g_renderer->init(AAssetManager_fromJava(env, assetMgr));
+    logToFile("Renderer replaced and initialized for current EGL context");
 }
 
 extern "C" JNIEXPORT void JNICALL
