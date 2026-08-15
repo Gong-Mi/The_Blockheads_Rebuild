@@ -56,6 +56,15 @@ void WorldRenderer::init(AAssetManager* mgr) {
     }
 
     uMatrix = glGetUniformLocation(program, "mvp_matrix");
+
+    char* itemVSource = loadShaderSource(mgr, "Item.vsh");
+    char* itemFSource = loadShaderSource(mgr, "Item.fsh");
+    if (itemVSource && itemFSource) {
+        itemProgram = createProgram(itemVSource, itemFSource);
+        free(itemVSource); free(itemFSource);
+    } else {
+        LOGE("Critical Error: Failed to load original shaders Item.vsh/fsh");
+    }
     
     char* cVSource = loadShaderSource(mgr, "BlockheadBody.vsh");
     char* cFSource = loadShaderSource(mgr, "BlockheadBody.fsh");
@@ -82,7 +91,7 @@ void WorldRenderer::init(AAssetManager* mgr) {
     dodoLegTexID = loadTex(mgr, "dodoLeg.png");
     yakBodyTexID = loadTex(mgr, "yakBody.png");
     yakHeadTexID = loadTex(mgr, "yakHead.png");
-    yakLegTexID = loadTex(mgr, "yakLeg.png");
+    yakLegTexID = loadTex(mgr, "yakLegs.png");
     dropbearBodyTexID = loadTex(mgr, "dropbearBody.png");
     dropbearHeadTexID = loadTex(mgr, "dropbearHead.png");
     
@@ -140,9 +149,13 @@ GLuint WorldRenderer::loadTex(AAssetManager* mgr, const char* name) {
     glBindTexture(GL_TEXTURE_2D, id);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, d);
     
-    glGenerateMipmap(GL_TEXTURE_2D);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    // The original asset set contains NPOT UI textures.  Do not select a
+    // mipmapped minification filter without a complete mip chain: GLES2 then
+    // treats the texture as incomplete and samples transparent/black data.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     
     stbi_image_free(d);
     AAsset_close(asset);
@@ -168,8 +181,8 @@ void WorldRenderer::pushBlock(std::vector<Vertex>& buffer, float x, float y, int
         texRow = def->texRow;
         texCol = def->texCol;
     } else {
-        texCol = (type - 1) % 32;
-        texRow = (type - 1) / 32;
+        LOGE("No atlas definition for block/item id %d; refusing guessed coordinates", type);
+        return;
     }
 
     float tx = (float)texCol;
@@ -507,6 +520,7 @@ void WorldRenderer::renderFrame() {
     if (charProgram != 0 && dodoBodyTexID != 0) {
         glUseProgram(charProgram);
         auto drawMobPart = [&](GLuint tex, float mx, float my, float x, float y, float z, float w, float h, float d) {
+            if (tex == 0) return;
             glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, tex);
             glUniform1i(glGetUniformLocation(charProgram, "texture"), 0);
             float m_part[16]; std::copy(matrix, matrix + 16, m_part);
@@ -551,24 +565,43 @@ void WorldRenderer::renderFrame() {
     }
 
     // --- Render Drop Items ---
-    if (program != 0 && itemsTexID != 0) {
-        glUseProgram(program);
+    // Item.vsh/fsh consumes normalized UVs and ItemNormals.png. The old
+    // prototype incorrectly used Block.vsh/fsh with atlas cell coordinates.
+    if (itemProgram != 0 && itemsTexID != 0 && normalID != 0) {
+        glUseProgram(itemProgram);
         glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, itemsTexID);
+        glUniform1i(glGetUniformLocation(itemProgram, "texture"), 0);
+        glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, normalID);
+        glUniform1i(glGetUniformLocation(itemProgram, "normal_texture"), 1);
+        glUniform4f(glGetUniformLocation(itemProgram, "light"), 1.0f, 1.0f, 1.0f, 1.0f);
+        glUniform4f(glGetUniformLocation(itemProgram, "lightPosition"), camX, camY + 20.0f, 5.0f, 1.0f);
+        GLint itemPosLoc = glGetAttribLocation(itemProgram, "position");
+        GLint itemTexLoc = glGetAttribLocation(itemProgram, "texCoord");
+        glEnableVertexAttribArray(itemPosLoc);
+        glEnableVertexAttribArray(itemTexLoc);
         for (const auto& item : dropItems) {
+            const auto* def = ItemManager::getInstance().getDef(item.type);
+            if (!def) continue;
             float m_item[16]; std::copy(matrix, matrix + 16, m_item);
             Matrix::translate(m_item, item.x, item.y + 0.2f, 0.1f);
             Matrix::scale(m_item, 0.4f, 0.4f, 1.0f);
-            glUniformMatrix4fv(uMatrix, 1, GL_FALSE, m_item);
-            
-            float itX = (float)((item.type - 1) % 32);
-            float itY = (float)((item.type - 1) / 32);
-            glUniform4f(glGetAttribLocation(program, "other"), 0, 0, itY, 0); 
+            glUniformMatrix4fv(glGetUniformLocation(itemProgram, "mvp_matrix"), 1, GL_FALSE, m_item);
 
-            float iV[] = { 0,0, itX, 1, 1,0, itX, 1, 0,1, itX, 1, 1,0, itX, 1, 1,1, itX, 1, 0,1, itX, 1 };
-            glVertexAttribPointer(posLoc, 2, GL_FLOAT, GL_FALSE, 4*sizeof(float), &iV[0]);
-            glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, 4*sizeof(float), &iV[2]);
+            constexpr float atlasW = 512.0f;
+            constexpr float atlasH = 256.0f;
+            constexpr float cell = 16.0f;
+            float u0 = def->texCol * cell / atlasW;
+            float v0 = def->texRow * cell / atlasH;
+            float u1 = u0 + cell / atlasW;
+            float v1 = v0 + cell / atlasH;
+            float iV[] = { 0,0, u0,v1, 1,0, u1,v1, 0,1, u0,v0,
+                           1,0, u1,v1, 1,1, u1,v0, 0,1, u0,v0 };
+            glVertexAttribPointer(itemPosLoc, 2, GL_FLOAT, GL_FALSE, 4*sizeof(float), &iV[0]);
+            glVertexAttribPointer(itemTexLoc, 2, GL_FLOAT, GL_FALSE, 4*sizeof(float), &iV[2]);
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
+        glDisableVertexAttribArray(itemPosLoc);
+        glDisableVertexAttribArray(itemTexLoc);
     }
 
     // --- Render ActionSquare ---
@@ -626,8 +659,9 @@ void WorldRenderer::renderFrame() {
 void WorldRenderer::spawnBlockBreakParticles(int x, int y, int blockType) {
     if (blockType == 0) return;
     auto def = ItemManager::getInstance().getDef(blockType);
-    int texRow = def ? def->texRow : (blockType - 1) / 32;
-    int texCol = def ? def->texCol : (blockType - 1) % 32;
+    if (!def) return;
+    int texRow = def->texRow;
+    int texCol = def->texCol;
     
     float tileUVSize = 1.0f / 32.0f;
     float uBase = texCol * tileUVSize;

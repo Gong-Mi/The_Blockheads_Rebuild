@@ -48,6 +48,7 @@ public:
     GLuint yakBodyTexID, yakHeadTexID, yakLegTexID;
     GLuint dropbearBodyTexID, dropbearHeadTexID;
     GLuint actionSquareTexID, actionSquareProgram;
+    GLuint itemProgram = 0;
     GLuint charProgram;
     GLuint debugProgram; // For debugging char render
     

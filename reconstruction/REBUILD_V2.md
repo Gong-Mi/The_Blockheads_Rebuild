@@ -69,3 +69,13 @@ assets; the comparison currently identifies the character skin files as
 the core atlases mismatched was invalid and is not used anymore.
 
 These are evidence-backed starting points, not gameplay guesses.
+
+## First implementation landed
+
+The renderer now has a separate item path using the APK's `Item.vsh` and
+`Item.fsh` pair. Dropped items resolve through `ItemManager` and convert the
+explicit item-table cell to normalized coordinates for `Items.png`; they no
+longer use `Block.fsh` or `(itemId - 1) % 32`. Unknown IDs are rejected instead
+of being rendered at a guessed location. Texture upload also uses a complete
+non-mipmapped GLES2 contract, and the known yak leg filename is corrected to
+`yakLegs.png`.
