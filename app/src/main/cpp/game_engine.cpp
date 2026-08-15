@@ -88,6 +88,7 @@ extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_onSurfaceCreatedNative(JNIEnv* env, jobject obj, jobject assetMgr) {
     std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
     onSurfaceCreatedInternal(env, assetMgr);
+    if (g_renderer) g_renderer->menuMode = false;
 }
 
 extern "C" JNIEXPORT void JNICALL
@@ -443,6 +444,18 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
 
             { std::lock_guard<std::mutex> lock(g_world->chunksMutex); g_renderer->updateMesh(g_world->chunks); }
             g_renderer->renderFrame();
+            if (frameLog % 60 == 0) {
+                char status[128];
+                snprintf(status, sizeof(status), "Ready chunks=%zu vertices=%d",
+                         g_renderer->chunkMeshes.size(), g_renderer->totalVertexCount);
+                jclass statusClazz = env->GetObjectClass(obj);
+                jmethodID statusMethod = env->GetMethodID(statusClazz, "updateDebugInfo", "(Ljava/lang/String;)V");
+                if (statusMethod) {
+                    jstring statusString = env->NewStringUTF(status);
+                    env->CallVoidMethod(obj, statusMethod, statusString);
+                    env->DeleteLocalRef(statusString);
+                }
+            }
         }
     }
 }
