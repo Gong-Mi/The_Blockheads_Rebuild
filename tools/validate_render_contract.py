@@ -37,6 +37,15 @@ require("selectionBox40.png" in (ROOT / "app/src/main/java/com/noodlecake/blockh
 player_marker = RENDERER.index("// --- Render Player Character (In Game) ---")
 require("glBindBuffer(GL_ARRAY_BUFFER, 0);" in RENDERER[max(0, player_marker - 300):player_marker],
         "world VBO must be unbound before player/client-side vertex arrays")
+mob_marker = RENDERER.index("// --- Render Mobs ---", player_marker)
+player_pass = RENDERER[player_marker:mob_marker]
+require('glGetUniformLocation(charProgram, "artificalLight")' in player_pass,
+        "in-game character pass must initialize the shader's artificalLight uniform")
+require('glGetUniformLocation(charProgram, "lightPosition")' in player_pass,
+        "in-game character pass must initialize the shader's lightPosition uniform")
+light_texture_block = RENDERER[RENDERER.index("static GLuint whiteTex = 0;"):RENDERER.index("// Daylight vector")]
+require("GL_TEXTURE_MIN_FILTER" in light_texture_block and "GL_TEXTURE_MAG_FILTER" in light_texture_block,
+        "fallback light texture must be texture-complete without mipmaps")
 for name in ("Item.vsh", "Item.fsh", "Items.png", "ItemNormals.png", "yakLegs.png", "selectionBox40.png"):
     require((ROOT / "app/src/main/assets" / name).exists(), f"missing runtime asset: {name}")
 

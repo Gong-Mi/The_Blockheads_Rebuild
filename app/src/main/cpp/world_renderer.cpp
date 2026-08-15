@@ -319,6 +319,10 @@ void WorldRenderer::renderFrame() {
         glGenTextures(1, &whiteTex);
         glBindTexture(GL_TEXTURE_2D, whiteTex);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &p);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     }
     glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, whiteTex);
     glUniform1i(glGetUniformLocation(program, "light_texture"), 2);
@@ -480,10 +484,12 @@ void WorldRenderer::renderFrame() {
     if (charProgram != 0 && bodyTexID != 0) {
         glUseProgram(charProgram);
         glUniform4f(glGetUniformLocation(charProgram, "daylight"), 1.0f, 1.0f, 1.0f, 1.0f);
+        glUniform4f(glGetUniformLocation(charProgram, "artificalLight"), 0.5f, 0.5f, 0.5f, 1.0f);
         glUniform4f(glGetUniformLocation(charProgram, "skinColor"), 1.0f, 0.85f, 0.7f, 1.0f);
         glUniform4f(glGetUniformLocation(charProgram, "clothingColorA"), 1.0f, 1.0f, 1.0f, 1.0f);
         glUniform4f(glGetUniformLocation(charProgram, "clothingColorB"), 0.9f, 0.9f, 0.9f, 1.0f);
         glUniform3f(glGetUniformLocation(charProgram, "artificialLightDirection"), 0.5f, 0.5f, 1.0f);
+        glUniform4f(glGetUniformLocation(charProgram, "lightPosition"), camX, camY + 20.0f, 5.0f, 1.0f);
         
         auto drawCharCube = [&](GLuint tex, float x, float y, float z, float w, float h, float d, float u1, float v1, float u2, float v2) {
             glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, tex);
