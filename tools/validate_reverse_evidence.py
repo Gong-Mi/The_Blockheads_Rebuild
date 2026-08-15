@@ -127,6 +127,24 @@ def main() -> None:
             "Evidence levels",
         ],
     )
+    require(
+        ROOT / "tools/extract_original_item_image_map.py",
+        [
+            "FUNCTION_VA = 0x004D71DC",
+            "JUMP_BASE_VA = 0x004D726C",
+            "DEFAULT_IMAGE = 32",
+            "movw_r0_immediate",
+        ],
+    )
+    require(
+        NATIVE / "original_item_image_map.tsv",
+        [
+            "item_type\timage_dataA0\tcol_dataA0\trow_dataA0",
+            "1024\t33\t1\t1\t33\t1\t1\t0x004d73c0",
+            "1043\t342\t22\t10\t343\t23\t10\t0x004d74e0",
+            "1104\t742\t6\t23\t743\t7\t23\t0x004d7528",
+        ],
+    )
     print("reverse-evidence-contract: PASS")
 
 

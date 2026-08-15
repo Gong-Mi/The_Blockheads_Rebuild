@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Static regression checks for the v2 GLES asset/render contract."""
 from pathlib import Path
+import json
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -8,6 +9,10 @@ RENDERER = (ROOT / "app/src/main/cpp/world_renderer.cpp").read_text()
 WORLD = (ROOT / "app/src/main/cpp/game_world.cpp").read_text()
 BLOCK = (ROOT / "app/src/main/assets/Block.vsh").read_text()
 ITEM = (ROOT / "app/src/main/assets/Item.fsh").read_text()
+ITEM_DEFS = {
+    item["string_id"]: item
+    for item in json.loads((ROOT / "assets/gamedata/items.json").read_text())
+}
 
 errors = []
 def require(condition: bool, message: str) -> None:
@@ -24,6 +29,26 @@ require("(type - 1) % 32" not in RENDERER and "(item.type - 1) % 32" not in REND
         "numeric IDs must not be used as guessed atlas coordinates")
 require("ItemManager::getInstance().getDef(item.type)" in RENDERER,
         "drop items must resolve through the item definition table")
+# These are semantic cells in the original APK TileMap.png, not sequential IDs.
+# In particular, (2,0) and (3,0) are ore cells, so assigning them to wood
+# and leaves reproduces the device-visible corruption this contract prevents.
+semantic_atlas_cells = {
+    "ITEM_DIRT": (0, 3),
+    "ITEM_STONE": (3, 2),
+    "BLOCK_WOOD": (0, 6),
+    "BLOCK_LEAVES": (0, 7),
+    "BLOCK_GRASS": (2, 3),
+    "BLOCK_SAND": (1, 2),
+    "ITEM_COPPER_ORE": (2, 0),
+    "ITEM_TIN_ORE": (3, 0),
+    "ITEM_IRON_ORE": (19, 2),
+    "ITEM_GOLD_ORE": (20, 2),
+}
+for string_id, expected_cell in semantic_atlas_cells.items():
+    item = ITEM_DEFS[string_id]
+    actual_cell = (item["texCol"], item["texRow"])
+    require(actual_cell == expected_cell,
+            f"{string_id} atlas cell must be {expected_cell}, got {actual_cell}")
 require("outTexIndex.x" in BLOCK and "/ 255.0" in BLOCK,
         "block shader atlas-index contract must remain explicit")
 require("block->vertexCache.push_back(0.0f); // Unpainted: paint alpha must be zero" in WORLD,
