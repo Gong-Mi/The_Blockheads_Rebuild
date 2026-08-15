@@ -25,8 +25,8 @@ def png_size(data: bytes) -> list[int] | None:
     return list(struct.unpack(">II", data[16:24]))
 
 
-def apk_assets(path: Path) -> dict[str, dict]:
-    out: dict[str, dict] = {}
+def apk_assets(path: Path) -> dict[str, list[dict]]:
+    out: dict[str, list[dict]] = {}
     with zipfile.ZipFile(path) as zf:
         for name in zf.namelist():
             if not name.startswith("assets/") or name.endswith("/"):
@@ -37,12 +37,12 @@ def apk_assets(path: Path) -> dict[str, dict]:
             size = png_size(data)
             if size:
                 row["width"], row["height"] = size
-            out[base] = row
+            out.setdefault(base, []).append(row)
     return out
 
 
-def tree_assets(path: Path) -> dict[str, dict]:
-    out: dict[str, dict] = {}
+def tree_assets(path: Path) -> dict[str, list[dict]]:
+    out: dict[str, list[dict]] = {}
     for p in path.rglob("*"):
         if not p.is_file():
             continue
@@ -51,7 +51,7 @@ def tree_assets(path: Path) -> dict[str, dict]:
             size = png_size(p.read_bytes()[:32])
             if size:
                 row["width"], row["height"] = size
-        out[p.name] = row
+        out.setdefault(p.name, []).append(row)
     return out
 
 
@@ -75,17 +75,32 @@ def main() -> int:
     ap.add_argument("--repo", type=Path, default=Path("."))
     ap.add_argument("--json", type=Path)
     args = ap.parse_args()
-    if bool(args.apk) == bool(args.assets):
-        ap.error("choose exactly one of --apk or --assets")
+    if not args.apk and not args.assets:
+        ap.error("provide --apk and/or --assets")
 
-    catalog = apk_assets(args.apk) if args.apk else tree_assets(args.assets)
+    apk_catalog = apk_assets(args.apk) if args.apk else None
+    tree_catalog = tree_assets(args.assets) if args.assets else None
+    catalog = apk_catalog or tree_catalog or {}
     refs = references(args.repo)
     missing = [name for name in refs if name not in catalog]
+    dimension_mismatches = []
+    if apk_catalog is not None and tree_catalog is not None:
+        for name in sorted(set(apk_catalog) & set(tree_catalog)):
+            # Renderer references are relative to assets/GameResources. Prefer
+            # that APK copy over the HDTex copy with the same basename.
+            apk_row = next((r for r in apk_catalog[name] if r.get("apk_path") == f"assets/GameResources/{name}"), apk_catalog[name][0])
+            tree_row = next((r for r in tree_catalog[name] if r.get("path") == name), tree_catalog[name][0])
+            apk_size = (apk_row.get("width"), apk_row.get("height"))
+            tree_size = (tree_row.get("width"), tree_row.get("height"))
+            if apk_size != (None, None) and tree_size != (None, None) and apk_size != tree_size:
+                dimension_mismatches.append({"name": name, "apk": apk_size, "tree": tree_size})
     result = {
         "source": str(args.apk or args.assets),
+        "comparison": str(args.assets) if args.apk and args.assets else None,
         "reference_count": len(refs),
         "asset_count": len(catalog),
         "missing_references": missing,
+        "dimension_mismatches": dimension_mismatches,
         "assets": catalog,
     }
     text = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
@@ -93,10 +108,12 @@ def main() -> int:
         args.json.parent.mkdir(parents=True, exist_ok=True)
         args.json.write_text(text)
     print(f"source={result['source']}")
-    print(f"references={len(refs)} assets={len(catalog)} missing={len(missing)}")
+    print(f"references={len(refs)} assets={len(catalog)} missing={len(missing)} dimension_mismatches={len(dimension_mismatches)}")
     for name in missing:
         print(f"MISSING {name}")
-    return 1 if missing else 0
+    for row in dimension_mismatches:
+        print(f"DIMENSION {row['name']} apk={row['apk'][0]}x{row['apk'][1]} tree={row['tree'][0]}x{row['tree'][1]}")
+    return 1 if missing or dimension_mismatches else 0
 
 
 if __name__ == "__main__":

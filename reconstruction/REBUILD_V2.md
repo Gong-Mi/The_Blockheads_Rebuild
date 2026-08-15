@@ -61,4 +61,11 @@ build error, not a runtime fallback.
   simulation share global objects. v2 will replace this with a command queue and
   immutable snapshots.
 
+The asset comparison must preserve APK paths because the package contains both
+the normal and `HDTex` copies of many files. The normal `TileMap`,
+`TileDestruct`, and `Items` dimensions match the corresponding old-project
+assets; the comparison currently identifies the character skin files as
+32x16-vs-256x128 mismatches. The earlier basename-only comparison that called
+the core atlases mismatched was invalid and is not used anymore.
+
 These are evidence-backed starting points, not gameplay guesses.
