@@ -218,8 +218,6 @@ public class GameActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         
-        initNative(getExternalFilesDir(null).getAbsolutePath());
-
         android.widget.FrameLayout layout = new android.widget.FrameLayout(this);
         mGameView = new GameView(this);
         layout.addView(mGameView);

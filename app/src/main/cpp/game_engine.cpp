@@ -134,6 +134,13 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
     }
     LOGI("Native Engine Ready");
     logToFile("Native Init Complete");
+    jclass clazz = env->GetObjectClass(obj);
+    jmethodID debugMethod = env->GetMethodID(clazz, "updateDebugInfo", "(Ljava/lang/String;)V");
+    if (debugMethod) {
+        jstring ready = env->NewStringUTF("Ready");
+        env->CallVoidMethod(obj, debugMethod, ready);
+        env->DeleteLocalRef(ready);
+    }
 }
 
 extern "C" JNIEXPORT void JNICALL

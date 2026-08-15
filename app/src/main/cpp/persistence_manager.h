@@ -165,6 +165,10 @@ public:
             if (chunk->y >= 0 && chunk->y < GameWorld::MAX_CHUNKS_Y) {
                 world->chunkGrid[wrappedX][chunk->y] = chunk;
             }
+            // Loaded chunks have tiles but no runtime mesh cache. Rebuild it
+            // before the renderer consumes the saved world.
+            chunk->dirty = true;
+            world->processChunkAsync(chunk);
         }
 
         fclose(f);
