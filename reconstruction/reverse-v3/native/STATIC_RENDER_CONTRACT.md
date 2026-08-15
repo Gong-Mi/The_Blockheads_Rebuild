@@ -184,12 +184,10 @@ Cross-checks include PineTreeTrunk `7 -> image 192 (0,6)` and PineTreeLeaf
 [A/C+] That independent enum source correlates original TileType values with
 Stone=1, Air=2, Water=3, Ice=4, Snow=5, Dirt=6, DesertSand=7,
 BeachSand=8, Wood=9, GrassDirt=27 and SnowDirt=28. Names remain C+; switch
-values and image assignments are A-grade ELF facts. The rebuild's basic cells
-now use the field-sensitive original cases: Stone/content0 image 32,
-Dirt/content0 image 64, GrassDirt/content0 image 160, CopperOre content61
-image 1, TinOre content62 image 3, IronOre content63 image 2, and GoldNuggets
-content77 image 84. These replace visual guesses while retaining the rebuild's
-temporary custom item IDs.
+values and image assignments are A-grade ELF facts. They are not sufficient to
+assign one atlas cell to a rebuild semantic ID: the original method derives
+three pass-specific draw slots from raw Tile state, while the current rebuild
+collapses that state into one ID and one pass.
 
 [C] The current rebuild's small semantic IDs and hand-authored item definitions
 are not the original TileType or ItemType namespace. They remain a replacement

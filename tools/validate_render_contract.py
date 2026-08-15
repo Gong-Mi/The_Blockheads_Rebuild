@@ -43,26 +43,9 @@ require("(type - 1) % 32" not in RENDERER and "(item.type - 1) % 32" not in REND
         "numeric IDs must not be used as guessed atlas coordinates")
 require("ItemManager::getInstance().getDef(item.type)" in RENDERER,
         "drop items must resolve through the item definition table")
-# These are semantic cells in the original APK TileMap.png, not sequential IDs.
-# They are pinned to reloadDrawBlock field-sensitive cases rather than atlas
-# appearance. Wood/leaves use PineTreeTrunk/PineTreeLeaf Tile[3] cases.
-semantic_atlas_cells = {
-    "ITEM_DIRT": (0, 2),
-    "ITEM_STONE": (0, 1),
-    "BLOCK_WOOD": (0, 6),
-    "BLOCK_LEAVES": (13, 7),
-    "BLOCK_GRASS": (0, 5),
-    "BLOCK_SAND": (1, 2),
-    "ITEM_COPPER_ORE": (1, 0),
-    "ITEM_TIN_ORE": (3, 0),
-    "ITEM_IRON_ORE": (2, 0),
-    "ITEM_GOLD_ORE": (20, 2),
-}
-for string_id, expected_cell in semantic_atlas_cells.items():
-    item = ITEM_DEFS[string_id]
-    actual_cell = (item["texCol"], item["texRow"])
-    require(actual_cell == expected_cell,
-            f"{string_id} atlas cell must be {expected_cell}, got {actual_cell}")
+# The current rebuild IDs and texRow/texCol fields are compatibility placeholders.
+# Do not promote their cells to original semantic evidence: original rendering
+# resolves raw Tile fields into three draw-pass slots inside reloadDrawBlock.
 require("outTexIndex.x" in BLOCK and "/ 255.0" in BLOCK,
         "block shader atlas-index contract must remain explicit")
 require("block->vertexCache.push_back(0.0f); // Unpainted: paint alpha must be zero" in WORLD,
