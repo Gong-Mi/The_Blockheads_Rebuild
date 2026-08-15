@@ -32,7 +32,9 @@ require("queueCV.wait_for" in WORLD and "std::chrono::milliseconds(50)" in WORLD
         "world worker must wake on a timer when the chunk queue is idle")
 require("queueCV.wait(lock, [this]" not in WORLD,
         "world worker must not block simulation indefinitely on an empty queue")
-for name in ("Item.vsh", "Item.fsh", "Items.png", "ItemNormals.png", "yakLegs.png"):
+require("selectionBox40.png" in (ROOT / "app/src/main/java/com/noodlecake/blockheads/rebuild/GameActivity.java").read_text(),
+        "hotbar must use the APK's case-sensitive selectionBox40.png name")
+for name in ("Item.vsh", "Item.fsh", "Items.png", "ItemNormals.png", "yakLegs.png", "selectionBox40.png"):
     require((ROOT / "app/src/main/assets" / name).exists(), f"missing runtime asset: {name}")
 
 if errors:

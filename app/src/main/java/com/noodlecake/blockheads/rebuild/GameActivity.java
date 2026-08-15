@@ -262,7 +262,7 @@ public class GameActivity extends Activity {
         
         try {
             android.graphics.Bitmap bgBtn = android.graphics.BitmapFactory.decodeStream(getAssets().open("InventoryButtonBackground.png"));
-            android.graphics.Bitmap selBox = android.graphics.BitmapFactory.decodeStream(getAssets().open("SelectionBox40.png"));
+            android.graphics.Bitmap selBox = android.graphics.BitmapFactory.decodeStream(getAssets().open("selectionBox40.png"));
             
             android.graphics.drawable.BitmapDrawable bgDrawable = new android.graphics.drawable.BitmapDrawable(getResources(), bgBtn);
             final android.graphics.drawable.BitmapDrawable selDrawable = new android.graphics.drawable.BitmapDrawable(getResources(), selBox);

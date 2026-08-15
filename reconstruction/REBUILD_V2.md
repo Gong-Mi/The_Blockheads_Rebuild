@@ -48,7 +48,9 @@ build error, not a runtime fallback.
 
 ## Known legacy defects recorded from source
 
-- `SelectionBox40.png` is referenced but absent from both APK and repository.
+- The hotbar originally referenced `SelectionBox40.png`, but the APK uses the
+  case-sensitive path `selectionBox40.png`. The Java reference is now aligned
+  and the original asset is present in the app assets root.
 - `dropbearBody.png`, `dropbearHead.png`, and `yakLeg.png` are referenced but
   absent; the APK uses other names/parts (`yakLegs.png`, etc.).
 - `loadTex()` always calls `glGenerateMipmap()` and selects a mipmapped min
