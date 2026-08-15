@@ -40,10 +40,13 @@ char* WorldRenderer::loadShaderSource(AAssetManager* mgr, const char* name) {
 }
 
 void WorldRenderer::init(AAssetManager* mgr) {
-    textureID = loadTex(mgr, "TileMap.png");
-    destructID = loadTex(mgr, "TileDestruct.png");
+    // Use the original 1.7.6 high-definition atlases directly. Their 32x32
+    // logical grid is identical to the SD atlases; only cell resolution differs.
+    textureID = loadTex(mgr, "GameResources/HDTex/TileMap.png");
+    destructID = loadTex(mgr, "GameResources/HDTex/TileDestruct.png");
     normalID = loadTex(mgr, "ItemNormals.png");
-    itemsTexID = loadTex(mgr, "Items.png");
+    itemsTexID = loadTex(mgr, "GameResources/HDTex/Items.png");
+    whiteTexID = loadTex(mgr, "white.png");
     
     char* vSource = loadShaderSource(mgr, "Block.vsh");
     char* fSource = loadShaderSource(mgr, "Block.fsh");
@@ -313,18 +316,9 @@ void WorldRenderer::renderFrame() {
     glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, destructID);
     glUniform1i(glGetUniformLocation(program, "destruct_texture"), 1);
     
-    static GLuint whiteTex = 0;
-    if (whiteTex == 0) {
-        uint32_t p = 0xFFFFFFFF;
-        glGenTextures(1, &whiteTex);
-        glBindTexture(GL_TEXTURE_2D, whiteTex);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &p);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    }
-    glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, whiteTex);
+    // A real per-block lightmap is not reconstructed yet. Bind the original
+    // APK white texture rather than synthesizing a replacement GL texture.
+    glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, whiteTexID);
     glUniform1i(glGetUniformLocation(program, "light_texture"), 2);
 
     // Daylight vector according to original shader expectations
@@ -788,18 +782,10 @@ void WorldRenderer::renderParticles() {
         if (p.type == PARTICLE_BLOCK_DEBRIS) drawQuad(p, textureID);
     }
 
-    // Pass 2: White Texture (Smoke/Weather)
-    static GLuint whiteTex = 0;
-    if (whiteTex == 0) {
-        uint32_t px = 0xFFFFFFFF;
-        glGenTextures(1, &whiteTex);
-        glBindTexture(GL_TEXTURE_2D, whiteTex);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &px);
-    }
-    
-    glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, whiteTex);
+    // Pass 2: use the original APK white texture for smoke/weather.
+    glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, whiteTexID);
     for (const auto& p : particles) {
-        if (p.type != PARTICLE_BLOCK_DEBRIS) drawQuad(p, whiteTex);
+        if (p.type != PARTICLE_BLOCK_DEBRIS) drawQuad(p, whiteTexID);
     }
 }
 void WorldRenderer::projectWorldToScreen(float worldX, float worldY, float& outScreenX, float& outScreenY) {
@@ -831,14 +817,7 @@ void WorldRenderer::renderCraftingProgress(float x, float y, float progress) {
     if (actionSquareProgram == 0) return;
     glUseProgram(actionSquareProgram);
     
-    static GLuint whiteTex = 0;
-    if (whiteTex == 0) {
-        uint32_t px = 0xFFFFFFFF;
-        glGenTextures(1, &whiteTex);
-        glBindTexture(GL_TEXTURE_2D, whiteTex);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &px);
-    }
-    glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, whiteTex);
+    glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, whiteTexID);
 
     float matrix[16];
     float aspect = (float)screenW / (float)screenH;

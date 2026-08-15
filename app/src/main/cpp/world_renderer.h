@@ -41,7 +41,7 @@ public:
     int clothingLegs = 0;
     
     // Textures
-    GLuint textureID, destructID, normalID, itemsTexID;
+    GLuint textureID, destructID, normalID, itemsTexID, whiteTexID;
     GLuint headTexID, bodyTexID, armsTexID, legsTexID;
     GLuint clothingTex[4]; // 0:Cap, 1:Pants, 2:Coat, 3:Boots
     GLuint dodoBodyTexID, dodoHeadTexID, dodoLegTexID;
