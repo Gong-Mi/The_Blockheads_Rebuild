@@ -471,6 +471,11 @@ void WorldRenderer::renderFrame() {
         }
     }
 
+    // The terrain pass leaves a VBO bound.  The character/mob paths below use
+    // client-side arrays, so their pointers would otherwise be interpreted as
+    // offsets into the terrain VBO and the draws would produce GL errors.
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
     // --- Render Player Character (In Game) ---
     if (charProgram != 0 && bodyTexID != 0) {
         glUseProgram(charProgram);

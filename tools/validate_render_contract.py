@@ -34,6 +34,9 @@ require("queueCV.wait(lock, [this]" not in WORLD,
         "world worker must not block simulation indefinitely on an empty queue")
 require("selectionBox40.png" in (ROOT / "app/src/main/java/com/noodlecake/blockheads/rebuild/GameActivity.java").read_text(),
         "hotbar must use the APK's case-sensitive selectionBox40.png name")
+player_marker = RENDERER.index("// --- Render Player Character (In Game) ---")
+require("glBindBuffer(GL_ARRAY_BUFFER, 0);" in RENDERER[max(0, player_marker - 300):player_marker],
+        "world VBO must be unbound before player/client-side vertex arrays")
 for name in ("Item.vsh", "Item.fsh", "Items.png", "ItemNormals.png", "yakLegs.png", "selectionBox40.png"):
     require((ROOT / "app/src/main/assets" / name).exists(), f"missing runtime asset: {name}")
 
