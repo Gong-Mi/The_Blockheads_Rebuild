@@ -52,10 +52,22 @@ jobs:
         /tmp/test_original_save_format
       working-directory: .
 
+    - name: Generate native item data for unit tests
+      run: |
+        mkdir -p /tmp/blockheads-generated
+        python3 tools/process_items.py \
+          assets/gamedata/items.json \
+          assets/gamedata/recipes.json \
+          /tmp/blockheads-generated/game_item_ids.h \
+          /tmp/blockheads-generated/game_item_data.cpp \
+          /tmp/blockheads-generated/game_recipe_data.h \
+          /tmp/blockheads-generated/game_recipe_data.cpp
+      working-directory: .
+
     - name: Test inventory stack limits
       run: |
         c++ -std=c++17 -Wall -Wextra -Werror -ffunction-sections -fdata-sections \
-          -Iapp/src/main/cpp/generated \
+          -I/tmp/blockheads-generated \
           -Iapp/src/main/cpp \
           tools/test_inventory.cpp \
           app/src/main/cpp/entity_manager.cpp \
