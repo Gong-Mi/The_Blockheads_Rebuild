@@ -16,12 +16,13 @@ void Player::addItem(int type, int count) {
             if (count == 0) return;
         }
     }
-    // 2. Try to fill empty slots
-    for(int i=0; i<INVENTORY_SIZE; i++) {
+    // 2. Fill empty slots, preserving the same stack limit as existing stacks.
+    for(int i=0; i<INVENTORY_SIZE && count > 0; i++) {
         if (slots[i] == 0) {
+            int add = std::min(99, count);
             slots[i] = type;
-            counts[i] = count;
-            return;
+            counts[i] = add;
+            count -= add;
         }
     }
 }

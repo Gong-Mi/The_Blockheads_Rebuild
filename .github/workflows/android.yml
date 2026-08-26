@@ -52,6 +52,18 @@ jobs:
         /tmp/test_original_save_format
       working-directory: .
 
+    - name: Test inventory stack limits
+      run: |
+        c++ -std=c++17 -Wall -Wextra -Werror -ffunction-sections -fdata-sections \
+          -Iapp/src/main/cpp/generated \
+          -Iapp/src/main/cpp \
+          tools/test_inventory.cpp \
+          app/src/main/cpp/entity_manager.cpp \
+          -Wl,--gc-sections \
+          -o /tmp/test_inventory
+        /tmp/test_inventory
+      working-directory: .
+
     - name: Build with Gradle
       run: ./gradlew assembleDebug
       working-directory: .
