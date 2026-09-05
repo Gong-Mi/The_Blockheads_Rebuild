@@ -19,9 +19,9 @@ Compiled source: `reconstruction/recovered/world_view_contracts.{h,cpp}` in `blo
 
 The width getter uses a relaxed atomic load followed by a seq_cst fence to preserve a post-load full barrier in this portable model. This is not a proof of original ObjC memory-model/ABI equivalence. Other fields require serialized ownership; no concurrent mutation contract is invented. Signed-byte getters retain the full -128..127 result range; a later FrameWorld bool adapter must explicitly implement the caller's nonzero test.
 
-## Deliberately not implemented
+## Setter follow-up and remaining dependencies
 
-`setTranslation:` at `0x005531d0` is not a plain assignment. The pinned body contains arithmetic/branches, additional vector writes and outgoing calls. Its entire region through `0x005536a4` is retained in disassembly with hash `a587b51ed92d57877723438e5518d8a149f84c1df11468b61b0b8a380279a9e1`, but exact wrap/quantization/outgoing effects are still pending semantic recovery. No setter stub was added.
+`setTranslation:` at `0x005531d0` is not a plain assignment. The pinned body contains arithmetic/branches, additional vector writes and outgoing calls. Its entire region through `0x005536a4` is retained in disassembly with hash `a587b51ed92d57877723438e5518d8a149f84c1df11468b61b0b8a380279a9e1`, and the complete local setter is now implemented in `world_translation.cpp`; see `WORLD_TRANSLATION.md` for wrap/quantization/outgoing effects and the imported-math/dynamic-sound boundaries. No setter stub was added.
 
 `World.update:accurateDT:pinchScale:dragInProgress:` and input/window construction also remain pending. Six getters do not make World or the game complete.
 

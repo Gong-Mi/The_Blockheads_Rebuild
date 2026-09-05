@@ -16,7 +16,7 @@ Linking the static archive into the APK without executing the entry and supplyin
 
 ## Integration prerequisites and acceptance
 
-1. Recover complete World accessor/setter methods from their actual IMPs. A getter name alone is not a field contract; a setter may have side effects. Keep `World.update` explicitly pending until its body/dependencies are recovered. Never use an empty override to call the adapter complete.
+1. Six complete World getters and the complete local `setTranslation:` body are recovered in the method library (see `WORLD_VIEW_CONTRACTS.md` and `WORLD_TRANSLATION.md`). The setter shares accurateTranslation/width state with the getters, preserves wrapping and quantization, and requires imported math and sound-dispatch interfaces. A production FrameWorld adapter and dynamic callees remain missing. Keep `World.update` explicitly pending until its body/dependencies are recovered. Never use an empty override to call the adapter complete.
 2. Recover GameView input-state producers and window lanes. The method map currently indexes, but does not thereby recover:
    - `pinchGesture:velocity:state:center:numberOfTouches:` — `0x0092d1c4`.
    - `pinchZoomToScale:` — `0x00940f24`.

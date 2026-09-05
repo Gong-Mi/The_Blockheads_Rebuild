@@ -53,8 +53,8 @@ jobs:
           --json /tmp/reverse-coverage-ledger.json \
           --markdown /tmp/reverse-coverage-ledger.md
         grep -F "Methods: 10478" /tmp/reverse-coverage-ledger.md
-        grep -F "semantics | 8" /tmp/reverse-coverage-ledger.md
-        grep -F "implemented | 8" /tmp/reverse-coverage-ledger.md
+        grep -F "semantics | 9" /tmp/reverse-coverage-ledger.md
+        grep -F "implemented | 9" /tmp/reverse-coverage-ledger.md
         grep -F "behavior-verified | 0" /tmp/reverse-coverage-ledger.md
       working-directory: .
 
@@ -132,6 +132,11 @@ jobs:
       run: |
         export PYTHONDONTWRITEBYTECODE=1
         python3 tools/test_gameview_method_map.py
+        # Prove the new setter assertions survive the Release NDEBUG flag.
+        c++ -std=c++17 -O2 -DNDEBUG -DTRANSLATION_ASSIGNMENT_NEGATIVE_CONTROL \
+          -Ireconstruction/recovered tools/test_world_translation.cpp \
+          -o /tmp/world-translation-negative
+        python3 -c 'import subprocess; p=subprocess.run(["/tmp/world-translation-negative"],capture_output=True,text=True); print("setter negative control:",p.returncode,p.stderr); assert p.returncode != 0 and "s.accurateTranslation.x==expected" in p.stderr'
         for opt in 0 2; do
           build="/tmp/blockheads-methods-O${opt}"
           cmake -S reconstruction/recovered -B "$build" \
