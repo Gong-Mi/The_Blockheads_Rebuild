@@ -1,5 +1,6 @@
 """Uncompressed default vs compressed negative control on synthetic loopback."""
 from pathlib import Path
+from server_announcement import decode_message, Announcement
 import subprocess,tempfile,re,plistlib,select
 root=Path(__file__).resolve().parent
 with tempfile.TemporaryDirectory() as t:
@@ -16,7 +17,9 @@ with tempfile.TemporaryDirectory() as t:
   assert positive.returncode==0,positive
   match=re.search(r'packet_bytes=(\d+) hex=([0-9a-f]+)',positive.stdout);assert match,positive.stdout
   raw=bytes.fromhex(match[2]);assert len(raw)==int(match[1]);assert raw[:2]==b'\x23\x26'
-  assert plistlib.loads(raw[2:])['worldID']=='synthetic-fixture'
+  announcement=decode_message(raw)
+  assert isinstance(announcement,Announcement)
+  assert announcement.fields['worldID']=='synthetic-fixture'
   print('PASS synthetic ENet: compressed rejected; default CONNECT+payload received')
  finally:
   server.terminate();server.wait(timeout=5)
