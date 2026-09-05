@@ -83,6 +83,14 @@ class DispatchDataflowTest(unittest.TestCase):
                        'ldr r1, [fp, -0x20]', 'blx r3')
         self.assertEqual(row['selector_status'], 'unknown')
 
+    def test_background_store_rejects_changed_instructions(self):
+        from unittest.mock import patch
+        import recover_drawframe_background_store as recovery
+        memory = Memory()
+        with patch.object(recovery, 'ELFMemory', return_value=memory):
+            with self.assertRaisesRegex(ValueError, 'ARM instruction mismatch'):
+                recovery.recover(Path('unused-by-fixture'))
+
     def test_stack_roundtrip(self):
         row, = analyze('ldr r3, [0x104]', 'ldr r1, [0x100]',
                        'str r1, [fp, -0x20]', 'movw r1, 0',

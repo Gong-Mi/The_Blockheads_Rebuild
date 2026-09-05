@@ -33,3 +33,32 @@ stack-address escape handling, or independent bounded native evidence proving
 this particular destination cannot alias fp-0x34. The generic alias rule remains.
 
 No runtime tracing, receiver recovery, game launch or device acceptance performed.
+
+## Bounded native destination recovered
+
+`tools/recover_drawframe_background_store.py` has been executed against the pinned
+original ELF. It validates 12 ARM instruction words before reporting:
+
+- PIC base: 0x0105faf4
+- ivar GOT slot: 0x0105d6cc (R_ARM_RELATIVE, nonzero file addend)
+- ivar-offset symbol address: 0x00f33884
+- symbol: OBJC_IVAR_$_EvolutionViewController.tempBackgroundView
+- ivar byte offset: 44
+- store at 0x00781b64: 32-bit zero to self + 44
+
+The bounded path removes the temporary background view from its superview,
+releases it, then clears the ivar. The zero is saved at fp-0x38 and restored
+into r2 immediately before the store; the ivar-offset pointer is saved at fp-0x3c.
+
+This supplies field semantics, NOT a generic proof of entry receiver/stack
+non-aliasing. The analyzer's unknown-store invalidation remains unchanged.
+In particular, a symbol name and known ivar offset cannot alone prove the
+runtime address of self; do not turn the candidate chain into universal alias facts.
+
+Reproduce (radare2 not required; pyelftools required):
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 tools/recover_drawframe_background_store.py \
+  "$HOME/blockheads-work/extracted/lib/armeabi-v7a/libApplication.so" \
+  --output "$TMPDIR/blockheads-background-store.json"
+```
