@@ -50,6 +50,26 @@
       "literal": "0x00927194",
       "symbol": "OBJC_IVAR_$_GameView.pinchZooming",
       "offset": 184
+    },
+    {
+      "literal": "0x00927358",
+      "symbol": "OBJC_IVAR_$_GameView.hasPinchVelocity",
+      "offset": 172
+    },
+    {
+      "literal": "0x0092735c",
+      "symbol": "OBJC_IVAR_$_GameView.pinchVelocity",
+      "offset": 164
+    },
+    {
+      "literal": "0x009273b8",
+      "symbol": "OBJC_IVAR_$_GameView.lastPinchFactor",
+      "offset": 168
+    },
+    {
+      "literal": "0x00927548",
+      "symbol": "OBJC_IVAR_$_GameView.pinchStartScale",
+      "offset": 160
     }
   ],
   "vfp_constants": [
@@ -82,12 +102,30 @@
       "word": "0xeeb22a00",
       "immediate8": 32,
       "value": 8.0
+    },
+    {
+      "instruction": "0x00926490",
+      "word": "0xeeb32a00",
+      "immediate8": 48,
+      "value": 16.0
+    },
+    {
+      "instruction": "0x00926628",
+      "word": "0xeeb40a00",
+      "immediate8": 64,
+      "value": 0.125
+    },
+    {
+      "instruction": "0x0092662c",
+      "word": "0xeeb61a00",
+      "immediate8": 96,
+      "value": 0.5
     }
   ],
   "call_count": 80,
   "indirect_call_count": 41,
   "direct_call_count": 39,
-  "reviewed_selector_route_count": 13,
+  "reviewed_selector_route_count": 16,
   "inertia_stop_squared_speed": 0.10000000149011612,
   "calls": [
     {
@@ -318,8 +356,8 @@
     },
     {
       "call": "0x00926440",
-      "selector_reviewed": null,
-      "status": "indexed only; middle semantics pending",
+      "selector_reviewed": "translatingToGoal",
+      "status": "reviewed boundary slice",
       "kind": "indirect_blx"
     },
     {
@@ -327,13 +365,13 @@
       "kind": "direct_bl",
       "target_va": "0x001c281c",
       "disassembly_target_label": "loc.imp.objc_msgSend",
-      "selector_reviewed": null,
-      "status": "indexed only; semantics pending"
+      "selector_reviewed": "takingPhoto",
+      "status": "reviewed local selector route"
     },
     {
       "call": "0x009266bc",
-      "selector_reviewed": null,
-      "status": "indexed only; middle semantics pending",
+      "selector_reviewed": "pinchScaleChanged",
+      "status": "reviewed boundary slice",
       "kind": "indirect_blx"
     },
     {
@@ -656,5 +694,5 @@
     "stack0_double": "self.pinchScale",
     "stack8_bool": "self.scrolling || self.pinching"
   },
-  "boundary": "Entry gates and outgoing ABI reviewed; middle input/zoom logic not recovered. No runtime equivalence claim."
+  "boundary": "Entry/outgoing ABI and selected inertia/zoom slices reviewed; remaining input branches pending. No runtime equivalence claim."
 }

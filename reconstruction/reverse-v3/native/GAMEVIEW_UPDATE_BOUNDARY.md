@@ -5,7 +5,7 @@ against the pinned original ELF. The complete callsite inventory is now 80:
 41 indirect blx and 39 direct bl. The previous 41-only count omitted direct
 calls and was NOT the full function denominator. Twelve direct calls target
 Objective-C send/stret labels; the other 27 are C/C++/runtime helpers.
-Thirteen local selector routes are reviewed, while remaining entries retain an
+Sixteen local selector routes are reviewed, while remaining entries retain an
 explicit indexed-only status. This is not full update/camera/input recovery.
 
 ## Entry
@@ -98,6 +98,31 @@ It emits persistScale/handledBranch explicitly but performs no Android settings
 writes and is not integrated into the game loop. RED was observed, O0/O2 pass.
 As for inertia, finite normal IEEE inputs/FP-contract-off are the tested boundary,
 not runtime differential, NaN/FTZ or full pinch-gesture implementation.
+
+## Pinch inertia (0x009263e0..0x009266d0)
+
+Only considered when pinchZooming was false. hasPinchVelocity(offset172) false
+skips it; world.translatingToGoal true clears that flag before arithmetic.
+The float pinchVelocity(offset164) becomes
+`float(double(v) * (1.0 - double(float(dt*16.0))))`.
+If abs(newVelocity) < float(0.01), clear the flag and do not update factor/scale.
+Otherwise lastPinchFactor(offset168) += float(newVelocity*dt). If that result
+is below float(0.01), clear the flag without dividing.
+
+The ratio uses FLOAT division of pinchStartScale(offset160)/lastPinchFactor,
+then widens to double pinchScale(offset152). world.takingPhoto at 0x00926624
+selects a minimum of 0.125 versus normal 0.5. These are VFPExpandImm decoded
+values (raw text prints misleading 1/5). There is no upper clamp in this slice.
+After the minimum clamp the method calls self.pinchScaleChanged at 0x009266bc.
+The method does not directly persist a setting here.
+
+reconstruction/recovered/pinch_inertia.* reproduces the finite-input numerical
+and flag result with an explicit notifyScaleChanged request. takingPhoto and
+goal results are supplied snapshots: actual Objective-C query timing and the
+intermediate pre-clamp pinchScale store are not simulated. Therefore this helper
+is not a drop-in callback implementation or an original-runtime equivalence claim.
+RED was observed; O0/O2 tests cover branch precedence, cancellation, both stop
+gates, photo/normal minimum and absence of an invented upper bound.
 
 ## Reproduce
 

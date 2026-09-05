@@ -31,7 +31,7 @@ def recover(path):
         elf = ELFFile(stream)
         symbols = {s['st_value']: s.name for s in elf.get_section_by_name('.dynsym').iter_symbols()}
     fields = []
-    for literal in (0x9268ec, 0x9268f0, 0x9268f4, 0x926b58, 0x928008, 0x92800c, 0x92801c, 0x926b68, 0x926b70, 0x927194):
+    for literal in (0x9268ec, 0x9268f0, 0x9268f4, 0x926b58, 0x928008, 0x92800c, 0x92801c, 0x926b68, 0x926b70, 0x927194, 0x927358, 0x92735c, 0x9273b8, 0x927548):
         pointer = memory.word((base + memory.word(literal)) & 0xffffffff)
         name = symbols.get(pointer)
         if not name or not name.startswith('OBJC_IVAR_$_GameView.'):
@@ -43,6 +43,8 @@ def recover(path):
                                     (0x925d14, 0x926b6c, 'translatingToGoal'),
                                     (0x9263a8, 0x926904, 'standardUserDefaults'),
                                     (0x9263d8, 0x927354, 'setFloat:forKey:'),
+                                    (0x926440, 0x926b6c, 'translatingToGoal'),
+                                    (0x9266bc, 0x927554, 'pinchScaleChanged'),
                                     (0x927fd4, 0x92802c, 'update:accurateDT:pinchScale:dragInProgress:')):
         name = memory.selectors.get(memory.word((base + memory.word(literal)) & 0xffffffff))
         if name != expected:
@@ -59,7 +61,8 @@ def recover(path):
                        0x926000: (0x926fac, 'worldWidthMacro'),
                        0x926058: (0x926e08, 'translation'),
                        0x9260e4: (0x926e08, 'translation'),
-                       0x926150: (0x926fac, 'worldWidthMacro')}
+                       0x926150: (0x926fac, 'worldWidthMacro'),
+                       0x926624: (0x927550, 'takingPhoto')}
     for address, label in re.findall(r'(0x[0-9a-f]{8})\s+[0-9a-f]{8}\s+bl\s+([^\n]+)', text):
         address = int(address, 16)
         selector = None
@@ -81,7 +84,7 @@ def recover(path):
         row.setdefault('kind', 'indirect_blx')
     calls.sort(key=lambda row: int(row['call'], 16))
     constants = []
-    for address, width in ((0x925a18, 32), (0x925a7c, 32), (0x925ab4, 64), (0x925d54, 32), (0x9262b8, 32)):
+    for address, width in ((0x925a18, 32), (0x925a7c, 32), (0x925ab4, 64), (0x925d54, 32), (0x9262b8, 32), (0x926490, 32), (0x926628, 32), (0x92662c, 32)):
         word = memory.word(address)
         imm8 = (((word >> 16) & 15) << 4) | (word & 15)
         constants.append({'instruction': f'0x{address:08x}', 'word': f'0x{word:08x}',
@@ -96,7 +99,7 @@ def recover(path):
             'outgoing_abi_reviewed': {'r0': 'self.world', 'r2': 'dt saved at fp-0x28',
              'r3': 'accurateDT saved at fp-0x2c', 'stack0_double': 'self.pinchScale',
              'stack8_bool': 'self.scrolling || self.pinching'},
-            'boundary': 'Entry gates and outgoing ABI reviewed; middle input/zoom logic not recovered. No runtime equivalence claim.'}
+            'boundary': 'Entry/outgoing ABI and selected inertia/zoom slices reviewed; remaining input branches pending. No runtime equivalence claim.'}
 
 
 def main():
