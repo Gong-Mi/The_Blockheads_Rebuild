@@ -17,6 +17,15 @@ class SliceGateTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'exactly cover'):
             verify_disassembly(Memory(), text + text, 0x10, 0x18)
 
+    def test_initopengl_map_covers_every_indirect_call(self):
+        import re
+        from recover_gameview_initopengl import CALL_LITERALS, NATIVE
+        text = (NATIVE / 'disasm_gameview_initopengl.txt').read_text()
+        sites = {int(a, 16) for a in re.findall(r'(0x[0-9a-f]{8})\s+[0-9a-f]{8}\s+blx\s', text)}
+        self.assertEqual(sites, set(CALL_LITERALS))
+        self.assertEqual(len(sites), 23)
+        self.assertEqual(len(re.findall(r'\sbl sym.imp.__wrap_gl', text)), 7)
+
     def test_reviewed_paths_have_unique_call_sites(self):
         self.assertEqual(len(SLICES), 11)
         self.assertEqual(len({row[0] for row in SLICES}), 11)
