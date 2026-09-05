@@ -1,0 +1,12 @@
+name: Protocol probe method
+on:
+  pull_request:
+    branches: [reverse-v3]
+  workflow_dispatch:
+jobs:
+  transport:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y libenet-dev
+      - run: python3 tools/test_enet_loopback.py
