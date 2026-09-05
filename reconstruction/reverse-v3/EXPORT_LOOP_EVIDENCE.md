@@ -310,6 +310,17 @@ DynamicWorld -update:accurateDT:isSimulation:
 
 这一步只完成“有界机器码 + 引用证据”收集，**没有把引用文件的排序当作执行顺序**。下一步仍需从反汇编的基本块中配对 selector 装载、receiver、参数和 `objc_msgSend`/间接调用，再记录条件边和副作用。
 
+已增加保守的 ARM 间接调用索引：
+
+```text
+native/indirect_calls_draw_frame.tsv
+  11 个 blx 点，selector_pair/receiver_pair/argument_pair 全部 unknown
+native/indirect_calls_dynamic_world_update.tsv
+  71 个 blx 点，selector_pair/receiver_pair/argument_pair 全部 unknown
+```
+
+该索引只回答“哪里发生了寄存器间接调用”，不回答“调用了哪个 Objective-C selector”。只有后续寄存器数据流能证明 selector、receiver 和参数关系时，才允许将 unknown 改为 confirmed。
+
 ## 下一步
 
 ```text
