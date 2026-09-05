@@ -17,9 +17,7 @@ Linking the static archive into the APK without executing the entry and supplyin
 ## Integration prerequisites and acceptance
 
 1. Six complete World getters and the complete local `setTranslation:` body are recovered in the method library (see `WORLD_VIEW_CONTRACTS.md` and `WORLD_TRANSLATION.md`). The setter shares accurateTranslation/width state with the getters, preserves wrapping and quantization, and requires imported math and sound-dispatch interfaces. `TranslationSoundBridge` now executes the recovered singleton/listener local methods (see `SOUND_MANAGER.md`); alloc/init, imported math and OpenAL remain mandatory external interfaces. A production FrameWorld adapter remains missing. Keep `World.update` explicitly pending until its body/dependencies are recovered. Never use an empty override to call the adapter complete.
-2. Recover GameView input-state producers and window lanes. The method map currently indexes, but does not thereby recover:
-   - `pinchGesture:velocity:state:center:numberOfTouches:` — `0x0092d1c4`.
-   - `pinchZoomToScale:` — `0x00940f24`.
+2. The complete local `pinchGesture:velocity:state:center:numberOfTouches:` (0x0092d1c4), `pinchZoomToScale:` (0x00940f24), and `shouldAllowDoubleTap` (0x00940f90) are recovered in `gameview_input.cpp`, sharing the update method state. See `GAMEVIEW_INPUT.md`; mandatory World/UI/self calls are not completed callees. Remaining input/window producers include:
    - primary start/move/end/cancel — `0x0092be2c`, `0x0092c148`, `0x0092c3f4`, `0x0092c638`.
    - secondary start/move/end/cancel — `0x0092c89c`, `0x0092cba8`, `0x0092cdd8`, `0x0092cfa0`.
    - `init` — `0x0091c780`; inspect initialization/window construction before assigning width/height or pixel/world units to the four `windowInfo` lanes.

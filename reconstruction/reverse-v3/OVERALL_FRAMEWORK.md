@@ -15,8 +15,9 @@
 新增：World.setTranslation完整局部方法（单次环绕、原输入量化、声音调用后字段重读）→ 同库CTest
 声音依赖：MJSoundManager.instance/setListenerPosition:zoom:/listenerPos完整局部方法
           → TranslationSoundBridge实际执行setter→singleton→listener链；alloc/init/OpenAL仍是强制接口
-账本：两个GameView+七个World+三个MJSoundManager方法；原版运行时验证仍为0
-下一批：World.update与input/window状态构造、声音init和平台音频/导入数学边界 → 游戏帧循环适配
+输入生产者：完整pinchGesture + pinchZoomToScale + shouldAllowDoubleTap → 共享GameViewState和update方法测试
+账本：五个GameView+七个World+三个MJSoundManager方法；原版运行时验证仍为0
+下一批：updateTranslation完整callee、其余touch/window构造、World.update、声音init和平台边界 → 游戏帧循环适配
 行为接入：已接成可执行方法/依赖模块，但尚未接入Android游戏循环；不是游戏完成
 画面还原：完整Tile字段→draw pass→atlas→shader链仍为独立验收线
 平台现代化：现有Android构建独立验证；不以CI绿代替设备/游戏验收

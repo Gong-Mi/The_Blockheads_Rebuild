@@ -53,8 +53,8 @@ jobs:
           --json /tmp/reverse-coverage-ledger.json \
           --markdown /tmp/reverse-coverage-ledger.md
         grep -F "Methods: 10478" /tmp/reverse-coverage-ledger.md
-        grep -F "semantics | 12" /tmp/reverse-coverage-ledger.md
-        grep -F "implemented | 12" /tmp/reverse-coverage-ledger.md
+        grep -F "semantics | 15" /tmp/reverse-coverage-ledger.md
+        grep -F "implemented | 15" /tmp/reverse-coverage-ledger.md
         grep -F "behavior-verified | 0" /tmp/reverse-coverage-ledger.md
       working-directory: .
 
@@ -132,6 +132,7 @@ jobs:
       run: |
         export PYTHONDONTWRITEBYTECODE=1
         python3 tools/test_gameview_method_map.py
+        CXX=c++ python3 tools/gameview_input_test.py
         c++ -std=c++17 -O2 -DNDEBUG -DSOUND_ASSIGNMENT_NEGATIVE_CONTROL \
           -Ireconstruction/recovered tools/test_sound_manager.cpp reconstruction/recovered/world_translation.cpp \
           -o /tmp/sound-manager-negative
