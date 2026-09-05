@@ -141,6 +141,11 @@ def transfer(op, incoming, memory):
     if mnemonic == 'push':
         # Stack-relative slots change, but fp-relative locals remain stable.
         return {k: v for k, v in state.items() if not (isinstance(k, tuple) and k[1] == 'r13')}
+    if mnemonic in ('strb', 'strh'):
+        if '!' in operands or '],' in operands:
+            return {}  # base writeback is not modelled
+        # Partial/aliased writes invalidate saved words, not CPU registers.
+        return {k: v for k, v in state.items() if isinstance(k, str)}
     if len(args) == 2 and mnemonic in ('str', 'ldr'):
         if '!' in operands or '],' in operands:
             return {}  # writeback/post-indexed addressing is not modelled

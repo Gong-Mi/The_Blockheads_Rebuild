@@ -72,6 +72,17 @@ class DispatchDataflowTest(unittest.TestCase):
                        'ldr r2, [r1], 4', 'blx r3')
         self.assertEqual(row['selector_status'], 'unknown')
 
+    def test_byte_store_preserves_unmodified_registers(self):
+        row, = analyze('ldr r3, [0x104]', 'ldr r1, [0x100]',
+                       'strb r0, [r2]', 'blx r3')
+        self.assertEqual(row['selector_name'], 'removeFromSuperview')
+
+    def test_partial_stack_store_invalidates_saved_word(self):
+        row, = analyze('ldr r3, [0x104]', 'ldr r1, [0x100]',
+                       'str r1, [fp, -0x20]', 'strb r0, [fp, -0x1f]',
+                       'ldr r1, [fp, -0x20]', 'blx r3')
+        self.assertEqual(row['selector_status'], 'unknown')
+
     def test_stack_roundtrip(self):
         row, = analyze('ldr r3, [0x104]', 'ldr r1, [0x100]',
                        'str r1, [fp, -0x20]', 'movw r1, 0',
