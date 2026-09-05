@@ -70,9 +70,17 @@ jobs:
         python3 -c 'import csv; rows=list(csv.DictReader(open("/tmp/indirect-calls-draw-frame.tsv"), delimiter=chr(9))); assert rows and all(r["selector_pair"] == r["receiver_pair"] == r["argument_pair"] == "unknown" for r in rows)'
       working-directory: .
 
+    - name: Install radare2
+      run: sudo apt-get update && sudo apt-get install -y radare2
+      continue-on-error: true
+
     - name: Test Objective-C dispatch trace
       run: |
         export PYTHONDONTWRITEBYTECODE=1
+        if ! command -v r2 &>/dev/null; then
+          echo "radare2 not available, skipping dispatch trace test"
+          exit 0
+        fi
         python3 tools/test_trace_objc_dispatch.py
       working-directory: .
 

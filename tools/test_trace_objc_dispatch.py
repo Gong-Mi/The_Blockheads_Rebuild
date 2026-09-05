@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import csv
+import os
 import subprocess
 import tempfile
 import unittest
@@ -11,12 +12,18 @@ TOOL = ROOT / "tools/trace_objc_dispatch.py"
 
 class ObjCDispatchTraceTest(unittest.TestCase):
     def test_drawframe_trace_produces_candidates_and_unknowns(self):
+        elf = os.environ.get("BLOCKHEADS_ELF")
+        if not elf:
+            home = Path.home()
+            elf = home / "blockheads-work/extracted/lib/armeabi-v7a/libApplication.so"
+        if not Path(elf).exists():
+            self.skipTest(f"original ELF not available at {elf}")
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             output = root / "trace.tsv"
             subprocess.run(
                 ["python3", str(TOOL),
-                 str(Path.home() / "blockheads-work/extracted/lib/armeabi-v7a/libApplication.so"),
+                 str(elf),
                  "--imp", "0x00781a44",
                  "--output", str(output)],
                 check=True,
