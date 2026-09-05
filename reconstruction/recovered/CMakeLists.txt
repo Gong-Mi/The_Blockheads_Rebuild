@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 project(BlockheadsRecoveredView LANGUAGES CXX)
 
 add_library(blockheads_recovered_view STATIC
-    gameview_update.cpp projection_update.cpp
+    gameview_update.cpp projection_update.cpp world_view_contracts.cpp
     pinch_return.cpp translation_return.cpp zoom_settle.cpp)
 target_include_directories(blockheads_recovered_view PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(blockheads_recovered_view PUBLIC cxx_std_17)
@@ -19,5 +19,8 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         add_executable(test_projection_update ../../tools/test_projection_update.cpp)
         target_link_libraries(test_projection_update PRIVATE blockheads_recovered_view)
         add_test(NAME projection_update COMMAND test_projection_update)
+        add_executable(test_world_view_contracts ../../tools/test_world_view_contracts.cpp)
+        target_link_libraries(test_world_view_contracts PRIVATE blockheads_recovered_view)
+        add_test(NAME world_view_contracts COMMAND test_world_view_contracts)
     endif()
 endif()
