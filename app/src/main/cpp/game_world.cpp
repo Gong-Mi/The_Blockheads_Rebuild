@@ -2,6 +2,7 @@
 #include "item_manager.h"
 #include <cmath>
 #include <algorithm>
+#include <chrono>
 
 GameWorld::GameWorld() {
     for(int x=0; x<MAX_CHUNKS_X; x++) 
@@ -267,29 +268,39 @@ void GameWorld::updateTemperature() {
 void GameWorld::workerLoop() {
     int tick = 0;
     while (!stopThread) {
-        tick++;
-        if (tick % 10 == 0) updateFluids(); 
-        if (tick % 30 == 0) updateElectricity(); 
-        if (tick % 60 == 0) updateTemperature(); // Update temperature every ~1 sec
-        if (tick % 100 == 0) updateVegetation(); 
-        
-        std::pair<int, int> task;
+        std::pair<int, int> task{-1, -1};
         {
             std::unique_lock<std::mutex> lock(queueMutex);
-            queueCV.wait(lock, [this]{ return !taskQueue.empty() || stopThread; });
+            // Simulation must advance even when the camera has not queued a
+            // chunk. The old wait made fluids, power, temperature and plants
+            // stop completely as soon as the task queue became idle.
+            queueCV.wait_for(lock, std::chrono::milliseconds(50), [this]{
+                return !taskQueue.empty() || stopThread;
+            });
             if (stopThread) return;
-            task = taskQueue.front();
-            taskQueue.pop();
+            if (!taskQueue.empty()) {
+                task = taskQueue.front();
+                taskQueue.pop();
+            }
         }
-        
-        int cx = task.first;
-        int cy = task.second;
-        int wCx = wrapChunkX(cx);
-        
-        if (!chunkGrid[wCx][cy]) {
-            generateChunkSync(cx, cy);
-        } else if (chunkGrid[wCx][cy]->dirty) {
-            processChunkAsync(chunkGrid[wCx][cy]);
+
+        tick++;
+        if (tick % 10 == 0) updateFluids();
+        if (tick % 30 == 0) updateElectricity();
+        if (tick % 60 == 0) updateTemperature();
+        if (tick % 100 == 0) updateVegetation();
+
+        if (task.first >= 0) {
+            int cx = task.first;
+            int cy = task.second;
+            int wCx = wrapChunkX(cx);
+            if (cy >= 0 && cy < MAX_CHUNKS_Y) {
+                if (!chunkGrid[wCx][cy]) {
+                    generateChunkSync(cx, cy);
+                } else if (chunkGrid[wCx][cy]->dirty) {
+                    processChunkAsync(chunkGrid[wCx][cy]);
+                }
+            }
         }
     }
 }
@@ -348,7 +359,7 @@ void GameWorld::buildMeshCache(PhysicalBlock* block) {
                 block->vertexCache.push_back(1.0f);
                 block->vertexCache.push_back(1.0f);
                 block->vertexCache.push_back(1.0f);
-                block->vertexCache.push_back(1.0f);
+                block->vertexCache.push_back(0.0f); // Unpainted: paint alpha must be zero
             };
             
             if (renderType == 1) { // Plant (Flat Quad)

@@ -2,9 +2,10 @@ name: Android CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, rebuild-v2, reverse-v3 ]
   pull_request:
     branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -29,8 +30,166 @@ jobs:
       run: chmod +x gradlew
       working-directory: .
 
+    - name: Validate render contract
+      run: python3 tools/validate_render_contract.py
+      working-directory: .
+
+    - name: Validate runtime lifecycle contract
+      run: python3 tools/validate_runtime_contract.py
+      working-directory: .
+
+    - name: Validate reverse evidence contract
+      run: python3 tools/validate_reverse_evidence.py
+      working-directory: .
+
+    - name: Test reverse coverage ledger
+      run: |
+        export PYTHONDONTWRITEBYTECODE=1
+        python3 tools/test_reverse_coverage_ledger.py
+        python3 tools/build_reverse_coverage_ledger.py \
+          reconstruction/reverse-v3/native/libApplication_objc_methods.tsv \
+          --evidence-root reconstruction/reverse-v3/native \
+          --implementation-records reconstruction/reverse-v3/native/implemented_methods.json \
+          --json /tmp/reverse-coverage-ledger.json \
+          --markdown /tmp/reverse-coverage-ledger.md
+        grep -F "Methods: 10478" /tmp/reverse-coverage-ledger.md
+        grep -F "semantics | 15" /tmp/reverse-coverage-ledger.md
+        grep -F "implemented | 15" /tmp/reverse-coverage-ledger.md
+        grep -F "behavior-verified | 0" /tmp/reverse-coverage-ledger.md
+      working-directory: .
+
+    - name: Test ARM indirect call index
+      run: |
+        export PYTHONDONTWRITEBYTECODE=1
+        python3 tools/test_arm_indirect_calls.py
+        python3 tools/index_arm_indirect_calls.py \
+          reconstruction/reverse-v3/native/disasm_draw_frame.txt \
+          --output /tmp/indirect-calls-draw-frame.tsv
+        python3 tools/index_arm_indirect_calls.py \
+          reconstruction/reverse-v3/native/disasm_dynamic_world_update.txt \
+          --output /tmp/indirect-calls-dynamic-world-update.tsv
+        test "$(($(wc -l < /tmp/indirect-calls-draw-frame.tsv) - 1))" -eq 11
+        test "$(($(wc -l < /tmp/indirect-calls-dynamic-world-update.tsv) - 1))" -eq 71
+        python3 -c 'import csv; rows=list(csv.DictReader(open("/tmp/indirect-calls-draw-frame.tsv"), delimiter=chr(9))); assert rows and all(r["selector_pair"] == r["receiver_pair"] == r["argument_pair"] == "unknown" for r in rows)'
+      working-directory: .
+
+    # These execute the analyzer without r2 or a copyrighted original ELF.
+    # OriginalELFTest is a separate local acceptance layer, not claimed by CI.
+    - name: Test Objective-C dispatch dataflow (synthetic contracts)
+      run: |
+        export PYTHONDONTWRITEBYTECODE=1
+        python3 tools/test_trace_objc_dispatch.py DispatchDataflowTest
+        python3 tools/test_drawframe_slices.py
+      working-directory: .
+
+    - name: Test recovered scroll inertia numerical slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_scroll_inertia.cpp \
+            reconstruction/recovered/scroll_inertia.cpp -o /tmp/test_scroll_inertia
+          /tmp/test_scroll_inertia
+        done
+
+    - name: Test recovered pinch return numerical slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_pinch_return.cpp \
+            reconstruction/recovered/pinch_return.cpp -o /tmp/test_pinch_return
+          /tmp/test_pinch_return
+        done
+
+    - name: Test recovered pinch inertia numerical slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_pinch_inertia.cpp \
+            reconstruction/recovered/pinch_inertia.cpp -o /tmp/test_pinch_inertia
+          /tmp/test_pinch_inertia
+        done
+
+    - name: Test recovered translation return numerical slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_translation_return.cpp \
+            reconstruction/recovered/translation_return.cpp -o /tmp/test_translation_return
+          /tmp/test_translation_return
+        done
+
+    - name: Test recovered zoom settling paths
+      run: |
+        python3 tools/test_zoom_settle_evidence.py
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_zoom_settle.cpp \
+            reconstruction/recovered/zoom_settle.cpp -o /tmp/test_zoom_settle
+          /tmp/test_zoom_settle
+        done
+
+    - name: Test complete recovered GameView method batch
+      run: |
+        export PYTHONDONTWRITEBYTECODE=1
+        python3 tools/test_gameview_method_map.py
+        CXX=c++ python3 tools/gameview_input_test.py
+        c++ -std=c++17 -O2 -DNDEBUG -DSOUND_ASSIGNMENT_NEGATIVE_CONTROL \
+          -Ireconstruction/recovered tools/test_sound_manager.cpp reconstruction/recovered/world_translation.cpp \
+          -o /tmp/sound-manager-negative
+        python3 -c 'import subprocess; p=subprocess.run(["/tmp/sound-manager-negative"],capture_output=True,text=True); print("sound negative control:",p.returncode,p.stderr); assert p.returncode != 0 and "p==&r.allocated" in p.stderr'
+        # Prove the new setter assertions survive the Release NDEBUG flag.
+        c++ -std=c++17 -O2 -DNDEBUG -DTRANSLATION_ASSIGNMENT_NEGATIVE_CONTROL \
+          -Ireconstruction/recovered tools/test_world_translation.cpp \
+          -o /tmp/world-translation-negative
+        python3 -c 'import subprocess; p=subprocess.run(["/tmp/world-translation-negative"],capture_output=True,text=True); print("setter negative control:",p.returncode,p.stderr); assert p.returncode != 0 and "s.accurateTranslation.x==expected" in p.stderr'
+        for opt in 0 2; do
+          build="/tmp/blockheads-methods-O${opt}"
+          cmake -S reconstruction/recovered -B "$build" \
+            -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE="-O${opt} -DNDEBUG"
+          cmake --build "$build" --parallel 2
+          ctest --test-dir "$build" --output-on-failure --verbose
+        done
+
+    - name: Test original 1.7.6 save decoder
+      run: |
+        c++ -std=c++17 -Wall -Wextra -Werror \
+          -Iapp/src/main/cpp \
+          tools/test_original_save_format.cpp \
+          app/src/main/cpp/original_save_format.cpp \
+          -lz -o /tmp/test_original_save_format
+        /tmp/test_original_save_format
+      working-directory: .
+
+    - name: Generate native item data for unit tests
+      run: |
+        mkdir -p /tmp/blockheads-generated
+        python3 tools/process_items.py \
+          assets/gamedata/items.json \
+          assets/gamedata/recipes.json \
+          /tmp/blockheads-generated/game_item_ids.h \
+          /tmp/blockheads-generated/game_item_data.cpp \
+          /tmp/blockheads-generated/game_recipe_data.h \
+          /tmp/blockheads-generated/game_recipe_data.cpp
+      working-directory: .
+
+    - name: Test inventory stack limits
+      run: |
+        c++ -std=c++17 -Wall -Wextra -Werror -ffunction-sections -fdata-sections \
+          -I/tmp/blockheads-generated \
+          -Iapp/src/main/cpp \
+          tools/test_inventory.cpp \
+          app/src/main/cpp/entity_manager.cpp \
+          -Wl,--gc-sections \
+          -o /tmp/test_inventory
+        /tmp/test_inventory
+      working-directory: .
+
     - name: Build with Gradle
       run: ./gradlew assembleDebug
+      working-directory: .
+
+    - name: Validate packaged APK contract
+      run: python3 tools/validate_apk.py app/build/outputs/apk/debug/app-debug.apk
       working-directory: .
 
     - name: Upload APK

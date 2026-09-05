@@ -185,7 +185,7 @@ public class GameActivity extends Activity {
         } else {
             if (mItemsAtlas == null) {
                 try {
-                    mItemsAtlas = android.graphics.BitmapFactory.decodeStream(getAssets().open("Items.png"));
+                    mItemsAtlas = android.graphics.BitmapFactory.decodeStream(getAssets().open("HDTex/Items.png"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -201,8 +201,8 @@ public class GameActivity extends Activity {
                     android.graphics.Bitmap icon = android.graphics.Bitmap.createBitmap(mItemsAtlas, col * size, row * size, size, size);
                     slot.setImageBitmap(icon);
                 } catch (Exception e) {
-                    // Fallback to color if crop fails
-                    slot.setColorFilter(0xFF888888);
+                    slot.setImageDrawable(null);
+                    android.util.Log.e("BlockheadsUI", "Invalid original item-atlas crop for type " + type, e);
                 }
             }
         }
@@ -218,8 +218,6 @@ public class GameActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         
-        initNative(getExternalFilesDir(null).getAbsolutePath());
-
         android.widget.FrameLayout layout = new android.widget.FrameLayout(this);
         mGameView = new GameView(this);
         layout.addView(mGameView);
@@ -262,7 +260,7 @@ public class GameActivity extends Activity {
         
         try {
             android.graphics.Bitmap bgBtn = android.graphics.BitmapFactory.decodeStream(getAssets().open("InventoryButtonBackground.png"));
-            android.graphics.Bitmap selBox = android.graphics.BitmapFactory.decodeStream(getAssets().open("SelectionBox40.png"));
+            android.graphics.Bitmap selBox = android.graphics.BitmapFactory.decodeStream(getAssets().open("selectionBox40.png"));
             
             android.graphics.drawable.BitmapDrawable bgDrawable = new android.graphics.drawable.BitmapDrawable(getResources(), bgBtn);
             final android.graphics.drawable.BitmapDrawable selDrawable = new android.graphics.drawable.BitmapDrawable(getResources(), selBox);
@@ -312,13 +310,15 @@ public class GameActivity extends Activity {
         
         layout.addView(hotbar, hotbarParams);
 
-        // --- Basket Button (Open Inventory) ---
+        // --- Basket Button (Open Inventory): original APK inventory glyph ---
         android.widget.ImageButton basketBtn = new android.widget.ImageButton(this);
         try {
-            android.graphics.Bitmap basketImg = android.graphics.BitmapFactory.decodeStream(getAssets().open("chestBackground.png")); // Placeholder
-            basketBtn.setImageBitmap(basketImg); 
-        } catch(Exception e) { basketBtn.setBackgroundColor(0xFF8B4513); }
-        
+            android.graphics.Bitmap basketImg = android.graphics.BitmapFactory.decodeStream(getAssets().open("inventoryButton26.png"));
+            basketBtn.setImageBitmap(basketImg);
+        } catch(Exception e) {
+            android.util.Log.e("BlockheadsUI", "Missing original inventoryButton26.png", e);
+        }
+
         basketBtn.setOnClickListener(v -> {
             if (mInventoryOverlay != null) {
                 mInventoryOverlay.setVisibility(mInventoryOverlay.getVisibility() == android.view.View.VISIBLE ? android.view.View.GONE : android.view.View.VISIBLE);
@@ -695,7 +695,7 @@ public class GameActivity extends Activity {
 
     private void updateSlotImageDirect(android.widget.ImageView view, int type) {
         if (mItemsAtlas == null) {
-            try { mItemsAtlas = android.graphics.BitmapFactory.decodeStream(getAssets().open("Items.png")); } catch (Exception e) {}
+            try { mItemsAtlas = android.graphics.BitmapFactory.decodeStream(getAssets().open("HDTex/Items.png")); } catch (Exception e) {}
         }
         if (mItemsAtlas != null && type > 0) {
             int idx = type - 1;

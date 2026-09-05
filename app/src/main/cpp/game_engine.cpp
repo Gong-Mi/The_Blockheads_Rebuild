@@ -42,13 +42,25 @@ void logToFile(const char* fmt, ...) {
 // --- Shared Helper for Surface Created ---
 void onSurfaceCreatedInternal(JNIEnv* env, jobject assetMgr) {
     logToFile("onSurfaceCreatedInternal called");
-    if (!g_renderer) {
-        g_renderer = new WorldRenderer();
-        g_renderer->init(AAssetManager_fromJava(env, assetMgr));
-        logToFile("Renderer created and initialized");
-    } else {
-        logToFile("Renderer already exists, skipping re-init");
+
+    // MainMenuActivity and GameActivity each create their own GLSurfaceView and
+    // EGL context.  Program, texture and VBO names from the previous context are
+    // invalid here even though the C++ pointer survives the Activity transition.
+    // Rebuild the renderer and all context-owned resources for this surface.
+    delete g_renderer;
+    g_renderer = new WorldRenderer();
+    g_renderer->init(AAssetManager_fromJava(env, assetMgr));
+
+    // updateMesh() clears meshReady after uploading a chunk to a VBO.  Those
+    // VBOs belonged to the discarded context, while vertexCache remains valid
+    // CPU data.  Queue every cached chunk for upload into the new context.
+    if (g_world) {
+        std::lock_guard<std::mutex> chunksLock(g_world->chunksMutex);
+        for (PhysicalBlock* chunk : g_world->chunks) {
+            if (chunk) chunk->meshReady = true;
+        }
     }
+    logToFile("Renderer replaced and initialized for current EGL context");
 }
 
 extern "C" JNIEXPORT void JNICALL
@@ -88,6 +100,7 @@ extern "C" JNIEXPORT void JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_onSurfaceCreatedNative(JNIEnv* env, jobject obj, jobject assetMgr) {
     std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
     onSurfaceCreatedInternal(env, assetMgr);
+    if (g_renderer) g_renderer->menuMode = false;
 }
 
 extern "C" JNIEXPORT void JNICALL
@@ -134,6 +147,13 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
     }
     LOGI("Native Engine Ready");
     logToFile("Native Init Complete");
+    jclass clazz = env->GetObjectClass(obj);
+    jmethodID debugMethod = env->GetMethodID(clazz, "updateDebugInfo", "(Ljava/lang/String;)V");
+    if (debugMethod) {
+        jstring ready = env->NewStringUTF("Ready");
+        env->CallVoidMethod(obj, debugMethod, ready);
+        env->DeleteLocalRef(ready);
+    }
 }
 
 extern "C" JNIEXPORT void JNICALL
@@ -436,6 +456,18 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
 
             { std::lock_guard<std::mutex> lock(g_world->chunksMutex); g_renderer->updateMesh(g_world->chunks); }
             g_renderer->renderFrame();
+            if (frameLog % 60 == 0) {
+                char status[128];
+                snprintf(status, sizeof(status), "Ready chunks=%zu vertices=%d",
+                         g_renderer->chunkMeshes.size(), g_renderer->totalVertexCount);
+                jclass statusClazz = env->GetObjectClass(obj);
+                jmethodID statusMethod = env->GetMethodID(statusClazz, "updateDebugInfo", "(Ljava/lang/String;)V");
+                if (statusMethod) {
+                    jstring statusString = env->NewStringUTF(status);
+                    env->CallVoidMethod(obj, statusMethod, statusString);
+                    env->DeleteLocalRef(statusString);
+                }
+            }
         }
     }
 }

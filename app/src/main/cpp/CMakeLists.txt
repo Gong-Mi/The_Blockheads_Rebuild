@@ -36,6 +36,7 @@ add_library(native-lib SHARED
             blockhead_ai.cpp
             world_renderer.cpp
             compression_manager.cpp
+            original_save_format.cpp
             command_processor.cpp
             item_manager.cpp
             generated/game_item_data.cpp
@@ -47,8 +48,10 @@ add_library(native-lib SHARED
 find_library(log-lib log)
 find_library(android-lib android)
 find_library(gles2-lib GLESv2)
+find_library(z-lib z)
 
 target_link_libraries(native-lib
                        ${log-lib}
                        ${android-lib}
-                       ${gles2-lib})
+                       ${gles2-lib}
+                       ${z-lib})

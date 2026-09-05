@@ -2,6 +2,7 @@
 #define ENTITY_MANAGER_H
 
 #include <vector>
+#include <string>
 #include <cmath>
 #include "game_world.h"
 
