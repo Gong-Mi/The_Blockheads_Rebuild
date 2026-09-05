@@ -121,9 +121,11 @@ def location(text, state, pc):
     offset = value(parts[1], state, pc) if len(parts) == 2 else 0
     if not isinstance(offset, int):
         return None
+    base = value(parts[0], state, pc)
+    if isinstance(base, tuple) and base[0] == 'frame':
+        return ('stack', 'entry', base[1] + offset)
     if reg(parts[0]) in ('r11', 'r13'):
         return ('stack', reg(parts[0]), offset)
-    base = value(parts[0], state, pc)
     return (base + offset) & 0xffffffff if isinstance(base, int) else None
 
 
@@ -133,14 +135,33 @@ def transfer(op, incoming, memory):
     args = [p.strip() for p in operands.split(',', 1)]
     pc = op['addr'] + 8
     if mnemonic in ('bl', 'blx'):
+        if any(isinstance(incoming.get(name), tuple) and incoming[name][0] == 'frame'
+               for name in ('r0', 'r1', 'r2', 'r3')):
+            # A callee receiving a known stack pointer may mutate saved words.
+            state = {k: v for k, v in state.items() if isinstance(k, str)}
         for name in ('r0', 'r1', 'r2', 'r3', 'r12', 'r14'):
             state.pop(name, None)
         return state
     if mnemonic == 'b' or mnemonic in {'b' + c for c in CONDITIONS} or mnemonic in ('cmp', 'cmn', 'tst', 'teq', 'nop'):
         return state
     if mnemonic == 'push':
-        # Stack-relative slots change, but fp-relative locals remain stable.
-        return {k: v for k, v in state.items() if not (isinstance(k, tuple) and k[1] == 'r13')}
+        match = re.fullmatch(r'\{([^}]+)\}', operands)
+        names = [p.strip() for p in match[1].split(',')] if match else []
+        if not names or not all(REG.fullmatch(n) for n in names):
+            return {}  # register ranges/writeback variants are not modelled
+        names = sorted({reg(n) for n in names}, key=lambda n: int(n[1:]))
+        base = incoming.get('r13')
+        if not (isinstance(base, tuple) and base[0] == 'frame') or 'r13' in names or 'r15' in names:
+            return {}
+        offset = base[1] - 4 * len(names)
+        state = {k: v for k, v in state.items()
+                 if not (isinstance(k, tuple) and
+                         (k[1] != 'entry' or k[2] < base[1] and offset < k[2] + 4))}
+        for index, name in enumerate(names):
+            if name in incoming:
+                state[('stack', 'entry', offset + index * 4)] = incoming[name]
+        state['r13'] = ('frame', offset)
+        return state
     if mnemonic in ('strb', 'strh'):
         if '!' in operands or '],' in operands:
             return {}  # base writeback is not modelled
@@ -184,6 +205,8 @@ def transfer(op, incoming, memory):
             a, b = (value(p, incoming, pc) for p in parts)
             if isinstance(a, int) and isinstance(b, int):
                 result = (a + b if mnemonic == 'add' else a - b) & 0xffffffff
+            elif isinstance(a, tuple) and a[0] == 'frame' and isinstance(b, int):
+                result = ('frame', a[1] + b if mnemonic == 'add' else a[1] - b)
         state.pop(destination, None)
         if destination in ('r11', 'r13'):
             state = {k: v for k, v in state.items() if not (isinstance(k, tuple) and k[1] == destination)}
@@ -210,7 +233,7 @@ def analyze_ops(ops, memory):
     if not ops:
         return []
     by_address = {op['addr']: i for i, op in enumerate(ops)}
-    states = {0: {}}
+    states = {0: {'r13': ('frame', 0)}}
     queue = deque([0])
     while queue:
         i = queue.popleft()

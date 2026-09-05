@@ -51,6 +51,24 @@ original drawFrame remains 11 calls / 2 candidates.
 Next precision work should canonicalize fp/sp to a proved stack coordinate,
 including prologue adjustments, rather than deleting this alias invalidation.
 
+## Canonical entry-SP coordinates
+
+The analyzer now seeds entry SP as a symbolic frame origin. Supported mov/add/sub
+and explicit-register push propagate offsets; fp/sp accesses normalize to the same
+entry-frame coordinate when provable. Word overlap checks then compare actual
+intervals instead of assuming different base-register names are disjoint.
+
+Tests cover prologue aliasing, proven cross-base non-overlap/overlap, push register
+order, and a changing-SP loop losing a nonconstant base. Passing a known symbolic
+stack pointer in r0-r3 invalidates saved words across the call.
+
+Local result: 21 dependency-free tests plus one original ELF test pass. Original
+output remains 11 calls / 2 candidates. This is bounded constant propagation,
+not complete may-alias/escape analysis: unknown or path-merged pointer provenance
+is not a proof of non-aliasing, and candidates must not be promoted to confirmed.
+Unsupported register ranges and non-modelled operations remain conservative.
+The unknown self-store rule has not been relaxed.
+
 ## Bounded native destination recovered
 
 `tools/recover_drawframe_background_store.py` has been executed against the pinned

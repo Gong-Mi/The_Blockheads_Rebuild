@@ -103,6 +103,43 @@ class DispatchDataflowTest(unittest.TestCase):
                        'ldr r1, [fp, -0x20]', 'blx r3')
         self.assertEqual(row['selector_status'], 'unknown')
 
+    def test_prologue_fp_sp_same_slot(self):
+        row, = analyze('push {fp, lr}', 'mov fp, sp', 'sub sp, sp, 0x20',
+                       'ldr r3, [0x104]', 'ldr r1, [0x100]',
+                       'str r1, [fp, -0x10]', 'ldr r1, [sp, 0x10]', 'blx r3')
+        self.assertEqual(row['selector_status'], 'candidate')
+
+    def test_proven_cross_base_nonoverlap(self):
+        row, = analyze('mov fp, sp', 'sub sp, sp, 0x40',
+                       'ldr r3, [0x104]', 'ldr r1, [0x100]',
+                       'str r1, [fp, -0x10]', 'str r0, [sp, 0]',
+                       'ldr r1, [fp, -0x10]', 'blx r3')
+        self.assertEqual(row['selector_status'], 'candidate')
+
+    def test_proven_cross_base_overlap(self):
+        row, = analyze('mov fp, sp', 'sub sp, sp, 0x10',
+                       'ldr r3, [0x104]', 'ldr r1, [0x100]',
+                       'str r1, [fp, -0x10]', 'str r0, [sp]',
+                       'ldr r1, [fp, -0x10]', 'blx r3')
+        self.assertEqual(row['selector_status'], 'unknown')
+
+    def test_stack_adjustment_backedge_loses_nonconstant_base(self):
+        row, = analyze('ldr r4, [0x104]', 'ldr r1, [0x100]',
+                       'str r1, [sp]', 'sub sp, sp, 4', 'bne 0x100c',
+                       'ldr r1, [sp, 4]', 'blx r4')
+        self.assertEqual(row['selector_status'], 'unknown')
+
+    def test_push_preserves_register_order_and_frame_coordinates(self):
+        row, = analyze('ldr r4, [0x100]', 'ldr r5, [0x104]',
+                       'push {r5, r4}', 'ldr r1, [sp]', 'blx r5')
+        self.assertEqual(row['selector_status'], 'candidate')
+
+    def test_escaped_stack_address_invalidates_slots_across_call(self):
+        row, = analyze('ldr r4, [0x104]', 'ldr r1, [0x100]',
+                       'str r1, [sp]', 'mov r0, sp', 'blx r4',
+                       'ldr r1, [sp]', 'blx r4')[-1:]
+        self.assertEqual(row['selector_status'], 'unknown')
+
     def test_stack_roundtrip(self):
         row, = analyze('ldr r3, [0x104]', 'ldr r1, [0x100]',
                        'str r1, [fp, -0x20]', 'movw r1, 0',
