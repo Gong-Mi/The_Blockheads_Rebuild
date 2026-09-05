@@ -88,6 +88,15 @@ jobs:
           /tmp/test_scroll_inertia
         done
 
+    - name: Test recovered pinch return numerical slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_pinch_return.cpp \
+            reconstruction/recovered/pinch_return.cpp -o /tmp/test_pinch_return
+          /tmp/test_pinch_return
+        done
+
     - name: Test original 1.7.6 save decoder
       run: |
         c++ -std=c++17 -Wall -Wextra -Werror \

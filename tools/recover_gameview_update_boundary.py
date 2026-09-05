@@ -31,7 +31,7 @@ def recover(path):
         elf = ELFFile(stream)
         symbols = {s['st_value']: s.name for s in elf.get_section_by_name('.dynsym').iter_symbols()}
     fields = []
-    for literal in (0x9268ec, 0x9268f0, 0x9268f4, 0x926b58, 0x928008, 0x92800c, 0x92801c, 0x926b68, 0x926b70):
+    for literal in (0x9268ec, 0x9268f0, 0x9268f4, 0x926b58, 0x928008, 0x92800c, 0x92801c, 0x926b68, 0x926b70, 0x927194):
         pointer = memory.word((base + memory.word(literal)) & 0xffffffff)
         name = symbols.get(pointer)
         if not name or not name.startswith('OBJC_IVAR_$_GameView.'):
@@ -41,6 +41,8 @@ def recover(path):
     for call, literal, expected in ((0x925c10, 0x926b54, 'loadComplete'),
                                     (0x925c5c, 0x926b5c, 'isSimulating'),
                                     (0x925d14, 0x926b6c, 'translatingToGoal'),
+                                    (0x9263a8, 0x926904, 'standardUserDefaults'),
+                                    (0x9263d8, 0x927354, 'setFloat:forKey:'),
                                     (0x927fd4, 0x92802c, 'update:accurateDT:pinchScale:dragInProgress:')):
         name = memory.selectors.get(memory.word((base + memory.word(literal)) & 0xffffffff))
         if name != expected:
@@ -79,7 +81,7 @@ def recover(path):
         row.setdefault('kind', 'indirect_blx')
     calls.sort(key=lambda row: int(row['call'], 16))
     constants = []
-    for address, width in ((0x925a18, 32), (0x925a7c, 32), (0x925ab4, 64), (0x925d54, 32)):
+    for address, width in ((0x925a18, 32), (0x925a7c, 32), (0x925ab4, 64), (0x925d54, 32), (0x9262b8, 32)):
         word = memory.word(address)
         imm8 = (((word >> 16) & 15) << 4) | (word & 15)
         constants.append({'instruction': f'0x{address:08x}', 'word': f'0x{word:08x}',

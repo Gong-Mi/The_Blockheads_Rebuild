@@ -5,7 +5,7 @@ against the pinned original ELF. The complete callsite inventory is now 80:
 41 indirect blx and 39 direct bl. The previous 41-only count omitted direct
 calls and was NOT the full function denominator. Twelve direct calls target
 Objective-C send/stret labels; the other 27 are C/C++/runtime helpers.
-Eleven local selector routes are reviewed, while remaining entries retain an
+Thirteen local selector routes are reviewed, while remaining entries retain an
 explicit indexed-only status. This is not full update/camera/input recovery.
 
 ## Entry
@@ -79,6 +79,25 @@ beyond these ordinary ABI semantics remain a separate runtime boundary.
 stret ABI differs from normal send: r0=result buffer, r1=receiver, r2=selector.
 These calls were omitted by the previous blx-only inventory and must remain
 separate from ordinary r0-receiver/r1-selector analysis.
+
+## Pinch return-to-one branch (0x00926278..0x009263dc)
+
+pinchZooming (offset184) selects this branch before hasPinchVelocity handling.
+The existing double pinchScale at offset152 evolves as:
+`scale += (1.0 - scale) * double(float32(dt * 8.0))`.
+The stop test casts the NEW scale to float, subtracts float 1, takes absolute
+value, then compares strictly below the literal float32(0.01) at 0x00926664.
+
+On completion, clear pinchZooming (0x00926388), obtain standardUserDefaults
+(0x009263a8), and setFloat(currentScaleFloat, "pinchScale") (0x009263d8).
+The scale is NOT snapped to exactly one. The branch then jumps to 0x009266d0;
+clearing the flag does not fall into the pinch-velocity branch in the same frame.
+
+Executable numerical/state source: reconstruction/recovered/pinch_return.*.
+It emits persistScale/handledBranch explicitly but performs no Android settings
+writes and is not integrated into the game loop. RED was observed, O0/O2 pass.
+As for inertia, finite normal IEEE inputs/FP-contract-off are the tested boundary,
+not runtime differential, NaN/FTZ or full pinch-gesture implementation.
 
 ## Reproduce
 
