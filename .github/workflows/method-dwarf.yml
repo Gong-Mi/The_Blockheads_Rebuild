@@ -1,0 +1,21 @@
+name: DWARF method evidence
+on:
+  pull_request:
+    branches: [reverse-v3]
+  workflow_dispatch:
+jobs:
+  types:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m pip install pyelftools
+      - run: python3 tools/test_server_types.py
+      - name: Check complete committed enum inventory
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('reconstruction/reverse-v3/native/server_types.json'))
+          assert d['counts']=={'definitions_merged':1120,'structures':2,'enums':53}
+          assert sum(len(e['values']) for e in d['enums'].values())==1817
+          assert d['conflicts']==[]
+          PY
