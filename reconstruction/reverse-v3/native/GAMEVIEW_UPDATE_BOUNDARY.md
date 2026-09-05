@@ -5,8 +5,10 @@ against the pinned original ELF. The complete callsite inventory is now 80:
 41 indirect blx and 39 direct bl. The previous 41-only count omitted direct
 calls and was NOT the full function denominator. Twelve direct calls target
 Objective-C send/stret labels; the other 27 are C/C++/runtime helpers.
-Forty-nine local selector routes are reviewed, while remaining entries retain an
-explicit indexed-only status. This is not full update/camera/input recovery.
+All fifty-three Objective-C selector routes are now reviewed. Non-ObjC calls
+remain separately indexed here; their executable bindings and the full logical
+method are in GAMEVIEW_METHOD.md/gameview_method.json. This does not establish
+downstream World implementation, Android game integration or runtime parity.
 
 ## Entry
 
@@ -176,6 +178,8 @@ PYTHONDONTWRITEBYTECODE=1 python3 tools/recover_gameview_update_boundary.py \
 ```
 
 Post-cap zoom region is now recovered as snapshot C++: see GAMEVIEW_ZOOM_SETTLE.md.
-Next: remaining entry-time/horizontal-query routes, entry-time source and full callback reload/effect ordering before frame integration.
+The full method, entry accounting, callback reload order and projection dependency
+now execute in blockheads_recovered_view. Next: World/input state contracts and
+a verified game-loop adapter (not merely adding the archive to an APK).
 Use the full 80-entry inventory; selector-route review is not whole-callee or
 whole-branch semantic completion. Do not infer call order from selector refs.

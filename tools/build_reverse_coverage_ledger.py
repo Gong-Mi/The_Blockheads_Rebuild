@@ -73,7 +73,36 @@ def implementations_in_files(files: Iterable[Path]) -> tuple[set[str], set[str]]
     return refs, cfg
 
 
-def build(rows: list[dict[str, str]], refs: set[str], cfg: set[str]) -> dict:
+def read_implementation_records(path: Path, source_root: Path) -> dict:
+    data = json.loads(path.read_text())
+    if data.get("schema") != 1 or not isinstance(data.get("methods"), list):
+        raise ValueError("invalid implementation manifest schema")
+    records = {}
+    root = source_root.resolve()
+    for record in data["methods"]:
+        required = {"implementation", "class", "kind", "selector", "types", "source", "test", "evidence", "scope", "integration"}
+        if not required.issubset(record) or not all(isinstance(record[k], str) and record[k] for k in required):
+            raise ValueError("incomplete implementation record")
+        imp = record["implementation"]
+        if not re.fullmatch(r"0x[0-9a-f]{8}", imp) or imp in records:
+            raise ValueError("invalid/duplicate record implementation")
+        if record["integration"] != "recovered-method-module":
+            raise ValueError("unsupported implementation scope")
+        for field in ("source", "test", "evidence"):
+            relative = Path(record[field])
+            target = (root / relative).resolve()
+            if relative.is_absolute() or not target.is_relative_to(root) or not target.is_file():
+                raise ValueError("missing/outside implementation record file: " + record[field])
+        records[imp] = record
+    return records
+
+
+def build(rows: list[dict[str, str]], refs: set[str], cfg: set[str], records: dict | None = None) -> dict:
+    records = records or {}
+    by_imp = {row["implementation"]: row for row in rows}
+    for imp, record in records.items():
+        if imp not in by_imp or any(record.get(k) != by_imp[imp][k] for k in ("implementation", "class", "kind", "selector", "types")):
+            raise ValueError("implementation record identity mismatch: " + imp)
     entries = []
     for row in rows:
         imp = row["implementation"]
@@ -92,6 +121,15 @@ def build(rows: list[dict[str, str]], refs: set[str], cfg: set[str]) -> dict:
             "implementation_status": "not-audited",
             "behavior_status": "not-tested",
         })
+    for entry in entries:
+        record = records.get(entry["implementation"])
+        if record:
+            for stage in ("refs", "cfg", "semantics", "implemented"):
+                entry["stages"][stage] = True
+            entry["semantic_status"] = "reviewed-with-recorded-boundaries"
+            entry["implementation_status"] = "explicit-record"
+            entry["implementation_record"] = record
+            # Local interface/fixture tests do not establish original-runtime parity.
     counts = {stage: sum(e["stages"][stage] for e in entries) for stage in STAGES}
     return {
         "schema": 1,
@@ -119,9 +157,9 @@ def markdown(ledger: dict, source: Path) -> str:
         "| indexed | %d | present in the method map |" % counts["indexed"],
         "| refs | %d | explicit implementation owner in refs/disassembly evidence |" % counts["refs"],
         "| cfg | %d | explicit IMP owner in CFG statistics or bounded disassembly; not a completeness claim |" % counts["cfg"],
-        "| semantics | 0 | requires an explicit semantic audit; never inferred from names |",
-        "| implemented | 0 | requires an explicit replacement implementation record |",
-        "| behavior-verified | 0 | requires a controlled runtime behavior record |",
+        "| semantics | %d | explicit reviewed method records and their stated limits |" % counts["semantics"],
+        "| implemented | %d | explicit source/test/evidence records; not gameplay integration |" % counts["implemented"],
+        "| behavior-verified | %d | controlled original-runtime evidence, not local fixtures |" % counts["behavior-verified"],
         "",
         "Unknown/conditional/indirect cases remain unknown. This file is an index,",
         "not a completion percentage or an equivalence claim.",
@@ -136,10 +174,13 @@ def main() -> int:
     parser.add_argument("--evidence-root", type=Path, required=True)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--markdown", type=Path, required=True)
+    parser.add_argument("--implementation-records", type=Path)
+    parser.add_argument("--source-root", type=Path, default=Path(__file__).resolve().parents[1])
     args = parser.parse_args()
     rows = read_methods(args.methods)
     refs, cfg = implementations_in_files(evidence_files(args.evidence_root))
-    ledger = build(rows, refs, cfg)
+    records = read_implementation_records(args.implementation_records, args.source_root) if args.implementation_records else {}
+    ledger = build(rows, refs, cfg, records)
     args.json.parent.mkdir(parents=True, exist_ok=True)
     args.json.write_text(json.dumps(ledger, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     args.markdown.parent.mkdir(parents=True, exist_ok=True)

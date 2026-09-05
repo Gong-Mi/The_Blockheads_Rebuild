@@ -6,12 +6,14 @@
 
 ```text
 原版证据：固定 ELF → update 全部2460字核对 → 80调用完整清单
-                                      └→ 49处局部 selector 路由已审
-源码恢复：scroll inertia → pinch return → pinch inertia → translation return/初段scale cap
-          独立C++已测试      已测试          已测试          已测试
-          → zoom settle：全部10条收敛路径/门控/通知/持久化请求/末尾factor写回已测试
-下一片段：入口计时源码与剩余调用路由 → 回调后字段重读/完整effect顺序 → 帧编排接入
-行为接入：上述独立片段尚未接入游戏循环；不得按整个update已恢复计数
+                                      └→ 53处ObjC路由+27个C/C++调用全部有源码绑定
+方法批次：GameView.update（完整逻辑方法）
+          → pinchScaleChanged（真实矩阵/cameraZ写入）→ 完整矩阵helper
+          → blockheads_recovered_view静态库；O0/O2方法轨迹与回调突变测试
+旧切片：五组数值helper继续作回归；不再以每个片段单独触发完整CI
+账本：两个GameView方法以显式source/test/evidence记录登记；原版运行时验证仍为0
+下一批：World平移/update契约与input/window状态构造 → 游戏帧循环适配
+行为接入：已接成可执行方法/依赖模块，但尚未接入Android游戏循环；不是游戏完成
 画面还原：完整Tile字段→draw pass→atlas→shader链仍为独立验收线
 平台现代化：现有Android构建独立验证；不以CI绿代替设备/游戏验收
 最终闭环：原版世界加载→移动/挖掘/获得物品/放置/合成→保存→重载（未完成）
@@ -19,6 +21,7 @@
 
 本检查点记录源码和证据，不把方法索引数量、局部路由或测试数量换算成整款游戏完成率。
 精确调用边界与复现命令见 `native/GAMEVIEW_UPDATE_BOUNDARY.md`。
+生产适配边界见 `native/GAME_ADAPTER_BOUNDARY.md`：当前 APK 直接修改 camera、部分逻辑采用固定0.05步长；不能仅链接静态库就把它标为原版帧循环接入。
 远端构建结果在规范 PR #1 的 exact-head 评论中单独登记。
 
 ## 证据对象

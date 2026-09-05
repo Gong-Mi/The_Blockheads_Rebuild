@@ -1,0 +1,23 @@
+cmake_minimum_required(VERSION 3.16)
+project(BlockheadsRecoveredView LANGUAGES CXX)
+
+add_library(blockheads_recovered_view STATIC
+    gameview_update.cpp projection_update.cpp
+    pinch_return.cpp translation_return.cpp zoom_settle.cpp)
+target_include_directories(blockheads_recovered_view PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_view PUBLIC cxx_std_17)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(blockheads_recovered_view PUBLIC -fno-fast-math -ffp-contract=off)
+endif()
+
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    include(CTest)
+    if(BUILD_TESTING)
+        add_executable(test_gameview_update ../../tools/test_gameview_update.cpp)
+        target_link_libraries(test_gameview_update PRIVATE blockheads_recovered_view)
+        add_test(NAME gameview_update COMMAND test_gameview_update)
+        add_executable(test_projection_update ../../tools/test_projection_update.cpp)
+        target_link_libraries(test_projection_update PRIVATE blockheads_recovered_view)
+        add_test(NAME projection_update COMMAND test_projection_update)
+    endif()
+endif()

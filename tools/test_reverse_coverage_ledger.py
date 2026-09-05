@@ -58,6 +58,40 @@ class CoverageLedgerTest(unittest.TestCase):
             self.assertEqual(found_refs, {'0x00000010', '0x00000040'})
             self.assertEqual(found_cfg, {'0x00000010'})
 
+    def test_explicit_method_record_does_not_claim_original_runtime(self):
+        from build_reverse_coverage_ledger import build
+        row={'implementation':'0x00000010','class':'View','kind':'instance','selector':'update','types':'v@:'}
+        record={**row,'source':'view.cpp','test':'test_view.cpp','evidence':'view.md',
+                'scope':'typed method only','integration':'recovered-method-module'}
+        result=build([row],set(),set(),{row['implementation']:record})
+        self.assertEqual(result['stage_counts']['implemented'],1)
+        self.assertEqual(result['stage_counts']['semantics'],1)
+        self.assertEqual(result['stage_counts']['behavior-verified'],0)
+        self.assertEqual(result['entries'][0]['implementation_record']['scope'],'typed method only')
+
+    def test_record_identity_and_file_validation(self):
+        from build_reverse_coverage_ledger import build, read_implementation_records
+        row={'implementation':'0x00000010','class':'View','kind':'instance','selector':'update','types':'v@:'}
+        record={**row,'source':'view.cpp','test':'test.cpp','evidence':'proof.md',
+                'scope':'typed method','integration':'recovered-method-module'}
+        for bad in ({**record,'selector':'other'}, {**record,'implementation':'0x00000020'}):
+            with self.assertRaisesRegex(ValueError,'identity mismatch'):
+                build([row],set(),set(),{bad['implementation']:bad})
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            for name in ('view.cpp','test.cpp','proof.md'):
+                (root/name).write_text('fixture')
+            manifest=root/'records.json'
+            manifest.write_text(json.dumps({'schema':1,'methods':[record]}))
+            self.assertEqual(len(read_implementation_records(manifest,root)),1)
+            for bad in ({**record,'source':'missing.cpp'}, {**record,'source':'../outside.cpp'},
+                        {**record,'implementation':'0x10'}, {**record,'scope':''}):
+                manifest.write_text(json.dumps({'schema':1,'methods':[bad]}))
+                with self.assertRaises(ValueError): read_implementation_records(manifest,root)
+            manifest.write_text(json.dumps({'schema':1,'methods':[record,record]}))
+            with self.assertRaisesRegex(ValueError,'duplicate'):
+                read_implementation_records(manifest,root)
+
     def test_duplicate_imp_is_rejected(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

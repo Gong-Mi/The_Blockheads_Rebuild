@@ -38,7 +38,9 @@ def recover(path):
             raise ValueError('missing field evidence')
         fields.append({'literal': f'0x{literal:08x}', 'symbol': name, 'offset': memory.word(pointer)})
     reviewed = {}
-    for call, literal, expected in ((0x925c10, 0x926b54, 'loadComplete'),
+    for call, literal, expected in ((0x925b04, 0x926904, 'standardUserDefaults'),
+                                    (0x925b34, 0x926900, 'setDouble:forKey:'),
+                                    (0x925c10, 0x926b54, 'loadComplete'),
                                     (0x925c5c, 0x926b5c, 'isSimulating'),
                                     (0x925d14, 0x926b6c, 'translatingToGoal'),
                                     (0x9263a8, 0x926904, 'standardUserDefaults'),
@@ -71,7 +73,9 @@ def recover(path):
                        0x926150: (0x926fac, 'worldWidthMacro'),
                        0x926624: (0x927550, 'takingPhoto'),
                        0x926764: (0x926e08, 'translation'),
-                       0x926a44: (0x926e10, 'setTranslation:')}
+                       0x926a44: (0x926e10, 'setTranslation:'),
+                       0x9261d0: (0x926fac, 'worldWidthMacro'),
+                       0x926228: (0x926e08, 'translation')}
     for address, label in re.findall(r'(0x[0-9a-f]{8})\s+[0-9a-f]{8}\s+bl\s+([^\n]+)', text):
         address = int(address, 16)
         selector = None
@@ -114,7 +118,7 @@ def recover(path):
             'outgoing_abi_reviewed': {'r0': 'self.world', 'r2': 'dt saved at fp-0x28',
              'r3': 'accurateDT saved at fp-0x2c', 'stack0_double': 'self.pinchScale',
              'stack8_bool': 'self.scrolling || self.pinching'},
-            'boundary': 'Entry/outgoing ABI and selected inertia/zoom slices reviewed; remaining input branches pending. No runtime equivalence claim.'}
+            'boundary': 'Full typed method module is mapped separately in gameview_method.json; this report tracks local selector routes. World/game adapter and original-runtime parity unverified.'}
 
 
 def main():
