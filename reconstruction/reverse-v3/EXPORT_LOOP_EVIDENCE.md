@@ -321,6 +321,20 @@ native/indirect_calls_dynamic_world_update.tsv
 
 该索引只回答“哪里发生了寄存器间接调用”，不回答“调用了哪个 Objective-C selector”。只有后续寄存器数据流能证明 selector、receiver 和参数关系时，才允许将 unknown 改为 confirmed。
 
+已增加保守的 Objective-C dispatch 追踪工具：
+
+- `tools/trace_objc_dispatch.py`
+  - 使用 r2 `pdfj` 提取 ARM 基本块和指令级 ESIL。
+  - 尝试追踪 `blx` 目标寄存器到最近的 selector 装载点。
+  - 支持常见的 Apportable PIC 序列：`ldr base, [got]`、`add base, pc, got`、`ldr reg, [base, offset]`。
+  - 若无法完整解析 GOT 内容或寄存器链，保持 `unknown`。
+- `tools/test_trace_objc_dispatch.py`
+  - 对 `drawFrame` 的 11 个 `blx` 点运行追踪。
+  - 断言所有 `selector_status`、`receiver_status`、`argument_status` 均为 `unknown`。
+  - 防止未经验证的配对被标记为 confirmed。
+
+当前 `drawFrame` 追踪结果：11 个调用点，0 个候选 selector。这表示工具保守地拒绝配对，而不是证明这些调用没有 Objective-C 语义。
+
 ## 下一步
 
 ```text
