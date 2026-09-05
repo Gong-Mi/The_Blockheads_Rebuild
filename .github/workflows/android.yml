@@ -42,6 +42,19 @@ jobs:
       run: python3 tools/validate_reverse_evidence.py
       working-directory: .
 
+    - name: Test reverse coverage ledger
+      run: |
+        export PYTHONDONTWRITEBYTECODE=1
+        python3 tools/test_reverse_coverage_ledger.py
+        python3 tools/build_reverse_coverage_ledger.py \
+          reconstruction/reverse-v3/native/libApplication_objc_methods.tsv \
+          --evidence-root reconstruction/reverse-v3/native \
+          --json /tmp/reverse-coverage-ledger.json \
+          --markdown /tmp/reverse-coverage-ledger.md
+        grep -F "Methods: 10478" /tmp/reverse-coverage-ledger.md
+        grep -F "semantics | 0" /tmp/reverse-coverage-ledger.md
+      working-directory: .
+
     - name: Test original 1.7.6 save decoder
       run: |
         c++ -std=c++17 -Wall -Wextra -Werror \
