@@ -22,7 +22,7 @@ Setter code `[0x005531d0,0x0055365c)`, pool/padding through `0x005536a4`. Region
 
 - `Vector2::operator float*()` at 0x4bdaac is fully recovered: five instructions, returns this unchanged. Inlined field/local access is the complete helper behavior, not a stub.
 - PLT 0x1c3d4c resolves through relocation 0x1060228 to **undefined imported `__wrap_fmodf`**, not an in-ELF arithmetic implementation. Production requires `WorldTranslationRuntime::wrapFmodf`; tests provide `std::fmod` explicitly as a test boundary, not as proof of the original wrapper's exceptional-value/FP-environment semantics.
-- PLT 0x1c281c resolves to objc_msgSend. Class and selectors are proven; dynamic instance/listener callee bodies are **not recovered in this batch**. Mandatory pure-virtual interfaces expose both dispatches instead of silently omitting them. Original Objective-C receiver identity, substitute instances, exception behavior and audio engine internals remain outside acceptance.
+- PLT 0x1c281c resolves to objc_msgSend. Class and selectors are proven; dynamic instance/listener callee bodies were **not recovered in the setter batch**; the follow-up `SOUND_MANAGER.md` now recovers their complete local bodies and provides `TranslationSoundBridge`, with alloc/init/OpenAL still external. Mandatory pure-virtual interfaces expose both dispatches instead of silently omitting them. Original Objective-C receiver identity, substitute instances, exception behavior and audio engine internals remain outside acceptance.
 - Portable C++ models value/state/order under ordinary floating-point operation. Original FPSCR exception flags, DN/FZ/subnormal configuration, NaN payload propagation and ARM memory concurrency are not verified. No original runtime executed.
 
 ## Executed acceptance

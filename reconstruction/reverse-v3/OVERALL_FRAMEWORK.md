@@ -13,8 +13,10 @@
 旧切片：五组数值helper继续作回归；不再以每个片段单独触发完整CI
 直接依赖：World六个完整getter（含cameraUI调用与width内存屏障）→ 同库CTest
 新增：World.setTranslation完整局部方法（单次环绕、原输入量化、声音调用后字段重读）→ 同库CTest
-账本：两个GameView方法+七个World方法显式登记；原版运行时验证仍为0
-下一批：World.update与input/window状态构造、声音动态callee/导入数学边界 → 游戏帧循环适配
+声音依赖：MJSoundManager.instance/setListenerPosition:zoom:/listenerPos完整局部方法
+          → TranslationSoundBridge实际执行setter→singleton→listener链；alloc/init/OpenAL仍是强制接口
+账本：两个GameView+七个World+三个MJSoundManager方法；原版运行时验证仍为0
+下一批：World.update与input/window状态构造、声音init和平台音频/导入数学边界 → 游戏帧循环适配
 行为接入：已接成可执行方法/依赖模块，但尚未接入Android游戏循环；不是游戏完成
 画面还原：完整Tile字段→draw pass→atlas→shader链仍为独立验收线
 平台现代化：现有Android构建独立验证；不以CI绿代替设备/游戏验收
