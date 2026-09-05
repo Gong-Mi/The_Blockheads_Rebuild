@@ -43,6 +43,21 @@ class CoverageLedgerTest(unittest.TestCase):
             self.assertEqual(ledger["entries"][0]["semantic_status"], "unknown")
             self.assertFalse(ledger["entries"][1]["stages"]["refs"])
 
+    def test_evidence_owners_exclude_boundaries_callees_and_values(self):
+        from build_reverse_coverage_ledger import implementations_in_files
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            disasm = root / 'disasm_sample.txt'
+            disasm.write_text('# implementation: 0x00000010\n'
+                              '# ARM.exidx end: 0x00000020\n'
+                              '0x00000014 bl 0x00000030\n')
+            refs = root / 'refs_sample.tsv'
+            refs.write_text('implementation\treference_address\tvalue\n'
+                            '0x00000040\t0x00000050\t0x00000060\n')
+            found_refs, found_cfg = implementations_in_files([disasm, refs])
+            self.assertEqual(found_refs, {'0x00000010', '0x00000040'})
+            self.assertEqual(found_cfg, {'0x00000010'})
+
     def test_duplicate_imp_is_rejected(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

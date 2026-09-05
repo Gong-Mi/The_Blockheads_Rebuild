@@ -50,11 +50,26 @@ def implementations_in_files(files: Iterable[Path]) -> tuple[set[str], set[str]]
     cfg: set[str] = set()
     for path in files:
         text = path.read_text(encoding="utf-8", errors="replace")
-        addresses = {a.lower() for a in re.findall(r"0x[0-9a-fA-F]{8}", text)}
-        if path.suffix in {".tsv", ".txt"} and ("refs_" in path.name or "disasm_" in path.name):
-            refs |= addresses
-        if "CONTROL_FLOW_STATS" in path.name or path.name.startswith("disasm_"):
-            cfg |= addresses
+        if path.name.startswith("refs_") and path.suffix == ".tsv":
+            with path.open(encoding="utf-8", newline="") as stream:
+                reader = csv.DictReader(stream, delimiter="\t")
+                if not reader.fieldnames or "implementation" not in reader.fieldnames:
+                    raise ValueError(f"missing implementation column: {path}")
+                for row in reader:
+                    address = row.get("implementation", "")
+                    if not re.fullmatch(r"0x[0-9a-fA-F]{8}", address or ""):
+                        raise ValueError(f"invalid evidence implementation in {path}: {address!r}")
+                    refs.add(address.lower())
+        elif path.name.startswith("disasm_") and path.suffix == ".txt":
+            # Only explicit function owners, never instruction/callee/end addresses.
+            owners = {a.lower() for a in re.findall(
+                r"^# implementation: (0x[0-9a-fA-F]{8})\s*$", text, re.MULTILINE)}
+            refs |= owners
+            cfg |= owners
+        elif "CONTROL_FLOW_STATS" in path.name and path.suffix == ".md":
+            # Explicit IMP labels only; prose mentions do not establish ownership.
+            cfg |= {a.lower() for a in re.findall(
+                r"^IMP:\s*`?(0x[0-9a-fA-F]{8})`?\s*$", text, re.MULTILINE)}
     return refs, cfg
 
 
@@ -102,8 +117,8 @@ def markdown(ledger: dict, source: Path) -> str:
         "| stage | count | meaning |",
         "|---|---:|---|",
         "| indexed | %d | present in the method map |" % counts["indexed"],
-        "| refs | %d | implementation address appears in checked-in refs/disassembly evidence |" % counts["refs"],
-        "| cfg | %d | address appears in CFG statistics or bounded disassembly evidence |" % counts["cfg"],
+        "| refs | %d | explicit implementation owner in refs/disassembly evidence |" % counts["refs"],
+        "| cfg | %d | explicit IMP owner in CFG statistics or bounded disassembly; not a completeness claim |" % counts["cfg"],
         "| semantics | 0 | requires an explicit semantic audit; never inferred from names |",
         "| implemented | 0 | requires an explicit replacement implementation record |",
         "| behavior-verified | 0 | requires a controlled runtime behavior record |",
