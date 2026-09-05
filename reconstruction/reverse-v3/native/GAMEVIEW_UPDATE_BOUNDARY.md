@@ -66,10 +66,15 @@ cases are not runtime-verified.
 - Compute translation minus (decayed scrollVelocity * dt), then send
   world.setTranslation: at 0x00925f28.
 
-The subsequent horizontal-boundary code reads translation and worldWidthMacro;
-its local selector routes are recorded, but wrap/clamp writeback behavior is
-not yet fully reviewed. Do not assume modifying a returned Vector2 temporary
-necessarily updates the world without tracing the consumer/setter.
+The horizontal-boundary consumers have now been followed through 0x00926278.
+Vector2::operator float*() at 0x004bdaac returns its own this pointer unchanged.
+The add at 0x00926094 writes into the getter result at fp-0x60; the subtract at
+0x00926264 writes into another getter result at fp-0x70. These are local stret
+return buffers. No setTranslation: or copy back to world follows either write
+before convergence at 0x00926278. Under ordinary return-value semantics these
+local modifications do not implement world-coordinate wrap. The recovered C++
+therefore does NOT add an imagined modulo/wrap setter. Getter/callee side effects
+beyond these ordinary ABI semantics remain a separate runtime boundary.
 
 stret ABI differs from normal send: r0=result buffer, r1=receiver, r2=selector.
 These calls were omitted by the previous blx-only inventory and must remain
