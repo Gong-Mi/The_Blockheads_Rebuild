@@ -104,6 +104,52 @@ Local UBSan-trap build additionally passes all 12 CTest targets.
       -> client world/chunk ownership [NOT INTEGRATED]
       -> renderer/gameplay/lifecycle [NOT VERIFIED]
 
+## Player-information exchange: recovered and accepted by the original server
+
+Recovered the full client-side send path and verified the real first join
+step against the hash-pinned original server 1.7.1 (qemu-x86-64, stopped
+after test, loopback only).
+
+Client send path (Android 1.7.6 `libApplication.so`, ARM32):
+  * `-[BHNetClientMatch sendPlayerInformationToServer:password:]` at
+    0x00833a60 emits a prefix byte 0x1F, copies myPlayerInfo, appends the
+    optional clientPassword, serializes with plist XML format (constant
+    0x64 = 100 = NSPropertyListXMLFormat_v1_0; the earlier "binary 200"
+    hypothesis is corrected by this disassembly).
+  * Server receive path `-[BHNetServerMatch
+    clientPlayerInformationRecieved:fromPeer:]` at 0x4f8d70, resolved via
+    DWARF against the GNUstep string table (0xbc2220..0xbc23d0): it reads
+    alias/local/micOrSpeakerOn/voiceConnected/playerID/udidNew/photo/
+    connected/cloudKey/ip/iCloudID/gameCenterID/minorVersion/
+    clientPassword. **There is NO minorVersion gate**: the code does
+    objectForKey then setValue:forKey: with a nil skip (0x4fa288 cmp/je,
+    0x4fa348 setValue) — any reported version is accepted and stored.
+
+`tools/player_info_packet.py` builds the exact wire bytes (0x1f + XML
+plist) from those recovered keys; `tools/test_player_info_packet.py`
+(15 checks) verifies prefix, key sets, omission policy, XML round-trip
+and byte-exact packet split. `tools/probe_join_local.c` is the first-join
+probe (CONNECT -> worldID announcement -> send player info -> print
+server replies); `tools/test_join_local.py` is the acceptance harness.
+
+Observed against the real server:
+  * server log: `REVERSEPROBE - Player Connected probe | 127.0.0.1 |
+    8da843ff65205a61374b09b81ed0fa35` — alias MD5 == localPlayerID, the
+    deduplication path actually executed.
+  * server replies after accept: 0x01 + gzip(payload 925B GNUstep plist,
+    full world metadata: worldName, saveID, randomSeed, expertMode,
+    worldWidthMacro, highestPoint, startPortalPos, worldTime, credit) and
+    a 0x1e + empty plist array.
+  * clean disconnect afterwards (`Player Disconnected probe`) — no
+    version or password rejection.
+
+Remaining lanes: world metadata response -> client World state assembly,
+missing-chunk loading, render/consumption chains, Android 1.7.6 full
+join semantics (the client and the server are different minor versions;
+the server does not gate on it, the client's own acceptance of server
+metadata is not verified). Do not infer full joinability from the
+successful first exchange.
+
 Do not flatten these records into the prototype world.bin or assign invented
 material/atlas identities. A whole-world importer needs coordinate semantics,
 missing-chunk policy, dynamic-object records and world metadata. Those are not
