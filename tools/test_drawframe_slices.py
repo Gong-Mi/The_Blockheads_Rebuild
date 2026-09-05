@@ -36,6 +36,20 @@ class SliceGateTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             expand_vfp_immediate(256, 32)
 
+    def test_update_inventory_includes_direct_and_stret_calls(self):
+        import json
+        import re
+        from recover_gameview_update_boundary import NATIVE
+        text = (NATIVE / 'disasm_gameview_update.txt').read_text()
+        report = json.loads((NATIVE / 'gameview_update_boundary.json').read_text())
+        sites = set(re.findall(r'(0x[0-9a-f]{8})\s+[0-9a-f]{8}\s+blx?\s', text))
+        self.assertEqual(sites, {row['call'] for row in report['calls']})
+        self.assertEqual(len(report['calls']), len(sites))
+        self.assertEqual(report['call_count'], 80)
+        self.assertEqual(report['direct_call_count'], 39)
+        self.assertEqual(report['indirect_call_count'], 41)
+        self.assertEqual(report['reviewed_selector_route_count'], sum(row['selector_reviewed'] is not None for row in report['calls']))
+
     def test_reviewed_paths_have_unique_call_sites(self):
         self.assertEqual(len(SLICES), 11)
         self.assertEqual(len({row[0] for row in SLICES}), 11)
