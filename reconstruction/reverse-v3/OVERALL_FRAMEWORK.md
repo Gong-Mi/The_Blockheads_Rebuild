@@ -2,6 +2,24 @@
 
 本文是 `com.noodlecake.blockheads` 1.7.6 的整体静态框架地图，目标是先恢复模块边界和数据流，再决定重建代码如何落地。它不是对所有函数的语义命名，也不是运行时行为完成声明。
 
+## 当前施工计划图（GameView 数值源码恢复检查点）
+
+```text
+原版证据：固定 ELF → update 全部2460字核对 → 80调用完整清单
+                                      └→ 19处局部 selector 路由已审
+源码恢复：scroll inertia → pinch return → pinch inertia → translation return/初段scale cap
+          独立C++已测试      已测试          已测试          本轮新增并已测试
+下一片段：0x926acc 起 zoom flags → 后续输入/平移分支 → 完整调用时序与receiver审核
+行为接入：上述独立片段尚未接入游戏循环；不得按整个update已恢复计数
+画面还原：完整Tile字段→draw pass→atlas→shader链仍为独立验收线
+平台现代化：现有Android构建独立验证；不以CI绿代替设备/游戏验收
+最终闭环：原版世界加载→移动/挖掘/获得物品/放置/合成→保存→重载（未完成）
+```
+
+本检查点记录源码和证据，不把方法索引数量、局部路由或测试数量换算成整款游戏完成率。
+精确调用边界与复现命令见 `native/GAMEVIEW_UPDATE_BOUNDARY.md`。
+远端构建结果在规范 PR #1 的 exact-head 评论中单独登记。
+
 ## 证据对象
 
 ```text

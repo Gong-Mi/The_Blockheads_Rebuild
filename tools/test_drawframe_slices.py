@@ -50,6 +50,27 @@ class SliceGateTest(unittest.TestCase):
         self.assertEqual(report['indirect_call_count'], 41)
         self.assertEqual(report['reviewed_selector_route_count'], sum(row['selector_reviewed'] is not None for row in report['calls']))
 
+    def test_translation_return_evidence_contract(self):
+        import json
+        import struct
+        from recover_gameview_update_boundary import NATIVE
+        report = json.loads((NATIVE / 'gameview_update_boundary.json').read_text())
+        calls = {r['call']: r['selector_reviewed'] for r in report['calls']}
+        self.assertEqual(calls['0x0092670c'], 'translatingToGoal')
+        self.assertEqual(calls['0x00926764'], 'translation')
+        self.assertEqual(calls['0x00926a44'], 'setTranslation:')
+        fields = {r['literal']: (r['symbol'], r['offset']) for r in report['fields']}
+        self.assertEqual(fields['0x0092771c'], ('OBJC_IVAR_$_GameView.windowInfo', 208))
+        literals = report['translation_return_literals']
+        f32 = lambda x: struct.unpack('<f', struct.pack('<f', x))[0]
+        self.assertEqual(literals, {'world_span': 1024.0, 'lane3_multiplier': f32(0.025),
+                                   'snap_epsilon': f32(0.01), 'bias_double': f32(0.01),
+                                   'scale_limit_numerator': 40960.0})
+        self.assertNotEqual(literals['bias_double'], 0.01)
+        immediates = {r['instruction']: r['value'] for r in report['vfp_constants']}
+        for address in ('0x00926850', '0x0092696c'):
+            self.assertEqual(immediates[address], 10.0)
+
     def test_reviewed_paths_have_unique_call_sites(self):
         self.assertEqual(len(SLICES), 11)
         self.assertEqual(len({row[0] for row in SLICES}), 11)

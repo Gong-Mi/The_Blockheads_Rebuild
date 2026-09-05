@@ -5,7 +5,7 @@ against the pinned original ELF. The complete callsite inventory is now 80:
 41 indirect blx and 39 direct bl. The previous 41-only count omitted direct
 calls and was NOT the full function denominator. Twelve direct calls target
 Objective-C send/stret labels; the other 27 are C/C++/runtime helpers.
-Sixteen local selector routes are reviewed, while remaining entries retain an
+Nineteen local selector routes are reviewed, while remaining entries retain an
 explicit indexed-only status. This is not full update/camera/input recovery.
 
 ## Entry
@@ -124,6 +124,49 @@ is not a drop-in callback implementation or an original-runtime equivalence clai
 RED was observed; O0/O2 tests cover branch precedence, cancellation, both stop
 gates, photo/normal minimum and absence of an invented upper bound.
 
+## Translation return and initial scale cap (0x009266d0..0x00926acc)
+
+The earlier scrolling/pinching gates bypass the translation-return region.
+The world.translatingToGoal send at 0x0092670c also skips it on true.
+Otherwise world.translation at 0x00926764 returns an 8-byte Vector2 into fp-0x90;
+nil world uses explicit memset(0, 8), not an invented world allocation.
+
+GameView.windowInfo is symbol-resolved at offset208. This slice uses float
+lanes +12 and +4; their viewport interpretation is deliberately not asserted.
+With f32 indicating a float rounding boundary:
+
+- lower = f32(double(f32(windowInfo[3] * f32(0.025))) * pinchScale)
+- upper = f32(1024 - lower)
+- if y < lower AND y < upper, return toward lower;
+- else if y > upper AND y > lower, return toward upper;
+- otherwise leave y unchanged, including the middle of an inverted interval.
+
+For either return, delta = f32(y - target), factor = 1 - double(f32(dt * 10)).
+Compute double(target) + double(delta) * factor, then add/subtract the double
+literal 0.009999999776482582 (exact widened float(0.01)), and finally cast to
+float. Lower return snaps if newY > f32(lower - float(0.01)); upper return
+snaps if newY < f32(upper + float(0.01)). Both comparisons are strict.
+The multiplier's raw VFP bits encode TEN despite the printed operand being 1.
+Do not clamp dt or suppress the bias at dt=0.
+
+Unlike the earlier ineffective horizontal-wrap writes, this local result DOES
+reach a setter: 0x00926a24..0x00926a40 loads x/y from fp-0x90/-0x8c into r2/r3;
+0x00926a44 sends world.setTranslation:. The getter and setter separately reload
+self.world; snapshot inputs do not model receiver changes or getter side effects.
+The setter is sent even if neither correction branch changed y. Nil receiver
+semantics remain the caller's responsibility.
+
+The independent region 0x00926a4c..0x00926acc computes float(40960 / windowInfo[1]),
+widens it to double, and stores it only if pinchScale is greater. This region
+also runs after the scrolling/pinching/goal bypasses. Later zoom flags can
+modify pinchScale again: this is NOT the final per-frame maximum contract.
+
+Executable source: reconstruction/recovered/translation_return.{h,cpp}.
+Behavioral RED observed (missing unconditional write request), then O0/O2 PASS.
+Finite normal arithmetic with finite intermediate results is the supported
+numerical contract; NaN, FTZ, FP exceptions and original-runtime differential
+acceptance are not verified. No gameplay wiring was changed.
+
 ## Reproduce
 
 ```sh
@@ -132,6 +175,6 @@ PYTHONDONTWRITEBYTECODE=1 python3 tools/recover_gameview_update_boundary.py \
   --output "$TMPDIR/gameview-update-boundary.json"
 ```
 
-Next: horizontal-boundary consumers and remaining input/zoom branches.
+Next: 0x00926acc onward zoom flags, gesture/translation dispatch, and remaining input branches.
 Use the full 80-entry inventory; selector-route review is not whole-callee or
 whole-branch semantic completion. Do not infer call order from selector refs.
