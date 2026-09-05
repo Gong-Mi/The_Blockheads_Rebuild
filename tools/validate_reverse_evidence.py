@@ -118,6 +118,45 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "disasm_draw_frame.txt",
+        [
+            "# EvolutionViewController -[drawFrame]",
+            "# implementation: 0x00781a44",
+            "# ARM.exidx end: 0x00781eb0",
+        ],
+    )
+    require(
+        NATIVE / "refs_draw_frame.tsv",
+        [
+            "implementation\tclass\tmethod\treference_kind\treference_address\tvalue",
+            "0x00781a44\tEvolutionViewController\tdrawFrame\tselector",
+            "initOpenGL",
+            "preUpdate:",
+            "update:accurateDT:",
+            "render:",
+            "presentFramebuffer",
+        ],
+    )
+    require(
+        NATIVE / "disasm_dynamic_world_update.txt",
+        [
+            "# DynamicWorld -[update:accurateDT:isSimulation:]",
+            "# implementation: 0x008cbf40",
+            "# ARM.exidx end:",
+        ],
+    )
+    require(
+        NATIVE / "refs_dynamic_world_update.tsv",
+        [
+            "0x008cbf40\tDynamicWorld\tupdate:accurateDT:isSimulation:\tselector",
+            "removeObject:",
+            "addObject:",
+            "updateNetObjects",
+            "updateRain:dt:",
+            "worldChanged:",
+        ],
+    )
+    require(
         NATIVE / "STATIC_LIFECYCLE_CONTRACT.md",
         [
             "VerdeApplication",

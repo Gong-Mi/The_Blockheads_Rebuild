@@ -10,8 +10,8 @@ have recovered semantics, replacement code, or behavioral verification.
 | stage | count | meaning |
 |---|---:|---|
 | indexed | 10478 | present in the method map |
-| refs | 25 | implementation address appears in checked-in refs/disassembly evidence |
-| cfg | 25 | address appears in CFG statistics or bounded disassembly evidence |
+| refs | 28 | implementation address appears in checked-in refs/disassembly evidence |
+| cfg | 28 | address appears in CFG statistics or bounded disassembly evidence |
 | semantics | 0 | requires an explicit semantic audit; never inferred from names |
 | implemented | 0 | requires an explicit replacement implementation record |
 | behavior-verified | 0 | requires a controlled runtime behavior record |

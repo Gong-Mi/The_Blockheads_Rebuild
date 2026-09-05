@@ -286,9 +286,31 @@ network replication
 4. 所有内容行为（挖掘、放置、掉落、合成、AI 决策）还不能只由模块入口命名推出。
 5. 当前文件记录的是 original export/IMP evidence，不是 replacement runtime acceptance。
 
-## 下一步
+## P1 first evidence slice
 
-下一轮直接针对 `DynamicWorld -update:accurateDT:isSimulation:` 和 `EvolutionViewController -drawFrame` 做：
+在 `reverse-v3` 当前 head 上，使用 hash 已锁定的原版 `libApplication.so` 重新生成了两个目标 IMP 的有界反汇编和 selector 引用：
+
+```text
+EvolutionViewController -drawFrame
+  IMP: 0x00781a44
+  ARM.exidx end: 0x00781eb0
+  disasm: native/disasm_draw_frame.txt
+  refs:   native/refs_draw_frame.tsv
+  selector refs: 10
+
+DynamicWorld -update:accurateDT:isSimulation:
+  IMP: 0x008cbf40
+  ARM.exidx boundary: retained in disasm header
+  disasm: native/disasm_dynamic_world_update.txt
+  refs:   native/refs_dynamic_world_update.tsv
+  selector refs: 39
+```
+
+`drawFrame` 的引用集合包含 `initOpenGL`、`preUpdate:`、`update:accurateDT:`、`render:`、`presentFramebuffer`；`DynamicWorld::update` 的集合包含动态对象增删、Blockhead inventory save、`updateNetObjects`、雨/世界内容变化和对象数据发送等候选边界。
+
+这一步只完成“有界机器码 + 引用证据”收集，**没有把引用文件的排序当作执行顺序**。下一步仍需从反汇编的基本块中配对 selector 装载、receiver、参数和 `objc_msgSend`/间接调用，再记录条件边和副作用。
+
+## 下一步
 
 ```text
 ARM 控制流切块
