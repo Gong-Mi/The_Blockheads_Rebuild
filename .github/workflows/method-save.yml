@@ -1,0 +1,19 @@
+name: Save assembly method
+on:
+  pull_request:
+    branches: [reverse-v3]
+  workflow_dispatch:
+jobs:
+  recovered:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        mode: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m pip install lmdb
+      - run: python3 tools/test_export_server_world.py
+      - run: cmake -S reconstruction/recovered -B build-method -DCMAKE_BUILD_TYPE=${{ matrix.mode }}
+      - run: cmake --build build-method -j2
+      - run: ctest --test-dir build-method --output-on-failure
+      - run: python3 tools/test_assemble_server_snapshot.py build-method/decode_original_block
