@@ -34,6 +34,23 @@ this particular destination cannot alias fp-0x34. The generic alias rule remains
 
 No runtime tracing, receiver recovery, game launch or device acceptance performed.
 
+## Stack-word alias regressions
+
+Two further false candidates were reproduced and fixed:
+
+- A word stored at fp-0x1f partially overwrites a saved selector at fp-0x20.
+  Invalidating only an exactly equal dictionary key retained stale bytes.
+- A store through sp may alias an fp-relative slot when their base relation is
+  not modelled. Treating the two key namespaces as disjoint was unsound.
+
+Word stores now invalidate intersecting same-base four-byte intervals and all
+slots using another unproven frame base. Non-overlapping same-base slots remain.
+Local acceptance: 15 dependency-free tests plus the original ELF test pass;
+original drawFrame remains 11 calls / 2 candidates.
+
+Next precision work should canonicalize fp/sp to a proved stack coordinate,
+including prologue adjustments, rather than deleting this alias invalidation.
+
 ## Bounded native destination recovered
 
 `tools/recover_drawframe_background_store.py` has been executed against the pinned

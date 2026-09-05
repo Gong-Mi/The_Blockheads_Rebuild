@@ -153,9 +153,14 @@ def transfer(op, incoming, memory):
         address = location(args[1], state, pc)
         if mnemonic == 'str':
             if isinstance(address, tuple):
-                state.pop(address, None)
-                if destination in state:
-                    state[address] = state[destination]
+                # Word stores may partially overlap another word. fp/sp coordinates
+                # are not proven disjoint without a tracked frame-base relation.
+                state = {k: v for k, v in state.items()
+                         if not (isinstance(k, tuple) and
+                                 (k[1] != address[1] or
+                                  k[2] < address[2] + 4 and address[2] < k[2] + 4))}
+                if destination in incoming:
+                    state[address] = incoming[destination]
             else:
                 # Unknown stores may alias saved locals. Do not retain stack facts.
                 state = {k: v for k, v in state.items() if isinstance(k, str)}

@@ -91,6 +91,18 @@ class DispatchDataflowTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'ARM instruction mismatch'):
                 recovery.recover(Path('unused-by-fixture'))
 
+    def test_overlapping_word_store_invalidates_saved_selector(self):
+        row, = analyze('ldr r3, [0x104]', 'ldr r1, [0x100]',
+                       'str r1, [fp, -0x20]', 'str r0, [fp, -0x1f]',
+                       'ldr r1, [fp, -0x20]', 'blx r3')
+        self.assertEqual(row['selector_status'], 'unknown')
+
+    def test_other_frame_base_may_alias_saved_selector(self):
+        row, = analyze('ldr r3, [0x104]', 'ldr r1, [0x100]',
+                       'str r1, [fp, -0x20]', 'str r0, [sp, 0]',
+                       'ldr r1, [fp, -0x20]', 'blx r3')
+        self.assertEqual(row['selector_status'], 'unknown')
+
     def test_stack_roundtrip(self):
         row, = analyze('ldr r3, [0x104]', 'ldr r1, [0x100]',
                        'str r1, [fp, -0x20]', 'movw r1, 0',
