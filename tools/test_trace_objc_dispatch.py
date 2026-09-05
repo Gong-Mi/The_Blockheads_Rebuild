@@ -1,46 +1,96 @@
 #!/usr/bin/env python3
-import csv
+"""Dependency-free dataflow regressions plus optional real-ELF acceptance."""
 import os
-import subprocess
-import tempfile
-import unittest
 from pathlib import Path
+import unittest
+import trace_objc_dispatch as trace
 
-ROOT = Path(__file__).resolve().parents[1]
-TOOL = ROOT / "tools/trace_objc_dispatch.py"
+
+class Memory:
+    def __init__(self):
+        self.words = {0x100: 0x200, 0x104: 0x300}
+        self.selectors = {0x200: 'removeFromSuperview'}
+        self.imports = {0x104: 'objc_msgSend'}
+
+    def word(self, address):
+        return self.words.get(address)
 
 
-class ObjCDispatchTraceTest(unittest.TestCase):
-    def test_drawframe_trace_produces_candidates_and_unknowns(self):
-        elf = os.environ.get("BLOCKHEADS_ELF")
+def analyze(*instructions):
+    ops = [{'addr': 0x1000 + i * 4, 'disasm': text}
+           for i, text in enumerate(instructions)]
+    return trace.analyze_ops(ops, Memory())
+
+
+class DispatchDataflowTest(unittest.TestCase):
+    def test_selector_is_r1_not_call_target(self):
+        row, = analyze('ldr r3, [0x104]', 'ldr r1, [0x100]', 'blx r3')
+        self.assertEqual(row['target_symbol'], 'objc_msgSend')
+        self.assertEqual(row['selector_name'], 'removeFromSuperview')
+        self.assertEqual(row['selector_status'], 'candidate')
+
+    def test_unrecognized_write_invalidates_register(self):
+        row, = analyze('ldr r3, [0x104]', 'ldr r1, [0x100]',
+                       'eor r1, r1, r1', 'blx r3')
+        self.assertEqual(row['selector_status'], 'unknown')
+
+    def test_call_clobbers_argument_registers(self):
+        rows = analyze('ldr r4, [0x104]', 'ldr r1, [0x100]', 'blx r4', 'blx r4')
+        self.assertEqual(rows[0]['selector_status'], 'candidate')
+        self.assertEqual(rows[1]['selector_status'], 'unknown')
+
+    def test_branch_barrier_does_not_merge_linear_paths(self):
+        row, = analyze('ldr r3, [0x104]', 'ldr r1, [0x100]', 'beq 0x1010',
+                       'movw r1, 0', 'blx r3')
+        self.assertEqual(row['selector_status'], 'unknown')
+
+    def test_conditional_write_invalidates_register(self):
+        row, = analyze('ldr r3, [0x104]', 'ldr r1, [0x100]', 'moveq r1, r2', 'blx r3')
+        self.assertEqual(row['selector_status'], 'unknown')
+
+    def test_unknown_target_not_labelled_objc_dispatch(self):
+        row, = analyze('ldr r1, [0x100]', 'blx r3')
+        self.assertEqual(row['selector_status'], 'unknown')
+
+    def test_pic_arithmetic_and_register_alias(self):
+        # ARM pc is instruction address + 8, not the literal-load address.
+        memory = Memory()
+        memory.words[0x108] = (0x100 - (0x1004 + 8)) & 0xffffffff
+        ops = [{'addr': 0x1000 + i * 4, 'disasm': text} for i, text in enumerate([
+            'ldr r2, [0x108]', 'add r2, pc, r2', 'ldr r1, [r2]',
+            'ldr ip, [0x104]', 'blx r12'])]
+        row, = trace.analyze_ops(ops, memory)
+        self.assertEqual(row['selector_name'], 'removeFromSuperview')
+
+    def test_backedge_removes_stale_selector(self):
+        row, = analyze('ldr r4, [0x104]', 'ldr r1, [0x100]',
+                       'blx r4', 'bne 0x1008')
+        self.assertEqual(row['selector_status'], 'unknown')
+
+    def test_writeback_invalidates_base(self):
+        row, = analyze('ldr r3, [0x104]', 'ldr r1, [0x100]',
+                       'ldr r2, [r1], 4', 'blx r3')
+        self.assertEqual(row['selector_status'], 'unknown')
+
+    def test_stack_roundtrip(self):
+        row, = analyze('ldr r3, [0x104]', 'ldr r1, [0x100]',
+                       'str r1, [fp, -0x20]', 'movw r1, 0',
+                       'ldr r1, [fp, -0x20]', 'blx r3')
+        self.assertEqual(row['selector_name'], 'removeFromSuperview')
+
+
+class OriginalELFTest(unittest.TestCase):
+    def test_drawframe_first_dispatch(self):
+        elf = os.environ.get('BLOCKHEADS_ELF')
         if not elf:
-            home = Path.home()
-            elf = home / "blockheads-work/extracted/lib/armeabi-v7a/libApplication.so"
-        if not Path(elf).exists():
-            self.skipTest(f"original ELF not available at {elf}")
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            output = root / "trace.tsv"
-            subprocess.run(
-                ["python3", str(TOOL),
-                 str(elf),
-                 "--imp", "0x00781a44",
-                 "--output", str(output)],
-                check=True,
-            )
-            with output.open(encoding="utf-8") as stream:
-                rows = list(csv.DictReader(stream, delimiter="\t"))
-            self.assertEqual(len(rows), 11)
-            # Conservative tool: all sites must be unknown until register dataflow is fully proven
-            self.assertTrue(all(r["selector_status"] == "unknown" for r in rows))
-            self.assertTrue(all(r["receiver_status"] == "unknown" for r in rows))
-            self.assertTrue(all(r["argument_status"] == "unknown" for r in rows))
-
-    def test_unknown_when_no_selector_load(self):
-        # A synthetic case where the tool should refuse or return unknown.
-        # We rely on the drawFrame test above; this placeholder documents intent.
-        pass
+            self.skipTest('set BLOCKHEADS_ELF for original binary acceptance')
+        rows = trace.analyze(Path(elf), 0x00781a44)
+        self.assertEqual(len(rows), 11)
+        first = next(r for r in rows if r['call_address'] == '0x00781b28')
+        self.assertEqual(first['selector_name'], 'removeFromSuperview')
+        self.assertEqual(first['target_symbol'], 'objc_msgSend')
+        self.assertTrue(all(r['receiver_status'] == r['argument_status'] == 'unknown' for r in rows))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

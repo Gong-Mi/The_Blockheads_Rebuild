@@ -321,19 +321,37 @@ native/indirect_calls_dynamic_world_update.tsv
 
 该索引只回答“哪里发生了寄存器间接调用”，不回答“调用了哪个 Objective-C selector”。只有后续寄存器数据流能证明 selector、receiver 和参数关系时，才允许将 unknown 改为 confirmed。
 
-已增加保守的 Objective-C dispatch 追踪工具：
+dispatch 审计修正（旧版本的全 unknown 不是二进制限制）：
 
-- `tools/trace_objc_dispatch.py`
-  - 使用 r2 `pdfj` 提取 ARM 基本块和指令级 ESIL。
-  - 尝试追踪 `blx` 目标寄存器到最近的 selector 装载点。
-  - 支持常见的 Apportable PIC 序列：`ldr base, [got]`、`add base, pc, got`、`ldr reg, [base, offset]`。
-  - 若无法完整解析 GOT 内容或寄存器链，保持 `unknown`。
-- `tools/test_trace_objc_dispatch.py`
-  - 对 `drawFrame` 的 11 个 `blx` 点运行追踪。
-  - 断言所有 `selector_status`、`receiver_status`、`argument_status` 均为 `unknown`。
-  - 防止未经验证的配对被标记为 confirmed。
+- 旧工具错误地从 `blx` 目标寄存器寻找 selector，且未使用 ESIL/CFG。
+- 当前工具独立追踪目标和 r1：ARM32 的目标是函数地址，r1 才是 selector。
+- 使用 ELF32 PT_LOAD 做 VA→文件偏移转换；GLOB_DAT/JUMP_SLOT 提供导入符号，RELATIVE 保留模块相对地址。输入由原版 ELF SHA-256 门禁固定。
+- 使用直接 ARM 分支建立有界工作列表传播；汇合只保留相同事实。调用破坏 caller-saved 寄存器，不支持的指令保守失效。支持受限 fp/sp 保存恢复，不是通用 ARM 模拟器或完整 alias 分析。
+- 静态候选仍不是动态验收：不解析 receiver/额外参数，不声称完整调用顺序。
 
-当前 `drawFrame` 追踪结果：11 个调用点，0 个候选 selector。这表示工具保守地拒绝配对，而不是证明这些调用没有 Objective-C 语义。
+原版 `drawFrame` 实跑：11 个寄存器 blx，2 个 selector candidates：
+
+| call | target | selector |
+|---|---|---|
+| 0x00781b28 | objc_msgSend | removeFromSuperview |
+| 0x00781b4c | objc_msgSend | release |
+
+第一处的 PIC base=0x0105faf4、selref=0x00e81054、selector string VA=0x00ee9ab2；目标 GOT=0x0105b7a0 的重定位是 objc_msgSend。无需运行时 GOT 实值即可恢复这条静态链。其余 9 处保持 unknown，不代表不可恢复。
+
+TSV 的 `selector_address` 现在是 r1 中的 selector 字符串模块 VA；新增 `target_symbol`，移除无法可靠归属的 `selector_load_address`。旧 indirect-call TSV 保持纯调用点索引，不与候选追踪表混用。
+
+测试分层：CI 必跑不依赖 ELF/r2 的 `DispatchDataflowTest`，覆盖 r1/目标分离、覆盖写、调用 clobber、分支汇合、回边、PIC、别名、写回和栈恢复。`OriginalELFTest` 是单独原版验收，不再用空测试或全部 unknown 断言代替能力测试。
+
+本地复现（依赖 radare2、pyelftools）：
+
+```sh
+export PYTHONDONTWRITEBYTECODE=1
+export BLOCKHEADS_ELF="$HOME/blockheads-work/extracted/lib/armeabi-v7a/libApplication.so"
+python3 tools/test_trace_objc_dispatch.py
+python3 tools/trace_objc_dispatch.py "$BLOCKHEADS_ELF" --imp 0x00781a44 --output "$TMPDIR/blockheads-dispatch.tsv"
+```
+
+r2 会报告原库没有 ELF entrypoint 并选择默认地址；分析命令通过 `af/pdfj @ 0x00781a44` 显式选定 IMP，不依赖该默认入口。诊断不再被吞掉。
 
 ## 下一步
 
