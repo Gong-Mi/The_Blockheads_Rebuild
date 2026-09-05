@@ -5,7 +5,7 @@ against the pinned original ELF. The complete callsite inventory is now 80:
 41 indirect blx and 39 direct bl. The previous 41-only count omitted direct
 calls and was NOT the full function denominator. Twelve direct calls target
 Objective-C send/stret labels; the other 27 are C/C++/runtime helpers.
-Nineteen local selector routes are reviewed, while remaining entries retain an
+Forty-nine local selector routes are reviewed, while remaining entries retain an
 explicit indexed-only status. This is not full update/camera/input recovery.
 
 ## Entry
@@ -175,6 +175,7 @@ PYTHONDONTWRITEBYTECODE=1 python3 tools/recover_gameview_update_boundary.py \
   --output "$TMPDIR/gameview-update-boundary.json"
 ```
 
-Next: 0x00926acc onward zoom flags, gesture/translation dispatch, and remaining input branches.
+Post-cap zoom region is now recovered as snapshot C++: see GAMEVIEW_ZOOM_SETTLE.md.
+Next: remaining entry-time/horizontal-query routes, entry-time source and full callback reload/effect ordering before frame integration.
 Use the full 80-entry inventory; selector-route review is not whole-callee or
 whole-branch semantic completion. Do not infer call order from selector refs.

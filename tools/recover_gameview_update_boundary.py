@@ -51,6 +51,12 @@ def recover(path):
         if name != expected:
             raise ValueError('selector evidence changed')
         reviewed[call] = name
+    from recover_gameview_zoom_settle import CALL_ROUTES
+    for call, (literal, expected, _receiver) in CALL_ROUTES.items():
+        name = memory.selectors.get(memory.word((base + memory.word(literal)) & 0xffffffff))
+        if name != expected:
+            raise ValueError('zoom-settling selector evidence changed')
+        reviewed[call] = name
     calls = []
     for address in re.findall(r'(0x[0-9a-f]{8})\s+[0-9a-f]{8}\s+blx\s', text):
         address = int(address, 16)

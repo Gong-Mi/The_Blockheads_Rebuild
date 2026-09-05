@@ -6,10 +6,11 @@
 
 ```text
 原版证据：固定 ELF → update 全部2460字核对 → 80调用完整清单
-                                      └→ 19处局部 selector 路由已审
+                                      └→ 49处局部 selector 路由已审
 源码恢复：scroll inertia → pinch return → pinch inertia → translation return/初段scale cap
-          独立C++已测试      已测试          已测试          本轮新增并已测试
-下一片段：0x926acc 起 zoom flags → 后续输入/平移分支 → 完整调用时序与receiver审核
+          独立C++已测试      已测试          已测试          已测试
+          → zoom settle：全部10条收敛路径/门控/通知/持久化请求/末尾factor写回已测试
+下一片段：入口计时源码与剩余调用路由 → 回调后字段重读/完整effect顺序 → 帧编排接入
 行为接入：上述独立片段尚未接入游戏循环；不得按整个update已恢复计数
 画面还原：完整Tile字段→draw pass→atlas→shader链仍为独立验收线
 平台现代化：现有Android构建独立验证；不以CI绿代替设备/游戏验收
