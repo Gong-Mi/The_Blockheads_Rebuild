@@ -26,6 +26,16 @@ class SliceGateTest(unittest.TestCase):
         self.assertEqual(len(sites), 23)
         self.assertEqual(len(re.findall(r'\sbl sym.imp.__wrap_gl', text)), 7)
 
+    def test_vfp_immediate_is_decoded_from_bits_not_disassembly_label(self):
+        from recover_gameview_update_boundary import expand_vfp_immediate
+        for width in (32, 64):
+            self.assertEqual(expand_vfp_immediate(0x24, width), 10.0)
+            self.assertEqual(expand_vfp_immediate(0x70, width), 1.0)
+            self.assertEqual(expand_vfp_immediate(0x08, width), 3.0)
+            self.assertEqual(expand_vfp_immediate(0xa4, width), -10.0)
+        with self.assertRaises(ValueError):
+            expand_vfp_immediate(256, 32)
+
     def test_reviewed_paths_have_unique_call_sites(self):
         self.assertEqual(len(SLICES), 11)
         self.assertEqual(len({row[0] for row in SLICES}), 11)
