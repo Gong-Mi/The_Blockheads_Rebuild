@@ -2,6 +2,22 @@
 
 本文是 `com.noodlecake.blockheads` 1.7.6 的整体静态框架地图，目标是先恢复模块边界和数据流，再决定重建代码如何落地。它不是对所有函数的语义命名，也不是运行时行为完成声明。
 
+## 原版 pickup 路径批次（2026-09-06，接续198b0ae）
+
+```text
+固定原ARM ELF：Blockhead -pickupFreeblockIfPossible:inTile:intentional:
+  → 入口 state 字节 / priority 拒绝（intentional 不绕过）
+  → 普通 freeblock 路径：字段读取→canPickUp==1→needsRemoved→
+    InventoryItem构造→addItemToInventory:flash:1→setNeedsRemoved:1→
+    索引记账分支→成功1；失败块仅 priority==self 时 tip
+  → signed char 1/0，不归一 bool，不当作接受数量
+显式 pending（不猜测）：0xc61d..0xc626 查找/容器/所有权分支、
+0x629..0x634 货币拆分（0x12a/div/mod/makeIntpair）
+证据：1650指令/80调用/29选择器/9个ivar（state/ignoringFreeblocksDueToDrop/
+      isClientBlockheadBeingControlledByServer/unconfirmedPickups/thisFramePickupRequests）
+验收：O0/O2 行为测试通过；账本36 implemented；原版runtime behavior-verified仍0
+```
+
 ## 原版库存方法批次（2026-09-06，接续473899a）
 
 ```text
