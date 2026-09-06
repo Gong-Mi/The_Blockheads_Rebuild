@@ -729,3 +729,18 @@ The Runtime contract is now named `stateStorageAddress`. This is an interface/
 test/evidence correction, not new APK gameplay or full pickup equivalence.
 The failed full-method emulator harness established no impossibility theorem.
 See native/INVENTORY_PICKUP.md for the executable recipe and precise scope.
+
+
+## Ownership helper closure (after 3b70b70)
+
+```text
+pickup expectedCraftItems search (pending) -> ownership access branch (pending)
+  -> itemTypeRequiresOwnershipToRemove (complete C++ + original ARM differential)
+     -> workbench -> workbench-kind map (both complete)
+     -> torch / stairs / column / painting (complete)
+  -> World removal effects / currency / original inventory APK integration (pending)
+```
+
+Seven complete pure helpers, each 66,567 inputs matching O0/O2. Added to host
+recovered-inventory library and CTest, NOT wired into APK or incomplete pickup.
+See native/INVENTORY_OWNERSHIP.md and the per-function evidence report.
