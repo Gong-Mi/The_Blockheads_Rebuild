@@ -2,6 +2,30 @@
 
 本文是 `com.noodlecake.blockheads` 1.7.6 的整体静态框架地图，目标是先恢复模块边界和数据流，再决定重建代码如何落地。它不是对所有函数的语义命名，也不是运行时行为完成声明。
 
+## 原版库存方法批次（2026-09-06，接续473899a）
+
+```text
+固定原ARM ELF
+  ├→ InventoryItem：14个局部逻辑方法（构造/保存/递归子槽/访问器）
+  ├→ 容量分类：2个方法，0/1/-1不归一成bool，外层索引1..7
+  ├→ 入包：4个重载，五遍分配/排序/容器路径，返回外层index/-1
+  └→ 8个共享C++ helper及槽数/货币直接依赖
+       → blockheads_recovered_inventory 可执行方法库
+       → 实际Item对象→容量→入包→普通头部保存/加载的组装测试
+
+证据：8 helper原ARM指令与C++ O0/O2差分42788输入一致
+      容量主方法原ARM+合成不可变ObjC消息图差分3888输入一致
+      以上不是原版App/真实Foundation/Android运行时差分
+验收：O0/O2各24项CTest通过；GitHub exact-head与产物另验
+账本：新增20个显式逻辑方法，总35 implemented；原版runtime behavior-verified仍0
+
+接入边界：现有Player是另一Item ID域/30扁平槽，不能强制转换成原版嵌套对象
+尚待：真实Foundation codec及World效果实现→原版库存加载/UI→完整pickup入口→APK运行
+```
+
+本批恢复的是原版逻辑方法源码和模块间测试，不是再次修原型，也不把单纯链接库冒充游戏接入。
+各方法边界见 `native/INVENTORY_ITEM.md`、`INVENTORY_CAPACITY.md`、`INVENTORY_ADD.md`、`INVENTORY_RULES.md`。
+
 ## 当前可玩链施工（2026-09-06）
 
 ```text

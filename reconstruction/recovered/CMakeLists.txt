@@ -10,9 +10,21 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(blockheads_recovered_view PUBLIC -fno-fast-math -ffp-contract=off)
 endif()
 
+# Inventory methods are a distinct recovered module, not the replacement Player.
+add_library(blockheads_recovered_inventory STATIC
+    inventory_item.cpp inventory_capacity.cpp inventory_rules.cpp inventory_add.cpp)
+target_include_directories(blockheads_recovered_inventory PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_inventory PUBLIC cxx_std_17)
+
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     include(CTest)
     if(BUILD_TESTING)
+        foreach(inventory_part item capacity rules add chain)
+            add_executable(test_inventory_${inventory_part} ../../tools/test_inventory_${inventory_part}.cpp)
+            target_link_libraries(test_inventory_${inventory_part} PRIVATE blockheads_recovered_inventory)
+            target_compile_options(test_inventory_${inventory_part} PRIVATE -UNDEBUG)
+            add_test(NAME recovered_inventory_${inventory_part} COMMAND test_inventory_${inventory_part})
+        endforeach()
         add_executable(test_gameview_update ../../tools/test_gameview_update.cpp)
         target_link_libraries(test_gameview_update PRIVATE blockheads_recovered_view)
         add_test(NAME gameview_update COMMAND test_gameview_update)
