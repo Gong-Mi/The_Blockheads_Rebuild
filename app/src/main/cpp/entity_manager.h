@@ -41,7 +41,8 @@ public:
     int selectedSlot;
 
     Player();
-    void addItem(int type, int count);
+    // Returns how many items were actually accepted; callers retain the rest.
+    int addItem(int type, int count);
     bool checkCollision(float newX, float newY, GameWorld* world);
     void update(float gravity, GameWorld* world);
 };

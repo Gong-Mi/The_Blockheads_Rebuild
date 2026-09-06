@@ -32,5 +32,17 @@ int main() {
         assert(full.counts[i] == 99);
     }
 
+    // Callers can now conserve rejected/partially accepted items.
+    assert(full.addItem(42, 1) == 0);
+    full.counts[0] = 98;
+    assert(full.addItem(7, 3) == 1);
+    assert(full.counts[0] == 99);
+    Player invalid;
+    assert(invalid.addItem(0, 1) == 0);
+    assert(invalid.addItem(-1, 1) == 0);
+    assert(invalid.addItem(42, 0) == 0);
+    assert(invalid.addItem(42, -1) == 0);
+    for (int i=0; i<Player::INVENTORY_SIZE; ++i) expectStack(invalid, i, 0, 0);
+
     return 0;
 }

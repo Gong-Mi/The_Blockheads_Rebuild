@@ -4,12 +4,18 @@
 #include <string>
 #include <cstdio>
 #include <sys/stat.h>
+#if defined(__ANDROID__)
 #include <android/log.h>
+#endif
 #include "game_world.h"
 #include "entity_manager.h"
 
 #define SAVE_TAG "Persistence"
+#if defined(__ANDROID__)
 #define LOGS(...) __android_log_print(ANDROID_LOG_INFO, SAVE_TAG, __VA_ARGS__)
+#else
+#define LOGS(...) do { std::fprintf(stderr, __VA_ARGS__); std::fputc('\n', stderr); } while (false)
+#endif
 
 class PersistenceManager {
 public:

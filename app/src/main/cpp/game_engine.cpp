@@ -334,7 +334,9 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
 
         if (g_ai->update(g_entities->player.x, g_entities->player.y, g_world, g_entities)) g_world->updateLighting();
         
-        if (g_crafting) g_crafting->update(0.05f * timeSpeed, &g_entities->player);
+        if (g_crafting && g_crafting->update(0.05f * timeSpeed, &g_entities->player)) {
+            g_entities->inventoryDirty = true;
+        }
 
         if (g_ai->pendingInteractionBenchId != -1) {
             jclass clazz = env->GetObjectClass(obj);

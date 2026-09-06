@@ -7,6 +7,7 @@
 #include <map>
 #include <cstdint>
 #include <mutex>
+#include <cmath>
 #include "entity_manager.h"
 #include "game_recipe_data.h"
 #include "game_item_ids.h"
@@ -15,7 +16,9 @@ struct ActiveCraft {
     int recipeId;
     float progress; // 0.0 to 1.0
     float totalTime;
-    bool finished;
+    bool finished; // Timer complete; delivery may still be pending.
+    int outputType = ITEM_EMPTY;
+    int remainingOutput = 0;
 };
 
 class CraftingManager {
@@ -27,6 +30,7 @@ public:
     CraftingManager() {}
 
     bool canCraft(Player* p, int recipeId) {
+        if (!p) return false;
         for (int i = 0; i < g_recipeCount; ++i) {
             const auto& r = g_recipeData[i];
             if (r.id == recipeId) {
@@ -74,6 +78,8 @@ public:
                 ac.progress = 0.0f;
                 ac.totalTime = r.time;
                 ac.finished = false;
+                ac.outputType = r.outType;
+                ac.remainingOutput = r.outCount;
                 activeCrafts[key] = ac;
                 return true;
             }
@@ -81,30 +87,39 @@ public:
         return false;
     }
 
-    void update(float dt, Player* p) {
+    // Replacement-runtime contract: all tasks advance by dt / totalTime in
+    // parallel, and ingredients are charged once at start. This does not claim
+    // original-game crafting/bench parity. Zero dt may retry completed delivery;
+    // null players and negative/non-finite dt leave the entire state untouched.
+    bool update(float dt, Player* p) {
+        if (!p || !std::isfinite(dt) || dt < 0.0f) return false;
         std::lock_guard<std::mutex> lock(craftMutex);
+        bool inventoryChanged = false;
         auto it = activeCrafts.begin();
         while (it != activeCrafts.end()) {
             ActiveCraft& ac = it->second;
-            ac.progress += dt / ac.totalTime;
-            
-            if (ac.progress >= 1.0f) {
-                ac.progress = 1.0f;
-                if (!ac.finished) {
-                    // Find recipe to get output
-                    for (int i = 0; i < g_recipeCount; i++) {
-                        if (g_recipeData[i].id == ac.recipeId) {
-                            p->addItem(g_recipeData[i].outType, g_recipeData[i].outCount);
-                            break;
-                        }
-                    }
+            if (!ac.finished) {
+                if (!std::isfinite(ac.totalTime) || ac.totalTime <= 0.0f) {
+                    ++it;
+                    continue;
+                }
+                ac.progress = std::min(1.0f, ac.progress + dt / ac.totalTime);
+                if (ac.progress >= 1.0f) {
                     ac.finished = true;
                 }
-                it = activeCrafts.erase(it); // Remove after finishing (one-shot for now)
+            }
+            if (ac.finished) {
+                const int accepted = p->addItem(ac.outputType, ac.remainingOutput);
+                ac.remainingOutput -= accepted;
+                inventoryChanged |= accepted > 0;
+            }
+            if (ac.finished && ac.remainingOutput == 0) {
+                it = activeCrafts.erase(it);
             } else {
                 ++it;
             }
         }
+        return inventoryChanged;
     }
 
     std::string getRecipesJson(int benchId) {

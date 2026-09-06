@@ -84,6 +84,9 @@ void GameWorld::updateLighting() {
 }
 
 Tile* GameWorld::getTileInternal(int x, int y) {
+    // Integer division truncates -1/CHUNK_SIZE to zero; checking cy alone
+    // allowed negative rows to index before tiles during light propagation.
+    if (y < 0) return nullptr;
     int cx = (int)floor((float)x / CHUNK_SIZE);
     int cy = y / CHUNK_SIZE;
     if (cy < 0 || cy >= MAX_CHUNKS_Y) return nullptr;
@@ -302,6 +305,25 @@ void GameWorld::workerLoop() {
                 }
             }
         }
+    }
+}
+
+void GameWorld::refreshTileMesh(int x, int y) {
+    if (y < 0 || y >= WORLD_DEPTH) return;
+    const int cx = wrapChunkX(static_cast<int>(std::floor(static_cast<float>(x) / CHUNK_SIZE)));
+    PhysicalBlock* chunk = chunkGrid[cx][y / CHUNK_SIZE];
+    if (!chunk) return;
+    // An edit can change lighting in other loaded chunks (for example a torch
+    // at a chunk boundary). Recompute lighting once, then publish every loaded
+    // CPU mesh so no neighboring VBO keeps stale light values. This synchronous
+    // correctness path is not a claim of an optimized/asynchronous scheduler.
+    updateLighting();
+    std::lock_guard<std::mutex> lock(chunksMutex);
+    for (PhysicalBlock* loaded : chunks) {
+        if (!loaded) continue;
+        buildMeshCache(loaded);
+        loaded->dirty = false;
+        loaded->meshReady = true;
     }
 }
 
