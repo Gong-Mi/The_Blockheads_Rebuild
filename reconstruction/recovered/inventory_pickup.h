@@ -10,11 +10,20 @@ using Object = inventory_capacity::Object;
 // lifetime must be supplied by the real runtime.
 struct Runtime {
     virtual ~Runtime() = default;
-    // Blockhead entry-gate bytes at ivar offsets 0x60 and 0x68.
-    virtual std::int8_t entryGateA(Object self) = 0;
-    virtual std::int8_t entryGateB(Object self) = 0;
+    // Blockhead entry: DynamicObject.world ivar at +0x4, then worldUIDragging.
+    virtual Object readWorld(Object self) = 0;
+    virtual std::int8_t worldUIDragging(Object world) = 0;
+    // Blockhead.state ivar at +0x38; original gates read state +0x60/+0x68.
+    virtual Object entryState(Object self) = 0;
+    virtual std::int8_t stateGateA(Object state) = 0;
+    virtual std::int8_t stateGateB(Object state) = 0;
     // priorityBlockhead for the freeblock; zero is ObjC nil.
     virtual Object priorityBlockhead(Object freeblock) = 0;
+    // Intentional-gate region 0xc61d00..0xc61d84: with intentional==0, a set
+    // ignoringFreeblocksDueToDrop byte or nonzero meditating requires
+    // priority==self to continue.
+    virtual std::int8_t ignoringFreeblocksDueToDrop(Object self) = 0;
+    virtual std::int8_t meditating(Object self) = 0;
     // Freeblock ordinary fields (each is a distinct selector read).
     virtual std::int32_t itemType(Object freeblock) = 0;
     virtual Object subItems(Object freeblock) = 0;

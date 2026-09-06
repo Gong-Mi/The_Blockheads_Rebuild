@@ -9,12 +9,23 @@ namespace recovered::inventory_pickup {
 // recovered; production callers must supply a resolved freeblock and the
 // pending path intentionally returns zero without side effects.
 std::int8_t pickupFreeblockIfPossible(Runtime& r, Object self, Object freeblock,
-                                      std::int8_t /*intentional*/) {
-    // 0xc61c48..0xc61c68: entry gate bytes; nonzero rejects immediately.
-    if (r.entryGateA(self) != 0 || r.entryGateB(self) != 0) return 0;
-    // 0xc61cd0..0xc61cfc: priorityBlockhead. Non-nil and not self rejects;
-    // the intentional flag does NOT bypass this check (0xc61d78 original).
+                                      std::int8_t intentional) {
+    // 0xc61c48..0xc61c6c: worldUIDragging(world) gate; nonzero rejects.
+    const Object world = r.readWorld(self);
+    if (r.worldUIDragging(world) != 0) return 0;
+    // 0xc61c7c..0xc61cbc: state bytes at +0x60/+0x68; nonzero rejects.
+    const Object state = r.entryState(self);
+    if (r.stateGateA(state) != 0 || r.stateGateB(state) != 0) return 0;
+    // 0xc61cd0..0xc61cfc: priorityBlockhead send.
     const Object priority = r.priorityBlockhead(freeblock);
+    // 0xc61d00..0xc61d84: with intentional==0, ignoringFreeblocksDueToDrop or
+    // meditating forces priority==self; intentional nonzero skips this region
+    // (the later priority != self check still applies).
+    if (intentional == 0 &&
+        (r.ignoringFreeblocksDueToDrop(self) != 0 || r.meditating(self) != 0)) {
+        if (priority != self) return 0;
+    }
+    // 0xc61d88..0xc61db4: non-nil foreign priority rejects.
     if (priority != 0 && priority != self) return 0;
     // Lookup-region bytes are not recovered; a nil freeblock cannot continue.
     if (freeblock == 0) return 0;

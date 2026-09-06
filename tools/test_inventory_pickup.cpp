@@ -12,9 +12,10 @@ using namespace recovered::inventory_pickup;
 namespace rules = blockheads::recovered;
 
 struct Fixture final : Runtime {
-    Object self = 1, freeblock = 2, madeItem = 3;
-    std::int8_t gateA = 0, gateB = 0;
+    Object self = 1, freeblock = 2, madeItem = 3, world = 4, state = 5;
+    std::int8_t dragging = 0, gateA = 0, gateB = 0;
     Object priority = 0;
+    std::int8_t ignoring = 0, meditatingFlag = 0;
     std::int32_t type = 20, canPickUp = 1;
     std::uint16_t a = 0xf123, b = 0x8123;
     Object sub = 0, dynamic = 0;
@@ -26,9 +27,14 @@ struct Fixture final : Runtime {
     std::int32_t madeType = -1; std::uint16_t madeA = 0, madeB = 0;
     Object madeSub = 0, madeDynamic = 0; std::int8_t madeFlash = -1;
 
-    std::int8_t entryGateA(Object) override { events.push_back("gateA"); return gateA; }
-    std::int8_t entryGateB(Object) override { events.push_back("gateB"); return gateB; }
+    Object readWorld(Object s) override { assert(s == self); events.push_back("world"); return world; }
+    std::int8_t worldUIDragging(Object w) override { assert(w == world); events.push_back("dragging"); return dragging; }
+    Object entryState(Object s) override { assert(s == self); events.push_back("state"); return state; }
+    std::int8_t stateGateA(Object st) override { assert(st == state); events.push_back("gateA"); return gateA; }
+    std::int8_t stateGateB(Object st) override { assert(st == state); events.push_back("gateB"); return gateB; }
     Object priorityBlockhead(Object) override { events.push_back("priority"); return priority; }
+    std::int8_t ignoringFreeblocksDueToDrop(Object) override { events.push_back("ignoring"); return ignoring; }
+    std::int8_t meditating(Object s) override { assert(s == self); events.push_back("meditating"); return meditatingFlag; }
     std::int32_t itemType(Object f) override { assert(f == freeblock); events.push_back("itemType"); return type; }
     Object subItems(Object f) override { assert(f == freeblock); events.push_back("subItems"); return sub; }
     std::uint16_t dataA(Object f) override { assert(f == freeblock); events.push_back("dataA"); return a; }
@@ -62,21 +68,40 @@ struct Fixture final : Runtime {
         ++recordCalls; events.push_back("recordIndexed");
     }
     bool pendingPathUnresolved() override { events.push_back("pending"); return unresolved; }
-    std::int8_t run(std::int8_t intentional = 0) {
+    std::int8_t run(std::int8_t intentional = 1) {
         return pickupFreeblockIfPossible(*this, self, freeblock, intentional);
     }
 };
 
 int main() {
     {   // gate bytes reject before any other read.
-        Fixture f; f.gateA = -1;
-        assert(f.run() == 0); assert((f.events == std::vector<std::string>{"gateA"}));
-        Fixture g; g.gateB = 1;
-        assert(g.run() == 0); assert((g.events == std::vector<std::string>{"gateA", "gateB"}));
+        Fixture f; f.dragging = -1;
+        assert(f.run() == 0); assert((f.events == std::vector<std::string>{"world", "dragging"}));
+        Fixture g; g.gateA = 1;
+        assert(g.run() == 0); assert((g.events == std::vector<std::string>{"world", "dragging", "state", "gateA"}));
+        Fixture h; h.gateB = 1;
+        assert(h.run() == 0); assert((h.events == std::vector<std::string>{"world", "dragging", "state", "gateA", "gateB"}));
     }
-    {   // non-nil foreign priority rejects, intentional does not bypass.
+    {   // non-nil foreign priority rejects; intentional does not bypass it.
         Fixture f; f.priority = 99;
         assert(f.run(1) == 0); assert(f.tipCalls == 0 && f.addCalls == 0 && f.removeCalls == 0);
+    }
+    {   // intentional==0 + ignoring set forces priority==self; foreign rejects.
+        Fixture f; f.ignoring = 1; f.priority = 99;
+        assert(f.run() == 0); assert(f.addCalls == 0 && f.removeCalls == 0);
+        Fixture g; g.ignoring = 1; g.priority = g.self;
+        assert(g.run() == 1); assert(g.addCalls == 1);
+    }
+    {   // intentional==0 + meditating set forces priority==self.
+        Fixture f; f.meditatingFlag = -1; f.priority = 99;
+        assert(f.run() == 0); assert(f.addCalls == 0);
+        Fixture g; g.meditatingFlag = -1; g.priority = g.self;
+        assert(g.run(0) == 1);
+    }
+    {   // intentional==1 skips the ignoring/meditating forced-priority region,
+        // but the later non-nil foreign priority check still rejects.
+        Fixture f; f.ignoring = 1; f.meditatingFlag = 1; f.priority = 99;
+        assert(f.run(1) == 0); assert(f.addCalls == 0);
     }
     {   // ordinary success path: exact message order and preserved fields.
         Fixture f; Object d = 0x1234ull;
@@ -86,7 +111,7 @@ int main() {
         assert(f.madeSub == 88 && f.madeDynamic == d && f.madeFlash == 1);
         assert(f.addCalls == 1 && f.removeCalls == 1 && f.recordCalls == 1 && f.tipCalls == 0);
         assert((f.events == std::vector<std::string>{
-            "gateA","gateB","priority","itemType","subItems","dataA","dataB",
+            "world","dragging","state","gateA","gateB","priority","itemType","subItems","dataA","dataB",
             "canPickUp","needsRemoved","pending","dynamic","makeItem","addItem",
             "setNeedsRemoved","recordComparator","recordIndexed"}));
     }

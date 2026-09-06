@@ -6,16 +6,19 @@
 
 ```text
 固定原ARM ELF：Blockhead -pickupFreeblockIfPossible:inTile:intentional:
-  → 入口 state 字节 / priority 拒绝（intentional 不绕过）
+  → 入口：worldUIDragging→state+0x60/+0x68→priorityBlockhead
+    → intentional==0时 ignoring/meditating 强制 priority==self
+    → 非空外部 priority 拒绝
   → 普通 freeblock 路径：字段读取→canPickUp==1→needsRemoved→
     InventoryItem构造→addItemToInventory:flash:1→setNeedsRemoved:1→
     索引记账分支→成功1；失败块仅 priority==self 时 tip
   → signed char 1/0，不归一 bool，不当作接受数量
 显式 pending（不猜测）：0xc61d..0xc626 查找/容器/所有权分支、
-0x629..0x634 货币拆分（0x12a/div/mod/makeIntpair）
+0x629..0x634 货币拆分（0x12a：0x104/0xa7/0xa6 三循环+100进制 div/mod+
+  smmul换算+makeIntpair，静态证据已记录未移植）
 证据：1650指令/80调用/29选择器/9个ivar（state/ignoringFreeblocksDueToDrop/
       isClientBlockheadBeingControlledByServer/unconfirmedPickups/thisFramePickupRequests）
-验收：O0/O2 行为测试通过；账本36 implemented；原版runtime behavior-verified仍0
+验收：O0/O2/UBSan行为测试通过；账本36 implemented；原版runtime behavior-verified仍0
 ```
 
 ## 原版库存方法批次（2026-09-06，接续473899a）
