@@ -13,8 +13,10 @@ signed char: 1 success, 0 rejection; neither bool nor accepted count.
 Executed order (original instruction anchors):
 - entry gate: world = [[self + DynamicObject.world]] (ivar +4) then
   worldUIDragging(world), nonzero rejects (0xc61c48..0xc61c6c);
-- state bytes: [[self + Blockhead.state]] (ivar +0x38); state+0x60 and state+0x68
-  nonzero reject (0xc61c7c..0xc61cbc);
+- state is INLINE storage: self + Blockhead.state offset (+0x38), NOT
+  a pointer loaded from that location. Signed bytes at storage+0x60/+0x68
+  nonzero reject (0xc61c7c..0xc61cbc). The old double-dereference description
+  in 14f3574 was incorrect; `stateStorageAddress` makes the boundary explicit.
 - priorityBlockhead send on the freeblock (0xc61cd0..0xc61cfc);
 - intentional gate (0xc61d00..0xc61d84): with intentional==0, a set
   ignoringFreeblocksDueToDrop byte (ivar +0x2b4) or nonzero meditating requires
@@ -77,3 +79,38 @@ capacity==1 strictness (0/2 reject), needsRemoved duplication guard, comparator
 record branch, pending-path refusal, nil freeblock/item construction failure and
 silent vs tip rejection. These are synthetic-runtime contracts, not Foundation,
 original-app or device execution.
+
+### Executed original-ARM entry differential
+
+`tools/test_pickup_entry_arm.py` executes the pinned original bytes from
+0xc61c00 until entry rejection/return or BEFORE 0xc61db4. It hooks only
+objc_msgSend with explicit synthetic receivers; signed field loads, conditional
+branches and the stack argument load run unchanged. The fifth argument is at
+entry SP, not entry SP+8. The inline state's first word is poisoned with an
+unmapped address, so a mistakenly added pointer dereference cannot pass.
+
+O0 and O2 each match all 2,187 input combinations (zero/positive/negative signed
+bytes across dragging/state/intentional/ignoring/meditating and nil/self/foreign
+priority). Compared outputs are entry continuation/rejection AND selector/field
+read order. Three compiled C++ negative controls are detected: skipped
+intentional gate (27 mismatches), negative dragging incorrectly accepted (729),
+and omitted second state gate (243). Counts are per optimization, not distinct
+input universes. Existing fixture tests now pass explicit run(0) and use nil
+priority so foreign-priority rejection cannot mask an untested forced gate.
+
+Reproduce (pyelftools, Unicorn and clang++ required; original ELF not bundled):
+
+```sh
+LIBUNICORN_PATH="$PREFIX/lib" python3 tools/test_pickup_entry_arm.py \
+  "$HOME/blockheads-work/extracted/lib/armeabi-v7a/libApplication.so" \
+  --output-dir "$HOME/blockheads-work/pickup-entry-verify"
+```
+
+Full pickup remains UNVERIFIED, not proven impossible to emulate. An invalid
+instruction in the abandoned harness never established the claimed recording
+region root cause: its diagnostic returned a nonzero first gate and exited
+early, and the later exception trace patch did not land. Spilled indirect call
+targets require relocation/dataflow analysis; their existence alone is not a
+hard limit on Unicorn. This entry test makes NO lookup/ownership/currency,
+ordinary insertion, recording, Foundation or APK equivalence claim. No change
+to full-method behavior-verified count is justified by this bounded test.

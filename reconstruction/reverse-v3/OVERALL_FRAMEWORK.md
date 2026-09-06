@@ -713,3 +713,19 @@ NoodleNewsClient
 ```
 
 本文件只记录逆向结果；它不宣称上述后续功能已经实现。
+
+
+## Pickup entry acceptance correction (after 14f3574)
+
+```text
+Original pinned ARM entry 0xc61c00 -> stop before 0xc61db4
+  -> signed inline-state loads + world/priority/meditating messages
+  -> 2187 synthetic inputs match C++ O0 / O2 (each), three mutants detected
+  -> lookup/ownership -> currency -> recording/World -> APK remain pending
+```
+
+`Blockhead.state` is inline storage at self+0x38, NOT a loaded pointer.
+The Runtime contract is now named `stateStorageAddress`. This is an interface/
+test/evidence correction, not new APK gameplay or full pickup equivalence.
+The failed full-method emulator harness established no impossibility theorem.
+See native/INVENTORY_PICKUP.md for the executable recipe and precise scope.

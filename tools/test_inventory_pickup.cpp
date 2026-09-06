@@ -12,7 +12,7 @@ using namespace recovered::inventory_pickup;
 namespace rules = blockheads::recovered;
 
 struct Fixture final : Runtime {
-    Object self = 1, freeblock = 2, madeItem = 3, world = 4, state = 5;
+    Object self = 1, freeblock = 2, madeItem = 3, world = 4, state = self + 0x38;
     std::int8_t dragging = 0, gateA = 0, gateB = 0;
     Object priority = 0;
     std::int8_t ignoring = 0, meditatingFlag = 0;
@@ -29,7 +29,7 @@ struct Fixture final : Runtime {
 
     Object readWorld(Object s) override { assert(s == self); events.push_back("world"); return world; }
     std::int8_t worldUIDragging(Object w) override { assert(w == world); events.push_back("dragging"); return dragging; }
-    Object entryState(Object s) override { assert(s == self); events.push_back("state"); return state; }
+    Object stateStorageAddress(Object s) override { assert(s == self); events.push_back("state"); return state; }
     std::int8_t stateGateA(Object st) override { assert(st == state); events.push_back("gateA"); return gateA; }
     std::int8_t stateGateB(Object st) override { assert(st == state); events.push_back("gateB"); return gateB; }
     Object priorityBlockhead(Object) override { events.push_back("priority"); return priority; }
@@ -86,17 +86,25 @@ int main() {
         Fixture f; f.priority = 99;
         assert(f.run(1) == 0); assert(f.tipCalls == 0 && f.addCalls == 0 && f.removeCalls == 0);
     }
-    {   // intentional==0 + ignoring set forces priority==self; foreign rejects.
-        Fixture f; f.ignoring = 1; f.priority = 99;
-        assert(f.run() == 0); assert(f.addCalls == 0 && f.removeCalls == 0);
-        Fixture g; g.ignoring = 1; g.priority = g.self;
-        assert(g.run() == 1); assert(g.addCalls == 1);
-    }
-    {   // intentional==0 + meditating set forces priority==self.
-        Fixture f; f.meditatingFlag = -1; f.priority = 99;
-        assert(f.run() == 0); assert(f.addCalls == 0);
-        Fixture g; g.meditatingFlag = -1; g.priority = g.self;
-        assert(g.run(0) == 1);
+    {   // Explicit zero: a default run(1) silently skipped the claimed gate.
+        for (int flag : {1, -128}) {
+            Fixture f; f.ignoring = static_cast<std::int8_t>(flag);
+            assert(f.run(0) == 0); // nil priority: foreign-priority gate cannot mask this
+            assert(f.addCalls == 0 && f.tipCalls == 0);
+            assert(f.events.back() == "ignoring"); // short-circuits meditating
+            Fixture g; g.ignoring = static_cast<std::int8_t>(flag); g.priority = g.self;
+            assert(g.run(0) == 1);
+            assert(std::count(g.events.begin(), g.events.end(), "meditating") == 0);
+            Fixture h; h.meditatingFlag = static_cast<std::int8_t>(flag);
+            assert(h.run(0) == 0);
+            assert(h.events.back() == "meditating" && h.tipCalls == 0);
+            Fixture i; i.meditatingFlag = static_cast<std::int8_t>(flag); i.priority = i.self;
+            assert(i.run(0) == 1);
+        }
+        Fixture f; f.ignoring = 1; f.meditatingFlag = 1;
+        assert(f.run(1) == 1); // intentional bypass with nil priority
+        assert(std::count(f.events.begin(), f.events.end(), "ignoring") == 0);
+        assert(std::count(f.events.begin(), f.events.end(), "meditating") == 0);
     }
     {   // intentional==1 skips the ignoring/meditating forced-priority region,
         // but the later non-nil foreign priority check still rejects.

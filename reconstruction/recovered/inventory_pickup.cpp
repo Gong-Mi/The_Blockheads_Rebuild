@@ -14,7 +14,7 @@ std::int8_t pickupFreeblockIfPossible(Runtime& r, Object self, Object freeblock,
     const Object world = r.readWorld(self);
     if (r.worldUIDragging(world) != 0) return 0;
     // 0xc61c7c..0xc61cbc: state bytes at +0x60/+0x68; nonzero rejects.
-    const Object state = r.entryState(self);
+    const Object state = r.stateStorageAddress(self);
     if (r.stateGateA(state) != 0 || r.stateGateB(state) != 0) return 0;
     // 0xc61cd0..0xc61cfc: priorityBlockhead send.
     const Object priority = r.priorityBlockhead(freeblock);

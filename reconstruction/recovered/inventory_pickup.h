@@ -13,8 +13,9 @@ struct Runtime {
     // Blockhead entry: DynamicObject.world ivar at +0x4, then worldUIDragging.
     virtual Object readWorld(Object self) = 0;
     virtual std::int8_t worldUIDragging(Object world) = 0;
-    // Blockhead.state ivar at +0x38; original gates read state +0x60/+0x68.
-    virtual Object entryState(Object self) = 0;
+    // INLINE Blockhead.state storage at self+0x38 (not *(self+0x38)).
+    // Return the storage address; original reads signed bytes at +0x60/+0x68.
+    virtual Object stateStorageAddress(Object self) = 0;
     virtual std::int8_t stateGateA(Object state) = 0;
     virtual std::int8_t stateGateB(Object state) = 0;
     // priorityBlockhead for the freeblock; zero is ObjC nil.
