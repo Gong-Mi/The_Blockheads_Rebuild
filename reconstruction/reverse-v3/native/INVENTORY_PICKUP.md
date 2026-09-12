@@ -48,23 +48,16 @@ Executed order (original instruction anchors):
   binding and coordinate layout remain pending; no parent integration is claimed.
 - Ownership special-item branches (0xc6225c itemTypeRequiresOwnershipToRemove
   and the 0x428/0x429/0xcf/0xa8/0xa4..0xa6 sub-branches) are not implemented.
-- Currency-split loop 0xc62900..0xc63440 is NOW RECOVERED as the sibling
-  module `recovered::pickup_currency::splitMoney`
-  (`inventory_pickup_currency.cpp`, contract `INVENTORY_PICKUP_CURRENCY.md`):
-  three strict-gate insertion loops keyed by 0x104/0xa7/0xa6, uxth field
-  truncation, cascade limits via __aeabi_idiv/__modsi3 (`0xc62c00`/`0xc62de0`
-  are PLT stubs, not opaque helpers), residual/10000 via the smmul magic +
-  makeIntpair. The parent still refuses the region through
-  `pendingPathUnresolved()` until the lookup region supplies the resolved
-  freeblock. The earlier "residual-tail slots 0x145c418/0x145c508/0x145c5e4
-  above `_end` are statically unresolvable" claim was wrong: they are
-  GOT-anchor recomputes (`add rN, pc, rN` after the literal load), and with
-  that rule every literal in the method resolves (see
-  `INVENTORY_PICKUP_CURRENCY.md` correction note). The C++ models the
-  residual K/R arithmetic for the differential but production callers must
-  not execute tail side effects: the tails are manifest evidence only.
-  dataA/dataB denomination names
-  remain inference-labelled (C evidence); arithmetic itself is A evidence.
+- Currency-split loop 0xc62900..0xc63440 is recovered as the sibling module
+  `recovered::pickup_currency::splitMoney` (`inventory_pickup_currency.cpp`,
+  contract `INVENTORY_PICKUP_CURRENCY.md`): three strict-gate insertion loops,
+  `uxth` truncation, `__aeabi_idiv`/`__modsi3` cascades, and residual arithmetic.
+  All literal/selector/class/CFString references in this region are statically
+  resolved. The parent still refuses the unresolved lookup/ownership path via
+  `pendingPathUnresolved()`; this is an integration boundary, not an address-
+  resolution gap. Tail runtime side effects (achievement, save-dict, pickup
+  records, residual freeblock creation) remain unimplemented. Denomination
+  names are inference-labelled; arithmetic is directly evidenced.
 
 Integration with a game Runtime therefore requires implementing the dynamic
 selector bridge and deciding the pending paths. Until then this module is not an

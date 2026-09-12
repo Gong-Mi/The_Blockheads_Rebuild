@@ -91,11 +91,11 @@ evidence:
    - `limit3 = (limit2 - gold) * 100 + dataB % 100`     (`__modsi3`)
 6. `residual = limit3 - copper` (`0xc62f9c..0xc62fa8`).
    `> 0` enters the makeIntpair/achievement tail; `<= 0` exits at
-   `0xc630a8`. Both tails read lazily initialized `.bss` ivar-offset slots
-   `0x145c418/0x145c508/0x145c5e4` — above `_end` (`0xfcbf97` in-file),
-   statically unresolvable, therefore NOT recovered. The C++ models
-   thousands/remainder for the oracle but callers must not side-effect past
-   the stop edges.
+   `0xc630a8`. The formerly suspicious addresses
+   `0x145c418/0x145c508/0x145c5e4` are resolved GOT-anchor rematerializations,
+   not lazy `.bss` ivar slots. Their literal references are statically resolved;
+   what remains unimplemented is the tail's runtime side effects, not address
+   resolution. The C++ oracle intentionally stops at the verified region edges.
 
 Denomination model implied by the constants: 1 platinum = 100 gold =
 10000 copper (the /100, %100, *100, 10000-magic chain is a unit cascade;
@@ -134,4 +134,6 @@ Synthetic receivers only: no Foundation, no real InventoryItem, no original
 app execution, no Android device. `behavior-verified` for the parent method
 stays 0 in the ledger; this region is implemented-with-recorded-boundaries.
 Integration order that remains: resolved-freeblock plumbing from the parent
-(lookup region still pending), then the three lazily resolved tail slots.
+(lookup region still pending), then runtime side-effect contracts for the
+already statically resolved achievement, save-dict, pickup-record and residual
+freeblock tails.

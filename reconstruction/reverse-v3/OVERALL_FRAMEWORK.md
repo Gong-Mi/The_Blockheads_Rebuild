@@ -19,16 +19,10 @@
     →addItemToInventory:flash:1(返回值不读)；gate严格cmp#1
   → 0xb分支：setNeedsRemoved:1(sxtb符号1)后FALLTHROUGH第二次itemType
     （实跑trace证明，非提前返回）
-  → 未恢复边界（批次内自我纠正）：residual尾部"三个.bss ivar槽0x145c418/
-    508/5e4高于_end不可解析"判定为误——它们是GOT锚(add rN,pc,rN重算,方法内
-    8对)；锚规则修复后方法内字面量100%解析：31选择器/10ivar/1 import/
-    NSNumber+InventoryItem类槽/6 CFString(ownerID/safeClientID/
-    sellerClientID/ironPlaceClientID/server/grp.diamond_tree)。
-    非货币尾=itemType0x58钻石→grp.diamond_tree成就；记账尾=
-    dynamicObjectSaveDict上ownerID等键的 objectForKey:/setObject:forKey:
-    +unconfirmedPickups/thisFramePickupRequests+addIndex:；residual尾=
-    makeIntpair(rem/1e4,rem%1e4)以同类型0x12a重新生成 money freeblock。
-    尾段仅manifest证据，移植边界仍是停止边
+  → 货币区当前已完成地址/字面量解析；此前误称为"三个不可解析.bss槽"的
+    0x145c418/508/5e4 实为GOT锚重算，不再列为解析缺口。仍未完成的是
+    尾段运行时副作用契约：钻石成就、dynamicObjectSaveDict写回、拾取记录、
+    residual money freeblock重新生成，以及这些副作用接入父方法。
 验收：契约fixture O0/O2 CTest 27/27；Unicorn实跑差分288输入×O0/O2消息序列+
   计数器+停止边全一致；4负控全检出(54/96/24/28)
 账本：父方法implemented仍36（同IMP不重复计数）；behavior-verified仍0
