@@ -40,9 +40,12 @@ Executed order (original instruction anchors):
 ## Not recovered (explicit boundaries, no guessing)
 
 - Freeblock/tile lookup and container-enumeration region 0xc61dd0..0xc626d8:
-  the local method reads resolved freeblocks through the lookup chain. The
-  recovered function requires a resolved freeblock as its argument; the lookup,
-  fast enumeration and Tile-pack copies in this region are not ported.
+  a static manifest now covers all 578 instructions, 17 calls and 42 branch
+  sites (`inventory_pickup_lookup.json`, contract `INVENTORY_PICKUP_LOOKUP.md`).
+  It confirms the two-word header gate, stack-built coordinate/object preparation,
+  `__aeabi_memmove`, the two-byte cursor loop, the direct ownership helper and
+  the 0x428/0x429/0xa4..0xa8/0xcf dispatch constants. Dynamic selector/receiver
+  binding and coordinate layout remain pending; no parent integration is claimed.
 - Ownership special-item branches (0xc6225c itemTypeRequiresOwnershipToRemove
   and the 0x428/0x429/0xcf/0xa8/0xa4..0xa6 sub-branches) are not implemented.
 - Currency-split loop 0xc62900..0xc63440 is NOW RECOVERED as the sibling
