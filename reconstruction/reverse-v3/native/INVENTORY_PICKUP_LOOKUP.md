@@ -14,6 +14,7 @@ Output: `inventory_pickup_lookup.json`.
 - `0xc62108` is `__aeabi_memmove`; the preceding block constructs/copies a small coordinate/object representation. This is not enough to name the fields.
 - `0xc6214c..0xc621b8` is a loop that compares a two-byte value and advances a cursor by 2 on mismatch. It is structurally an enumeration/packed-record loop, but the record type and source collection are not yet proven.
 - `0xc6225c` directly calls `itemTypeRequiresOwnershipToRemove(ItemType)`.
+- The ownership path statically resolves its key strings: `ownerID`, `safeClientID`, `sellerClientID`, `ironPlaceClientID`, and `server`. It also reads `isAdmin`, `objectForKey:`, `localNetID`, `dynamicObjectSaveDict`, `isEqualToString:`, and `isClient`.
 - `0xc623bc..0xc624f8` dispatches on the returned ItemType. Confirmed constants are `0x428`, `0x429`, `0xa4`, `0xa5`, `0xa6`, `0xa7`, `0xa8`, and `0xcf`; the branches lead to different indirect calls.
 - `0xc62500..0xc626d8` performs the second predicate/priority gate and writes the local result byte used by the parent method.
 

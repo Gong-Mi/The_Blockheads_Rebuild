@@ -79,6 +79,34 @@ def recover(path):
                     item['target'] = hex(target)
                 branches.append(item)
         require(len(insns) * 4 == END - START, 'word coverage')
+        # Resolve the CFConstantString objects used by the ownership/removal
+        # dispatch. Their class-reference relocations are at the PIC-derived
+        # slots; the payload pointer is word+8 and the stored length is word+12.
+        cfstrings = []
+        for slot in (0xfa20a8, 0xfa20b8, 0xfa20c8, 0xfa20d8, 0xfa20e8):
+            try:
+                payload = word(slot + 8)
+                length = word(slot + 12)
+                raw = read(payload, length)
+                value = raw.decode('utf-8', 'replace')
+                cfstrings.append(dict(slot=hex(slot), payload=hex(payload),
+                                      length=length, value=value))
+            except (TypeError, ValueError, UnicodeDecodeError):
+                pass
+        selector_refs = []
+        for slot, expected in (
+            (0xe870f4, 'itemType'), (0xe87168, 'isAdmin'),
+            (0xe87084, 'objectForKey:'), (0xe8709c, 'localNetID'),
+            (0xe871cc, 'dynamicObjectSaveDict'),
+            (0xe870d0, 'isEqualToString:'), (0xe87028, 'isClient'),
+            (0xe876b0, 'priorityBlockheadCannotPickup'),
+        ):
+            try:
+                selector_refs.append(dict(slot=hex(slot), selector=expected,
+                                          payload=hex(word(slot))))
+            except (TypeError, ValueError):
+                pass
+
         return dict(
             schema=1,
             elf_sha256=SHA,
@@ -100,6 +128,8 @@ def recover(path):
                 dict(address='0xc623bc', finding='ItemType dispatch: 0x428/0x429/0xa4..0xa8/0xcf branches'),
                 dict(address='0xc62500', finding='secondary removal predicates and priority/self comparison'),
             ],
+            cfstrings=cfstrings,
+            selector_refs=selector_refs,
             dynamic_bindings_pending=[
                 'fast-enumeration receiver and selector at 0xc61e10',
                 'per-entry remove*AtPos: selector and receiver calls',
@@ -127,6 +157,8 @@ def main():
         'branches': len(data['branches']),
         'direct_symbols': sorted({x['symbol'] for x in data['calls'] if 'symbol' in x}),
         'dynamic_bindings_pending': len(data['dynamic_bindings_pending']),
+        'cfstrings': data['cfstrings'],
+        'selector_refs': data['selector_refs'],
     }))
 
 
