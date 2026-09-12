@@ -53,10 +53,14 @@ Executed order (original instruction anchors):
   are PLT stubs, not opaque helpers), residual/10000 via the smmul magic +
   makeIntpair. The parent still refuses the region through
   `pendingPathUnresolved()` until the lookup region supplies the resolved
-  freeblock. Residual-tail `.bss` ivar-offset slots 0x145c418/0x145c508/
-  0x145c5e4 are above `_end` (lazily initialized, statically unresolvable);
-  the C++ models their K/R arithmetic for the differential but production
-  callers must not execute tail side effects. dataA/dataB denomination names
+  freeblock. The earlier "residual-tail slots 0x145c418/0x145c508/0x145c5e4
+  above `_end` are statically unresolvable" claim was wrong: they are
+  GOT-anchor recomputes (`add rN, pc, rN` after the literal load), and with
+  that rule every literal in the method resolves (see
+  `INVENTORY_PICKUP_CURRENCY.md` correction note). The C++ models the
+  residual K/R arithmetic for the differential but production callers must
+  not execute tail side effects: the tails are manifest evidence only.
+  dataA/dataB denomination names
   remain inference-labelled (C evidence); arithmetic itself is A evidence.
 
 Integration with a game Runtime therefore requires implementing the dynamic

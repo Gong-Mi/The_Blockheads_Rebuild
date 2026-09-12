@@ -25,6 +25,36 @@ as the PIC base as `ldrsbteq`). Exact pools: `0xc62bb8..0xc62bd8`,
 `0xc62dac..0xc62db8`, `0xc62f8c..0xc62f9c`, `0xc63300..0xc63340`,
 `0xc63804..0xc638a0`.
 
+Second correction (same batch, after full slot classification): the
+earlier note that residual-tail slots `0x145c418/0x145c508/0x145c5e4` were
+"lazily initialized .bss addresses, statically unresolvable" was wrong —
+those PIC-relative values were the method's GOT anchor (== PIC base
+`0x105faf4`), and the very next instruction recomputes it as
+`add rN, pc, rN` (pc-form rematerialization, 8 such literal pairs in the
+method). With the anchor rule applied every pool literal resolves; unique
+slots across the method: 31 selectors, 10 ivars, 1 import
+(objc_msgSend), 2 class slots (`OBJC_CLASS_$_NSNumber` reloc slot 0xe8b4a0,
+`InventoryItem` class pointer slot 0xe8b4a4) and 6 CFStrings
+(`ownerID`, `safeClientID`, `sellerClientID`, `ironPlaceClientID`,
+`server`, `grp.diamond_tree`). Zero unresolved references remain.
+
+New tail evidence from the fixed classification (hand review, C-level
+until differential-tested): the non-money exit at `0xc63340` reads
+itemType == `0x58` (ITEM_DIAMOND) and `hovers`, then sends
+`reportAchievementWithIdentifier:` with CFString `grp.diamond_tree`.
+The record/bookkeeping tail from `0xc63440` walks
+`objectForKey:`/`setObject:forKey:` on `dynamicObjectSaveDict` using key
+CFStrings `ownerID`, `safeClientID`, `sellerClientID`, `ironPlaceClientID`
+and `server`, plus `NSNumber numberWithInt:/unsignedLong:`,
+`unconfirmedPickups`/`thisFramePickupRequests` ivar traffic and
+`addIndex:` on the indexed record — the shape the parent contract calls
+the record region. The residual>0 tail (stop edge `0xc62ff0`) computes
+makeIntpair(rem/10000, rem%10000) and sends
+`createFreeBlockAtPosition:ofType:0x12a dataA:uxth(rem/10000)
+dataB:uxth(rem%10000) …` — it re-emits the un-insertable remainder as a
+NEW money freeblock (same type, split fields). Ported behavior stops at
+the edges; the tails remain manifest-only evidence.
+
 Earlier guesses were also wrong in two places and are now corrected with
 evidence:
 - The "three循环 keyed by 0x104/0xa7/0xa6" framing is right, but the helper

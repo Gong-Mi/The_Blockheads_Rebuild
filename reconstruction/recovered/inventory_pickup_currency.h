@@ -63,10 +63,14 @@ struct Outcome {
 // Each level inserts while its own counter < limit AND the gate returns 1;
 // a failed gate exits the level immediately. Loop counter and success
 // counter advance together (failure jumps past both), so they stay equal.
-// The residual tail (makeIntpair + achievement bookkeeping on lazily
-// initialized .bss ivar-offset slots 0x145c418/0x145c508/0x145c5e4, which
-// are above _end: statically unresolvable) is NOT recovered; callers must
-// perform no side effects beyond the stop edges.
+// The tails beyond the stop edges were first thought to read unresolvable
+// lazily initialized slots; that was wrong (manifest correction 2026-09-12):
+// they are GOT-anchor recomputes and every literal now resolves. The
+// residual>0 tail re-emits makeIntpair(rem/10000, rem%10000) as a NEW
+// 0x12a freeblock via createFreeBlockAtPosition:... on the blockhead's
+// dynamicWorld at its pos (see INVENTORY_PICKUP_CURRENCY.md). Modeled by
+// K/R here but NOT ported: this module stops at the edges and callers must
+// perform no other side effects beyond them.
 Outcome splitMoney(Runtime&, Object self, Object freeblock);
 
 inline std::int32_t uxth(std::int32_t raw) {

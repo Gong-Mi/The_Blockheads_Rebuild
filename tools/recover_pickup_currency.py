@@ -118,6 +118,11 @@ def main():
         info = rels.get(slot)
         try: pointed = word(slot)
         except ValueError: return {**out, 'kind': 'unmapped'}
+        # GOT anchor computation: a literal whose PIC-relative value lands on
+        # the anchor itself (the pc-form `add rN,pc,rN` recompute at the next
+        # instruction proves it; these are NOT data references).
+        if slot == PIC:
+            return {**out, 'kind': 'got-anchor-literal'}
         if info and info == (21, 'objc_msgSend'):
             return {**out, 'kind': 'import', 'target': 'objc_msgSend'}
         if info and info[0] == 21:
@@ -129,7 +134,17 @@ def main():
             # On REL relocations the file word is the addend; 0 means the
             # runtime fills the slot with the relocation symbol's address.
             if pointed == 0:
-                return {**out, 'kind': 'relocated-at-load', 'reloc': info[1]}
+                extra = {}
+                if info[1] == '__CFConstantStringClassReference':
+                    # The slot itself is the CFString struct: [class,flags,
+                    # char* data, len] with data/len file-backed constants.
+                    try:
+                        dp, ln = word(slot + 8), word(slot + 12)
+                        if 0 < ln < 64:
+                            extra['cfstring'] = cstr(dp, ln)
+                    except (ValueError, struct.error):
+                        pass
+                return {**out, 'kind': 'relocated-at-load', 'reloc': info[1], **extra}
             syms = [n for n in dyn.get(pointed, []) if n]
             return {**out, 'kind': 'class-ref', 'reloc': info[1], 'word': hex(pointed)} if not syms else {**out, 'kind': 'reloc-absolute', 'symbols': syms, 'word': hex(pointed)}
         if info and info[0] == 23:
@@ -139,7 +154,15 @@ def main():
             s2 = cstr(pointed)
             if s2: return {**out, 'kind': 'selector', 'selector': s2}
             cf = any(v == pointed and '__CFConstantStringClassReference' in names for v, names in dyn.items())
+            payload = None
+            try:
+                dp, ln = word(pointed + 8), word(pointed + 12)
+                if 0 < ln < 64:
+                    payload = cstr(dp, ln)
+            except (ValueError, struct.error):
+                pass
             return {**out, 'kind': 'data', 'word': hex(pointed), 'cfstring_ref': cf,
+                    'cfstring': payload,
                     'unmapped_target': not any(b <= pointed < b + len(d) for b, d in segs)}
         syms = [n for n in dyn.get(pointed, []) if n]
         if syms:
@@ -147,6 +170,18 @@ def main():
         return {**out, 'kind': 'raw', 'word': hex(pointed)}
 
     annotated, sends, stubs, ivar_reads = [], [], {}, {}
+    def pc_rematerialize(addr):
+        """True if the insn following a ldr[pc] is `add <same reg>, pc, <reg>`,
+        i.e. the literal is a GOT-anchor (PIC base) recompute, not a slot
+        offset read via [slot, base]."""
+        i = code.get(addr + 4)
+        if i is None or i.mnemonic != 'add':
+            return None
+        regs = [t.strip() for t in i.op_str.split(',')]
+        want = code[addr].op_str.split(',')[0].strip()
+        if len(regs) == 3 and regs[1] == 'pc' and regs[0] == want and regs[2] == want:
+            return (addr + 4 + 8) & 0xffffffff
+        return None
     for addr in sorted(code):
         i = code[addr]; text = f'{i.mnemonic} {i.op_str}'
         note = ''
@@ -156,10 +191,17 @@ def main():
             lit = (addr + 8 + imm) & 0xffffffff
             try:
                 pool_word = word(lit)
-                slot = (PIC + pool_word) & 0xffffffff
-                info = resolve_slot(slot)
-                ivar_reads[reg] = (lit, slot, info)
-                note = f'  ;pool {lit:08x} slot {slot:#x} ' + json.dumps(info, sort_keys=True)
+                remat = pc_rematerialize(addr)
+                if remat is not None:
+                    anchor = (remat + pool_word) & 0xffffffff
+                    info = {'slot': hex(anchor), 'kind': 'got-anchor-recompute',
+                            'matches_pic_base': anchor == PIC}
+                    note = f'  ;pool {lit:08x} ' + json.dumps(info, sort_keys=True)
+                else:
+                    slot = (PIC + pool_word) & 0xffffffff
+                    info = resolve_slot(slot)
+                    ivar_reads[reg] = (lit, slot, info)
+                    note = f'  ;pool {lit:08x} slot {slot:#x} ' + json.dumps(info, sort_keys=True)
             except ValueError:
                 note = f'  ;pool {lit:08x} unreadable'
         elif i.mnemonic == 'add' and 'r2, r2, r' not in i.op_str and text.startswith('add'):
@@ -198,10 +240,36 @@ def main():
     lines = list(annotated)
     for s, e in pools:
         for addr in range(s, e, 4):
-            slot = (PIC + word(addr)) & 0xffffffff
-            try: info = resolve_slot(slot)
-            except ValueError: info = {'kind': 'unreadable'}
-            lines.append(f'{addr:08x}: {word(addr):08x} .word  ;slot {slot:#x} ' + json.dumps(info, sort_keys=True))
+            # If a code instruction loads this literal and the very next
+            # instruction recomputes it as (addr+12 + word), the word is a
+            # GOT anchor (PIC base) constant, not a slot offset.
+            recompute = None
+            for c in sorted(code):
+                i = code[c]
+                if i.mnemonic not in ('ldr', 'ldrb', 'ldrsb', 'ldrd') or '[pc, #' not in i.op_str:
+                    continue
+                try:
+                    imm = int(i.op_str.rsplit('#', 1)[1].rstrip(']'), 0)
+                except ValueError:
+                    continue
+                if (c + 8 + imm) & 0xffffffff != addr:
+                    continue
+                j = code.get(c + 4)
+                regs = [t.strip() for t in j.op_str.split(',')] if j and j.mnemonic == 'add' else []
+                want = i.op_str.split(',')[0].strip()
+                if len(regs) == 3 and regs[1] == 'pc' and regs[0] == want and regs[2] == want:
+                    recompute = (c + 12 + word(addr)) & 0xffffffff
+                    break
+            if recompute is not None:
+                info = {'kind': 'got-anchor-recompute', 'slot': hex(recompute),
+                        'matches_pic_base': recompute == PIC}
+            else:
+                slot = (PIC + word(addr)) & 0xffffffff
+                try:
+                    info = resolve_slot(slot)
+                except ValueError:
+                    info = {'kind': 'unreadable'}
+            lines.append(f'{addr:08x}: {word(addr):08x} .word  ;' + json.dumps(info, sort_keys=True))
 
     lines_sorted = sorted(lines, key=lambda s: int(s[:8], 16))
     lines_sorted = [

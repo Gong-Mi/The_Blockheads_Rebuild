@@ -231,7 +231,7 @@ def main():
                   elf_sha256=SHA, cases=len(cases), reports=reports,
                   negative_controls=negatives,
                   runtime_verified_original_app=False,
-                  boundary='region only; slots 0x145c418/0x145c508/0x145c5e4 are above _end (lazily initialized, statically unresolvable); no Foundation/app/device claim')
+                  boundary='region only; tail slots 0x145c418/0x145c508/0x145c5e4 were proven GOT-anchor recomputes (all literals resolve; see INVENTORY_PICKUP_CURRENCY.md correction note) — stop edges remain the port boundary, tails manifest-only; no Foundation/app/device claim')
     (a.output_dir / 'result.json').write_text(json.dumps(result, indent=2))
     print(json.dumps({k: v for k, v in result.items() if k != 'reports'}))
     print('mismatch counts:', [r['mismatch_count'] for r in reports])
