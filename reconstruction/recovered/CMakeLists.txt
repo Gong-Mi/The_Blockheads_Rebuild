@@ -12,14 +12,14 @@ endif()
 
 # Inventory methods are a distinct recovered module, not the replacement Player.
 add_library(blockheads_recovered_inventory STATIC
-    inventory_item.cpp inventory_capacity.cpp inventory_rules.cpp inventory_add.cpp inventory_pickup.cpp inventory_ownership.cpp)
+    inventory_item.cpp inventory_capacity.cpp inventory_rules.cpp inventory_add.cpp inventory_pickup.cpp inventory_ownership.cpp inventory_pickup_currency.cpp)
 target_include_directories(blockheads_recovered_inventory PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(blockheads_recovered_inventory PUBLIC cxx_std_17)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     include(CTest)
     if(BUILD_TESTING)
-        foreach(inventory_part item capacity rules add chain pickup ownership)
+        foreach(inventory_part item capacity rules add chain pickup ownership pickup_currency)
             add_executable(test_inventory_${inventory_part} ../../tools/test_inventory_${inventory_part}.cpp)
             target_link_libraries(test_inventory_${inventory_part} PRIVATE blockheads_recovered_inventory)
             target_compile_options(test_inventory_${inventory_part} PRIVATE -UNDEBUG)

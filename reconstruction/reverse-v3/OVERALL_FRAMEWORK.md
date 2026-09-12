@@ -2,6 +2,31 @@
 
 本文是 `com.noodlecake.blockheads` 1.7.6 的整体静态框架地图，目标是先恢复模块边界和数据流，再决定重建代码如何落地。它不是对所有函数的语义命名，也不是运行时行为完成声明。
 
+## ITEM_MONEY 货币拆分区域独立恢复批次（2026-09-12，接续ebb71e2）
+
+```text
+固定原ARM ELF：pickup 0xc628f8..0xc62fec 货币区
+  → CFG精确划分取代旧POOLS粗标（0xc62bd8起是活代码；池字面量被ldr[pc]引用
+    即强制为数据，修正ldrsbteq等假指令）；精确池5段
+  → 旧记录两处错误用实跑证据纠正：
+    "helper analyzed separately" = __aeabi_idiv/__modsi3 PLT桩
+      （0xc62c00/0xc62de0 GOT 0x106001c/0x105fdc4），limit2/3 直接
+      (dataA-platinum)*100+dataB/100、(limit2-gold)*100+dataB%100级联
+    smmul 0x68db8bad+asr12+lsr31 = residual/10000、mls 0x2710 = %10000，
+      打包进 makeIntpair(_Z11makeIntpairii 0x4b49fc)
+  → 面额钉死：0x104 platinum(260)/0xa7 gold(167)/0xa6 copper(166)
+    （服务器DWARF ItemType交叉对照）；每枚 alloc→initWithType→autorelease
+    →addItemToInventory:flash:1(返回值不读)；gate严格cmp#1
+  → 0xb分支：setNeedsRemoved:1(sxtb符号1)后FALLTHROUGH第二次itemType
+    （实跑trace证明，非提前返回）
+  → 未恢复边界：residual尾部三个.bss ivar槽0x145c418/508/5e4高于_end，
+    静态不可解析；调用方禁止在stop边外产生副作用
+验收：契约fixture O0/O2 CTest 27/27；Unicorn实跑差分288输入×O0/O2消息序列+
+  计数器+停止边全一致；4负控全检出(54/96/24/28)
+账本：父方法implemented仍36（同IMP不重复计数）；behavior-verified仍0
+旧工具遗留笔误记录：recover_inventory_pickup.py HELPERS键0x6225c应为0xc6225c
+```
+
 ## 原版 pickup 路径批次（2026-09-06，接续198b0ae）
 
 ```text

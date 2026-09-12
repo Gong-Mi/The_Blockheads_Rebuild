@@ -47,9 +47,12 @@ struct Runtime {
     // Recording callback executed only on the equal branch, once.
     virtual void recordIndexed(Object self, Object freeblock, Object item,
                                std::int32_t addSlot) = 0;
-    // NOT YET RECOVERED paths (original 0xc61d..0xc626 ownership/container and
-    // 0xc629..0xc634 currency-split regions). The caller returns zero and no
-    // side effect is performed on these paths; never claim they are complete.
+    // NOT YET RECOVERED paths in the parent: original 0xc61d..0xc626
+    // ownership/container lookup region. The 0xc629..0xc634 currency-split
+    // region is recovered separately in inventory_pickup_currency.{h,cpp};
+    // the parent keeps refusing until the lookup supplies a resolved
+    // freeblock. The caller returns zero and no side effect is performed on
+    // these paths; never claim they are complete.
     virtual bool pendingPathUnresolved() = 0;
 };
 

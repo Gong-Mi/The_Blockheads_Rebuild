@@ -46,6 +46,10 @@ std::int8_t pickupFreeblockIfPossible(Runtime& r, Object self, Object freeblock,
         return 0;
     }
     // Currency-split / special-item path is not recovered; refuse conservatively.
+// The 0x12a region is now recovered separately in
+// inventory_pickup_currency.{h,cpp} (see INVENTORY_PICKUP_CURRENCY.md); the
+// parent still refuses the whole pending region until the lookup/ownership
+// plumbing supplies the resolved freeblock and tails are decided.
     if (r.pendingPathUnresolved()) return 0;
     // 0xc63440..0xc63580: construct InventoryItem preserving all original fields.
     const Object dynamic = r.dynamicObjectSaveDict(freeblock);
