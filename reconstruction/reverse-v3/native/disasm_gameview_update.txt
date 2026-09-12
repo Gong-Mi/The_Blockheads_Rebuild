@@ -1,0 +1,2465 @@
+# GameView -[update:accurateDT:]
+# types: v16@0:4f8f12
+# implementation: 0x009259c0
+# ARM.exidx end: 0x00928030
+
+            0x009259c0      f04d2de9       push {r4, r5, r6, r7, r8, sl, fp, lr}
+            0x009259c4      18b08de2       add fp, sp, 0x18
+            0x009259c8      d6df4de2       sub sp, sp, 0x358
+            0x009259cc      14cf9fe5       ldr ip, [0x009268e8]        ; [0x9268e8:4]=0x73a11c
+            0x009259d0      0cc08fe0       add ip, pc, ip
+            0x009259d4      103a00ee       vmov s0, r3
+            0x009259d8      102a01ee       vmov s2, r2
+            0x009259dc      082f9fe5       ldr r2, [0x009268ec]        ; [0x9268ec:4]=0xffffe69c
+            0x009259e0      0c2092e7       ldr r2, [r2, ip]
+            0x009259e4      20000be5       str r0, [fp, -0x20]
+            0x009259e8      24100be5       str r1, [fp, -0x24]
+            0x009259ec      0a1a0bed       vstr s2, [fp, -0x28]
+            0x009259f0      0b0a0bed       vstr s0, [fp, -0x2c]
+            0x009259f4      20001be5       ldr r0, [fp, -0x20]
+            0x009259f8      001092e5       ldr r1, [r2]
+            0x009259fc      010080e0       add r0, r0, r1
+            0x00925a00      d000d0e1       ldrsb r0, [r0]
+            0x00925a04      000050e3       cmp r0, 0
+            0x00925a08      a8c00be5       str ip, [fp, -0xa8]         ; "yC#"
+        ┌─< 0x00925a0c      0000001a       bne 0x925a14
+       ┌──< 0x00925a10      700900ea       b 0x927fd8
+       │└─> 0x00925a14      0a0000e3       movw r0, 0xa
+       │    0x00925a18      040ab2ee       vmov.f32 s0, 1
+       │    0x00925a1c      cc1e9fe5       ldr r1, [0x009268f0]        ; [0x9268f0:4]=0xffffe6a0
+       │    0x00925a20      a8201be5       ldr r2, [fp, -0xa8]         ; "yC#"
+       │    0x00925a24      021091e7       ldr r1, [r1, r2]
+       │    0x00925a28      0b1a1bed       vldr s2, [fp, -0x2c]
+       │    0x00925a2c      20301be5       ldr r3, [fp, -0x20]
+       │    0x00925a30      00c091e5       ldr ip, [r1]
+       │    0x00925a34      0c3083e0       add r3, r3, ip
+       │    0x00925a38      002a93ed       vldr s4, [r3]
+       │    0x00925a3c      011a32ee       vadd.f32 s2, s4, s2
+       │    0x00925a40      001a83ed       vstr s2, [r3]
+       │    0x00925a44      20301be5       ldr r3, [fp, -0x20]
+       │    0x00925a48      001091e5       ldr r1, [r1]
+       │    0x00925a4c      011083e0       add r1, r3, r1
+       │    0x00925a50      001a91ed       vldr s2, [r1]
+       │    0x00925a54      c01ab4ee       vcmpe.f32 s2, s0
+       │    0x00925a58      10faf1ee       vmrs apsr_nzcv, fpscr
+       │    0x00925a5c      ac000be5       str r0, [fp, -0xac]
+       │┌─< 0x00925a60      510000da       ble 0x925bac
+       ││   0x00925a64      100e00e3       movw r0, 0xe10              ; '\x10\x0e'
+       ││   0x00925a68      eb0a9fed       vldr s0, [0x00925e1c]
+       ││   0x00925a6c      801e9fe5       ldr r1, [0x009268f4]        ; [0x9268f4:4]=0xffffe640
+       ││   0x00925a70      a8201be5       ldr r2, [fp, -0xa8]         ; "yC#"
+       ││   0x00925a74      021091e7       ldr r1, [r1, r2]
+       ││   0x00925a78      0a3000e3       movw r3, 0xa
+       ││   0x00925a7c      041ab2ee       vmov.f32 s2, 1
+       ││   0x00925a80      68ce9fe5       ldr ip, [0x009268f0]        ; [0x9268f0:4]=0xffffe6a0
+       ││   0x00925a84      02c09ce7       ldr ip, [ip, r2]
+       ││   0x00925a88      68ee9fe5       ldr lr, [0x009268f8]        ; [0x9268f8:4]=0xfff34574
+       ││   0x00925a8c      02e08ee0       add lr, lr, r2
+       ││   0x00925a90      644e9fe5       ldr r4, [0x009268fc]        ; [0x9268fc:4]=0xffffbcac
+       ││   0x00925a94      024094e7       ldr r4, [r4, r2]
+       ││   0x00925a98      0450a0e1       mov r5, r4
+       ││   0x00925a9c      5c6e9fe5       ldr r6, [0x00926900]        ; [0x926900:4]=0xffe23ad8
+       ││   0x00925aa0      026086e0       add r6, r6, r2
+       ││   0x00925aa4      587e9fe5       ldr r7, [0x00926904]        ; [0x926904:4]=0xffe23958
+       ││   0x00925aa8      027087e0       add r7, r7, r2
+       ││   0x00925aac      548e9fe5       ldr r8, [0x00926908]        ; [0x926908:4]=0xffe2aff8
+       ││   0x00925ab0      028088e0       add r8, r8, r2
+       ││   0x00925ab4      042bb2ee       vmov.f64 d2, 1
+       ││   0x00925ab8      20a01be5       ldr sl, [fp, -0x20]
+       ││   0x00925abc      002091e5       ldr r2, [r1]
+       ││   0x00925ac0      02208ae0       add r2, sl, r2
+       ││   0x00925ac4      003b92ed       vldr d3, [r2]
+       ││   0x00925ac8      022b33ee       vadd.f64 d2, d3, d2
+       ││   0x00925acc      002b82ed       vstr d2, [r2]
+       ││   0x00925ad0      002098e5       ldr r2, [r8]
+       ││   0x00925ad4      007097e5       ldr r7, [r7]
+       ││   0x00925ad8      b0000be5       str r0, [fp, -0xb0]
+       ││   0x00925adc      0200a0e1       mov r0, r2
+       ││   0x00925ae0      b4100be5       str r1, [fp, -0xb4]
+       ││   0x00925ae4      0710a0e1       mov r1, r7
+       ││   0x00925ae8      b8e00be5       str lr, [fp, -0xb8]
+       ││   0x00925aec      2f0a0bed       vstr s0, [fp, -0xbc]
+       ││   0x00925af0      c0500be5       str r5, [fp, -0xc0]
+       ││   0x00925af4      c4600be5       str r6, [fp, -0xc4]
+       ││   0x00925af8      c8300be5       str r3, [fp, -0xc8]
+       ││   0x00925afc      331a0bed       vstr s2, [fp, -0xcc]
+       ││   0x00925b00      d0c00be5       str ip, [fp, -0xd0]
+       ││   0x00925b04      34ff2fe1       blx r4
+       ││   0x00925b08      20101be5       ldr r1, [fp, -0x20]
+       ││   0x00925b0c      b4201be5       ldr r2, [fp, -0xb4]
+       ││   0x00925b10      003092e5       ldr r3, [r2]
+       ││   0x00925b14      031081e0       add r1, r1, r3
+       ││   0x00925b18      002b91ed       vldr d2, [r1]
+       ││   0x00925b1c      c4101be5       ldr r1, [fp, -0xc4]
+       ││   0x00925b20      001091e5       ldr r1, [r1]
+       ││   0x00925b24      122b53ec       vmov r2, r3, d2
+       ││   0x00925b28      b8c01be5       ldr ip, [fp, -0xb8]
+       ││   0x00925b2c      00c08de5       str ip, [sp]
+       ││   0x00925b30      c0e01be5       ldr lr, [fp, -0xc0]
+       ││   0x00925b34      3eff2fe1       blx lr
+       ││   0x00925b38      20001be5       ldr r0, [fp, -0x20]
+       ││   0x00925b3c      d0101be5       ldr r1, [fp, -0xd0]
+       ││   0x00925b40      002091e5       ldr r2, [r1]
+       ││   0x00925b44      020080e0       add r0, r0, r2
+       ││   0x00925b48      000a90ed       vldr s0, [r0]
+       ││   0x00925b4c      331a1bed       vldr s2, [fp, -0xcc]
+       ││   0x00925b50      410a30ee       vsub.f32 s0, s0, s2
+       ││   0x00925b54      000a80ed       vstr s0, [r0]
+       ││   0x00925b58      20001be5       ldr r0, [fp, -0x20]
+       ││   0x00925b5c      b4201be5       ldr r2, [fp, -0xb4]
+       ││   0x00925b60      003092e5       ldr r3, [r2]
+       ││   0x00925b64      030080e0       add r0, r0, r3
+       ││   0x00925b68      002b90ed       vldr d2, [r0]
+       ││   0x00925b6c      c20bb7ee       vcvt.f32.f64 s0, d2
+       ││   0x00925b70      100a10ee       vmov r0, s0
+       ││   0x00925b74      2f0a1bed       vldr s0, [fp, -0xbc]
+       ││   0x00925b78      101a10ee       vmov r1, s0
+       ││   0x00925b7c      7278e2eb       bl sym.imp.__wrap_fmodf
+       ││   0x00925b80      100a00ee       vmov s0, r0
+       ││   0x00925b84      0a0000e3       movw r0, 0xa
+       ││   0x00925b88      041ab2ee       vmov.f32 s2, 1
+       ││   0x00925b8c      0c0a0bed       vstr s0, [fp, -0x30]
+       ││   0x00925b90      0c0a1bed       vldr s0, [fp, -0x30]
+       ││   0x00925b94      c10ab4ee       vcmpe.f32 s0, s2
+       ││   0x00925b98      10faf1ee       vmrs apsr_nzcv, fpscr
+       ││   0x00925b9c      d4000be5       str r0, [fp, -0xd4]
+      ┌───< 0x00925ba0      0000005a       bpl 0x925ba8
+     ┌────< 0x00925ba4      ffffffea       b 0x925ba8
+    ┌└└───> 0x00925ba8      ffffffea       b 0x925bac
+    └───└─> 0x00925bac      9c0f9fe5       ldr r0, [0x00926b50]        ; [0x926b50:4]=0xffffe6a4
+       │    0x00925bb0      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+       │    0x00925bb4      010090e7       ldr r0, [r0, r1]
+       │    0x00925bb8      20201be5       ldr r2, [fp, -0x20]
+       │    0x00925bbc      000090e5       ldr r0, [r0]
+       │    0x00925bc0      000082e0       add r0, r2, r0
+       │    0x00925bc4      d000d0e1       ldrsb r0, [r0]
+       │    0x00925bc8      000050e3       cmp r0, 0
+       │┌─< 0x00925bcc      0000000a       beq 0x925bd4
+      ┌───< 0x00925bd0      ffffffea       b 0x925bd4
+      └─└─> 0x00925bd4      200d9fe5       ldr r0, [0x009268fc]        ; [0x9268fc:4]=0xffffbcac
+       │    0x00925bd8      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+       │    0x00925bdc      010090e7       ldr r0, [r0, r1]
+       │    0x00925be0      6c2f9fe5       ldr r2, [0x00926b54]        ; [0x926b54:4]=0xffe23adc
+       │    0x00925be4      012082e0       add r2, r2, r1
+       │    0x00925be8      683f9fe5       ldr r3, [0x00926b58]        ; [0x926b58:4]=0xffffe61c
+       │    0x00925bec      013093e7       ldr r3, [r3, r1]
+       │    0x00925bf0      20c01be5       ldr ip, [fp, -0x20]
+       │    0x00925bf4      003093e5       ldr r3, [r3]
+       │    0x00925bf8      03308ce0       add r3, ip, r3
+       │    0x00925bfc      003093e5       ldr r3, [r3]
+       │    0x00925c00      001092e5       ldr r1, [r2]
+       │    0x00925c04      d8000be5       str r0, [fp, -0xd8]
+       │    0x00925c08      0300a0e1       mov r0, r3
+       │    0x00925c0c      d8201be5       ldr r2, [fp, -0xd8]
+       │    0x00925c10      32ff2fe1       blx r2
+       │    0x00925c14      7000afe6       sxtb r0, r0
+       │    0x00925c18      000050e3       cmp r0, 0
+       │┌─< 0x00925c1c      ed08000a       beq 0x927fd8
+       ││   0x00925c20      d40c9fe5       ldr r0, [0x009268fc]        ; [0x9268fc:4]=0xffffbcac
+       ││   0x00925c24      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+       ││   0x00925c28      010090e7       ldr r0, [r0, r1]
+       ││   0x00925c2c      282f9fe5       ldr r2, [0x00926b5c]        ; [0x926b5c:4]=0xffe23ad4
+       ││   0x00925c30      012082e0       add r2, r2, r1
+       ││   0x00925c34      1c3f9fe5       ldr r3, [0x00926b58]        ; [0x926b58:4]=0xffffe61c
+       ││   0x00925c38      013093e7       ldr r3, [r3, r1]
+       ││   0x00925c3c      20c01be5       ldr ip, [fp, -0x20]
+       ││   0x00925c40      003093e5       ldr r3, [r3]
+       ││   0x00925c44      03308ce0       add r3, ip, r3
+       ││   0x00925c48      003093e5       ldr r3, [r3]
+       ││   0x00925c4c      001092e5       ldr r1, [r2]
+       ││   0x00925c50      dc000be5       str r0, [fp, -0xdc]
+       ││   0x00925c54      0300a0e1       mov r0, r3
+       ││   0x00925c58      dc201be5       ldr r2, [fp, -0xdc]
+       ││   0x00925c5c      32ff2fe1       blx r2
+       ││   0x00925c60      7000afe6       sxtb r0, r0
+       ││   0x00925c64      000050e3       cmp r0, 0
+      ┌───< 0x00925c68      9a08001a       bne 0x927ed8
+      │││   0x00925c6c      ec0e9fe5       ldr r0, [0x00926b60]        ; [0x926b60:4]=0xffffe6a8
+      │││   0x00925c70      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+      │││   0x00925c74      010090e7       ldr r0, [r0, r1]
+      │││   0x00925c78      20201be5       ldr r2, [fp, -0x20]
+      │││   0x00925c7c      000090e5       ldr r0, [r0]
+      │││   0x00925c80      000082e0       add r0, r2, r0
+      │││   0x00925c84      d000d0e1       ldrsb r0, [r0]
+      │││   0x00925c88      000050e3       cmp r0, 0
+     ┌────< 0x00925c8c      6e03001a       bne 0x926a4c
+     ││││   0x00925c90      cc0e9fe5       ldr r0, [0x00926b64]        ; [0x926b64:4]=0xffffe6ac
+     ││││   0x00925c94      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+     ││││   0x00925c98      010090e7       ldr r0, [r0, r1]
+     ││││   0x00925c9c      20201be5       ldr r2, [fp, -0x20]
+     ││││   0x00925ca0      000090e5       ldr r0, [r0]
+     ││││   0x00925ca4      000082e0       add r0, r2, r0
+     ││││   0x00925ca8      d000d0e1       ldrsb r0, [r0]
+     ││││   0x00925cac      000050e3       cmp r0, 0
+    ┌─────< 0x00925cb0      6503001a       bne 0x926a4c
+    │││││   0x00925cb4      ac0e9fe5       ldr r0, [0x00926b68]        ; [0x926b68:4]=0xffffe6b0
+    │││││   0x00925cb8      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+    │││││   0x00925cbc      010090e7       ldr r0, [r0, r1]
+    │││││   0x00925cc0      20201be5       ldr r2, [fp, -0x20]
+    │││││   0x00925cc4      000090e5       ldr r0, [r0]
+    │││││   0x00925cc8      000082e0       add r0, r2, r0
+    │││││   0x00925ccc      d000d0e1       ldrsb r0, [r0]
+    │││││   0x00925cd0      000050e3       cmp r0, 0
+   ┌──────< 0x00925cd4      6701000a       beq 0x926278
+   ││││││   0x00925cd8      1c0c9fe5       ldr r0, [0x009268fc]        ; [0x9268fc:4]=0xffffbcac
+   ││││││   0x00925cdc      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+   ││││││   0x00925ce0      010090e7       ldr r0, [r0, r1]
+   ││││││   0x00925ce4      802e9fe5       ldr r2, [0x00926b6c]        ; [0x926b6c:4]=0xffe23ae0
+   ││││││   0x00925ce8      012082e0       add r2, r2, r1
+   ││││││   0x00925cec      643e9fe5       ldr r3, [0x00926b58]        ; [0x926b58:4]=0xffffe61c
+   ││││││   0x00925cf0      013093e7       ldr r3, [r3, r1]
+   ││││││   0x00925cf4      20c01be5       ldr ip, [fp, -0x20]
+   ││││││   0x00925cf8      003093e5       ldr r3, [r3]
+   ││││││   0x00925cfc      03308ce0       add r3, ip, r3
+   ││││││   0x00925d00      003093e5       ldr r3, [r3]
+   ││││││   0x00925d04      001092e5       ldr r1, [r2]
+   ││││││   0x00925d08      e0000be5       str r0, [fp, -0xe0]
+   ││││││   0x00925d0c      0300a0e1       mov r0, r3
+   ││││││   0x00925d10      e0201be5       ldr r2, [fp, -0xe0]
+   ││││││   0x00925d14      32ff2fe1       blx r2
+   ││││││   0x00925d18      7000afe6       sxtb r0, r0
+   ││││││   0x00925d1c      000050e3       cmp r0, 0
+  ┌───────< 0x00925d20      0800000a       beq 0x925d48
+  │││││││   0x00925d24      000000e3       movw r0, 0
+  │││││││   0x00925d28      381e9fe5       ldr r1, [0x00926b68]        ; [0x926b68:4]=0xffffe6b0
+  │││││││   0x00925d2c      a8201be5       ldr r2, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00925d30      021091e7       ldr r1, [r1, r2]
+  │││││││   0x00925d34      20301be5       ldr r3, [fp, -0x20]
+  │││││││   0x00925d38      001091e5       ldr r1, [r1]
+  │││││││   0x00925d3c      011083e0       add r1, r3, r1
+  │││││││   0x00925d40      0000c1e5       strb r0, [r1]
+  ────────< 0x00925d44      4a0100ea       b 0x926274
+  └───────> 0x00925d48      010000e3       movw r0, 1
+   ││││││   0x00925d4c      000bb7ee       vmov.f64 d0, 1
+   ││││││   0x00925d50      041000e3       movw r1, 4
+   ││││││   0x00925d54      001ab1ee       vmov.f32 s2, 4
+   ││││││   0x00925d58      102e9fe5       ldr r2, [0x00926b70]        ; [0x926b70:4]=0xffffe6b4
+   ││││││   0x00925d5c      a8301be5       ldr r3, [fp, -0xa8]         ; "yC#"
+   ││││││   0x00925d60      032092e7       ldr r2, [r2, r3]
+   ││││││   0x00925d64      20c01be5       ldr ip, [fp, -0x20]
+   ││││││   0x00925d68      00e092e5       ldr lr, [r2]
+   ││││││   0x00925d6c      0ec08ce0       add ip, ip, lr
+   ││││││   0x00925d70      20e01be5       ldr lr, [fp, -0x20]
+   ││││││   0x00925d74      002092e5       ldr r2, [r2]
+   ││││││   0x00925d78      02208ee0       add r2, lr, r2
+   ││││││   0x00925d7c      0a2a1bed       vldr s4, [fp, -0x28]
+   ││││││   0x00925d80      011a22ee       vmul.f32 s2, s4, s2
+   ││││││   0x00925d84      c13ab7ee       vcvt.f64.f32 d3, s2
+   ││││││   0x00925d88      430b30ee       vsub.f64 d0, d0, d3
+   ││││││   0x00925d8c      c01bb7ee       vcvt.f32.f64 s2, d0
+   ││││││   0x00925d90      10ea11ee       vmov lr, s2
+   ││││││   0x00925d94      38404be2       sub r4, fp, 0x38
+   ││││││   0x00925d98      e4000be5       str r0, [fp, -0xe4]
+   ││││││   0x00925d9c      0400a0e1       mov r0, r4
+   ││││││   0x00925da0      e8100be5       str r1, [fp, -0xe8]
+   ││││││   0x00925da4      0210a0e1       mov r1, r2
+   ││││││   0x00925da8      0e20a0e1       mov r2, lr
+   ││││││   0x00925dac      ecc00be5       str ip, [fp, -0xec]
+   ││││││   0x00925db0      6ca9eeeb       bl method.Vector2.operator_float_ ; Vector2::operator*(float)
+   ││││││   0x00925db4      b40d9fe5       ldr r0, [0x00926b70]        ; [0x926b70:4]=0xffffe6b4
+   ││││││   0x00925db8      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+   ││││││   0x00925dbc      010090e7       ldr r0, [r0, r1]
+   ││││││   0x00925dc0      38201be5       ldr r2, [fp, -0x38]
+   ││││││   0x00925dc4      ec301be5       ldr r3, [fp, -0xec]
+   ││││││   0x00925dc8      002083e5       str r2, [r3]
+   ││││││   0x00925dcc      34201be5       ldr r2, [fp, -0x34]         ; elf_phdr
+   ││││││   0x00925dd0      042083e5       str r2, [r3, 4]
+   ││││││   0x00925dd4      20201be5       ldr r2, [fp, -0x20]
+   ││││││   0x00925dd8      000090e5       ldr r0, [r0]
+   ││││││   0x00925ddc      000082e0       add r0, r2, r0
+   ││││││   0x00925de0      25e7f2eb       bl method.Vector2.lengthSquared___const ; Vector2::lengthSquared() const
+   ││││││   0x00925de4      100a01ee       vmov s2, r0
+   ││││││   0x00925de8      bf2a9fed       vldr s4, [0x009260ec]
+   ││││││   0x00925dec      c21ab4ee       vcmpe.f32 s2, s4
+   ││││││   0x00925df0      10faf1ee       vmrs apsr_nzcv, fpscr
+  ┌───────< 0x00925df4      0900005a       bpl 0x925e20
+  │││││││   0x00925df8      000000e3       movw r0, 0
+  │││││││   0x00925dfc      641d9fe5       ldr r1, [0x00926b68]        ; [0x926b68:4]=0xffffe6b0
+  │││││││   0x00925e00      a8201be5       ldr r2, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00925e04      021091e7       ldr r1, [r1, r2]
+  │││││││   0x00925e08      20301be5       ldr r3, [fp, -0x20]
+  │││││││   0x00925e0c      001091e5       ldr r1, [r1]
+  │││││││   0x00925e10      011083e0       add r1, r3, r1
+  │││││││   0x00925e14      0000c1e5       strb r0, [r1]
+  ────────< 0x00925e18      140100ea       b 0x926270
+  │││││││   0x00925e1c      00006145       strbmi r0, [r1, -0]!
+  └───────> 0x00925e20      000000e3       movw r0, 0
+   ││││││   0x00925e24      dc1f9fe5       ldr r1, [0x00926e08]        ; [0x926e08:4]=0xffe23ae4
+   ││││││   0x00925e28      a8201be5       ldr r2, [fp, -0xa8]         ; "yC#"
+   ││││││   0x00925e2c      021081e0       add r1, r1, r2
+   ││││││   0x00925e30      203d9fe5       ldr r3, [0x00926b58]        ; [0x926b58:4]=0xffffe61c
+   ││││││   0x00925e34      023093e7       ldr r3, [r3, r2]
+   ││││││   0x00925e38      20c01be5       ldr ip, [fp, -0x20]
+   ││││││   0x00925e3c      00e093e5       ldr lr, [r3]
+   ││││││   0x00925e40      0ec08ce0       add ip, ip, lr
+   ││││││   0x00925e44      00c09ce5       ldr ip, [ip]
+   ││││││   0x00925e48      20e01be5       ldr lr, [fp, -0x20]
+   ││││││   0x00925e4c      003093e5       ldr r3, [r3]
+   ││││││   0x00925e50      03308ee0       add r3, lr, r3
+   ││││││   0x00925e54      003093e5       ldr r3, [r3]
+   ││││││   0x00925e58      002091e5       ldr r2, [r1]
+   ││││││   0x00925e5c      000053e1       cmp r3, r0
+   ││││││   0x00925e60      f0300be5       str r3, [fp, -0xf0]
+   ││││││   0x00925e64      f4200be5       str r2, [fp, -0xf4]
+   ││││││   0x00925e68      f8c00be5       str ip, [fp, -0xf8]
+  ┌───────< 0x00925e6c      0400000a       beq 0x925e84
+  │││││││   0x00925e70      48004be2       sub r0, fp, 0x48
+  │││││││   0x00925e74      f0101be5       ldr r1, [fp, -0xf0]
+  │││││││   0x00925e78      f4201be5       ldr r2, [fp, -0xf4]
+  │││││││   0x00925e7c      a572e2eb       bl loc.imp.objc_msgSend_stret
+  ────────< 0x00925e80      070000ea       b 0x925ea4
+  └───────> 0x00925e84      000000e3       movw r0, 0
+   ││││││   0x00925e88      082000e3       movw r2, 8
+   ││││││   0x00925e8c      48104be2       sub r1, fp, 0x48
+   ││││││   0x00925e90      fc000be5       str r0, [fp, -0xfc]
+   ││││││   0x00925e94      0100a0e1       mov r0, r1
+   ││││││   0x00925e98      fc101be5       ldr r1, [fp, -0xfc]
+   ││││││   0x00925e9c      ff1001e2       and r1, r1, 0xff
+   ││││││   0x00925ea0      9f72e2eb       bl sym.imp.memset
+  ────────> 0x00925ea4      000000e3       movw r0, 0
+   ││││││   0x00925ea8      581f9fe5       ldr r1, [0x00926e08]        ; [0x926e08:4]=0xffe23ae4
+   ││││││   0x00925eac      a8201be5       ldr r2, [fp, -0xa8]         ; "yC#"
+   ││││││   0x00925eb0      021081e0       add r1, r1, r2
+   ││││││   0x00925eb4      9c3c9fe5       ldr r3, [0x00926b58]        ; [0x926b58:4]=0xffffe61c
+   ││││││   0x00925eb8      023093e7       ldr r3, [r3, r2]
+   ││││││   0x00925ebc      20c01be5       ldr ip, [fp, -0x20]
+   ││││││   0x00925ec0      a8ec9fe5       ldr lr, [0x00926b70]        ; [0x926b70:4]=0xffffe6b4
+   ││││││   0x00925ec4      404f9fe5       ldr r4, [0x00926e0c]        ; [0x926e0c:4]=0x739c24
+   ││││││   0x00925ec8      04408fe0       add r4, pc, r4
+   ││││││   0x00925ecc      04e09ee7       ldr lr, [lr, r4]
+   ││││││   0x00925ed0      00e09ee5       ldr lr, [lr]
+   ││││││   0x00925ed4      0ec08ce0       add ip, ip, lr
+   ││││││   0x00925ed8      28201be5       ldr r2, [fp, -0x28]
+   ││││││   0x00925edc      50e04be2       sub lr, fp, 0x50
+   ││││││   0x00925ee0      00010be5       str r0, [fp, -0x100]
+   ││││││   0x00925ee4      0e00a0e1       mov r0, lr
+   ││││││   0x00925ee8      04110be5       str r1, [fp, -0x104]
+   ││││││   0x00925eec      0c10a0e1       mov r1, ip
+   ││││││   0x00925ef0      08410be5       str r4, [fp, -0x108]
+   ││││││   0x00925ef4      0c310be5       str r3, [fp, -0x10c]
+   ││││││   0x00925ef8      1aa9eeeb       bl method.Vector2.operator_float_ ; Vector2::operator*(float)
+   ││││││   0x00925efc      50201be5       ldr r2, [fp, -0x50]
+   ││││││   0x00925f00      4c301be5       ldr r3, [fp, -0x4c]
+   ││││││   0x00925f04      40004be2       sub r0, fp, 0x40
+   ││││││   0x00925f08      48104be2       sub r1, fp, 0x48
+   ││││││   0x00925f0c      68a9eeeb       bl method.Vector2.operator__Vector2_ ; Vector2::operator-(Vector2)
+   ││││││   0x00925f10      f80e9fe5       ldr r0, [0x00926e10]        ; [0x926e10:4]=0xffe23ae8
+   ││││││   0x00925f14      08111be5       ldr r1, [fp, -0x108]
+   ││││││   0x00925f18      011090e7       ldr r1, [r0, r1]
+   ││││││   0x00925f1c      f8001be5       ldr r0, [fp, -0xf8]
+   ││││││   0x00925f20      40201be5       ldr r2, [fp, -0x40]
+   ││││││   0x00925f24      3c301be5       ldr r3, [fp, -0x3c]
+   ││││││   0x00925f28      3b72e2eb       bl loc.imp.objc_msgSend
+   ││││││   0x00925f2c      20001be5       ldr r0, [fp, -0x20]
+   ││││││   0x00925f30      0c111be5       ldr r1, [fp, -0x10c]
+   ││││││   0x00925f34      002091e5       ldr r2, [r1]
+   ││││││   0x00925f38      020080e0       add r0, r0, r2
+   ││││││   0x00925f3c      000090e5       ldr r0, [r0]
+   ││││││   0x00925f40      04211be5       ldr r2, [fp, -0x104]
+   ││││││   0x00925f44      002092e5       ldr r2, [r2]
+   ││││││   0x00925f48      00311be5       ldr r3, [fp, -0x100]
+   ││││││   0x00925f4c      030050e1       cmp r0, r3
+   ││││││   0x00925f50      10210be5       str r2, [fp, -0x110]
+   ││││││   0x00925f54      14010be5       str r0, [fp, -0x114]
+  ┌───────< 0x00925f58      0400000a       beq 0x925f70
+  │││││││   0x00925f5c      58004be2       sub r0, fp, 0x58
+  │││││││   0x00925f60      14111be5       ldr r1, [fp, -0x114]
+  │││││││   0x00925f64      10211be5       ldr r2, [fp, -0x110]
+  │││││││   0x00925f68      6a72e2eb       bl loc.imp.objc_msgSend_stret
+  ────────< 0x00925f6c      070000ea       b 0x925f90
+  └───────> 0x00925f70      000000e3       movw r0, 0
+   ││││││   0x00925f74      082000e3       movw r2, 8
+   ││││││   0x00925f78      58104be2       sub r1, fp, 0x58
+   ││││││   0x00925f7c      18010be5       str r0, [fp, -0x118]
+   ││││││   0x00925f80      0100a0e1       mov r0, r1
+   ││││││   0x00925f84      18111be5       ldr r1, [fp, -0x118]
+   ││││││   0x00925f88      ff1001e2       and r1, r1, 0xff
+   ││││││   0x00925f8c      6472e2eb       bl sym.imp.memset
+  ────────> 0x00925f90      58004be2       sub r0, fp, 0x58
+   ││││││   0x00925f94      c45eeeeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+   ││││││   0x00925f98      000a90ed       vldr s0, [r0]
+   ││││││   0x00925f9c      c00ab5ee       vcmpe.f32 s0, 0
+   ││││││   0x00925fa0      10faf1ee       vmrs apsr_nzcv, fpscr
+  ┌───────< 0x00925fa4      3c00005a       bpl 0x92609c
+  │││││││   0x00925fa8      000000e3       movw r0, 0
+  │││││││   0x00925fac      541e9fe5       ldr r1, [0x00926e08]        ; [0x926e08:4]=0xffe23ae4
+  │││││││   0x00925fb0      a8201be5       ldr r2, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00925fb4      021081e0       add r1, r1, r2
+  │││││││   0x00925fb8      983b9fe5       ldr r3, [0x00926b58]        ; [0x926b58:4]=0xffffe61c
+  │││││││   0x00925fbc      023093e7       ldr r3, [r3, r2]
+  │││││││   0x00925fc0      05c000e3       movw ip, 5
+  │││││││   0x00925fc4      20e01be5       ldr lr, [fp, -0x20]
+  │││││││   0x00925fc8      884b9fe5       ldr r4, [0x00926b58]        ; [0x926b58:4]=0xffffe61c
+  │││││││   0x00925fcc      d45f9fe5       ldr r5, [0x00926fa8]        ; [0x926fa8:4]=0x739b1c
+  │││││││   0x00925fd0      05508fe0       add r5, pc, r5
+  │││││││   0x00925fd4      054094e7       ldr r4, [r4, r5]
+  │││││││   0x00925fd8      004094e5       ldr r4, [r4]
+  │││││││   0x00925fdc      04e09ee7       ldr lr, [lr, r4]
+  │││││││   0x00925fe0      c44f9fe5       ldr r4, [0x00926fac]        ; [0x926fac:4]=0xffe23aec
+  │││││││   0x00925fe4      054094e7       ldr r4, [r4, r5]
+  │││││││   0x00925fe8      1c010be5       str r0, [fp, -0x11c]
+  │││││││   0x00925fec      0e00a0e1       mov r0, lr
+  │││││││   0x00925ff0      20110be5       str r1, [fp, -0x120]
+  │││││││   0x00925ff4      0410a0e1       mov r1, r4
+  │││││││   0x00925ff8      24c10be5       str ip, [fp, -0x124]
+  │││││││   0x00925ffc      28310be5       str r3, [fp, -0x128]
+  │││││││   0x00926000      0572e2eb       bl loc.imp.objc_msgSend
+  │││││││   0x00926004      0010a0e1       mov r1, r0
+  │││││││   0x00926008      8002a0e1       lsl r0, r0, 5
+  │││││││   0x0092600c      100a00ee       vmov s0, r0
+  │││││││   0x00926010      c00ab8ee       vcvt.f32.s32 s0, s0
+  │││││││   0x00926014      20001be5       ldr r0, [fp, -0x20]
+  │││││││   0x00926018      28211be5       ldr r2, [fp, -0x128]
+  │││││││   0x0092601c      003092e5       ldr r3, [r2]
+  │││││││   0x00926020      030080e0       add r0, r0, r3
+  │││││││   0x00926024      000090e5       ldr r0, [r0]
+  │││││││   0x00926028      20311be5       ldr r3, [fp, -0x120]
+  │││││││   0x0092602c      002093e5       ldr r2, [r3]
+  │││││││   0x00926030      1cc11be5       ldr ip, [fp, -0x11c]
+  │││││││   0x00926034      0c0050e1       cmp r0, ip
+  │││││││   0x00926038      2c110be5       str r1, [fp, -0x12c]
+  │││││││   0x0092603c      4c0a0bed       vstr s0, [fp, -0x130]
+  │││││││   0x00926040      34210be5       str r2, [fp, -segment.INTERP] ; 0x134 ; "/system/bin/linker"
+  │││││││   0x00926044      38010be5       str r0, [fp, -0x138]        ; "tem/bin/linker"
+  ────────< 0x00926048      0400000a       beq 0x926060
+  │││││││   0x0092604c      60004be2       sub r0, fp, 0x60
+  │││││││   0x00926050      38111be5       ldr r1, [fp, -0x138]        ; "tem/bin/linker"
+  │││││││   0x00926054      34211be5       ldr r2, [fp, -segment.INTERP] ; 0x134 ; "/system/bin/linker"
+  │││││││   0x00926058      2e72e2eb       bl loc.imp.objc_msgSend_stret
+  ────────< 0x0092605c      070000ea       b 0x926080
+  ────────> 0x00926060      000000e3       movw r0, 0
+  │││││││   0x00926064      082000e3       movw r2, 8
+  │││││││   0x00926068      60104be2       sub r1, fp, 0x60
+  │││││││   0x0092606c      3c010be5       str r0, [fp, -0x13c]        ; "bin/linker"
+  │││││││   0x00926070      0100a0e1       mov r0, r1
+  │││││││   0x00926074      3c111be5       ldr r1, [fp, -0x13c]        ; "bin/linker"
+  │││││││   0x00926078      ff1001e2       and r1, r1, 0xff
+  │││││││   0x0092607c      2872e2eb       bl sym.imp.memset
+  ────────> 0x00926080      60004be2       sub r0, fp, 0x60
+  │││││││   0x00926084      885eeeeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+  │││││││   0x00926088      000a90ed       vldr s0, [r0]
+  │││││││   0x0092608c      4c1a1bed       vldr s2, [fp, -0x130]
+  │││││││   0x00926090      010a30ee       vadd.f32 s0, s0, s2
+  │││││││   0x00926094      000a80ed       vstr s0, [r0]
+  ────────< 0x00926098      730000ea       b 0x92626c
+  └───────> 0x0092609c      000000e3       movw r0, 0
+   ││││││   0x009260a0      601d9fe5       ldr r1, [0x00926e08]        ; [0x926e08:4]=0xffe23ae4
+   ││││││   0x009260a4      a8201be5       ldr r2, [fp, -0xa8]         ; "yC#"
+   ││││││   0x009260a8      021081e0       add r1, r1, r2
+   ││││││   0x009260ac      a43a9fe5       ldr r3, [0x00926b58]        ; [0x926b58:4]=0xffffe61c
+   ││││││   0x009260b0      023093e7       ldr r3, [r3, r2]
+   ││││││   0x009260b4      20c01be5       ldr ip, [fp, -0x20]
+   ││││││   0x009260b8      003093e5       ldr r3, [r3]
+   ││││││   0x009260bc      03308ce0       add r3, ip, r3
+   ││││││   0x009260c0      003093e5       ldr r3, [r3]
+   ││││││   0x009260c4      002091e5       ldr r2, [r1]
+   ││││││   0x009260c8      000053e1       cmp r3, r0
+   ││││││   0x009260cc      40310be5       str r3, [fp, -0x140]        ; "linker"
+   ││││││   0x009260d0      44210be5       str r2, [fp, -0x144]        ; "er"
+  ┌───────< 0x009260d4      0500000a       beq 0x9260f0
+  │││││││   0x009260d8      68004be2       sub r0, fp, 0x68
+  │││││││   0x009260dc      40111be5       ldr r1, [fp, -0x140]        ; "linker"
+  │││││││   0x009260e0      44211be5       ldr r2, [fp, -0x144]        ; "er"
+  │││││││   0x009260e4      0b72e2eb       bl loc.imp.objc_msgSend_stret
+  ────────< 0x009260e8      080000ea       b 0x926110
+  │││││││   0x009260ec      cdcccc3d       stcllo p12, c12, [ip, 0x334]
+  └───────> 0x009260f0      000000e3       movw r0, 0
+   ││││││   0x009260f4      082000e3       movw r2, 8
+   ││││││   0x009260f8      68104be2       sub r1, fp, 0x68
+   ││││││   0x009260fc      48010be5       str r0, [fp, -segment.NOTE] ; 0x148
+   ││││││   0x00926100      0100a0e1       mov r0, r1
+   ││││││   0x00926104      48111be5       ldr r1, [fp, -segment.NOTE] ; 0x148
+   ││││││   0x00926108      ff1001e2       and r1, r1, 0xff
+   ││││││   0x0092610c      0472e2eb       bl sym.imp.memset
+  ────────> 0x00926110      050000e3       movw r0, 5
+   ││││││   0x00926114      68104be2       sub r1, fp, 0x68
+   ││││││   0x00926118      4c010be5       str r0, [fp, -0x14c]
+   ││││││   0x0092611c      0100a0e1       mov r0, r1
+   ││││││   0x00926120      615eeeeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+   ││││││   0x00926124      000a90ed       vldr s0, [r0]
+   ││││││   0x00926128      20001be5       ldr r0, [fp, -0x20]
+   ││││││   0x0092612c      241a9fe5       ldr r1, [0x00926b58]        ; [0x926b58:4]=0xffffe61c
+   ││││││   0x00926130      782e9fe5       ldr r2, [0x00926fb0]        ; [0x926fb0:4]=0x7399b8
+   ││││││   0x00926134      02208fe0       add r2, pc, r2
+   ││││││   0x00926138      021091e7       ldr r1, [r1, r2]
+   ││││││   0x0092613c      001091e5       ldr r1, [r1]
+   ││││││   0x00926140      010090e7       ldr r0, [r0, r1]
+   ││││││   0x00926144      601e9fe5       ldr r1, [0x00926fac]        ; [0x926fac:4]=0xffe23aec
+   ││││││   0x00926148      021091e7       ldr r1, [r1, r2]
+   ││││││   0x0092614c      540a0bed       vstr s0, [fp, -0x150]
+   ││││││   0x00926150      b171e2eb       bl loc.imp.objc_msgSend
+   ││││││   0x00926154      0010a0e1       mov r1, r0
+   ││││││   0x00926158      8002a0e1       lsl r0, r0, 5
+   ││││││   0x0092615c      100a00ee       vmov s0, r0
+   ││││││   0x00926160      c00ab8ee       vcvt.f32.s32 s0, s0
+   ││││││   0x00926164      541a1bed       vldr s2, [fp, -0x150]
+   ││││││   0x00926168      c01ab4ee       vcmpe.f32 s2, s0
+   ││││││   0x0092616c      10faf1ee       vmrs apsr_nzcv, fpscr
+   ││││││   0x00926170      54110be5       str r1, [fp, -0x154]
+  ┌───────< 0x00926174      3b0000ba       blt 0x926268
+  │││││││   0x00926178      000000e3       movw r0, 0
+  │││││││   0x0092617c      841c9fe5       ldr r1, [0x00926e08]        ; [0x926e08:4]=0xffe23ae4
+  │││││││   0x00926180      a8201be5       ldr r2, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00926184      021081e0       add r1, r1, r2
+  │││││││   0x00926188      c8399fe5       ldr r3, [0x00926b58]        ; [0x926b58:4]=0xffffe61c
+  │││││││   0x0092618c      023093e7       ldr r3, [r3, r2]
+  │││││││   0x00926190      05c000e3       movw ip, 5
+  │││││││   0x00926194      20e01be5       ldr lr, [fp, -0x20]
+  │││││││   0x00926198      b8499fe5       ldr r4, [0x00926b58]        ; [0x926b58:4]=0xffffe61c
+  │││││││   0x0092619c      ec5f9fe5       ldr r5, [0x00927190]        ; [0x927190:4]=0x73994c
+  │││││││   0x009261a0      05508fe0       add r5, pc, r5
+  │││││││   0x009261a4      054094e7       ldr r4, [r4, r5]
+  │││││││   0x009261a8      004094e5       ldr r4, [r4]
+  │││││││   0x009261ac      04e09ee7       ldr lr, [lr, r4]
+  │││││││   0x009261b0      f44d9fe5       ldr r4, [0x00926fac]        ; [0x926fac:4]=0xffe23aec
+  │││││││   0x009261b4      054094e7       ldr r4, [r4, r5]
+  │││││││   0x009261b8      58010be5       str r0, [fp, -0x158]
+  │││││││   0x009261bc      0e00a0e1       mov r0, lr
+  │││││││   0x009261c0      5c110be5       str r1, [fp, -0x15c]
+  │││││││   0x009261c4      0410a0e1       mov r1, r4
+  │││││││   0x009261c8      60c10be5       str ip, [fp, -0x160]
+  │││││││   0x009261cc      64310be5       str r3, [fp, -0x164]
+  │││││││   0x009261d0      9171e2eb       bl loc.imp.objc_msgSend
+  │││││││   0x009261d4      0010a0e1       mov r1, r0
+  │││││││   0x009261d8      8002a0e1       lsl r0, r0, 5
+  │││││││   0x009261dc      100a00ee       vmov s0, r0
+  │││││││   0x009261e0      c00ab8ee       vcvt.f32.s32 s0, s0
+  │││││││   0x009261e4      20001be5       ldr r0, [fp, -0x20]
+  │││││││   0x009261e8      64211be5       ldr r2, [fp, -0x164]
+  │││││││   0x009261ec      003092e5       ldr r3, [r2]
+  │││││││   0x009261f0      030080e0       add r0, r0, r3
+  │││││││   0x009261f4      000090e5       ldr r0, [r0]
+  │││││││   0x009261f8      5c311be5       ldr r3, [fp, -0x15c]
+  │││││││   0x009261fc      002093e5       ldr r2, [r3]
+  │││││││   0x00926200      58c11be5       ldr ip, [fp, -0x158]
+  │││││││   0x00926204      0c0050e1       cmp r0, ip
+  │││││││   0x00926208      68110be5       str r1, [fp, -0x168]
+  │││││││   0x0092620c      5b0a0bed       vstr s0, [fp, -section..dynsym]
+  │││││││   0x00926210      70210be5       str r2, [fp, -0x170]
+  │││││││   0x00926214      74010be5       str r0, [fp, -0x174]
+  ────────< 0x00926218      0400000a       beq 0x926230
+  │││││││   0x0092621c      70004be2       sub r0, fp, 0x70
+  │││││││   0x00926220      74111be5       ldr r1, [fp, -0x174]
+  │││││││   0x00926224      70211be5       ldr r2, [fp, -0x170]
+  │││││││   0x00926228      ba71e2eb       bl loc.imp.objc_msgSend_stret
+  ────────< 0x0092622c      070000ea       b 0x926250
+  ────────> 0x00926230      000000e3       movw r0, 0
+  │││││││   0x00926234      082000e3       movw r2, 8
+  │││││││   0x00926238      70104be2       sub r1, fp, 0x70
+  │││││││   0x0092623c      78010be5       str r0, [fp, -0x178]
+  │││││││   0x00926240      0100a0e1       mov r0, r1
+  │││││││   0x00926244      78111be5       ldr r1, [fp, -0x178]
+  │││││││   0x00926248      ff1001e2       and r1, r1, 0xff
+  │││││││   0x0092624c      b471e2eb       bl sym.imp.memset
+  ────────> 0x00926250      70004be2       sub r0, fp, 0x70
+  │││││││   0x00926254      145eeeeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+  │││││││   0x00926258      000a90ed       vldr s0, [r0]
+  │││││││   0x0092625c      5b1a1bed       vldr s2, [fp, -section..dynsym]
+  │││││││   0x00926260      410a30ee       vsub.f32 s0, s0, s2
+  │││││││   0x00926264      000a80ed       vstr s0, [r0]
+  └───────> 0x00926268      ffffffea       b 0x92626c
+  ┌───────< 0x0092626c      ffffffea       b 0x926270
+  └───────> 0x00926270      ffffffea       b 0x926274
+  ┌───────< 0x00926274      ffffffea       b 0x926278
+  └└──────> 0x00926278      140f9fe5       ldr r0, [0x00927194]        ; [0x927194:4]=0xffffe6b8
+    │││││   0x0092627c      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+    │││││   0x00926280      010090e7       ldr r0, [r0, r1]
+    │││││   0x00926284      20201be5       ldr r2, [fp, -0x20]
+    │││││   0x00926288      000090e5       ldr r0, [r0]
+    │││││   0x0092628c      000082e0       add r0, r2, r0
+    │││││   0x00926290      d000d0e1       ldrsb r0, [r0]
+    │││││   0x00926294      000050e3       cmp r0, 0
+   ┌──────< 0x00926298      5000000a       beq 0x9263e0
+   ││││││   0x0092629c      f00a9fed       vldr s0, [0x00926664]
+   ││││││   0x009262a0      010000e3       movw r0, 1
+   ││││││   0x009262a4      001ab7ee       vmov.f32 s2, 1
+   ││││││   0x009262a8      e81e9fe5       ldr r1, [0x00927198]        ; [0x927198:4]=0xffffe62c
+   ││││││   0x009262ac      a8201be5       ldr r2, [fp, -0xa8]         ; "yC#"
+   ││││││   0x009262b0      021091e7       ldr r1, [r1, r2]
+   ││││││   0x009262b4      083000e3       movw r3, 8
+   ││││││   0x009262b8      002ab2ee       vmov.f32 s4, 8
+   ││││││   0x009262bc      003bb7ee       vmov.f64 d3, 1
+   ││││││   0x009262c0      20c01be5       ldr ip, [fp, -0x20]
+   ││││││   0x009262c4      00e091e5       ldr lr, [r1]
+   ││││││   0x009262c8      0ec08ce0       add ip, ip, lr
+   ││││││   0x009262cc      004b9ced       vldr d4, [ip]
+   ││││││   0x009262d0      20c01be5       ldr ip, [fp, -0x20]
+   ││││││   0x009262d4      00e091e5       ldr lr, [r1]
+   ││││││   0x009262d8      0ec08ce0       add ip, ip, lr
+   ││││││   0x009262dc      005b9ced       vldr d5, [ip]
+   ││││││   0x009262e0      453b33ee       vsub.f64 d3, d3, d5
+   ││││││   0x009262e4      0a6a1bed       vldr s12, [fp, -0x28]
+   ││││││   0x009262e8      022a26ee       vmul.f32 s4, s12, s4
+   ││││││   0x009262ec      c25ab7ee       vcvt.f64.f32 d5, s4
+   ││││││   0x009262f0      053b23ee       vmul.f64 d3, d3, d5
+   ││││││   0x009262f4      033b34ee       vadd.f64 d3, d4, d3
+   ││││││   0x009262f8      20c01be5       ldr ip, [fp, -0x20]
+   ││││││   0x009262fc      00e091e5       ldr lr, [r1]
+   ││││││   0x00926300      0ec08ce0       add ip, ip, lr
+   ││││││   0x00926304      003b8ced       vstr d3, [ip]
+   ││││││   0x00926308      20c01be5       ldr ip, [fp, -0x20]
+   ││││││   0x0092630c      001091e5       ldr r1, [r1]
+   ││││││   0x00926310      01108ce0       add r1, ip, r1
+   ││││││   0x00926314      003b91ed       vldr d3, [r1]
+   ││││││   0x00926318      c32bb7ee       vcvt.f32.f64 s4, d3
+   ││││││   0x0092631c      411a32ee       vsub.f32 s2, s4, s2
+   ││││││   0x00926320      c11ab0ee       vabs.f32 s2, s2
+   ││││││   0x00926324      c01ab4ee       vcmpe.f32 s2, s0
+   ││││││   0x00926328      10faf1ee       vmrs apsr_nzcv, fpscr
+   ││││││   0x0092632c      7c010be5       str r0, [fp, -0x17c]
+   ││││││   0x00926330      80310be5       str r3, [fp, -0x180]
+  ┌───────< 0x00926334      2800005a       bpl 0x9263dc
+  │││││││   0x00926338      5c0e9fe5       ldr r0, [0x0092719c]        ; [0x92719c:4]=0xfff34544
+  │││││││   0x0092633c      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00926340      010080e0       add r0, r0, r1
+  │││││││   0x00926344      b0259fe5       ldr r2, [0x009268fc]        ; [0x9268fc:4]=0xffffbcac
+  │││││││   0x00926348      012092e7       ldr r2, [r2, r1]
+  │││││││   0x0092634c      0230a0e1       mov r3, r2
+  │││││││   0x00926350      fccf9fe5       ldr ip, [0x00927354]        ; [0x927354:4]=0xffe23af0
+  │││││││   0x00926354      01c08ce0       add ip, ip, r1
+  │││││││   0x00926358      38ee9fe5       ldr lr, [0x00927198]        ; [0x927198:4]=0xffffe62c
+  │││││││   0x0092635c      01e09ee7       ldr lr, [lr, r1]
+  │││││││   0x00926360      9c459fe5       ldr r4, [0x00926904]        ; [0x926904:4]=0xffe23958
+  │││││││   0x00926364      014084e0       add r4, r4, r1
+  │││││││   0x00926368      98559fe5       ldr r5, [0x00926908]        ; [0x926908:4]=0xffe2aff8
+  │││││││   0x0092636c      015085e0       add r5, r5, r1
+  │││││││   0x00926370      006000e3       movw r6, 0
+  │││││││   0x00926374      187e9fe5       ldr r7, [0x00927194]        ; [0x927194:4]=0xffffe6b8
+  │││││││   0x00926378      017097e7       ldr r7, [r7, r1]
+  │││││││   0x0092637c      20801be5       ldr r8, [fp, -0x20]
+  │││││││   0x00926380      007097e5       ldr r7, [r7]
+  │││││││   0x00926384      077088e0       add r7, r8, r7
+  │││││││   0x00926388      0060c7e5       strb r6, [r7]
+  │││││││   0x0092638c      005095e5       ldr r5, [r5]
+  │││││││   0x00926390      001094e5       ldr r1, [r4]
+  │││││││   0x00926394      84010be5       str r0, [fp, -0x184]
+  │││││││   0x00926398      0500a0e1       mov r0, r5
+  │││││││   0x0092639c      88c10be5       str ip, [fp, -0x188]
+  │││││││   0x009263a0      8c310be5       str r3, [fp, -0x18c]
+  │││││││   0x009263a4      90e10be5       str lr, [fp, -0x190]
+  │││││││   0x009263a8      32ff2fe1       blx r2
+  │││││││   0x009263ac      20101be5       ldr r1, [fp, -0x20]
+  │││││││   0x009263b0      90211be5       ldr r2, [fp, -0x190]
+  │││││││   0x009263b4      003092e5       ldr r3, [r2]
+  │││││││   0x009263b8      031081e0       add r1, r1, r3
+  │││││││   0x009263bc      000b91ed       vldr d0, [r1]
+  │││││││   0x009263c0      c01bb7ee       vcvt.f32.f64 s2, d0
+  │││││││   0x009263c4      88111be5       ldr r1, [fp, -0x188]
+  │││││││   0x009263c8      001091e5       ldr r1, [r1]
+  │││││││   0x009263cc      102a11ee       vmov r2, s2
+  │││││││   0x009263d0      84311be5       ldr r3, [fp, -0x184]
+  │││││││   0x009263d4      8cc11be5       ldr ip, [fp, -0x18c]
+  │││││││   0x009263d8      3cff2fe1       blx ip
+  └───────> 0x009263dc      bb0000ea       b 0x9266d0
+   └──────> 0x009263e0      700f9fe5       ldr r0, [0x00927358]        ; [0x927358:4]=0xffffe6bc
+    │││││   0x009263e4      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+    │││││   0x009263e8      010090e7       ldr r0, [r0, r1]
+    │││││   0x009263ec      20201be5       ldr r2, [fp, -0x20]
+    │││││   0x009263f0      000090e5       ldr r0, [r0]
+    │││││   0x009263f4      000082e0       add r0, r2, r0
+    │││││   0x009263f8      d000d0e1       ldrsb r0, [r0]
+    │││││   0x009263fc      000050e3       cmp r0, 0
+   ┌──────< 0x00926400      b100000a       beq 0x9266cc
+   ││││││   0x00926404      f0049fe5       ldr r0, [0x009268fc]        ; [0x9268fc:4]=0xffffbcac
+   ││││││   0x00926408      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+   ││││││   0x0092640c      010090e7       ldr r0, [r0, r1]
+   ││││││   0x00926410      54279fe5       ldr r2, [0x00926b6c]        ; [0x926b6c:4]=0xffe23ae0
+   ││││││   0x00926414      012082e0       add r2, r2, r1
+   ││││││   0x00926418      38379fe5       ldr r3, [0x00926b58]        ; [0x926b58:4]=0xffffe61c
+   ││││││   0x0092641c      013093e7       ldr r3, [r3, r1]
+   ││││││   0x00926420      20c01be5       ldr ip, [fp, -0x20]
+   ││││││   0x00926424      003093e5       ldr r3, [r3]
+   ││││││   0x00926428      03308ce0       add r3, ip, r3
+   ││││││   0x0092642c      003093e5       ldr r3, [r3]
+   ││││││   0x00926430      001092e5       ldr r1, [r2]
+   ││││││   0x00926434      94010be5       str r0, [fp, -0x194]
+   ││││││   0x00926438      0300a0e1       mov r0, r3
+   ││││││   0x0092643c      94211be5       ldr r2, [fp, -0x194]
+   ││││││   0x00926440      32ff2fe1       blx r2
+   ││││││   0x00926444      7000afe6       sxtb r0, r0
+   ││││││   0x00926448      000050e3       cmp r0, 0
+  ┌───────< 0x0092644c      0800000a       beq 0x926474
+  │││││││   0x00926450      000000e3       movw r0, 0
+  │││││││   0x00926454      fc1e9fe5       ldr r1, [0x00927358]        ; [0x927358:4]=0xffffe6bc
+  │││││││   0x00926458      a8201be5       ldr r2, [fp, -0xa8]         ; "yC#"
+  │││││││   0x0092645c      021091e7       ldr r1, [r1, r2]
+  │││││││   0x00926460      20301be5       ldr r3, [fp, -0x20]
+  │││││││   0x00926464      001091e5       ldr r1, [r1]
+  │││││││   0x00926468      011083e0       add r1, r3, r1
+  │││││││   0x0092646c      0000c1e5       strb r0, [r1]
+  ────────< 0x00926470      940000ea       b 0x9266c8
+  └───────> 0x00926474      7a0a9fed       vldr s0, [0x00926664]
+   ││││││   0x00926478      dc0e9fe5       ldr r0, [0x0092735c]        ; [0x92735c:4]=0xffffe6c0
+   ││││││   0x0092647c      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+   ││││││   0x00926480      010090e7       ldr r0, [r0, r1]
+   ││││││   0x00926484      012000e3       movw r2, 1
+   ││││││   0x00926488      001bb7ee       vmov.f64 d1, 1
+   ││││││   0x0092648c      103000e3       movw r3, 0x10
+   ││││││   0x00926490      002ab3ee       vmov.f32 s4, 1
+   ││││││   0x00926494      20c01be5       ldr ip, [fp, -0x20]
+   ││││││   0x00926498      00e090e5       ldr lr, [r0]
+   ││││││   0x0092649c      0ec08ce0       add ip, ip, lr
+   ││││││   0x009264a0      003a9ced       vldr s6, [ip]
+   ││││││   0x009264a4      c34ab7ee       vcvt.f64.f32 d4, s6
+   ││││││   0x009264a8      0a3a1bed       vldr s6, [fp, -0x28]
+   ││││││   0x009264ac      022a23ee       vmul.f32 s4, s6, s4
+   ││││││   0x009264b0      c25ab7ee       vcvt.f64.f32 d5, s4
+   ││││││   0x009264b4      451b31ee       vsub.f64 d1, d1, d5
+   ││││││   0x009264b8      011b24ee       vmul.f64 d1, d4, d1
+   ││││││   0x009264bc      c12bb7ee       vcvt.f32.f64 s4, d1
+   ││││││   0x009264c0      20c01be5       ldr ip, [fp, -0x20]
+   ││││││   0x009264c4      00e090e5       ldr lr, [r0]
+   ││││││   0x009264c8      0ec08ce0       add ip, ip, lr
+   ││││││   0x009264cc      002a8ced       vstr s4, [ip]
+   ││││││   0x009264d0      20c01be5       ldr ip, [fp, -0x20]
+   ││││││   0x009264d4      000090e5       ldr r0, [r0]
+   ││││││   0x009264d8      00008ce0       add r0, ip, r0
+   ││││││   0x009264dc      002a90ed       vldr s4, [r0]
+   ││││││   0x009264e0      c22ab0ee       vabs.f32 s4, s4
+   ││││││   0x009264e4      c02ab4ee       vcmpe.f32 s4, s0
+   ││││││   0x009264e8      10faf1ee       vmrs apsr_nzcv, fpscr
+   ││││││   0x009264ec      98210be5       str r2, [fp, -0x198]
+   ││││││   0x009264f0      9c310be5       str r3, [fp, -0x19c]
+  ┌───────< 0x009264f4      0800005a       bpl 0x92651c
+  │││││││   0x009264f8      000000e3       movw r0, 0
+  │││││││   0x009264fc      541e9fe5       ldr r1, [0x00927358]        ; [0x927358:4]=0xffffe6bc
+  │││││││   0x00926500      a8201be5       ldr r2, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00926504      021091e7       ldr r1, [r1, r2]
+  │││││││   0x00926508      20301be5       ldr r3, [fp, -0x20]
+  │││││││   0x0092650c      001091e5       ldr r1, [r1]
+  │││││││   0x00926510      011083e0       add r1, r3, r1
+  │││││││   0x00926514      0000c1e5       strb r0, [r1]
+  ────────< 0x00926518      690000ea       b 0x9266c4
+  └───────> 0x0092651c      500a9fed       vldr s0, [0x00926664]
+   ││││││   0x00926520      900e9fe5       ldr r0, [0x009273b8]        ; [0x9273b8:4]=0xffffe6c4
+   ││││││   0x00926524      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+   ││││││   0x00926528      010090e7       ldr r0, [r0, r1]
+   ││││││   0x0092652c      282e9fe5       ldr r2, [0x0092735c]        ; [0x92735c:4]=0xffffe6c0
+   ││││││   0x00926530      012092e7       ldr r2, [r2, r1]
+   ││││││   0x00926534      20301be5       ldr r3, [fp, -0x20]
+   ││││││   0x00926538      002092e5       ldr r2, [r2]
+   ││││││   0x0092653c      022083e0       add r2, r3, r2
+   ││││││   0x00926540      001a92ed       vldr s2, [r2]
+   ││││││   0x00926544      0a2a1bed       vldr s4, [fp, -0x28]
+   ││││││   0x00926548      021a21ee       vmul.f32 s2, s2, s4
+   ││││││   0x0092654c      20201be5       ldr r2, [fp, -0x20]
+   ││││││   0x00926550      003090e5       ldr r3, [r0]
+   ││││││   0x00926554      032082e0       add r2, r2, r3
+   ││││││   0x00926558      002a92ed       vldr s4, [r2]
+   ││││││   0x0092655c      011a32ee       vadd.f32 s2, s4, s2
+   ││││││   0x00926560      001a82ed       vstr s2, [r2]
+   ││││││   0x00926564      20201be5       ldr r2, [fp, -0x20]
+   ││││││   0x00926568      000090e5       ldr r0, [r0]
+   ││││││   0x0092656c      000082e0       add r0, r2, r0
+   ││││││   0x00926570      001a90ed       vldr s2, [r0]
+   ││││││   0x00926574      c01ab4ee       vcmpe.f32 s2, s0
+   ││││││   0x00926578      10faf1ee       vmrs apsr_nzcv, fpscr
+  ┌───────< 0x0092657c      0800005a       bpl 0x9265a4
+  │││││││   0x00926580      000000e3       movw r0, 0
+  │││││││   0x00926584      cc1d9fe5       ldr r1, [0x00927358]        ; [0x927358:4]=0xffffe6bc
+  │││││││   0x00926588      a8201be5       ldr r2, [fp, -0xa8]         ; "yC#"
+  │││││││   0x0092658c      021091e7       ldr r1, [r1, r2]
+  │││││││   0x00926590      20301be5       ldr r3, [fp, -0x20]
+  │││││││   0x00926594      001091e5       ldr r1, [r1]
+  │││││││   0x00926598      011083e0       add r1, r3, r1
+  │││││││   0x0092659c      0000c1e5       strb r0, [r1]
+  ────────< 0x009265a0      460000ea       b 0x9266c0
+  └───────> 0x009265a4      20001be5       ldr r0, [fp, -0x20]
+   ││││││   0x009265a8      981f9fe5       ldr r1, [0x00927548]        ; [0x927548:4]=0xffffe6c8
+   ││││││   0x009265ac      982f9fe5       ldr r2, [0x0092754c]        ; [0x92754c:4]=0x73953c
+   ││││││   0x009265b0      02208fe0       add r2, pc, r2
+   ││││││   0x009265b4      021091e7       ldr r1, [r1, r2]
+   ││││││   0x009265b8      001091e5       ldr r1, [r1]
+   ││││││   0x009265bc      011080e0       add r1, r0, r1
+   ││││││   0x009265c0      000a91ed       vldr s0, [r1]
+   ││││││   0x009265c4      781f9fe5       ldr r1, [0x00927544]        ; [0x927544:4]=0xffffe6c4
+   ││││││   0x009265c8      021091e7       ldr r1, [r1, r2]
+   ││││││   0x009265cc      001091e5       ldr r1, [r1]
+   ││││││   0x009265d0      011080e0       add r1, r0, r1
+   ││││││   0x009265d4      001a91ed       vldr s2, [r1]
+   ││││││   0x009265d8      010a80ee       vdiv.f32 s0, s0, s2
+   ││││││   0x009265dc      c02ab7ee       vcvt.f64.f32 d2, s0
+   ││││││   0x009265e0      b01b9fe5       ldr r1, [0x00927198]        ; [0x927198:4]=0xffffe62c
+   ││││││   0x009265e4      021091e7       ldr r1, [r1, r2]
+   ││││││   0x009265e8      003091e5       ldr r3, [r1]
+   ││││││   0x009265ec      030080e0       add r0, r0, r3
+   ││││││   0x009265f0      002b80ed       vstr d2, [r0]
+   ││││││   0x009265f4      20001be5       ldr r0, [fp, -0x20]
+   ││││││   0x009265f8      001091e5       ldr r1, [r1]
+   ││││││   0x009265fc      010080e0       add r0, r0, r1
+   ││││││   0x00926600      002b90ed       vldr d2, [r0]
+   ││││││   0x00926604      1e2b0bed       vstr d2, [fp, -0x78]
+   ││││││   0x00926608      20001be5       ldr r0, [fp, -0x20]
+   ││││││   0x0092660c      44159fe5       ldr r1, [0x00926b58]        ; [0x926b58:4]=0xffffe61c
+   ││││││   0x00926610      021091e7       ldr r1, [r1, r2]
+   ││││││   0x00926614      001091e5       ldr r1, [r1]
+   ││││││   0x00926618      010090e7       ldr r0, [r0, r1]
+   ││││││   0x0092661c      2c1f9fe5       ldr r1, [0x00927550]        ; [0x927550:4]=0xffe23af4
+   ││││││   0x00926620      021091e7       ldr r1, [r1, r2]
+   ││││││   0x00926624      7c70e2eb       bl loc.imp.objc_msgSend
+   ││││││   0x00926628      000ab4ee       vmov.f32 s0, 1
+   ││││││   0x0092662c      001ab6ee       vmov.f32 s2, 5
+   ││││││   0x00926630      ff0010e3       tst r0, 0xff
+   ││││││   0x00926634      401ab01e       vmovne.f32 s2, s0
+   ││││││   0x00926638      1f1a0bed       vstr s2, [fp, -0x7c]
+   ││││││   0x0092663c      1e2b1bed       vldr d2, [fp, -0x78]
+   ││││││   0x00926640      1f0a1bed       vldr s0, [fp, -0x7c]
+   ││││││   0x00926644      c03ab7ee       vcvt.f64.f32 d3, s0
+   ││││││   0x00926648      c32bb4ee       vcmpe.f64 d2, d3
+   ││││││   0x0092664c      10faf1ee       vmrs apsr_nzcv, fpscr
+  ┌───────< 0x00926650      0400005a       bpl 0x926668
+  │││││││   0x00926654      1f0a1bed       vldr s0, [fp, -0x7c]
+  │││││││   0x00926658      c01ab7ee       vcvt.f64.f32 d1, s0
+  │││││││   0x0092665c      6a1b0bed       vstr d1, [fp, -0x1a8]
+  ────────< 0x00926660      020000ea       b 0x926670
+  │││││││   0x00926664      0ad7233c       stclo p7, c13, [r3], -0x28
+  └───────> 0x00926668      1e0b1bed       vldr d0, [fp, -0x78]
+   ││││││   0x0092666c      6a0b0bed       vstr d0, [fp, -0x1a8]
+  ────────> 0x00926670      6a0b1bed       vldr d0, [fp, -0x1a8]
+   ││││││   0x00926674      80029fe5       ldr r0, [0x009268fc]        ; [0x9268fc:4]=0xffffbcac
+   ││││││   0x00926678      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+   ││││││   0x0092667c      010090e7       ldr r0, [r0, r1]
+   ││││││   0x00926680      cc2e9fe5       ldr r2, [0x00927554]        ; [0x927554:4]=0xffe23af8
+   ││││││   0x00926684      012082e0       add r2, r2, r1
+   ││││││   0x00926688      083b9fe5       ldr r3, [0x00927198]        ; [0x927198:4]=0xffffe62c
+   ││││││   0x0092668c      013093e7       ldr r3, [r3, r1]
+   ││││││   0x00926690      220b0bed       vstr d0, [fp, -0x88]
+   ││││││   0x00926694      220b1bed       vldr d0, [fp, -0x88]
+   ││││││   0x00926698      20c01be5       ldr ip, [fp, -0x20]
+   ││││││   0x0092669c      003093e5       ldr r3, [r3]
+   ││││││   0x009266a0      03308ce0       add r3, ip, r3
+   ││││││   0x009266a4      000b83ed       vstr d0, [r3]
+   ││││││   0x009266a8      20301be5       ldr r3, [fp, -0x20]
+   ││││││   0x009266ac      001092e5       ldr r1, [r2]
+   ││││││   0x009266b0      ac010be5       str r0, [fp, -0x1ac]
+   ││││││   0x009266b4      0300a0e1       mov r0, r3
+   ││││││   0x009266b8      ac211be5       ldr r2, [fp, -0x1ac]
+   ││││││   0x009266bc      32ff2fe1       blx r2
+  ┌───────< 0x009266c0      ffffffea       b 0x9266c4
+  └───────> 0x009266c4      ffffffea       b 0x9266c8
+  ┌───────< 0x009266c8      ffffffea       b 0x9266cc
+  └└──────> 0x009266cc      ffffffea       b 0x9266d0
+  ────────> 0x009266d0      24029fe5       ldr r0, [0x009268fc]        ; [0x9268fc:4]=0xffffbcac
+    │││││   0x009266d4      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+    │││││   0x009266d8      010090e7       ldr r0, [r0, r1]
+    │││││   0x009266dc      88249fe5       ldr r2, [0x00926b6c]        ; [0x926b6c:4]=0xffe23ae0
+    │││││   0x009266e0      012082e0       add r2, r2, r1
+    │││││   0x009266e4      6c349fe5       ldr r3, [0x00926b58]        ; [0x926b58:4]=0xffffe61c
+    │││││   0x009266e8      013093e7       ldr r3, [r3, r1]
+    │││││   0x009266ec      20c01be5       ldr ip, [fp, -0x20]
+    │││││   0x009266f0      003093e5       ldr r3, [r3]
+    │││││   0x009266f4      03308ce0       add r3, ip, r3
+    │││││   0x009266f8      003093e5       ldr r3, [r3]
+    │││││   0x009266fc      001092e5       ldr r1, [r2]
+    │││││   0x00926700      b0010be5       str r0, [fp, -0x1b0]
+    │││││   0x00926704      0300a0e1       mov r0, r3
+    │││││   0x00926708      b0211be5       ldr r2, [fp, -0x1b0]
+    │││││   0x0092670c      32ff2fe1       blx r2
+    │││││   0x00926710      7000afe6       sxtb r0, r0
+    │││││   0x00926714      000050e3       cmp r0, 0
+   ┌──────< 0x00926718      ca00001a       bne 0x926a48
+   ││││││   0x0092671c      000000e3       movw r0, 0
+   ││││││   0x00926720      e0169fe5       ldr r1, [0x00926e08]        ; [0x926e08:4]=0xffe23ae4
+   ││││││   0x00926724      a8201be5       ldr r2, [fp, -0xa8]         ; "yC#"
+   ││││││   0x00926728      021081e0       add r1, r1, r2
+   ││││││   0x0092672c      24349fe5       ldr r3, [0x00926b58]        ; [0x926b58:4]=0xffffe61c
+   ││││││   0x00926730      023093e7       ldr r3, [r3, r2]
+   ││││││   0x00926734      20c01be5       ldr ip, [fp, -0x20]
+   ││││││   0x00926738      003093e5       ldr r3, [r3]
+   ││││││   0x0092673c      03308ce0       add r3, ip, r3
+   ││││││   0x00926740      003093e5       ldr r3, [r3]
+   ││││││   0x00926744      002091e5       ldr r2, [r1]
+   ││││││   0x00926748      000053e1       cmp r3, r0
+   ││││││   0x0092674c      b4310be5       str r3, [fp, -0x1b4]
+   ││││││   0x00926750      b8218de5       str r2, [sp, 0x1b8]
+  ┌───────< 0x00926754      0400000a       beq 0x92676c
+  │││││││   0x00926758      90004be2       sub r0, fp, 0x90
+  │││││││   0x0092675c      b4111be5       ldr r1, [fp, -0x1b4]
+  │││││││   0x00926760      b8219de5       ldr r2, [sp, 0x1b8]
+  │││││││   0x00926764      6b70e2eb       bl loc.imp.objc_msgSend_stret
+  ────────< 0x00926768      070000ea       b 0x92678c
+  └───────> 0x0092676c      000000e3       movw r0, 0
+   ││││││   0x00926770      082000e3       movw r2, 8
+   ││││││   0x00926774      90104be2       sub r1, fp, 0x90
+   ││││││   0x00926778      b4018de5       str r0, [sp, 0x1b4]
+   ││││││   0x0092677c      0100a0e1       mov r0, r1
+   ││││││   0x00926780      b4119de5       ldr r1, [sp, 0x1b4]
+   ││││││   0x00926784      ff1001e2       and r1, r1, 0xff
+   ││││││   0x00926788      6570e2eb       bl sym.imp.memset
+  ────────> 0x0092678c      90004be2       sub r0, fp, 0x90
+   ││││││   0x00926790      001400e3       movw r1, 0x400
+   ││││││   0x00926794      f60a9fed       vldr s0, [0x00926b74]
+   ││││││   0x00926798      f8299fe5       ldr r2, [0x00927198]        ; [0x927198:4]=0xffffe62c
+   ││││││   0x0092679c      a8301be5       ldr r3, [fp, -0xa8]         ; "yC#"
+   ││││││   0x009267a0      032092e7       ldr r2, [r2, r3]
+   ││││││   0x009267a4      f31a9fed       vldr s2, [0x00926b78]
+   ││││││   0x009267a8      6ccf9fe5       ldr ip, [0x0092771c]        ; [0x92771c:4]=0xffffe694
+   ││││││   0x009267ac      03c09ce7       ldr ip, [ip, r3]
+   ││││││   0x009267b0      20e01be5       ldr lr, [fp, -0x20]
+   ││││││   0x009267b4      00c09ce5       ldr ip, [ip]
+   ││││││   0x009267b8      0cc08ee0       add ip, lr, ip
+   ││││││   0x009267bc      032a9ced       vldr s4, [ip, 0xc]
+   ││││││   0x009267c0      011a22ee       vmul.f32 s2, s4, s2
+   ││││││   0x009267c4      c13ab7ee       vcvt.f64.f32 d3, s2
+   ││││││   0x009267c8      20c01be5       ldr ip, [fp, -0x20]
+   ││││││   0x009267cc      002092e5       ldr r2, [r2]
+   ││││││   0x009267d0      02208ce0       add r2, ip, r2
+   ││││││   0x009267d4      004b92ed       vldr d4, [r2]
+   ││││││   0x009267d8      043b23ee       vmul.f64 d3, d3, d4
+   ││││││   0x009267dc      c31bb7ee       vcvt.f32.f64 s2, d3
+   ││││││   0x009267e0      251a0bed       vstr s2, [fp, -0x94]
+   ││││││   0x009267e4      251a1bed       vldr s2, [fp, -0x94]
+   ││││││   0x009267e8      410a30ee       vsub.f32 s0, s0, s2
+   ││││││   0x009267ec      260a0bed       vstr s0, [fp, -0x98]
+   ││││││   0x009267f0      b0118de5       str r1, [sp, 0x1b0]
+   ││││││   0x009267f4      ac5ceeeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+   ││││││   0x009267f8      010a90ed       vldr s0, [r0, 4]
+   ││││││   0x009267fc      251a1bed       vldr s2, [fp, -0x94]
+   ││││││   0x00926800      c10ab4ee       vcmpe.f32 s0, s2
+   ││││││   0x00926804      10faf1ee       vmrs apsr_nzcv, fpscr
+  ┌───────< 0x00926808      3f00005a       bpl 0x92690c
+  │││││││   0x0092680c      90004be2       sub r0, fp, 0x90
+  │││││││   0x00926810      a55ceeeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+  │││││││   0x00926814      010a90ed       vldr s0, [r0, 4]
+  │││││││   0x00926818      261a1bed       vldr s2, [fp, -0x98]
+  │││││││   0x0092681c      c10ab4ee       vcmpe.f32 s0, s2
+  │││││││   0x00926820      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x00926824      3800005a       bpl 0x92690c
+  │││││││   0x00926828      90004be2       sub r0, fp, 0x90
+  │││││││   0x0092682c      250a1bed       vldr s0, [fp, -0x94]
+  │││││││   0x00926830      c01ab7ee       vcvt.f64.f32 d1, s0
+  │││││││   0x00926834      6a1b8ded       vstr d1, [sp, 0x1a8]
+  │││││││   0x00926838      9b5ceeeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+  │││││││   0x0092683c      90104be2       sub r1, fp, 0x90
+  │││││││   0x00926840      ce1b9fed       vldr d1, [0x00926b80]
+  │││││││   0x00926844      012000e3       movw r2, 1
+  │││││││   0x00926848      002bb7ee       vmov.f64 d2, 1
+  │││││││   0x0092684c      0a3000e3       movw r3, 0xa
+  │││││││   0x00926850      040ab2ee       vmov.f32 s0, 1
+  │││││││   0x00926854      013a90ed       vldr s6, [r0, 4]
+  │││││││   0x00926858      254a1bed       vldr s8, [fp, -0x94]
+  │││││││   0x0092685c      443a33ee       vsub.f32 s6, s6, s8
+  │││││││   0x00926860      c35ab7ee       vcvt.f64.f32 d5, s6
+  │││││││   0x00926864      0a3a1bed       vldr s6, [fp, -0x28]
+  │││││││   0x00926868      000a23ee       vmul.f32 s0, s6, s0
+  │││││││   0x0092686c      c06ab7ee       vcvt.f64.f32 d6, s0
+  │││││││   0x00926870      462b32ee       vsub.f64 d2, d2, d6
+  │││││││   0x00926874      022b25ee       vmul.f64 d2, d5, d2
+  │││││││   0x00926878      6a5b9ded       vldr d5, [sp, 0x1a8]
+  │││││││   0x0092687c      022b35ee       vadd.f64 d2, d5, d2
+  │││││││   0x00926880      011b32ee       vadd.f64 d1, d2, d1
+  │││││││   0x00926884      c10bb7ee       vcvt.f32.f64 s0, d1
+  │││││││   0x00926888      0100a0e1       mov r0, r1
+  │││││││   0x0092688c      a4318de5       str r3, [sp, 0x1a4]
+  │││││││   0x00926890      680a8ded       vstr s0, [sp, 0x1a0]
+  │││││││   0x00926894      9c218de5       str r2, [sp, 0x19c]
+  │││││││   0x00926898      835ceeeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+  │││││││   0x0092689c      90104be2       sub r1, fp, 0x90
+  │││││││   0x009268a0      680a9ded       vldr s0, [sp, 0x1a0]
+  │││││││   0x009268a4      010a80ed       vstr s0, [r0, 4]
+  │││││││   0x009268a8      0100a0e1       mov r0, r1
+  │││││││   0x009268ac      7e5ceeeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+  │││││││   0x009268b0      950a1fed       vldr s0, [0x00926664]
+  │││││││   0x009268b4      013a90ed       vldr s6, [r0, 4]
+  │││││││   0x009268b8      254a1bed       vldr s8, [fp, -0x94]
+  │││││││   0x009268bc      400a34ee       vsub.f32 s0, s8, s0
+  │││││││   0x009268c0      c03ab4ee       vcmpe.f32 s6, s0
+  │││││││   0x009268c4      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x009268c8      050000da       ble 0x9268e4
+  │││││││   0x009268cc      90004be2       sub r0, fp, 0x90
+  │││││││   0x009268d0      250a1bed       vldr s0, [fp, -0x94]
+  │││││││   0x009268d4      660a8ded       vstr s0, [sp, 0x198]
+  │││││││   0x009268d8      735ceeeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+  │││││││   0x009268dc      660a9ded       vldr s0, [sp, 0x198]
+  │││││││   0x009268e0      010a80ed       vstr s0, [r0, 4]
+  ────────> 0x009268e4      470000ea       b 0x926a08
+  │││││││   0x009268e8      1ca17300       rsbseq sl, r3, ip, lsl r1
+  │││││││   0x009268ec      9ce6ffff       invalid
+  │││││││   0x009268f0      a0e6ffff       invalid
+  │││││││   0x009268f4      40e6ffff       invalid
+  │││││││   0x009268f8      7445f3ff       invalid
+  │││││││   0x009268fc      acbcffff       invalid
+  │││││││   0x00926900      d83ae2ff       invalid
+  │││││││   0x00926904      5839e2ff       invalid
+  │││││││   0x00926908      f8afe2ff       invalid
+  └───────> 0x0092690c      90004be2       sub r0, fp, 0x90
+   ││││││   0x00926910      655ceeeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+   ││││││   0x00926914      010a90ed       vldr s0, [r0, 4]
+   ││││││   0x00926918      261a1bed       vldr s2, [fp, -0x98]
+   ││││││   0x0092691c      c10ab4ee       vcmpe.f32 s0, s2
+   ││││││   0x00926920      10faf1ee       vmrs apsr_nzcv, fpscr
+  ┌───────< 0x00926924      360000da       ble 0x926a04
+  │││││││   0x00926928      90004be2       sub r0, fp, 0x90
+  │││││││   0x0092692c      5e5ceeeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+  │││││││   0x00926930      010a90ed       vldr s0, [r0, 4]
+  │││││││   0x00926934      251a1bed       vldr s2, [fp, -0x94]
+  │││││││   0x00926938      c10ab4ee       vcmpe.f32 s0, s2
+  │││││││   0x0092693c      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x00926940      2f0000da       ble 0x926a04
+  │││││││   0x00926944      90004be2       sub r0, fp, 0x90
+  │││││││   0x00926948      260a1bed       vldr s0, [fp, -0x98]
+  │││││││   0x0092694c      c01ab7ee       vcvt.f64.f32 d1, s0
+  │││││││   0x00926950      641b8ded       vstr d1, [sp, 0x190]
+  │││││││   0x00926954      545ceeeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+  │││││││   0x00926958      90104be2       sub r1, fp, 0x90
+  │││││││   0x0092695c      871b9fed       vldr d1, [0x00926b80]
+  │││││││   0x00926960      012000e3       movw r2, 1
+  │││││││   0x00926964      002bb7ee       vmov.f64 d2, 1
+  │││││││   0x00926968      0a3000e3       movw r3, 0xa
+  │││││││   0x0092696c      040ab2ee       vmov.f32 s0, 1
+  │││││││   0x00926970      013a90ed       vldr s6, [r0, 4]
+  │││││││   0x00926974      264a1bed       vldr s8, [fp, -0x98]
+  │││││││   0x00926978      443a33ee       vsub.f32 s6, s6, s8
+  │││││││   0x0092697c      c35ab7ee       vcvt.f64.f32 d5, s6
+  │││││││   0x00926980      0a3a1bed       vldr s6, [fp, -0x28]
+  │││││││   0x00926984      000a23ee       vmul.f32 s0, s6, s0
+  │││││││   0x00926988      c06ab7ee       vcvt.f64.f32 d6, s0
+  │││││││   0x0092698c      462b32ee       vsub.f64 d2, d2, d6
+  │││││││   0x00926990      022b25ee       vmul.f64 d2, d5, d2
+  │││││││   0x00926994      645b9ded       vldr d5, [sp, 0x190]
+  │││││││   0x00926998      022b35ee       vadd.f64 d2, d5, d2
+  │││││││   0x0092699c      411b32ee       vsub.f64 d1, d2, d1
+  │││││││   0x009269a0      c10bb7ee       vcvt.f32.f64 s0, d1
+  │││││││   0x009269a4      0100a0e1       mov r0, r1
+  │││││││   0x009269a8      8c318de5       str r3, [sp, 0x18c]
+  │││││││   0x009269ac      620a8ded       vstr s0, [sp, 0x188]
+  │││││││   0x009269b0      84218de5       str r2, [sp, 0x184]
+  │││││││   0x009269b4      3c5ceeeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+  │││││││   0x009269b8      90104be2       sub r1, fp, 0x90
+  │││││││   0x009269bc      620a9ded       vldr s0, [sp, 0x188]
+  │││││││   0x009269c0      010a80ed       vstr s0, [r0, 4]
+  │││││││   0x009269c4      0100a0e1       mov r0, r1
+  │││││││   0x009269c8      375ceeeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+  │││││││   0x009269cc      dc0a1fed       vldr s0, [0x00926664]
+  │││││││   0x009269d0      013a90ed       vldr s6, [r0, 4]
+  │││││││   0x009269d4      264a1bed       vldr s8, [fp, -0x98]
+  │││││││   0x009269d8      000a34ee       vadd.f32 s0, s8, s0
+  │││││││   0x009269dc      c03ab4ee       vcmpe.f32 s6, s0
+  │││││││   0x009269e0      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x009269e4      0500005a       bpl 0x926a00
+  │││││││   0x009269e8      90004be2       sub r0, fp, 0x90
+  │││││││   0x009269ec      260a1bed       vldr s0, [fp, -0x98]
+  │││││││   0x009269f0      600a8ded       vstr s0, [sp, 0x180]
+  │││││││   0x009269f4      2c5ceeeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+  │││││││   0x009269f8      600a9ded       vldr s0, [sp, 0x180]
+  │││││││   0x009269fc      010a80ed       vstr s0, [r0, 4]
+  ────────> 0x00926a00      ffffffea       b 0x926a04
+  └───────> 0x00926a04      ffffffea       b 0x926a08
+  ────────> 0x00926a08      20001be5       ldr r0, [fp, -0x20]
+   ││││││   0x00926a0c      44119fe5       ldr r1, [0x00926b58]        ; [0x926b58:4]=0xffffe61c
+   ││││││   0x00926a10      a02e9fe5       ldr r2, [0x009278b8]        ; [0x9278b8:4]=0x7390d8
+   ││││││   0x00926a14      02208fe0       add r2, pc, r2
+   ││││││   0x00926a18      021091e7       ldr r1, [r1, r2]
+   ││││││   0x00926a1c      001091e5       ldr r1, [r1]
+   ││││││   0x00926a20      010090e7       ldr r0, [r0, r1]
+   ││││││   0x00926a24      90101be5       ldr r1, [fp, -0x90]
+   ││││││   0x00926a28      8c301be5       ldr r3, [fp, -0x8c]
+   ││││││   0x00926a2c      9c300be5       str r3, [fp, -0x9c]
+   ││││││   0x00926a30      a0100be5       str r1, [fp, -0xa0]
+   ││││││   0x00926a34      d4139fe5       ldr r1, [0x00926e10]        ; [0x926e10:4]=0xffe23ae8
+   ││││││   0x00926a38      021091e7       ldr r1, [r1, r2]
+   ││││││   0x00926a3c      a0201be5       ldr r2, [fp, -0xa0]
+   ││││││   0x00926a40      9c301be5       ldr r3, [fp, -0x9c]
+   ││││││   0x00926a44      746fe2eb       bl loc.imp.objc_msgSend
+  ┌└──────> 0x00926a48      ffffffea       b 0x926a4c
+  └─└└────> 0x00926a4c      44079fe5       ldr r0, [0x00927198]        ; [0x927198:4]=0xffffe62c
+      │││   0x00926a50      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+      │││   0x00926a54      010090e7       ldr r0, [r0, r1]
+      │││   0x00926a58      00200ae3       movw r2, 0xa000
+      │││   0x00926a5c      ec0a9fed       vldr s0, [0x00926e14]
+      │││   0x00926a60      b43c9fe5       ldr r3, [0x0092771c]        ; [0x92771c:4]=0xffffe694
+      │││   0x00926a64      013093e7       ldr r3, [r3, r1]
+      │││   0x00926a68      20c01be5       ldr ip, [fp, -0x20]
+      │││   0x00926a6c      003093e5       ldr r3, [r3]
+      │││   0x00926a70      03308ce0       add r3, ip, r3
+      │││   0x00926a74      011a93ed       vldr s2, [r3, 4]
+      │││   0x00926a78      010a80ee       vdiv.f32 s0, s0, s2
+      │││   0x00926a7c      290a0bed       vstr s0, [fp, -0xa4]
+      │││   0x00926a80      20301be5       ldr r3, [fp, -0x20]
+      │││   0x00926a84      000090e5       ldr r0, [r0]
+      │││   0x00926a88      000083e0       add r0, r3, r0
+      │││   0x00926a8c      002b90ed       vldr d2, [r0]
+      │││   0x00926a90      290a1bed       vldr s0, [fp, -0xa4]
+      │││   0x00926a94      c03ab7ee       vcvt.f64.f32 d3, s0
+      │││   0x00926a98      c32bb4ee       vcmpe.f64 d2, d3
+      │││   0x00926a9c      10faf1ee       vmrs apsr_nzcv, fpscr
+      │││   0x00926aa0      7c218de5       str r2, [sp, 0x17c]
+     ┌────< 0x00926aa4      080000da       ble 0x926acc
+     ││││   0x00926aa8      e8069fe5       ldr r0, [0x00927198]        ; [0x927198:4]=0xffffe62c
+     ││││   0x00926aac      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+     ││││   0x00926ab0      010090e7       ldr r0, [r0, r1]
+     ││││   0x00926ab4      290a1bed       vldr s0, [fp, -0xa4]
+     ││││   0x00926ab8      c01ab7ee       vcvt.f64.f32 d1, s0
+     ││││   0x00926abc      20201be5       ldr r2, [fp, -0x20]
+     ││││   0x00926ac0      000090e5       ldr r0, [r0]
+     ││││   0x00926ac4      000082e0       add r0, r2, r0
+     ││││   0x00926ac8      001b80ed       vstr d1, [r0]
+     └────> 0x00926acc      7c0f9fe5       ldr r0, [0x00927a50]        ; [0x927a50:4]=0xffffe698
+      │││   0x00926ad0      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+      │││   0x00926ad4      010090e7       ldr r0, [r0, r1]
+      │││   0x00926ad8      20201be5       ldr r2, [fp, -0x20]
+      │││   0x00926adc      000090e5       ldr r0, [r0]
+      │││   0x00926ae0      000082e0       add r0, r2, r0
+      │││   0x00926ae4      d000d0e1       ldrsb r0, [r0]
+      │││   0x00926ae8      000050e3       cmp r0, 0
+     ┌────< 0x00926aec      3300000a       beq 0x926bc0
+     ││││   0x00926af0      a0069fe5       ldr r0, [0x00927198]        ; [0x927198:4]=0xffffe62c
+     ││││   0x00926af4      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+     ││││   0x00926af8      010090e7       ldr r0, [r0, r1]
+     ││││   0x00926afc      002000e3       movw r2, 0
+     ││││   0x00926b00      200b9fed       vldr d0, [0x00926b88]
+     ││││   0x00926b04      20301be5       ldr r3, [fp, -0x20]
+     ││││   0x00926b08      00c090e5       ldr ip, [r0]
+     ││││   0x00926b0c      0c3083e0       add r3, r3, ip
+     ││││   0x00926b10      001b93ed       vldr d1, [r3]
+     ││││   0x00926b14      0a2a1bed       vldr s4, [fp, -0x28]
+     ││││   0x00926b18      c23ab7ee       vcvt.f64.f32 d3, s4
+     ││││   0x00926b1c      000b23ee       vmul.f64 d0, d3, d0
+     ││││   0x00926b20      20301be5       ldr r3, [fp, -0x20]
+     ││││   0x00926b24      00c090e5       ldr ip, [r0]
+     ││││   0x00926b28      0c3083e0       add r3, r3, ip
+     ││││   0x00926b2c      003b93ed       vldr d3, [r3]
+     ││││   0x00926b30      030b20ee       vmul.f64 d0, d0, d3
+     ││││   0x00926b34      000b31ee       vadd.f64 d0, d1, d0
+     ││││   0x00926b38      20301be5       ldr r3, [fp, -0x20]
+     ││││   0x00926b3c      000090e5       ldr r0, [r0]
+     ││││   0x00926b40      000083e0       add r0, r3, r0
+     ││││   0x00926b44      000b80ed       vstr d0, [r0]
+     ││││   0x00926b48      78218de5       str r2, [sp, 0x178]
+    ┌─────< 0x00926b4c      e00400ea       b 0x927ed4
+    │││││   0x00926b50      a4e6ffff       invalid
+    │││││   0x00926b54      dc3ae2ff       invalid
+    │││││   0x00926b58      1ce6ffff       invalid
+    │││││   0x00926b5c      d43ae2ff       invalid
+    │││││   0x00926b60      a8e6ffff       invalid
+    │││││   0x00926b64      ace6ffff       invalid
+    │││││   0x00926b68      b0e6ffff       invalid
+    │││││   0x00926b6c      e03ae2ff       invalid
+    │││││   0x00926b70      b4e6ffff       invalid
+    │││││   0x00926b74      00008044       strmi r0, [r0], 0
+    │││││   0x00926b78      cdcccc3c       stcllo p12, c12, [ip], {0xcd}
+    │││││   0x00926b7c      00f020e3       nop
+    │││││   0x00926b80      00000040       andmi r0, r0, r0
+    │││││   0x00926b84      e17a843f       svclo 0x847ae1
+    │││││   0x00926b88      00000000       andeq r0, r0, r0
+    │││││   0x00926b8c      00000000       andeq r0, r0, r0
+    │││││   0x00926b90      00000000       andeq r0, r0, r0
+    │││││   0x00926b94      ebffef3f       svclo 0xefffeb
+    │││││   0x00926b98      00000040       andmi r0, r0, r0
+    │││││   0x00926b9c      3333e33f       svclo 0xe33333
+    │││││   0x00926ba0      d578e926       usaths r7, 9, r5, asr 0x11
+    │││││   0x00926ba4      3108e03f       svclo 0xe00831
+    │││││   0x00926ba8      00000000       andeq r0, r0, r0
+    │││││   0x00926bac      d6ffdf3f       svclo 0xdfffd6
+    │││││   0x00926bb0      2b8716d9       ldmdble r6, {r0, r1, r3, r5, r8, sb, sl, pc}
+    │││││   0x00926bb4      cef7ef3f       svclo 0xeff7ce
+    │││││   0x00926bb8      00000000       andeq r0, r0, r0
+    │││││   0x00926bbc      0100f03f       svclo 0xf00001
+    │└────> 0x00926bc0      64001fe5       ldr r0, [0x00926b64]        ; [0x926b64:4]=0xffffe6ac
+    │ │││   0x00926bc4      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+    │ │││   0x00926bc8      010090e7       ldr r0, [r0, r1]
+    │ │││   0x00926bcc      20201be5       ldr r2, [fp, -0x20]
+    │ │││   0x00926bd0      000090e5       ldr r0, [r0]
+    │ │││   0x00926bd4      000082e0       add r0, r2, r0
+    │ │││   0x00926bd8      d000d0e1       ldrsb r0, [r0]
+    │ │││   0x00926bdc      000050e3       cmp r0, 0
+    │┌────< 0x00926be0      ba04001a       bne 0x927ed0
+    │││││   0x00926be4      f0021fe5       ldr r0, [0x009268fc]        ; [0x9268fc:4]=0xffffbcac
+    │││││   0x00926be8      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+    │││││   0x00926bec      010090e7       ldr r0, [r0, r1]
+    │││││   0x00926bf0      58299fe5       ldr r2, [0x00927550]        ; [0x927550:4]=0xffe23af4
+    │││││   0x00926bf4      012082e0       add r2, r2, r1
+    │││││   0x00926bf8      a8301fe5       ldr r3, [0x00926b58]        ; [0x926b58:4]=0xffffe61c
+    │││││   0x00926bfc      013093e7       ldr r3, [r3, r1]
+    │││││   0x00926c00      20c01be5       ldr ip, [fp, -0x20]
+    │││││   0x00926c04      003093e5       ldr r3, [r3]
+    │││││   0x00926c08      03308ce0       add r3, ip, r3
+    │││││   0x00926c0c      003093e5       ldr r3, [r3]
+    │││││   0x00926c10      001092e5       ldr r1, [r2]
+    │││││   0x00926c14      74018de5       str r0, [sp, 0x174]
+    │││││   0x00926c18      0300a0e1       mov r0, r3
+    │││││   0x00926c1c      74219de5       ldr r2, [sp, 0x174]
+    │││││   0x00926c20      32ff2fe1       blx r2
+    │││││   0x00926c24      7000afe6       sxtb r0, r0
+    │││││   0x00926c28      000050e3       cmp r0, 0
+   ┌──────< 0x00926c2c      a704001a       bne 0x927ed0
+   ││││││   0x00926c30      5c059fe5       ldr r0, [0x00927194]        ; [0x927194:4]=0xffffe6b8
+   ││││││   0x00926c34      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+   ││││││   0x00926c38      010090e7       ldr r0, [r0, r1]
+   ││││││   0x00926c3c      20201be5       ldr r2, [fp, -0x20]
+   ││││││   0x00926c40      000090e5       ldr r0, [r0]
+   ││││││   0x00926c44      000082e0       add r0, r2, r0
+   ││││││   0x00926c48      d000d0e1       ldrsb r0, [r0]
+   ││││││   0x00926c4c      000050e3       cmp r0, 0
+  ┌───────< 0x00926c50      9e04001a       bne 0x927ed0
+  │││││││   0x00926c54      330b1fed       vldr d0, [0x00926b90]
+  │││││││   0x00926c58      38059fe5       ldr r0, [0x00927198]        ; [0x927198:4]=0xffffe62c
+  │││││││   0x00926c5c      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00926c60      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00926c64      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x00926c68      000090e5       ldr r0, [r0]
+  │││││││   0x00926c6c      000082e0       add r0, r2, r0
+  │││││││   0x00926c70      001b90ed       vldr d1, [r0]
+  │││││││   0x00926c74      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x00926c78      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x00926c7c      cc00005a       bpl 0x926fb4
+  │││││││   0x00926c80      3c0b1fed       vldr d0, [0x00926b98]
+  │││││││   0x00926c84      0c059fe5       ldr r0, [0x00927198]        ; [0x927198:4]=0xffffe62c
+  │││││││   0x00926c88      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00926c8c      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00926c90      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x00926c94      000090e5       ldr r0, [r0]
+  │││││││   0x00926c98      000082e0       add r0, r2, r0
+  │││││││   0x00926c9c      001b90ed       vldr d1, [r0]
+  │││││││   0x00926ca0      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x00926ca4      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x00926ca8      5a00005a       bpl 0x926e18
+  │││││││   0x00926cac      450b1fed       vldr d0, [0x00926ba0]
+  │││││││   0x00926cb0      e0049fe5       ldr r0, [0x00927198]        ; [0x927198:4]=0xffffe62c
+  │││││││   0x00926cb4      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00926cb8      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00926cbc      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x00926cc0      000090e5       ldr r0, [r0]
+  │││││││   0x00926cc4      000082e0       add r0, r2, r0
+  │││││││   0x00926cc8      001b90ed       vldr d1, [r0]
+  │││││││   0x00926ccc      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x00926cd0      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x00926cd4      4a0000da       ble 0x926e04
+  │││││││   0x00926cd8      4e0b1fed       vldr d0, [0x00926ba8]
+  │││││││   0x00926cdc      b4049fe5       ldr r0, [0x00927198]        ; [0x927198:4]=0xffffe62c
+  │││││││   0x00926ce0      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00926ce4      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00926ce8      5c1b1fed       vldr d1, [0x00926b80]
+  │││││││   0x00926cec      002bb6ee       vmov.f64 d2, 5
+  │││││││   0x00926cf0      012000e3       movw r2, 1
+  │││││││   0x00926cf4      003bb7ee       vmov.f64 d3, 1
+  │││││││   0x00926cf8      0a3000e3       movw r3, 0xa
+  │││││││   0x00926cfc      044ab2ee       vmov.f32 s8, 1
+  │││││││   0x00926d00      20c01be5       ldr ip, [fp, -0x20]
+  │││││││   0x00926d04      00e090e5       ldr lr, [r0]
+  │││││││   0x00926d08      0ec08ce0       add ip, ip, lr
+  │││││││   0x00926d0c      005b9ced       vldr d5, [ip]
+  │││││││   0x00926d10      425b35ee       vsub.f64 d5, d5, d2
+  │││││││   0x00926d14      0a6a1bed       vldr s12, [fp, -0x28]
+  │││││││   0x00926d18      044a26ee       vmul.f32 s8, s12, s8
+  │││││││   0x00926d1c      c47ab7ee       vcvt.f64.f32 d7, s8
+  │││││││   0x00926d20      473b33ee       vsub.f64 d3, d3, d7
+  │││││││   0x00926d24      033b25ee       vmul.f64 d3, d5, d3
+  │││││││   0x00926d28      032b32ee       vadd.f64 d2, d2, d3
+  │││││││   0x00926d2c      411b32ee       vsub.f64 d1, d2, d1
+  │││││││   0x00926d30      20c01be5       ldr ip, [fp, -0x20]
+  │││││││   0x00926d34      00e090e5       ldr lr, [r0]
+  │││││││   0x00926d38      0ec08ce0       add ip, ip, lr
+  │││││││   0x00926d3c      001b8ced       vstr d1, [ip]
+  │││││││   0x00926d40      20c01be5       ldr ip, [fp, -0x20]
+  │││││││   0x00926d44      000090e5       ldr r0, [r0]
+  │││││││   0x00926d48      00008ce0       add r0, ip, r0
+  │││││││   0x00926d4c      001b90ed       vldr d1, [r0]
+  │││││││   0x00926d50      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x00926d54      10faf1ee       vmrs apsr_nzcv, fpscr
+  │││││││   0x00926d58      70218de5       str r2, [sp, 0x170]
+  │││││││   0x00926d5c      6c318de5       str r3, [sp, section..dynsym]
+  ────────< 0x00926d60      2600005a       bpl 0x926e00
+  │││││││   0x00926d64      e4059fe5       ldr r0, [0x00927350]        ; [0x927350:4]=0xfff34544
+  │││││││   0x00926d68      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00926d6c      010080e0       add r0, r0, r1
+  │││││││   0x00926d70      7c241fe5       ldr r2, [0x009268fc]        ; [0x9268fc:4]=0xffffbcac
+  │││││││   0x00926d74      012092e7       ldr r2, [r2, r1]
+  │││││││   0x00926d78      0230a0e1       mov r3, r2
+  │││││││   0x00926d7c      d0c59fe5       ldr ip, [0x00927354]        ; [0x927354:4]=0xffe23af0
+  │││││││   0x00926d80      01c08ce0       add ip, ip, r1
+  │││││││   0x00926d84      0ce49fe5       ldr lr, [0x00927198]        ; [0x927198:4]=0xffffe62c
+  │││││││   0x00926d88      01e09ee7       ldr lr, [lr, r1]
+  │││││││   0x00926d8c      90441fe5       ldr r4, [0x00926904]        ; [0x926904:4]=0xffe23958
+  │││││││   0x00926d90      014084e0       add r4, r4, r1
+  │││││││   0x00926d94      94541fe5       ldr r5, [0x00926908]        ; [0x926908:4]=0xffe2aff8
+  │││││││   0x00926d98      015085e0       add r5, r5, r1
+  │││││││   0x00926d9c      000bb6ee       vmov.f64 d0, 5
+  │││││││   0x00926da0      20601be5       ldr r6, [fp, -0x20]
+  │││││││   0x00926da4      00709ee5       ldr r7, [lr]
+  │││││││   0x00926da8      076086e0       add r6, r6, r7
+  │││││││   0x00926dac      000b86ed       vstr d0, [r6]
+  │││││││   0x00926db0      005095e5       ldr r5, [r5]
+  │││││││   0x00926db4      001094e5       ldr r1, [r4]
+  │││││││   0x00926db8      68018de5       str r0, [sp, 0x168]
+  │││││││   0x00926dbc      0500a0e1       mov r0, r5
+  │││││││   0x00926dc0      64c18de5       str ip, [sp, 0x164]
+  │││││││   0x00926dc4      60318de5       str r3, [sp, 0x160]
+  │││││││   0x00926dc8      5ce18de5       str lr, [sp, 0x15c]
+  │││││││   0x00926dcc      32ff2fe1       blx r2
+  │││││││   0x00926dd0      20101be5       ldr r1, [fp, -0x20]
+  │││││││   0x00926dd4      5c219de5       ldr r2, [sp, 0x15c]
+  │││││││   0x00926dd8      003092e5       ldr r3, [r2]
+  │││││││   0x00926ddc      031081e0       add r1, r1, r3
+  │││││││   0x00926de0      000b91ed       vldr d0, [r1]
+  │││││││   0x00926de4      c01bb7ee       vcvt.f32.f64 s2, d0
+  │││││││   0x00926de8      64119de5       ldr r1, [sp, 0x164]
+  │││││││   0x00926dec      001091e5       ldr r1, [r1]
+  │││││││   0x00926df0      102a11ee       vmov r2, s2
+  │││││││   0x00926df4      68319de5       ldr r3, [sp, 0x168]
+  │││││││   0x00926df8      60c19de5       ldr ip, [sp, 0x160]
+  │││││││   0x00926dfc      3cff2fe1       blx ip
+  ────────> 0x00926e00      ffffffea       b 0x926e04
+  ────────> 0x00926e04      5b0000ea       b 0x926f78
+  │││││││   0x00926e08      e43ae2ff       invalid
+  │││││││   0x00926e0c      249c7300       rsbseq sb, r3, r4, lsr 24
+  │││││││   0x00926e10      e83ae2ff       invalid
+  │││││││   0x00926e14      00002047       strmi r0, [r0, -r0]!
+  ────────> 0x00926e18      9c0b1fed       vldr d0, [0x00926bb0]
+  │││││││   0x00926e1c      74039fe5       ldr r0, [0x00927198]        ; [0x927198:4]=0xffffe62c
+  │││││││   0x00926e20      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00926e24      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00926e28      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x00926e2c      000090e5       ldr r0, [r0]
+  │││││││   0x00926e30      000082e0       add r0, r2, r0
+  │││││││   0x00926e34      001b90ed       vldr d1, [r0]
+  │││││││   0x00926e38      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x00926e3c      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x00926e40      4b00005a       bpl 0x926f74
+  │││││││   0x00926e44      a50b1fed       vldr d0, [0x00926bb8]
+  │││││││   0x00926e48      48039fe5       ldr r0, [0x00927198]        ; [0x927198:4]=0xffffe62c
+  │││││││   0x00926e4c      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00926e50      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00926e54      b71b1fed       vldr d1, [0x00926b80]
+  │││││││   0x00926e58      012000e3       movw r2, 1
+  │││││││   0x00926e5c      002bb7ee       vmov.f64 d2, 1
+  │││││││   0x00926e60      0a3000e3       movw r3, 0xa
+  │││││││   0x00926e64      043ab2ee       vmov.f32 s6, 1
+  │││││││   0x00926e68      20c01be5       ldr ip, [fp, -0x20]
+  │││││││   0x00926e6c      00e090e5       ldr lr, [r0]
+  │││││││   0x00926e70      0ec08ce0       add ip, ip, lr
+  │││││││   0x00926e74      004b9ced       vldr d4, [ip]
+  │││││││   0x00926e78      424b34ee       vsub.f64 d4, d4, d2
+  │││││││   0x00926e7c      0a5a1bed       vldr s10, [fp, -0x28]
+  │││││││   0x00926e80      033a25ee       vmul.f32 s6, s10, s6
+  │││││││   0x00926e84      c36ab7ee       vcvt.f64.f32 d6, s6
+  │││││││   0x00926e88      466b32ee       vsub.f64 d6, d2, d6
+  │││││││   0x00926e8c      064b24ee       vmul.f64 d4, d4, d6
+  │││││││   0x00926e90      042b32ee       vadd.f64 d2, d2, d4
+  │││││││   0x00926e94      011b32ee       vadd.f64 d1, d2, d1
+  │││││││   0x00926e98      20c01be5       ldr ip, [fp, -0x20]
+  │││││││   0x00926e9c      00e090e5       ldr lr, [r0]
+  │││││││   0x00926ea0      0ec08ce0       add ip, ip, lr
+  │││││││   0x00926ea4      001b8ced       vstr d1, [ip]
+  │││││││   0x00926ea8      20c01be5       ldr ip, [fp, -0x20]
+  │││││││   0x00926eac      000090e5       ldr r0, [r0]
+  │││││││   0x00926eb0      00008ce0       add r0, ip, r0
+  │││││││   0x00926eb4      001b90ed       vldr d1, [r0]
+  │││││││   0x00926eb8      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x00926ebc      10faf1ee       vmrs apsr_nzcv, fpscr
+  │││││││   0x00926ec0      58318de5       str r3, [sp, 0x158]
+  │││││││   0x00926ec4      54218de5       str r2, [sp, 0x154]
+  ────────< 0x00926ec8      280000da       ble 0x926f70
+  │││││││   0x00926ecc      7c049fe5       ldr r0, [0x00927350]        ; [0x927350:4]=0xfff34544
+  │││││││   0x00926ed0      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00926ed4      010080e0       add r0, r0, r1
+  │││││││   0x00926ed8      e4251fe5       ldr r2, [0x009268fc]        ; [0x9268fc:4]=0xffffbcac
+  │││││││   0x00926edc      012092e7       ldr r2, [r2, r1]
+  │││││││   0x00926ee0      0230a0e1       mov r3, r2
+  │││││││   0x00926ee4      68c49fe5       ldr ip, [0x00927354]        ; [0x927354:4]=0xffe23af0
+  │││││││   0x00926ee8      01c08ce0       add ip, ip, r1
+  │││││││   0x00926eec      a4e29fe5       ldr lr, [0x00927198]        ; [0x927198:4]=0xffffe62c
+  │││││││   0x00926ef0      01e09ee7       ldr lr, [lr, r1]
+  │││││││   0x00926ef4      f8451fe5       ldr r4, [0x00926904]        ; [0x926904:4]=0xffe23958
+  │││││││   0x00926ef8      014084e0       add r4, r4, r1
+  │││││││   0x00926efc      fc551fe5       ldr r5, [0x00926908]        ; [0x926908:4]=0xffe2aff8
+  │││││││   0x00926f00      015085e0       add r5, r5, r1
+  │││││││   0x00926f04      016000e3       movw r6, 1
+  │││││││   0x00926f08      000bb7ee       vmov.f64 d0, 1
+  │││││││   0x00926f0c      20701be5       ldr r7, [fp, -0x20]
+  │││││││   0x00926f10      00809ee5       ldr r8, [lr]
+  │││││││   0x00926f14      087087e0       add r7, r7, r8
+  │││││││   0x00926f18      000b87ed       vstr d0, [r7]
+  │││││││   0x00926f1c      005095e5       ldr r5, [r5]
+  │││││││   0x00926f20      001094e5       ldr r1, [r4]
+  │││││││   0x00926f24      50018de5       str r0, [sp, 0x150]
+  │││││││   0x00926f28      0500a0e1       mov r0, r5
+  │││││││   0x00926f2c      4cc18de5       str ip, [sp, 0x14c]
+  │││││││   0x00926f30      48618de5       str r6, [sp, segment.NOTE]
+  │││││││   0x00926f34      44e18de5       str lr, [sp, 0x144]
+  │││││││   0x00926f38      40318de5       str r3, [sp, 0x140]
+  │││││││   0x00926f3c      32ff2fe1       blx r2
+  │││││││   0x00926f40      20101be5       ldr r1, [fp, -0x20]
+  │││││││   0x00926f44      44219de5       ldr r2, [sp, 0x144]
+  │││││││   0x00926f48      003092e5       ldr r3, [r2]
+  │││││││   0x00926f4c      031081e0       add r1, r1, r3
+  │││││││   0x00926f50      000b91ed       vldr d0, [r1]
+  │││││││   0x00926f54      c01bb7ee       vcvt.f32.f64 s2, d0
+  │││││││   0x00926f58      4c119de5       ldr r1, [sp, 0x14c]
+  │││││││   0x00926f5c      001091e5       ldr r1, [r1]
+  │││││││   0x00926f60      102a11ee       vmov r2, s2
+  │││││││   0x00926f64      50319de5       ldr r3, [sp, 0x150]
+  │││││││   0x00926f68      40c19de5       ldr ip, [sp, 0x140]
+  │││││││   0x00926f6c      3cff2fe1       blx ip
+  ────────> 0x00926f70      ffffffea       b 0x926f74
+  ────────> 0x00926f74      ffffffea       b 0x926f78
+  ────────> 0x00926f78      84061fe5       ldr r0, [0x009268fc]        ; [0x9268fc:4]=0xffffbcac
+  │││││││   0x00926f7c      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00926f80      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00926f84      8c279fe5       ldr r2, [0x00927718]        ; [0x927718:4]=0xffe23af8
+  │││││││   0x00926f88      012082e0       add r2, r2, r1
+  │││││││   0x00926f8c      20301be5       ldr r3, [fp, -0x20]
+  │││││││   0x00926f90      001092e5       ldr r1, [r2]
+  │││││││   0x00926f94      3c018de5       str r0, [sp, 0x13c]
+  │││││││   0x00926f98      0300a0e1       mov r0, r3
+  │││││││   0x00926f9c      3c219de5       ldr r2, [sp, 0x13c]
+  │││││││   0x00926fa0      32ff2fe1       blx r2
+  ────────< 0x00926fa4      a90300ea       b 0x927e50
+  │││││││   0x00926fa8      1c9b7300       rsbseq sb, r3, ip, lsl fp
+  │││││││   0x00926fac      ec3ae2ff       invalid
+  │││││││   0x00926fb0      b8997300       ldrhteq sb, [r3], -0x98
+  ────────> 0x00926fb4      e90b9fed       vldr d0, [0x00927360]
+  │││││││   0x00926fb8      d8019fe5       ldr r0, [0x00927198]        ; [0x927198:4]=0xffffe62c
+  │││││││   0x00926fbc      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00926fc0      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00926fc4      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x00926fc8      000090e5       ldr r0, [r0]
+  │││││││   0x00926fcc      000082e0       add r0, r2, r0
+  │││││││   0x00926fd0      001b90ed       vldr d1, [r0]
+  │││││││   0x00926fd4      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x00926fd8      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x00926fdc      9a0300da       ble 0x927e4c
+  │││││││   0x00926fe0      040bb7ee       vmov.f64 d0, 1
+  │││││││   0x00926fe4      ac019fe5       ldr r0, [0x00927198]        ; [0x927198:4]=0xffffe62c
+  │││││││   0x00926fe8      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00926fec      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00926ff0      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x00926ff4      000090e5       ldr r0, [r0]
+  │││││││   0x00926ff8      000082e0       add r0, r2, r0
+  │││││││   0x00926ffc      001b90ed       vldr d1, [r0]
+  │││││││   0x00927000      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x00927004      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x00927008      6400005a       bpl 0x9271a0
+  │││││││   0x0092700c      d50b9fed       vldr d0, [0x00927368]
+  │││││││   0x00927010      80019fe5       ldr r0, [0x00927198]        ; [0x927198:4]=0xffffe62c
+  │││││││   0x00927014      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927018      010090e7       ldr r0, [r0, r1]
+  │││││││   0x0092701c      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x00927020      000090e5       ldr r0, [r0]
+  │││││││   0x00927024      000082e0       add r0, r2, r0
+  │││││││   0x00927028      001b90ed       vldr d1, [r0]
+  │││││││   0x0092702c      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x00927030      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x00927034      540000da       ble 0x92718c
+  │││││││   0x00927038      010000e3       movw r0, 1
+  │││││││   0x0092703c      000bb7ee       vmov.f64 d0, 1
+  │││││││   0x00927040      d41f9fe5       ldr r1, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x00927044      a8201be5       ldr r2, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927048      021091e7       ldr r1, [r1, r2]
+  │││││││   0x0092704c      c71b9fed       vldr d1, [0x00927370]
+  │││││││   0x00927050      0a3000e3       movw r3, 0xa
+  │││││││   0x00927054      042ab2ee       vmov.f32 s4, 1
+  │││││││   0x00927058      20c01be5       ldr ip, [fp, -0x20]
+  │││││││   0x0092705c      00e091e5       ldr lr, [r1]
+  │││││││   0x00927060      0ec08ce0       add ip, ip, lr
+  │││││││   0x00927064      003b9ced       vldr d3, [ip]
+  │││││││   0x00927068      403b33ee       vsub.f64 d3, d3, d0
+  │││││││   0x0092706c      0a4a1bed       vldr s8, [fp, -0x28]
+  │││││││   0x00927070      022a24ee       vmul.f32 s4, s8, s4
+  │││││││   0x00927074      c25ab7ee       vcvt.f64.f32 d5, s4
+  │││││││   0x00927078      455b30ee       vsub.f64 d5, d0, d5
+  │││││││   0x0092707c      053b23ee       vmul.f64 d3, d3, d5
+  │││││││   0x00927080      033b30ee       vadd.f64 d3, d0, d3
+  │││││││   0x00927084      411b33ee       vsub.f64 d1, d3, d1
+  │││││││   0x00927088      20c01be5       ldr ip, [fp, -0x20]
+  │││││││   0x0092708c      00e091e5       ldr lr, [r1]
+  │││││││   0x00927090      0ec08ce0       add ip, ip, lr
+  │││││││   0x00927094      001b8ced       vstr d1, [ip]
+  │││││││   0x00927098      20c01be5       ldr ip, [fp, -0x20]
+  │││││││   0x0092709c      001091e5       ldr r1, [r1]
+  │││││││   0x009270a0      01108ce0       add r1, ip, r1
+  │││││││   0x009270a4      001b91ed       vldr d1, [r1]
+  │││││││   0x009270a8      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x009270ac      10faf1ee       vmrs apsr_nzcv, fpscr
+  │││││││   0x009270b0      38018de5       str r0, [sp, 0x138]
+  │││││││   0x009270b4      34318de5       str r3, [sp, segment.INTERP]
+  ────────< 0x009270b8      2800005a       bpl 0x927160
+  │││││││   0x009270bc      600f9fe5       ldr r0, [0x00928024]        ; [0x928024:4]=0xfff34544
+  │││││││   0x009270c0      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x009270c4      010080e0       add r0, r0, r1
+  │││││││   0x009270c8      282f9fe5       ldr r2, [0x00927ff8]        ; [0x927ff8:4]=0xffffbcac
+  │││││││   0x009270cc      012092e7       ldr r2, [r2, r1]
+  │││││││   0x009270d0      0230a0e1       mov r3, r2
+  │││││││   0x009270d4      4ccf9fe5       ldr ip, [0x00928028]        ; [0x928028:4]=0xffe23af0
+  │││││││   0x009270d8      01c08ce0       add ip, ip, r1
+  │││││││   0x009270dc      38ef9fe5       ldr lr, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x009270e0      01e09ee7       ldr lr, [lr, r1]
+  │││││││   0x009270e4      104f9fe5       ldr r4, [0x00927ffc]        ; [0x927ffc:4]=0xffe23958
+  │││││││   0x009270e8      014084e0       add r4, r4, r1
+  │││││││   0x009270ec      0c5f9fe5       ldr r5, [0x00928000]        ; [0x928000:4]=0xffe2aff8
+  │││││││   0x009270f0      015085e0       add r5, r5, r1
+  │││││││   0x009270f4      016000e3       movw r6, 1
+  │││││││   0x009270f8      000bb7ee       vmov.f64 d0, 1
+  │││││││   0x009270fc      20701be5       ldr r7, [fp, -0x20]
+  │││││││   0x00927100      00809ee5       ldr r8, [lr]
+  │││││││   0x00927104      087087e0       add r7, r7, r8
+  │││││││   0x00927108      000b87ed       vstr d0, [r7]
+  │││││││   0x0092710c      005095e5       ldr r5, [r5]
+  │││││││   0x00927110      001094e5       ldr r1, [r4]
+  │││││││   0x00927114      30018de5       str r0, [sp, 0x130]
+  │││││││   0x00927118      0500a0e1       mov r0, r5
+  │││││││   0x0092711c      2cc18de5       str ip, [sp, 0x12c]
+  │││││││   0x00927120      28618de5       str r6, [sp, 0x128]
+  │││││││   0x00927124      24e18de5       str lr, [sp, 0x124]
+  │││││││   0x00927128      20318de5       str r3, [sp, 0x120]
+  │││││││   0x0092712c      32ff2fe1       blx r2
+  │││││││   0x00927130      20101be5       ldr r1, [fp, -0x20]
+  │││││││   0x00927134      24219de5       ldr r2, [sp, 0x124]
+  │││││││   0x00927138      003092e5       ldr r3, [r2]
+  │││││││   0x0092713c      031081e0       add r1, r1, r3
+  │││││││   0x00927140      000b91ed       vldr d0, [r1]
+  │││││││   0x00927144      c01bb7ee       vcvt.f32.f64 s2, d0
+  │││││││   0x00927148      2c119de5       ldr r1, [sp, 0x12c]
+  │││││││   0x0092714c      001091e5       ldr r1, [r1]
+  │││││││   0x00927150      102a11ee       vmov r2, s2
+  │││││││   0x00927154      30319de5       ldr r3, [sp, 0x130]
+  │││││││   0x00927158      20c19de5       ldr ip, [sp, 0x120]
+  │││││││   0x0092715c      3cff2fe1       blx ip
+  ────────> 0x00927160      900e9fe5       ldr r0, [0x00927ff8]        ; [0x927ff8:4]=0xffffbcac
+  │││││││   0x00927164      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927168      010090e7       ldr r0, [r0, r1]
+  │││││││   0x0092716c      ac2e9fe5       ldr r2, [0x00928020]        ; [0x928020:4]=0xffe23af8
+  │││││││   0x00927170      012082e0       add r2, r2, r1
+  │││││││   0x00927174      20301be5       ldr r3, [fp, -0x20]
+  │││││││   0x00927178      001092e5       ldr r1, [r2]
+  │││││││   0x0092717c      1c018de5       str r0, [sp, 0x11c]
+  │││││││   0x00927180      0300a0e1       mov r0, r3
+  │││││││   0x00927184      1c219de5       ldr r2, [sp, 0x11c]
+  │││││││   0x00927188      32ff2fe1       blx r2
+  ────────> 0x0092718c      2d0300ea       b 0x927e48
+  │││││││   0x00927190      4c997300       rsbseq sb, r3, ip, asr 18
+  │││││││   0x00927194      b8e6ffff       invalid
+  │││││││   0x00927198      2ce6ffff       invalid
+  │││││││   0x0092719c      4445f3ff       invalid
+  ────────> 0x009271a0      0c0bb7ee       vmov.f64 d0, 1
+  │││││││   0x009271a4      700e9fe5       ldr r0, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x009271a8      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x009271ac      010090e7       ldr r0, [r0, r1]
+  │││││││   0x009271b0      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x009271b4      000090e5       ldr r0, [r0]
+  │││││││   0x009271b8      000082e0       add r0, r2, r0
+  │││││││   0x009271bc      001b90ed       vldr d1, [r0]
+  │││││││   0x009271c0      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x009271c4      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x009271c8      e200005a       bpl 0x927558
+  │││││││   0x009271cc      690b9fed       vldr d0, [0x00927378]
+  │││││││   0x009271d0      440e9fe5       ldr r0, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x009271d4      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x009271d8      010090e7       ldr r0, [r0, r1]
+  │││││││   0x009271dc      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x009271e0      000090e5       ldr r0, [r0]
+  │││││││   0x009271e4      000082e0       add r0, r2, r0
+  │││││││   0x009271e8      001b90ed       vldr d1, [r0]
+  │││││││   0x009271ec      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x009271f0      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x009271f4      7000005a       bpl 0x9273bc
+  │││││││   0x009271f8      600b9fed       vldr d0, [0x00927380]
+  │││││││   0x009271fc      180e9fe5       ldr r0, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x00927200      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927204      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00927208      581b9fed       vldr d1, [0x00927370]
+  │││││││   0x0092720c      082bb7ee       vmov.f64 d2, 1
+  │││││││   0x00927210      012000e3       movw r2, 1
+  │││││││   0x00927214      003bb7ee       vmov.f64 d3, 1
+  │││││││   0x00927218      0a3000e3       movw r3, 0xa
+  │││││││   0x0092721c      044ab2ee       vmov.f32 s8, 1
+  │││││││   0x00927220      20c01be5       ldr ip, [fp, -0x20]
+  │││││││   0x00927224      00e090e5       ldr lr, [r0]
+  │││││││   0x00927228      0ec08ce0       add ip, ip, lr
+  │││││││   0x0092722c      005b9ced       vldr d5, [ip]
+  │││││││   0x00927230      425b35ee       vsub.f64 d5, d5, d2
+  │││││││   0x00927234      0a6a1bed       vldr s12, [fp, -0x28]
+  │││││││   0x00927238      044a26ee       vmul.f32 s8, s12, s8
+  │││││││   0x0092723c      c47ab7ee       vcvt.f64.f32 d7, s8
+  │││││││   0x00927240      473b33ee       vsub.f64 d3, d3, d7
+  │││││││   0x00927244      033b25ee       vmul.f64 d3, d5, d3
+  │││││││   0x00927248      032b32ee       vadd.f64 d2, d2, d3
+  │││││││   0x0092724c      011b32ee       vadd.f64 d1, d2, d1
+  │││││││   0x00927250      20c01be5       ldr ip, [fp, -0x20]
+  │││││││   0x00927254      00e090e5       ldr lr, [r0]
+  │││││││   0x00927258      0ec08ce0       add ip, ip, lr
+  │││││││   0x0092725c      001b8ced       vstr d1, [ip]
+  │││││││   0x00927260      20c01be5       ldr ip, [fp, -0x20]
+  │││││││   0x00927264      000090e5       ldr r0, [r0]
+  │││││││   0x00927268      00008ce0       add r0, ip, r0
+  │││││││   0x0092726c      001b90ed       vldr d1, [r0]
+  │││││││   0x00927270      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x00927274      10faf1ee       vmrs apsr_nzcv, fpscr
+  │││││││   0x00927278      18218de5       str r2, [sp, 0x118]
+  │││││││   0x0092727c      14318de5       str r3, [sp, 0x114]
+  ────────< 0x00927280      260000da       ble 0x927320
+  │││││││   0x00927284      980d9fe5       ldr r0, [0x00928024]        ; [0x928024:4]=0xfff34544
+  │││││││   0x00927288      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x0092728c      010080e0       add r0, r0, r1
+  │││││││   0x00927290      602d9fe5       ldr r2, [0x00927ff8]        ; [0x927ff8:4]=0xffffbcac
+  │││││││   0x00927294      012092e7       ldr r2, [r2, r1]
+  │││││││   0x00927298      0230a0e1       mov r3, r2
+  │││││││   0x0092729c      84cd9fe5       ldr ip, [0x00928028]        ; [0x928028:4]=0xffe23af0
+  │││││││   0x009272a0      01c08ce0       add ip, ip, r1
+  │││││││   0x009272a4      70ed9fe5       ldr lr, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x009272a8      01e09ee7       ldr lr, [lr, r1]
+  │││││││   0x009272ac      484d9fe5       ldr r4, [0x00927ffc]        ; [0x927ffc:4]=0xffe23958
+  │││││││   0x009272b0      014084e0       add r4, r4, r1
+  │││││││   0x009272b4      445d9fe5       ldr r5, [0x00928000]        ; [0x928000:4]=0xffe2aff8
+  │││││││   0x009272b8      015085e0       add r5, r5, r1
+  │││││││   0x009272bc      080bb7ee       vmov.f64 d0, 1
+  │││││││   0x009272c0      20601be5       ldr r6, [fp, -0x20]
+  │││││││   0x009272c4      00709ee5       ldr r7, [lr]
+  │││││││   0x009272c8      076086e0       add r6, r6, r7
+  │││││││   0x009272cc      000b86ed       vstr d0, [r6]
+  │││││││   0x009272d0      005095e5       ldr r5, [r5]
+  │││││││   0x009272d4      001094e5       ldr r1, [r4]
+  │││││││   0x009272d8      10018de5       str r0, [sp, 0x110]
+  │││││││   0x009272dc      0500a0e1       mov r0, r5
+  │││││││   0x009272e0      0cc18de5       str ip, [sp, 0x10c]
+  │││││││   0x009272e4      08318de5       str r3, [sp, 0x108]
+  │││││││   0x009272e8      04e18de5       str lr, [sp, 0x104]
+  │││││││   0x009272ec      32ff2fe1       blx r2
+  │││││││   0x009272f0      20101be5       ldr r1, [fp, -0x20]
+  │││││││   0x009272f4      04219de5       ldr r2, [sp, 0x104]
+  │││││││   0x009272f8      003092e5       ldr r3, [r2]
+  │││││││   0x009272fc      031081e0       add r1, r1, r3
+  │││││││   0x00927300      000b91ed       vldr d0, [r1]
+  │││││││   0x00927304      c01bb7ee       vcvt.f32.f64 s2, d0
+  │││││││   0x00927308      0c119de5       ldr r1, [sp, 0x10c]
+  │││││││   0x0092730c      001091e5       ldr r1, [r1]
+  │││││││   0x00927310      102a11ee       vmov r2, s2
+  │││││││   0x00927314      10319de5       ldr r3, [sp, 0x110]
+  │││││││   0x00927318      08c19de5       ldr ip, [sp, 0x108]
+  │││││││   0x0092731c      3cff2fe1       blx ip
+  ────────> 0x00927320      d00c9fe5       ldr r0, [0x00927ff8]        ; [0x927ff8:4]=0xffffbcac
+  │││││││   0x00927324      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927328      010090e7       ldr r0, [r0, r1]
+  │││││││   0x0092732c      ec2c9fe5       ldr r2, [0x00928020]        ; [0x928020:4]=0xffe23af8
+  │││││││   0x00927330      012082e0       add r2, r2, r1
+  │││││││   0x00927334      20301be5       ldr r3, [fp, -0x20]
+  │││││││   0x00927338      001092e5       ldr r1, [r2]
+  │││││││   0x0092733c      00018de5       str r0, [sp, 0x100]
+  │││││││   0x00927340      0300a0e1       mov r0, r3
+  │││││││   0x00927344      00219de5       ldr r2, [sp, 0x100]
+  │││││││   0x00927348      32ff2fe1       blx r2
+  ────────< 0x0092734c      7b0000ea       b 0x927540
+  │││││││   0x00927350      4445f3ff       invalid
+  │││││││   0x00927354      f03ae2ff       invalid
+  │││││││   0x00927358      bce6ffff       invalid
+  │││││││   0x0092735c      c0e6ffff       invalid
+  │││││││   0x00927360      00000080       andhi r0, r0, r0
+  │││││││   0x00927364      0a00f03f       svclo 0xf0000a
+  │││││││   0x00927368      6abc7493       cmnls r4, 0x6a00
+  │││││││   0x0092736c      1804f03f       svclo 0xf00418
+  │││││││   0x00927370      00000040       andmi r0, r0, r0
+  │││││││   0x00927374      e17a843f       svclo 0x847ae1
+  │││││││   0x00927378      96438b6c       stcvs p3, c4, [fp], {0x96}
+  │││││││   0x0092737c      e7fbf73f       svclo 0xf7fbe7
+  │││││││   0x00927380      00000060       andvs r0, r0, r0
+  │││││││   0x00927384      e7fbf73f       svclo 0xf7fbe7
+  │││││││   0x00927388      6abc7493       cmnls r4, 0x6a00
+  │││││││   0x0092738c      1804f83f       svclo 0xf80418
+  │││││││   0x00927390      000000a0       andge r0, r0, r0
+  │││││││   0x00927394      1804f83f       svclo 0xf80418
+  │││││││   0x00927398      00000020       andhs r0, r0, r0
+  │││││││   0x0092739c      97ffff3f       svclo 0xffff97
+  │││││││   0x009273a0      00000060       andvs r0, r0, r0
+  │││││││   0x009273a4      e7fbff3f       svclo 0xfffbe7
+  │││││││   0x009273a8      00000060       andvs r0, r0, r0
+  │││││││   0x009273ac      34000040       andmi r0, r0, r4, lsr r0
+  │││││││   0x009273b0      00000040       andmi r0, r0, r0
+  │││││││   0x009273b4      0c020040       andmi r0, r0, ip, lsl 4
+  │││││││   0x009273b8      c4e6ffff       invalid
+  ────────> 0x009273bc      0f0b1fed       vldr d0, [0x00927388]
+  │││││││   0x009273c0      540c9fe5       ldr r0, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x009273c4      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x009273c8      010090e7       ldr r0, [r0, r1]
+  │││││││   0x009273cc      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x009273d0      000090e5       ldr r0, [r0]
+  │││││││   0x009273d4      000082e0       add r0, r2, r0
+  │││││││   0x009273d8      001b90ed       vldr d1, [r0]
+  │││││││   0x009273dc      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x009273e0      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x009273e4      540000da       ble 0x92753c
+  │││││││   0x009273e8      180b1fed       vldr d0, [0x00927390]
+  │││││││   0x009273ec      280c9fe5       ldr r0, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x009273f0      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x009273f4      010090e7       ldr r0, [r0, r1]
+  │││││││   0x009273f8      241b1fed       vldr d1, [0x00927370]
+  │││││││   0x009273fc      082bb7ee       vmov.f64 d2, 1
+  │││││││   0x00927400      012000e3       movw r2, 1
+  │││││││   0x00927404      003bb7ee       vmov.f64 d3, 1
+  │││││││   0x00927408      0a3000e3       movw r3, 0xa
+  │││││││   0x0092740c      044ab2ee       vmov.f32 s8, 1
+  │││││││   0x00927410      20c01be5       ldr ip, [fp, -0x20]
+  │││││││   0x00927414      00e090e5       ldr lr, [r0]
+  │││││││   0x00927418      0ec08ce0       add ip, ip, lr
+  │││││││   0x0092741c      005b9ced       vldr d5, [ip]
+  │││││││   0x00927420      425b35ee       vsub.f64 d5, d5, d2
+  │││││││   0x00927424      0a6a1bed       vldr s12, [fp, -0x28]
+  │││││││   0x00927428      044a26ee       vmul.f32 s8, s12, s8
+  │││││││   0x0092742c      c47ab7ee       vcvt.f64.f32 d7, s8
+  │││││││   0x00927430      473b33ee       vsub.f64 d3, d3, d7
+  │││││││   0x00927434      033b25ee       vmul.f64 d3, d5, d3
+  │││││││   0x00927438      032b32ee       vadd.f64 d2, d2, d3
+  │││││││   0x0092743c      411b32ee       vsub.f64 d1, d2, d1
+  │││││││   0x00927440      20c01be5       ldr ip, [fp, -0x20]
+  │││││││   0x00927444      00e090e5       ldr lr, [r0]
+  │││││││   0x00927448      0ec08ce0       add ip, ip, lr
+  │││││││   0x0092744c      001b8ced       vstr d1, [ip]
+  │││││││   0x00927450      20c01be5       ldr ip, [fp, -0x20]
+  │││││││   0x00927454      000090e5       ldr r0, [r0]
+  │││││││   0x00927458      00008ce0       add r0, ip, r0
+  │││││││   0x0092745c      001b90ed       vldr d1, [r0]
+  │││││││   0x00927460      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x00927464      10faf1ee       vmrs apsr_nzcv, fpscr
+  │││││││   0x00927468      fc208de5       str r2, [sp, 0xfc]
+  │││││││   0x0092746c      f8308de5       str r3, [sp, 0xf8]
+  ────────< 0x00927470      2600005a       bpl 0x927510
+  │││││││   0x00927474      a80b9fe5       ldr r0, [0x00928024]        ; [0x928024:4]=0xfff34544
+  │││││││   0x00927478      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x0092747c      010080e0       add r0, r0, r1
+  │││││││   0x00927480      702b9fe5       ldr r2, [0x00927ff8]        ; [0x927ff8:4]=0xffffbcac
+  │││││││   0x00927484      012092e7       ldr r2, [r2, r1]
+  │││││││   0x00927488      0230a0e1       mov r3, r2
+  │││││││   0x0092748c      94cb9fe5       ldr ip, [0x00928028]        ; [0x928028:4]=0xffe23af0
+  │││││││   0x00927490      01c08ce0       add ip, ip, r1
+  │││││││   0x00927494      80eb9fe5       ldr lr, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x00927498      01e09ee7       ldr lr, [lr, r1]
+  │││││││   0x0092749c      584b9fe5       ldr r4, [0x00927ffc]        ; [0x927ffc:4]=0xffe23958
+  │││││││   0x009274a0      014084e0       add r4, r4, r1
+  │││││││   0x009274a4      545b9fe5       ldr r5, [0x00928000]        ; [0x928000:4]=0xffe2aff8
+  │││││││   0x009274a8      015085e0       add r5, r5, r1
+  │││││││   0x009274ac      080bb7ee       vmov.f64 d0, 1
+  │││││││   0x009274b0      20601be5       ldr r6, [fp, -0x20]
+  │││││││   0x009274b4      00709ee5       ldr r7, [lr]
+  │││││││   0x009274b8      076086e0       add r6, r6, r7
+  │││││││   0x009274bc      000b86ed       vstr d0, [r6]
+  │││││││   0x009274c0      005095e5       ldr r5, [r5]
+  │││││││   0x009274c4      001094e5       ldr r1, [r4]
+  │││││││   0x009274c8      f4008de5       str r0, [sp, 0xf4]
+  │││││││   0x009274cc      0500a0e1       mov r0, r5
+  │││││││   0x009274d0      f0c08de5       str ip, [sp, 0xf0]
+  │││││││   0x009274d4      ec308de5       str r3, [sp, 0xec]
+  │││││││   0x009274d8      e8e08de5       str lr, [sp, 0xe8]
+  │││││││   0x009274dc      32ff2fe1       blx r2
+  │││││││   0x009274e0      20101be5       ldr r1, [fp, -0x20]
+  │││││││   0x009274e4      e8209de5       ldr r2, [sp, 0xe8]
+  │││││││   0x009274e8      003092e5       ldr r3, [r2]
+  │││││││   0x009274ec      031081e0       add r1, r1, r3
+  │││││││   0x009274f0      000b91ed       vldr d0, [r1]
+  │││││││   0x009274f4      c01bb7ee       vcvt.f32.f64 s2, d0
+  │││││││   0x009274f8      f0109de5       ldr r1, [sp, 0xf0]
+  │││││││   0x009274fc      001091e5       ldr r1, [r1]
+  │││││││   0x00927500      102a11ee       vmov r2, s2
+  │││││││   0x00927504      f4309de5       ldr r3, [sp, 0xf4]
+  │││││││   0x00927508      ecc09de5       ldr ip, [sp, 0xec]
+  │││││││   0x0092750c      3cff2fe1       blx ip
+  ────────> 0x00927510      e00a9fe5       ldr r0, [0x00927ff8]        ; [0x927ff8:4]=0xffffbcac
+  │││││││   0x00927514      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927518      010090e7       ldr r0, [r0, r1]
+  │││││││   0x0092751c      fc2a9fe5       ldr r2, [0x00928020]        ; [0x928020:4]=0xffe23af8
+  │││││││   0x00927520      012082e0       add r2, r2, r1
+  │││││││   0x00927524      20301be5       ldr r3, [fp, -0x20]
+  │││││││   0x00927528      001092e5       ldr r1, [r2]
+  │││││││   0x0092752c      e4008de5       str r0, [sp, 0xe4]
+  │││││││   0x00927530      0300a0e1       mov r0, r3
+  │││││││   0x00927534      e4209de5       ldr r2, [sp, 0xe4]
+  │││││││   0x00927538      32ff2fe1       blx r2
+  ────────> 0x0092753c      ffffffea       b 0x927540
+  ────────< 0x00927540      3f0200ea       b 0x927e44
+  │││││││   0x00927544      c4e6ffff       invalid
+  │││││││   0x00927548      c8e6ffff       invalid
+  │││││││   0x0092754c      3c957300       rsbseq sb, r3, ip, lsr r5
+  │││││││   0x00927550      f43ae2ff       invalid
+  │││││││   0x00927554      f83ae2ff       invalid
+  ────────> 0x00927558      040bb0ee       vmov.f64 d0, 2
+  │││││││   0x0092755c      b80a9fe5       ldr r0, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x00927560      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927564      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00927568      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x0092756c      000090e5       ldr r0, [r0]
+  │││││││   0x00927570      000082e0       add r0, r2, r0
+  │││││││   0x00927574      001b90ed       vldr d1, [r0]
+  │││││││   0x00927578      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x0092757c      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x00927580      cd00005a       bpl 0x9278bc
+  │││││││   0x00927584      7d0b1fed       vldr d0, [0x00927398]
+  │││││││   0x00927588      8c0a9fe5       ldr r0, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x0092758c      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927590      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00927594      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x00927598      000090e5       ldr r0, [r0]
+  │││││││   0x0092759c      000082e0       add r0, r2, r0
+  │││││││   0x009275a0      001b90ed       vldr d1, [r0]
+  │││││││   0x009275a4      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x009275a8      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x009275ac      5b00005a       bpl 0x927720
+  │││││││   0x009275b0      860b1fed       vldr d0, [0x009273a0]
+  │││││││   0x009275b4      600a9fe5       ldr r0, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x009275b8      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x009275bc      010090e7       ldr r0, [r0, r1]
+  │││││││   0x009275c0      961b1fed       vldr d1, [0x00927370]
+  │││││││   0x009275c4      022000e3       movw r2, 2
+  │││││││   0x009275c8      002bb0ee       vmov.f64 d2, 2
+  │││││││   0x009275cc      013000e3       movw r3, 1
+  │││││││   0x009275d0      003bb7ee       vmov.f64 d3, 1
+  │││││││   0x009275d4      0ac000e3       movw ip, 0xa
+  │││││││   0x009275d8      044ab2ee       vmov.f32 s8, 1
+  │││││││   0x009275dc      20e01be5       ldr lr, [fp, -0x20]
+  │││││││   0x009275e0      004090e5       ldr r4, [r0]
+  │││││││   0x009275e4      04e08ee0       add lr, lr, r4
+  │││││││   0x009275e8      005b9eed       vldr d5, [lr]
+  │││││││   0x009275ec      425b35ee       vsub.f64 d5, d5, d2
+  │││││││   0x009275f0      0a6a1bed       vldr s12, [fp, -0x28]
+  │││││││   0x009275f4      044a26ee       vmul.f32 s8, s12, s8
+  │││││││   0x009275f8      c47ab7ee       vcvt.f64.f32 d7, s8
+  │││││││   0x009275fc      473b33ee       vsub.f64 d3, d3, d7
+  │││││││   0x00927600      033b25ee       vmul.f64 d3, d5, d3
+  │││││││   0x00927604      032b32ee       vadd.f64 d2, d2, d3
+  │││││││   0x00927608      011b32ee       vadd.f64 d1, d2, d1
+  │││││││   0x0092760c      20e01be5       ldr lr, [fp, -0x20]
+  │││││││   0x00927610      004090e5       ldr r4, [r0]
+  │││││││   0x00927614      04e08ee0       add lr, lr, r4
+  │││││││   0x00927618      001b8eed       vstr d1, [lr]
+  │││││││   0x0092761c      20e01be5       ldr lr, [fp, -0x20]
+  │││││││   0x00927620      000090e5       ldr r0, [r0]
+  │││││││   0x00927624      00008ee0       add r0, lr, r0
+  │││││││   0x00927628      001b90ed       vldr d1, [r0]
+  │││││││   0x0092762c      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x00927630      10faf1ee       vmrs apsr_nzcv, fpscr
+  │││││││   0x00927634      e0208de5       str r2, [sp, 0xe0]
+  │││││││   0x00927638      dcc08de5       str ip, [sp, 0xdc]
+  │││││││   0x0092763c      d8308de5       str r3, [sp, 0xd8]
+  ────────< 0x00927640      280000da       ble 0x9276e8
+  │││││││   0x00927644      d8099fe5       ldr r0, [0x00928024]        ; [0x928024:4]=0xfff34544
+  │││││││   0x00927648      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x0092764c      010080e0       add r0, r0, r1
+  │││││││   0x00927650      a0299fe5       ldr r2, [0x00927ff8]        ; [0x927ff8:4]=0xffffbcac
+  │││││││   0x00927654      012092e7       ldr r2, [r2, r1]
+  │││││││   0x00927658      0230a0e1       mov r3, r2
+  │││││││   0x0092765c      c4c99fe5       ldr ip, [0x00928028]        ; [0x928028:4]=0xffe23af0
+  │││││││   0x00927660      01c08ce0       add ip, ip, r1
+  │││││││   0x00927664      b0e99fe5       ldr lr, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x00927668      01e09ee7       ldr lr, [lr, r1]
+  │││││││   0x0092766c      88499fe5       ldr r4, [0x00927ffc]        ; [0x927ffc:4]=0xffe23958
+  │││││││   0x00927670      014084e0       add r4, r4, r1
+  │││││││   0x00927674      84599fe5       ldr r5, [0x00928000]        ; [0x928000:4]=0xffe2aff8
+  │││││││   0x00927678      015085e0       add r5, r5, r1
+  │││││││   0x0092767c      026000e3       movw r6, 2
+  │││││││   0x00927680      000bb0ee       vmov.f64 d0, 2
+  │││││││   0x00927684      20701be5       ldr r7, [fp, -0x20]
+  │││││││   0x00927688      00809ee5       ldr r8, [lr]
+  │││││││   0x0092768c      087087e0       add r7, r7, r8
+  │││││││   0x00927690      000b87ed       vstr d0, [r7]
+  │││││││   0x00927694      005095e5       ldr r5, [r5]
+  │││││││   0x00927698      001094e5       ldr r1, [r4]
+  │││││││   0x0092769c      d4008de5       str r0, [sp, 0xd4]
+  │││││││   0x009276a0      0500a0e1       mov r0, r5
+  │││││││   0x009276a4      d0c08de5       str ip, [sp, 0xd0]
+  │││││││   0x009276a8      cc608de5       str r6, [sp, 0xcc]
+  │││││││   0x009276ac      c8e08de5       str lr, [sp, 0xc8]
+  │││││││   0x009276b0      c4308de5       str r3, [sp, 0xc4]
+  │││││││   0x009276b4      32ff2fe1       blx r2
+  │││││││   0x009276b8      20101be5       ldr r1, [fp, -0x20]
+  │││││││   0x009276bc      c8209de5       ldr r2, [sp, 0xc8]
+  │││││││   0x009276c0      003092e5       ldr r3, [r2]
+  │││││││   0x009276c4      031081e0       add r1, r1, r3
+  │││││││   0x009276c8      000b91ed       vldr d0, [r1]
+  │││││││   0x009276cc      c01bb7ee       vcvt.f32.f64 s2, d0
+  │││││││   0x009276d0      d0109de5       ldr r1, [sp, 0xd0]
+  │││││││   0x009276d4      001091e5       ldr r1, [r1]
+  │││││││   0x009276d8      102a11ee       vmov r2, s2
+  │││││││   0x009276dc      d4309de5       ldr r3, [sp, 0xd4]
+  │││││││   0x009276e0      c4c09de5       ldr ip, [sp, 0xc4]
+  │││││││   0x009276e4      3cff2fe1       blx ip
+  ────────> 0x009276e8      08099fe5       ldr r0, [0x00927ff8]        ; [0x927ff8:4]=0xffffbcac
+  │││││││   0x009276ec      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x009276f0      010090e7       ldr r0, [r0, r1]
+  │││││││   0x009276f4      24299fe5       ldr r2, [0x00928020]        ; [0x928020:4]=0xffe23af8
+  │││││││   0x009276f8      012082e0       add r2, r2, r1
+  │││││││   0x009276fc      20301be5       ldr r3, [fp, -0x20]
+  │││││││   0x00927700      001092e5       ldr r1, [r2]
+  │││││││   0x00927704      c0008de5       str r0, [sp, 0xc0]
+  │││││││   0x00927708      0300a0e1       mov r0, r3
+  │││││││   0x0092770c      c0209de5       ldr r2, [sp, 0xc0]
+  │││││││   0x00927710      32ff2fe1       blx r2
+  ────────< 0x00927714      660000ea       b 0x9278b4
+  │││││││   0x00927718      f83ae2ff       invalid
+  │││││││   0x0092771c      94e6ffff       invalid
+  ────────> 0x00927720      e00b1fed       vldr d0, [0x009273a8]
+  │││││││   0x00927724      f0089fe5       ldr r0, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x00927728      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x0092772c      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00927730      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x00927734      000090e5       ldr r0, [r0]
+  │││││││   0x00927738      000082e0       add r0, r2, r0
+  │││││││   0x0092773c      001b90ed       vldr d1, [r0]
+  │││││││   0x00927740      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x00927744      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x00927748      580000da       ble 0x9278b0
+  │││││││   0x0092774c      e90b1fed       vldr d0, [0x009273b0]
+  │││││││   0x00927750      c4089fe5       ldr r0, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x00927754      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927758      010090e7       ldr r0, [r0, r1]
+  │││││││   0x0092775c      fd1b1fed       vldr d1, [0x00927370]
+  │││││││   0x00927760      022000e3       movw r2, 2
+  │││││││   0x00927764      002bb0ee       vmov.f64 d2, 2
+  │││││││   0x00927768      013000e3       movw r3, 1
+  │││││││   0x0092776c      003bb7ee       vmov.f64 d3, 1
+  │││││││   0x00927770      0ac000e3       movw ip, 0xa
+  │││││││   0x00927774      044ab2ee       vmov.f32 s8, 1
+  │││││││   0x00927778      20e01be5       ldr lr, [fp, -0x20]
+  │││││││   0x0092777c      004090e5       ldr r4, [r0]
+  │││││││   0x00927780      04e08ee0       add lr, lr, r4
+  │││││││   0x00927784      005b9eed       vldr d5, [lr]
+  │││││││   0x00927788      425b35ee       vsub.f64 d5, d5, d2
+  │││││││   0x0092778c      0a6a1bed       vldr s12, [fp, -0x28]
+  │││││││   0x00927790      044a26ee       vmul.f32 s8, s12, s8
+  │││││││   0x00927794      c47ab7ee       vcvt.f64.f32 d7, s8
+  │││││││   0x00927798      473b33ee       vsub.f64 d3, d3, d7
+  │││││││   0x0092779c      033b25ee       vmul.f64 d3, d5, d3
+  │││││││   0x009277a0      032b32ee       vadd.f64 d2, d2, d3
+  │││││││   0x009277a4      411b32ee       vsub.f64 d1, d2, d1
+  │││││││   0x009277a8      20e01be5       ldr lr, [fp, -0x20]
+  │││││││   0x009277ac      004090e5       ldr r4, [r0]
+  │││││││   0x009277b0      04e08ee0       add lr, lr, r4
+  │││││││   0x009277b4      001b8eed       vstr d1, [lr]
+  │││││││   0x009277b8      20e01be5       ldr lr, [fp, -0x20]
+  │││││││   0x009277bc      000090e5       ldr r0, [r0]
+  │││││││   0x009277c0      00008ee0       add r0, lr, r0
+  │││││││   0x009277c4      001b90ed       vldr d1, [r0]
+  │││││││   0x009277c8      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x009277cc      10faf1ee       vmrs apsr_nzcv, fpscr
+  │││││││   0x009277d0      bc208de5       str r2, [sp, 0xbc]
+  │││││││   0x009277d4      b8c08de5       str ip, [sp, 0xb8]
+  │││││││   0x009277d8      b4308de5       str r3, [sp, 0xb4]
+  ────────< 0x009277dc      2800005a       bpl 0x927884
+  │││││││   0x009277e0      3c089fe5       ldr r0, [0x00928024]        ; [0x928024:4]=0xfff34544
+  │││││││   0x009277e4      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x009277e8      010080e0       add r0, r0, r1
+  │││││││   0x009277ec      04289fe5       ldr r2, [0x00927ff8]        ; [0x927ff8:4]=0xffffbcac
+  │││││││   0x009277f0      012092e7       ldr r2, [r2, r1]
+  │││││││   0x009277f4      0230a0e1       mov r3, r2
+  │││││││   0x009277f8      28c89fe5       ldr ip, [0x00928028]        ; [0x928028:4]=0xffe23af0
+  │││││││   0x009277fc      01c08ce0       add ip, ip, r1
+  │││││││   0x00927800      14e89fe5       ldr lr, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x00927804      01e09ee7       ldr lr, [lr, r1]
+  │││││││   0x00927808      ec479fe5       ldr r4, [0x00927ffc]        ; [0x927ffc:4]=0xffe23958
+  │││││││   0x0092780c      014084e0       add r4, r4, r1
+  │││││││   0x00927810      e8579fe5       ldr r5, [0x00928000]        ; [0x928000:4]=0xffe2aff8
+  │││││││   0x00927814      015085e0       add r5, r5, r1
+  │││││││   0x00927818      026000e3       movw r6, 2
+  │││││││   0x0092781c      000bb0ee       vmov.f64 d0, 2
+  │││││││   0x00927820      20701be5       ldr r7, [fp, -0x20]
+  │││││││   0x00927824      00809ee5       ldr r8, [lr]
+  │││││││   0x00927828      087087e0       add r7, r7, r8
+  │││││││   0x0092782c      000b87ed       vstr d0, [r7]
+  │││││││   0x00927830      005095e5       ldr r5, [r5]
+  │││││││   0x00927834      001094e5       ldr r1, [r4]
+  │││││││   0x00927838      b0008de5       str r0, [sp, 0xb0]
+  │││││││   0x0092783c      0500a0e1       mov r0, r5
+  │││││││   0x00927840      acc08de5       str ip, [sp, 0xac]
+  │││││││   0x00927844      a8608de5       str r6, [sp, 0xa8]
+  │││││││   0x00927848      a4e08de5       str lr, [sp, 0xa4]
+  │││││││   0x0092784c      a0308de5       str r3, [sp, 0xa0]
+  │││││││   0x00927850      32ff2fe1       blx r2
+  │││││││   0x00927854      20101be5       ldr r1, [fp, -0x20]
+  │││││││   0x00927858      a4209de5       ldr r2, [sp, 0xa4]
+  │││││││   0x0092785c      003092e5       ldr r3, [r2]
+  │││││││   0x00927860      031081e0       add r1, r1, r3
+  │││││││   0x00927864      000b91ed       vldr d0, [r1]
+  │││││││   0x00927868      c01bb7ee       vcvt.f32.f64 s2, d0
+  │││││││   0x0092786c      ac109de5       ldr r1, [sp, 0xac]
+  │││││││   0x00927870      001091e5       ldr r1, [r1]
+  │││││││   0x00927874      102a11ee       vmov r2, s2
+  │││││││   0x00927878      b0309de5       ldr r3, [sp, 0xb0]
+  │││││││   0x0092787c      a0c09de5       ldr ip, [sp, 0xa0]
+  │││││││   0x00927880      3cff2fe1       blx ip
+  ────────> 0x00927884      6c079fe5       ldr r0, [0x00927ff8]        ; [0x927ff8:4]=0xffffbcac
+  │││││││   0x00927888      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x0092788c      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00927890      88279fe5       ldr r2, [0x00928020]        ; [0x928020:4]=0xffe23af8
+  │││││││   0x00927894      012082e0       add r2, r2, r1
+  │││││││   0x00927898      20301be5       ldr r3, [fp, -0x20]
+  │││││││   0x0092789c      001092e5       ldr r1, [r2]
+  │││││││   0x009278a0      9c008de5       str r0, [sp, 0x9c]
+  │││││││   0x009278a4      0300a0e1       mov r0, r3
+  │││││││   0x009278a8      9c209de5       ldr r2, [sp, 0x9c]
+  │││││││   0x009278ac      32ff2fe1       blx r2
+  ────────> 0x009278b0      ffffffea       b 0x9278b4
+  ────────< 0x009278b4      610100ea       b 0x927e40
+  │││││││   0x009278b8      d8907300       ldrsbteq sb, [r3], -8
+  ────────> 0x009278bc      d70b9fed       vldr d0, [0x00927c20]
+  │││││││   0x009278c0      54079fe5       ldr r0, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x009278c4      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x009278c8      010090e7       ldr r0, [r0, r1]
+  │││││││   0x009278cc      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x009278d0      000090e5       ldr r0, [r0]
+  │││││││   0x009278d4      000082e0       add r0, r2, r0
+  │││││││   0x009278d8      001b90ed       vldr d1, [r0]
+  │││││││   0x009278dc      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x009278e0      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x009278e4      5a00005a       bpl 0x927a54
+  │││││││   0x009278e8      ce0b9fed       vldr d0, [0x00927c28]
+  │││││││   0x009278ec      28079fe5       ldr r0, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x009278f0      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x009278f4      010090e7       ldr r0, [r0, r1]
+  │││││││   0x009278f8      cc1b9fed       vldr d1, [0x00927c30]
+  │││││││   0x009278fc      032000e3       movw r2, 3
+  │││││││   0x00927900      082bb0ee       vmov.f64 d2, 3
+  │││││││   0x00927904      013000e3       movw r3, 1
+  │││││││   0x00927908      003bb7ee       vmov.f64 d3, 1
+  │││││││   0x0092790c      0ac000e3       movw ip, 0xa
+  │││││││   0x00927910      044ab2ee       vmov.f32 s8, 1
+  │││││││   0x00927914      20e01be5       ldr lr, [fp, -0x20]
+  │││││││   0x00927918      004090e5       ldr r4, [r0]
+  │││││││   0x0092791c      04e08ee0       add lr, lr, r4
+  │││││││   0x00927920      005b9eed       vldr d5, [lr]
+  │││││││   0x00927924      425b35ee       vsub.f64 d5, d5, d2
+  │││││││   0x00927928      0a6a1bed       vldr s12, [fp, -0x28]
+  │││││││   0x0092792c      044a26ee       vmul.f32 s8, s12, s8
+  │││││││   0x00927930      c47ab7ee       vcvt.f64.f32 d7, s8
+  │││││││   0x00927934      473b33ee       vsub.f64 d3, d3, d7
+  │││││││   0x00927938      033b25ee       vmul.f64 d3, d5, d3
+  │││││││   0x0092793c      032b32ee       vadd.f64 d2, d2, d3
+  │││││││   0x00927940      011b32ee       vadd.f64 d1, d2, d1
+  │││││││   0x00927944      20e01be5       ldr lr, [fp, -0x20]
+  │││││││   0x00927948      004090e5       ldr r4, [r0]
+  │││││││   0x0092794c      04e08ee0       add lr, lr, r4
+  │││││││   0x00927950      001b8eed       vstr d1, [lr]
+  │││││││   0x00927954      20e01be5       ldr lr, [fp, -0x20]
+  │││││││   0x00927958      000090e5       ldr r0, [r0]
+  │││││││   0x0092795c      00008ee0       add r0, lr, r0
+  │││││││   0x00927960      001b90ed       vldr d1, [r0]
+  │││││││   0x00927964      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x00927968      10faf1ee       vmrs apsr_nzcv, fpscr
+  │││││││   0x0092796c      98208de5       str r2, [sp, 0x98]
+  │││││││   0x00927970      94c08de5       str ip, [sp, 0x94]
+  │││││││   0x00927974      90308de5       str r3, [sp, 0x90]
+  ────────< 0x00927978      280000da       ble 0x927a20
+  │││││││   0x0092797c      a0069fe5       ldr r0, [0x00928024]        ; [0x928024:4]=0xfff34544
+  │││││││   0x00927980      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927984      010080e0       add r0, r0, r1
+  │││││││   0x00927988      68269fe5       ldr r2, [0x00927ff8]        ; [0x927ff8:4]=0xffffbcac
+  │││││││   0x0092798c      012092e7       ldr r2, [r2, r1]
+  │││││││   0x00927990      0230a0e1       mov r3, r2
+  │││││││   0x00927994      8cc69fe5       ldr ip, [0x00928028]        ; [0x928028:4]=0xffe23af0
+  │││││││   0x00927998      01c08ce0       add ip, ip, r1
+  │││││││   0x0092799c      78e69fe5       ldr lr, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x009279a0      01e09ee7       ldr lr, [lr, r1]
+  │││││││   0x009279a4      50469fe5       ldr r4, [0x00927ffc]        ; [0x927ffc:4]=0xffe23958
+  │││││││   0x009279a8      014084e0       add r4, r4, r1
+  │││││││   0x009279ac      4c569fe5       ldr r5, [0x00928000]        ; [0x928000:4]=0xffe2aff8
+  │││││││   0x009279b0      015085e0       add r5, r5, r1
+  │││││││   0x009279b4      036000e3       movw r6, 3
+  │││││││   0x009279b8      080bb0ee       vmov.f64 d0, 3
+  │││││││   0x009279bc      20701be5       ldr r7, [fp, -0x20]
+  │││││││   0x009279c0      00809ee5       ldr r8, [lr]
+  │││││││   0x009279c4      087087e0       add r7, r7, r8
+  │││││││   0x009279c8      000b87ed       vstr d0, [r7]
+  │││││││   0x009279cc      005095e5       ldr r5, [r5]
+  │││││││   0x009279d0      001094e5       ldr r1, [r4]
+  │││││││   0x009279d4      8c008de5       str r0, [sp, 0x8c]
+  │││││││   0x009279d8      0500a0e1       mov r0, r5
+  │││││││   0x009279dc      88c08de5       str ip, [sp, 0x88]
+  │││││││   0x009279e0      84608de5       str r6, [sp, 0x84]
+  │││││││   0x009279e4      80e08de5       str lr, [sp, 0x80]
+  │││││││   0x009279e8      7c308de5       str r3, [sp, 0x7c]
+  │││││││   0x009279ec      32ff2fe1       blx r2
+  │││││││   0x009279f0      20101be5       ldr r1, [fp, -0x20]
+  │││││││   0x009279f4      80209de5       ldr r2, [sp, 0x80]
+  │││││││   0x009279f8      003092e5       ldr r3, [r2]
+  │││││││   0x009279fc      031081e0       add r1, r1, r3
+  │││││││   0x00927a00      000b91ed       vldr d0, [r1]
+  │││││││   0x00927a04      c01bb7ee       vcvt.f32.f64 s2, d0
+  │││││││   0x00927a08      88109de5       ldr r1, [sp, 0x88]
+  │││││││   0x00927a0c      001091e5       ldr r1, [r1]
+  │││││││   0x00927a10      102a11ee       vmov r2, s2
+  │││││││   0x00927a14      8c309de5       ldr r3, [sp, 0x8c]
+  │││││││   0x00927a18      7cc09de5       ldr ip, [sp, 0x7c]
+  │││││││   0x00927a1c      3cff2fe1       blx ip
+  ────────> 0x00927a20      d0059fe5       ldr r0, [0x00927ff8]        ; [0x927ff8:4]=0xffffbcac
+  │││││││   0x00927a24      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927a28      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00927a2c      ec259fe5       ldr r2, [0x00928020]        ; [0x928020:4]=0xffe23af8
+  │││││││   0x00927a30      012082e0       add r2, r2, r1
+  │││││││   0x00927a34      20301be5       ldr r3, [fp, -0x20]
+  │││││││   0x00927a38      001092e5       ldr r1, [r2]
+  │││││││   0x00927a3c      78008de5       str r0, [sp, 0x78]
+  │││││││   0x00927a40      0300a0e1       mov r0, r3
+  │││││││   0x00927a44      78209de5       ldr r2, [sp, 0x78]
+  │││││││   0x00927a48      32ff2fe1       blx r2
+  ────────< 0x00927a4c      fa0000ea       b 0x927e3c
+  │││││││   0x00927a50      98e6ffff       invalid
+  ────────> 0x00927a54      050000e3       movw r0, 5
+  │││││││   0x00927a58      040bb1ee       vmov.f64 d0, 5
+  │││││││   0x00927a5c      b8159fe5       ldr r1, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x00927a60      a8201be5       ldr r2, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927a64      021091e7       ldr r1, [r1, r2]
+  │││││││   0x00927a68      20301be5       ldr r3, [fp, -0x20]
+  │││││││   0x00927a6c      001091e5       ldr r1, [r1]
+  │││││││   0x00927a70      011083e0       add r1, r3, r1
+  │││││││   0x00927a74      001b91ed       vldr d1, [r1]
+  │││││││   0x00927a78      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x00927a7c      10faf1ee       vmrs apsr_nzcv, fpscr
+  │││││││   0x00927a80      74008de5       str r0, [sp, 0x74]
+  ────────< 0x00927a84      6f00005a       bpl 0x927c48
+  │││││││   0x00927a88      6a0b9fed       vldr d0, [0x00927c38]
+  │││││││   0x00927a8c      88059fe5       ldr r0, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x00927a90      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927a94      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00927a98      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x00927a9c      000090e5       ldr r0, [r0]
+  │││││││   0x00927aa0      000082e0       add r0, r2, r0
+  │││││││   0x00927aa4      001b90ed       vldr d1, [r0]
+  │││││││   0x00927aa8      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x00927aac      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x00927ab0      580000da       ble 0x927c18
+  │││││││   0x00927ab4      610b9fed       vldr d0, [0x00927c40]
+  │││││││   0x00927ab8      5c059fe5       ldr r0, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x00927abc      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927ac0      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00927ac4      591b9fed       vldr d1, [0x00927c30]
+  │││││││   0x00927ac8      032000e3       movw r2, 3
+  │││││││   0x00927acc      082bb0ee       vmov.f64 d2, 3
+  │││││││   0x00927ad0      013000e3       movw r3, 1
+  │││││││   0x00927ad4      003bb7ee       vmov.f64 d3, 1
+  │││││││   0x00927ad8      0ac000e3       movw ip, 0xa
+  │││││││   0x00927adc      044ab2ee       vmov.f32 s8, 1
+  │││││││   0x00927ae0      20e01be5       ldr lr, [fp, -0x20]
+  │││││││   0x00927ae4      004090e5       ldr r4, [r0]
+  │││││││   0x00927ae8      04e08ee0       add lr, lr, r4
+  │││││││   0x00927aec      005b9eed       vldr d5, [lr]
+  │││││││   0x00927af0      425b35ee       vsub.f64 d5, d5, d2
+  │││││││   0x00927af4      0a6a1bed       vldr s12, [fp, -0x28]
+  │││││││   0x00927af8      044a26ee       vmul.f32 s8, s12, s8
+  │││││││   0x00927afc      c47ab7ee       vcvt.f64.f32 d7, s8
+  │││││││   0x00927b00      473b33ee       vsub.f64 d3, d3, d7
+  │││││││   0x00927b04      033b25ee       vmul.f64 d3, d5, d3
+  │││││││   0x00927b08      032b32ee       vadd.f64 d2, d2, d3
+  │││││││   0x00927b0c      411b32ee       vsub.f64 d1, d2, d1
+  │││││││   0x00927b10      20e01be5       ldr lr, [fp, -0x20]
+  │││││││   0x00927b14      004090e5       ldr r4, [r0]
+  │││││││   0x00927b18      04e08ee0       add lr, lr, r4
+  │││││││   0x00927b1c      001b8eed       vstr d1, [lr]
+  │││││││   0x00927b20      20e01be5       ldr lr, [fp, -0x20]
+  │││││││   0x00927b24      000090e5       ldr r0, [r0]
+  │││││││   0x00927b28      00008ee0       add r0, lr, r0
+  │││││││   0x00927b2c      001b90ed       vldr d1, [r0]
+  │││││││   0x00927b30      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x00927b34      10faf1ee       vmrs apsr_nzcv, fpscr
+  │││││││   0x00927b38      70208de5       str r2, [sp, 0x70]
+  │││││││   0x00927b3c      6cc08de5       str ip, [sp, 0x6c]
+  │││││││   0x00927b40      68308de5       str r3, [sp, 0x68]
+  ────────< 0x00927b44      2800005a       bpl 0x927bec
+  │││││││   0x00927b48      d4049fe5       ldr r0, [0x00928024]        ; [0x928024:4]=0xfff34544
+  │││││││   0x00927b4c      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927b50      010080e0       add r0, r0, r1
+  │││││││   0x00927b54      9c249fe5       ldr r2, [0x00927ff8]        ; [0x927ff8:4]=0xffffbcac
+  │││││││   0x00927b58      012092e7       ldr r2, [r2, r1]
+  │││││││   0x00927b5c      0230a0e1       mov r3, r2
+  │││││││   0x00927b60      c0c49fe5       ldr ip, [0x00928028]        ; [0x928028:4]=0xffe23af0
+  │││││││   0x00927b64      01c08ce0       add ip, ip, r1
+  │││││││   0x00927b68      ace49fe5       ldr lr, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x00927b6c      01e09ee7       ldr lr, [lr, r1]
+  │││││││   0x00927b70      84449fe5       ldr r4, [0x00927ffc]        ; [0x927ffc:4]=0xffe23958
+  │││││││   0x00927b74      014084e0       add r4, r4, r1
+  │││││││   0x00927b78      80549fe5       ldr r5, [0x00928000]        ; [0x928000:4]=0xffe2aff8
+  │││││││   0x00927b7c      015085e0       add r5, r5, r1
+  │││││││   0x00927b80      036000e3       movw r6, 3
+  │││││││   0x00927b84      080bb0ee       vmov.f64 d0, 3
+  │││││││   0x00927b88      20701be5       ldr r7, [fp, -0x20]
+  │││││││   0x00927b8c      00809ee5       ldr r8, [lr]
+  │││││││   0x00927b90      087087e0       add r7, r7, r8
+  │││││││   0x00927b94      000b87ed       vstr d0, [r7]
+  │││││││   0x00927b98      005095e5       ldr r5, [r5]
+  │││││││   0x00927b9c      001094e5       ldr r1, [r4]
+  │││││││   0x00927ba0      64008de5       str r0, [sp, 0x64]
+  │││││││   0x00927ba4      0500a0e1       mov r0, r5
+  │││││││   0x00927ba8      60c08de5       str ip, [sp, 0x60]
+  │││││││   0x00927bac      5c608de5       str r6, [sp, 0x5c]
+  │││││││   0x00927bb0      58e08de5       str lr, [sp, 0x58]
+  │││││││   0x00927bb4      54308de5       str r3, [sp, 0x54]
+  │││││││   0x00927bb8      32ff2fe1       blx r2
+  │││││││   0x00927bbc      20101be5       ldr r1, [fp, -0x20]
+  │││││││   0x00927bc0      58209de5       ldr r2, [sp, 0x58]
+  │││││││   0x00927bc4      003092e5       ldr r3, [r2]
+  │││││││   0x00927bc8      031081e0       add r1, r1, r3
+  │││││││   0x00927bcc      000b91ed       vldr d0, [r1]
+  │││││││   0x00927bd0      c01bb7ee       vcvt.f32.f64 s2, d0
+  │││││││   0x00927bd4      60109de5       ldr r1, [sp, 0x60]
+  │││││││   0x00927bd8      001091e5       ldr r1, [r1]
+  │││││││   0x00927bdc      102a11ee       vmov r2, s2
+  │││││││   0x00927be0      64309de5       ldr r3, [sp, 0x64]
+  │││││││   0x00927be4      54c09de5       ldr ip, [sp, 0x54]
+  │││││││   0x00927be8      3cff2fe1       blx ip
+  ────────> 0x00927bec      04049fe5       ldr r0, [0x00927ff8]        ; [0x927ff8:4]=0xffffbcac
+  │││││││   0x00927bf0      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927bf4      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00927bf8      20249fe5       ldr r2, [0x00928020]        ; [0x928020:4]=0xffe23af8
+  │││││││   0x00927bfc      012082e0       add r2, r2, r1
+  │││││││   0x00927c00      20301be5       ldr r3, [fp, -0x20]
+  │││││││   0x00927c04      001092e5       ldr r1, [r2]
+  │││││││   0x00927c08      50008de5       str r0, [sp, 0x50]
+  │││││││   0x00927c0c      0300a0e1       mov r0, r3
+  │││││││   0x00927c10      50209de5       ldr r2, [sp, 0x50]
+  │││││││   0x00927c14      32ff2fe1       blx r2
+  ────────> 0x00927c18      860000ea       b 0x927e38
+  │││││││   0x00927c1c      00f020e3       nop
+  │││││││   0x00927c20      000000a0       andge r0, r0, r0
+  │││││││   0x00927c24      cbff0740       andmi pc, r7, fp, asr 31
+  │││││││   0x00927c28      000000c0       andgt r0, r0, r0
+  │││││││   0x00927c2c      f3fd0740       invalid
+  │││││││   0x00927c30      00000040       andmi r0, r0, r0
+  │││││││   0x00927c34      e17a843f       svclo 0x847ae1
+  │││││││   0x00927c38      00000060       andvs r0, r0, r0
+  │││││││   0x00927c3c      34000840       andmi r0, r8, r4, lsr r0
+  │││││││   0x00927c40      00000040       andmi r0, r0, r0
+  │││││││   0x00927c44      0c020840       andmi r0, r8, ip, lsl 4
+  ────────> 0x00927c48      e60b9fed       vldr d0, [0x00927fe8]
+  │││││││   0x00927c4c      c8039fe5       ldr r0, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x00927c50      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927c54      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00927c58      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x00927c5c      000090e5       ldr r0, [r0]
+  │││││││   0x00927c60      000082e0       add r0, r2, r0
+  │││││││   0x00927c64      001b90ed       vldr d1, [r0]
+  │││││││   0x00927c68      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x00927c6c      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x00927c70      5900005a       bpl 0x927ddc
+  │││││││   0x00927c74      dd0b9fed       vldr d0, [0x00927ff0]
+  │││││││   0x00927c78      9c039fe5       ldr r0, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x00927c7c      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927c80      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00927c84      d51b9fed       vldr d1, [0x00927fe0]
+  │││││││   0x00927c88      082000e3       movw r2, 8
+  │││││││   0x00927c8c      002bb2ee       vmov.f64 d2, 8
+  │││││││   0x00927c90      013000e3       movw r3, 1
+  │││││││   0x00927c94      003bb7ee       vmov.f64 d3, 1
+  │││││││   0x00927c98      0ac000e3       movw ip, 0xa
+  │││││││   0x00927c9c      044ab2ee       vmov.f32 s8, 1
+  │││││││   0x00927ca0      20e01be5       ldr lr, [fp, -0x20]
+  │││││││   0x00927ca4      004090e5       ldr r4, [r0]
+  │││││││   0x00927ca8      04e08ee0       add lr, lr, r4
+  │││││││   0x00927cac      005b9eed       vldr d5, [lr]
+  │││││││   0x00927cb0      425b35ee       vsub.f64 d5, d5, d2
+  │││││││   0x00927cb4      0a6a1bed       vldr s12, [fp, -0x28]
+  │││││││   0x00927cb8      044a26ee       vmul.f32 s8, s12, s8
+  │││││││   0x00927cbc      c47ab7ee       vcvt.f64.f32 d7, s8
+  │││││││   0x00927cc0      473b33ee       vsub.f64 d3, d3, d7
+  │││││││   0x00927cc4      033b25ee       vmul.f64 d3, d5, d3
+  │││││││   0x00927cc8      032b32ee       vadd.f64 d2, d2, d3
+  │││││││   0x00927ccc      011b32ee       vadd.f64 d1, d2, d1
+  │││││││   0x00927cd0      20e01be5       ldr lr, [fp, -0x20]
+  │││││││   0x00927cd4      004090e5       ldr r4, [r0]
+  │││││││   0x00927cd8      04e08ee0       add lr, lr, r4
+  │││││││   0x00927cdc      001b8eed       vstr d1, [lr]
+  │││││││   0x00927ce0      20e01be5       ldr lr, [fp, -0x20]
+  │││││││   0x00927ce4      000090e5       ldr r0, [r0]
+  │││││││   0x00927ce8      00008ee0       add r0, lr, r0
+  │││││││   0x00927cec      001b90ed       vldr d1, [r0]
+  │││││││   0x00927cf0      c01bb4ee       vcmpe.f64 d1, d0
+  │││││││   0x00927cf4      10faf1ee       vmrs apsr_nzcv, fpscr
+  │││││││   0x00927cf8      4c208de5       str r2, [sp, 0x4c]
+  │││││││   0x00927cfc      48c08de5       str ip, [sp, 0x48]
+  │││││││   0x00927d00      44308de5       str r3, [sp, 0x44]
+  ────────< 0x00927d04      280000da       ble 0x927dac
+  │││││││   0x00927d08      14039fe5       ldr r0, [0x00928024]        ; [0x928024:4]=0xfff34544
+  │││││││   0x00927d0c      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927d10      010080e0       add r0, r0, r1
+  │││││││   0x00927d14      dc229fe5       ldr r2, [0x00927ff8]        ; [0x927ff8:4]=0xffffbcac
+  │││││││   0x00927d18      012092e7       ldr r2, [r2, r1]
+  │││││││   0x00927d1c      0230a0e1       mov r3, r2
+  │││││││   0x00927d20      00c39fe5       ldr ip, [0x00928028]        ; [0x928028:4]=0xffe23af0
+  │││││││   0x00927d24      01c08ce0       add ip, ip, r1
+  │││││││   0x00927d28      ece29fe5       ldr lr, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x00927d2c      01e09ee7       ldr lr, [lr, r1]
+  │││││││   0x00927d30      c4429fe5       ldr r4, [0x00927ffc]        ; [0x927ffc:4]=0xffe23958
+  │││││││   0x00927d34      014084e0       add r4, r4, r1
+  │││││││   0x00927d38      c0529fe5       ldr r5, [0x00928000]        ; [0x928000:4]=0xffe2aff8
+  │││││││   0x00927d3c      015085e0       add r5, r5, r1
+  │││││││   0x00927d40      086000e3       movw r6, 8
+  │││││││   0x00927d44      000bb2ee       vmov.f64 d0, 8
+  │││││││   0x00927d48      20701be5       ldr r7, [fp, -0x20]
+  │││││││   0x00927d4c      00809ee5       ldr r8, [lr]
+  │││││││   0x00927d50      087087e0       add r7, r7, r8
+  │││││││   0x00927d54      000b87ed       vstr d0, [r7]
+  │││││││   0x00927d58      005095e5       ldr r5, [r5]
+  │││││││   0x00927d5c      001094e5       ldr r1, [r4]
+  │││││││   0x00927d60      40008de5       str r0, [sp, 0x40]
+  │││││││   0x00927d64      0500a0e1       mov r0, r5
+  │││││││   0x00927d68      3cc08de5       str ip, [sp, 0x3c]
+  │││││││   0x00927d6c      38608de5       str r6, [sp, 0x38]
+  │││││││   0x00927d70      34e08de5       str lr, [sp, 0x34]
+  │││││││   0x00927d74      30308de5       str r3, [sp, 0x30]
+  │││││││   0x00927d78      32ff2fe1       blx r2
+  │││││││   0x00927d7c      20101be5       ldr r1, [fp, -0x20]
+  │││││││   0x00927d80      34209de5       ldr r2, [sp, 0x34]
+  │││││││   0x00927d84      003092e5       ldr r3, [r2]
+  │││││││   0x00927d88      031081e0       add r1, r1, r3
+  │││││││   0x00927d8c      000b91ed       vldr d0, [r1]
+  │││││││   0x00927d90      c01bb7ee       vcvt.f32.f64 s2, d0
+  │││││││   0x00927d94      3c109de5       ldr r1, [sp, 0x3c]
+  │││││││   0x00927d98      001091e5       ldr r1, [r1]
+  │││││││   0x00927d9c      102a11ee       vmov r2, s2
+  │││││││   0x00927da0      40309de5       ldr r3, [sp, 0x40]
+  │││││││   0x00927da4      30c09de5       ldr ip, [sp, 0x30]
+  │││││││   0x00927da8      3cff2fe1       blx ip
+  ────────> 0x00927dac      44029fe5       ldr r0, [0x00927ff8]        ; [0x927ff8:4]=0xffffbcac
+  │││││││   0x00927db0      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927db4      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00927db8      60229fe5       ldr r2, [0x00928020]        ; [0x928020:4]=0xffe23af8
+  │││││││   0x00927dbc      012082e0       add r2, r2, r1
+  │││││││   0x00927dc0      20301be5       ldr r3, [fp, -0x20]
+  │││││││   0x00927dc4      001092e5       ldr r1, [r2]
+  │││││││   0x00927dc8      2c008de5       str r0, [sp, 0x2c]
+  │││││││   0x00927dcc      0300a0e1       mov r0, r3
+  │││││││   0x00927dd0      2c209de5       ldr r2, [sp, 0x2c]
+  │││││││   0x00927dd4      32ff2fe1       blx r2
+  ────────< 0x00927dd8      150000ea       b 0x927e34
+  ────────> 0x00927ddc      38029fe5       ldr r0, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x00927de0      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927de4      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00927de8      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x00927dec      000090e5       ldr r0, [r0]
+  │││││││   0x00927df0      000082e0       add r0, r2, r0
+  │││││││   0x00927df4      000b90ed       vldr d0, [r0]
+  │││││││   0x00927df8      291a1bed       vldr s2, [fp, -0xa4]
+  │││││││   0x00927dfc      c12ab7ee       vcvt.f64.f32 d2, s2
+  │││││││   0x00927e00      c20bb4ee       vcmpe.f64 d0, d2
+  │││││││   0x00927e04      10faf1ee       vmrs apsr_nzcv, fpscr
+  ────────< 0x00927e08      080000da       ble 0x927e30
+  │││││││   0x00927e0c      08029fe5       ldr r0, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x00927e10      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927e14      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00927e18      290a1bed       vldr s0, [fp, -0xa4]
+  │││││││   0x00927e1c      c01ab7ee       vcvt.f64.f32 d1, s0
+  │││││││   0x00927e20      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x00927e24      000090e5       ldr r0, [r0]
+  │││││││   0x00927e28      000082e0       add r0, r2, r0
+  │││││││   0x00927e2c      001b80ed       vstr d1, [r0]
+  ────────> 0x00927e30      ffffffea       b 0x927e34
+  ────────< 0x00927e34      ffffffea       b 0x927e38
+  ────────> 0x00927e38      ffffffea       b 0x927e3c
+  ────────< 0x00927e3c      ffffffea       b 0x927e40
+  ────────> 0x00927e40      ffffffea       b 0x927e44
+  ────────< 0x00927e44      ffffffea       b 0x927e48
+  ────────> 0x00927e48      ffffffea       b 0x927e4c
+  ────────> 0x00927e4c      ffffffea       b 0x927e50
+  ────────> 0x00927e50      b8019fe5       ldr r0, [0x00928010]        ; [0x928010:4]=0xffffe6bc
+  │││││││   0x00927e54      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927e58      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00927e5c      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x00927e60      000090e5       ldr r0, [r0]
+  │││││││   0x00927e64      000082e0       add r0, r2, r0
+  │││││││   0x00927e68      d000d0e1       ldrsb r0, [r0]
+  │││││││   0x00927e6c      000050e3       cmp r0, 0
+  ────────< 0x00927e70      1500000a       beq 0x927ecc
+  │││││││   0x00927e74      9c019fe5       ldr r0, [0x00928018]        ; [0x928018:4]=0xffffe6c8
+  │││││││   0x00927e78      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+  │││││││   0x00927e7c      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00927e80      94219fe5       ldr r2, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+  │││││││   0x00927e84      012092e7       ldr r2, [r2, r1]
+  │││││││   0x00927e88      84319fe5       ldr r3, [0x00928014]        ; [0x928014:4]=0xffffe6c4
+  │││││││   0x00927e8c      013093e7       ldr r3, [r3, r1]
+  │││││││   0x00927e90      20c01be5       ldr ip, [fp, -0x20]
+  │││││││   0x00927e94      003093e5       ldr r3, [r3]
+  │││││││   0x00927e98      03308ce0       add r3, ip, r3
+  │││││││   0x00927e9c      000a93ed       vldr s0, [r3]
+  │││││││   0x00927ea0      c01ab7ee       vcvt.f64.f32 d1, s0
+  │││││││   0x00927ea4      20301be5       ldr r3, [fp, -0x20]
+  │││││││   0x00927ea8      002092e5       ldr r2, [r2]
+  │││││││   0x00927eac      022083e0       add r2, r3, r2
+  │││││││   0x00927eb0      002b92ed       vldr d2, [r2]
+  │││││││   0x00927eb4      021b21ee       vmul.f64 d1, d1, d2
+  │││││││   0x00927eb8      c10bb7ee       vcvt.f32.f64 s0, d1
+  │││││││   0x00927ebc      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x00927ec0      000090e5       ldr r0, [r0]
+  │││││││   0x00927ec4      000082e0       add r0, r2, r0
+  │││││││   0x00927ec8      000a80ed       vstr s0, [r0]
+  ────────> 0x00927ecc      ffffffea       b 0x927ed0
+  └└─└────> 0x00927ed0      ffffffea       b 0x927ed4
+  ──└┌────< 0x00927ed4      ffffffea       b 0x927ed8
+     └└───> 0x00927ed8      010000e3       movw r0, 1
+       ││   0x00927edc      24119fe5       ldr r1, [0x00928008]        ; [0x928008:4]=0xffffe6a8
+       ││   0x00927ee0      a8201be5       ldr r2, [fp, -0xa8]         ; "yC#"
+       ││   0x00927ee4      021091e7       ldr r1, [r1, r2]
+       ││   0x00927ee8      2c319fe5       ldr r3, [0x0092801c]        ; [0x92801c:4]=0xffffe62c
+       ││   0x00927eec      023093e7       ldr r3, [r3, r2]
+       ││   0x00927ef0      0cc19fe5       ldr ip, [0x00928004]        ; [0x928004:4]=0xffffe61c
+       ││   0x00927ef4      02c09ce7       ldr ip, [ip, r2]
+       ││   0x00927ef8      20e01be5       ldr lr, [fp, -0x20]
+       ││   0x00927efc      00c09ce5       ldr ip, [ip]
+       ││   0x00927f00      0cc08ee0       add ip, lr, ip
+       ││   0x00927f04      00c09ce5       ldr ip, [ip]
+       ││   0x00927f08      0a0a1bed       vldr s0, [fp, -0x28]
+       ││   0x00927f0c      0b1a1bed       vldr s2, [fp, -0x2c]
+       ││   0x00927f10      20e01be5       ldr lr, [fp, -0x20]
+       ││   0x00927f14      003093e5       ldr r3, [r3]
+       ││   0x00927f18      03308ee0       add r3, lr, r3
+       ││   0x00927f1c      002b93ed       vldr d2, [r3]
+       ││   0x00927f20      20301be5       ldr r3, [fp, -0x20]
+       ││   0x00927f24      001091e5       ldr r1, [r1]
+       ││   0x00927f28      011083e0       add r1, r3, r1
+       ││   0x00927f2c      d010d1e1       ldrsb r1, [r1]
+       ││   0x00927f30      000051e3       cmp r1, 0
+       ││   0x00927f34      0a0a8ded       vstr s0, [sp, 0x28]
+       ││   0x00927f38      082b8ded       vstr d2, [sp, 0x20]
+       ││   0x00927f3c      071a8ded       vstr s2, [sp, 0x1c]
+       ││   0x00927f40      18c08de5       str ip, [sp, 0x18]
+       ││   0x00927f44      14008de5       str r0, [sp, 0x14]
+      ┌───< 0x00927f48      0a00001a       bne 0x927f78
+      │││   0x00927f4c      b8009fe5       ldr r0, [0x0092800c]        ; [0x92800c:4]=0xffffe6ac
+      │││   0x00927f50      a8101be5       ldr r1, [fp, -0xa8]         ; "yC#"
+      │││   0x00927f54      010090e7       ldr r0, [r0, r1]
+      │││   0x00927f58      20201be5       ldr r2, [fp, -0x20]
+      │││   0x00927f5c      000090e5       ldr r0, [r0]
+      │││   0x00927f60      000082e0       add r0, r2, r0
+      │││   0x00927f64      d000d0e1       ldrsb r0, [r0]
+      │││   0x00927f68      000050e3       cmp r0, 0
+      │││   0x00927f6c      000000e3       movw r0, 0
+      │││   0x00927f70      0100a013       movne r0, 1
+      │││   0x00927f74      14008de5       str r0, [sp, 0x14]
+      └───> 0x00927f78      14009de5       ldr r0, [sp, 0x14]
+       ││   0x00927f7c      74109fe5       ldr r1, [0x00927ff8]        ; [0x927ff8:4]=0xffffbcac
+       ││   0x00927f80      a8201be5       ldr r2, [fp, -0xa8]         ; "yC#"
+       ││   0x00927f84      021091e7       ldr r1, [r1, r2]
+       ││   0x00927f88      9c309fe5       ldr r3, [0x0092802c]        ; [0x92802c:4]=0xffe23afc
+       ││   0x00927f8c      023083e0       add r3, r3, r2
+       ││   0x00927f90      010000e2       and r0, r0, 1
+       ││   0x00927f94      003093e5       ldr r3, [r3]
+       ││   0x00927f98      18c09de5       ldr ip, [sp, 0x18]
+       ││   0x00927f9c      10008de5       str r0, [sp, 0x10]
+       ││   0x00927fa0      0c00a0e1       mov r0, ip
+       ││   0x00927fa4      0c108de5       str r1, [sp, 0xc]
+       ││   0x00927fa8      0310a0e1       mov r1, r3
+       ││   0x00927fac      0a0a9ded       vldr s0, [sp, 0x28]
+       ││   0x00927fb0      102a10ee       vmov r2, s0
+       ││   0x00927fb4      071a9ded       vldr s2, [sp, 0x1c]
+       ││   0x00927fb8      103a11ee       vmov r3, s2
+       ││   0x00927fbc      082b9ded       vldr d2, [sp, 0x20]
+       ││   0x00927fc0      002b8ded       vstr d2, [sp]
+       ││   0x00927fc4      10c09de5       ldr ip, [sp, 0x10]
+       ││   0x00927fc8      7ce0afe6       sxtb lr, ip
+       ││   0x00927fcc      08e08de5       str lr, [sp, 8]
+       ││   0x00927fd0      0ce09de5       ldr lr, [sp, 0xc]
+       ││   0x00927fd4      3eff2fe1       blx lr
+       └└─> 0x00927fd8      18d04be2       sub sp, fp, 0x18
+            0x00927fdc      f08dbde8       pop {r4, r5, r6, r7, r8, sl, fp, pc}
+            0x00927fe0      00000040       andmi r0, r0, r0
+            0x00927fe4      e17a843f       svclo 0x847ae1
+            0x00927fe8      000000c0       andgt r0, r0, r0
+            0x00927fec      e5ff1f40       andsmi pc, pc, r5, ror 31
+            0x00927ff0      000000e0       and r0, r0, r0
+            0x00927ff4      f9fe1f40       ldrshmi pc, [pc], -sb       ; [0x927ffc:4]=0xffe23958
+            0x00927ff8      acbcffff       invalid
+            0x00927ffc      5839e2ff       invalid
+            0x00928000      f8afe2ff       invalid
+            0x00928004      1ce6ffff       invalid
+            0x00928008      a8e6ffff       invalid
+            0x0092800c      ace6ffff       invalid
+            0x00928010      bce6ffff       invalid
+            0x00928014      c4e6ffff       invalid
+            0x00928018      c8e6ffff       invalid
+            0x0092801c      2ce6ffff       invalid
+            0x00928020      f83ae2ff       invalid
+            0x00928024      4445f3ff       invalid
+            0x00928028      f03ae2ff       invalid
+            0x0092802c      fc3ae2ff       invalid

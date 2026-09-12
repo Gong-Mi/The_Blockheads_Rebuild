@@ -57,6 +57,8 @@ public:
     Tile* getTile(int x, int y) { return getTileInternal(x, y); }
     void workerLoop();
     void processChunkAsync(PhysicalBlock* block);
+    // Publish CPU mesh changes after a foreground gameplay edit.
+    void refreshTileMesh(int x, int y);
     void buildMeshCache(PhysicalBlock* block);
     void generateChunkSync(int cx, int cy);
     void updateChunks(float camX, float camY);

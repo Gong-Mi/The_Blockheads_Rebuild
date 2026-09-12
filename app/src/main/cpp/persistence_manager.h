@@ -4,12 +4,18 @@
 #include <string>
 #include <cstdio>
 #include <sys/stat.h>
+#if defined(__ANDROID__)
 #include <android/log.h>
+#endif
 #include "game_world.h"
 #include "entity_manager.h"
 
 #define SAVE_TAG "Persistence"
+#if defined(__ANDROID__)
 #define LOGS(...) __android_log_print(ANDROID_LOG_INFO, SAVE_TAG, __VA_ARGS__)
+#else
+#define LOGS(...) do { std::fprintf(stderr, __VA_ARGS__); std::fputc('\n', stderr); } while (false)
+#endif
 
 class PersistenceManager {
 public:
@@ -165,6 +171,10 @@ public:
             if (chunk->y >= 0 && chunk->y < GameWorld::MAX_CHUNKS_Y) {
                 world->chunkGrid[wrappedX][chunk->y] = chunk;
             }
+            // Loaded chunks have tiles but no runtime mesh cache. Rebuild it
+            // before the renderer consumes the saved world.
+            chunk->dirty = true;
+            world->processChunkAsync(chunk);
         }
 
         fclose(f);
