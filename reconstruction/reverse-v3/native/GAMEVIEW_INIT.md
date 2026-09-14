@@ -98,12 +98,34 @@ environment setup live inside `GameView -[init]`.
 
 ## Remaining unresolved sites
 
-37 blx targets unresolved: selector-receiver pairs beyond model reach
+38 blx targets unresolved: selector-receiver pairs beyond model reach
 (spill/reload around `time()`, ad-framework and account callbacks whose
 dispatch registers arrive through instruction classes the model invalidates).
-`gameview_init.json` lists each with `kind: unresolved`; filling them needs
-branch-sensitive CFG replay (see `trace_objc_dispatch.analyze_ops` for the
-join-merge design, plus r2 5.x for pdfj — both tracked separately).
+`gameview_init.json` lists each with `kind: unresolved`.
+
+### CFG replay cross-check (2026-09-14)
+
+`tools/crosscheck_gameview_init_cfg.py` re-derives selector facts with a
+worklist + all-path join (loop headers keep only values equal on every
+incoming path), independent of the linear pass's layout-order assumption.
+Result: 9 of 27 selector sites re-proven, ZERO conflicts, ZERO additions
+(machine copy: `gameview_init_cfg_crosscheck.json`).
+
+Two honest conclusions:
+1. Those 9 sites now have layout-order-free evidence (strongest tier in this
+   file). The join pass cannot beat the linear model for the rest: the
+   remaining sites' selectors are preloaded before loop headers and consumed
+   inside, so all-path intersection removes them by construction — a
+   precision limit of the join, not a contradiction of the linear pass.
+2. The cross-check tool hard-refuses to emit on any future pass disagreement,
+   so the table above cannot silently drift from CFG-verifiable ground.
+   Re-check (needs original ELF):
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 tools/crosscheck_gameview_init_cfg.py \
+  "$HOME/blockheads-work/extracted/lib/armeabi-v7a/libApplication.so" \
+  --json reconstruction/reverse-v3/native/gameview_init_cfg_crosscheck.json
+```
 
 ## Reproduce (local acceptance layer, requires original ELF)
 
