@@ -157,6 +157,36 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "GAMEVIEW_INIT.md",
+        [
+            "0x0091c780",
+            "0x0091d9cc",
+            "1171",
+            "0x0105faf4",
+            "initWithPath:maxDatabases:maxMapSizeInMB:",
+            "reconnectWithAuthenticationDelegate:",
+            "totalGamePlayTimePassed",
+        ],
+    )
+    require(
+        NATIVE / "disasm_gameview_init.txt",
+        [
+            "# GameView -[init]",
+            "# implementation: 0x0091c780",
+            "# ARM.exidx end: 0x0091d9cc",
+        ],
+    )
+    require(
+        NATIVE / "gameview_init.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"blx_sites\": 60",
+            "\"selector_resolved_calls\": 21",
+            "NSSearchPathForDirectoriesInDomains",
+            "__wrap_exit",
+        ],
+    )
+    require(
         NATIVE / "STATIC_LIFECYCLE_CONTRACT.md",
         [
             "VerdeApplication",
