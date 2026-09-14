@@ -3,6 +3,7 @@
 #error gameplay assertions must remain enabled
 #endif
 #include <cassert>
+#include <cmath>
 #include <cstring>
 #include <iostream>
 #include <memory>
@@ -158,6 +159,40 @@ static void rejectedTargets() {
     assert(s.tile().foreground==ITEM_EMPTY && !s.entities.inventoryDirty);
 }
 
+static void movement() {
+    Scene s;
+    Player& p = s.entities.player;
+    // Sustained right input reaches physics every tick (JNI handleMoveNative sets
+    // inputAxis once; the world loop must keep moving without repeated input).
+    p.inputAxis = 1.0f;
+    const float start = p.x;
+    for (int i = 0; i < 10; ++i) s.entities.update(0.0f, s.world.get());
+    assert(p.x > start + 0.5f && "held axis must drive continuous motion through update ticks");
+    p.inputAxis = -1.0f;
+    const float turned = p.x;
+    for (int i = 0; i < 10; ++i) s.entities.update(0.0f, s.world.get());
+    assert(p.x < turned && "reversed held axis drives motion the other way");
+    // Clear on ACTION_UP stops further drift after existing velocity decays.
+    s.entities.update(0.0f, s.world.get());
+    p.inputAxis = 0.0f;
+    // Overshoot clamps inside Player::update, not at the JNI boundary.
+    p.inputAxis = 4.0f;
+    s.entities.update(0.0f, s.world.get());
+    assert(std::abs(p.vx) <= Player::MOVE_SPEED + 1e-6f && "axis must clamp to [-1,1]");
+    p.inputAxis = 0.0f; p.vx = 0.0f;
+    // Jump only consumes the request while grounded.
+    p.grounded = false;
+    p.jumpRequested = true;
+    s.entities.update(0.0f, s.world.get());
+    assert(!p.jumpRequested && "request must not latch");
+    assert(p.vy == 0.0f && "airborne jump must be dropped");
+    p.grounded = true;
+    p.jumpRequested = true;
+    s.entities.update(0.0f, s.world.get());
+    assert(p.vy > 0.0f && "grounded jump must launch through physics");
+    assert(!p.grounded);
+}
+
 int main(int argc,char** argv) {
     assert(argc==2);
     const std::string name=argv[1];
@@ -165,6 +200,7 @@ int main(int argc,char** argv) {
     else if(name=="pickup") fullPickup();
     else if(name=="placement") { placement(); neighborLighting(); }
     else if(name=="loop") closedLoop();
+    else if(name=="movement") movement();
     else if(name=="reject") rejectedTargets();
     else return 2;
     std::cout << "PASS gameplay " << name << '\n';

@@ -58,6 +58,21 @@ bool Player::checkCollision(float newX, float newY, GameWorld* world) {
 }
 
 void Player::update(float gravity, GameWorld* world) {
+    // Sustained touch input drives horizontal motion before the physics pass;
+    // this runs from EntityManager::update once per rendered frame.
+    if (inputAxis != 0.0f) {
+        float target = inputAxis;
+        if (target > 1.0f) target = 1.0f;
+        if (target < -1.0f) target = -1.0f;
+        vx = target * MOVE_SPEED;
+    }
+    if (jumpRequested && grounded) {
+        vy = JUMP_SPEED;
+        grounded = false;
+        jumpRequested = false;
+    } else {
+        jumpRequested = false;
+    }
     // Ladder & Elevator Logic
     bool onLadder = false;
     bool inElevator = false;

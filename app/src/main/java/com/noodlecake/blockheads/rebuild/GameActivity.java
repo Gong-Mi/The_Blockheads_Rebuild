@@ -412,6 +412,52 @@ public class GameActivity extends Activity {
         statusParams.leftMargin = 30; statusParams.topMargin = 30;
         layout.addView(statusArea, statusParams);
 
+        // --- Sustained movement controls (left/right hold + jump tap) ---
+        android.widget.LinearLayout moveRow = new android.widget.LinearLayout(this);
+        moveRow.setOrientation(android.widget.LinearLayout.HORIZONTAL);
+        android.widget.Button leftBtn = new android.widget.Button(this);
+        leftBtn.setText("\u25C0");
+        leftBtn.setTextSize(28);
+        android.widget.Button rightBtn = new android.widget.Button(this);
+        rightBtn.setText("\u25B6");
+        rightBtn.setTextSize(28);
+        android.widget.Button jumpBtn = new android.widget.Button(this);
+        jumpBtn.setText("\u25B2");
+        jumpBtn.setTextSize(28);
+        android.view.View.OnTouchListener holdListener = (v, event) -> {
+            switch (event.getActionMasked()) {
+                case android.view.MotionEvent.ACTION_DOWN:
+                    if (v == leftBtn) handleMoveNative(-1.0f, false);
+                    else if (v == rightBtn) handleMoveNative(1.0f, false);
+                    else handleMoveNative(0.0f, true);
+                    return true;
+                case android.view.MotionEvent.ACTION_UP:
+                case android.view.MotionEvent.ACTION_CANCEL:
+                    if (v == jumpBtn) return true;
+                    clearMoveNative();
+                    return true;
+                default:
+                    return false;
+            }
+        };
+        leftBtn.setOnTouchListener(holdListener);
+        rightBtn.setOnTouchListener(holdListener);
+        jumpBtn.setOnTouchListener(holdListener);
+        android.widget.LinearLayout.LayoutParams moveBtnParams =
+                new android.widget.LinearLayout.LayoutParams(170, 170);
+        moveBtnParams.setMargins(10, 0, 10, 0);
+        moveRow.addView(leftBtn, moveBtnParams);
+        moveRow.addView(rightBtn, moveBtnParams);
+        moveRow.addView(jumpBtn, moveBtnParams);
+        android.widget.FrameLayout.LayoutParams moveParams =
+                new android.widget.FrameLayout.LayoutParams(
+                        android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
+                        android.widget.FrameLayout.LayoutParams.WRAP_CONTENT);
+        moveParams.gravity = android.view.Gravity.BOTTOM | android.view.Gravity.LEFT;
+        moveParams.leftMargin = 30;
+        moveParams.bottomMargin = 40;
+        layout.addView(moveRow, moveParams);
+
         // --- Debug Info Overlay ---
         mDebugText = new android.widget.TextView(this);
         mDebugText.setTextColor(0xFFFFFFFF);
@@ -731,4 +777,6 @@ public class GameActivity extends Activity {
     public native void handleSwapInventoryItemNative(int fromSlot, int toSlot);
     public native void handleSleepNative();
     public native String getRecipesNative(int benchId);
+    public native void handleMoveNative(float axis, boolean jump);
+    public native void clearMoveNative();
 }

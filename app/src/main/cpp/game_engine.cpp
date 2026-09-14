@@ -271,6 +271,21 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_handleZoomNative(JNIEnv* env
     }
 }
 
+extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_GameActivity_handleMoveNative(JNIEnv*, jobject, jfloat axis, jboolean jump) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
+    if (!g_entities) return;
+    g_entities->player.inputAxis = axis;   // sustained; Player::update clamps
+    if (jump) g_entities->player.jumpRequested = true;
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_noodlecake_blockheads_rebuild_GameActivity_clearMoveNative(JNIEnv*, jobject) {
+    std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
+    if (!g_entities) return;
+    g_entities->player.inputAxis = 0.0f;
+}
+
 extern "C" JNIEXPORT jint JNICALL
 Java_com_noodlecake_blockheads_rebuild_GameActivity_getContainerItemTypeNative(JNIEnv* env, jobject obj, jint x, jint y, jint slot) {
     std::lock_guard<std::recursive_mutex> lock(g_engineMutex);
