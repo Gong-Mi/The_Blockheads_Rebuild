@@ -45,7 +45,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         target_link_libraries(test_gameview_input PRIVATE blockheads_recovered_view)
         add_test(NAME gameview_input COMMAND test_gameview_input)
         # Standalone numerical recoveries also remain independently executable.
-        foreach(slice scroll_inertia pinch_return pinch_inertia translation_return zoom_settle)
+        foreach(slice scroll_inertia pinch_return pinch_inertia translation_return zoom_settle zoom_initial_cap)
             add_executable(test_${slice} ../../tools/test_${slice}.cpp ${slice}.cpp)
             target_include_directories(test_${slice} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
             target_compile_features(test_${slice} PRIVATE cxx_std_17)

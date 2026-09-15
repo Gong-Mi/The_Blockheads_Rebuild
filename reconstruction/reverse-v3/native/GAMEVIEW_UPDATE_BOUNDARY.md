@@ -162,6 +162,14 @@ The independent region 0x00926a4c..0x00926acc computes float(40960 / windowInfo[
 widens it to double, and stores it only if pinchScale is greater. This region
 also runs after the scrolling/pinching/goal bypasses. Later zoom flags can
 modify pinchScale again: this is NOT the final per-frame maximum contract.
+Recovered exactly (2026-09-14) as reconstruction/recovered/zoom_initial_cap.{h,cpp}:
+windowInfo is the symbol-resolved ivar at self+208 (element [1] = self+212,
+vldr s2,[r3,#4]), pinchScale at self+152 (vstr d1), the 40960.0f word literal
+0x47200000 sits at 0x00926e14, and the guard is `vcmpe.f64; vmrs; ble` — the
+store executes ONLY on ordered-greater; ordered-equal, ordered-less and
+unordered (either operand NaN, Z=1) all take the branch and skip. Dividing in
+float and widening once is preserved; double-domain recompute is rejected by a
+round-trip test. O0/O2 pass.
 
 Executable source: reconstruction/recovered/translation_return.{h,cpp}.
 Behavioral RED observed (missing unconditional write request), then O0/O2 PASS.

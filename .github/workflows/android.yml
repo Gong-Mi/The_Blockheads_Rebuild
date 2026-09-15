@@ -134,6 +134,15 @@ jobs:
           /tmp/test_zoom_settle
         done
 
+    - name: Test recovered initial zoom cap numerical slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_zoom_initial_cap.cpp \
+            reconstruction/recovered/zoom_initial_cap.cpp -o /tmp/test_zoom_initial_cap
+          /tmp/test_zoom_initial_cap
+        done
+
     - name: Test complete recovered GameView method batch
       run: |
         export PYTHONDONTWRITEBYTECODE=1
