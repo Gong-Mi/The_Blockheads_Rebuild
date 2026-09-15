@@ -274,6 +274,32 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "WORLDTILELOADER_REFINETERRAINCOUNT.md",
+        [
+            "0x00854c18",
+            "0x00854c54",
+            "15 words",
+            "0x0105faf4",
+            "OBJC_IVAR_$_WorldTileLoader.refineTerrainCount",
+        ],
+    )
+    require(
+        NATIVE / "disasm_worldtileloader_refineterraincount.txt",
+        [
+            "# WorldTileLoader -[refineTerrainCount]",
+            "# implementation: 0x00854c18",
+            "# ARM.exidx end: 0x00854c54",
+        ],
+    )
+    require(
+        NATIVE / "worldtileloader_refineterraincount.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 15",
+            "OBJC_IVAR_$_WorldTileLoader.refineTerrainCount",
+        ],
+    )
+    require(
         NATIVE / "STATIC_LIFECYCLE_CONTRACT.md",
         [
             "VerdeApplication",
