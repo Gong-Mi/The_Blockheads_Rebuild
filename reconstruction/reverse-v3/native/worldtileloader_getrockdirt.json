@@ -1,0 +1,61 @@
+{
+  "arm_exidx_end": "0x00857340",
+  "branches": [
+    {
+      "address": "0x008571b4",
+      "destination": "0x0085720c"
+    },
+    {
+      "address": "0x00857208",
+      "destination": "0x008572b8"
+    },
+    {
+      "address": "0x00857260",
+      "destination": "0x008572b4"
+    },
+    {
+      "address": "0x008572b4",
+      "destination": "0x008572b8"
+    }
+  ],
+  "calls": [
+    "0x008571ec",
+    "0x00857248",
+    "0x00857298"
+  ],
+  "cells": {
+    "0x0085731c": {
+      "kind": "ivar",
+      "name": "OBJC_IVAR_$_WorldTileLoader.world",
+      "offset": 4,
+      "slot": "0x0105dd4c"
+    },
+    "0x00857324": {
+      "kind": "selector",
+      "name": "worldWidthMacro",
+      "slot": "0x00e823a8"
+    },
+    "0x00857330": {
+      "kind": "ivar",
+      "name": "OBJC_IVAR_$_WorldTileLoader.rockHeights",
+      "offset": 96,
+      "slot": "0x0105dd60"
+    },
+    "0x00857338": {
+      "kind": "ivar",
+      "name": "OBJC_IVAR_$_WorldTileLoader.dirtHeights",
+      "offset": 92,
+      "slot": "0x0105dd5c"
+    }
+  },
+  "claim": "static bounded-body map; no runtime array contents or caller timing proof",
+  "decision": "x is wrapped once into [0, worldWidthMacro*32): if x < 0, x += worldWidthMacro*32; else if x >= worldWidthMacro*32, x -= worldWidthMacro*32. The method then writes *rockHeight = self->rockHeights[x] and *dirtHeight = self->dirtHeights[x]. worldWidthMacro is queried through [self->world worldWidthMacro] in each wrap path; three objc_msgSend sites are byte-anchored to the shared PLT.",
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "imp": "0x00857188",
+  "method": "WorldTileLoader -[getRockAndDirtHeightforX:rockHeight:dirtHeight:]",
+  "msgsend_got_slot": "0x0105b7a0",
+  "msgsend_stub": "0x001c281c",
+  "pic_base": "0x0105faf4",
+  "types": "v20@0:4i8^i12^i16",
+  "verified_words": 110
+}

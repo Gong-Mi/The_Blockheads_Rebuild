@@ -373,6 +373,34 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "WORLDTILELOADER_GETROCKDIRT.md",
+        [
+            "0x00857188",
+            "0x00857340",
+            "110 words",
+            "worldWidthMacro",
+            "rockHeights",
+            "dirtHeights",
+        ],
+    )
+    require(
+        NATIVE / "disasm_worldtileloader_getrockdirt.txt",
+        [
+            "# WorldTileLoader -[getRockAndDirtHeightforX:rockHeight:dirtHeight:]",
+            "# implementation: 0x00857188",
+            "# ARM.exidx end: 0x00857340",
+        ],
+    )
+    require(
+        NATIVE / "worldtileloader_getrockdirt.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 110",
+            "OBJC_IVAR_$_WorldTileLoader.rockHeights",
+            "OBJC_IVAR_$_WorldTileLoader.dirtHeights",
+        ],
+    )
+    require(
         NATIVE / "disasm_worldtileloader_refineterrain.txt",
         [
             "# WorldTileLoader -[refineTerrain]",
