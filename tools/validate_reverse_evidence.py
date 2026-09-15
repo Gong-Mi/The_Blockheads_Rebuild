@@ -245,6 +245,35 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "GAMEVIEW_CANCELTOUCH.md",
+        [
+            "0x0092c638",
+            "0x0092c89c",
+            "153",
+            "0x0105faf4",
+            "cancelTouch:index:",
+            "startTouchHasntMoved",
+            "endTouch:",
+        ],
+    )
+    require(
+        NATIVE / "disasm_gameview_canceltouch.txt",
+        [
+            "# GameView -[cancelTouch:]",
+            "# implementation: 0x0092c638",
+            "# ARM.exidx end: 0x0092c89c",
+        ],
+    )
+    require(
+        NATIVE / "gameview_canceltouch.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"msgsend_stub\": \"0x001c281c\"",
+            "\"verified_words\": 153",
+            "OBJC_IVAR_$_GameView.primaryTouchIsActiveInUI",
+        ],
+    )
+    require(
         NATIVE / "STATIC_LIFECYCLE_CONTRACT.md",
         [
             "VerdeApplication",
