@@ -187,6 +187,35 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "WORLD_STARTTOUCH.md",
+        [
+            "0x005b31b8",
+            "0x005b3278",
+            "OBJC_IVAR_$_World.pauseIdleTimer",
+            "OBJC_IVAR_$_World.uiManager",
+            "startTouch:tapCount:index:",
+            "sxtb",
+        ],
+    )
+    require(
+        NATIVE / "disasm_world_starttouch.txt",
+        [
+            "# World -[startTouch:tapCount:index:]",
+            "# implementation: 0x005b31b8",
+            "# ARM.exidx end: 0x005b3278",
+        ],
+    )
+    require(
+        NATIVE / "world_starttouch.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 48",
+            "\"branch_count\": 0",
+            "\"msgsend_stub\": \"0x001c281c\"",
+            "OBJC_IVAR_$_World.pauseIdleTimer",
+        ],
+    )
+    require(
         NATIVE / "GAMEVIEW_TOUCHISINUI.md",
         [
             "0x0092bc54",
