@@ -330,6 +330,36 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "WORLDTILELOADER_ISCAVE.md",
+        [
+            "0x00857f48",
+            "0x00858320",
+            "246 words",
+            "customRules",
+            "caveNoiseFunctionA",
+            "caveNoiseFunctionB",
+            "yHeightDivider",
+        ],
+    )
+    require(
+        NATIVE / "disasm_worldtileloader_iscave.txt",
+        [
+            "# WorldTileLoader -[isCaveForX:y:faultOffset:]",
+            "# implementation: 0x00857f48",
+            "# ARM.exidx end: 0x00858320",
+        ],
+    )
+    require(
+        NATIVE / "worldtileloader_iscave.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 246",
+            "OBJC_IVAR_$_WorldTileLoader.caveNoiseFunctionA",
+            "OBJC_IVAR_$_WorldTileLoader.caveNoiseFunctionB",
+            "objc_msgSend_stret",
+        ],
+    )
+    require(
         NATIVE / "STATIC_LIFECYCLE_CONTRACT.md",
         [
             "VerdeApplication",
