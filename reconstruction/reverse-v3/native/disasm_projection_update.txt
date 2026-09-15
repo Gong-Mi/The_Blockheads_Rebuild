@@ -1,0 +1,219 @@
+# Full ARM words, including literal pools (pool mnemonics are not code).
+# callback code [0x92ef38,0x92f150); pool [0x92f150,0x92f170)
+# helper code [0x92f170,0x92f294); zero literal [0x92f294,0x92f298)
+0x0092ef38  00482de9  push {fp, lr}
+0x0092ef3c  0db0a0e1  mov fp, sp
+0x0092ef40  98d04de2  sub sp, sp, 0x98
+0x0092ef44  0fd0cde3  bic sp, sp, 0xf
+0x0092ef48  1c229fe5  ldr r2, [pc, 0x21c]
+0x0092ef4c  02208fe0  add r2, pc, r2
+0x0092ef50  013000e3  movw r3, 1
+0x0092ef54  000bb7ee  vmov.f64 d0, 1.000000e+00
+0x0092ef58  f8c19fe5  ldr ip, [pc, 0x1f8]
+0x0092ef5c  02c09ce7  ldr ip, [ip, r2]
+0x0092ef60  94008de5  str r0, [sp, 0x94]
+0x0092ef64  90108de5  str r1, [sp, 0x90]
+0x0092ef68  94009de5  ldr r0, [sp, 0x94]
+0x0092ef6c  00109ce5  ldr r1, [ip]
+0x0092ef70  010080e0  add r0, r0, r1
+0x0092ef74  001b90ed  vldr d1, [r0]
+0x0092ef78  201b8ded  vstr d1, [sp, 0x80]
+0x0092ef7c  1e0b8ded  vstr d0, [sp, 0x78]
+0x0092ef80  200b9ded  vldr d0, [sp, 0x80]
+0x0092ef84  1e1b9ded  vldr d1, [sp, 0x78]
+0x0092ef88  c10bb4ee  vcmpe.f64 d0, d1
+0x0092ef8c  10faf1ee  vmrs apsr_nzcv, fpscr
+0x0092ef90  2c208de5  str r2, [sp, 0x2c]
+0x0092ef94  28308de5  str r3, [sp, 0x28]
+0x0092ef98  0200005a  bpl 0x92efa8
+0x0092ef9c  200b9ded  vldr d0, [sp, 0x80]
+0x0092efa0  080b8ded  vstr d0, [sp, 0x20]
+0x0092efa4  010000ea  b 0x92efb0
+0x0092efa8  1e0b9ded  vldr d0, [sp, 0x78]
+0x0092efac  080b8ded  vstr d0, [sp, 0x20]
+0x0092efb0  080b9ded  vldr d0, [sp, 0x20]
+0x0092efb4  a0019fe5  ldr r0, [pc, 0x1a0]
+0x0092efb8  2c109de5  ldr r1, [sp, 0x2c]
+0x0092efbc  010090e7  ldr r0, [r0, r1]
+0x0092efc0  621b9fed  vldr d1, [pc, 0x188]
+0x0092efc4  1c0b8ded  vstr d0, [sp, 0x70]
+0x0092efc8  1c0b9ded  vldr d0, [sp, 0x70]
+0x0092efcc  000b21ee  vmul.f64 d0, d1, d0
+0x0092efd0  c02bb7ee  vcvt.f32.f64 s4, d0
+0x0092efd4  232a8ded  vstr s4, [sp, 0x8c]
+0x0092efd8  94209de5  ldr r2, [sp, 0x94]
+0x0092efdc  003090e5  ldr r3, [r0]
+0x0092efe0  032082e0  add r2, r2, r3
+0x0092efe4  002a92ed  vldr s4, [r2]
+0x0092efe8  94209de5  ldr r2, [sp, 0x94]
+0x0092efec  000090e5  ldr r0, [r0]
+0x0092eff0  000082e0  add r0, r2, r0
+0x0092eff4  013a90ed  vldr s6, [r0, 4]
+0x0092eff8  c32ab4ee  vcmpe.f32 s4, s6
+0x0092effc  10faf1ee  vmrs apsr_nzcv, fpscr
+0x0092f000  0e0000da  ble 0x92f040
+0x0092f004  50019fe5  ldr r0, [pc, 0x150]
+0x0092f008  2c109de5  ldr r1, [sp, 0x2c]
+0x0092f00c  010090e7  ldr r0, [r0, r1]
+0x0092f010  230a9ded  vldr s0, [sp, 0x8c]
+0x0092f014  94209de5  ldr r2, [sp, 0x94]
+0x0092f018  003090e5  ldr r3, [r0]
+0x0092f01c  032082e0  add r2, r2, r3
+0x0092f020  011a92ed  vldr s2, [r2, 4]
+0x0092f024  94209de5  ldr r2, [sp, 0x94]
+0x0092f028  000090e5  ldr r0, [r0]
+0x0092f02c  000082e0  add r0, r2, r0
+0x0092f030  002a90ed  vldr s4, [r0]
+0x0092f034  021a81ee  vdiv.f32 s2, s2, s4
+0x0092f038  010a20ee  vmul.f32 s0, s0, s2
+0x0092f03c  230a8ded  vstr s0, [sp, 0x8c]
+0x0092f040  14019fe5  ldr r0, [pc, 0x114]
+0x0092f044  2c109de5  ldr r1, [sp, 0x2c]
+0x0092f048  010090e7  ldr r0, [r0, r1]
+0x0092f04c  230a9ded  vldr s0, [sp, 0x8c]
+0x0092f050  94209de5  ldr r2, [sp, 0x94]
+0x0092f054  003090e5  ldr r3, [r0]
+0x0092f058  032082e0  add r2, r2, r3
+0x0092f05c  001a92ed  vldr s2, [r2]
+0x0092f060  94209de5  ldr r2, [sp, 0x94]
+0x0092f064  000090e5  ldr r0, [r0]
+0x0092f068  000082e0  add r0, r2, r0
+0x0092f06c  012a90ed  vldr s4, [r0, 4]
+0x0092f070  021a81ee  vdiv.f32 s2, s2, s4
+0x0092f074  0d00a0e1  mov r0, sp
+0x0092f078  4524a0e3  mov r2, 0x45000000
+0x0092f07c  002080e5  str r2, [r0]
+0x0092f080  101a10ee  vmov r1, s0
+0x0092f084  102a11ee  vmov r2, s2
+0x0092f088  30008de2  add r0, sp, 0x30
+0x0092f08c  fe35a0e3  mov r3, 0x3f800000
+0x0092f090  360000eb  bl 0x92f170
+0x0092f094  000ab6ee  vmov.f32 s0, 5.000000e-01
+0x0092f098  311a9fed  vldr s2, [pc, 0xc4]
+0x0092f09c  b8009fe5  ldr r0, [pc, 0xb8]
+0x0092f0a0  2c109de5  ldr r1, [sp, 0x2c]
+0x0092f0a4  010090e7  ldr r0, [r0, r1]
+0x0092f0a8  402000e3  movw r2, 0x40
+0x0092f0ac  30308de2  add r3, sp, 0x30
+0x0092f0b0  b0c09fe5  ldr ip, [pc, 0xb0]
+0x0092f0b4  01c09ce7  ldr ip, [ip, r1]
+0x0092f0b8  94e09de5  ldr lr, [sp, 0x94]
+0x0092f0bc  00c09ce5  ldr ip, [ip]
+0x0092f0c0  0cc08ee0  add ip, lr, ip
+0x0092f0c4  1c008de5  str r0, [sp, 0x1c]
+0x0092f0c8  0c00a0e1  mov r0, ip
+0x0092f0cc  0310a0e1  mov r1, r3
+0x0092f0d0  060a8ded  vstr s0, [sp, 0x18]
+0x0092f0d4  051a8ded  vstr s2, [sp, 0x14]
+0x0092f0d8  ed4de2eb  bl 0x1c2894
+0x0092f0dc  94009de5  ldr r0, [sp, 0x94]
+0x0092f0e0  1c109de5  ldr r1, [sp, 0x1c]
+0x0092f0e4  002091e5  ldr r2, [r1]
+0x0092f0e8  020080e0  add r0, r0, r2
+0x0092f0ec  010a90ed  vldr s0, [r0, 4]
+0x0092f0f0  051a9ded  vldr s2, [sp, 0x14]
+0x0092f0f4  010a20ee  vmul.f32 s0, s0, s2
+0x0092f0f8  232a9ded  vldr s4, [sp, 0x8c]
+0x0092f0fc  063a9ded  vldr s6, [sp, 0x18]
+0x0092f100  032a22ee  vmul.f32 s4, s4, s6
+0x0092f104  100a12ee  vmov r0, s4
+0x0092f108  040a8ded  vstr s0, [sp, 0x10]
+0x0092f10c  2c53e2eb  bl 0x1c3dc4
+0x0092f110  100a00ee  vmov s0, r0
+0x0092f114  44009fe5  ldr r0, [pc, 0x44]
+0x0092f118  2c109de5  ldr r1, [sp, 0x2c]
+0x0092f11c  010090e7  ldr r0, [r0, r1]
+0x0092f120  022000e3  movw r2, 2
+0x0092f124  001ab0ee  vmov.f32 s2, 2.000000e+00
+0x0092f128  000a21ee  vmul.f32 s0, s2, s0
+0x0092f12c  041a9ded  vldr s2, [sp, 0x10]
+0x0092f130  000a81ee  vdiv.f32 s0, s2, s0
+0x0092f134  94309de5  ldr r3, [sp, 0x94]
+0x0092f138  000090e5  ldr r0, [r0]
+0x0092f13c  000083e0  add r0, r3, r0
+0x0092f140  000a80ed  vstr s0, [r0]
+0x0092f144  0c208de5  str r2, [sp, 0xc]
+0x0092f148  0bd0a0e1  mov sp, fp
+0x0092f14c  0088bde8  pop {fp, pc}
+0x0092f150  00000040  andmi r0, r0, r0
+0x0092f154  52c1f03f  svclo 0xf0c152
+0x0092f158  2ce6ffff  invalid
+0x0092f15c  94e6ffff  invalid
+0x0092f160  cce6ffff  invalid
+0x0092f164  cdcccc3c  stcllo p12, c12, [ip], {0xcd}
+0x0092f168  d0e6ffff  invalid
+0x0092f16c  a00b7300  rsbseq r0, r3, r0, lsr 23
+0x0092f170  00482de9  push {fp, lr}
+0x0092f174  0db0a0e1  mov fp, sp
+0x0092f178  30d04de2  sub sp, sp, 0x30
+0x0092f17c  103a00ee  vmov s0, r3
+0x0092f180  102a01ee  vmov s2, r2
+0x0092f184  101a02ee  vmov s4, r1
+0x0092f188  023a9bed  vldr s6, [fp, 8]
+0x0092f18c  021000e3  movw r1, 2
+0x0092f190  004ab0ee  vmov.f32 s8, 2.000000e+00
+0x0092f194  012a0bed  vstr s4, [fp, -4]
+0x0092f198  021a0bed  vstr s2, [fp, -8]
+0x0092f19c  030a0bed  vstr s0, [fp, -0xc]
+0x0092f1a0  043a0bed  vstr s6, [fp, -0x10]
+0x0092f1a4  010a1bed  vldr s0, [fp, -4]
+0x0092f1a8  040a80ee  vdiv.f32 s0, s0, s8
+0x0092f1ac  102a10ee  vmov r2, s0
+0x0092f1b0  18008de5  str r0, [sp, 0x18]
+0x0092f1b4  0200a0e1  mov r0, r2
+0x0092f1b8  14108de5  str r1, [sp, 0x14]
+0x0092f1bc  0053e2eb  bl 0x1c3dc4
+0x0092f1c0  100a00ee  vmov s0, r0
+0x0092f1c4  000000e3  movw r0, 0
+0x0092f1c8  311a9fed  vldr s2, [pc, 0xc4]
+0x0092f1cc  021000e3  movw r1, 2
+0x0092f1d0  002ab0ee  vmov.f32 s4, 2.000000e+00
+0x0092f1d4  0020e0e3  mvn r2, 0
+0x0092f1d8  003abfee  vmov.f32 s6, -1.000000e+00
+0x0092f1dc  013000e3  movw r3, 1
+0x0092f1e0  004ab7ee  vmov.f32 s8, 1.000000e+00
+0x0092f1e4  000a84ee  vdiv.f32 s0, s8, s0
+0x0092f1e8  050a0bed  vstr s0, [fp, -0x14]
+0x0092f1ec  050a1bed  vldr s0, [fp, -0x14]
+0x0092f1f0  024a1bed  vldr s8, [fp, -8]
+0x0092f1f4  040a80ee  vdiv.f32 s0, s0, s8
+0x0092f1f8  18c09de5  ldr ip, [sp, 0x18]
+0x0092f1fc  000a8ced  vstr s0, [ip]
+0x0092f200  011a8ced  vstr s2, [ip, 4]
+0x0092f204  021a8ced  vstr s2, [ip, 8]
+0x0092f208  031a8ced  vstr s2, [ip, 0xc]
+0x0092f20c  041a8ced  vstr s2, [ip, 0x10]
+0x0092f210  050a1bed  vldr s0, [fp, -0x14]
+0x0092f214  050a8ced  vstr s0, [ip, 0x14]
+0x0092f218  061a8ced  vstr s2, [ip, 0x18]
+0x0092f21c  071a8ced  vstr s2, [ip, 0x1c]
+0x0092f220  081a8ced  vstr s2, [ip, 0x20]
+0x0092f224  091a8ced  vstr s2, [ip, 0x24]
+0x0092f228  040a1bed  vldr s0, [fp, -0x10]
+0x0092f22c  034a1bed  vldr s8, [fp, -0xc]
+0x0092f230  040a30ee  vadd.f32 s0, s0, s8
+0x0092f234  034a1bed  vldr s8, [fp, -0xc]
+0x0092f238  045a1bed  vldr s10, [fp, -0x10]
+0x0092f23c  454a34ee  vsub.f32 s8, s8, s10
+0x0092f240  040a80ee  vdiv.f32 s0, s0, s8
+0x0092f244  0a0a8ced  vstr s0, [ip, 0x28]
+0x0092f248  0b3a8ced  vstr s6, [ip, 0x2c]
+0x0092f24c  0c1a8ced  vstr s2, [ip, 0x30]
+0x0092f250  0d1a8ced  vstr s2, [ip, 0x34]
+0x0092f254  040a1bed  vldr s0, [fp, -0x10]
+0x0092f258  000a22ee  vmul.f32 s0, s4, s0
+0x0092f25c  032a1bed  vldr s4, [fp, -0xc]
+0x0092f260  020a20ee  vmul.f32 s0, s0, s4
+0x0092f264  032a1bed  vldr s4, [fp, -0xc]
+0x0092f268  043a1bed  vldr s6, [fp, -0x10]
+0x0092f26c  432a32ee  vsub.f32 s4, s4, s6
+0x0092f270  020a80ee  vdiv.f32 s0, s0, s4
+0x0092f274  0e0a8ced  vstr s0, [ip, 0x38]
+0x0092f278  0f1a8ced  vstr s2, [ip, 0x3c]
+0x0092f27c  10308de5  str r3, [sp, 0x10]
+0x0092f280  0c008de5  str r0, [sp, 0xc]
+0x0092f284  08208de5  str r2, [sp, 8]
+0x0092f288  04108de5  str r1, [sp, 4]
+0x0092f28c  0bd0a0e1  mov sp, fp
+0x0092f290  0088bde8  pop {fp, pc}
+0x0092f294  00000000  andeq r0, r0, r0

@@ -2,6 +2,7 @@
 #define ENTITY_MANAGER_H
 
 #include <vector>
+#include <string>
 #include <cmath>
 #include "game_world.h"
 
@@ -26,6 +27,14 @@ public:
     float x, y;
     float vx, vy;
     bool grounded;
+
+    // Sustained movement input from GameActivity (handleMoveNative/clearMoveNative).
+    // inputAxis in [-1,1]: direct target-velocity drive, matching the original
+    // touch-hold semantics (button held -> continuous motion through physics ticks).
+    float inputAxis = 0.0f;
+    bool jumpRequested = false;
+    static constexpr float MOVE_SPEED = 0.12f;
+    static constexpr float JUMP_SPEED = 0.42f;
     
     float health = 1.0f; // 0.0 to 1.0
     float hunger = 1.0f; // 0.0 to 1.0
@@ -40,7 +49,8 @@ public:
     int selectedSlot;
 
     Player();
-    void addItem(int type, int count);
+    // Returns how many items were actually accepted; callers retain the rest.
+    int addItem(int type, int count);
     bool checkCollision(float newX, float newY, GameWorld* world);
     void update(float gravity, GameWorld* world);
 };
