@@ -300,6 +300,36 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "WORLDTILELOADER_FAULTOFFSET.md",
+        [
+            "0x00856d18",
+            "0x00857188",
+            "284 words",
+            "worldWidthMacro",
+            "getX:Y:octaves:",
+            "heightNoiseFunctionB",
+            "faultNoiseFunction",
+        ],
+    )
+    require(
+        NATIVE / "disasm_worldtileloader_faultoffset.txt",
+        [
+            "# WorldTileLoader -[faultOffsetForX:y:]",
+            "# implementation: 0x00856d18",
+            "# ARM.exidx end: 0x00857188",
+        ],
+    )
+    require(
+        NATIVE / "worldtileloader_faultoffset.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 284",
+            "OBJC_IVAR_$_WorldTileLoader.faultNoiseFunction",
+            "OBJC_IVAR_$_WorldTileLoader.heightNoiseFunctionB",
+            "__wrap_powf",
+        ],
+    )
+    require(
         NATIVE / "STATIC_LIFECYCLE_CONTRACT.md",
         [
             "VerdeApplication",
