@@ -1,0 +1,102 @@
+{
+  "arm_exidx_end": "0x0092be2c",
+  "branches": [
+    {
+      "address": "0x0092bc9c",
+      "condition": "beq: self->mainMenuUI == nil -> world path",
+      "destination": "0x0092bd10"
+    },
+    {
+      "address": "0x0092bcc4",
+      "condition": "bne: self->world != nil -> world path",
+      "destination": "0x0092bd10"
+    },
+    {
+      "address": "0x0092bd0c",
+      "condition": "b: mainMenuUI result stored, return path",
+      "destination": "0x0092bdfc"
+    },
+    {
+      "address": "0x0092bd58",
+      "condition": "beq: loadComplete (sxtb) == 0 -> constant 0",
+      "destination": "0x0092bdf0"
+    },
+    {
+      "address": "0x0092bda4",
+      "condition": "bne: isSimulating (sxtb) != 0 -> constant 0",
+      "destination": "0x0092bdf0"
+    },
+    {
+      "address": "0x0092bdec",
+      "condition": "b: world touchIsInUI result, return path",
+      "destination": "0x0092bdfc"
+    },
+    {
+      "address": "0x0092bdf0",
+      "condition": "b: padding fallthrough into movw r0,#0",
+      "destination": "0x0092bdf4"
+    }
+  ],
+  "calls": [
+    {
+      "receiver_route": "mainMenuUI (self+ivar): loaded 0x0092bc80..0x0092bc90; path taken iff mainMenuUI != nil AND world == nil (0x0092bc9c beq / 0x0092bcc4 bne both jump to the world path otherwise)",
+      "route": "bl stub",
+      "selector": "touchIsInUI:",
+      "site": "0x0092bd04"
+    },
+    {
+      "receiver_route": "world reloaded 0x0092bd24..0x0092bd3c; reached from 0x0092bd10 (mainMenuUI==nil OR world!=nil)",
+      "route": "blx r2 (GOT objc_msgSend)",
+      "selector": "loadComplete",
+      "site": "0x0092bd4c"
+    },
+    {
+      "receiver_route": "world reloaded 0x0092bd70..0x0092bd84 (0x0092bd88 loads the selector); reached when loadComplete != 0",
+      "route": "blx r2 (GOT objc_msgSend)",
+      "selector": "isSimulating",
+      "site": "0x0092bd98"
+    },
+    {
+      "receiver_route": "world loaded 0x0092bda8..0x0092bdc0; reached when isSimulating == 0",
+      "route": "bl stub",
+      "selector": "touchIsInUI:",
+      "site": "0x0092bde4"
+    }
+  ],
+  "claim": "static bounded-body map with per-instruction anchors; no runtime receiver identity, nil-dispatch outcome or UI-state side-effect proof",
+  "decision": "world-path (mainMenuUI==nil OR world!=nil): return 0 unless [world loadComplete] && ![world isSimulating], then return [world touchIsInUI:point]; menu-path (mainMenuUI!=nil AND world==nil): return [mainMenuUI touchIsInUI:point]. Result byte is strb-stored and ldrsb-returned (signed char).",
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "imp": "0x0092bc54",
+  "ivars": {
+    "mainMenuUI": {
+      "cell": "0x0092be08",
+      "offset": 20,
+      "symbol": "OBJC_IVAR_$_GameView.mainMenuUI"
+    },
+    "world": {
+      "cell": "0x0092be0c",
+      "offset": 24,
+      "symbol": "OBJC_IVAR_$_GameView.world"
+    }
+  },
+  "method": "GameView -[touchIsInUI:]",
+  "msgsend_got_slot": "0x0105fb18",
+  "msgsend_stub": "0x001c281c",
+  "pic_base": "0x0105faf4",
+  "selectors": {
+    "isSimulating": {
+      "cell": "0x0092be20",
+      "slot": "0x00e835c8"
+    },
+    "loadComplete": {
+      "cell": "0x0092be1c",
+      "slot": "0x00e835d0"
+    },
+    "touchIsInUI:": {
+      "cell": "0x0092be14",
+      "slot": "0x00e836a0"
+    }
+  },
+  "types": "c16@0:4{CGPoint=ff}8",
+  "verified_words": 118
+}

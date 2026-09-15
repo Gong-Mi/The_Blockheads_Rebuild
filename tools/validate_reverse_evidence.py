@@ -187,6 +187,35 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "GAMEVIEW_TOUCHISINUI.md",
+        [
+            "0x0092bc54",
+            "0x0092be2c",
+            "118",
+            "0x0105faf4",
+            "R_ARM_JUMP_SLOT  objc_msgSend",
+            "loadComplete",
+            "isSimulating",
+        ],
+    )
+    require(
+        NATIVE / "disasm_gameview_touchisinui.txt",
+        [
+            "# GameView -[touchIsInUI:]",
+            "# implementation: 0x0092bc54",
+            "# ARM.exidx end: 0x0092be2c",
+        ],
+    )
+    require(
+        NATIVE / "gameview_touchisinui.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"msgsend_stub\": \"0x001c281c\"",
+            "\"verified_words\": 118",
+            "OBJC_IVAR_$_GameView.mainMenuUI",
+        ],
+    )
+    require(
         NATIVE / "STATIC_LIFECYCLE_CONTRACT.md",
         [
             "VerdeApplication",
