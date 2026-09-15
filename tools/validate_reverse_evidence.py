@@ -360,6 +360,39 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "WORLDTILELOADER_REFINETERRAIN.md",
+        [
+            "0x00854c54",
+            "0x00855ad0",
+            "927 words",
+            "refineTerrainCount",
+            "hasRefinedTerrain",
+            "isCaveForX:y:faultOffset:",
+            "recursivelyFlowOutWaterFromTile:atPos:",
+            "NSAutoreleasePool",
+        ],
+    )
+    require(
+        NATIVE / "disasm_worldtileloader_refineterrain.txt",
+        [
+            "# WorldTileLoader -[refineTerrain]",
+            "# implementation: 0x00854c54",
+            "# ARM.exidx end: 0x00855ad0",
+        ],
+    )
+    require(
+        NATIVE / "worldtileloader_refineterrain.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 927",
+            "OBJC_IVAR_$_WorldTileLoader.refineTerrainCount",
+            "OBJC_IVAR_$_WorldTileLoader.hasRefinedTerrain",
+            "OBJC_CLASS_$_NSAutoreleasePool",
+            "tileAtWorldPositionLoaded",
+            "makeIntpair",
+        ],
+    )
+    require(
         NATIVE / "STATIC_LIFECYCLE_CONTRACT.md",
         [
             "VerdeApplication",
