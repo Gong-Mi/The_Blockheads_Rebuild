@@ -1,0 +1,170 @@
+{
+  "blx_calls": [
+    {
+      "note": "world = self + world ivar",
+      "route": "blx lr",
+      "selector": "worldWidthMacro",
+      "site": "0x00948508"
+    },
+    {
+      "note": "second width query",
+      "route": "blx r3",
+      "selector": "worldWidthMacro",
+      "site": "0x00948560"
+    },
+    {
+      "note": "heightNoiseFunctionB(qx+0.05, 7, 1)",
+      "route": "blx r4",
+      "selector": "getX:Y:octaves:",
+      "site": "0x00948688"
+    },
+    {
+      "note": "faultNoiseFunction(qx, qy, 1)",
+      "route": "blx lr",
+      "selector": "getX:Y:octaves:",
+      "site": "0x00948734"
+    }
+  ],
+  "boundary_end": "0x009488e0",
+  "boundary_note": "no own ARM.exidx row; closed by next IMP -[isCaveForX:y:faultOffset:]",
+  "branches": [
+    {
+      "destination": "0x009485e4",
+      "note": "bge: width >= 512 -> retain qy=(y/64)/width",
+      "site": "0x009485a0"
+    },
+    {
+      "destination": "0x00948860",
+      "note": "ble: abs(fault) <= 0 -> shaped=0",
+      "site": "0x0094875c"
+    },
+    {
+      "destination": "0x009487ac",
+      "note": "bpl: abs(fault) >= 0.2 -> ridge branch",
+      "site": "0x00948770"
+    },
+    {
+      "destination": "0x0094885c",
+      "note": "b: join small-fault branch into final shape",
+      "site": "0x009487a8"
+    },
+    {
+      "destination": "0x00948804",
+      "note": "bpl: max(2*(a-0.2),0) selection",
+      "site": "0x009487f4"
+    },
+    {
+      "destination": "0x0094880c",
+      "note": "b: join max selection",
+      "site": "0x00948800"
+    }
+  ],
+  "cells": {
+    "0x009488b0": {
+      "meaning": "objc_msgSend GOT",
+      "slot": "0x0105b7a0",
+      "slot_word": "0x00000000",
+      "symbol": "__cxa_finalize"
+    },
+    "0x009488b4": {
+      "meaning": "selector worldWidthMacro",
+      "slot": "0x00e83904",
+      "slot_word": "0x00f00c49",
+      "symbol": null
+    },
+    "0x009488b8": {
+      "meaning": "OBJC_IVAR_$_ClientTileLoader.world",
+      "slot": "0x0105e2a8",
+      "slot_word": "0x00f3446c",
+      "symbol": "OBJC_IVAR_$_ClientTileLoader.world"
+    },
+    "0x009488c4": {
+      "meaning": "selector getX:Y:octaves:",
+      "slot": "0x00e83958",
+      "slot_word": "0x00f00e66",
+      "symbol": null
+    },
+    "0x009488c8": {
+      "meaning": "OBJC_IVAR_$_ClientTileLoader.faultNoiseFunction",
+      "slot": "0x0105e2c0",
+      "slot_word": "0x00f3448c",
+      "symbol": "OBJC_IVAR_$_ClientTileLoader.faultNoiseFunction"
+    },
+    "0x009488d4": {
+      "meaning": "OBJC_IVAR_$_ClientTileLoader.heightNoiseFunctionB",
+      "slot": "0x0105e2c8",
+      "slot_word": "0x00f34484",
+      "symbol": "OBJC_IVAR_$_ClientTileLoader.heightNoiseFunctionB"
+    }
+  },
+  "claim": "static bounded-body map; runtime noise values and client integration remain unverified",
+  "constants": {
+    "0x0094889c": {
+      "kind": "float",
+      "value": 32.0
+    },
+    "0x009488a0": {
+      "kind": "double",
+      "value": 0.20000000298023224
+    },
+    "0x009488a8": {
+      "kind": "double",
+      "value": 0.800000011920929
+    },
+    "0x009488bc": {
+      "kind": "float",
+      "value": 32.0
+    },
+    "0x009488c0": {
+      "kind": "float",
+      "value": 512.0
+    },
+    "0x009488cc": {
+      "kind": "float",
+      "value": 0.0
+    },
+    "0x009488d0": {
+      "kind": "float",
+      "value": 0.05000000074505806
+    },
+    "0x009488d8": {
+      "kind": "float",
+      "value": 0.20000000298023224
+    }
+  },
+  "direct_calls": [
+    {
+      "name": "clamp",
+      "note": "band clamp [0,1]",
+      "site": "0x009486c0",
+      "target": "0x004be068"
+    },
+    {
+      "name": "__wrap_powf",
+      "note": "powf(2*a,2) for 0<a<0.2",
+      "site": "0x0094879c",
+      "target": "0x001c3f98"
+    },
+    {
+      "name": "__wrap_powf",
+      "note": "powf(2*(a-0.2),2) for a>=0.2",
+      "site": "0x00948838",
+      "target": "0x001c3f98"
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "formula": {
+    "band": "band=clamp((float)B.getX(qx+0.05,7.0,1),0,1)",
+    "fault": "a=abs((float)faultNoiseFunction.getX(qx,qy,1))",
+    "qx": "(float)x / 32.0f / (float)worldWidthMacro",
+    "qy": "(float)y / 2.0f / 32.0f / (float)worldWidthMacro",
+    "qy_small_world": "if width < 512: (float)y / 2.0f / 32.0f / 512.0f",
+    "return": "(int)(512.0f * shape * band), vcvt.s32.f32 truncation",
+    "shape": "0 if a<=0; powf(2*a,2) if 0<a<0.2; powf(max(2*(a-0.2),0),2)+5*band otherwise"
+  },
+  "imp": "0x00948470",
+  "method": "ClientTileLoader -[faultOffsetForX:y:]",
+  "pic_base": "0x0105faf4",
+  "types": "i16@0:4i8i12",
+  "verified_words": 284
+}

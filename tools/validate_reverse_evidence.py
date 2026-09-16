@@ -430,6 +430,33 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "CLIENTTILELOADER_FAULTOFFSET.md",
+        [
+            "0x00948470",
+            "284 ARM words",
+            "faultNoiseFunction",
+            "if (width < 512):",
+            "result = (int)(512.0f * shaped * band)",
+        ],
+    )
+    require(
+        NATIVE / "disasm_clienttileloader_faultoffset.txt",
+        [
+            "# ClientTileLoader -[faultOffsetForX:y:]",
+            "# implementation: 0x00948470",
+            "0x009488e0",
+        ],
+    )
+    require(
+        NATIVE / "clienttileloader_faultoffset.json",
+        [
+            '"verified_words": 284',
+            '"blx_calls":',
+            '"formula":',
+            '"elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7"',
+        ],
+    )
+    require(
         NATIVE / "NOISEFUNCTION_GETXY.md",
         [
             "getX:Y:octaves:",
