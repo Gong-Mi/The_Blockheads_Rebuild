@@ -14,6 +14,11 @@ public:
     virtual void setTranslation(FrameVector2 value) = 0;
     virtual std::int32_t worldWidthMacro() = 0;
     virtual void update(float dt, float accurateDT, double pinchScale, bool dragInProgress) = 0;
+    // GameView -[startTouch:withTouch:withEvent:] receiver-side World selectors.
+    // Signed-char results preserved as int8_t; GameView consumes the raw byte.
+    virtual std::int8_t startTouch(FrameVector2 point, std::int32_t tapCount,
+                                   std::int32_t index) = 0;
+    virtual std::int8_t touchIsInUI(FrameVector2 point) = 0;
 };
 class FrameDefaults {
 public:

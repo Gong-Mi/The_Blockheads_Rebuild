@@ -21,6 +21,8 @@ struct World final: FrameWorld {
  void setTranslation(FrameVector2 v) override{t=v;}
  std::int32_t worldWidthMacro() override{return 32;}
  void update(float,float,double,bool) override{++updates;}
+ std::int8_t startTouch(FrameVector2,std::int32_t,std::int32_t) override{return 0;}
+ std::int8_t touchIsInUI(FrameVector2) override{return 0;}
 };
 struct Runtime final: GameViewInputRuntime,InputUI {
  std::vector<std::string> events; bool buttons=false,pan=true; FrameVector2 delivered{};

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 project(BlockheadsRecoveredView LANGUAGES CXX)
 
 add_library(blockheads_recovered_view STATIC
-    gameview_update.cpp projection_update.cpp world_view_contracts.cpp world_translation.cpp sound_manager.cpp gameview_input.cpp
+    gameview_update.cpp projection_update.cpp world_view_contracts.cpp world_translation.cpp sound_manager.cpp gameview_input.cpp gameview_starttouch.cpp
     pinch_return.cpp translation_return.cpp zoom_settle.cpp)
 target_include_directories(blockheads_recovered_view PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(blockheads_recovered_view PUBLIC cxx_std_17)
@@ -44,6 +44,9 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         target_compile_options(test_gameview_input PRIVATE -UNDEBUG)
         target_link_libraries(test_gameview_input PRIVATE blockheads_recovered_view)
         add_test(NAME gameview_input COMMAND test_gameview_input)
+        add_executable(test_gameview_starttouch ../../tools/test_gameview_starttouch.cpp)
+        target_link_libraries(test_gameview_starttouch PRIVATE blockheads_recovered_view)
+        add_test(NAME gameview_starttouch COMMAND test_gameview_starttouch)
         # Standalone numerical recoveries also remain independently executable.
         foreach(slice scroll_inertia pinch_return pinch_inertia translation_return zoom_settle zoom_initial_cap)
             add_executable(test_${slice} ../../tools/test_${slice}.cpp ${slice}.cpp)
@@ -66,7 +69,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         # evidence, but run in the same O0/O2 CI batch and preserve assertions.
         add_subdirectory(../../tools/gameplay ${CMAKE_CURRENT_BINARY_DIR}/gameplay)
         # Tests using assert must still exercise their contracts in Release.
-        foreach(test_target test_gameview_update test_projection_update test_world_view_contracts test_world_translation test_sound_manager test_original_save_format)
+        foreach(test_target test_gameview_update test_projection_update test_world_view_contracts test_world_translation test_sound_manager test_original_save_format test_gameview_starttouch)
             target_compile_options(${test_target} PRIVATE -UNDEBUG)
         endforeach()
     endif()
