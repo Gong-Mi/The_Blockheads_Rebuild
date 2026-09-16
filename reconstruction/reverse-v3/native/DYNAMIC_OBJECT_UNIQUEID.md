@@ -21,3 +21,8 @@ pool used by the code and are not counted as executable instructions.
 This is static bounded evidence for the identity field only. It does not prove
 which plist key creates the object, dynamic object type-specific fields,
 entity construction, or original-app/runtime equivalence.
+
+The neighboring `DynamicObject -[objectType]` getter is tracked separately. Its
+7-word body returns the constant `0x41`; it does not read an object field. This
+base-class constant must not be substituted for the concrete type stored in a
+serialized dynamic-object record.
