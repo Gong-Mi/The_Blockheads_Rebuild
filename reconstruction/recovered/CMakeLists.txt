@@ -68,8 +68,15 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         # Real replacement-gameplay contracts are separate from recovered-method
         # evidence, but run in the same O0/O2 CI batch and preserve assertions.
         add_subdirectory(../../tools/gameplay ${CMAKE_CURRENT_BINARY_DIR}/gameplay)
+        add_library(original_client_world STATIC original_client_world.cpp)
+        target_include_directories(original_client_world PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+        target_compile_features(original_client_world PUBLIC cxx_std_17)
+        add_executable(test_original_client_world ../../tools/test_original_client_world.cpp)
+        target_link_libraries(test_original_client_world PRIVATE original_client_world)
+        target_compile_options(test_original_client_world PRIVATE -UNDEBUG)
+        add_test(NAME original_client_world COMMAND test_original_client_world)
         # Tests using assert must still exercise their contracts in Release.
-        foreach(test_target test_gameview_update test_projection_update test_world_view_contracts test_world_translation test_sound_manager test_original_save_format test_gameview_starttouch)
+        foreach(test_target test_gameview_update test_projection_update test_world_view_contracts test_world_translation test_sound_manager test_original_save_format test_gameview_starttouch test_original_client_world)
             target_compile_options(${test_target} PRIVATE -UNDEBUG)
         endforeach()
     endif()

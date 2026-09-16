@@ -21,8 +21,27 @@ class AssemblyTest(unittest.TestCase):
    self.assertEqual(set(groups),set(domains))
    self.assertEqual(sum(len(g['records']) for g in groups.values()),4)
    record=groups[b'blocks']['records'][0];self.assertEqual((b/'snapshot'/record['decoded_file']).read_bytes(),raw)
+   self.assertEqual(record['coordinate'],{'x':0,'y':0})
+   index=(b/'snapshot'/'blocks'/'index.tsv').read_text().splitlines()
+   self.assertEqual(index[0],'key_hex\tx\ty\tfile\traw_sha256\tbytes')
+   self.assertIn('\t0\t0\tblocks/0_0.raw\t',index[1])
    self.assertEqual(groups[b'main']['records'][0]['plist']['binary'],{'binary_hex':'00ff'})
    self.assertEqual(groups[b'dw']['records'][0]['plist']['dynamicObjects'][0]['uniqueID'],42)
    self.assertTrue(groups[b'unknown']['records'][0]['opaque'])
    with self.assertRaises(FileExistsError):assemble(b/'archive',DECODER,b/'snapshot')
+ def test_coordinate_key_is_required_and_duplicate_coordinates_rejected(self):
+  with tempfile.TemporaryDirectory() as t:
+   b=Path(t);source=b/'source';source.mkdir();e=lmdb.open(str(source/'world_db'),max_dbs=8)
+   db=e.open_db(b'blocks')
+   raw=bytes(range(256))*256+b'\x01\x78\x56\x34\x12'
+   with e.begin(write=True,db=db) as txn:
+    txn.put(b'not-a-coordinate',gzip.compress(raw))
+   e.close();export_world(source,b/'archive')
+   with self.assertRaises(ValueError):assemble(b/'archive',DECODER,b/'bad-key')
+
+   source=b/'source2';source.mkdir();e=lmdb.open(str(source/'world_db'),max_dbs=8);db=e.open_db(b'blocks')
+   with e.begin(write=True,db=db) as txn:
+    txn.put(b'0_0',gzip.compress(raw));txn.put(b'00_0',gzip.compress(raw))
+   e.close();export_world(source,b/'archive2')
+   with self.assertRaises(ValueError):assemble(b/'archive2',DECODER,b/'duplicate')
 if __name__=='__main__':unittest.main()
