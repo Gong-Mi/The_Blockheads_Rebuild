@@ -1,0 +1,694 @@
+# NoiseFunction -[getX:Y:octaves:]
+# types: d28@0:4d8d16i24
+# wrapper implementation: 0x00a6324c (calls static noise2d 0x00a63320..0x00a634e8)
+# getX:Y:Z:octaves: wrapper: 0x00a63500; noise3d: 0x00a635e8..0x00a6454c
+# grad2: 0x00a645e8; grad1: 0x00a64e28 (see NOISEFUNCTION_GETXY.md)
+            0x00a6324c      00482de9       push {fp, lr}
+            0x00a63250      0db0a0e1       mov fp, sp
+            0x00a63254      58d04de2       sub sp, sp, 0x58
+            0x00a63258      bcc09fe5       ldr ip, [0x00a6331c]        ; [0xa6331c:4]=0x5fc890
+            0x00a6325c      0cc08fe0       add ip, pc, ip
+            0x00a63260      102b43ec       vmov d0, r2, r3
+            0x00a63264      10209be5       ldr r2, [fp, 0x10]
+            0x00a63268      021b9bed       vldr d1, [fp, 8]
+            0x00a6326c      013000e3       movw r3, 1
+            0x00a63270      a0e09fe5       ldr lr, [0x00a63318]        ; [0xa63318:4]=0xffffee0c
+            0x00a63274      0cc09ee7       ldr ip, [lr, ip]
+            0x00a63278      28e08de2       add lr, sp, 0x28
+            0x00a6327c      04000be5       str r0, [fp, -4]
+            0x00a63280      08100be5       str r1, [fp, -8]
+            0x00a63284      040b0bed       vstr d0, [fp, -0x10]
+            0x00a63288      061b0bed       vstr d1, [fp, -0x18]
+            0x00a6328c      1c200be5       str r2, [fp, -0x1c]
+            0x00a63290      040b1bed       vldr d0, [fp, -0x10]
+            0x00a63294      0a0b8ded       vstr d0, [sp, 0x28]
+            0x00a63298      060b1bed       vldr d0, [fp, -0x18]
+            0x00a6329c      0c0b8ded       vstr d0, [sp, 0x30]
+            0x00a632a0      04001be5       ldr r0, [fp, -4]
+            0x00a632a4      00109ce5       ldr r1, [ip]
+            0x00a632a8      010080e0       add r0, r0, r1
+            0x00a632ac      001090e5       ldr r1, [r0]
+            0x00a632b0      1c001be5       ldr r0, [fp, -0x1c]
+            0x00a632b4      24008de5       str r0, [sp, 0x24]
+            0x00a632b8      20308de5       str r3, [sp, 0x20]
+            0x00a632bc      24009de5       ldr r0, [sp, 0x24]
+            0x00a632c0      20209de5       ldr r2, [sp, 0x20]
+            0x00a632c4      020050e1       cmp r0, r2
+            0x00a632c8      18108de5       str r1, [sp, 0x18]
+            0x00a632cc      14e08de5       str lr, [sp, 0x14]
+        ┌─< 0x00a632d0      020000aa       bge 0xa632e0
+        │   0x00a632d4      20009de5       ldr r0, [sp, 0x20]
+        │   0x00a632d8      10008de5       str r0, [sp, 0x10]
+       ┌──< 0x00a632dc      010000ea       b 0xa632e8
+       │└─> 0x00a632e0      24009de5       ldr r0, [sp, 0x24]
+       │    0x00a632e4      10008de5       str r0, [sp, 0x10]
+       └──> 0x00a632e8      10009de5       ldr r0, [sp, 0x10]
+            0x00a632ec      1c008de5       str r0, [sp, 0x1c]
+            0x00a632f0      14109de5       ldr r1, [sp, 0x14]
+            0x00a632f4      0c008de5       str r0, [sp, 0xc]
+            0x00a632f8      0100a0e1       mov r0, r1
+            0x00a632fc      18109de5       ldr r1, [sp, 0x18]
+            0x00a63300      0c209de5       ldr r2, [sp, 0xc]
+            0x00a63304      050000eb       bl 0xa63320
+            0x00a63308      100b41ec       vmov d0, r0, r1
+            0x00a6330c      000b8ded       vstr d0, [sp]
+            0x00a63310      0bd0a0e1       mov sp, fp
+            0x00a63314      0088bde8       pop {fp, pc}
+            0x00a63318      0ceeffff       invalid
+            0x00a6331c      90c85f00       invalid
+            0x00a63320      30482de9       push {r4, r5, fp, lr}
+            0x00a63324      08b08de2       add fp, sp, 8
+            0x00a63328      50d04de2       sub sp, sp, 0x50
+            0x00a6332c      003000e3       movw r3, 0
+            0x00a63330      01c000e3       movw ip, 1
+            0x00a63334      b4e19fe5       ldr lr, [0x00a634f0]        ; [0xa634f0:4]=0x1605c
+            0x00a63338      b4419fe5       ldr r4, [0x00a634f4]        ; [0xa634f4:4]=0x16058
+            0x00a6333c      b4519fe5       ldr r5, [0x00a634f8]        ; [0xa634f8:4]=0x16068
+            0x00a63340      680b9fed       vldr d0, [0x00a634e8]
+            0x00a63344      0c000be5       str r0, [fp, -0xc]
+            0x00a63348      10100be5       str r1, [fp, -0x10]
+            0x00a6334c      14200be5       str r2, [fp, -0x14]
+            0x00a63350      080b0bed       vstr d0, [fp, -0x20]
+            0x00a63354      10001be5       ldr r0, [fp, -0x10]
+            0x00a63358      050080e0       add r0, r0, r5
+            0x00a6335c      000b90ed       vldr d0, [r0]
+            0x00a63360      0a0b0bed       vstr d0, [fp, -0x28]
+            0x00a63364      10001be5       ldr r0, [fp, -0x10]
+            0x00a63368      040080e0       add r0, r0, r4
+            0x00a6336c      000090e5       ldr r0, [r0]
+            0x00a63370      1c00a0e1       lsl r0, ip, r0
+            0x00a63374      2c008de5       str r0, [sp, 0x2c]
+            0x00a63378      10001be5       ldr r0, [fp, -0x10]
+            0x00a6337c      0e0080e0       add r0, r0, lr
+            0x00a63380      000090e5       ldr r0, [r0]
+            0x00a63384      1c00a0e1       lsl r0, ip, r0
+            0x00a63388      28008de5       str r0, [sp, 0x28]
+            0x00a6338c      2c009de5       ldr r0, [sp, 0x2c]
+            0x00a63390      100a01ee       vmov s2, r0
+            0x00a63394      410bb8ee       vcvt.f64.u32 d0, s2
+            0x00a63398      0c001be5       ldr r0, [fp, -0xc]
+            0x00a6339c      002b90ed       vldr d2, [r0]
+            0x00a633a0      000b22ee       vmul.f64 d0, d2, d0
+            0x00a633a4      000b80ed       vstr d0, [r0]
+            0x00a633a8      28009de5       ldr r0, [sp, 0x28]
+            0x00a633ac      100a01ee       vmov s2, r0
+            0x00a633b0      410bb8ee       vcvt.f64.u32 d0, s2
+            0x00a633b4      0c001be5       ldr r0, [fp, -0xc]
+            0x00a633b8      022b90ed       vldr d2, [r0, 8]
+            0x00a633bc      000b22ee       vmul.f64 d0, d2, d0
+            0x00a633c0      020b80ed       vstr d0, [r0, 8]
+            0x00a633c4      24308de5       str r3, [sp, 0x24]
+            0x00a633c8      24009de5       ldr r0, [sp, 0x24]
+            0x00a633cc      14101be5       ldr r1, [fp, -0x14]
+            0x00a633d0      010050e1       cmp r0, r1
+            0x00a633d4      3e00002a       bhs 0xa634d4
+            0x00a633d8      2c009de5       ldr r0, [sp, 0x2c]
+            0x00a633dc      24109de5       ldr r1, [sp, 0x24]
+            0x00a633e0      1001a0e1       lsl r0, r0, r1
+            0x00a633e4      20008de5       str r0, [sp, 0x20]
+            0x00a633e8      28009de5       ldr r0, [sp, 0x28]
+            0x00a633ec      24109de5       ldr r1, [sp, 0x24]
+            0x00a633f0      1001a0e1       lsl r0, r0, r1
+            0x00a633f4      1c008de5       str r0, [sp, 0x1c]
+            0x00a633f8      20009de5       ldr r0, [sp, 0x20]
+            0x00a633fc      010050e3       cmp r0, 1
+            0x00a63400      020000aa       bge 0xa63410
+            0x00a63404      010000e3       movw r0, 1
+            0x00a63408      0c008de5       str r0, [sp, 0xc]
+            0x00a6340c      010000ea       b 0xa63418
+            0x00a63410      20009de5       ldr r0, [sp, 0x20]
+            0x00a63414      0c008de5       str r0, [sp, 0xc]
+            0x00a63418      0c009de5       ldr r0, [sp, 0xc]
+            0x00a6341c      20008de5       str r0, [sp, 0x20]
+            0x00a63420      1c009de5       ldr r0, [sp, 0x1c]
+            0x00a63424      010050e3       cmp r0, 1
+            0x00a63428      020000aa       bge 0xa63438
+            0x00a6342c      010000e3       movw r0, 1
+            0x00a63430      08008de5       str r0, [sp, 8]
+            0x00a63434      010000ea       b 0xa63440
+            0x00a63438      1c009de5       ldr r0, [sp, 0x1c]
+            0x00a6343c      08008de5       str r0, [sp, 8]
+            0x00a63440      08009de5       ldr r0, [sp, 8]
+            0x00a63444      1c008de5       str r0, [sp, 0x1c]
+            0x00a63448      0c001be5       ldr r0, [fp, -0xc]
+            0x00a6344c      10101be5       ldr r1, [fp, -0x10]
+            0x00a63450      20209de5       ldr r2, [sp, 0x20]
+            0x00a63454      1c309de5       ldr r3, [sp, 0x1c]
+            0x00a63458      720600eb       bl 0xa64e28
+            0x00a6345c      100b41ec       vmov d0, r0, r1
+            0x00a63460      94009fe5       ldr r0, [0x00a634fc]        ; [0xa634fc:4]=0x16070
+            0x00a63464      021000e3       movw r1, 2
+            0x00a63468      001bb0ee       vmov.f64 d1, 2
+            0x00a6346c      040b8ded       vstr d0, [sp, 0x10]
+            0x00a63470      040b9ded       vldr d0, [sp, 0x10]
+            0x00a63474      0a2b1bed       vldr d2, [fp, -0x28]
+            0x00a63478      020b20ee       vmul.f64 d0, d0, d2
+            0x00a6347c      082b1bed       vldr d2, [fp, -0x20]
+            0x00a63480      000b32ee       vadd.f64 d0, d2, d0
+            0x00a63484      080b0bed       vstr d0, [fp, -0x20]
+            0x00a63488      0c201be5       ldr r2, [fp, -0xc]
+            0x00a6348c      000b92ed       vldr d0, [r2]
+            0x00a63490      010b20ee       vmul.f64 d0, d0, d1
+            0x00a63494      000b82ed       vstr d0, [r2]
+            0x00a63498      0c201be5       ldr r2, [fp, -0xc]
+            0x00a6349c      020b92ed       vldr d0, [r2, 8]
+            0x00a634a0      010b20ee       vmul.f64 d0, d0, d1
+            0x00a634a4      020b82ed       vstr d0, [r2, 8]
+            0x00a634a8      10201be5       ldr r2, [fp, -0x10]
+            0x00a634ac      000082e0       add r0, r2, r0
+            0x00a634b0      000b90ed       vldr d0, [r0]
+            0x00a634b4      0a1b1bed       vldr d1, [fp, -0x28]
+            0x00a634b8      000b21ee       vmul.f64 d0, d1, d0
+            0x00a634bc      0a0b0bed       vstr d0, [fp, -0x28]
+            0x00a634c0      04108de5       str r1, [sp, 4]
+            0x00a634c4      24009de5       ldr r0, [sp, 0x24]
+            0x00a634c8      010080e2       add r0, r0, 1
+            0x00a634cc      24008de5       str r0, [sp, 0x24]
+            0x00a634d0      bcffffea       b 0xa633c8
+            0x00a634d4      080b1bed       vldr d0, [fp, -0x20]
+            0x00a634d8      100b51ec       vmov r0, r1, d0
+            0x00a634dc      08d04be2       sub sp, fp, 8
+            0x00a634e0      3088bde8       pop {r4, r5, fp, pc}
+            0x00a634e4      00f020e3       nop
+            0x00a634e8      00000000       andeq r0, r0, r0
+            0x00a634ec      00000000       andeq r0, r0, r0
+            0x00a634f0      5c600100       andeq r6, r1, ip, asr r0
+            0x00a634f4      58600100       andeq r6, r1, r8, asr r0
+            0x00a634f8      68600100       andeq r6, r1, r8, rrx
+            0x00a634fc      70600100       andeq r6, r1, r0, ror r0
+            0x00a63500      00482de9       push {fp, lr}
+            0x00a63504      0db0a0e1       mov fp, sp
+            0x00a63508      68d04de2       sub sp, sp, 0x68
+            0x00a6350c      ccc09fe5       ldr ip, [0x00a635e0]        ; [0xa635e0:4]=0x5fc5dc
+            0x00a63510      0cc08fe0       add ip, pc, ip
+            0x00a63514      102b43ec       vmov d0, r2, r3
+            0x00a63518      18209be5       ldr r2, [fp, 0x18]
+            0x00a6351c      041b9bed       vldr d1, [fp, 0x10]
+            0x00a63520      022b9bed       vldr d2, [fp, 8]
+            0x00a63524      013000e3       movw r3, 1
+            0x00a63528      ace09fe5       ldr lr, [0x00a635dc]        ; [0xa635dc:4]=0xffffee0c
+            0x00a6352c      0cc09ee7       ldr ip, [lr, ip]
+            0x00a63530      28e08de2       add lr, sp, 0x28
+            0x00a63534      04000be5       str r0, [fp, -4]
+            0x00a63538      08100be5       str r1, [fp, -8]
+            0x00a6353c      040b0bed       vstr d0, [fp, -0x10]
+            0x00a63540      062b0bed       vstr d2, [fp, -0x18]
+            0x00a63544      081b0bed       vstr d1, [fp, -0x20]
+            0x00a63548      24200be5       str r2, [fp, -0x24]
+            0x00a6354c      040b1bed       vldr d0, [fp, -0x10]
+            0x00a63550      0a0b8ded       vstr d0, [sp, 0x28]
+            0x00a63554      060b1bed       vldr d0, [fp, -0x18]
+            0x00a63558      0c0b8ded       vstr d0, [sp, 0x30]
+            0x00a6355c      080b1bed       vldr d0, [fp, -0x20]
+            0x00a63560      0e0b8ded       vstr d0, [sp, 0x38]
+            0x00a63564      04001be5       ldr r0, [fp, -4]
+            0x00a63568      00109ce5       ldr r1, [ip]
+            0x00a6356c      010080e0       add r0, r0, r1
+            0x00a63570      001090e5       ldr r1, [r0]
+            0x00a63574      24001be5       ldr r0, [fp, -0x24]
+            0x00a63578      24008de5       str r0, [sp, 0x24]
+            0x00a6357c      20308de5       str r3, [sp, 0x20]
+            0x00a63580      24009de5       ldr r0, [sp, 0x24]
+            0x00a63584      20209de5       ldr r2, [sp, 0x20]
+            0x00a63588      020050e1       cmp r0, r2
+            0x00a6358c      18108de5       str r1, [sp, 0x18]
+            0x00a63590      14e08de5       str lr, [sp, 0x14]
+            0x00a63594      020000aa       bge 0xa635a4
+            0x00a63598      20009de5       ldr r0, [sp, 0x20]
+            0x00a6359c      10008de5       str r0, [sp, 0x10]
+            0x00a635a0      010000ea       b 0xa635ac
+            0x00a635a4      24009de5       ldr r0, [sp, 0x24]
+            0x00a635a8      10008de5       str r0, [sp, 0x10]
+            0x00a635ac      10009de5       ldr r0, [sp, 0x10]
+            0x00a635b0      1c008de5       str r0, [sp, 0x1c]
+            0x00a635b4      14109de5       ldr r1, [sp, 0x14]
+            0x00a635b8      0c008de5       str r0, [sp, 0xc]
+            0x00a635bc      0100a0e1       mov r0, r1
+            0x00a635c0      18109de5       ldr r1, [sp, 0x18]
+            0x00a635c4      0c209de5       ldr r2, [sp, 0xc]
+            0x00a635c8      060000eb       bl 0xa635e8
+            0x00a635cc      100b41ec       vmov d0, r0, r1
+            0x00a635d0      000b8ded       vstr d0, [sp]
+            0x00a635d4      0bd0a0e1       mov sp, fp
+            0x00a635d8      0088bde8       pop {fp, pc}
+            0x00a635dc      0ceeffff       invalid
+            0x00a635e0      dcc55f00       ldrsbeq ip, [pc], -0x5c     ; [0xa635e8:4]=0xe92d4c10
+            0x00a635e4      00000000       andeq r0, r0, r0
+            0x00a635e8      104c2de9       push {r4, sl, fp, lr}
+            0x00a635ec      08b08de2       add fp, sp, 8
+            0x00a635f0      25de4de2       sub sp, sp, 0x250
+            0x00a635f4      303f9fe5       ldr r3, [0x00a6452c]        ; [0xa6452c:4]=0x16058
+            0x00a635f8      01c000e3       movw ip, 1
+            0x00a635fc      000bb7ee       vmov.f64 d0, 1
+            0x00a63600      00e000e3       movw lr, 0
+            0x00a63604      244f9fe5       ldr r4, [0x00a64530]        ; [0xa64530:4]=0x16068
+            0x00a63608      e01b9fed       vldr d1, [0x00a63990]
+            0x00a6360c      0c000be5       str r0, [fp, -0xc]
+            0x00a63610      10100be5       str r1, [fp, -0x10]
+            0x00a63614      14200be5       str r2, [fp, -0x14]
+            0x00a63618      081b0bed       vstr d1, [fp, -0x20]
+            0x00a6361c      10001be5       ldr r0, [fp, -0x10]
+            0x00a63620      040080e0       add r0, r0, r4
+            0x00a63624      001b90ed       vldr d1, [r0]
+            0x00a63628      0a1b0bed       vstr d1, [fp, -0x28]
+            0x00a6362c      2cc00be5       str ip, [fp, -0x2c]
+            0x00a63630      30c00be5       str ip, [fp, -0x30]
+            0x00a63634      34c00be5       str ip, [fp, -0x34]         ; elf_phdr
+            0x00a63638      38e00be5       str lr, [fp, -0x38]
+            0x00a6363c      3ce00be5       str lr, [fp, -0x3c]
+            0x00a63640      40e00be5       str lr, [fp, -0x40]
+            0x00a63644      0c001be5       ldr r0, [fp, -0xc]
+            0x00a63648      001b90ed       vldr d1, [r0]
+            0x00a6364c      121b0bed       vstr d1, [fp, -0x48]
+            0x00a63650      0c001be5       ldr r0, [fp, -0xc]
+            0x00a63654      021b90ed       vldr d1, [r0, 8]
+            0x00a63658      141b0bed       vstr d1, [fp, -0x50]
+            0x00a6365c      0c001be5       ldr r0, [fp, -0xc]
+            0x00a63660      041b90ed       vldr d1, [r0, 0x10]
+            0x00a63664      161b0bed       vstr d1, [fp, -0x58]
+            0x00a63668      180b0bed       vstr d0, [fp, -0x60]
+            0x00a6366c      1a0b0bed       vstr d0, [fp, -0x68]
+            0x00a63670      1c0b0bed       vstr d0, [fp, -0x70]
+            0x00a63674      10001be5       ldr r0, [fp, -0x10]
+            0x00a63678      030080e0       add r0, r0, r3
+            0x00a6367c      000090e5       ldr r0, [r0]
+            0x00a63680      000050e3       cmp r0, 0
+            0x00a63684      140000ba       blt 0xa636dc
+            0x00a63688      010000e3       movw r0, 1
+            0x00a6368c      981e9fe5       ldr r1, [0x00a6452c]        ; [0xa6452c:4]=0x16058
+            0x00a63690      10201be5       ldr r2, [fp, -0x10]
+            0x00a63694      011082e0       add r1, r2, r1
+            0x00a63698      001091e5       ldr r1, [r1]
+            0x00a6369c      1001a0e1       lsl r0, r0, r1
+            0x00a636a0      2c000be5       str r0, [fp, -0x2c]
+            0x00a636a4      2c001be5       ldr r0, [fp, -0x2c]
+            0x00a636a8      100a00ee       vmov s0, r0
+            0x00a636ac      401bb8ee       vcvt.f64.u32 d1, s0
+            0x00a636b0      0c001be5       ldr r0, [fp, -0xc]
+            0x00a636b4      002b90ed       vldr d2, [r0]
+            0x00a636b8      011b22ee       vmul.f64 d1, d2, d1
+            0x00a636bc      001b80ed       vstr d1, [r0]
+            0x00a636c0      2c001be5       ldr r0, [fp, -0x2c]
+            0x00a636c4      100a00ee       vmov s0, r0
+            0x00a636c8      401bb8ee       vcvt.f64.u32 d1, s0
+            0x00a636cc      182b1bed       vldr d2, [fp, -0x60]
+            0x00a636d0      011b22ee       vmul.f64 d1, d2, d1
+            0x00a636d4      181b0bed       vstr d1, [fp, -0x60]
+            0x00a636d8      160000ea       b 0xa63738
+            0x00a636dc      010000e3       movw r0, 1
+            0x00a636e0      001000e3       movw r1, 0
+            0x00a636e4      402e9fe5       ldr r2, [0x00a6452c]        ; [0xa6452c:4]=0x16058
+            0x00a636e8      10301be5       ldr r3, [fp, -0x10]
+            0x00a636ec      022083e0       add r2, r3, r2
+            0x00a636f0      002092e5       ldr r2, [r2]
+            0x00a636f4      021041e0       sub r1, r1, r2
+            0x00a636f8      38100be5       str r1, [fp, -0x38]
+            0x00a636fc      38101be5       ldr r1, [fp, -0x38]
+            0x00a63700      1011a0e1       lsl r1, r0, r1
+            0x00a63704      101a00ee       vmov s0, r1
+            0x00a63708      c01bb8ee       vcvt.f64.s32 d1, s0
+            0x00a6370c      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63710      002b91ed       vldr d2, [r1]
+            0x00a63714      011b82ee       vdiv.f64 d1, d2, d1
+            0x00a63718      001b81ed       vstr d1, [r1]
+            0x00a6371c      38101be5       ldr r1, [fp, -0x38]
+            0x00a63720      1001a0e1       lsl r0, r0, r1
+            0x00a63724      100a00ee       vmov s0, r0
+            0x00a63728      c01bb8ee       vcvt.f64.s32 d1, s0
+            0x00a6372c      182b1bed       vldr d2, [fp, -0x60]
+            0x00a63730      011b82ee       vdiv.f64 d1, d2, d1
+            0x00a63734      181b0bed       vstr d1, [fp, -0x60]
+            0x00a63738      f40d9fe5       ldr r0, [0x00a64534]        ; [0xa64534:4]=0x1605c
+            0x00a6373c      10101be5       ldr r1, [fp, -0x10]
+            0x00a63740      000081e0       add r0, r1, r0
+            0x00a63744      000090e5       ldr r0, [r0]
+            0x00a63748      000050e3       cmp r0, 0
+            0x00a6374c      140000ba       blt 0xa637a4
+            0x00a63750      010000e3       movw r0, 1
+            0x00a63754      d81d9fe5       ldr r1, [0x00a64534]        ; [0xa64534:4]=0x1605c
+            0x00a63758      10201be5       ldr r2, [fp, -0x10]
+            0x00a6375c      011082e0       add r1, r2, r1
+            0x00a63760      001091e5       ldr r1, [r1]
+            0x00a63764      1001a0e1       lsl r0, r0, r1
+            0x00a63768      30000be5       str r0, [fp, -0x30]
+            0x00a6376c      30001be5       ldr r0, [fp, -0x30]
+            0x00a63770      100a00ee       vmov s0, r0
+            0x00a63774      401bb8ee       vcvt.f64.u32 d1, s0
+            0x00a63778      0c001be5       ldr r0, [fp, -0xc]
+            0x00a6377c      022b90ed       vldr d2, [r0, 8]
+            0x00a63780      011b22ee       vmul.f64 d1, d2, d1
+            0x00a63784      021b80ed       vstr d1, [r0, 8]
+            0x00a63788      30001be5       ldr r0, [fp, -0x30]
+            0x00a6378c      100a00ee       vmov s0, r0
+            0x00a63790      401bb8ee       vcvt.f64.u32 d1, s0
+            0x00a63794      1a2b1bed       vldr d2, [fp, -0x68]
+            0x00a63798      011b22ee       vmul.f64 d1, d2, d1
+            0x00a6379c      1a1b0bed       vstr d1, [fp, -0x68]
+            0x00a637a0      160000ea       b 0xa63800
+            0x00a637a4      010000e3       movw r0, 1
+            0x00a637a8      001000e3       movw r1, 0
+            0x00a637ac      802d9fe5       ldr r2, [0x00a64534]        ; [0xa64534:4]=0x1605c
+            0x00a637b0      10301be5       ldr r3, [fp, -0x10]
+            0x00a637b4      022083e0       add r2, r3, r2
+            0x00a637b8      002092e5       ldr r2, [r2]
+            0x00a637bc      021041e0       sub r1, r1, r2
+            0x00a637c0      3c100be5       str r1, [fp, -0x3c]
+            0x00a637c4      3c101be5       ldr r1, [fp, -0x3c]
+            0x00a637c8      1011a0e1       lsl r1, r0, r1
+            0x00a637cc      101a00ee       vmov s0, r1
+            0x00a637d0      c01bb8ee       vcvt.f64.s32 d1, s0
+            0x00a637d4      0c101be5       ldr r1, [fp, -0xc]
+            0x00a637d8      022b91ed       vldr d2, [r1, 8]
+            0x00a637dc      011b82ee       vdiv.f64 d1, d2, d1
+            0x00a637e0      021b81ed       vstr d1, [r1, 8]
+            0x00a637e4      3c101be5       ldr r1, [fp, -0x3c]
+            0x00a637e8      1001a0e1       lsl r0, r0, r1
+            0x00a637ec      100a00ee       vmov s0, r0
+            0x00a637f0      c01bb8ee       vcvt.f64.s32 d1, s0
+            0x00a637f4      1a2b1bed       vldr d2, [fp, -0x68]
+            0x00a637f8      011b82ee       vdiv.f64 d1, d2, d1
+            0x00a637fc      1a1b0bed       vstr d1, [fp, -0x68]
+            0x00a63800      300d9fe5       ldr r0, [0x00a64538]        ; [0xa64538:4]=0x16060
+            0x00a63804      10101be5       ldr r1, [fp, -0x10]
+            0x00a63808      000081e0       add r0, r1, r0
+            0x00a6380c      000090e5       ldr r0, [r0]
+            0x00a63810      000050e3       cmp r0, 0
+            0x00a63814      140000ba       blt 0xa6386c
+            0x00a63818      010000e3       movw r0, 1
+            0x00a6381c      141d9fe5       ldr r1, [0x00a64538]        ; [0xa64538:4]=0x16060
+            0x00a63820      10201be5       ldr r2, [fp, -0x10]
+            0x00a63824      011082e0       add r1, r2, r1
+            0x00a63828      001091e5       ldr r1, [r1]
+            0x00a6382c      1001a0e1       lsl r0, r0, r1
+            0x00a63830      34000be5       str r0, [fp, -0x34]         ; elf_phdr
+            0x00a63834      34001be5       ldr r0, [fp, -0x34]         ; elf_phdr
+            0x00a63838      100a00ee       vmov s0, r0
+            0x00a6383c      401bb8ee       vcvt.f64.u32 d1, s0
+            0x00a63840      0c001be5       ldr r0, [fp, -0xc]
+            0x00a63844      042b90ed       vldr d2, [r0, 0x10]
+            0x00a63848      011b22ee       vmul.f64 d1, d2, d1
+            0x00a6384c      041b80ed       vstr d1, [r0, 0x10]
+            0x00a63850      34001be5       ldr r0, [fp, -0x34]         ; elf_phdr
+            0x00a63854      100a00ee       vmov s0, r0
+            0x00a63858      401bb8ee       vcvt.f64.u32 d1, s0
+            0x00a6385c      1c2b1bed       vldr d2, [fp, -0x70]
+            0x00a63860      011b22ee       vmul.f64 d1, d2, d1
+            0x00a63864      1c1b0bed       vstr d1, [fp, -0x70]
+            0x00a63868      160000ea       b 0xa638c8
+            0x00a6386c      010000e3       movw r0, 1
+            0x00a63870      001000e3       movw r1, 0
+            0x00a63874      bc2c9fe5       ldr r2, [0x00a64538]        ; [0xa64538:4]=0x16060
+            0x00a63878      10301be5       ldr r3, [fp, -0x10]
+            0x00a6387c      022083e0       add r2, r3, r2
+            0x00a63880      002092e5       ldr r2, [r2]
+            0x00a63884      021041e0       sub r1, r1, r2
+            0x00a63888      40100be5       str r1, [fp, -0x40]
+            0x00a6388c      40101be5       ldr r1, [fp, -0x40]
+            0x00a63890      1011a0e1       lsl r1, r0, r1
+            0x00a63894      101a00ee       vmov s0, r1
+            0x00a63898      c01bb8ee       vcvt.f64.s32 d1, s0
+            0x00a6389c      0c101be5       ldr r1, [fp, -0xc]
+            0x00a638a0      042b91ed       vldr d2, [r1, 0x10]
+            0x00a638a4      011b82ee       vdiv.f64 d1, d2, d1
+            0x00a638a8      041b81ed       vstr d1, [r1, 0x10]
+            0x00a638ac      40101be5       ldr r1, [fp, -0x40]
+            0x00a638b0      1001a0e1       lsl r0, r0, r1
+            0x00a638b4      100a00ee       vmov s0, r0
+            0x00a638b8      c01bb8ee       vcvt.f64.s32 d1, s0
+            0x00a638bc      1c2b1bed       vldr d2, [fp, -0x70]
+            0x00a638c0      011b82ee       vdiv.f64 d1, d2, d1
+            0x00a638c4      1c1b0bed       vstr d1, [fp, -0x70]
+            0x00a638c8      000000e3       movw r0, 0
+            0x00a638cc      74000be5       str r0, [fp, -0x74]
+            0x00a638d0      74001be5       ldr r0, [fp, -0x74]
+            0x00a638d4      14101be5       ldr r1, [fp, -0x14]
+            0x00a638d8      010050e1       cmp r0, r1
+            0x00a638dc      0e0300aa       bge 0xa6451c
+            0x00a638e0      2c001be5       ldr r0, [fp, -0x2c]
+            0x00a638e4      74101be5       ldr r1, [fp, -0x74]
+            0x00a638e8      38201be5       ldr r2, [fp, -0x38]
+            0x00a638ec      021041e0       sub r1, r1, r2
+            0x00a638f0      1001a0e1       lsl r0, r0, r1
+            0x00a638f4      78000be5       str r0, [fp, -0x78]
+            0x00a638f8      30001be5       ldr r0, [fp, -0x30]
+            0x00a638fc      74101be5       ldr r1, [fp, -0x74]
+            0x00a63900      3c201be5       ldr r2, [fp, -0x3c]
+            0x00a63904      021041e0       sub r1, r1, r2
+            0x00a63908      1001a0e1       lsl r0, r0, r1
+            0x00a6390c      7c000be5       str r0, [fp, -0x7c]
+            0x00a63910      34001be5       ldr r0, [fp, -0x34]         ; elf_phdr
+            0x00a63914      74101be5       ldr r1, [fp, -0x74]
+            0x00a63918      40201be5       ldr r2, [fp, -0x40]
+            0x00a6391c      021041e0       sub r1, r1, r2
+            0x00a63920      1001a0e1       lsl r0, r0, r1
+            0x00a63924      80000be5       str r0, [fp, -0x80]
+            0x00a63928      78001be5       ldr r0, [fp, -0x78]
+            0x00a6392c      010050e3       cmp r0, 1
+            0x00a63930      020000aa       bge 0xa63940
+            0x00a63934      010000e3       movw r0, 1
+            0x00a63938      2c008de5       str r0, [sp, 0x2c]
+            0x00a6393c      010000ea       b 0xa63948
+            0x00a63940      78001be5       ldr r0, [fp, -0x78]
+            0x00a63944      2c008de5       str r0, [sp, 0x2c]
+            0x00a63948      2c009de5       ldr r0, [sp, 0x2c]
+            0x00a6394c      78000be5       str r0, [fp, -0x78]
+            0x00a63950      7c001be5       ldr r0, [fp, -0x7c]
+            0x00a63954      010050e3       cmp r0, 1
+            0x00a63958      020000aa       bge 0xa63968
+            0x00a6395c      010000e3       movw r0, 1
+            0x00a63960      28008de5       str r0, [sp, 0x28]
+            0x00a63964      010000ea       b 0xa63970
+            0x00a63968      7c001be5       ldr r0, [fp, -0x7c]
+            0x00a6396c      28008de5       str r0, [sp, 0x28]
+            0x00a63970      28009de5       ldr r0, [sp, 0x28]
+            0x00a63974      7c000be5       str r0, [fp, -0x7c]
+            0x00a63978      80001be5       ldr r0, [fp, -0x80]
+            0x00a6397c      010050e3       cmp r0, 1
+            0x00a63980      040000aa       bge 0xa63998
+            0x00a63984      010000e3       movw r0, 1
+            0x00a63988      24008de5       str r0, [sp, 0x24]
+            0x00a6398c      030000ea       b 0xa639a0
+            0x00a63990      00000000       andeq r0, r0, r0
+            0x00a63994      00000000       andeq r0, r0, r0
+            0x00a63998      80001be5       ldr r0, [fp, -0x80]
+            0x00a6399c      24008de5       str r0, [sp, 0x24]
+            0x00a639a0      24009de5       ldr r0, [sp, 0x24]
+            0x00a639a4      80000be5       str r0, [fp, -0x80]
+            0x00a639a8      0c001be5       ldr r0, [fp, -0xc]
+            0x00a639ac      10101be5       ldr r1, [fp, -0x10]
+            0x00a639b0      78201be5       ldr r2, [fp, -0x78]
+            0x00a639b4      7c301be5       ldr r3, [fp, -0x7c]
+            0x00a639b8      80c01be5       ldr ip, [fp, -0x80]
+            0x00a639bc      00c08de5       str ip, [sp]
+            0x00a639c0      080300eb       bl 0xa645e8
+            0x00a639c4      100b41ec       vmov d0, r0, r1
+            0x00a639c8      6c0b9fe5       ldr r0, [0x00a6453c]        ; [0xa6453c:4]=0x16078
+            0x00a639cc      220b0bed       vstr d0, [fp, -0x88]
+            0x00a639d0      10101be5       ldr r1, [fp, -0x10]
+            0x00a639d4      000081e0       add r0, r1, r0
+            0x00a639d8      d000d0e1       ldrsb r0, [r0]
+            0x00a639dc      000050e3       cmp r0, 0
+            0x00a639e0      e501000a       beq 0xa6417c
+            0x00a639e4      38001be5       ldr r0, [fp, -0x38]
+            0x00a639e8      74101be5       ldr r1, [fp, -0x74]
+            0x00a639ec      010050e1       cmp r0, r1
+            0x00a639f0      e10100da       ble 0xa6417c
+            0x00a639f4      440b9fe5       ldr r0, [0x00a64540]        ; [0xa64540:4]=0x16079
+            0x00a639f8      10101be5       ldr r1, [fp, -0x10]
+            0x00a639fc      000081e0       add r0, r1, r0
+            0x00a63a00      d000d0e1       ldrsb r0, [r0]
+            0x00a63a04      000050e3       cmp r0, 0
+            0x00a63a08      5101000a       beq 0xa63f54
+            0x00a63a0c      3c001be5       ldr r0, [fp, -0x3c]
+            0x00a63a10      74101be5       ldr r1, [fp, -0x74]
+            0x00a63a14      010050e1       cmp r0, r1
+            0x00a63a18      4d0100da       ble 0xa63f54
+            0x00a63a1c      200b9fe5       ldr r0, [0x00a64544]        ; [0xa64544:4]=0x1607a
+            0x00a63a20      10101be5       ldr r1, [fp, -0x10]
+            0x00a63a24      000081e0       add r0, r1, r0
+            0x00a63a28      d000d0e1       ldrsb r0, [r0]
+            0x00a63a2c      000050e3       cmp r0, 0
+            0x00a63a30      e900000a       beq 0xa63ddc
+            0x00a63a34      40001be5       ldr r0, [fp, -0x40]
+            0x00a63a38      74101be5       ldr r1, [fp, -0x74]
+            0x00a63a3c      010050e1       cmp r0, r1
+            0x00a63a40      e50000da       ble 0xa63ddc
+            0x00a63a44      a0004be2       sub r0, fp, 0xa0
+            0x00a63a48      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63a4c      000b91ed       vldr d0, [r1]
+            0x00a63a50      280b0bed       vstr d0, [fp, -0xa0]
+            0x00a63a54      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63a58      020b91ed       vldr d0, [r1, 8]
+            0x00a63a5c      1a1b1bed       vldr d1, [fp, -0x68]
+            0x00a63a60      410b30ee       vsub.f64 d0, d0, d1
+            0x00a63a64      260b0bed       vstr d0, [fp, -0x98]
+            0x00a63a68      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63a6c      040b91ed       vldr d0, [r1, 0x10]
+            0x00a63a70      240b0bed       vstr d0, [fp, -0x90]
+            0x00a63a74      10101be5       ldr r1, [fp, -0x10]
+            0x00a63a78      78201be5       ldr r2, [fp, -0x78]
+            0x00a63a7c      7c301be5       ldr r3, [fp, -0x7c]
+            0x00a63a80      80c01be5       ldr ip, [fp, -0x80]
+            0x00a63a84      00c08de5       str ip, [sp]
+            0x00a63a88      d60200eb       bl 0xa645e8
+            0x00a63a8c      100b41ec       vmov d0, r0, r1
+            0x00a63a90      a0004be2       sub r0, fp, 0xa0
+            0x00a63a94      2a0b0bed       vstr d0, [fp, -0xa8]
+            0x00a63a98      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63a9c      000b91ed       vldr d0, [r1]
+            0x00a63aa0      181b1bed       vldr d1, [fp, -0x60]
+            0x00a63aa4      410b30ee       vsub.f64 d0, d0, d1
+            0x00a63aa8      280b0bed       vstr d0, [fp, -0xa0]
+            0x00a63aac      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63ab0      020b91ed       vldr d0, [r1, 8]
+            0x00a63ab4      1a1b1bed       vldr d1, [fp, -0x68]
+            0x00a63ab8      410b30ee       vsub.f64 d0, d0, d1
+            0x00a63abc      260b0bed       vstr d0, [fp, -0x98]
+            0x00a63ac0      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63ac4      040b91ed       vldr d0, [r1, 0x10]
+            0x00a63ac8      240b0bed       vstr d0, [fp, -0x90]
+            0x00a63acc      10101be5       ldr r1, [fp, -0x10]
+            0x00a63ad0      78201be5       ldr r2, [fp, -0x78]
+            0x00a63ad4      7c301be5       ldr r3, [fp, -0x7c]
+            0x00a63ad8      80c01be5       ldr ip, [fp, -0x80]
+            0x00a63adc      00c08de5       str ip, [sp]
+            0x00a63ae0      c00200eb       bl 0xa645e8
+            0x00a63ae4      100b41ec       vmov d0, r0, r1
+            0x00a63ae8      a0004be2       sub r0, fp, 0xa0
+            0x00a63aec      2c0b0bed       vstr d0, [fp, -0xb0]
+            0x00a63af0      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63af4      000b91ed       vldr d0, [r1]
+            0x00a63af8      181b1bed       vldr d1, [fp, -0x60]
+            0x00a63afc      410b30ee       vsub.f64 d0, d0, d1
+            0x00a63b00      280b0bed       vstr d0, [fp, -0xa0]
+            0x00a63b04      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63b08      020b91ed       vldr d0, [r1, 8]
+            0x00a63b0c      260b0bed       vstr d0, [fp, -0x98]
+            0x00a63b10      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63b14      040b91ed       vldr d0, [r1, 0x10]
+            0x00a63b18      240b0bed       vstr d0, [fp, -0x90]
+            0x00a63b1c      10101be5       ldr r1, [fp, -0x10]
+            0x00a63b20      78201be5       ldr r2, [fp, -0x78]
+            0x00a63b24      7c301be5       ldr r3, [fp, -0x7c]
+            0x00a63b28      80c01be5       ldr ip, [fp, -0x80]
+            0x00a63b2c      00c08de5       str ip, [sp]
+            0x00a63b30      ac0200eb       bl 0xa645e8
+            0x00a63b34      100b41ec       vmov d0, r0, r1
+            0x00a63b38      a0004be2       sub r0, fp, 0xa0
+            0x00a63b3c      2e0b0bed       vstr d0, [fp, -0xb8]
+            0x00a63b40      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63b44      000b91ed       vldr d0, [r1]
+            0x00a63b48      280b0bed       vstr d0, [fp, -0xa0]
+            0x00a63b4c      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63b50      020b91ed       vldr d0, [r1, 8]
+            0x00a63b54      260b0bed       vstr d0, [fp, -0x98]
+            0x00a63b58      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63b5c      040b91ed       vldr d0, [r1, 0x10]
+            0x00a63b60      1c1b1bed       vldr d1, [fp, -0x70]
+            0x00a63b64      410b30ee       vsub.f64 d0, d0, d1
+            0x00a63b68      240b0bed       vstr d0, [fp, -0x90]
+            0x00a63b6c      10101be5       ldr r1, [fp, -0x10]
+            0x00a63b70      78201be5       ldr r2, [fp, -0x78]
+            0x00a63b74      7c301be5       ldr r3, [fp, -0x7c]
+            0x00a63b78      80c01be5       ldr ip, [fp, -0x80]
+            0x00a63b7c      00c08de5       str ip, [sp]
+            0x00a63b80      980200eb       bl 0xa645e8
+            0x00a63b84      100b41ec       vmov d0, r0, r1
+            0x00a63b88      a0004be2       sub r0, fp, 0xa0
+            0x00a63b8c      300b0bed       vstr d0, [fp, -0xc0]
+            0x00a63b90      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63b94      000b91ed       vldr d0, [r1]
+            0x00a63b98      280b0bed       vstr d0, [fp, -0xa0]
+            0x00a63b9c      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63ba0      020b91ed       vldr d0, [r1, 8]
+            0x00a63ba4      1a1b1bed       vldr d1, [fp, -0x68]
+            0x00a63ba8      410b30ee       vsub.f64 d0, d0, d1
+            0x00a63bac      260b0bed       vstr d0, [fp, -0x98]
+            0x00a63bb0      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63bb4      040b91ed       vldr d0, [r1, 0x10]
+            0x00a63bb8      1c1b1bed       vldr d1, [fp, -0x70]
+            0x00a63bbc      410b30ee       vsub.f64 d0, d0, d1
+            0x00a63bc0      240b0bed       vstr d0, [fp, -0x90]
+            0x00a63bc4      10101be5       ldr r1, [fp, -0x10]
+            0x00a63bc8      78201be5       ldr r2, [fp, -0x78]
+            0x00a63bcc      7c301be5       ldr r3, [fp, -0x7c]
+            0x00a63bd0      80c01be5       ldr ip, [fp, -0x80]
+            0x00a63bd4      00c08de5       str ip, [sp]
+            0x00a63bd8      820200eb       bl 0xa645e8
+            0x00a63bdc      100b41ec       vmov d0, r0, r1
+            0x00a63be0      a0004be2       sub r0, fp, 0xa0
+            0x00a63be4      320b0bed       vstr d0, [fp, -0xc8]
+            0x00a63be8      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63bec      000b91ed       vldr d0, [r1]
+            0x00a63bf0      181b1bed       vldr d1, [fp, -0x60]
+            0x00a63bf4      410b30ee       vsub.f64 d0, d0, d1
+            0x00a63bf8      280b0bed       vstr d0, [fp, -0xa0]
+            0x00a63bfc      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63c00      020b91ed       vldr d0, [r1, 8]
+            0x00a63c04      1a1b1bed       vldr d1, [fp, -0x68]
+            0x00a63c08      410b30ee       vsub.f64 d0, d0, d1
+            0x00a63c0c      260b0bed       vstr d0, [fp, -0x98]
+            0x00a63c10      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63c14      040b91ed       vldr d0, [r1, 0x10]
+            0x00a63c18      1c1b1bed       vldr d1, [fp, -0x70]
+            0x00a63c1c      410b30ee       vsub.f64 d0, d0, d1
+            0x00a63c20      240b0bed       vstr d0, [fp, -0x90]
+            0x00a63c24      10101be5       ldr r1, [fp, -0x10]
+            0x00a63c28      78201be5       ldr r2, [fp, -0x78]
+            0x00a63c2c      7c301be5       ldr r3, [fp, -0x7c]
+            0x00a63c30      80c01be5       ldr ip, [fp, -0x80]
+            0x00a63c34      00c08de5       str ip, [sp]
+            0x00a63c38      6a0200eb       bl 0xa645e8
+            0x00a63c3c      100b41ec       vmov d0, r0, r1
+            0x00a63c40      a0004be2       sub r0, fp, 0xa0
+            0x00a63c44      340b0bed       vstr d0, [fp, -0xd0]
+            0x00a63c48      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63c4c      000b91ed       vldr d0, [r1]
+            0x00a63c50      181b1bed       vldr d1, [fp, -0x60]
+            0x00a63c54      410b30ee       vsub.f64 d0, d0, d1
+            0x00a63c58      280b0bed       vstr d0, [fp, -0xa0]
+            0x00a63c5c      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63c60      020b91ed       vldr d0, [r1, 8]
+            0x00a63c64      260b0bed       vstr d0, [fp, -0x98]
+            0x00a63c68      0c101be5       ldr r1, [fp, -0xc]
+            0x00a63c6c      040b91ed       vldr d0, [r1, 0x10]
+            0x00a63c70      1c1b1bed       vldr d1, [fp, -0x70]
+            0x00a63c74      410b30ee       vsub.f64 d0, d0, d1
+            0x00a63c78      240b0bed       vstr d0, [fp, -0x90]
+            0x00a63c7c      10101be5       ldr r1, [fp, -0x10]
+            0x00a63c80      78201be5       ldr r2, [fp, -0x78]
+            0x00a63c84      7c301be5       ldr r3, [fp, -0x7c]
+            0x00a63c88      80c01be5       ldr ip, [fp, -0x80]
+            0x00a63c8c      00c08de5       str ip, [sp]
+            0x00a63c90      540200eb       bl 0xa645e8
+            0x00a63c94      100b41ec       vmov d0, r0, r1
+            0x00a63c98      010000e3       movw r0, 1
+            0x00a63c9c      001bb7ee       vmov.f64 d1, 1
+            0x00a63ca0      360b0bed       vstr d0, [fp, -0xd8]
+            0x00a63ca4      220b1bed       vldr d0, [fp, -0x88]
+            0x00a63ca8      122b1bed       vldr d2, [fp, -0x48]
+            0x00a63cac      422b31ee       vsub.f64 d2, d1, d2
+            0x00a63cb0      020b20ee       vmul.f64 d0, d0, d2
+            0x00a63cb4      142b1bed       vldr d2, [fp, -0x50]
+            0x00a63cb8      422b31ee       vsub.f64 d2, d1, d2
+            0x00a63cbc      020b20ee       vmul.f64 d0, d0, d2
+            0x00a63cc0      162b1bed       vldr d2, [fp, -0x58]
+            0x00a63cc4      422b31ee       vsub.f64 d2, d1, d2
+            0x00a63cc8      020b20ee       vmul.f64 d0, d0, d2
+            0x00a63ccc      2a2b1bed       vldr d2, [fp, -0xa8]
+            0x00a63cd0      123b1bed       vldr d3, [fp, -0x48]
+            0x00a63cd4      433b31ee       vsub.f64 d3, d1, d3
+            0x00a63cd8      032b22ee       vmul.f64 d2, d2, d3
+            0x00a63cdc      143b1bed       vldr d3, [fp, -0x50]
+            0x00a63ce0      032b22ee       vmul.f64 d2, d2, d3
+            0x00a63ce4      163b1bed       vldr d3, [fp, -0x58]
+            0x00a63ce8      433b31ee       vsub.f64 d3, d1, d3
+            0x00a63cec      032b22ee       vmul.f64 d2, d2, d3
+            0x00a63cf0      020b30ee       vadd.f64 d0, d0, d2
+            0x00a63cf4      2c2b1bed       vldr d2, [fp, -0xb0]
+            0x00a63cf8      123b1bed       vldr d3, [fp, -0x48]
+            0x00a63cfc      032b22ee       vmul.f64 d2, d2, d3
+            0x00a63d00      143b1bed       vldr d3, [fp, -0x50]
+            0x00a63d04      032b22ee       vmul.f64 d2, d2, d3
+            0x00a63d08      163b1bed       vldr d3, [fp, -0x58]
+            0x00a63d0c      433b31ee       vsub.f64 d3, d1, d3
