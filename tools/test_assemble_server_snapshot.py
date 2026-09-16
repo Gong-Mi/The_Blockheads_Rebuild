@@ -26,7 +26,13 @@ class AssemblyTest(unittest.TestCase):
    self.assertEqual(index[0],'key_hex\tx\ty\tfile\traw_sha256\tbytes')
    self.assertIn('\t0\t0\tblocks/0_0.raw\t',index[1])
    self.assertEqual(groups[b'main']['records'][0]['plist']['binary'],{'binary_hex':'00ff'})
-   self.assertEqual(groups[b'dw']['records'][0]['plist']['dynamicObjects'][0]['uniqueID'],42)
+   dynamic=groups[b'dw']['records'][0]
+   self.assertEqual(dynamic['plist']['dynamicObjects'][0]['uniqueID'],42)
+   self.assertEqual(dynamic['coordinate'],{'x':0,'y':0})
+   self.assertTrue(dynamic['decoded_file'].startswith('dynamic/'))
+   dynamic_index=(b/'snapshot'/'dynamic'/'index.tsv').read_text().splitlines()
+   self.assertEqual(dynamic_index[0],'key_hex\tx\ty\tfile\traw_sha256\tbytes')
+   self.assertIn('\t0\t0\tdynamic/',dynamic_index[1])
    self.assertTrue(groups[b'unknown']['records'][0]['opaque'])
    with self.assertRaises(FileExistsError):assemble(b/'archive',DECODER,b/'snapshot')
  def test_coordinate_key_is_required_and_duplicate_coordinates_rejected(self):

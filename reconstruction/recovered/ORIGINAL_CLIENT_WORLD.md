@@ -29,6 +29,12 @@ Acceptance contracts:
 - a failed reload preserves the previous successfully loaded state;
 - the original raw Tile structure is not cast onto the replacement packed `Tile`.
 
+`assemble_server_snapshot.py` also emits `dynamic/index.tsv` and content-addressed
+`dynamic/<sha256>.raw` files for every `dw` record. A leading `<x>_<y>/...` key
+gets an explicit coordinate; keys without a proven coordinate remain indexed
+with empty coordinate columns. The decoded plist is retained for inspection,
+but no dynamic-object fields are guessed or materialized into entities yet.
+
 This is a host-side snapshot container and a loader boundary. It is not yet the
 replacement `GameWorld`, dynamic-object materialization, renderer input, save
 back-write, original app execution, or Android device acceptance.

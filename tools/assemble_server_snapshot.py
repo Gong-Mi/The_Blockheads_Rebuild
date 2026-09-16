@@ -26,8 +26,9 @@ def describe(value):
 
 def assemble(archive,decoder,destination):
  archive=Path(archive);destination=Path(destination);m=verify_archive(archive)
- destination.mkdir(parents=True,exist_ok=False);(destination/'blocks').mkdir();groups=[]
+ destination.mkdir(parents=True,exist_ok=False);(destination/'blocks').mkdir();(destination/'dynamic').mkdir();groups=[]
  index=['key_hex\tx\ty\tfile\traw_sha256\tbytes']
+ dynamic_index=['key_hex\tx\ty\tfile\traw_sha256\tbytes']
  coordinates=set()
  for env in m['environments']:
   for db in env['databases']:
@@ -49,12 +50,29 @@ def assemble(archive,decoder,destination):
                                str(target.stat().st_size)]))
     else:
      decoded=gzip.decompress(raw) if raw.startswith(b'\x1f\x8b') else raw
+     if env['path']=='world_db' and bytes.fromhex(db['name_hex'])==b'dw':
+      dynamic_key=bytes.fromhex(record['key_hex'])
+      prefix=dynamic_key.split(b'/',1)[0]
+      try:coordinate=parse_block_coordinate(prefix)
+      except ValueError:coordinate=None
+      raw_sha256=hashlib.sha256(decoded).hexdigest()
+      target=destination/'dynamic'/(raw_sha256+'.raw')
+      if not target.exists():target.write_bytes(decoded)
+      row['decoded_file']=str(target.relative_to(destination))
+      row['raw_sha256']=raw_sha256
+      row['raw_bytes']=len(decoded)
+      if coordinate is not None:
+       row['coordinate']=coordinate
+       x,y=str(coordinate['x']),str(coordinate['y'])
+      else:x,y='',''
+      dynamic_index.append('\t'.join([record['key_hex'],x,y,str(row['decoded_file']),raw_sha256,str(len(decoded))]))
      try:row['plist']=describe(plistlib.loads(decoded))
      except (ValueError,plistlib.InvalidFileException):row['opaque']=True
     rows.append(row)
    groups.append({'environment':env['path'],'database_hex':db['name_hex'],'records':rows})
  result={'scope':'offline inspection; no runtime object construction','groups':groups,'original_files':m['files']}
  (destination/'blocks'/'index.tsv').write_text('\n'.join(index)+'\n')
+ (destination/'dynamic'/'index.tsv').write_text('\n'.join(dynamic_index)+'\n')
  (destination/'snapshot.json').write_text(json.dumps(result,indent=2));return result
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('archive',type=Path);p.add_argument('decoder',type=Path);p.add_argument('destination',type=Path);a=p.parse_args()
