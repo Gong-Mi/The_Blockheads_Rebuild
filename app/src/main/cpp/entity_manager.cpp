@@ -5,7 +5,9 @@ Player::Player() : x(0), y(0), vx(0), vy(0), grounded(false), selectedSlot(0) {
     for(int i=0; i<INVENTORY_SIZE; i++) { slots[i] = 0; counts[i] = 0; }
 }
 
-void Player::addItem(int type, int count) {
+int Player::addItem(int type, int count) {
+    if (type <= 0 || count <= 0) return 0;
+    const int requested = count;
     // 1. Try to stack
     for(int i=0; i<INVENTORY_SIZE; i++) {
         if (slots[i] == type && counts[i] < 99) {
@@ -13,17 +15,19 @@ void Player::addItem(int type, int count) {
             int add = std::min(space, count);
             counts[i] += add;
             count -= add;
-            if (count == 0) return;
+            if (count == 0) return requested;
         }
     }
-    // 2. Try to fill empty slots
-    for(int i=0; i<INVENTORY_SIZE; i++) {
+    // 2. Fill empty slots, preserving the same stack limit as existing stacks.
+    for(int i=0; i<INVENTORY_SIZE && count > 0; i++) {
         if (slots[i] == 0) {
+            int add = std::min(99, count);
             slots[i] = type;
-            counts[i] = count;
-            return;
+            counts[i] = add;
+            count -= add;
         }
     }
+    return requested - count;
 }
 
 bool Player::checkCollision(float newX, float newY, GameWorld* world) {
@@ -54,6 +58,21 @@ bool Player::checkCollision(float newX, float newY, GameWorld* world) {
 }
 
 void Player::update(float gravity, GameWorld* world) {
+    // Sustained touch input drives horizontal motion before the physics pass;
+    // this runs from EntityManager::update once per rendered frame.
+    if (inputAxis != 0.0f) {
+        float target = inputAxis;
+        if (target > 1.0f) target = 1.0f;
+        if (target < -1.0f) target = -1.0f;
+        vx = target * MOVE_SPEED;
+    }
+    if (jumpRequested && grounded) {
+        vy = JUMP_SPEED;
+        grounded = false;
+        jumpRequested = false;
+    } else {
+        jumpRequested = false;
+    }
     // Ladder & Elevator Logic
     bool onLadder = false;
     bool inElevator = false;
@@ -321,8 +340,7 @@ void EntityManager::update(float gravity, GameWorld* world) {
             e.onGround = false; 
         }
         
-        if (distSq < 0.2f) { 
-            player.addItem(e.itemId, 1);
+        if (distSq < 0.2f && player.addItem(e.itemId, 1) == 1) {
             inventoryDirty = true;
             queueSound("pop.wav");
             e.markForDelete = true;

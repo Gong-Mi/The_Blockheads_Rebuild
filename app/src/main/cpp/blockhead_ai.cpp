@@ -37,6 +37,8 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
     }
 
     Action& current = actionQueue.front();
+    // Preserve the target before a completed action is popped.
+    const int changedX = current.tx, changedY = current.ty;
     
     // Target calculation with wrapping support
     float targetWorldX = (float)current.tx + 0.5f; 
@@ -162,11 +164,11 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                         t->damage = 0;
                         changed = true;
                     }
-                } else {
-                    current.progress = 100.0f;
                 }
+                // Progress and accumulated tile damage were independent clocks.
+                // Complete only once the target is gone, never at progress=100.
+                if (!t || t->foreground == ITEM_EMPTY) actionQueue.pop();
             }
-            if (current.progress >= 100.0f) actionQueue.pop();
             
         } else if (current.type == ACTION_PLACE) {
             currentStatus = ACTION_PLACE;
@@ -186,7 +188,7 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
                         }
 
                         if (canPlace) {
-                            t->foreground = (uint8_t)item;
+                            t->foreground = static_cast<uint16_t>(item);
                             t->damage = 0;
                             t->growth = 0; // Reset growth
                             entities->player.counts[slot]--;
@@ -282,6 +284,9 @@ bool BlockheadAI::update(float& outX, float& outY, GameWorld* world, EntityManag
         }
     }
     
+    if (changed && world && (currentStatus == ACTION_MINE || currentStatus == ACTION_PLACE)) {
+        world->refreshTileMesh(changedX, changedY);
+    }
     outX = entities->player.x;
     outY = entities->player.y;
     return changed;

@@ -1,0 +1,189 @@
+{
+  "arm_exidx_end": "0x0092c148",
+  "branches": [
+    {
+      "condition": "beq: self->mainMenuUI == nil -> world path",
+      "site": "0x0092beb8",
+      "target": "0x0092bf5c"
+    },
+    {
+      "condition": "bne: self->world != nil -> world path",
+      "site": "0x0092bee0",
+      "target": "0x0092bf5c"
+    },
+    {
+      "condition": "b: menu startTouch:tapCount: done, return",
+      "site": "0x0092bf58",
+      "target": "0x0092c104"
+    },
+    {
+      "condition": "beq: loadComplete (sxtb) == 0 -> skip region",
+      "site": "0x0092bfa4",
+      "target": "0x0092c100"
+    },
+    {
+      "condition": "bne: isSimulating (sxtb) != 0 -> skip region",
+      "site": "0x0092bff0",
+      "target": "0x0092c100"
+    },
+    {
+      "condition": "bne: touchIsInUI (sxtb) != 0 -> skip stores",
+      "site": "0x0092c0b8",
+      "target": "0x0092c0fc"
+    },
+    {
+      "condition": "b: join into skip chain",
+      "site": "0x0092c0fc",
+      "target": "0x0092c100"
+    },
+    {
+      "condition": "b: join into epilogue",
+      "site": "0x0092c100",
+      "target": "0x0092c104"
+    }
+  ],
+  "calls": [
+    {
+      "receiver_route": "withTouch (fp-0x2c, first stack arg); menu path only",
+      "route": "bl stub",
+      "selector": "tapCount",
+      "site": "0x0092bf2c"
+    },
+    {
+      "receiver_route": "mainMenuUI reloaded 0x0092bee4..0x0092befc; menu path iff mainMenuUI != nil AND world == nil (0x0092beb8 beq / 0x0092bee0 bne both route to the world path)",
+      "route": "bl stub",
+      "selector": "startTouch:tapCount:",
+      "site": "0x0092bf50"
+    },
+    {
+      "receiver_route": "world reloaded 0x0092bf70..0x0092bf84; reached when mainMenuUI == nil OR world != nil",
+      "route": "blx r2 (GOT objc_msgSend GLOB_DAT)",
+      "selector": "loadComplete",
+      "site": "0x0092bf98"
+    },
+    {
+      "receiver_route": "world reloaded 0x0092bfbc..0x0092bfd0; reached when loadComplete (sxtb) != 0",
+      "route": "blx r2 (GOT objc_msgSend GLOB_DAT)",
+      "selector": "isSimulating",
+      "site": "0x0092bfe4"
+    },
+    {
+      "receiver_route": "withTouch reloaded fp-0x2c; re-sent after the world gates",
+      "route": "bl stub",
+      "selector": "tapCount",
+      "site": "0x0092c03c"
+    },
+    {
+      "receiver_route": "world reloaded 0x0092bff4..0x0092c00c; stack args [tapCount, 0] (index literal 0 via movw lr,#0@0x0092c058)",
+      "route": "bl stub",
+      "selector": "startTouch:tapCount:index:",
+      "site": "0x0092c068"
+    },
+    {
+      "receiver_route": "world kept from 0x0092c00c load; reached when isSimulating (sxtb) == 0",
+      "route": "bl stub",
+      "selector": "touchIsInUI:",
+      "site": "0x0092c0a8"
+    }
+  ],
+  "claim": "static bounded-body map with per-instruction anchors; no runtime receiver identity, nil-dispatch outcome or UI/World side-effect proof",
+  "implementation": "0x0092be2c",
+  "ivars": {
+    "mainMenuUI": {
+      "cell": "0x0092c10c",
+      "offset": 20,
+      "symbol": "OBJC_IVAR_$_GameView.mainMenuUI"
+    },
+    "primaryTouchIsActiveInUI": {
+      "cell": "0x0092c110",
+      "offset": 496,
+      "symbol": "OBJC_IVAR_$_GameView.primaryTouchIsActiveInUI"
+    },
+    "startTouchHasntMoved": {
+      "cell": "0x0092c114",
+      "offset": 486,
+      "symbol": "OBJC_IVAR_$_GameView.startTouchHasntMoved"
+    },
+    "startTouchPos": {
+      "cell": "0x0092c140",
+      "offset": 488,
+      "symbol": "OBJC_IVAR_$_GameView.startTouchPos"
+    },
+    "world": {
+      "cell": "0x0092c118",
+      "offset": 24,
+      "symbol": "OBJC_IVAR_$_GameView.world"
+    }
+  },
+  "method": "GameView -[startTouch:withTouch:withEvent:]",
+  "msgsend_glob_dat_slot": "0x0105b7a0",
+  "msgsend_stub": "0x001c281c",
+  "pic_base": "0x0105faf4",
+  "selectors": {
+    "isSimulating": {
+      "cell": "0x0092c130",
+      "slot": "0x00e835c8"
+    },
+    "loadComplete": {
+      "cell": "0x0092c12c",
+      "slot": "0x00e835d0"
+    },
+    "startTouch:tapCount:": {
+      "cell": "0x0092c124",
+      "slot": "0x00e836a8"
+    },
+    "startTouch:tapCount:index:": {
+      "cell": "0x0092c138",
+      "slot": "0x00e836ac"
+    },
+    "tapCount": {
+      "cell": "0x0092c120",
+      "slot": "0x00e836a4"
+    },
+    "touchIsInUI:": {
+      "cell": "0x0092c13c",
+      "slot": "0x00e836a0"
+    }
+  },
+  "semantics": "startTouchHasntMoved=0 and primaryTouchIsActiveInUI=0 execute before any gate. If mainMenuUI != nil AND world == nil: [mainMenuUI startTouch:point tapCount:[withTouch tapCount]]; return. Otherwise: [world loadComplete] (sxtb, nil dispatches 0) returns early when 0; [world isSimulating] (sxtb) returns early when nonzero; re-send [withTouch tapCount]; primaryTouchIsActiveInUI = low byte of [world startTouch:point tapCount:tapCount index:0] (no sxtb); when [world touchIsInUI:point] (sxtb) == 0: startTouchHasntMoved=1 and startTouchPos=point (full words). withEvent argument is never read.",
+  "stores": [
+    {
+      "effect": "self->startTouchHasntMoved = 0",
+      "instruction": "strb r7(=0)",
+      "note": "unconditional, before any gate",
+      "site": "0x0092be8c"
+    },
+    {
+      "effect": "self->primaryTouchIsActiveInUI = 0",
+      "instruction": "strb r7(=0)",
+      "note": "unconditional, before any gate",
+      "site": "0x0092be9c"
+    },
+    {
+      "effect": "self->primaryTouchIsActiveInUI = result byte",
+      "instruction": "strb r0",
+      "note": "NO sxtb by GameView: only the low byte of the World return is kept",
+      "site": "0x0092c080"
+    },
+    {
+      "effect": "self->startTouchHasntMoved = 1",
+      "instruction": "strb r2(=1)",
+      "note": "only when touchIsInUI (sxtb) == 0",
+      "site": "0x0092c0dc"
+    },
+    {
+      "effect": "self->startTouchPos.x = point.x",
+      "instruction": "str r2",
+      "note": "full word",
+      "site": "0x0092c0f0"
+    },
+    {
+      "effect": "self->startTouchPos.y = point.y",
+      "instruction": "str r2,[r0,#4]",
+      "note": "full word",
+      "site": "0x0092c0f8"
+    }
+  ],
+  "types": "v24@0:4{CGPoint=ff}8@16@20",
+  "verified_words": 199
+}

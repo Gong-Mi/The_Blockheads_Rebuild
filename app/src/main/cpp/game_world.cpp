@@ -2,6 +2,7 @@
 #include "item_manager.h"
 #include <cmath>
 #include <algorithm>
+#include <chrono>
 
 GameWorld::GameWorld() {
     for(int x=0; x<MAX_CHUNKS_X; x++) 
@@ -83,6 +84,9 @@ void GameWorld::updateLighting() {
 }
 
 Tile* GameWorld::getTileInternal(int x, int y) {
+    // Integer division truncates -1/CHUNK_SIZE to zero; checking cy alone
+    // allowed negative rows to index before tiles during light propagation.
+    if (y < 0) return nullptr;
     int cx = (int)floor((float)x / CHUNK_SIZE);
     int cy = y / CHUNK_SIZE;
     if (cy < 0 || cy >= MAX_CHUNKS_Y) return nullptr;
@@ -267,30 +271,59 @@ void GameWorld::updateTemperature() {
 void GameWorld::workerLoop() {
     int tick = 0;
     while (!stopThread) {
-        tick++;
-        if (tick % 10 == 0) updateFluids(); 
-        if (tick % 30 == 0) updateElectricity(); 
-        if (tick % 60 == 0) updateTemperature(); // Update temperature every ~1 sec
-        if (tick % 100 == 0) updateVegetation(); 
-        
-        std::pair<int, int> task;
+        std::pair<int, int> task{-1, -1};
         {
             std::unique_lock<std::mutex> lock(queueMutex);
-            queueCV.wait(lock, [this]{ return !taskQueue.empty() || stopThread; });
+            // Simulation must advance even when the camera has not queued a
+            // chunk. The old wait made fluids, power, temperature and plants
+            // stop completely as soon as the task queue became idle.
+            queueCV.wait_for(lock, std::chrono::milliseconds(50), [this]{
+                return !taskQueue.empty() || stopThread;
+            });
             if (stopThread) return;
-            task = taskQueue.front();
-            taskQueue.pop();
+            if (!taskQueue.empty()) {
+                task = taskQueue.front();
+                taskQueue.pop();
+            }
         }
-        
-        int cx = task.first;
-        int cy = task.second;
-        int wCx = wrapChunkX(cx);
-        
-        if (!chunkGrid[wCx][cy]) {
-            generateChunkSync(cx, cy);
-        } else if (chunkGrid[wCx][cy]->dirty) {
-            processChunkAsync(chunkGrid[wCx][cy]);
+
+        tick++;
+        if (tick % 10 == 0) updateFluids();
+        if (tick % 30 == 0) updateElectricity();
+        if (tick % 60 == 0) updateTemperature();
+        if (tick % 100 == 0) updateVegetation();
+
+        if (task.first >= 0) {
+            int cx = task.first;
+            int cy = task.second;
+            int wCx = wrapChunkX(cx);
+            if (cy >= 0 && cy < MAX_CHUNKS_Y) {
+                if (!chunkGrid[wCx][cy]) {
+                    generateChunkSync(cx, cy);
+                } else if (chunkGrid[wCx][cy]->dirty) {
+                    processChunkAsync(chunkGrid[wCx][cy]);
+                }
+            }
         }
+    }
+}
+
+void GameWorld::refreshTileMesh(int x, int y) {
+    if (y < 0 || y >= WORLD_DEPTH) return;
+    const int cx = wrapChunkX(static_cast<int>(std::floor(static_cast<float>(x) / CHUNK_SIZE)));
+    PhysicalBlock* chunk = chunkGrid[cx][y / CHUNK_SIZE];
+    if (!chunk) return;
+    // An edit can change lighting in other loaded chunks (for example a torch
+    // at a chunk boundary). Recompute lighting once, then publish every loaded
+    // CPU mesh so no neighboring VBO keeps stale light values. This synchronous
+    // correctness path is not a claim of an optimized/asynchronous scheduler.
+    updateLighting();
+    std::lock_guard<std::mutex> lock(chunksMutex);
+    for (PhysicalBlock* loaded : chunks) {
+        if (!loaded) continue;
+        buildMeshCache(loaded);
+        loaded->dirty = false;
+        loaded->meshReady = true;
     }
 }
 
@@ -348,7 +381,7 @@ void GameWorld::buildMeshCache(PhysicalBlock* block) {
                 block->vertexCache.push_back(1.0f);
                 block->vertexCache.push_back(1.0f);
                 block->vertexCache.push_back(1.0f);
-                block->vertexCache.push_back(1.0f);
+                block->vertexCache.push_back(0.0f); // Unpainted: paint alpha must be zero
             };
             
             if (renderType == 1) { // Plant (Flat Quad)
