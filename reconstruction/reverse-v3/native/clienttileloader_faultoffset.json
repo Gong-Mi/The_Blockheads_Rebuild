@@ -13,7 +13,13 @@
       "site": "0x00948560"
     },
     {
-      "note": "heightNoiseFunctionB(qx+0.05, 7, 1)",
+      "note": "width gate query; qx/qy retain earlier width values",
+      "route": "blx r3",
+      "selector": "worldWidthMacro",
+      "site": "0x00948598"
+    },
+    {
+      "note": "heightNoiseFunctionB(16*qx+0.05, 0.75, 1)",
       "route": "blx r4",
       "selector": "getX:Y:octaves:",
       "site": "0x00948688"
@@ -57,6 +63,11 @@
       "destination": "0x0094880c",
       "note": "b: join max selection",
       "site": "0x00948800"
+    },
+    {
+      "destination": "0x00948860",
+      "note": "b: join final shaped value",
+      "site": "0x0094885c"
     }
   ],
   "cells": {
@@ -64,7 +75,7 @@
       "meaning": "objc_msgSend GOT",
       "slot": "0x0105b7a0",
       "slot_word": "0x00000000",
-      "symbol": "__cxa_finalize"
+      "symbol": "objc_msgSend"
     },
     "0x009488b4": {
       "meaning": "selector worldWidthMacro",
@@ -154,13 +165,13 @@
   ],
   "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
   "formula": {
-    "band": "band=clamp((float)B.getX(qx+0.05,7.0,1),0,1)",
+    "band": "band=clamp(f32(0.8*double(B.getX(16*qx+0.05,0.75,1)) + 0.2),0,1)",
     "fault": "a=abs((float)faultNoiseFunction.getX(qx,qy,1))",
     "qx": "(float)x / 32.0f / (float)worldWidthMacro",
     "qy": "(float)y / 2.0f / 32.0f / (float)worldWidthMacro",
     "qy_small_world": "if width < 512: (float)y / 2.0f / 32.0f / 512.0f",
     "return": "(int)(512.0f * shape * band), vcvt.s32.f32 truncation",
-    "shape": "0 if a<=0; powf(2*a,2) if 0<a<0.2; powf(max(2*(a-0.2),0),2)+5*band otherwise"
+    "shape": "0 if a<=0; powf(2*a,2) if 0<a<0.2; powf(max(2*(a-0.2),0),2)+0.5*band otherwise"
   },
   "imp": "0x00948470",
   "method": "ClientTileLoader -[faultOffsetForX:y:]",

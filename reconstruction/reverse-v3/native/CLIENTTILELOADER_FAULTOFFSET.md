@@ -46,7 +46,8 @@ The resulting normalized x coordinate is:
 qx = (float)x / 32.0f / (float)width
 ```
 
-The second width query is at `0x00948560`. The normal y coordinate is:
+The second width query is at `0x00948560`; a third independent width query at
+`0x00948598` supplies the `< 512` branch gate. The normal y coordinate is:
 
 ```text
 qy = (float)y / 2.0f / 32.0f / (float)width
@@ -70,14 +71,14 @@ fixed-512 recomputation.
 The first noise call is:
 
 ```text
-bandNoise = heightNoiseFunctionB.getX(qx + 0.05f, 7.0, 1)
+bandNoise = heightNoiseFunctionB.getX(16.0f * qx + 0.05f, 0.75, 1)
 ```
 
 It is the indirect call at `0x00948688`. The return is converted to float
 and clamped:
 
 ```text
-band = clamp(bandNoise, 0.0f, 1.0f)
+band = clamp(f32(0.8 * double(bandNoise) + 0.2), 0.0f, 1.0f)
 ```
 
 The clamp call is `0x009486c0`. The band is saved at `[fp-0x34]` and is used
@@ -107,7 +108,7 @@ else if a < 0.2:
 else:
     t = 2.0f * (a - 0.2f)
     t = max(t, 0.0f)
-    shaped = powf(t, 2.0f) + 5.0f * band
+    shaped = powf(t, 2.0f) + 0.5f * band
 ```
 
 The two `powf` sites are `0x0094879c` and `0x00948838`. The comparison
@@ -128,6 +129,7 @@ result = (int)(512.0f * shaped * band)
 
 Anchors:
 
+- `0x0094885c`: unconditional join to the final shape path;
 - `0x00948860`: load 512.0f and multiply by shaped;
 - `0x00948878`: multiply by band;
 - `0x00948880`: `vcvt.s32.f32` truncation toward zero;
@@ -140,10 +142,8 @@ Anchors:
 32.0f, 512.0f, 0.0f, 0.05f, 0.2f
 ```
 
-The `0.8` value is present in the literal pool although this body’s final
-band path uses the clamped B-noise result directly; it is retained as a
-verified pool cell and not promoted to an active formula term without a
-specific instruction consumer.
+The `0.8` and `0.2` values are active in the double-precision band
+normalization at `0x00948690..0x009486a0`, not dead pool entries.
 
 ## Comparison with WorldTileLoader
 

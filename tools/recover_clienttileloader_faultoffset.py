@@ -40,7 +40,8 @@ FLOAT_CELLS = {
 BLX_CALLS = (
     (0x00948508, "blx lr", "worldWidthMacro", "world = self + world ivar"),
     (0x00948560, "blx r3", "worldWidthMacro", "second width query"),
-    (0x00948688, "blx r4", "getX:Y:octaves:", "heightNoiseFunctionB(qx+0.05, 7, 1)"),
+    (0x00948598, "blx r3", "worldWidthMacro", "width gate query; qx/qy retain earlier width values"),
+    (0x00948688, "blx r4", "getX:Y:octaves:", "heightNoiseFunctionB(16*qx+0.05, 0.75, 1)"),
     (0x00948734, "blx lr", "getX:Y:octaves:", "faultNoiseFunction(qx, qy, 1)"),
 )
 DIRECT_CALLS = (
@@ -55,6 +56,7 @@ BRANCHES = (
     (0x009487A8, 0x0094885C, "b: join small-fault branch into final shape"),
     (0x009487F4, 0x00948804, "bpl: max(2*(a-0.2),0) selection"),
     (0x00948800, 0x0094880C, "b: join max selection"),
+    (0x0094885C, 0x00948860, "b: join final shaped value"),
 )
 
 
@@ -79,7 +81,11 @@ def recover(path: Path) -> dict:
     if base != BASE:
         raise ValueError(f"PIC base drift: {base:#x}")
     elf = ELFFile(io.BytesIO(path.read_bytes()))
-    symbols = {s["st_value"]: s.name for s in elf.get_section_by_name(".dynsym").iter_symbols()}
+    dynsym = elf.get_section_by_name(".dynsym")
+    if dynsym is None:
+        raise ValueError("missing .dynsym")
+    symbols = {s["st_value"]: s.name for s in getattr(dynsym, "iter_symbols")()
+               if s["st_value"] != 0}
     if memory.imports.get(MSGSEND_GOT) != "objc_msgSend":
         raise ValueError("objc_msgSend GOT drift")
 
@@ -91,7 +97,8 @@ def recover(path: Path) -> dict:
         entry = memory.word(slot)
         cells[f"0x{cell:08x}"] = {
             "slot": f"0x{slot:08x}", "meaning": meaning,
-            "symbol": symbols.get(entry), "slot_word": f"0x{entry:08x}",
+            "symbol": memory.imports.get(slot) or symbols.get(entry),
+            "slot_word": f"0x{entry:08x}",
         }
     constants = {}
     for cell, (kind, expected) in FLOAT_CELLS.items():
@@ -118,6 +125,32 @@ def recover(path: Path) -> dict:
         if not m or int(m[1], 16) != dest:
             raise ValueError(f"branch drift at {site:#x}: {rows.get(site)!r}")
 
+    actual_blx = {address for address, row in rows.items()
+                  if row.split(maxsplit=1)[0] == "blx"}
+    actual_bl = {address for address, row in rows.items()
+                 if row.split(maxsplit=1)[0] == "bl"}
+    actual_branches = {address for address, row in rows.items()
+                       if row.split(maxsplit=1)[0] in {"b", "bpl", "beq", "bge", "ble"}}
+    if actual_blx != {site for site, *_ in BLX_CALLS}:
+        raise ValueError(f"indirect call set drift: {sorted(actual_blx)}")
+    if actual_bl != {site for site, *_ in DIRECT_CALLS}:
+        raise ValueError(f"direct call set drift: {sorted(actual_bl)}")
+    if actual_branches != {site for site, *_ in BRANCHES}:
+        raise ValueError(f"branch set drift: {sorted(actual_branches)}")
+
+    instruction_words = {
+        0x00948598: 0xE12FFF33,  # third worldWidthMacro query
+        0x009485FC: 0xEEB64B08,  # vmov.f64 d4, #0.75
+        0x0094861C: 0xEEB36A00,  # vmov.f32 s12, #16.0
+        0x00948640: 0xEE365A05,  # band coordinate multiply/add path
+        0x009486A0: 0xEEB70BC2,  # double-to-float band conversion
+        0x00948840: 0xEEB61A00,  # vmov.f32 s2, #0.5
+        0x0094885C: 0xEAFFFFFF,  # final join branch
+    }
+    for address, expected in instruction_words.items():
+        if memory.word(address) != expected:
+            raise ValueError(f"instruction word drift at {address:#x}")
+
     return {
         "method": "ClientTileLoader -[faultOffsetForX:y:]",
         "types": "i16@0:4i8i12",
@@ -136,9 +169,9 @@ def recover(path: Path) -> dict:
             "qx": "(float)x / 32.0f / (float)worldWidthMacro",
             "qy": "(float)y / 2.0f / 32.0f / (float)worldWidthMacro",
             "qy_small_world": "if width < 512: (float)y / 2.0f / 32.0f / 512.0f",
-            "band": "band=clamp((float)B.getX(qx+0.05,7.0,1),0,1)",
+            "band": "band=clamp(f32(0.8*double(B.getX(16*qx+0.05,0.75,1)) + 0.2),0,1)",
             "fault": "a=abs((float)faultNoiseFunction.getX(qx,qy,1))",
-            "shape": "0 if a<=0; powf(2*a,2) if 0<a<0.2; powf(max(2*(a-0.2),0),2)+5*band otherwise",
+            "shape": "0 if a<=0; powf(2*a,2) if 0<a<0.2; powf(max(2*(a-0.2),0),2)+0.5*band otherwise",
             "return": "(int)(512.0f * shape * band), vcvt.s32.f32 truncation",
         },
         "claim": "static bounded-body map; runtime noise values and client integration remain unverified",
@@ -158,7 +191,7 @@ def main():
             raise SystemExit("stale clienttileloader_faultoffset.json")
     else:
         args.output.write_text(payload)
-    print(f"words={report['verified_words']} blx=4 direct=3 branches=6 constants={len(report['constants'])} cells={len(report['cells'])}")
+    print(f"words={report['verified_words']} blx={len(report['blx_calls'])} direct={len(report['direct_calls'])} branches={len(report['branches'])} constants={len(report['constants'])} cells={len(report['cells'])}")
 
 
 if __name__ == "__main__":

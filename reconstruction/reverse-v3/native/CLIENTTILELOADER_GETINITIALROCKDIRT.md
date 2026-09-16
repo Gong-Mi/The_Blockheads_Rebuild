@@ -36,28 +36,29 @@ The seven indirect calls are byte-checked as:
 0x00947c44  world.worldWidthMacro()
              q = ((float)x / 32.0f) / (float)width
 
-0x00947cac  A.getX(q + 0.05, 5.0, 3)
-0x00947d14  B.getX(q + 0.07, 5.0, 5)
-0x00947d74  B.getX(q + 0.05, 7.0, 9)
+0x00947cac  A.getX(q + 0.1, 0.5, 3)
+0x00947d14  B.getX(q + 0.07, 0.5, 5)
+0x00947d74  B.getX(q + 0.05, 0.75, 9)
 
-0x00948000  A.getX(q + 0.07, 5.0, 3)
-0x00948068  B.getX(q + 0.07, 5.0, 3)
-0x009480c8  B.getX(q + 0.05, 7.0, 9)
+0x00948000  A.getX(q + 0.1, 0.5, 3)
+0x00948068  B.getX(q + 0.07, 0.5, 3)
+0x009480c8  B.getX(q + 0.05, 0.75, 9)
 ```
 
-The noise return is converted from double to float after each call. There is
-no `customRules`/nil fallback in this body.
+The noise calls return an ARM ABI double in `r0/r1`; the multiply/add blend is
+performed in double precision and is then narrowed to float at the documented
+operation points. There is no `customRules`/nil fallback in this body.
 
 ## First pass → rock output
 
 For the first three samples:
 
 ```text
-p0 = 0.3 * A.getX(q + 0.05, 5, 3) + 5
-p1 = 5.0 * B.getX(q + 0.07, 5, 5) + 5
-u  = clamp(0.8 * B.getX(q + 0.05, 7, 9) + 0.2, 0, 1)
+p0 = 0.3 * A.getX(q + 0.1, 0.5, 3) + 0.5
+p1 = 0.5 * B.getX(q + 0.07, 0.5, 5) + 0.5
+u  = clamp(0.8 * B.getX(q + 0.05, 0.75, 9) + 0.2, 0, 1)
 v  = linearInterpolate(p0, p1, u)
-r  = (v - 5) * 2
+r  = (v - 0.5) * 2
 ```
 
 The small-shape correction is exact:
@@ -65,7 +66,7 @@ The small-shape correction is exact:
 ```text
 if abs(r) < 0.1:
     negative = (r < 0)
-    r = powf(r, 2)       # not powf(2*r, 2)
+    r = powf(10 * abs(r), 2) / 10
     if negative:
         r = -r
 ```
@@ -73,31 +74,31 @@ if abs(r) < 0.1:
 Then the original writes the first output pointer (`r3` at entry):
 
 ```text
-*rockHeight = 1 + 32 * 3 * (5 + r / 2)
+*rockHeight = 16 + 32 * (31 * (0.5 + r / 2))
 ```
 
-The write is anchored at `0x00947f70`, after the first shape correction.
+The write is anchored at `0x00947f74`, after the first shape correction.
 
 ## Second pass → dirt output
 
 The second pass repeats the same shape pipeline with the second call triplet:
 
 ```text
-p0 = 0.3 * A.getX(q + 0.07, 5, 3) + 5
-p1 = 5.0 * B.getX(q + 0.07, 5, 3) + 5
-u  = clamp(0.8 * B.getX(q + 0.05, 7, 9) + 0.2, 0, 1)
+p0 = 0.3 * A.getX(q + 0.1, 0.5, 3) + 0.5
+p1 = 0.5 * B.getX(q + 0.07, 0.5, 3) + 0.5
+u  = clamp(0.8 * B.getX(q + 0.05, 0.75, 9) + 0.2, 0, 1)
 v  = linearInterpolate(p0, p1, u)
-r2 = (v - 5) * 2
+r2 = (v - 0.5) * 2
 ```
 
 It applies the identical `<0.1` square/sign correction, then writes the
 stack-passed second output pointer (`[fp-0x60]`):
 
 ```text
-*dirtHeight = 2 + 32 * 3 * (5 + r2 / 2)
+*dirtHeight = 20 + 32 * (31 * (0.5 + r2 / 2))
 ```
 
-The final write is `0x00948234`.
+The final write is `0x00948238`.
 
 ## Literal constants
 

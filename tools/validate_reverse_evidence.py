@@ -405,9 +405,9 @@ def main() -> None:
         [
             "0x00947af8",
             "490 ARM words",
-            "0x00947cac  A.getX(q + 0.05, 5.0, 3)",
-            "*rockHeight = 1 + 32 * 3 * (5 + r / 2)",
-            "*dirtHeight = 2 + 32 * 3 * (5 + r2 / 2)",
+            "0x00947cac  A.getX(q + 0.1, 0.5, 3)",
+            "*rockHeight = 16 + 32 * (31 * (0.5 + r / 2))",
+            "*dirtHeight = 20 + 32 * (31 * (0.5 + r2 / 2))",
             "zero stret reads",
         ],
     )
@@ -435,6 +435,8 @@ def main() -> None:
             "0x00948470",
             "284 ARM words",
             "faultNoiseFunction",
+            "0x00948598",
+            "0x0094885c",
             "if (width < 512):",
             "result = (int)(512.0f * shaped * band)",
         ],
