@@ -1,0 +1,232 @@
+{
+  "blx_calls": [
+    {
+      "note": "world = [self + ClientTileLoader.world@4]",
+      "route": "blx r7",
+      "selector": "worldWidthMacro",
+      "site": "0x00947c44"
+    },
+    {
+      "note": "heightNoiseFunctionA; X=q+0.05, Y=5, octaves=3",
+      "route": "blx lr",
+      "selector": "getX:Y:octaves:",
+      "site": "0x00947cac"
+    },
+    {
+      "note": "heightNoiseFunctionB; X=q+0.07, Y=5, octaves=5",
+      "route": "blx lr",
+      "selector": "getX:Y:octaves:",
+      "site": "0x00947d14"
+    },
+    {
+      "note": "heightNoiseFunctionB; X=q+0.05, Y=7, octaves=9",
+      "route": "blx lr",
+      "selector": "getX:Y:octaves:",
+      "site": "0x00947d74"
+    },
+    {
+      "note": "heightNoiseFunctionA; X=q+0.07, Y=5, octaves=3",
+      "route": "blx r6",
+      "selector": "getX:Y:octaves:",
+      "site": "0x00948000"
+    },
+    {
+      "note": "heightNoiseFunctionB; X=q+0.07, Y=5, octaves=3",
+      "route": "blx lr",
+      "selector": "getX:Y:octaves:",
+      "site": "0x00948068"
+    },
+    {
+      "note": "heightNoiseFunctionB; X=q+0.05, Y=7, octaves=9",
+      "route": "blx lr",
+      "selector": "getX:Y:octaves:",
+      "site": "0x009480c8"
+    }
+  ],
+  "boundary_end": "0x009482a0",
+  "boundary_note": "no own ARM.exidx row; closed by next IMP -[maxOfRockAndDirtHeightForX:]",
+  "branches": [
+    {
+      "destination": "0x00947eb4",
+      "note": "bpl: abs(shape) >= 0.1 -> leave shape linear",
+      "site": "0x00947e34"
+    },
+    {
+      "destination": "0x00947e68",
+      "note": "b: abs(shape) < 0.1 -> square branch",
+      "site": "0x00947e38"
+    },
+    {
+      "destination": "0x00947ecc",
+      "note": "beq: original shape non-negative -> no sign restore",
+      "site": "0x00947ebc"
+    },
+    {
+      "destination": "0x009481d8",
+      "note": "bpl: abs(shape) >= 0.1 -> leave shape linear",
+      "site": "0x00948188"
+    },
+    {
+      "destination": "0x009481f0",
+      "note": "beq: original shape non-negative -> no sign restore",
+      "site": "0x009481e0"
+    }
+  ],
+  "cells": {
+    "0x00948278": {
+      "meaning": "objc_msgSend GOT",
+      "slot": "0x0105b7a0",
+      "slot_word": "0x00000000",
+      "symbol": "__cxa_finalize"
+    },
+    "0x0094827c": {
+      "meaning": "selector getX:Y:octaves:",
+      "slot": "0x00e83958",
+      "slot_word": "0x00f00e66",
+      "symbol": null
+    },
+    "0x00948284": {
+      "meaning": "OBJC_IVAR_$_ClientTileLoader.heightNoiseFunctionB",
+      "slot": "0x0105e2c8",
+      "slot_word": "0x00f34484",
+      "symbol": "OBJC_IVAR_$_ClientTileLoader.heightNoiseFunctionB"
+    },
+    "0x0094828c": {
+      "meaning": "OBJC_IVAR_$_ClientTileLoader.heightNoiseFunctionA",
+      "slot": "0x0105e2cc",
+      "slot_word": "0x00f34480",
+      "symbol": "OBJC_IVAR_$_ClientTileLoader.heightNoiseFunctionA"
+    },
+    "0x00948290": {
+      "meaning": "selector worldWidthMacro",
+      "slot": "0x00e83904",
+      "slot_word": "0x00f00c49",
+      "symbol": null
+    },
+    "0x00948294": {
+      "meaning": "OBJC_IVAR_$_ClientTileLoader.world",
+      "slot": "0x0105e2a8",
+      "slot_word": "0x00f3446c",
+      "symbol": "OBJC_IVAR_$_ClientTileLoader.world"
+    }
+  },
+  "claim": "static bounded-body map; noise internals are mapped separately in NOISEFUNCTION_GETXY.md; runtime values and ClientTileLoader integration remain unverified",
+  "constants": {
+    "0x00947e3c": {
+      "kind": "float",
+      "value": 0.0
+    },
+    "0x00947e40": {
+      "kind": "double",
+      "value": 0.20000000298023224
+    },
+    "0x00947e48": {
+      "kind": "double",
+      "value": 0.800000011920929
+    },
+    "0x00947e50": {
+      "kind": "float",
+      "value": 0.05000000074505806
+    },
+    "0x00947e54": {
+      "kind": "float",
+      "value": 0.07000000029802322
+    },
+    "0x00947e58": {
+      "kind": "double",
+      "value": 0.30000001192092896
+    },
+    "0x00947e60": {
+      "kind": "float",
+      "value": 0.10000000149011612
+    },
+    "0x00947e64": {
+      "kind": "float",
+      "value": 32.0
+    },
+    "0x00948258": {
+      "kind": "double",
+      "value": 0.20000000298023224
+    },
+    "0x00948260": {
+      "kind": "double",
+      "value": 0.800000011920929
+    },
+    "0x00948268": {
+      "kind": "double",
+      "value": 0.30000001192092896
+    },
+    "0x00948270": {
+      "kind": "float",
+      "value": 0.10000000149011612
+    },
+    "0x00948280": {
+      "kind": "float",
+      "value": 0.05000000074505806
+    },
+    "0x00948288": {
+      "kind": "float",
+      "value": 0.07000000029802322
+    },
+    "0x00948298": {
+      "kind": "float",
+      "value": 32.0
+    }
+  },
+  "direct_calls": [
+    {
+      "name": "clamp",
+      "note": "first interpolation factor, [0,1]",
+      "site": "0x00947dac",
+      "target": "0x004be068"
+    },
+    {
+      "name": "linearInterpolate",
+      "note": "first height blend",
+      "site": "0x00947dd0",
+      "target": "0x00582a14"
+    },
+    {
+      "name": "__wrap_powf",
+      "note": "square when abs(firstShape)<0.1",
+      "site": "0x00947e98",
+      "target": "0x001c3f98"
+    },
+    {
+      "name": "clamp",
+      "note": "second interpolation factor, [0,1]",
+      "site": "0x00948100",
+      "target": "0x004be068"
+    },
+    {
+      "name": "linearInterpolate",
+      "note": "second height blend",
+      "site": "0x00948124",
+      "target": "0x00582a14"
+    },
+    {
+      "name": "__wrap_powf",
+      "note": "square when abs(secondShape)<0.1",
+      "site": "0x009481bc",
+      "target": "0x001c3f98"
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "formula": {
+    "dirt": "2.0 + 32.0 * 3.0 * (5.0 + r2/2.0)",
+    "q": "(float)x / 32.0f / (float)[world worldWidthMacro]",
+    "rock": "1.0 + 32.0 * 3.0 * (5.0 + r/2.0)",
+    "sample_shape": "u=clamp(0.8*B(q+0.05,7,9)+0.2,0,1); v=lerp(0.3*A(q+0.05,5,3)+5, 5*B(q+0.07,5,5)+5, u); r=(v-5)*2",
+    "sample_triplet": [
+      "A(q+0.05, 5.0, 3)",
+      "B(q+0.07, 5.0, 5)",
+      "B(q+0.05, 7.0, 9)"
+    ],
+    "small_shape": "if abs(r)<0.1: r=powf(r,2); restore sign from original r"
+  },
+  "imp": "0x00947af8",
+  "method": "ClientTileLoader -[getInitialRockAndDirtHeightforX:rockHeight:dirtHeight:]",
+  "pic_base": "0x0105faf4",
+  "types": "v20@0:4i8^f12^f16",
+  "verified_words": 490
+}

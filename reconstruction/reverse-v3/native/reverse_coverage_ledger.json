@@ -4,10 +4,10 @@
   "unique_implementation_count": 10478,
   "stage_counts": {
     "indexed": 10478,
-    "refs": 69,
-    "cfg": 68,
-    "semantics": 36,
-    "implemented": 36,
+    "refs": 71,
+    "cfg": 70,
+    "semantics": 37,
+    "implemented": 37,
     "behavior-verified": 0
   },
   "entries": [
@@ -136251,15 +136251,28 @@
       "types": "v24@0:4{CGPoint=ff}8@16@20",
       "stages": {
         "indexed": true,
-        "refs": false,
-        "cfg": false,
-        "semantics": false,
-        "implemented": false,
+        "refs": true,
+        "cfg": true,
+        "semantics": true,
+        "implemented": true,
         "behavior-verified": false
       },
-      "semantic_status": "unknown",
-      "implementation_status": "not-audited",
-      "behavior_status": "not-tested"
+      "semantic_status": "reviewed-with-recorded-boundaries",
+      "implementation_status": "explicit-record",
+      "behavior_status": "not-tested",
+      "implementation_record": {
+        "implementation": "0x0092be2c",
+        "class": "GameView",
+        "kind": "instance",
+        "selector": "startTouch:withTouch:withEvent:",
+        "types": "v24@0:4{CGPoint=ff}8@16@20",
+        "entry_point": "blockheads::recovered::startTouch",
+        "source": "reconstruction/recovered/gameview_starttouch.cpp",
+        "test": "tools/test_gameview_starttouch.cpp",
+        "evidence": "reconstruction/reverse-v3/native/GAMEVIEW_STARTTOUCH.md",
+        "integration": "recovered-method-module",
+        "scope": "Static bounded-body map (199 words, PIC base 0x0105faf4) with per-instruction anchors: startTouchHasntMoved/primaryTouchIsActiveInUI cleared before any gate; menu path iff mainMenuUI!=nil AND world==nil forwards [withTouch tapCount] to [mainMenuUI startTouch:tapCount:]; world path gates [world loadComplete] (sxtb) and [world isSimulating] (sxtb), re-sends tapCount, stores ONLY the low byte of [world startTouch:tapCount:index:0], and on [world touchIsInUI:] sxtb==0 sets startTouchHasntMoved=1 with a full-word CGPoint store. Receiver reloads and nil-dispatch chains modeled; withEvent never read. Local fixture tests O0/O2 only; not original ARM runtime differential, not UI/World callee internals, not a game adapter."
+      }
     },
     {
       "implementation": "0x0092c148",
@@ -138514,8 +138527,8 @@
       "types": "v20@0:4i8^f12^f16",
       "stages": {
         "indexed": true,
-        "refs": false,
-        "cfg": false,
+        "refs": true,
+        "cfg": true,
         "semantics": false,
         "implemented": false,
         "behavior-verified": false

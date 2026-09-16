@@ -401,6 +401,44 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
+        [
+            "0x00947af8",
+            "490 ARM words",
+            "0x00947cac  A.getX(q + 0.05, 5.0, 3)",
+            "*rockHeight = 1 + 32 * 3 * (5 + r / 2)",
+            "*dirtHeight = 2 + 32 * 3 * (5 + r2 / 2)",
+            "zero stret reads",
+        ],
+    )
+    require(
+        NATIVE / "disasm_clienttileloader_getinitialrockdirt.txt",
+        [
+            "# ClientTileLoader -[getInitialRockAndDirtHeightforX:rockHeight:dirtHeight:]",
+            "# implementation: 0x00947af8",
+            "0x009482a0",
+        ],
+    )
+    require(
+        NATIVE / "clienttileloader_getinitialrockdirt.json",
+        [
+            '"verified_words": 490',
+            '"blx_calls":',
+            '"direct_calls":',
+            '"formula":',
+            '"elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7"',
+        ],
+    )
+    require(
+        NATIVE / "NOISEFUNCTION_GETXY.md",
+        [
+            "getX:Y:octaves:",
+            "0x00a6324c",
+            "grad2",
+            "0x2008",
+        ],
+    )
+    require(
         NATIVE / "disasm_worldtileloader_refineterrain.txt",
         [
             "# WorldTileLoader -[refineTerrain]",
