@@ -59,8 +59,8 @@ jobs:
           --json /tmp/reverse-coverage-ledger.json \
           --markdown /tmp/reverse-coverage-ledger.md
         grep -F "Methods: 10478" /tmp/reverse-coverage-ledger.md
-        grep -F "semantics | 36" /tmp/reverse-coverage-ledger.md
-        grep -F "implemented | 36" /tmp/reverse-coverage-ledger.md
+        grep -F "semantics | 37" /tmp/reverse-coverage-ledger.md
+        grep -F "implemented | 37" /tmp/reverse-coverage-ledger.md
         grep -F "behavior-verified | 0" /tmp/reverse-coverage-ledger.md
       working-directory: .
 
@@ -122,6 +122,16 @@ jobs:
             -Ireconstruction/recovered tools/test_translation_return.cpp \
             reconstruction/recovered/translation_return.cpp -o /tmp/test_translation_return
           /tmp/test_translation_return
+        done
+
+    - name: Test recovered primary touch-start dispatch slice
+      run: |
+        for opt in 0 2; do
+          build="/tmp/blockheads-starttouch-O${opt}"
+          cmake -S reconstruction/recovered -B "$build" \
+            -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE="-O${opt} -DNDEBUG"
+          cmake --build "$build" --parallel 2 --target test_gameview_starttouch
+          ctest --test-dir "$build" -R gameview_starttouch --output-on-failure
         done
 
     - name: Test recovered zoom settling paths
