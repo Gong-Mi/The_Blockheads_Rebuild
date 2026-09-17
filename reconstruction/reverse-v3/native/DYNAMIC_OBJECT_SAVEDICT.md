@@ -12,7 +12,7 @@ Original ELF SHA-256:
 - PIC base: `0x0105faf4`
 
 The bounded body is an assembly path, not a simple field getter. It contains
-seven `objc_msgSend` sites and two unresolved indirect `blx` sites. Independently
+nine direct `objc_msgSend` sites and two stack-indirect `blx` sites. Independently
 resolved selector cells include:
 
 ```text
@@ -33,9 +33,18 @@ uniqueID  self + 40
 ```
 
 The result is reloaded from `[fp-0x14]` at `0x0083aa64` after the assembly
-sequence. Three objc_msgSend sites and both indirect calls remain unresolved;
-serialized key names, object-type-specific fields, and the exact save-dict
-schema are intentionally not inferred from selector names.
+sequence. The four proven key-to-dictionary-field routes are:
+
+```text
+floatPos  -> setObject:forKey: at 0x0083a930 -> self + 24
+pos_x     -> setObject:forKey: at 0x0083a99c -> self + 16
+pos_y     -> setObject:forKey: at 0x0083aa00 -> self + 20
+uniqueID  -> indirect setObject route at 0x0083aa60 -> self + 40
+```
+
+The two indirect call targets remain separately marked unresolved at the machine
+call-target level. Object-type-specific fields and the exact complete save-dict
+schema remain unresolved.
 
 This evidence proves that DynamicObject save data is assembled through a real
 multi-call path. It does not yet provide a field-complete plist schema, object

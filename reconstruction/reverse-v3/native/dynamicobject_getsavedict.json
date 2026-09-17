@@ -1,7 +1,7 @@
 {
   "body_sha256": "817bee107a168228c4099457cb74d3df98e1d98296cddeb700d0e9418f0eb483",
   "boundary_end": "0x0083aabc",
-  "claim": "bounded static selector/ivar inventory; key payload names and dynamic-object construction remain unresolved",
+  "claim": "bounded static selector/ivar inventory plus four key-to-setObject/ivar source pairings; two stack-indirect call targets, complete schema and dynamic-object construction remain unresolved",
   "code_end": "0x0083aa70",
   "code_words": 177,
   "coverage_words": 196,
@@ -11,6 +11,7 @@
     "0x0083aa3c",
     "0x0083aa60"
   ],
+  "indirect_blx_sites_unresolved_count": 2,
   "known_ivars": {
     "OBJC_IVAR_$_DynamicObject.floatPos": 24,
     "OBJC_IVAR_$_DynamicObject.pos": 16,
@@ -29,25 +30,66 @@
     "0x0083a820",
     "0x0083a888",
     "0x0083a8cc",
+    "0x0083a8fc",
     "0x0083a930",
     "0x0083a974",
     "0x0083a99c",
+    "0x0083a9d8",
     "0x0083aa00"
   ],
   "objc_msgsend_sites_known": {
     "0x0083a820": "dictionary",
     "0x0083a888": "numberWithFloat:",
-    "0x0083a8cc": "arrayWithObjects:",
-    "0x0083a930": "setObject:forKey:"
+    "0x0083a8cc": "numberWithFloat:",
+    "0x0083a8fc": "arrayWithObjects:",
+    "0x0083a930": "setObject:forKey:",
+    "0x0083a974": "numberWithInt:",
+    "0x0083a99c": "setObject:forKey:",
+    "0x0083a9d8": "numberWithInt:",
+    "0x0083aa00": "setObject:forKey:"
   },
-  "objc_msgsend_sites_unresolved": [
-    "0x0083a974",
-    "0x0083a99c",
-    "0x0083aa00"
-  ],
-  "objc_msgsend_sites_unresolved_count": 3,
+  "objc_msgsend_sites_unresolved": [],
+  "objc_msgsend_sites_unresolved_count": 0,
   "pic_base": "0x0105faf4",
   "return_boundary": "result is reloaded from [fp-0x14] at 0x0083aa64 after dictionary assembly",
+  "save_dict_key_pairings": [
+    {
+      "constant_string_object": "0x00f92108",
+      "cstring": "0x00f571af",
+      "ivar": "OBJC_IVAR_$_DynamicObject.floatPos",
+      "ivar_offset": 24,
+      "key": "floatPos",
+      "literal_cell": "0x0083aaa0",
+      "set_object_site": "0x0083a930"
+    },
+    {
+      "constant_string_object": "0x00f920e8",
+      "cstring": "0x00f571a3",
+      "ivar": "OBJC_IVAR_$_DynamicObject.pos",
+      "ivar_offset": 16,
+      "key": "pos_x",
+      "literal_cell": "0x0083aaac",
+      "set_object_site": "0x0083a99c"
+    },
+    {
+      "constant_string_object": "0x00f920f8",
+      "cstring": "0x00f571a9",
+      "ivar": "OBJC_IVAR_$_DynamicObject.pos",
+      "ivar_offset": 20,
+      "key": "pos_y",
+      "literal_cell": "0x0083aab0",
+      "set_object_site": "0x0083aa00"
+    },
+    {
+      "constant_string_object": "0x00f920d8",
+      "cstring": "0x00f50df3",
+      "ivar": "OBJC_IVAR_$_DynamicObject.uniqueID",
+      "ivar_offset": 40,
+      "key": "uniqueID",
+      "literal_cell": "0x0083aa70",
+      "set_object_site": "0x0083aa60"
+    }
+  ],
   "schema": 1,
   "types": "@8@0:4"
 }
