@@ -33,9 +33,16 @@ unsignedLongValue
 
 Dispatch imports are separately resolved as `objc_msgSendSuper2` and
 `objc_msgSend`. A nil saveDict gate returns before the field initialization
-path. Numeric conversion selectors prove that saveDict values are consumed,
-but this slice does not assign their key names or claim the complete field map.
+Numeric conversion selectors prove that saveDict values are consumed. Four key-source/value-conversion/ivar-write pairings are now statically bounded in the companion `dynamicobject_init_keys.json` evidence:
 
-The next method-specific work is to trace each `objectForKey:` key argument to
-its CFString/data source and pair it with the exact ivar write. Until that is
-done, no plist field is promoted into the replacement entity model.
+```text
+uniqueID  -> unsignedLongValue -> self + 40
+pos_x     -> intValue         -> self + 16
+pos_y     -> intValue         -> self + 20
+floatPos  -> objectAtIndex:0/1 -> floatValue -> self + 24
+```
+
+The key objects are GNUstep/CF constant strings whose ELF cstring payloads are
+`uniqueID`, `pos_x`, `pos_y`, and `floatPos`. `ownerID` and the remaining field
+mapping are still unresolved; no plist field is promoted beyond these four
+pairings.
