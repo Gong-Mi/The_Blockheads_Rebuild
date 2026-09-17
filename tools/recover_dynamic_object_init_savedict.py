@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Hash-gated bounded evidence for DynamicObject saveDict initialization."""
-import argparse, hashlib, io, json
+import argparse,hashlib,json,io
 from pathlib import Path
 from elftools.elf.elffile import ELFFile
 from trace_objc_dispatch import ELFMemory
@@ -9,6 +9,7 @@ ROOT=Path(__file__).resolve().parents[1];NATIVE=ROOT/'reconstruction/reverse-v3/
 SHA='733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7'
 START=0x839f7c;CODE_END=0x83a368;END=0x83a3c0;BASE_ADD=0x839f8c;BASE_LITERAL=0x83a3bc
 SELECTORS={0x83a36c:'init',0x83a378:'initDerivedStuff:loadPhysicalBlockIfNeeded:',0x83a37c:'floatValue',0x83a380:'objectAtIndex:',0x83a388:'objectForKey:',0x83a394:'intValue',0x83a3b4:'unsignedLongValue'}
+IVAR_CELLS={0x83a38c:('OBJC_IVAR_$_DynamicObject.floatPos',24),0x83a390:('OBJC_IVAR_$_DynamicObject.pos',16),0x83a3a0:('OBJC_IVAR_$_DynamicObject.world',4),0x83a3a8:('OBJC_IVAR_$_DynamicObject.cache',32),0x83a3ac:('OBJC_IVAR_$_DynamicObject.dynamicWorld',8),0x83a3b8:('OBJC_IVAR_$_DynamicObject.uniqueID',40)}
 
 def s(v):return v-(1<<32) if v&0x80000000 else v
 def word(m,a):
@@ -32,10 +33,17 @@ def recover(path):
   slot=(base+s(word(m,cell)))&0xffffffff;imports.append(m.imports.get(slot))
  if imports!=['objc_msgSendSuper2','objc_msgSend']:raise ValueError('dispatch imports drift')
  elf=ELFFile(io.BytesIO(raw));dynsym=elf.get_section_by_name('.dynsym')
+ if dynsym is None:raise ValueError('missing dynsym')
+ symbols={s['st_value']:s.name for s in getattr(dynsym,'iter_symbols')() if s['st_value']}
  bodyoff=m.offset(START,CODE_END-START)
  if bodyoff is None:raise ValueError('missing body')
  bodyoff=int(bodyoff)
- return {'schema':1,'method':'DynamicObject -[initWithWorld:dynamicWorld:saveDict:cache:]','types':'@24@0:4@8@12@16@20','elf_sha256':hashlib.sha256(raw).hexdigest(),'imp':f'0x{START:08x}','code_end':f'0x{CODE_END:08x}','boundary_end':f'0x{END:08x}','code_words':(CODE_END-START)//4,'coverage_words':coverage,'body_sha256':hashlib.sha256(m.data[bodyoff:bodyoff+CODE_END-START]).hexdigest(),'pic_base':f'0x{base:08x}','dispatch_imports':imports,'known_selectors':selectors,'arguments':{'saveDict':'[fp+8] stored at [fp-0x30]','cache':'[fp+12] stored at [fp-0x34]'},'save_dict_access':['objectForKey:','floatValue','intValue','unsignedLongValue','objectAtIndex:'],'null_save_dict_gate':'[fp-0x20] == nil returns before field initialization','claim':'bounded static init evidence; key names, full field mapping, dynamic entity construction and runtime claim remain unresolved'}
+ ivars={}
+ for cell,(name,expected) in IVAR_CELLS.items():
+  slot=(base+s(word(m,cell)))&0xffffffff;storage=word(m,slot)
+  if symbols.get(storage)!=name or word(m,storage)!=expected:raise ValueError(f'ivar drift {name}')
+  ivars[name]=expected
+ return {'schema':1,'method':'DynamicObject -[initWithWorld:dynamicWorld:saveDict:cache:]','types':'@24@0:4@8@12@16@20','elf_sha256':hashlib.sha256(raw).hexdigest(),'imp':f'0x{START:08x}','code_end':f'0x{CODE_END:08x}','boundary_end':f'0x{END:08x}','code_words':(CODE_END-START)//4,'coverage_words':coverage,'body_sha256':hashlib.sha256(m.data[bodyoff:bodyoff+CODE_END-START]).hexdigest(),'pic_base':f'0x{base:08x}','dispatch_imports':imports,'known_selectors':selectors,'known_ivars':ivars,'arguments':{'saveDict':'[fp+8] stored at [fp-0x30]','cache':'[fp+12] stored at [fp-0x34]'},'save_dict_access':['objectForKey:','floatValue','intValue','unsignedLongValue','objectAtIndex:'],'null_save_dict_gate':'[fp-0x20] == nil returns before field initialization','claim':'bounded static init evidence; key names, full field mapping, dynamic entity construction and runtime claim remain unresolved'}
 def main():
  p=argparse.ArgumentParser();p.add_argument('elf',type=Path);p.add_argument('--check',action='store_true');p.add_argument('--output',type=Path,default=NATIVE/'dynamicobject_init_savedict.json');a=p.parse_args();r=recover(a.elf);t=json.dumps(r,indent=2,sort_keys=True)+'\n'
  if a.check:
