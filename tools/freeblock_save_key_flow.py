@@ -18,12 +18,14 @@ from trace_objc_dispatch import ELFMemory
 START, CODE_END = 0x629804, 0x62A410
 CELL_LO, CELL_HI = 0x62A414, 0x62A4B8
 
-
 def sgn(v):
     return v - (1 << 32) if v & 0x80000000 else v
 
 
-def main(elf_path):
+def main(elf_path, start=None, end=None):
+    global START, CODE_END
+    if start is not None:
+        START, CODE_END = start, end
     m = ELFMemory(Path(elf_path))
 
     def word(a):
@@ -234,4 +236,7 @@ def main(elf_path):
 
 
 if __name__ == '__main__':
-    main(sys.argv[1])
+    if len(sys.argv) > 3:
+        main(sys.argv[1], int(sys.argv[2], 16), int(sys.argv[3], 16))
+    else:
+        main(sys.argv[1])
