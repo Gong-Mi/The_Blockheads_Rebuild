@@ -249,6 +249,12 @@ KNOWN_CLASSES = {
     'ElevatorMotor': (0x00700B5C, 0x00700ED8),
     'ElevatorShaft': (0x00CAD998, 0x00CADD14),
     'FireObject': (0x0067501C, 0x006753EC),
+    'Painting': (0x00AA8FC8, 0x00AA9390),
+    'Boat': (0x0096C238, 0x0096C674),
+    'TrainCar': (0x00A394B0, 0x00A39D64),
+    'DropBear': (0x0079DDC0, 0x0079E2B8),
+    'CaveTroll': (0x00D54924, 0x00D54E2C),
+    'TradingPost': (0x005E6B08, 0x005E7024),
 }
 
 
