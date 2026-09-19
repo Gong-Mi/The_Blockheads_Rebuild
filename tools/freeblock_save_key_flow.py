@@ -45,7 +45,7 @@ def main(elf_path, start=None, end=None):
             s = m.data[off:e].decode('ascii')
         except UnicodeDecodeError:
             return None
-        return s if len(s) > 1 and s.isprintable() else None
+        return s if len(s) >= 1 and s.isprintable() else None
 
     def key_text(obj):
         # classic CFString constant: data pointer at +8
@@ -103,6 +103,7 @@ def main(elf_path, start=None, end=None):
                 mn_note = treg[1]
             rows.append({'site': f'0x{a:08x}', 'mn': mn, 'ops': ops,
                          'r0': val('r0'), 'r1_sel': sel_name, 'r3_key': key,
+                         'r2_key': key_text(val('r2')),
                          'dispatch': mn_note or ('objc_msgSend' if mn == 'blx' else None)})
             for c in ('r0', 'r1', 'r2', 'r3', 'r12'):
                 regs[c] = None

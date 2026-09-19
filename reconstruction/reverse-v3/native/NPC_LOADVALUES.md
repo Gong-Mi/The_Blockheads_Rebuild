@@ -21,7 +21,7 @@ constant whose `len` field matches strlen; selref via `__objc_selrefs`.
 
 ## What the body reads
 
-Selector cells: `objectForKey:` — 9 cell references covering 19 distinct call sites (forward-simulator count), `floatValue` ×2, `intValue` ×3,
+Selector cells: `objectForKey:` — 9 cell references, 19 distinct call sites (forward-simulator count; 4 keys are probed twice: fullness, layCooldownTimer, breed, currentBlockheadIndex), `floatValue` ×2, `intValue` ×3,
 `boolValue`, `unsignedIntegerValue`, `retain` ×2, `autorelease`,
 `dictionaryWithDictionary:`. All dispatch through the single
 `objc_msgSend` GOT slot; no `objc_msgSendSuper2` cell appears — the NPC
@@ -56,8 +56,11 @@ are now explicitly unclassified.
 
 ## Status boundary
 
-refs/cfg-level evidence (bounded listing + cell classification). The
-per-site pairing order (which objectForKey result feeds which conversion →
-vstr/str target offset, and retain/release ordering) is the next batch;
-replacement code, entity construction and original-runtime behavior are
-unclaimed.
+Refs/cfg evidence (bounded listing + cell classification) plus per-chain
+pairings: `tools/recover_npc_loadvalues_keys.py` → `npc_loadvalues_keys.json`
+pins all 15 `key → objectForKey: → conversion → self+ivar writeback` chains
+with CFString reloc/length, key-load cell, raw-word, dynsym-ivar and
+write-side agreement gates, plus the 4 guard probes and the
+`dictionaryWithDictionary:` copy site for `tameCountsByClientID`.
+Retain/release ordering, object copy semantics and all runtime behavior
+remain unresolved; replacement code and device acceptance not claimed.
