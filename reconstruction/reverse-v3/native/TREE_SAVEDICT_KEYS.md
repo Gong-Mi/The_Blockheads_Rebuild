@@ -38,5 +38,5 @@ rejected by the raw-word gate; the listing shows `blx ip` (`3cff2fe1`).
 Recorded as process evidence: the gate works.
 
 Static level-A evidence only: the read-back (`loadSaveDictValues:` family)
-for these keys, the remaining 43 overrides, and all save/roundtrip behavior
+for these keys, the remaining 40 overrides, and all save/roundtrip behavior
 stay unresolved.
