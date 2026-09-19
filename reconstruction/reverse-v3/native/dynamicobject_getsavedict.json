@@ -1,10 +1,19 @@
 {
   "body_sha256": "817bee107a168228c4099457cb74d3df98e1d98296cddeb700d0e9418f0eb483",
   "boundary_end": "0x0083aabc",
-  "claim": "bounded static selector/ivar inventory plus four key-to-setObject/ivar source pairings; two stack-indirect call targets, complete schema and dynamic-object construction remain unresolved",
+  "claim": "bounded static selector/ivar inventory plus four key-to-setObject/ivar pairings; both indirect objc_msgSend sites bound with class/selector/value provenance; three load-time ABS32 classrefs and two Vector2::operator float* direct calls pinned; complete schema and dynamic-object construction remain unresolved",
+  "classref_literals": {
+    "OBJC_CLASS_$_NSArray": "0x00e8a850",
+    "OBJC_CLASS_$_NSMutableDictionary": "0x00e8a84c",
+    "OBJC_CLASS_$_NSNumber": "0x00e8a854"
+  },
   "code_end": "0x0083aa70",
   "code_words": 177,
   "coverage_words": 196,
+  "direct_calls": {
+    "0x0083a868": "_ZN7Vector2cvPfEv",
+    "0x0083a8b4": "_ZN7Vector2cvPfEv"
+  },
   "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
   "imp": "0x0083a7ac",
   "indirect_blx_sites": [
@@ -108,5 +117,21 @@
     }
   ],
   "schema": 1,
-  "types": "@8@0:4"
+  "types": "@8@0:4",
+  "value_side_evidence": [
+    {
+      "argument": "uniqueID ivar double-deref: ldr lr,[0x0083aab4]; ldr lr,[lr,r2]; ldr lr,[lr]; ldr r2,[self+lr] -> self+40 value",
+      "dispatch": "blx r3 <- [fp-0x1c] = objc_msgSend (GOT cell 0x0105b7a0)",
+      "receiver": "NSNumber class via [fp-0x3c]+[fp-0x18] delta/base = 0x00e8a854",
+      "selector": "numberWithUnsignedLong: via [[fp-0x20]] = selref cell",
+      "site": "0x0083aa3c"
+    },
+    {
+      "argument": "value=[fp+0x8] (site1 result), key=[fp-0x28] = @\"uniqueID\" constant string 0x00f920d8",
+      "dispatch": "blx ip <- [fp-0x24] = objc_msgSend (same GOT cell)",
+      "receiver": "NSMutableDictionary from [fp-0x14] reloaded at 0x0083aa64 path",
+      "selector": "setObject:forKey: via [[fp-0x2c]] = selref cell",
+      "site": "0x0083aa60"
+    }
+  ]
 }

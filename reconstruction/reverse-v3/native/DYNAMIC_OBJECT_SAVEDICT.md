@@ -63,6 +63,33 @@ the proven `uniqueID` constant string. This closes the previously unresolved
 uniqueID serialization route, while leaving object-type-specific fields and
 the exact complete save-dict schema unresolved.
 
+## Value-side binding of the indirect sites (regenerated batch)
+
+`recover_dynamic_object_getsavedict.py` now additionally pins, on the hash-gated
+ELF `733d8210…`:
+
+- the three `__objc_classrefs` cells consumed by the body,
+  `0x0083AA80→OBJC_CLASS_$_NSMutableDictionary@0x00E8A84C`,
+  `0x0083AA8C→OBJC_CLASS_$_NSArray@0x00E8A850`,
+  `0x0083AA90→OBJC_CLASS_$_NSNumber@0x00E8A854`, each verified through its
+  `R_ARM_ABS32` relocation to an undefined symbol with file word `0`
+  (the pointer only exists after linkmap relocation at load time);
+- the two `bl` sites `0x0083A868`/`0x0083A8B4` as direct calls to
+  `_ZN7Vector2cvPfEv` (`Vector2::operator float*()`), target decoded from the
+  `bl` immediate, not an objc dispatch — these feed the `numberWithFloat:`
+  boxings of `floatPos.x` (`ldr r2,[r0]`) and `floatPos.y` (`ldr r2,[r0,4]`);
+- 34 raw provenance instruction words proving the fp-slot chain that supplies
+  runtime arguments to both indirect `blx` sites, e.g. receiver reload of the
+  NSNumber class from `[fp,-0x3c]`+base at `0x0083A88C/0x0083A938`, and the
+  delta literal `0xFFE2AD60` at `0x0083AA90` re-basing to `0x00E8A854`;
+- both indirect sites' selector cells resolved through the fp slots to
+  `numberWithUnsignedLong:` (`0x0083AA7C`) and `setObject:forKey:`
+  (`0x0083AA78`).
+
+Evidence level A for the static chain; the boxed `uniqueID` value itself is a
+runtime number, and the object-type-specific extra keys plus the full plist
+schema remain unresolved.
+
 This evidence proves that DynamicObject save data is assembled through a real
 multi-call path. It does not yet provide a field-complete plist schema, object
 construction, replacement entity integration, or original-app runtime

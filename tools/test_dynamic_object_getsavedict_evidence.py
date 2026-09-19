@@ -67,6 +67,21 @@ def main():
         'OBJC_IVAR_$_DynamicObject.pos':16,
         'OBJC_IVAR_$_DynamicObject.uniqueID':40,
     }
+    # value-side batch: load-time ABS32 classrefs, Vector2 direct calls,
+    # and fp-slot-proven indirect call arguments.
+    assert report['classref_literals']=={
+        'OBJC_CLASS_$_NSMutableDictionary':'0x00e8a84c',
+        'OBJC_CLASS_$_NSArray':'0x00e8a850',
+        'OBJC_CLASS_$_NSNumber':'0x00e8a854',
+    }
+    assert report['direct_calls']=={
+        '0x0083a868':'_ZN7Vector2cvPfEv',
+        '0x0083a8b4':'_ZN7Vector2cvPfEv',
+    }
+    sites=[entry['site'] for entry in report['value_side_evidence']]
+    assert sites==['0x0083aa3c','0x0083aa60']
+    assert '0x00e8a854' in report['value_side_evidence'][0]['receiver']
+    assert report['value_side_evidence'][1]['selector'].startswith('setObject:forKey:')
     print('dynamicobject-getsavedict-evidence: PASS')
 
 if __name__=='__main__':main()
