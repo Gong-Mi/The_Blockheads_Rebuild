@@ -19,10 +19,12 @@ GemTree   0x0052922c  gemTreeType int      @136  (numberWithInt:    0x00529328 -
                     fruitYear   int      @140  (numberWithInt:    0x00529388 -> setObject:forKey: 0x005293ac)
 ```
 
-The availableFood float is loaded `vldr s0,[r8+ivar_offset]` from a
-Tree-parent ivar at 136 in both Apple and Pine (dynsym-gated per class);
-GemTree's two ints load `ldr rN,[rX+off]`. NSNumber classref cells are
-ABS32-gated with zero file words.
+The availableFood float is loaded `vldr s0,[r8+ivar_offset]` from each
+class's OWN ivar `OBJC_IVAR_$_AppleTree.availableFood` /
+`OBJC_IVAR_$_PineTree.availableFood` (both at offset 136 but separate
+dynsym-gated symbols, not a shared parent field); GemTree's two ints load
+`ldr rN,[rX+off]`. NSNumber classref cells are ABS32-gated with zero file
+words.
 
 Super-class identity gate: the classref literal re-bases to a
 `__objc_classrefs` slot whose file word materialises the class struct, and
