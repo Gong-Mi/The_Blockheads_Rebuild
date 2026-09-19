@@ -1,0 +1,42 @@
+name: Save assembly method
+on:
+  pull_request:
+    branches: [reverse-v3]
+  workflow_dispatch:
+jobs:
+  recovered:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        mode: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m pip install lmdb
+      - run: python3 tools/test_export_server_world.py
+      - run: python3 tools/test_dynamic_object_uniqueid_evidence.py
+      - run: python3 tools/test_dynamic_object_objecttype_evidence.py
+      - run: python3 tools/test_dynamic_object_positions_evidence.py
+      - run: python3 tools/test_dynamic_object_getsavedict_evidence.py
+      - run: python3 tools/test_dynamic_object_init_savedict_evidence.py
+      - run: python3 tools/test_dynamic_object_init_keys_evidence.py
+      - run: python3 tools/test_dynamic_object_type_matrix_evidence.py
+      - run: python3 tools/test_dynamic_object_type_objecttype_matrix_evidence.py
+      - run: python3 tools/test_dynamic_object_npctype_matrix_evidence.py
+      - run: python3 tools/test_dynamic_object_flags_evidence.py
+      - run: python3 tools/test_freeblock_getsavedict_evidence.py
+      - run: python3 tools/test_freeblock_save_keys_evidence.py
+      - run: python3 tools/test_npc_save_keys_evidence.py
+      - run: python3 tools/test_subclass_savedict_inventory_evidence.py
+      - run: python3 tools/test_npc_loadvalues_keys_evidence.py
+      - run: python3 tools/test_tree_savedict_keys_evidence.py
+      - run: python3 tools/test_item_savedict_keys_b2b_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2c_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2d_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2e_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2f_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2g_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2h_evidence.py
+      - run: cmake -S reconstruction/recovered -B build-method -DCMAKE_BUILD_TYPE=${{ matrix.mode }}
+      - run: cmake --build build-method -j2
+      - run: ctest --test-dir build-method --output-on-failure
+      - run: python3 tools/test_assemble_server_snapshot.py build-method/decode_original_block
