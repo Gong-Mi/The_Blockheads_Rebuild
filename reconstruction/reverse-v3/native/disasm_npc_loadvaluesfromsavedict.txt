@@ -10,9 +10,9 @@
             0x00643b2c      54399fe5       ldr r3, [pc, #0x954]  ; [0x00644488:4]=0x00a1bfbc -> slot 0x01a7bab0 unmapped
             0x00643b30      03308fe0       add r3, pc, r3
             0x00643b34      00c000e3       movw ip, #0
-            0x00643b38      a8e89fe5       ldr lr, [pc, #0x8a8]  ; [0x006443e8:4]=0xfff20a74 -> slot 0x00f80568 unmapped
+            0x00643b38      a8e89fe5       ldr lr, [pc, #0x8a8]  ; [0x006443e8:4]=0xfff20a74 -> CFString key obj @0x00f80568 'fullness'
             0x00643b3c      03e08ee0       add lr, lr, r3
-            0x00643b40      a4489fe5       ldr r4, [pc, #0x8a4]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0
+            0x00643b40      a4489fe5       ldr r4, [pc, #0x8a4]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0 (relocated at load)
             0x00643b44      034094e7       ldr r4, [r4, r3]
             0x00643b48      a0589fe5       ldr r5, [pc, #0x8a0]  ; [0x006443f0:4]=0xffe1f5e0 -> selref/cstring @0x00edb080 'objectForKey:'
             0x00643b4c      035085e0       add r5, r5, r3
@@ -28,36 +28,36 @@
             0x00643b74      30101be5       ldr r1, [fp, #-0x30]
             0x00643b78      010050e1       cmp r0, r1
             0x00643b7c      6c00000a       beq #0x643d34
-            0x00643b80      6c089fe5       ldr r0, [pc, #0x86c]  ; [0x006443f4:4]=0xffffd194 -> sym OBJC_IVAR_$_NPC.age @0x00f32eb0
+            0x00643b80      6c089fe5       ldr r0, [pc, #0x86c]  ; [0x006443f4:4]=0xffffd194 -> ivar-offset storage OBJC_IVAR_$_NPC.age (slot 0x0105cc88) = 88
             0x00643b84      2c101be5       ldr r1, [fp, #-0x2c]
             0x00643b88      010090e7       ldr r0, [r0, r1]
-            0x00643b8c      58289fe5       ldr r2, [pc, #0x858]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0
+            0x00643b8c      58289fe5       ldr r2, [pc, #0x858]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0 (relocated at load)
             0x00643b90      012092e7       ldr r2, [r2, r1]
             0x00643b94      0230a0e1       mov r3, r2
             0x00643b98      58c89fe5       ldr ip, [pc, #0x858]  ; [0x006443f8:4]=0xffe1f5e4 -> selref/cstring @0x00edb08e 'floatValue'
             0x00643b9c      01c08ce0       add ip, ip, r1
-            0x00643ba0      54e89fe5       ldr lr, [pc, #0x854]  ; [0x006443fc:4]=0xfff20aa4 -> slot 0x00f80598 unmapped
+            0x00643ba0      54e89fe5       ldr lr, [pc, #0x854]  ; [0x006443fc:4]=0xfff20aa4 -> CFString key obj @0x00f80598 'age'
             0x00643ba4      01e08ee0       add lr, lr, r1
             0x00643ba8      0240a0e1       mov r4, r2
             0x00643bac      3c589fe5       ldr r5, [pc, #0x83c]  ; [0x006443f0:4]=0xffe1f5e0 -> selref/cstring @0x00edb080 'objectForKey:'
             0x00643bb0      015085e0       add r5, r5, r1
-            0x00643bb4      44689fe5       ldr r6, [pc, #0x844]  ; [0x00644400:4]=0xffffd198 -> sym OBJC_IVAR_$_NPC.damage @0x00f32eac
+            0x00643bb4      44689fe5       ldr r6, [pc, #0x844]  ; [0x00644400:4]=0xffffd198 -> ivar-offset storage OBJC_IVAR_$_NPC.damage (slot 0x0105cc8c) = 54
             0x00643bb8      016096e7       ldr r6, [r6, r1]
             0x00643bbc      40789fe5       ldr r7, [pc, #0x840]  ; [0x00644404:4]=0xffe1f5e8 -> selref/cstring @0x00edb099 'intValue'
             0x00643bc0      017087e0       add r7, r7, r1
-            0x00643bc4      3c889fe5       ldr r8, [pc, #0x83c]  ; [0x00644408:4]=0xfff20a94 -> slot 0x00f80588 unmapped
+            0x00643bc4      3c889fe5       ldr r8, [pc, #0x83c]  ; [0x00644408:4]=0xfff20a94 -> CFString key obj @0x00f80588 'damage'
             0x00643bc8      018088e0       add r8, r8, r1
-            0x00643bcc      38a89fe5       ldr sl, [pc, #0x838]  ; [0x0064440c:4]=0xffffd19c -> sym OBJC_IVAR_$_NPC.layTimer @0x00f32ea8
+            0x00643bcc      38a89fe5       ldr sl, [pc, #0x838]  ; [0x0064440c:4]=0xffffd19c -> ivar-offset storage OBJC_IVAR_$_NPC.layTimer (slot 0x0105cc90) = 80
             0x00643bd0      01a09ae7       ldr sl, [sl, r1]
-            0x00643bd4      34189fe5       ldr r1, [pc, #0x834]  ; [0x00644410:4]=0xfff20a84 -> slot 0x00f80578 unmapped
+            0x00643bd4      34189fe5       ldr r1, [pc, #0x834]  ; [0x00644410:4]=0xfff20a84 -> CFString key obj @0x00f80578 'layTimer'
             0x00643bd8      34000be5       str r0, [fp, #-0x34]
             0x00643bdc      2c001be5       ldr r0, [fp, #-0x2c]
             0x00643be0      001081e0       add r1, r1, r0
-            0x00643be4      28089fe5       ldr r0, [pc, #0x828]  ; [0x00644414:4]=0xffffd1a0 -> sym OBJC_IVAR_$_NPC.fullness @0x00f32ea4
+            0x00643be4      28089fe5       ldr r0, [pc, #0x828]  ; [0x00644414:4]=0xffffd1a0 -> ivar-offset storage OBJC_IVAR_$_NPC.fullness (slot 0x0105cc94) = 68
             0x00643be8      38100be5       str r1, [fp, #-0x38]
             0x00643bec      2c101be5       ldr r1, [fp, #-0x2c]
             0x00643bf0      010090e7       ldr r0, [r0, r1]
-            0x00643bf4      ec179fe5       ldr r1, [pc, #0x7ec]  ; [0x006443e8:4]=0xfff20a74 -> slot 0x00f80568 unmapped
+            0x00643bf4      ec179fe5       ldr r1, [pc, #0x7ec]  ; [0x006443e8:4]=0xfff20a74 -> CFString key obj @0x00f80568 'fullness'
             0x00643bf8      3c000be5       str r0, [fp, #-0x3c]
             0x00643bfc      2c001be5       ldr r0, [fp, #-0x2c]
             0x00643c00      001081e0       add r1, r1, r0
@@ -138,10 +138,10 @@
             0x00643d2c      020080e0       add r0, r0, r2
             0x00643d30      000a80ed       vstr s0, [r0]
             0x00643d34      000000e3       movw r0, #0
-            0x00643d38      d8169fe5       ldr r1, [pc, #0x6d8]  ; [0x00644418:4]=0xfff20ab4 -> slot 0x00f805a8 unmapped
+            0x00643d38      d8169fe5       ldr r1, [pc, #0x6d8]  ; [0x00644418:4]=0xfff20ab4 -> CFString key obj @0x00f805a8 'layCooldownTimer'
             0x00643d3c      2c201be5       ldr r2, [fp, #-0x2c]
             0x00643d40      021081e0       add r1, r1, r2
-            0x00643d44      a0369fe5       ldr r3, [pc, #0x6a0]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0
+            0x00643d44      a0369fe5       ldr r3, [pc, #0x6a0]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0 (relocated at load)
             0x00643d48      023093e7       ldr r3, [r3, r2]
             0x00643d4c      9cc69fe5       ldr ip, [pc, #0x69c]  ; [0x006443f0:4]=0xffe1f5e0 -> selref/cstring @0x00edb080 'objectForKey:'
             0x00643d50      02c08ce0       add ip, ip, r2
@@ -156,35 +156,35 @@
             0x00643d74      74101be5       ldr r1, [fp, #-0x74]
             0x00643d78      010050e1       cmp r0, r1
             0x00643d7c      a100000a       beq #0x644008
-            0x00643d80      94069fe5       ldr r0, [pc, #0x694]  ; [0x0064441c:4]=0xffffd1a4 -> sym OBJC_IVAR_$_NPC.mateBreed @0x00f32ec8
+            0x00643d80      94069fe5       ldr r0, [pc, #0x694]  ; [0x0064441c:4]=0xffffd1a4 -> ivar-offset storage OBJC_IVAR_$_NPC.mateBreed (slot 0x0105cc98) = 98
             0x00643d84      2c101be5       ldr r1, [fp, #-0x2c]
             0x00643d88      010090e7       ldr r0, [r0, r1]
-            0x00643d8c      58269fe5       ldr r2, [pc, #0x658]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0
+            0x00643d8c      58269fe5       ldr r2, [pc, #0x658]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0 (relocated at load)
             0x00643d90      012092e7       ldr r2, [r2, r1]
             0x00643d94      0230a0e1       mov r3, r2
             0x00643d98      64c69fe5       ldr ip, [pc, #0x664]  ; [0x00644404:4]=0xffe1f5e8 -> selref/cstring @0x00edb099 'intValue'
             0x00643d9c      01c08ce0       add ip, ip, r1
-            0x00643da0      78e69fe5       ldr lr, [pc, #0x678]  ; [0x00644420:4]=0xfff20b04 -> slot 0x00f805f8 unmapped
+            0x00643da0      78e69fe5       ldr lr, [pc, #0x678]  ; [0x00644420:4]=0xfff20b04 -> CFString key obj @0x00f805f8 'mateBreed'
             0x00643da4      01e08ee0       add lr, lr, r1
             0x00643da8      0240a0e1       mov r4, r2
             0x00643dac      3c569fe5       ldr r5, [pc, #0x63c]  ; [0x006443f0:4]=0xffe1f5e0 -> selref/cstring @0x00edb080 'objectForKey:'
             0x00643db0      015085e0       add r5, r5, r1
-            0x00643db4      68669fe5       ldr r6, [pc, #0x668]  ; [0x00644424:4]=0xffffd1a8 -> sym OBJC_IVAR_$_NPC.hasBeenFedByBlockheadOrChest @0x00f32ec4
+            0x00643db4      68669fe5       ldr r6, [pc, #0x668]  ; [0x00644424:4]=0xffffd1a8 -> ivar-offset storage OBJC_IVAR_$_NPC.hasBeenFedByBlockheadOrChest (slot 0x0105cc9c) = 101
             0x00643db8      016096e7       ldr r6, [r6, r1]
             0x00643dbc      0270a0e1       mov r7, r2
             0x00643dc0      60869fe5       ldr r8, [pc, #0x660]  ; [0x00644428:4]=0xffe1f5ec -> selref/cstring @0x00edb0a2 'boolValue'
             0x00643dc4      018088e0       add r8, r8, r1
-            0x00643dc8      5ca69fe5       ldr sl, [pc, #0x65c]  ; [0x0064442c:4]=0xfff20af4 -> slot 0x00f805e8 unmapped
+            0x00643dc8      5ca69fe5       ldr sl, [pc, #0x65c]  ; [0x0064442c:4]=0xfff20af4 -> CFString key obj @0x00f805e8 'hasBeenFedByBlockheadOrChest'
             0x00643dcc      01a08ae0       add sl, sl, r1
-            0x00643dd0      58169fe5       ldr r1, [pc, #0x658]  ; [0x00644430:4]=0xffffd1ac -> sym OBJC_IVAR_$_NPC.hasBred @0x00f32ec0
+            0x00643dd0      58169fe5       ldr r1, [pc, #0x658]  ; [0x00644430:4]=0xffffd1ac -> ivar-offset storage OBJC_IVAR_$_NPC.hasBred (slot 0x0105cca0) = 100
             0x00643dd4      7c000be5       str r0, [fp, #-0x7c]
             0x00643dd8      2c001be5       ldr r0, [fp, #-0x2c]
             0x00643ddc      001091e7       ldr r1, [r1, r0]
-            0x00643de0      4c069fe5       ldr r0, [pc, #0x64c]  ; [0x00644434:4]=0xfff20ae4 -> slot 0x00f805d8 unmapped
+            0x00643de0      4c069fe5       ldr r0, [pc, #0x64c]  ; [0x00644434:4]=0xfff20ae4 -> CFString key obj @0x00f805d8 'hasBred'
             0x00643de4      80100be5       str r1, [fp, #-0x80]
             0x00643de8      2c101be5       ldr r1, [fp, #-0x2c]
             0x00643dec      010080e0       add r0, r0, r1
-            0x00643df0      40169fe5       ldr r1, [pc, #0x640]  ; [0x00644438:4]=0xffffd1b0 -> sym OBJC_IVAR_$_NPC.mateCooldownTimer @0x00f32ebc
+            0x00643df0      40169fe5       ldr r1, [pc, #0x640]  ; [0x00644438:4]=0xffffd1b0 -> ivar-offset storage OBJC_IVAR_$_NPC.mateCooldownTimer (slot 0x0105cca4) = 76
             0x00643df4      84000be5       str r0, [fp, #-0x84]
             0x00643df8      2c001be5       ldr r0, [fp, #-0x2c]
             0x00643dfc      001091e7       ldr r1, [r1, r0]
@@ -192,23 +192,23 @@
             0x00643e04      88100be5       str r1, [fp, #-0x88]
             0x00643e08      2c101be5       ldr r1, [fp, #-0x2c]
             0x00643e0c      010080e0       add r0, r0, r1
-            0x00643e10      24169fe5       ldr r1, [pc, #0x624]  ; [0x0064443c:4]=0xfff20ad4 -> slot 0x00f805c8 unmapped
+            0x00643e10      24169fe5       ldr r1, [pc, #0x624]  ; [0x0064443c:4]=0xfff20ad4 -> CFString key obj @0x00f805c8 'mateCooldownTimer'
             0x00643e14      8c000be5       str r0, [fp, #-0x8c]
             0x00643e18      2c001be5       ldr r0, [fp, #-0x2c]
             0x00643e1c      001081e0       add r1, r1, r0
-            0x00643e20      18069fe5       ldr r0, [pc, #0x618]  ; [0x00644440:4]=0xffffd1b4 -> sym OBJC_IVAR_$_NPC.tameCooldownTimer @0x00f32eb8
+            0x00643e20      18069fe5       ldr r0, [pc, #0x618]  ; [0x00644440:4]=0xffffd1b4 -> ivar-offset storage OBJC_IVAR_$_NPC.tameCooldownTimer (slot 0x0105cca8) = 72
             0x00643e24      90100be5       str r1, [fp, #-0x90]
             0x00643e28      2c101be5       ldr r1, [fp, #-0x2c]
             0x00643e2c      010090e7       ldr r0, [r0, r1]
-            0x00643e30      0c169fe5       ldr r1, [pc, #0x60c]  ; [0x00644444:4]=0xfff20ac4 -> slot 0x00f805b8 unmapped
+            0x00643e30      0c169fe5       ldr r1, [pc, #0x60c]  ; [0x00644444:4]=0xfff20ac4 -> CFString key obj @0x00f805b8 'tameCooldownTimer'
             0x00643e34      94000be5       str r0, [fp, #-0x94]
             0x00643e38      2c001be5       ldr r0, [fp, #-0x2c]
             0x00643e3c      001081e0       add r1, r1, r0
-            0x00643e40      00069fe5       ldr r0, [pc, #0x600]  ; [0x00644448:4]=0xffffd1b8 -> sym OBJC_IVAR_$_NPC.layCooldownTimer @0x00f32eb4
+            0x00643e40      00069fe5       ldr r0, [pc, #0x600]  ; [0x00644448:4]=0xffffd1b8 -> ivar-offset storage OBJC_IVAR_$_NPC.layCooldownTimer (slot 0x0105ccac) = 84
             0x00643e44      98100be5       str r1, [fp, #-0x98]
             0x00643e48      2c101be5       ldr r1, [fp, #-0x2c]
             0x00643e4c      010090e7       ldr r0, [r0, r1]
-            0x00643e50      c0159fe5       ldr r1, [pc, #0x5c0]  ; [0x00644418:4]=0xfff20ab4 -> slot 0x00f805a8 unmapped
+            0x00643e50      c0159fe5       ldr r1, [pc, #0x5c0]  ; [0x00644418:4]=0xfff20ab4 -> CFString key obj @0x00f805a8 'layCooldownTimer'
             0x00643e54      9c000be5       str r0, [fp, #-0x9c]
             0x00643e58      2c001be5       ldr r0, [fp, #-0x2c]
             0x00643e5c      001081e0       add r1, r1, r0
@@ -319,10 +319,10 @@
             0x00644000      031081e0       add r1, r1, r3
             0x00644004      b000c1e1       strh r0, [r1]
             0x00644008      000000e3       movw r0, #0
-            0x0064400c      38149fe5       ldr r1, [pc, #0x438]  ; [0x0064444c:4]=0xfff20b14 -> slot 0x00f80608 unmapped
+            0x0064400c      38149fe5       ldr r1, [pc, #0x438]  ; [0x0064444c:4]=0xfff20b14 -> CFString key obj @0x00f80608 'breed'
             0x00644010      2c201be5       ldr r2, [fp, #-0x2c]
             0x00644014      021081e0       add r1, r1, r2
-            0x00644018      cc339fe5       ldr r3, [pc, #0x3cc]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0
+            0x00644018      cc339fe5       ldr r3, [pc, #0x3cc]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0 (relocated at load)
             0x0064401c      023093e7       ldr r3, [r3, r2]
             0x00644020      c8c39fe5       ldr ip, [pc, #0x3c8]  ; [0x006443f0:4]=0xffe1f5e0 -> selref/cstring @0x00edb080 'objectForKey:'
             0x00644024      02c08ce0       add ip, ip, r2
@@ -337,15 +337,15 @@
             0x00644048      7c109de5       ldr r1, [sp, #0x7c]
             0x0064404c      010050e1       cmp r0, r1
             0x00644050      1e00000a       beq #0x6440d0
-            0x00644054      f4039fe5       ldr r0, [pc, #0x3f4]  ; [0x00644450:4]=0xffffd1bc -> sym OBJC_IVAR_$_NPC.breed @0x00f32ecc
+            0x00644054      f4039fe5       ldr r0, [pc, #0x3f4]  ; [0x00644450:4]=0xffffd1bc -> ivar-offset storage OBJC_IVAR_$_NPC.breed (slot 0x0105ccb0) = 96
             0x00644058      2c101be5       ldr r1, [fp, #-0x2c]
             0x0064405c      010090e7       ldr r0, [r0, r1]
-            0x00644060      84239fe5       ldr r2, [pc, #0x384]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0
+            0x00644060      84239fe5       ldr r2, [pc, #0x384]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0 (relocated at load)
             0x00644064      012092e7       ldr r2, [r2, r1]
             0x00644068      0230a0e1       mov r3, r2
             0x0064406c      e0c39fe5       ldr ip, [pc, #0x3e0]  ; [0x00644454:4]=0xffe1f5f0 -> selref/cstring @0x00edb0ac 'unsignedIntegerValue'
             0x00644070      01c08ce0       add ip, ip, r1
-            0x00644074      d0e39fe5       ldr lr, [pc, #0x3d0]  ; [0x0064444c:4]=0xfff20b14 -> slot 0x00f80608 unmapped
+            0x00644074      d0e39fe5       ldr lr, [pc, #0x3d0]  ; [0x0064444c:4]=0xfff20b14 -> CFString key obj @0x00f80608 'breed'
             0x00644078      01e08ee0       add lr, lr, r1
             0x0064407c      6c439fe5       ldr r4, [pc, #0x36c]  ; [0x006443f0:4]=0xffe1f5e0 -> selref/cstring @0x00edb080 'objectForKey:'
             0x00644080      014084e0       add r4, r4, r1
@@ -369,27 +369,27 @@
             0x006440c8      031081e0       add r1, r1, r3
             0x006440cc      b000c1e1       strh r0, [r1]
             0x006440d0      000000e3       movw r0, #0
-            0x006440d4      7c139fe5       ldr r1, [pc, #0x37c]  ; [0x00644458:4]=0xfff20b44 -> slot 0x00f80638 unmapped
+            0x006440d4      7c139fe5       ldr r1, [pc, #0x37c]  ; [0x00644458:4]=0xfff20b44 -> CFString key obj @0x00f80638 'tameCountsByClientID'
             0x006440d8      2c201be5       ldr r2, [fp, #-0x2c]
             0x006440dc      021081e0       add r1, r1, r2
-            0x006440e0      04339fe5       ldr r3, [pc, #0x304]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0
+            0x006440e0      04339fe5       ldr r3, [pc, #0x304]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0 (relocated at load)
             0x006440e4      023093e7       ldr r3, [r3, r2]
             0x006440e8      03c0a0e1       mov ip, r3
             0x006440ec      fce29fe5       ldr lr, [pc, #0x2fc]  ; [0x006443f0:4]=0xffe1f5e0 -> selref/cstring @0x00edb080 'objectForKey:'
             0x006440f0      02e08ee0       add lr, lr, r2
-            0x006440f4      60439fe5       ldr r4, [pc, #0x360]  ; [0x0064445c:4]=0xffffd1c0 -> sym OBJC_IVAR_$_NPC.tameCountsByClientID @0x00f32ed8
+            0x006440f4      60439fe5       ldr r4, [pc, #0x360]  ; [0x0064445c:4]=0xffffd1c0 -> ivar-offset storage OBJC_IVAR_$_NPC.tameCountsByClientID (slot 0x0105ccb4) = 104
             0x006440f8      024094e7       ldr r4, [r4, r2]
             0x006440fc      5c539fe5       ldr r5, [pc, #0x35c]  ; [0x00644460:4]=0xffe1f5f8 -> selref/cstring @0x00edb0c8 'autorelease'
             0x00644100      025085e0       add r5, r5, r2
-            0x00644104      58639fe5       ldr r6, [pc, #0x358]  ; [0x00644464:4]=0xffffd1c4 -> sym OBJC_IVAR_$_NPC.name @0x00f32ed4
+            0x00644104      58639fe5       ldr r6, [pc, #0x358]  ; [0x00644464:4]=0xffffd1c4 -> ivar-offset storage OBJC_IVAR_$_NPC.name (slot 0x0105ccb8) = 92
             0x00644108      026096e7       ldr r6, [r6, r2]
             0x0064410c      54739fe5       ldr r7, [pc, #0x354]  ; [0x00644468:4]=0xffe1f5f4 -> selref/cstring @0x00edb0c1 'retain'
             0x00644110      027087e0       add r7, r7, r2
-            0x00644114      50839fe5       ldr r8, [pc, #0x350]  ; [0x0064446c:4]=0xfff20b34 -> slot 0x00f80628 unmapped
+            0x00644114      50839fe5       ldr r8, [pc, #0x350]  ; [0x0064446c:4]=0xfff20b34 -> CFString key obj @0x00f80628 'name'
             0x00644118      028088e0       add r8, r8, r2
-            0x0064411c      4ca39fe5       ldr sl, [pc, #0x34c]  ; [0x00644470:4]=0xffffd1c8 -> sym OBJC_IVAR_$_NPC.tamedClientID @0x00f32ed0
+            0x0064411c      4ca39fe5       ldr sl, [pc, #0x34c]  ; [0x00644470:4]=0xffffd1c8 -> ivar-offset storage OBJC_IVAR_$_NPC.tamedClientID (slot 0x0105ccbc) = 108
             0x00644120      02a09ae7       ldr sl, [sl, r2]
-            0x00644124      48239fe5       ldr r2, [pc, #0x348]  ; [0x00644474:4]=0xfff20b24 -> slot 0x00f80618 unmapped
+            0x00644124      48239fe5       ldr r2, [pc, #0x348]  ; [0x00644474:4]=0xfff20b24 -> CFString key obj @0x00f80618 'tamedClientID'
             0x00644128      64008de5       str r0, [sp, #0x64]
             0x0064412c      2c001be5       ldr r0, [fp, #-0x2c]
             0x00644130      002082e0       add r2, r2, r0
@@ -475,17 +475,17 @@
             0x00644270      64109de5       ldr r1, [sp, #0x64]
             0x00644274      010050e1       cmp r0, r1
             0x00644278      1f00000a       beq #0x6442fc
-            0x0064427c      d8019fe5       ldr r0, [pc, #0x1d8]  ; [0x0064445c:4]=0xffffd1c0 -> sym OBJC_IVAR_$_NPC.tameCountsByClientID @0x00f32ed8
+            0x0064427c      d8019fe5       ldr r0, [pc, #0x1d8]  ; [0x0064445c:4]=0xffffd1c0 -> ivar-offset storage OBJC_IVAR_$_NPC.tameCountsByClientID (slot 0x0105ccb4) = 104
             0x00644280      2c101be5       ldr r1, [fp, #-0x2c]
             0x00644284      010090e7       ldr r0, [r0, r1]
-            0x00644288      5c219fe5       ldr r2, [pc, #0x15c]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0
+            0x00644288      5c219fe5       ldr r2, [pc, #0x15c]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0 (relocated at load)
             0x0064428c      012092e7       ldr r2, [r2, r1]
             0x00644290      0230a0e1       mov r3, r2
             0x00644294      ccc19fe5       ldr ip, [pc, #0x1cc]  ; [0x00644468:4]=0xffe1f5f4 -> selref/cstring @0x00edb0c1 'retain'
             0x00644298      01c08ce0       add ip, ip, r1
             0x0064429c      d4e19fe5       ldr lr, [pc, #0x1d4]  ; [0x00644478:4]=0xffe1f5fc -> selref/cstring @0x00edb0d4 'dictionaryWithDictionary:'
             0x006442a0      01e08ee0       add lr, lr, r1
-            0x006442a4      d0419fe5       ldr r4, [pc, #0x1d0]  ; [0x0064447c:4]=0xffe2a744 -> slot 0x00e8a238 unmapped
+            0x006442a4      d0419fe5       ldr r4, [pc, #0x1d0]  ; [0x0064447c:4]=0xffe2a744 -> slot 0x00e8a238 word 0 (load-relocated, unclassified)
             0x006442a8      014084e0       add r4, r4, r1
             0x006442ac      004094e5       ldr r4, [r4]
             0x006442b0      28501be5       ldr r5, [fp, #-0x28]
@@ -508,15 +508,15 @@
             0x006442f4      031081e0       add r1, r1, r3
             0x006442f8      000081e5       str r0, [r1]
             0x006442fc      000000e3       movw r0, #0
-            0x00644300      78119fe5       ldr r1, [pc, #0x178]  ; [0x00644480:4]=0xfff20b54 -> slot 0x00f80648 unmapped
+            0x00644300      78119fe5       ldr r1, [pc, #0x178]  ; [0x00644480:4]=0xfff20b54 -> CFString key obj @0x00f80648 'currentBlockheadIndex'
             0x00644304      2c201be5       ldr r2, [fp, #-0x2c]
             0x00644308      021081e0       add r1, r1, r2
-            0x0064430c      d8309fe5       ldr r3, [pc, #0xd8]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0
+            0x0064430c      d8309fe5       ldr r3, [pc, #0xd8]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0 (relocated at load)
             0x00644310      023093e7       ldr r3, [r3, r2]
             0x00644314      d4c09fe5       ldr ip, [pc, #0xd4]  ; [0x006443f0:4]=0xffe1f5e0 -> selref/cstring @0x00edb080 'objectForKey:'
             0x00644318      02c08ce0       add ip, ip, r2
             0x0064431c      00e0e0e3       mvn lr, #0
-            0x00644320      5c419fe5       ldr r4, [pc, #0x15c]  ; [0x00644484:4]=0xffffd1cc -> sym OBJC_IVAR_$_NPC.savedBlockheadIndex @0x00f32edc
+            0x00644320      5c419fe5       ldr r4, [pc, #0x15c]  ; [0x00644484:4]=0xffffd1cc -> ivar-offset storage OBJC_IVAR_$_NPC.savedBlockheadIndex (slot 0x0105ccc0) = 136
             0x00644324      024094e7       ldr r4, [r4, r2]
             0x00644328      1c501be5       ldr r5, [fp, #-0x1c]
             0x0064432c      004094e5       ldr r4, [r4]
@@ -533,15 +533,15 @@
             0x00644358      18109de5       ldr r1, [sp, #0x18]
             0x0064435c      010050e1       cmp r0, r1
             0x00644360      1e00000a       beq #0x6443e0
-            0x00644364      18019fe5       ldr r0, [pc, #0x118]  ; [0x00644484:4]=0xffffd1cc -> sym OBJC_IVAR_$_NPC.savedBlockheadIndex @0x00f32edc
+            0x00644364      18019fe5       ldr r0, [pc, #0x118]  ; [0x00644484:4]=0xffffd1cc -> ivar-offset storage OBJC_IVAR_$_NPC.savedBlockheadIndex (slot 0x0105ccc0) = 136
             0x00644368      2c101be5       ldr r1, [fp, #-0x2c]
             0x0064436c      010090e7       ldr r0, [r0, r1]
-            0x00644370      74209fe5       ldr r2, [pc, #0x74]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0
+            0x00644370      74209fe5       ldr r2, [pc, #0x74]  ; [0x006443ec:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0 (relocated at load)
             0x00644374      012092e7       ldr r2, [r2, r1]
             0x00644378      0230a0e1       mov r3, r2
             0x0064437c      80c09fe5       ldr ip, [pc, #0x80]  ; [0x00644404:4]=0xffe1f5e8 -> selref/cstring @0x00edb099 'intValue'
             0x00644380      01c08ce0       add ip, ip, r1
-            0x00644384      f4e09fe5       ldr lr, [pc, #0xf4]  ; [0x00644480:4]=0xfff20b54 -> slot 0x00f80648 unmapped
+            0x00644384      f4e09fe5       ldr lr, [pc, #0xf4]  ; [0x00644480:4]=0xfff20b54 -> CFString key obj @0x00f80648 'currentBlockheadIndex'
             0x00644388      01e08ee0       add lr, lr, r1
             0x0064438c      5c409fe5       ldr r4, [pc, #0x5c]  ; [0x006443f0:4]=0xffe1f5e0 -> selref/cstring @0x00edb080 'objectForKey:'
             0x00644390      014084e0       add r4, r4, r1
@@ -579,7 +579,7 @@
             0x00644410      840af2ff       invalid
             0x00644414      a0d1ffff       invalid  ; [0x006445bc:4]=0x44610000 -> slot 0x4566faf4 unmapped
             0x00644418      b40af2ff       invalid
-            0x0064441c      a4d1ffff       invalid  ; [0x006445c8:4]=0xffffd194 -> sym OBJC_IVAR_$_NPC.age @0x00f32eb0
+            0x0064441c      a4d1ffff       invalid  ; [0x006445c8:4]=0xffffd194 -> ivar-offset storage OBJC_IVAR_$_NPC.age (slot 0x0105cc88) = 88
             0x00644420      040bf2ff       invalid
             0x00644424      a8d1ffff       invalid  ; [0x006445d4:4]=0x00a1b650 -> slot 0x01a7b144 unmapped
             0x00644428      ecf5e1ff       invalid
