@@ -58,6 +58,21 @@ class BoundedCandidateTrace(unittest.TestCase):
         self.assertEqual(result.get('analysis_kind'), 'linear-candidates-only')
         self.assertIs(result.get('conditional_paths_evaluated'), False)
 
+    def test_known_import_still_resolves(self):
+        # PC-relative literal -> add pc -> GOT load -> blx r3.
+        memory = Memory([0xe59f3008, 0xe08f3003, 0xe5933000, 0xe12fff33, 0xff4])
+        memory.imports[0x2000] = 'objc_msgSend'
+        output = io.StringIO()
+        with patch.object(flow, 'ELFMemory', return_value=memory):
+            with contextlib.redirect_stdout(output):
+                flow.main(Path('synthetic'), 0x1000, 0x1010)
+        result = json.loads(output.getvalue())
+        self.assertEqual(result['sites'][0]['dispatch'], 'objc_msgSend')
+
+    def test_decode_gap_does_not_silently_truncate_census(self):
+        with self.assertRaises(ValueError):
+            self.run_trace([0xe12fff33, 0xffffffff, 0xe12fff33])
+
     def test_rejects_empty_or_reversed_interval(self):
         for end in (0x1000, 0x0ffc):
             with self.subTest(end=end), self.assertRaises(ValueError):
