@@ -8,6 +8,7 @@ import lmdb
 def digest(data):return hashlib.sha256(data).hexdigest()
 def export_world(source,destination):
  source=Path(source).resolve();destination=Path(destination).resolve()
+ if not source.exists() or not source.is_dir():raise ValueError(f'source directory does not exist or is not a directory: {source}')
  if destination==source or source in destination.parents:raise ValueError('output must be outside save')
  destination.mkdir(parents=True,exist_ok=False)
  blobdir=destination/'blobs';blobdir.mkdir()
