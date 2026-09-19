@@ -20,6 +20,10 @@ class TestTraceSaveDictARMFeatures(unittest.TestCase):
         cls.tracer = tracer
         cls.uc = tracer.create_emulator(ELF_PATH)
 
+    def setUp(self):
+        # Reset stack between tests to prevent leftover frame slots
+        self.uc.mem_write(0x70000000, b'\0' * 0x10000)
+
     def test_door_features(self):
         res = self.tracer.trace_savedict(self.uc, 0x00769DC8, 0x0076A084)
         self.assertTrue(res['return_equals_super_dict'])
@@ -138,6 +142,60 @@ class TestTraceSaveDictARMFeatures(unittest.TestCase):
         self.assertEqual(keys['lightDict']['kind'], 'nested_getSaveDict')
         self.assertEqual(len(res['call_sites']), 13)
         self.assertEqual(len(res['branch_sites']), 1)
+
+    def test_additional_world_classes(self):
+        # Painting
+        res_p = self.tracer.trace_savedict(self.uc, 0x00AA8FC8, 0x00AA9390)
+        self.assertTrue(res_p['return_equals_super_dict'])
+        kp = {k['key']: k for k in res_p['keys']}
+        self.assertEqual(list(kp.keys()), ['itemType', 'ownerID', 'ownerName', 'hasVerifiedImageData'])
+        self.assertEqual(kp['itemType']['offset'], 56)
+        self.assertEqual(kp['ownerID']['offset'], 36)
+        self.assertEqual(kp['ownerName']['offset'], 64)
+        self.assertEqual(len(res_p['call_sites']), 9)
+        self.assertEqual(len(res_p['branch_sites']), 4)
+
+        # Boat
+        res_b = self.tracer.trace_savedict(self.uc, 0x0096C238, 0x0096C674)
+        self.assertTrue(res_b['return_equals_super_dict'])
+        kb = {k['key']: k for k in res_b['keys']}
+        self.assertEqual(list(kb.keys()), ['ownerID'])
+        self.assertEqual(kb['ownerID']['offset'], 36)
+
+        # TrainCar
+        res_tc = self.tracer.trace_savedict(self.uc, 0x00A394B0, 0x00A39D64)
+        self.assertTrue(res_tc['return_equals_super_dict'])
+        ktc = {k['key']: k for k in res_tc['keys']}
+        self.assertIn('ownerID', ktc)
+        self.assertIn('engineIsRight', ktc)
+        self.assertEqual(len(res_tc['call_sites']), 23)
+        self.assertEqual(len(res_tc['branch_sites']), 18)
+
+        # DropBear
+        res_db = self.tracer.trace_savedict(self.uc, 0x0079DDC0, 0x0079E2B8)
+        self.assertTrue(res_db['return_equals_super_dict'])
+        kdb = {k['key']: k for k in res_db['keys']}
+        self.assertEqual(list(kdb.keys()), ['provokeMeter', 'courageMeter', 'dropping', 'dropSpeed', 'onGround', 'dropPos.x', 'dropPos.y', 'goalTreeDirection'])
+        self.assertEqual(kdb['provokeMeter']['offset'], 300)
+        self.assertEqual(kdb['courageMeter']['offset'], 304)
+
+        # CaveTroll
+        res_ct = self.tracer.trace_savedict(self.uc, 0x00D54924, 0x00D54E2C)
+        self.assertTrue(res_ct['return_equals_super_dict'])
+        kct = {k['key']: k for k in res_ct['keys']}
+        self.assertIn('dead', kct)
+        self.assertIn('defendSquare.x', kct)
+        self.assertEqual(kct['defendSquare.x']['offset'], 356)
+        self.assertEqual(kct['defendSquare.y']['offset'], 360)
+
+        # TradingPost
+        res_tp = self.tracer.trace_savedict(self.uc, 0x005E6B08, 0x005E7024)
+        self.assertTrue(res_tp['return_equals_super_dict'])
+        ktp = {k['key']: k for k in res_tp['keys']}
+        self.assertEqual(list(ktp.keys()), ['sellerClientName', 'sellSlot', 'coinCount', 'priceTier'])
+        self.assertEqual(ktp['sellerClientName']['offset'], 112)
+        self.assertEqual(ktp['coinCount']['offset'], 104)
+        self.assertEqual(ktp['priceTier']['offset'], 108)
 
 
 def main():
