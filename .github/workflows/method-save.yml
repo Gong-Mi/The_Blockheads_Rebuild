@@ -11,8 +11,9 @@ jobs:
         mode: [Debug, Release]
     steps:
       - uses: actions/checkout@v4
-      - run: python3 -m pip install lmdb capstone==5.0.7 pyelftools
+      - run: python3 -m pip install lmdb capstone==5.0.7 pyelftools unicorn
       - run: python3 tools/test_freeblock_save_key_flow.py
+      - run: python3 tools/test_torch_savedict_arm.py
       - run: python3 tools/test_export_server_world.py
       - run: python3 tools/test_dynamic_object_uniqueid_evidence.py
       - run: python3 tools/test_dynamic_object_objecttype_evidence.py
