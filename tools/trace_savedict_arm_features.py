@@ -245,6 +245,10 @@ KNOWN_CLASSES = {
     'Ladder': (0x00AAE2AC, 0x00AAE518),
     'Bed': (0x00D410CC, 0x00D41334),
     'TradePortal': (0x00D39460, 0x00D39794),
+    'Workbench': (0x00AE81D0, 0x00AE9510),
+    'ElevatorMotor': (0x00700B5C, 0x00700ED8),
+    'ElevatorShaft': (0x00CAD998, 0x00CADD14),
+    'FireObject': (0x0067501C, 0x006753EC),
 }
 
 

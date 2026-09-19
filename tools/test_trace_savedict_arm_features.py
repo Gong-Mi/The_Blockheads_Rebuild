@@ -90,6 +90,55 @@ class TestTraceSaveDictARMFeatures(unittest.TestCase):
         self.assertEqual(keys['level']['offset'], 132)
         self.assertEqual(keys['lightDict']['kind'], 'nested_getSaveDict')
 
+    def test_workbench_features(self):
+        res = self.tracer.trace_savedict(self.uc, 0x00AE81D0, 0x00AE9510)
+        self.assertTrue(res['return_equals_super_dict'])
+        keys = {k['key']: k for k in res['keys']}
+        self.assertEqual(len(keys), 19)
+        self.assertEqual(keys['workbenchType']['offset'], 120)
+        self.assertEqual(keys['workbenchType']['width'], 32)
+        self.assertEqual(keys['level']['offset'], 176)
+        self.assertEqual(keys['level']['width'], 32)
+        self.assertEqual(keys['availableElectricity']['offset'], 222)
+        self.assertEqual(keys['availableElectricity']['width'], 16)
+        self.assertEqual(keys['craftingItemDatav2']['kind'], 'nested_getSaveDict')
+        self.assertEqual(keys['lightDict']['kind'], 'nested_getSaveDict')
+        self.assertEqual(len(res['call_sites']), 45)
+        self.assertEqual(len(res['branch_sites']), 15)
+
+    def test_elevator_motor_and_shaft_features(self):
+        res_motor = self.tracer.trace_savedict(self.uc, 0x00700B5C, 0x00700ED8)
+        self.assertTrue(res_motor['return_equals_super_dict'])
+        k_motor = {k['key']: k for k in res_motor['keys']}
+        self.assertEqual(list(k_motor.keys()), ['itemType', 'availableElectricity', 'minY', 'maxY', 'ownerID'])
+        self.assertEqual(k_motor['availableElectricity']['offset'], 60)
+        self.assertEqual(k_motor['availableElectricity']['width'], 16)
+        self.assertEqual(k_motor['minY']['offset'], 64)
+        self.assertEqual(k_motor['maxY']['offset'], 68)
+
+        res_shaft = self.tracer.trace_savedict(self.uc, 0x00CAD998, 0x00CADD14)
+        self.assertTrue(res_shaft['return_equals_super_dict'])
+        k_shaft = {k['key']: k for k in res_shaft['keys']}
+        self.assertEqual(list(k_shaft.keys()), ['itemType', 'lastKnownMotorPos.x', 'lastKnownMotorPos.y', 'paintColor', 'ownerID'])
+        self.assertEqual(k_shaft['lastKnownMotorPos.x']['offset'], 60)
+        self.assertEqual(k_shaft['lastKnownMotorPos.y']['offset'], 64)
+        self.assertEqual(k_shaft['paintColor']['offset'], 84)
+        self.assertEqual(k_shaft['paintColor']['width'], 16)
+
+    def test_fire_object_features(self):
+        res = self.tracer.trace_savedict(self.uc, 0x0067501C, 0x006753EC)
+        self.assertTrue(res['return_equals_super_dict'])
+        keys = {k['key']: k for k in res['keys']}
+        self.assertEqual(list(keys.keys()), ['burnTimer', 'spreadTimer_0', 'spreadTimer_1', 'spreadTimer_2', 'spreadTimer_3', 'lightDict'])
+        self.assertEqual(keys['burnTimer']['offset'], 56)
+        self.assertEqual(keys['spreadTimer_0']['offset'], 60)
+        self.assertEqual(keys['spreadTimer_1']['offset'], 64)
+        self.assertEqual(keys['spreadTimer_2']['offset'], 68)
+        self.assertEqual(keys['spreadTimer_3']['offset'], 72)
+        self.assertEqual(keys['lightDict']['kind'], 'nested_getSaveDict')
+        self.assertEqual(len(res['call_sites']), 13)
+        self.assertEqual(len(res['branch_sites']), 1)
+
 
 def main():
     if not ELF_PATH.exists():
@@ -100,7 +149,7 @@ def main():
     res = runner.run(suite)
     if not res.wasSuccessful():
         raise SystemExit(1)
-    print('trace-savedict-arm-features: PASS (Door, FreeBlock, Ladder, Bed, TradePortal)')
+    print('trace-savedict-arm-features: PASS (Door, FreeBlock, Ladder, Bed, TradePortal, Workbench, Elevator, FireObject)')
 
 
 if __name__ == '__main__':
