@@ -50,9 +50,18 @@ Both indirect call targets are now resolved through the shared GOT cell at
 0x0083aa60: blx ip -> objc_msgSend
 ```
 
-This resolves the dispatch mechanism, but not the runtime selector/value
-arguments at those two sites. Object-type-specific fields and the exact
-complete save-dict schema remain unresolved.
+The surrounding ARM32 data flow further binds both calls:
+
+```text
+0x0083aa3c: objc_msgSend(NSNumber, numberWithUnsignedLong:, self->uniqueID)
+0x0083aa60: objc_msgSend(dictionary, setObject:forKey:,
+                          boxed_uniqueID, "uniqueID")
+```
+
+The first call boxes `self + 40`; the second inserts that boxed value under
+the proven `uniqueID` constant string. This closes the previously unresolved
+uniqueID serialization route, while leaving object-type-specific fields and
+the exact complete save-dict schema unresolved.
 
 This evidence proves that DynamicObject save data is assembled through a real
 multi-call path. It does not yet provide a field-complete plist schema, object

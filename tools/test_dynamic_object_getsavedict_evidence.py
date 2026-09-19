@@ -42,6 +42,19 @@ def main():
         '0x0083aa3c':'objc_msgSend',
         '0x0083aa60':'objc_msgSend',
     }
+    assert report['indirect_call_contracts']=={
+        '0x0083aa3c':{
+            'dispatch':'objc_msgSend',
+            'selector':'numberWithUnsignedLong:',
+            'value_source':'DynamicObject.uniqueID (self + 40)',
+        },
+        '0x0083aa60':{
+            'dispatch':'objc_msgSend',
+            'selector':'setObject:forKey:',
+            'value_source':'boxed uniqueID result from 0x0083aa3c',
+            'key':'uniqueID',
+        },
+    }
     assert report['indirect_blx_sites_unresolved_count']==0
     assert report['save_dict_key_pairings']==[
         {'constant_string_object':'0x00f92108','cstring':'0x00f571af','ivar':'OBJC_IVAR_$_DynamicObject.floatPos','ivar_offset':24,'key':'floatPos','literal_cell':'0x0083aaa0','set_object_site':'0x0083a930'},

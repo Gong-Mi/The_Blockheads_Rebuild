@@ -99,6 +99,19 @@ def recover(path):
    '0x0083aa3c':'objc_msgSend',
    '0x0083aa60':'objc_msgSend',
   },
+  'indirect_call_contracts':{
+   '0x0083aa3c':{
+    'dispatch':'objc_msgSend',
+    'selector':'numberWithUnsignedLong:',
+    'value_source':'DynamicObject.uniqueID (self + 40)',
+   },
+   '0x0083aa60':{
+    'dispatch':'objc_msgSend',
+    'selector':'setObject:forKey:',
+    'value_source':'boxed uniqueID result from 0x0083aa3c',
+    'key':'uniqueID',
+   },
+  },
   'indirect_blx_sites_unresolved_count':0,
   'save_dict_key_pairings':key_pairings,
   'known_selectors':selectors,'known_ivars':ivars,
