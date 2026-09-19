@@ -51,6 +51,33 @@ DynamicObject getSaveDict
   -> write additional values into the inherited dictionary
 ```
 
-This is static native evidence only. It does not yet establish the exact
-FreeBlock save keys, every ivar offset, complete schema, replacement code,
-APK integration, or original-runtime equivalence.
+## Key/value pairings (recovery: tools/recover_freeblock_save_keys.py)
+
+The bounded forward register/stack trace promoted twelve keys, each re-checked
+against instruction words, CFString payloads, and ivar symbols:
+
+```text
+key                        conversion          value source (ivar @ offset)
+bounceTimer                numberWithFloat:    FreeBlock.bounceTimer @68
+fallSpeed                  numberWithFloat:    FreeBlock.fallSpeed @72
+floatPos[VX]               numberWithFloat:    DynamicObject.floatPos @24 (+0)
+floatPos[VY]               numberWithFloat:    DynamicObject.floatPos @24 (+4)
+itemType                   numberWithInt:      FreeBlock.itemType @56
+dataA                      numberWithInt:      FreeBlock.dataA @60
+dataB                      numberWithInt:      FreeBlock.dataB @62
+creationTime               numberWithDouble:   FreeBlock.creationTime @80
+hovers                     numberWithBool:     FreeBlock.hovers @64
+subItems                   (array route)       FreeBlock.subItems @112
+dynamicObjectSaveDict      (direct object)     FreeBlock.dynamicObjectSaveDict @140
+priorityBlockheadUinqueID  numberWithInt:      FreeBlock.priorityBlockhead @136
+```
+
+`priorityBlockheadUinqueID` is serialized as an int: the FreeBlock ivar object
+receives a `uniqueID` message at `0x0062a3ac` (selector cell `0x0062a4b4`,
+direct `bl objc_msgSend`), and the returned identifier is boxed through
+`numberWithInt:` at `0x0062a3e0`. The key name carries the original binary's
+typo ("Uinque"); it is preserved verbatim as the plist key.
+
+This is static native evidence only. It does not yet establish the subItems
+element contract beyond itemType/saveData messages, complete cross-class
+schema, replacement code, APK integration, or original-runtime equivalence.
