@@ -30,6 +30,7 @@ IVAR_CELLS={
 }
 OBJC_MSGSEND_SITES=(0x0083A820,0x0083A888,0x0083A8CC,0x0083A8FC,0x0083A930,0x0083A974,0x0083A99C,0x0083A9D8,0x0083AA00)
 BLX_SITES=(0x0083AA3C,0x0083AA60)
+INDIRECT_TARGET_CELL=0x0083AA74
 KEY_PAIRINGS=(
  ('floatPos',0x0083AAA0,0x00F571AF,0x0083A930,'OBJC_IVAR_$_DynamicObject.floatPos',24),
  ('pos_x',0x0083AAAC,0x00F571A3,0x0083A99C,'OBJC_IVAR_$_DynamicObject.pos',16),
@@ -58,6 +59,9 @@ def recover(path):
  coverage=verify_disassembly(m,text,START,END)
  base=(BASE_ADD+8+signed(checked_word(m,BASE_LITERAL)))&0xffffffff
  if base!=0x0105FAF4:raise ValueError('PIC base drift')
+ indirect_target=(base+signed(checked_word(m,INDIRECT_TARGET_CELL)))&0xffffffff
+ if m.imports.get(indirect_target)!='objc_msgSend':
+  raise ValueError('indirect objc_msgSend target drift')
  elf=ELFFile(io.BytesIO(raw));dynsym=elf.get_section_by_name('.dynsym')
  if dynsym is None:raise ValueError('missing dynsym')
  symbols={s['st_value']:s.name for s in getattr(dynsym,'iter_symbols')() if s['st_value']!=0}
@@ -91,7 +95,11 @@ def recover(path):
   'objc_msgsend_sites_unresolved_count':0,
   'objc_msgsend_sites_known':{f'0x{x:08x}':name for x,name in [(0x83A820,'dictionary'),(0x83A888,'numberWithFloat:'),(0x83A8CC,'numberWithFloat:'),(0x83A8FC,'arrayWithObjects:'),(0x83A930,'setObject:forKey:'),(0x83A974,'numberWithInt:'),(0x83A99C,'setObject:forKey:'),(0x83A9D8,'numberWithInt:'),(0x83AA00,'setObject:forKey:')]},
   'indirect_blx_sites':[f'0x{x:08x}' for x in BLX_SITES],
-  'indirect_blx_sites_unresolved_count':2,
+  'indirect_blx_sites_known':{
+   '0x0083aa3c':'objc_msgSend',
+   '0x0083aa60':'objc_msgSend',
+  },
+  'indirect_blx_sites_unresolved_count':0,
   'save_dict_key_pairings':key_pairings,
   'known_selectors':selectors,'known_ivars':ivars,
   'return_boundary':'result is reloaded from [fp-0x14] at 0x0083aa64 after dictionary assembly',

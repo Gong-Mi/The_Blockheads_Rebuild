@@ -42,9 +42,17 @@ pos_y     -> setObject:forKey: at 0x0083aa00 -> self + 20
 uniqueID  -> indirect setObject route at 0x0083aa60 -> self + 40
 ```
 
-The two indirect call targets remain separately marked unresolved at the machine
-call-target level. Object-type-specific fields and the exact complete save-dict
-schema remain unresolved.
+Both indirect call targets are now resolved through the shared GOT cell at
+`0x0083aa74`, which points to the `objc_msgSend` import:
+
+```text
+0x0083aa3c: blx r3 -> objc_msgSend
+0x0083aa60: blx ip -> objc_msgSend
+```
+
+This resolves the dispatch mechanism, but not the runtime selector/value
+arguments at those two sites. Object-type-specific fields and the exact
+complete save-dict schema remain unresolved.
 
 This evidence proves that DynamicObject save data is assembled through a real
 multi-call path. It does not yet provide a field-complete plist schema, object
