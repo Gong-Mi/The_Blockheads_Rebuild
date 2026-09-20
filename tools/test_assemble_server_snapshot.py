@@ -1,10 +1,11 @@
 """Synthetic full-record assembly test against the compiled client decoder."""
-import gzip,json,plistlib,sys,tempfile,unittest
+import gzip,json,plistlib,subprocess,sys,tempfile,unittest
 from pathlib import Path
 import lmdb
 from export_server_world import export_world
 from assemble_server_snapshot import assemble
 DECODER=Path(sys.argv.pop(1)).resolve()
+LOADER = Path(sys.argv.pop(1)).resolve() if len(sys.argv) > 1 and Path(sys.argv[1]).is_file() else None
 class AssemblyTest(unittest.TestCase):
  def test_all_domains_and_unknown_record_survive(self):
   with tempfile.TemporaryDirectory() as t:
@@ -34,6 +35,19 @@ class AssemblyTest(unittest.TestCase):
    self.assertEqual(dynamic_index[0],'key_hex\tx\ty\tfile\traw_sha256\tbytes')
    self.assertIn('\t0\t0\tdynamic/',dynamic_index[1])
    self.assertTrue(groups[b'unknown']['records'][0]['opaque'])
+   if LOADER and LOADER.exists():
+    r = subprocess.run([str(LOADER), str(b / 'snapshot'), '0', '0'], capture_output=True, text=True, check=True)
+    self.assertIn('OK blockCount=1', r.stdout)
+    self.assertIn('tile0_type=0', r.stdout)
+    self.assertIn('field13=1', r.stdout)
+    # Tampering with raw block payload must cause loader to reject with checksum mismatch
+    raw_file = b / 'snapshot/blocks/0_0.raw'
+    corrupt = bytearray(raw_file.read_bytes())
+    corrupt[0] ^= 1
+    raw_file.write_bytes(corrupt)
+    r_bad = subprocess.run([str(LOADER), str(b / 'snapshot')], capture_output=True, text=True)
+    self.assertEqual(r_bad.returncode, 2)
+    self.assertIn('LOAD_FAILED: checksum mismatch', r_bad.stderr)
    with self.assertRaises(FileExistsError):assemble(b/'archive',DECODER,b/'snapshot')
  def test_coordinate_key_is_required_and_duplicate_coordinates_rejected(self):
   with tempfile.TemporaryDirectory() as t:
