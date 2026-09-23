@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """Hash-gated roundtrip test for batch-2j save-key evidence.
 
-Re-runs tools/recover_subclass_savedict_keys_b2j.py against the pinned ELF
-and asserts byte-identical JSON with the checked-in
-reconstruction/reverse-v3/native/subclass_savedict_keys_b2j.json, plus
-content-level assertions (class/key sets, conversions, TradingPost
-saveData==selector semantics, Torch halfword loads, FireObject float lanes).
+On a host with the pinned ELF present (Termux working tree), re-runs
+tools/recover_subclass_savedict_keys_b2j.py against the pinned ELF and
+asserts byte-identical JSON with the checked-in
+reconstruction/reverse-v3/native/subclass_savedict_keys_b2j.json.
+On CI (ELF absent), falls back to the same static-contract shape as the
+b2i evidence test: content-level assertions only, plus listing word counts.
 """
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -20,17 +22,15 @@ SHA = '733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7'
 
 
 def main():
-    if not ELF.exists():
-        print(f'ELF missing: {ELF}')
-        sys.exit(1)
-    r = subprocess.run(
-        [sys.executable, str(ROOT / 'tools/recover_subclass_savedict_keys_b2j.py'),
-         str(ELF), '--check'],
-        capture_output=True, text=True)
-    if r.returncode != 0:
-        print(r.stdout + r.stderr)
-        raise SystemExit('stale subclass_savedict_keys_b2j.json')
-    print(r.stdout.strip())
+    if ELF.exists():
+        r = subprocess.run(
+            [sys.executable, str(ROOT / 'tools/recover_subclass_savedict_keys_b2j.py'),
+             str(ELF), '--check'],
+            capture_output=True, text=True)
+        if r.returncode != 0:
+            print(r.stdout + r.stderr)
+            raise SystemExit('stale subclass_savedict_keys_b2j.json')
+        print(r.stdout.strip())
 
     d = json.loads(OUT.read_text())
     assert d['elf_sha256'] == SHA, 'elf sha drift'
@@ -113,6 +113,13 @@ def main():
         assert f'spread_vldr_{i}@{site}' in fo['site_gates']
     assert 'light_guard_beq@0x00675354' in fo['site_gates']
     assert 'second_getsavedict_site@0x00675070' in fo['site_gates']
+
+    for name, words in (('disasm_torch_getsavedict.txt', 266),
+                        ('disasm_tradingpost_getsavedict.txt', 327),
+                        ('disasm_fireobject_getsavedict.txt', 244)):
+        t = (NATIVE / name).read_text()
+        n = len(re.findall(r'^\s+0x[0-9a-f]{8}\s+[0-9a-f]{8}\s', t, re.MULTILINE))
+        assert n == words, (name, n)
 
     print('b2j evidence: PASS')
 
