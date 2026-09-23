@@ -60,3 +60,9 @@ Facts:
 - Static level-A evidence only; the `loadDerivedStuff` body and the runtime
   roundtrip are unresolved. Remaining on this selector: **38 methods,
   10,606 words** (largest: Workbench 1,390w, FreeBlock 1,347w, Chest 760w).
+
+Two-sided confirmation: the save side of the same five classes is also
+keyless — `subclass_savedict_inventory.json` records `getSaveDict` for
+ClownFish, Shark, Scorpion, Dodo and DonkeyLike as `super_forward` with zero
+own keys — so their entire persistence is inherited in both directions and an
+offline save assembler needs no per-class entries for them.
