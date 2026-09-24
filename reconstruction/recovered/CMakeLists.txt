@@ -34,6 +34,12 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(blockheads_recovered_plant PUBLIC -fno-fast-math -ffp-contract=off)
 endif()
 
+# Forwarder convention slice (batch b4c): recovered contract shared by the five
+# 74-word initWithWorld:dynamicWorld:saveDict:cache: forwarders.
+add_library(blockheads_recovered_forwarder STATIC object_forwarder_init.cpp)
+target_include_directories(blockheads_recovered_forwarder PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_forwarder PUBLIC cxx_std_17)
+
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     include(CTest)
     if(BUILD_TESTING)
@@ -51,6 +57,10 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         target_link_libraries(test_plant_load_save_dict PRIVATE blockheads_recovered_plant)
         target_compile_options(test_plant_load_save_dict PRIVATE -UNDEBUG)
         add_test(NAME recovered_plant_load_save_dict COMMAND test_plant_load_save_dict)
+        add_executable(test_object_forwarder_init ../../tools/test_object_forwarder_init.cpp)
+        target_link_libraries(test_object_forwarder_init PRIVATE blockheads_recovered_forwarder)
+        target_compile_options(test_object_forwarder_init PRIVATE -UNDEBUG)
+        add_test(NAME recovered_object_forwarder_init COMMAND test_object_forwarder_init)
         add_executable(test_gameview_update ../../tools/test_gameview_update.cpp)
         target_link_libraries(test_gameview_update PRIVATE blockheads_recovered_view)
         add_test(NAME gameview_update COMMAND test_gameview_update)
