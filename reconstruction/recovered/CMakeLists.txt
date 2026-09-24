@@ -25,6 +25,13 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(blockheads_recovered_npc PUBLIC -fno-fast-math -ffp-contract=off)
 endif()
 
+# NPC state-load slice (read-back line, batch b4f): recovered contract for
+# -[NPC loadValuesFromSaveDict:]'s 15 key chains, group gates and the
+# tameCountsByClientID dictionary copy.
+add_library(blockheads_recovered_npc_load_values STATIC npc_load_values_from_save_dict.cpp)
+target_include_directories(blockheads_recovered_npc_load_values PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_npc_load_values PUBLIC cxx_std_17)
+
 # Plant read-back slice (batch b4b): recovered contract for
 # -[Plant loadSaveDictValues:] including the 0x004c0b70 clamp helper.
 add_library(blockheads_recovered_plant STATIC plant_load_save_dict.cpp)
@@ -62,6 +69,10 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         target_link_libraries(test_npc_init_with_world PRIVATE blockheads_recovered_npc)
         target_compile_options(test_npc_init_with_world PRIVATE -UNDEBUG)
         add_test(NAME recovered_npc_init_with_world COMMAND test_npc_init_with_world)
+        add_executable(test_npc_load_values ../../tools/test_npc_load_values.cpp)
+        target_link_libraries(test_npc_load_values PRIVATE blockheads_recovered_npc_load_values)
+        target_compile_options(test_npc_load_values PRIVATE -UNDEBUG)
+        add_test(NAME recovered_npc_load_values COMMAND test_npc_load_values)
         add_executable(test_plant_load_save_dict ../../tools/test_plant_load_save_dict.cpp)
         target_link_libraries(test_plant_load_save_dict PRIVATE blockheads_recovered_plant)
         target_compile_options(test_plant_load_save_dict PRIVATE -UNDEBUG)
