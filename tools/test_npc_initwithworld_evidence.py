@@ -52,7 +52,7 @@ def main():
     assert seed['ivar'] == 'OBJC_IVAR_$_NPC.randomHarmFromHungerTimer'
     assert seed['ivar_offset'] == 144
     assert 'lrand48' in seed['formula'] and '2^31' in seed['formula']
-    assert seed['range'] == '[1.0, 21.0)'
+    assert seed['range'].startswith('[1.0, 21.0]')
     assert seed['determinism'].startswith('NON-deterministic')
 
     chain = d['lrand48_chain']

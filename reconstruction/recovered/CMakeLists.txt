@@ -16,6 +16,15 @@ add_library(blockheads_recovered_inventory STATIC
 target_include_directories(blockheads_recovered_inventory PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(blockheads_recovered_inventory PUBLIC cxx_std_17)
 
+# NPC loader slice (read-back line, batch b4a): recovered contract for
+# -[NPC initWithWorld:dynamicWorld:saveDict:cache:]'s hunger-timer seed.
+add_library(blockheads_recovered_npc STATIC npc_init_with_world.cpp)
+target_include_directories(blockheads_recovered_npc PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_npc PUBLIC cxx_std_17)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(blockheads_recovered_npc PUBLIC -fno-fast-math -ffp-contract=off)
+endif()
+
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     include(CTest)
     if(BUILD_TESTING)
@@ -25,6 +34,10 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             target_compile_options(test_inventory_${inventory_part} PRIVATE -UNDEBUG)
             add_test(NAME recovered_inventory_${inventory_part} COMMAND test_inventory_${inventory_part})
         endforeach()
+        add_executable(test_npc_init_with_world ../../tools/test_npc_init_with_world.cpp)
+        target_link_libraries(test_npc_init_with_world PRIVATE blockheads_recovered_npc)
+        target_compile_options(test_npc_init_with_world PRIVATE -UNDEBUG)
+        add_test(NAME recovered_npc_init_with_world COMMAND test_npc_init_with_world)
         add_executable(test_gameview_update ../../tools/test_gameview_update.cpp)
         target_link_libraries(test_gameview_update PRIVATE blockheads_recovered_view)
         add_test(NAME gameview_update COMMAND test_gameview_update)

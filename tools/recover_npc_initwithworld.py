@@ -323,7 +323,8 @@ def recover(elf):
             'words': 'vmov s0=1.0f (67) / vmov s2=20.0f (69) / vldr s4=2^31f '
                      '(70) / vmov s6,r0 (71) / vcvt.f32.s32 (72) / vdiv (73) / '
                      'vmul (74) / vadd (75) / vstr (79)',
-            'range': '[1.0, 21.0)',
+            'range': '[1.0, 21.0] (float32 rounds the largest lrand48 '
+                     'values up: v >= 2^31-2^7 lands on exactly 21.0f)',
             'determinism': 'NON-deterministic: seeded from lrand48()',
         },
         'lrand48_chain': helper,
