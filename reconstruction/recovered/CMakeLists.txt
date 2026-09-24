@@ -32,6 +32,15 @@ add_library(blockheads_recovered_npc_load_values STATIC npc_load_values_from_sav
 target_include_directories(blockheads_recovered_npc_load_values PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(blockheads_recovered_npc_load_values PUBLIC cxx_std_17)
 
+# Tree growth state machine slice (read-back line, batch b4g, stage 1):
+# recovered contract for -[Tree growInTimeSinceSaved:] nil-tile path.
+add_library(blockheads_recovered_tree_grow STATIC tree_grow_in_time.cpp)
+target_include_directories(blockheads_recovered_tree_grow PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_tree_grow PUBLIC cxx_std_17)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(blockheads_recovered_tree_grow PUBLIC -fno-fast-math -ffp-contract=off)
+endif()
+
 # Plant read-back slice (batch b4b): recovered contract for
 # -[Plant loadSaveDictValues:] including the 0x004c0b70 clamp helper.
 add_library(blockheads_recovered_plant STATIC plant_load_save_dict.cpp)
@@ -73,6 +82,10 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         target_link_libraries(test_npc_load_values PRIVATE blockheads_recovered_npc_load_values)
         target_compile_options(test_npc_load_values PRIVATE -UNDEBUG)
         add_test(NAME recovered_npc_load_values COMMAND test_npc_load_values)
+        add_executable(test_tree_grow_in_time ../../tools/test_tree_grow_in_time.cpp)
+        target_link_libraries(test_tree_grow_in_time PRIVATE blockheads_recovered_tree_grow)
+        target_compile_options(test_tree_grow_in_time PRIVATE -UNDEBUG)
+        add_test(NAME recovered_tree_grow_in_time COMMAND test_tree_grow_in_time)
         add_executable(test_plant_load_save_dict ../../tools/test_plant_load_save_dict.cpp)
         target_link_libraries(test_plant_load_save_dict PRIVATE blockheads_recovered_plant)
         target_compile_options(test_plant_load_save_dict PRIVATE -UNDEBUG)
