@@ -42,6 +42,8 @@
 #include <cstdint>
 #include <vector>
 
+#include "generated/trace_codes.h"
+
 namespace blockheads::recovered {
 
 // Fixed token the synthetic dictionaryWithDictionary: stub returns (and
@@ -73,33 +75,11 @@ enum class NpcLoadKey : int {
     Count
 };
 
-// Call-trace codes, one per (selector, key) semantic site. Conversion codes
-// are generic (FloatValue/IntValue/...); the position in the sequence
-// disambiguates which key they convert.
-enum class NpcLoadCall : std::uint8_t {
-    ObjectForKeyFullness = 0,
-    ObjectForKeyLayTimer,
-    ObjectForKeyDamage,
-    ObjectForKeyAge,
-    ObjectForKeyLayCooldownTimer,
-    ObjectForKeyTameCooldownTimer,
-    ObjectForKeyMateCooldownTimer,
-    ObjectForKeyHasBred,
-    ObjectForKeyHasBeenFedByBlockheadOrChest,
-    ObjectForKeyMateBreed,
-    ObjectForKeyBreed,
-    ObjectForKeyTamedClientID,
-    Retain,
-    Autorelease,
-    ObjectForKeyName,
-    ObjectForKeyTameCountsByClientID,
-    DictionaryWithDictionary,
-    ObjectForKeyCurrentBlockheadIndex,
-    FloatValue,
-    IntValue,
-    BoolValue,
-    UnsignedIntegerValue,
-};
+// Trace codes (enum class NpcLoadCall) live in generated/trace_codes.h —
+// single source of truth: reconstruction/reverse-v3/native/trace_schemas.json
+// via tools/gen_trace_codes.py (born from the b4f collision bug, where this
+// hand-maintained enum and the harness's Python enumerate drifted apart:
+// name/tameCounts collided with Retain/Autorelease codes).
 
 struct NpcLoadValuesInputs {
     // Per-key presence in the save dictionary (probe result != nil).

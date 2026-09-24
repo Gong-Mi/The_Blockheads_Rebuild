@@ -64,21 +64,17 @@
 #include <utility>
 #include <vector>
 
+#include "generated/trace_codes.h"
+
 namespace blockheads::recovered {
 
 inline constexpr std::size_t kTreeGrowImageSize = 120;
 inline constexpr std::size_t kTreeGrowMaxTrace = 32;
 
-enum class TreeGrowCall : std::uint8_t {
-    IsStaticTree = 0,
-    WorldTime = 1,
-    IncrementHeight = 2,
-    UpdateGrowthAdult = 3,  // updateGrowth:1 (+ spilled 1.0f timeToGrow)
-    UpdateGrowthNo = 4,     // tail updateGrowth:0
-    IsGrowingInCompost = 5,
-    SowTreeNearParent = 6,   // arg = adultMaxAge float bits ([sp] arg)
-    RemoveAllOwnedTiles = 7,
-};
+// Trace codes (enum class TreeGrowCall) live in generated/trace_codes.h —
+// single source of truth: reconstruction/reverse-v3/native/trace_schemas.json
+// via tools/gen_trace_codes.py. The b4f collision bug: two hand-maintained
+// tables (Python enumerate + C++ enum) silently drifted.
 
 struct TreeGrowInputs {
     // Stub-returned values.

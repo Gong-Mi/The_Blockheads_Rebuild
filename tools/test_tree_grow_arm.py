@@ -5,55 +5,57 @@ synthetic world/dynamicWorld objects and compare the resulting instance
 image and message trace against the recovered C++ contract
 (reconstruction/recovered/tree_grow_in_time.cpp, built at -O0 and -O2).
 
-Synthetic graph (stated limits — not Foundation, not the original-app
-runtime):
-  * `objc_msgSend` (GOT slot 0x0105b7a0) is stubbed; the body loads every
-    selector from its own selref cells, so the stub dispatches on the real
-    selector strings. Stubs answer isStaticTree / worldTime /
-    isGrowingInCompost, script incrementHeight's height/maxHeightReached
-    mutations, and record updateGrowth:'s adult flag (+ the spilled 1.0f
-    the body parks at sp+0x44 = the next iteration's timeToGrow),
-    sowTreeNearParent:adult:adultMaxAge:'s [sp] float, and
+Built on tools/arm_harness (batches b4f/b4g patterns consolidated):
+  * ARMSession maps the pinned ELF and enables VFP.
+  * MsgDispatcher stubs objc_msgSend (GOT slot 0x0105b7a0) on the real
+    selector strings; handlers answer isStaticTree / worldTime /
+    isGrowingInCompost, script incrementHeight mutations, and record
+    updateGrowth:'s adult flag (+ spilled 1.0f at sp+0x44 = the next
+    iteration's timeToGrow), sowTreeNearParent:'s [sp] float and
     removeAllOwnedTiles:.
-  * The tile lookup `bl 0xa12f24` is hooked at its first instruction and
-    returns nil (STAGE 1 FIXTURE): the tile-record/PRNG block and the
-    0x1c3728 chain are a stage-2 slice. The hook asserts the lookup asks
-    for (pos.x, pos.y + current height) — proving the body really reads
-    those ivars.
-  * Everything else executes for real: the isStaticTree gate, the dead
-    checks, the f64 elapsed math, the maxAge comparison, the growth loop
-    (growthTime formula with the pinned 0.005 constant, the increment and
-    partial branches, the spilled timeToGrow), the compost/death paths and
-    the timeDied f64 store.
+  * WorldAnswers hooks the tile lookup `bl 0xa12f24` (STAGE 1 FIXTURE:
+    the tile-record/PRNG block is a stage-2 slice); the per-call check
+    asserts the lookup asks for (pos.x, pos.y + current height) — proving
+    the body really reads those ivars.
+  * Everything else executes for real: the isStaticTree gate, dead checks,
+    f64 elapsed math, maxAge comparison, the growth loop (0.005-constant
+    growthTime formula, increment/partial branches, spilled timeToGrow),
+    compost/death paths and the timeDied f64 store.
 Checked per case: the (code, arg) trace, the 120-byte instance image, and
 expectations computed independently of the C++ pair (timeDied value,
 sowTree adultMaxAge bits, scripted maxHeightReached, boundary branches).
 """
 import argparse
 import ctypes
-import hashlib
 import json
 import struct
 import subprocess
+import sys
 from pathlib import Path
 
-from elftools.elf.elffile import ELFFile
-from unicorn import Uc, UC_ARCH_ARM, UC_MODE_ARM, UC_HOOK_CODE
-from unicorn.arm_const import (UC_ARM_REG_R0, UC_ARM_REG_R1, UC_ARM_REG_R2,
-                               UC_ARM_REG_R3, UC_ARM_REG_SP, UC_ARM_REG_LR,
-                               UC_ARM_REG_PC, UC_ARM_REG_C1_C0_2,
-                               UC_ARM_REG_FPEXC)
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from arm_harness import ARMSession, FixtureGraph, MsgDispatcher, WorldAnswers
 
 SHA = '733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7'
 IMP = 0x004C2568
 GOT_MSGSEND = 0x0105B7A0
-TILE_ACCESSOR = 0x00A12F24
+STUB = 0x72000000
 IMAGE_SIZE = 120
 
-# Trace codes — must match the C++ enum TreeGrowCall.
-IS_STATIC_TREE, WORLD_TIME, INCREMENT_HEIGHT = 0, 1, 2
-UPDATE_GROWTH_ADULT, UPDATE_GROWTH_NO = 3, 4
-IS_GROWING_IN_COMPOST, SOW_TREE, REMOVE_ALL = 5, 6, 7
+# Trace codes — derived from the single source of truth
+# (reconstruction/reverse-v3/native/trace_schemas.json via
+# tools/gen_trace_codes.py); the b4f collision bug was two hand-maintained
+# tables drifting apart.
+from trace_codes_gen import TREE_GROW_CODES as TG
+
+IS_STATIC_TREE = TG['IsStaticTree']
+WORLD_TIME = TG['WorldTime']
+INCREMENT_HEIGHT = TG['IncrementHeight']
+UPDATE_GROWTH_ADULT = TG['UpdateGrowthAdult']
+UPDATE_GROWTH_NO = TG['UpdateGrowthNo']
+IS_GROWING_IN_COMPOST = TG['IsGrowingInCompost']
+SOW_TREE = TG['SowTreeNearParent']
+REMOVE_ALL = TG['RemoveAllOwnedTiles']
 
 BASE = {
     'world_token': 0x51CE0004, 'dynamic_world_token': 0x51CE0005,
@@ -89,124 +91,91 @@ def f32bits(value):
     return struct.unpack('<I', struct.pack('<f', value))[0]
 
 
-def f64bits(value):
-    return struct.unpack('<Q', struct.pack('<d', value))[0]
-
-
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('elf', type=Path)
     ap.add_argument('--output-dir', type=Path, required=True)
     a = ap.parse_args()
-    if hashlib.sha256(a.elf.read_bytes()).hexdigest() != SHA:
-        raise SystemExit('ELF SHA mismatch')
     a.output_dir.mkdir(parents=True, exist_ok=True)
 
-    with a.elf.open('rb') as f:
-        elf = ELFFile(f)
-        assert elf['e_machine'] == 'EM_ARM' and elf.elfclass == 32
-        loads = [(s['p_vaddr'], s['p_memsz'], s.data())
-                 for s in elf.iter_segments() if s['p_type'] == 'PT_LOAD']
+    session = ARMSession(a.elf, SHA)
+    uc = session.uc
+    graph = FixtureGraph(uc)
+    self_ptr = graph.base
+    dispatcher = MsgDispatcher(uc, STUB)
+    tile_lookup = WorldAnswers(uc)
+    session.patch_got(GOT_MSGSEND, STUB)
+    cmd_sel = graph.command_selector('growInTimeSinceSaved:')
 
-    uc = Uc(UC_ARCH_ARM, UC_MODE_ARM)
-    uc.reg_write(UC_ARM_REG_C1_C0_2,
-                 uc.reg_read(UC_ARM_REG_C1_C0_2) | (0xF << 20))
-    uc.reg_write(UC_ARM_REG_FPEXC, 0x40000000)
-    pages = set()
-    for base, size, _ in loads:
-        pages.update(range(base & ~4095, (base + size + 4095) & ~4095, 4096))
-    for page in sorted(pages):
-        uc.mem_map(page, 4096)
-    for base, _, data in loads:
-        uc.mem_write(base, data)
+    state = {'case': None}
 
-    graph, stack, stop, stub = (0x60000000, 0x70000000, 0x71000000, 0x72000000)
-    for base in (graph, stack, stop, stub):
-        uc.mem_map(base, 0x10000 if base in (graph, stack) else 0x1000)
-    cmd_region = 0x73000000
-    uc.mem_map(cmd_region, 0x1000)
-
-    def word(at, value):
-        uc.mem_write(at, struct.pack('<I', value & 0xffffffff))
-
-    self_ptr = graph
-    world = graph + 0x1000
-    dynamic_world = graph + 0x1100
-    word(GOT_MSGSEND, stub)
-    uc.mem_write(cmd_region, b'growInTimeSinceSaved:\0')
-
-    state = {'calls': [], 'accessor': [], 'case': None}
-
-    def hook(uc_, address, size, data):
-        if address == TILE_ACCESSOR:
-            # Stage-1 fixture: the tile lookup returns nil. Record the
-            # requested coordinates to prove pos/height are really read.
-            x = uc_.reg_read(UC_ARM_REG_R0)
-            y = uc_.reg_read(UC_ARM_REG_R1)
-            height_now = struct.unpack(
-                '<i', bytes(uc_.mem_read(self_ptr + 60, 4)))[0]
-            case = state['case']
-            assert x == case['pos_x'], ('accessor x', x, case['pos_x'])
-            assert y == case['pos_y'] + height_now, \
-                ('accessor y', y, case['pos_y'], height_now)
-            state['accessor'].append((x, y))
-            uc_.reg_write(UC_ARM_REG_R0, 0)
-            uc_.reg_write(UC_ARM_REG_PC, uc_.reg_read(UC_ARM_REG_LR))
-            return
-        recv = uc_.reg_read(UC_ARM_REG_R0)
-        sel_ptr = uc_.reg_read(UC_ARM_REG_R1)
-        sel = bytes(uc_.mem_read(sel_ptr, 64)).split(b'\0')[0].decode()
-        arg2 = uc_.reg_read(UC_ARM_REG_R2)
-        sp = uc_.reg_read(UC_ARM_REG_SP)
+    def check_accessor(x, y):
         case = state['case']
-        if sel == 'isStaticTree':
-            state['calls'].append((IS_STATIC_TREE, 0))
-            uc_.reg_write(UC_ARM_REG_R0, case.get('is_static_tree', 0))
-        elif sel == 'worldTime':
-            assert recv == case['world_token'], ('worldTime receiver', hex(recv))
-            state['calls'].append((WORLD_TIME, 0))
-            lo, hi = struct.unpack('<II',
-                                   struct.pack('<d', case['world_time']))
-            uc_.reg_write(UC_ARM_REG_R0, lo)
-            uc_.reg_write(UC_ARM_REG_R1, hi)
-        elif sel == 'isGrowingInCompost':
-            state['calls'].append((IS_GROWING_IN_COMPOST, 0))
-            uc_.reg_write(UC_ARM_REG_R0, case.get('is_growing_in_compost', 0))
-        elif sel == 'incrementHeight':
-            state['calls'].append((INCREMENT_HEIGHT, 0))
-            hai = case.get('height_after_increment', -1)
-            mhrai = case.get('max_height_reached_after_increment', -1)
-            if hai >= 0:
-                word(self_ptr + 60, hai)
-            if mhrai >= 0:
-                word(self_ptr + 64, mhrai)
-            uc_.reg_write(UC_ARM_REG_R0, 0)
-        elif sel == 'updateGrowth:':
-            adult = arg2 & 0xff
-            if adult:
-                spill = struct.unpack(
-                    '<f', bytes(uc_.mem_read(sp + 0x44, 4)))[0]
-                state['calls'].append((UPDATE_GROWTH_ADULT, f32bits(spill)))
-            else:
-                state['calls'].append((UPDATE_GROWTH_NO, 0))
-            uc_.reg_write(UC_ARM_REG_R0, 0)
-        elif sel == 'sowTreeNearParent:adult:adultMaxAge:':
-            assert recv == case['dynamic_world_token'], \
-                ('sow receiver', hex(recv))
-            assert arg2 == self_ptr, ('sow tree arg', hex(arg2))
-            assert uc_.reg_read(UC_ARM_REG_R3) == 1, 'sow adult = 1'
-            bits = struct.unpack('<I', bytes(uc_.mem_read(sp, 4)))[0]
-            state['calls'].append((SOW_TREE, bits))
-            uc_.reg_write(UC_ARM_REG_R0, 0)
-        elif sel == 'removeAllOwnedTiles:':
-            state['calls'].append((REMOVE_ALL, 0))
-            uc_.reg_write(UC_ARM_REG_R0, 0)
-        else:
-            raise AssertionError(('unimplemented message', hex(recv), sel))
-        uc_.reg_write(UC_ARM_REG_PC, uc_.reg_read(UC_ARM_REG_LR))
+        raw = session.read_word(self_ptr + 60)
+        signed = raw - (1 << 32) if raw & 0x80000000 else raw
+        assert x == case['pos_x'], ('accessor x', x, case['pos_x'])
+        assert y == case['pos_y'] + signed, \
+            ('accessor y', y, case['pos_y'], signed)
 
-    uc.hook_add(UC_HOOK_CODE, hook, begin=stub, end=stub + 4)
-    uc.hook_add(UC_HOOK_CODE, hook, begin=TILE_ACCESSOR, end=TILE_ACCESSOR + 4)
+    @dispatcher.register('isStaticTree')
+    def _(ctx):
+        ctx.record(IS_STATIC_TREE)
+        return state['case'].get('is_static_tree', 0), None
+
+    @dispatcher.register('worldTime')
+    def _(ctx):
+        assert ctx.recv == state['case']['world_token'], \
+            ('worldTime receiver', hex(ctx.recv))
+        ctx.record(WORLD_TIME)
+        lo, hi = struct.unpack('<II',
+                               struct.pack('<d', state['case']['world_time']))
+        return lo, hi
+
+    @dispatcher.register('isGrowingInCompost')
+    def _(ctx):
+        ctx.record(IS_GROWING_IN_COMPOST)
+        return state['case'].get('is_growing_in_compost', 0), None
+
+    @dispatcher.register('incrementHeight')
+    def _(ctx):
+        ctx.record(INCREMENT_HEIGHT)
+        case = state['case']
+        hai = case.get('height_after_increment', -1)
+        mhrai = case.get('max_height_reached_after_increment', -1)
+        if hai >= 0:
+            graph.word(self_ptr + 60, hai)
+        if mhrai >= 0:
+            graph.word(self_ptr + 64, mhrai)
+        return 0, None
+
+    @dispatcher.register('updateGrowth:')
+    def _(ctx):
+        adult = ctx.r2 & 0xff
+        if adult:
+            spill = struct.unpack('<f', ctx.read(ctx.sp + 0x44, 4))[0]
+            ctx.record(UPDATE_GROWTH_ADULT, f32bits(spill))
+        else:
+            ctx.record(UPDATE_GROWTH_NO)
+        return 0, None
+
+    @dispatcher.register('sowTreeNearParent:adult:adultMaxAge:')
+    def _(ctx):
+        case = state['case']
+        assert ctx.recv == case['dynamic_world_token'], \
+            ('sow receiver', hex(ctx.recv))
+        assert ctx.r2 == self_ptr, ('sow tree arg', hex(ctx.r2))
+        assert ctx.r3 == 1, 'sow adult = 1'
+        ctx.record(SOW_TREE, ctx.stack_word(0))
+        return 0, None
+
+    @dispatcher.register('removeAllOwnedTiles:')
+    def _(ctx):
+        ctx.record(REMOVE_ALL)
+        return 0, None
+
+    dispatcher.install()
+    tile_lookup.install()
+    tile_lookup.on_call = check_accessor
 
     repo = Path(__file__).resolve().parents[1]
     import os
@@ -243,37 +212,29 @@ def main():
         merged = dict(BASE)
         merged.update({k: v for k, v in case.items() if k != 'name'})
         state['case'] = merged
-        state['calls'] = []
-        state['accessor'] = []
+        dispatcher.trace = []
+        tile_lookup.calls = []
 
         uc.mem_write(self_ptr, b'\x00' * IMAGE_SIZE)
-        word(self_ptr + 4, merged['world_token'])
-        word(self_ptr + 8, merged['dynamic_world_token'])
-        word(self_ptr + 16, merged['pos_x'] & 0xffffffff)
-        word(self_ptr + 20, merged['pos_y'] & 0xffffffff)
-        word(self_ptr + 60, merged['height'] & 0xffffffff)
-        word(self_ptr + 64, merged['max_height_reached'] & 0xffffffff)
-        word(self_ptr + 68, f32bits(merged['growth_counter']))
-        word(self_ptr + 72, f32bits(merged['growth_rate']))
-        word(self_ptr + 88, merged['max_height'] & 0xffffffff)
-        word(self_ptr + 92, f32bits(merged['max_age']))
-        word(self_ptr + 96, f32bits(merged['age']))
+        graph.word(self_ptr + 4, merged['world_token'])
+        graph.word(self_ptr + 8, merged['dynamic_world_token'])
+        graph.word(self_ptr + 16, merged['pos_x'] & 0xffffffff)
+        graph.word(self_ptr + 20, merged['pos_y'] & 0xffffffff)
+        graph.word(self_ptr + 60, merged['height'] & 0xffffffff)
+        graph.word(self_ptr + 64, merged['max_height_reached'] & 0xffffffff)
+        graph.word(self_ptr + 68, f32bits(merged['growth_counter']))
+        graph.word(self_ptr + 72, f32bits(merged['growth_rate']))
+        graph.word(self_ptr + 88, merged['max_height'] & 0xffffffff)
+        graph.word(self_ptr + 92, f32bits(merged['max_age']))
+        graph.word(self_ptr + 96, f32bits(merged['age']))
         uc.mem_write(self_ptr + 104, bytes([merged['dead'] & 0xff]))
 
         lo, hi = struct.unpack('<II',
                                struct.pack('<d', merged['time_since_saved']))
-        sp = stack + 0x8000
-        uc.reg_write(UC_ARM_REG_R0, self_ptr)
-        uc.reg_write(UC_ARM_REG_R1, cmd_region)
-        uc.reg_write(UC_ARM_REG_R2, lo)
-        uc.reg_write(UC_ARM_REG_R3, hi)
-        uc.reg_write(UC_ARM_REG_SP, sp)
-        uc.reg_write(UC_ARM_REG_LR, stop)
-        uc.emu_start(IMP, stop, count=500000)
-        assert uc.reg_read(UC_ARM_REG_PC) == stop, 'method did not return'
+        session.run(IMP, R0=self_ptr, R1=cmd_sel, R2=lo, R3=hi)
 
         arm_image = bytes(uc.mem_read(self_ptr, IMAGE_SIZE))
-        arm_trace = list(state['calls'])
+        arm_trace = list(dispatcher.trace)
 
         cpp_images, cpp_traces = [], []
         for fn in fns:
@@ -313,7 +274,7 @@ def main():
         if case['name'] == 'double_increment':
             assert sum(1 for c, _ in arm_trace if c == INCREMENT_HEIGHT) == 2
         rows.append({'case': case['name'], 'trace_len': len(arm_trace),
-                     'tile_lookups': len(state['accessor'])})
+                     'tile_lookups': len(tile_lookup.calls)})
 
     report = {
         'sha256': SHA, 'class': 'Tree', 'method': 'growInTimeSinceSaved:',

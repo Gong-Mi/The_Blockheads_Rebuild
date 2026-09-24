@@ -44,10 +44,14 @@ def main():
     # The module documents what it implements and where the decode lives.
     assert '0x00643b20' in header and 'b3n' in header and 'b4f' in header
     assert 'loadValuesFromSaveDict:' in header
+    assert 'kNpcLoadDictCopyToken' in header
+    # Trace-code names moved to the single-source generated header (b4f fix).
+    assert 'generated/trace_codes.h' in header
+    generated = (RECOVERED / 'generated/trace_codes.h').read_text()
     for snippet in ('ObjectForKeyFullness', 'ObjectForKeyLayCooldownTimer',
                     'ObjectForKeyBreed', 'ObjectForKeyCurrentBlockheadIndex',
-                    'DictionaryWithDictionary', 'kNpcLoadDictCopyToken'):
-        assert snippet in header, snippet
+                    'DictionaryWithDictionary'):
+        assert snippet in generated, snippet
     # The four group gates plus the -1 default store are in the contract body.
     for snippet in ('present[static_cast<int>(Key::Fullness)]',
                     'present[static_cast<int>(Key::LayCooldownTimer)]',
@@ -68,6 +72,12 @@ def main():
     for name in CASES:
         assert f"'{name}'" in harness, name
     assert 'COPY_TOKEN = 0x00D1C700' in harness
+    # Trace codes: single source of truth, no drift possible.
+    gen = subprocess.run([sys.executable,
+                          str(ROOT / 'tools/gen_trace_codes.py'), '--check'],
+                         capture_output=True, text=True)
+    assert gen.returncode == 0, gen.stdout + gen.stderr
+    assert 'trace_codes_gen' in harness  # single-source trace codes (b4f fix)
 
     # Registration in both places.
     assert 'npc_load_values_from_save_dict.cpp' in cmake

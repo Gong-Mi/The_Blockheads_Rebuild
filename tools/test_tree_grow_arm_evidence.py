@@ -44,10 +44,12 @@ def main():
     # The module documents what it implements and where the decode lives.
     assert '0x004c2568' in header and 'b4g' in header
     assert 'growInTimeSinceSaved:' in header
+    assert 'generated/trace_codes.h' in header
+    generated = (RECOVERED / 'generated/trace_codes.h').read_text()
     for snippet in ('IsStaticTree', 'WorldTime', 'IncrementHeight',
                     'UpdateGrowthAdult', 'SowTreeNearParent',
                     'RemoveAllOwnedTiles'):
-        assert snippet in header, snippet
+        assert snippet in generated, snippet
     # The behavioral claims: 0.005 constant, the spilled timeToGrow = 1.0f
     # after an increment, the corrected partial formula gc + (1-gc)*eg,
     # the -1.0 elapsed exit, the timeDied order.
@@ -62,13 +64,22 @@ def main():
                     'two increments', 'compost'):
         assert snippet in contract, snippet
 
-    # Harness and guard agree on the case list; the listing is the frozen
-    # 546-word boundary.
+    # Harness and guard agree on the case list; the tile-lookup constant
+    # lives in tools/arm_harness/world.py (consolidated fixture library).
     for name in CASES:
         assert f"'{name}'" in harness, name
-    assert 'TILE_ACCESSOR = 0x00A12F24' in harness
+    world_mod = (ROOT / 'tools/arm_harness/world.py').read_text()
+    assert 'ACCESSOR_IMP = 0x00A12F24' in world_mod
+    assert 'WorldAnswers' in harness and 'arm_harness' in harness
     assert '0x004c2569' not in listing  # listing starts exactly at the IMP
     assert '0x004c2df0' in listing
+
+    # Trace codes: single source of truth, no drift possible.
+    gen = subprocess.run([sys.executable,
+                          str(ROOT / 'tools/gen_trace_codes.py'), '--check'],
+                         capture_output=True, text=True)
+    assert gen.returncode == 0, gen.stdout + gen.stderr
+    assert 'trace_codes_gen' in harness
 
     # Registration in both places.
     assert 'tree_grow_in_time.cpp' in cmake

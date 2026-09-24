@@ -57,17 +57,38 @@ KEYS = ['fullness', 'layTimer', 'damage', 'age',
         'breed', 'tamedClientID', 'name', 'tameCountsByClientID',
         'currentBlockheadIndex']
 
-# Trace codes follow the C++ enum NpcLoadCall exactly (order chosen to keep
-# the per-key ObjectForKey codes stable): object keys after tamedClientID
-# continue at 14/15/17 because 12/13/16 are Retain/Autorelease/
-# DictionaryWithDictionary.
-OFK = {'fullness': 0, 'layTimer': 1, 'damage': 2, 'age': 3,
-       'layCooldownTimer': 4, 'tameCooldownTimer': 5, 'mateCooldownTimer': 6,
-       'hasBred': 7, 'hasBeenFedByBlockheadOrChest': 8, 'mateBreed': 9,
-       'breed': 10, 'tamedClientID': 11, 'name': 14,
-       'tameCountsByClientID': 15, 'currentBlockheadIndex': 17}
-FLOAT_VALUE, INT_VALUE, BOOL_VALUE, UINT_VALUE = 18, 19, 20, 21
-RETAIN, AUTO_RELEASE, DICT_WITH_DICT = 12, 13, 16
+# Trace codes — derived from the single source of truth
+# (reconstruction/reverse-v3/native/trace_schemas.json via
+# tools/gen_trace_codes.py). The b4f collision bug was this hand-written
+# table drifting from the C++ enum (name/tameCounts hit the
+# Retain/Autorelease codes).
+from trace_codes_gen import NPC_LOADVALUES_CODES as NPCC
+
+OFK = {
+    'fullness': NPCC['ObjectForKeyFullness'],
+    'layTimer': NPCC['ObjectForKeyLayTimer'],
+    'damage': NPCC['ObjectForKeyDamage'],
+    'age': NPCC['ObjectForKeyAge'],
+    'layCooldownTimer': NPCC['ObjectForKeyLayCooldownTimer'],
+    'tameCooldownTimer': NPCC['ObjectForKeyTameCooldownTimer'],
+    'mateCooldownTimer': NPCC['ObjectForKeyMateCooldownTimer'],
+    'hasBred': NPCC['ObjectForKeyHasBred'],
+    'hasBeenFedByBlockheadOrChest':
+        NPCC['ObjectForKeyHasBeenFedByBlockheadOrChest'],
+    'mateBreed': NPCC['ObjectForKeyMateBreed'],
+    'breed': NPCC['ObjectForKeyBreed'],
+    'tamedClientID': NPCC['ObjectForKeyTamedClientID'],
+    'name': NPCC['ObjectForKeyName'],
+    'tameCountsByClientID': NPCC['ObjectForKeyTameCountsByClientID'],
+    'currentBlockheadIndex': NPCC['ObjectForKeyCurrentBlockheadIndex'],
+}
+FLOAT_VALUE = NPCC['FloatValue']
+INT_VALUE = NPCC['IntValue']
+BOOL_VALUE = NPCC['BoolValue']
+UINT_VALUE = NPCC['UnsignedIntegerValue']
+RETAIN = NPCC['Retain']
+AUTO_RELEASE = NPCC['Autorelease']
+DICT_WITH_DICT = NPCC['DictionaryWithDictionary']
 
 # Object-key payloads are the per-key box addresses; filled in after mapping.
 DEFAULT_BITS = {
