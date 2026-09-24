@@ -1,0 +1,348 @@
+{
+  "batch": "b3k",
+  "census": {
+    "covered_after_b3k": 40,
+    "covered_words_after_b3k": 4521,
+    "front_methods": 60,
+    "front_words": 13820,
+    "remaining_methods": 20,
+    "remaining_words": 9299
+  },
+  "claim": "Fifteen mid-tier initWithWorld loaders (Window 139w, Bed 144w, Tree 146w, PineTree 157w, Rail 164w, Sign 166w, Boat 168w, Ladder 168w, Egg 178w, SteamTrain 180w, Column 193w, Stairs 193w, Door 198w, TulipPlant 199w, Wire 200w \u2014 2,596 words) all share the forward-then-read shape: objc_msgSendSuper2 with own-class superref and nil guard, then own-key reads through objectForKey: + conversion selectors into own OBJC_IVAR slots. 62 distinct CFString keys are read across the batch. Hooks: initSubDerivedItems (11 classes), loadDerivedStuff (Boat), Tree growInTimeSinceSaved:; PineTree also calls [world worldTime]. Runtime supers include TrainCar (SteamTrain), Plant (TulipPlant \u2014 a three-deep loader chain), Tree (PineTree), InteractionObject (Bed, Sign). Exact per-class key/ivar/selector/super sets gated from the literal pool; static level-A evidence only",
+  "classes": [
+    {
+      "boundary": "0x00c98b70",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the literal pool",
+      "class": "Window",
+      "code_words": 139,
+      "imp": "0x00c98944",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_Window",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bed4"
+      },
+      "own_key_ivar_pairs": {},
+      "own_keys": [
+        "itemType",
+        "ownerID"
+      ],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x00d40a2c",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the literal pool",
+      "class": "Bed",
+      "code_words": 144,
+      "imp": "0x00d407ec",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_Bed",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bf1c"
+      },
+      "own_key_ivar_pairs": {},
+      "own_keys": [
+        "beddingColor",
+        "itemType"
+      ],
+      "runtime_superclass": "InteractionObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x004c3be8",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the literal pool",
+      "class": "Tree",
+      "code_words": 146,
+      "imp": "0x004c39a0",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_Tree",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bc30"
+      },
+      "own_key_ivar_pairs": {},
+      "own_keys": [
+        "saveTime"
+      ],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:treeDensityNoiseFunction:seasonOffsetNoiseFunction:"
+    },
+    {
+      "boundary": "0x00b651bc",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the literal pool",
+      "class": "PineTree",
+      "code_words": 157,
+      "imp": "0x00b64f48",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_PineTree",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8beb8"
+      },
+      "own_key_ivar_pairs": {},
+      "own_keys": [
+        "availableFood",
+        "saveTime"
+      ],
+      "runtime_superclass": "Tree",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:treeDensityNoiseFunction:seasonOffsetNoiseFunction:"
+    },
+    {
+      "boundary": "0x0077ae20",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the literal pool",
+      "class": "Rail",
+      "code_words": 164,
+      "imp": "0x0077ab90",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_Rail",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bd24"
+      },
+      "own_key_ivar_pairs": {},
+      "own_keys": [
+        "configuration",
+        "itemType",
+        "ownedByStation"
+      ],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x005fa89c",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the literal pool",
+      "class": "Sign",
+      "code_words": 166,
+      "imp": "0x005fa604",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_Sign",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bc6c"
+      },
+      "own_key_ivar_pairs": {},
+      "own_keys": [
+        "connectionType",
+        "offsetType",
+        "text"
+      ],
+      "runtime_superclass": "InteractionObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x0096bab8",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the literal pool",
+      "class": "Boat",
+      "code_words": 168,
+      "imp": "0x0096b818",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_Boat",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bdd4"
+      },
+      "own_key_ivar_pairs": {},
+      "own_keys": [
+        "currentBlockheadIndex",
+        "ownerID"
+      ],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x00aadf74",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the literal pool",
+      "class": "Ladder",
+      "code_words": 168,
+      "imp": "0x00aadcd4",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_Ladder",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8be68"
+      },
+      "own_key_ivar_pairs": {},
+      "own_keys": [
+        "itemType",
+        "ownerID",
+        "paintColor"
+      ],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x00d4e5d4",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the literal pool",
+      "class": "Egg",
+      "code_words": 178,
+      "imp": "0x00d4e30c",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_Egg",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bf24"
+      },
+      "own_key_ivar_pairs": {},
+      "own_keys": [
+        "breed",
+        "genesDict",
+        "hatchTimer"
+      ],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x00d18b04",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the literal pool",
+      "class": "SteamTrain",
+      "code_words": 180,
+      "imp": "0x00d18834",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_SteamTrain",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bf10"
+      },
+      "own_key_ivar_pairs": {},
+      "own_keys": [
+        "fuelFraction",
+        "goingRight",
+        "hasFuel",
+        "stopped"
+      ],
+      "runtime_superclass": "TrainCar",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x00834d34",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the literal pool",
+      "class": "Column",
+      "code_words": 193,
+      "imp": "0x00834a30",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_Column",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bd80"
+      },
+      "own_key_ivar_pairs": {},
+      "own_keys": [
+        "configuration",
+        "itemType",
+        "ownerID",
+        "paintColor"
+      ],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x006cca38",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the literal pool",
+      "class": "Stairs",
+      "code_words": 193,
+      "imp": "0x006cc734",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_Stairs",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bcc0"
+      },
+      "own_key_ivar_pairs": {},
+      "own_keys": [
+        "configuration",
+        "itemType",
+        "ownerID",
+        "paintColor"
+      ],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x00769814",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the literal pool",
+      "class": "Door",
+      "code_words": 198,
+      "imp": "0x007694fc",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_Door",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bd1c"
+      },
+      "own_key_ivar_pairs": {},
+      "own_keys": [
+        "blocked",
+        "ironPlaceClientID",
+        "itemType",
+        "ownerID"
+      ],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x009a1684",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the literal pool",
+      "class": "TulipPlant",
+      "code_words": 199,
+      "imp": "0x009a1368",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_TulipPlant",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bddc"
+      },
+      "own_key_ivar_pairs": {},
+      "own_keys": [
+        "availableFood",
+        "colorGenes",
+        "mateColorGenes",
+        "mixGenes"
+      ],
+      "runtime_superclass": "Plant",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:treeDensityNoiseFunction:seasonOffsetNoiseFunction:"
+    },
+    {
+      "boundary": "0x0095034c",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the literal pool",
+      "class": "Wire",
+      "code_words": 200,
+      "imp": "0x0095002c",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_Wire",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bdc0"
+      },
+      "own_key_ivar_pairs": {},
+      "own_keys": [
+        "configuration",
+        "itemType",
+        "ownerID",
+        "solidConfiguration"
+      ],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "method": "fifteen mid-tier initWithWorld loaders, forward-then-read (batch b3k)",
+  "pic_base": "0x0105faf4",
+  "schema": 1
+}
