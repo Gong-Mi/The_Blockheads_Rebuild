@@ -41,5 +41,12 @@ enum class NpcLoadCall : std::uint8_t {
     BoolValue = 20,
     UnsignedIntegerValue = 21
 };
+enum class FreightCarInitCall : std::uint8_t {
+    MsgSendSuper = 0,
+    ChestAlloc = 1,
+    ChestInitWithWorld = 2,
+    ChestSetProxyObjectOwner = 3,
+    ChestSetFloatPosAndUpdatePosition = 4
+};
 }  // namespace recovered
 }  // namespace blockheads

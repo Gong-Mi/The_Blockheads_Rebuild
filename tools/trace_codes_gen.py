@@ -38,7 +38,14 @@ NPC_LOADVALUES_CODES = {
     "BoolValue": 20,
     "UnsignedIntegerValue": 21
 }
-TABLES = {    'tree_grow': TREE_GROW_CODES,    'npc_loadvalues': NPC_LOADVALUES_CODES,}
+FREIGHT_CAR_INIT_CODES = {
+    "MsgSendSuper": 0,
+    "ChestAlloc": 1,
+    "ChestInitWithWorld": 2,
+    "ChestSetProxyObjectOwner": 3,
+    "ChestSetFloatPosAndUpdatePosition": 4
+}
+TABLES = {    'tree_grow': TREE_GROW_CODES,    'npc_loadvalues': NPC_LOADVALUES_CODES,    'freight_car_init': FREIGHT_CAR_INIT_CODES,}
 
 def self_test():
     for table, codes in TABLES.items():
