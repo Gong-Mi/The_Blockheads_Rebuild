@@ -1,4 +1,4 @@
-# Tree -[growInTimeSinceSaved:] — executed differential, STAGE 1 (batch b4g)
+# Tree -[growInTimeSinceSaved:] — executed differential, STAGE 1 & 2 (batch b4g & b4l)
 
 Original ELF SHA-256:
 `733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7`
@@ -13,24 +13,34 @@ types:    v16@0:4d8   (one double argument: timeSinceSaved)
 ```
 
 The b3n decode of this hook (the tree GROWTH STATE MACHINE) is now
-**executed** — stage 1, the nil-tile path:
+**fully executed** across both Stage 1 (nil-tile fallback) and Stage 2
+(tile illumination chance calculation):
 `tools/test_tree_grow_arm.py` runs the original ARM body under Unicorn
-with synthetic world/dynamicWorld objects, the tile lookup `bl 0xa12f24`
-hooked to return nil, and compares the 120-byte instance image and the
+with synthetic world/dynamicWorld objects and tile illumination fixtures,
+and compares the 120-byte instance image and the
 (code, arg) message trace against the recovered C++
 `reconstruction/recovered/tree_grow_in_time.{h,cpp}` at -O0 and -O2.
 `tools/test_tree_grow_arm_evidence.py` guards it in both host and CI
 modes; CTest `recovered_tree_grow_in_time` exercises the contract without
 the ELF.
 
-## Stage boundary
+## Stage 2 resolution: deterministic illumination vs earlier "PRNG" hypothesis
 
-The tile-record/PRNG block (0x4c27a8–0x4c2858: tile byte/+0xe/+0x10/+0x12
-reads, the 0x1c3728 chain, chance ≠ 0.5) is a **stage-2 slice**. Stage 1
-hooks the lookup at 0xa12f24's first instruction and returns nil, which is
-the fixture boundary documented in b4e: the growth math still runs with
-chance = 0.5f. The hook asserts the lookup asks for
-`(pos.x, pos.y + current height)` — proving the body reads those ivars.
+The 0x4c27a8–0x4c2858 block was previously hypothesized to be a "PRNG block"
+due to calls to `0x1c3728`. Relocation analysis (.rel.plt slot 0x0106001c)
+and disassembly prove **0x1c3728 is `__aeabi_idiv` (signed integer division)**.
+The growth chance calculation is 100% deterministic illumination arithmetic:
+
+```text
+tile == nil:
+  chance = 0.5f
+
+tile != nil:
+  sun_part = (sunLight / 255.0f) * 0.5f
+  art_sum = (artificialLightR / 4) + (artificialLightG / 4) + (artificialLightB / 2)
+  art_part = (float)(art_sum / 1024)
+  chance = sun_part + art_part
+```
 
 ## What execution settled that static reading could not
 

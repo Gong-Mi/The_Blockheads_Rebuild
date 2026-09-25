@@ -24,7 +24,13 @@ std::uint32_t recovered_tree_grow_run(
     std::int32_t max_height_reached, std::int32_t pos_x, std::int32_t pos_y,
     std::uint32_t world_token, std::uint32_t dynamic_world_token,
     std::int32_t height_after_increment,
-    std::int32_t max_height_reached_after_increment, std::uint8_t* image_out,
+    std::int32_t max_height_reached_after_increment,
+    std::uint8_t has_tile,
+    std::uint8_t tile_sun_light,
+    std::uint16_t tile_artificial_light_r,
+    std::uint16_t tile_artificial_light_g,
+    std::uint16_t tile_artificial_light_b,
+    std::uint8_t* image_out,
     std::uint8_t* trace_out) {
     TreeGrowInputs inputs;
     inputs.is_static_tree = is_static_tree;
@@ -46,6 +52,11 @@ std::uint32_t recovered_tree_grow_run(
     inputs.height_after_increment = height_after_increment;
     inputs.max_height_reached_after_increment =
         max_height_reached_after_increment;
+    inputs.has_tile = has_tile;
+    inputs.tile_sun_light = tile_sun_light;
+    inputs.tile_artificial_light_r = tile_artificial_light_r;
+    inputs.tile_artificial_light_g = tile_artificial_light_g;
+    inputs.tile_artificial_light_b = tile_artificial_light_b;
 
     const auto result = blockheads::recovered::tree_grow_in_time_since_saved(inputs);
     for (std::size_t i = 0; i < blockheads::recovered::kTreeGrowImageSize; ++i) {

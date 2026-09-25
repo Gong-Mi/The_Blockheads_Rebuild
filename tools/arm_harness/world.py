@@ -22,6 +22,7 @@ class WorldAnswers:
         # memory state) — the b4g port lesson: asserting after the run
         # compares against mutated state when a stub scripts changes.
         self.on_call = None
+        self.tile_provider = None
 
     def set(self, selector, value):
         self.answers[selector] = value
@@ -35,7 +36,10 @@ class WorldAnswers:
             if self.on_call is not None:
                 self.on_call(x, y)
             self.calls.append((x, y))
-            uc_.reg_write(UC_ARM_REG_R0, 0)  # stage-1 fixture: nil tile
+            ret = 0
+            if self.tile_provider is not None:
+                ret = self.tile_provider(x, y)
+            uc_.reg_write(UC_ARM_REG_R0, ret)
             uc_.reg_write(UC_ARM_REG_PC, uc_.reg_read(UC_ARM_REG_LR))
 
         uc.hook_add(UC_HOOK_CODE, hook, begin=self.accessor_imp,

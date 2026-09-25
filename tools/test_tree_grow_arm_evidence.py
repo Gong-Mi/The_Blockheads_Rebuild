@@ -20,7 +20,8 @@ RECOVERED = ROOT / 'reconstruction/recovered'
 ELF = Path.home() / 'blockheads-work/extracted/lib/armeabi-v7a/libApplication.so'
 CASES = ['static', 'dead_entry', 'partial', 'double_increment',
          'scripted_height_exit', 'compost', 'death', 'nan_worldtime',
-         'negative_elapsed', 'boundary']
+         'negative_elapsed', 'boundary', 'tile_sunlight',
+         'tile_artificial_light']
 
 
 def have_unicorn():

@@ -246,6 +246,46 @@ int main() {
                "boundary: >= goes old path");
     }
 
+    // Stage-2 Case: sunlight lighting calculation from tile
+    {
+        TreeGrowInputs in = base();
+        in.has_tile = 1;
+        in.tile_sun_light = 204; // 204 * 0.5 / 255 = 0.4 chance
+        in.world_time = 100.0;
+        in.time_since_saved = 99.0; // elapsed = 1.0
+        in.growth_counter = 0.0f;
+        in.growth_rate = 1.0f;
+        in.height = 2;
+        in.max_height = 10;
+        // hpct = ((1 - 0.2) + 0.2) * 0.5 = 0.5
+        // denom = 0.005 * 0.5 * 1.0 * 0.4 = 0.001
+        // timeToGrow = 1.0 -> growthTime = 1000.0
+        // eOverG = 1.0 / 1000.0 = 0.001 -> gc = 0.001
+        const TreeGrowResult r = tree_grow_in_time_since_saved(in);
+        expect(std::abs(float_at(r, 68) - 0.001f) < 1e-6f,
+               "stage 2 sunlight: growth_counter == 0.001");
+    }
+
+    // Stage-2 Case: artificial lighting calculation from tile
+    {
+        TreeGrowInputs in = base();
+        in.has_tile = 1;
+        in.tile_sun_light = 0;
+        in.tile_artificial_light_r = 2048;
+        in.tile_artificial_light_g = 2048;
+        in.tile_artificial_light_b = 1024; // sum = 512+512+512 = 1536 / 1024 = 1 -> chance = 1.0
+        in.world_time = 100.0;
+        in.time_since_saved = 99.0; // elapsed = 1.0
+        in.growth_counter = 0.0f;
+        in.growth_rate = 1.0f;
+        in.height = 2;
+        in.max_height = 10;
+        // denom = 0.005 * 0.5 * 1.0 * 1.0 = 0.0025 -> growthTime = 400.0 -> eOverG = 0.0025 -> gc = 0.0025
+        const TreeGrowResult r = tree_grow_in_time_since_saved(in);
+        expect(std::abs(float_at(r, 68) - 0.0025f) < 1e-6f,
+               "stage 2 artificial light: growth_counter == 0.0025");
+    }
+
     if (failures == 0) {
         std::printf("recovered_tree_grow_in_time: PASS\n");
     }

@@ -104,6 +104,12 @@ struct TreeGrowInputs {
     // height >= maxHeight loop-exit without a real incrementHeight body.
     std::int32_t height_after_increment = -1;
     std::int32_t max_height_reached_after_increment = -1;
+    // Stage-2 tile record lighting inputs.
+    std::uint8_t has_tile = 0;
+    std::uint8_t tile_sun_light = 0;
+    std::uint16_t tile_artificial_light_r = 0;
+    std::uint16_t tile_artificial_light_g = 0;
+    std::uint16_t tile_artificial_light_b = 0;
 };
 
 struct TreeGrowResult {

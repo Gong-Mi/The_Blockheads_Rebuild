@@ -71,8 +71,19 @@ TreeGrowResult tree_grow_in_time_since_saved(const TreeGrowInputs& in) {
                     if (!grow_block) {
                         break;
                     }
-                    // Stage-1 fixture: tile lookup returned nil -> chance 0.5.
-                    const float chance = 0.5f;
+                    // Stage 1 / Stage 2 chance calculation:
+                    // If tile lookup returns nil (has_tile == 0), chance defaults to 0.5f.
+                    // If tile is present, chance is computed from sunLight + artificialLightR/G/B.
+                    float chance = 0.5f;
+                    if (in.has_tile) {
+                        const float sun_contrib = (0.5f * static_cast<float>(in.tile_sun_light)) / 255.0f;
+                        const int r_div = static_cast<int>(in.tile_artificial_light_r) / 4;
+                        const int g_div = static_cast<int>(in.tile_artificial_light_g) / 4;
+                        const int b_div = static_cast<int>(in.tile_artificial_light_b) / 2;
+                        const int sum = r_div + g_div + b_div;
+                        const float art_contrib = static_cast<float>(sum / 1024);
+                        chance = sun_contrib + art_contrib;
+                    }
                     const float height_ratio =
                         (1.0f - (float)height / (float)max_height) + 0.2f;
                     const float hpct = height_ratio * 0.5f;

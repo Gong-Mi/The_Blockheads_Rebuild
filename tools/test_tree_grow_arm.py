@@ -84,6 +84,14 @@ CASES = [
     {'name': 'negative_elapsed', 'world_time': 5.0, 'time_since_saved': 10.0},
     {'name': 'boundary', 'age': 50.0, 'world_time': 60.0,
      'time_since_saved': 10.0, 'is_growing_in_compost': 1},
+    {'name': 'tile_sunlight', 'has_tile': 1, 'tile_sun_light': 204,
+     'world_time': 100.0, 'time_since_saved': 99.0, 'growth_counter': 0.0,
+     'growth_rate': 1.0, 'height': 2, 'max_height': 10},
+    {'name': 'tile_artificial_light', 'has_tile': 1, 'tile_sun_light': 0,
+     'tile_artificial_light_r': 2048, 'tile_artificial_light_g': 2048,
+     'tile_artificial_light_b': 1024,
+     'world_time': 100.0, 'time_since_saved': 99.0, 'growth_counter': 0.0,
+     'growth_rate': 1.0, 'height': 2, 'max_height': 10},
 ]
 
 
@@ -105,6 +113,39 @@ def main():
     dispatcher = MsgDispatcher(uc, STUB)
     tile_lookup = WorldAnswers(uc)
     session.patch_got(GOT_MSGSEND, STUB)
+
+    STUB_IDIV = 0x77000000
+    uc.mem_map(STUB_IDIV, 0x1000)
+    session.patch_got(0x0106001c, STUB_IDIV)
+
+    def hook_idiv(uc_, addr, sz, data):
+        from unicorn.arm_const import UC_ARM_REG_R0, UC_ARM_REG_R1, UC_ARM_REG_PC, UC_ARM_REG_LR
+        n = uc_.reg_read(UC_ARM_REG_R0)
+        d = uc_.reg_read(UC_ARM_REG_R1)
+        if n & 0x80000000: n -= (1 << 32)
+        if d & 0x80000000: d -= (1 << 32)
+        res = int(n / d) if d != 0 else 0
+        if res < 0: res += (1 << 32)
+        uc_.reg_write(UC_ARM_REG_R0, res & 0xffffffff)
+        uc_.reg_write(UC_ARM_REG_PC, uc_.reg_read(UC_ARM_REG_LR))
+
+    from unicorn import UC_HOOK_CODE
+    uc.hook_add(UC_HOOK_CODE, hook_idiv, begin=STUB_IDIV, end=STUB_IDIV + 4)
+
+    TILE_ADDR = 0x78000000
+    uc.mem_map(TILE_ADDR, 0x1000)
+
+    def tile_provider(x, y):
+        case = state['case']
+        if not case.get('has_tile', 0):
+            return 0
+        uc.mem_write(TILE_ADDR + 7, bytes([case.get('tile_sun_light', 0) & 0xff]))
+        uc.mem_write(TILE_ADDR + 14, struct.pack("<H", case.get('tile_artificial_light_r', 0) & 0xffff))
+        uc.mem_write(TILE_ADDR + 16, struct.pack("<H", case.get('tile_artificial_light_g', 0) & 0xffff))
+        uc.mem_write(TILE_ADDR + 18, struct.pack("<H", case.get('tile_artificial_light_b', 0) & 0xffff))
+        return TILE_ADDR
+
+    tile_lookup.tile_provider = tile_provider
     cmd_sel = graph.command_selector('growInTimeSinceSaved:')
 
     state = {'case': None}
@@ -200,6 +241,8 @@ def main():
                        ctypes.c_int32, ctypes.c_int32, ctypes.c_int32,
                        ctypes.c_int32, ctypes.c_int32, ctypes.c_uint32,
                        ctypes.c_uint32, ctypes.c_int32, ctypes.c_int32,
+                       ctypes.c_uint8, ctypes.c_uint8,
+                       ctypes.c_uint16, ctypes.c_uint16, ctypes.c_uint16,
                        ctypes.c_char_p, ctypes.c_char_p]
         fn.restype = ctypes.c_uint32
         fns.append(fn)
@@ -251,6 +294,11 @@ def main():
                    merged['dynamic_world_token'],
                    merged.get('height_after_increment', -1),
                    merged.get('max_height_reached_after_increment', -1),
+                   merged.get('has_tile', 0),
+                   merged.get('tile_sun_light', 0),
+                   merged.get('tile_artificial_light_r', 0),
+                   merged.get('tile_artificial_light_g', 0),
+                   merged.get('tile_artificial_light_b', 0),
                    image_out, trace_out)
             cpp_images.append(image_out.raw)
             cpp_traces.append(
