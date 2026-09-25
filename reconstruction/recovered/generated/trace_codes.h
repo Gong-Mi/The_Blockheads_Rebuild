@@ -66,5 +66,14 @@ enum class TradingPostInitSlotsCall : std::uint8_t {
     ItemType = 7,
     AddObject = 8
 };
+enum class DynamicObjectInitDerivedStuffCall : std::uint8_t {
+    WorldMacroTiles = 0,
+    LoadPhysicalBlock = 1,
+    ShouldAddToMacroBlock = 2,
+    LoadDynamicObjects = 3,
+    AddObject = 4,
+    ObjectType = 5,
+    DynamicWorldChanged = 6
+};
 }  // namespace recovered
 }  // namespace blockheads

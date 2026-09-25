@@ -63,7 +63,16 @@ TRADING_POST_INIT_SLOTS_CODES = {
     "ItemType": 7,
     "AddObject": 8
 }
-TABLES = {    'tree_grow': TREE_GROW_CODES,    'npc_loadvalues': NPC_LOADVALUES_CODES,    'freight_car_init': FREIGHT_CAR_INIT_CODES,    'trade_portal_price_offsets': TRADE_PORTAL_PRICE_OFFSETS_CODES,    'trading_post_init_slots': TRADING_POST_INIT_SLOTS_CODES,}
+DYNAMIC_OBJECT_INIT_DERIVED_STUFF_CODES = {
+    "WorldMacroTiles": 0,
+    "LoadPhysicalBlock": 1,
+    "ShouldAddToMacroBlock": 2,
+    "LoadDynamicObjects": 3,
+    "AddObject": 4,
+    "ObjectType": 5,
+    "DynamicWorldChanged": 6
+}
+TABLES = {    'tree_grow': TREE_GROW_CODES,    'npc_loadvalues': NPC_LOADVALUES_CODES,    'freight_car_init': FREIGHT_CAR_INIT_CODES,    'trade_portal_price_offsets': TRADE_PORTAL_PRICE_OFFSETS_CODES,    'trading_post_init_slots': TRADING_POST_INIT_SLOTS_CODES,    'dynamic_object_init_derived_stuff': DYNAMIC_OBJECT_INIT_DERIVED_STUFF_CODES,}
 
 def self_test():
     for table, codes in TABLES.items():
