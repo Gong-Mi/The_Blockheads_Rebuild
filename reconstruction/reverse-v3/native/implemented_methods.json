@@ -469,6 +469,19 @@
    "evidence": "reconstruction/reverse-v3/native/GAMEVIEW_STARTTOUCH.md",
    "integration": "recovered-method-module",
    "scope": "Static bounded-body map (199 words, PIC base 0x0105faf4) with per-instruction anchors: startTouchHasntMoved/primaryTouchIsActiveInUI cleared before any gate; menu path iff mainMenuUI!=nil AND world==nil forwards [withTouch tapCount] to [mainMenuUI startTouch:tapCount:]; world path gates [world loadComplete] (sxtb) and [world isSimulating] (sxtb), re-sends tapCount, stores ONLY the low byte of [world startTouch:tapCount:index:0], and on [world touchIsInUI:] sxtb==0 sets startTouchHasntMoved=1 with a full-word CGPoint store. Receiver reloads and nil-dispatch chains modeled; withEvent never read. Local fixture tests O0/O2 only; not original ARM runtime differential, not UI/World callee internals, not a game adapter."
+  },
+  {
+   "implementation": "0x004f68a0",
+   "class": "VinePlant",
+   "kind": "instance",
+   "selector": "initWithWorld:dynamicWorld:saveDict:cache:treeDensityNoiseFunction:seasonOffsetNoiseFunction:",
+   "types": "@32@0:4@8@12@16@20@24@28",
+   "entry_point": "blockheads::recovered::vine_plant_init_with_world",
+   "source": "reconstruction/recovered/vine_plant_init.cpp",
+   "test": "tools/test_vine_plant_init.cpp",
+   "evidence": "reconstruction/reverse-v3/native/VINE_PLANT_INIT_ARM.md",
+   "integration": "recovered-method-module",
+   "scope": "Single-threaded typed method and direct numerical dependencies; executed differential vs the original ARM body under Unicorn (O0/O2 bit-exact, 15 cases). Not the original ObjC ABI, not Foundation, not the original-app runtime, no APK/device acceptance."
   }
  ]
 }
