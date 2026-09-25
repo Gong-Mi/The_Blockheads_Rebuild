@@ -145,7 +145,50 @@ VINE_INIT_CODES = {
     "DynamicWorldChangedAtPos": 16,
     "WorldTileQuery": 17
 }
-TABLES = {    'tree_grow': TREE_GROW_CODES,    'npc_loadvalues': NPC_LOADVALUES_CODES,    'freight_car_init': FREIGHT_CAR_INIT_CODES,    'trade_portal_price_offsets': TRADE_PORTAL_PRICE_OFFSETS_CODES,    'trading_post_init_slots': TRADING_POST_INIT_SLOTS_CODES,    'dynamic_object_init_derived_stuff': DYNAMIC_OBJECT_INIT_DERIVED_STUFF_CODES,    'chest_init': CHEST_INIT_CODES,    'kelp_init': KELP_INIT_CODES,    'vine_init': VINE_INIT_CODES,}
+FREEBLOCK_INIT_CODES = {
+    "MsgSendSuper": 0,
+    "ObjectForKeyBounceTimer": 1,
+    "FloatValueBounceTimer": 2,
+    "ObjectForKeyFallSpeed": 3,
+    "FloatValueFallSpeed": 4,
+    "ObjectForKeyCreationTime": 5,
+    "DoubleValueCreationTime": 6,
+    "ObjectForKeyFloatPosVX": 7,
+    "FloatValueFloatPosVX": 8,
+    "ObjectForKeyFloatPosVY": 9,
+    "FloatValueFloatPosVY": 10,
+    "ObjectForKeyHovers": 11,
+    "BoolValueHovers": 12,
+    "ObjectForKeyItemType": 13,
+    "IntValueItemType": 14,
+    "ObjectForKeyDataA": 15,
+    "IntValueDataA": 16,
+    "ObjectForKeyDataB": 17,
+    "IntValueDataB": 18,
+    "ObjectForKeySubItems": 19,
+    "RetainSubItems": 20,
+    "MutableArrayArray": 21,
+    "MutableArrayInit": 22,
+    "CountByEnumerating": 23,
+    "InventoryAlloc": 24,
+    "InventoryInitWithSaveData": 25,
+    "InventoryAutorelease": 26,
+    "InventoryItemType": 27,
+    "SubItemsAddObject": 28,
+    "ObjectForKeyDynSaveDict": 29,
+    "DynSaveDictCopy": 30,
+    "ObjectForKeyPriorityId": 31,
+    "IntValuePriorityId": 32,
+    "BlockheadWithID": 33,
+    "RetainBlockhead": 34,
+    "InitSubDerivedObjects": 35,
+    "WorldTime": 36,
+    "UpdatePosition": 37,
+    "WorldTileQuery": 38,
+    "ObjectType": 39,
+    "DynamicWorldChangedAtPos": 40
+}
+TABLES = {    'tree_grow': TREE_GROW_CODES,    'npc_loadvalues': NPC_LOADVALUES_CODES,    'freight_car_init': FREIGHT_CAR_INIT_CODES,    'trade_portal_price_offsets': TRADE_PORTAL_PRICE_OFFSETS_CODES,    'trading_post_init_slots': TRADING_POST_INIT_SLOTS_CODES,    'dynamic_object_init_derived_stuff': DYNAMIC_OBJECT_INIT_DERIVED_STUFF_CODES,    'chest_init': CHEST_INIT_CODES,    'kelp_init': KELP_INIT_CODES,    'vine_init': VINE_INIT_CODES,    'freeblock_init': FREEBLOCK_INIT_CODES,}
 
 def self_test():
     for table, codes in TABLES.items():
