@@ -75,6 +75,11 @@ add_library(blockheads_recovered_trade_portal_offsets STATIC trade_portal_price_
 target_include_directories(blockheads_recovered_trade_portal_offsets PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(blockheads_recovered_trade_portal_offsets PUBLIC cxx_std_17)
 
+# TradingPost slot initialization slice (batch b4j): sellSlot restoration and itemType != 11 filter
+add_library(blockheads_recovered_trading_post_slots STATIC trading_post_init_slots.cpp)
+target_include_directories(blockheads_recovered_trading_post_slots PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_trading_post_slots PUBLIC cxx_std_17)
+
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     include(CTest)
     if(BUILD_TESTING)
@@ -120,6 +125,10 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         target_link_libraries(test_trade_portal_price_offsets PRIVATE blockheads_recovered_trade_portal_offsets)
         target_compile_options(test_trade_portal_price_offsets PRIVATE -UNDEBUG)
         add_test(NAME recovered_trade_portal_price_offsets COMMAND test_trade_portal_price_offsets)
+        add_executable(test_trading_post_init_slots ../../tools/test_trading_post_init_slots.cpp)
+        target_link_libraries(test_trading_post_init_slots PRIVATE blockheads_recovered_trading_post_slots)
+        target_compile_options(test_trading_post_init_slots PRIVATE -UNDEBUG)
+        add_test(NAME recovered_trading_post_init_slots COMMAND test_trading_post_init_slots)
         add_executable(test_gameview_update ../../tools/test_gameview_update.cpp)
         target_link_libraries(test_gameview_update PRIVATE blockheads_recovered_view)
         add_test(NAME gameview_update COMMAND test_gameview_update)

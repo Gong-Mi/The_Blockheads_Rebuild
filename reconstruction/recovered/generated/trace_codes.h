@@ -55,5 +55,16 @@ enum class TradePortalPriceOffsetsCall : std::uint8_t {
     NumberWithDouble = 3,
     SetObjectForKey = 4
 };
+enum class TradingPostInitSlotsCall : std::uint8_t {
+    AllocNSMutableArray = 0,
+    InitNSMutableArray = 1,
+    ObjectForKey = 2,
+    FastEnumeration = 3,
+    AllocInventoryItem = 4,
+    InitWithSaveData = 5,
+    AutoreleaseItem = 6,
+    ItemType = 7,
+    AddObject = 8
+};
 }  // namespace recovered
 }  // namespace blockheads

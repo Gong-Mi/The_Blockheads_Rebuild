@@ -52,7 +52,18 @@ TRADE_PORTAL_PRICE_OFFSETS_CODES = {
     "NumberWithDouble": 3,
     "SetObjectForKey": 4
 }
-TABLES = {    'tree_grow': TREE_GROW_CODES,    'npc_loadvalues': NPC_LOADVALUES_CODES,    'freight_car_init': FREIGHT_CAR_INIT_CODES,    'trade_portal_price_offsets': TRADE_PORTAL_PRICE_OFFSETS_CODES,}
+TRADING_POST_INIT_SLOTS_CODES = {
+    "AllocNSMutableArray": 0,
+    "InitNSMutableArray": 1,
+    "ObjectForKey": 2,
+    "FastEnumeration": 3,
+    "AllocInventoryItem": 4,
+    "InitWithSaveData": 5,
+    "AutoreleaseItem": 6,
+    "ItemType": 7,
+    "AddObject": 8
+}
+TABLES = {    'tree_grow': TREE_GROW_CODES,    'npc_loadvalues': NPC_LOADVALUES_CODES,    'freight_car_init': FREIGHT_CAR_INIT_CODES,    'trade_portal_price_offsets': TRADE_PORTAL_PRICE_OFFSETS_CODES,    'trading_post_init_slots': TRADING_POST_INIT_SLOTS_CODES,}
 
 def self_test():
     for table, codes in TABLES.items():
