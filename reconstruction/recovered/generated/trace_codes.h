@@ -48,5 +48,12 @@ enum class FreightCarInitCall : std::uint8_t {
     ChestSetProxyObjectOwner = 3,
     ChestSetFloatPosAndUpdatePosition = 4
 };
+enum class TradePortalPriceOffsetsCall : std::uint8_t {
+    FastEnumeration = 0,
+    ObjectForKey = 1,
+    DoubleValue = 2,
+    NumberWithDouble = 3,
+    SetObjectForKey = 4
+};
 }  // namespace recovered
 }  // namespace blockheads

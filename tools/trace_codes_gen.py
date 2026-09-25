@@ -45,7 +45,14 @@ FREIGHT_CAR_INIT_CODES = {
     "ChestSetProxyObjectOwner": 3,
     "ChestSetFloatPosAndUpdatePosition": 4
 }
-TABLES = {    'tree_grow': TREE_GROW_CODES,    'npc_loadvalues': NPC_LOADVALUES_CODES,    'freight_car_init': FREIGHT_CAR_INIT_CODES,}
+TRADE_PORTAL_PRICE_OFFSETS_CODES = {
+    "FastEnumeration": 0,
+    "ObjectForKey": 1,
+    "DoubleValue": 2,
+    "NumberWithDouble": 3,
+    "SetObjectForKey": 4
+}
+TABLES = {    'tree_grow': TREE_GROW_CODES,    'npc_loadvalues': NPC_LOADVALUES_CODES,    'freight_car_init': FREIGHT_CAR_INIT_CODES,    'trade_portal_price_offsets': TRADE_PORTAL_PRICE_OFFSETS_CODES,}
 
 def self_test():
     for table, codes in TABLES.items():
