@@ -4,6 +4,9 @@ project("TheBlockheads")
 include_directories(external)
 include_directories(.) # Add this to let generated files find local headers
 include_directories(generated) # Generated headers
+# Client assembly app skeleton (batch b5a) includes original_client_world.h from
+# the reconstruction tree; the header is what the host CI target also compiles.
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered)
 
 # --- Code Generation ---
 find_package(Python3 REQUIRED)
@@ -37,6 +40,10 @@ add_library(native-lib SHARED
             world_renderer.cpp
             compression_manager.cpp
             original_save_format.cpp
+            original_client_world.cpp
+            original_save_dict.cpp
+            dynamic_object_registry.cpp
+            original_client_app.cpp
             command_processor.cpp
             item_manager.cpp
             generated/game_item_data.cpp

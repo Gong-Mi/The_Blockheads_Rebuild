@@ -199,6 +199,26 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         target_link_libraries(test_original_client_world PRIVATE original_client_world)
         target_compile_options(test_original_client_world PRIVATE -UNDEBUG)
         add_test(NAME original_client_world COMMAND test_original_client_world)
+        # Client assembly app skeleton (batch b5a): the app-side original-save
+        # load path — block domain, dynamic index, SaveDict stub layer and the
+        # 1..64 dynamic object registry whose entries start as stubs. The
+        # sources live in app/src/main/cpp so the production APK builds the same
+        # files; this host target is what CI compiles and tests.
+        add_library(original_client_app STATIC
+            ../../app/src/main/cpp/original_save_dict.cpp
+            ../../app/src/main/cpp/dynamic_object_registry.cpp
+            ../../app/src/main/cpp/original_client_app.cpp
+            original_client_world.cpp)
+        target_include_directories(original_client_app PUBLIC
+            ${CMAKE_CURRENT_SOURCE_DIR}
+            ../../app/src/main/cpp)
+        target_compile_features(original_client_app PUBLIC cxx_std_17)
+        add_executable(test_original_client_app ../../tools/test_original_client_app.cpp)
+        target_link_libraries(test_original_client_app PRIVATE original_client_app)
+        target_compile_options(test_original_client_app PRIVATE -UNDEBUG)
+        add_test(NAME original_client_app COMMAND test_original_client_app)
+        add_executable(client_app_skeleton_cli ../../tools/client_app_skeleton_cli.cpp)
+        target_link_libraries(client_app_skeleton_cli PRIVATE original_client_app)
         # Tests using assert must still exercise their contracts in Release.
         foreach(test_target test_gameview_update test_projection_update test_world_view_contracts test_world_translation test_sound_manager test_original_save_format test_gameview_starttouch test_original_client_world)
             target_compile_options(${test_target} PRIVATE -UNDEBUG)
