@@ -75,5 +75,38 @@ enum class DynamicObjectInitDerivedStuffCall : std::uint8_t {
     ObjectType = 5,
     DynamicWorldChanged = 6
 };
+enum class ChestInitCall : std::uint8_t {
+    MsgSendSuper = 0,
+    ObjectForKeyChestType = 1,
+    IntValueChestType = 2,
+    CustomRulesStret = 3,
+    CustomRulesMemset = 4,
+    ObjectForKeySafeClientID = 5,
+    RetainSafeClientID = 6,
+    ObjectType = 7,
+    DynamicWorldChangedAtPos = 8,
+    ObjectForKeySaveItemSlots = 9,
+    AllocNSMutableArray = 10,
+    InitWithCapacity = 11,
+    CountSaveItemSlots = 12,
+    ArrayNSMutableArray = 13,
+    AddObjectSlotArray = 14,
+    ObjectAtIndex = 15,
+    StateMemset = 16,
+    FastEnumeration = 17,
+    EnumerationMutation = 18,
+    AllocInventoryItem = 19,
+    InitWithSaveData = 20,
+    AutoreleaseItem = 21,
+    ItemType = 22,
+    AddObjectItem = 23,
+    StringWithFormatShelfRenderItems = 24,
+    ObjectForKeyShelfRenderItems = 25,
+    IntValueShelfRenderItems = 26,
+    StringWithFormatShelfItemDataBs = 27,
+    ObjectForKeyShelfItemDataBs = 28,
+    IntValueShelfItemDataBs = 29,
+    InitSubDerivedItems = 30
+};
 }  // namespace recovered
 }  // namespace blockheads
