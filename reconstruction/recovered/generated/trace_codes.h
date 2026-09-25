@@ -108,5 +108,25 @@ enum class ChestInitCall : std::uint8_t {
     IntValueShelfItemDataBs = 29,
     InitSubDerivedItems = 30
 };
+enum class KelpInitCall : std::uint8_t {
+    MsgSendSuper = 0,
+    ObjectForKeyOccupied = 1,
+    IntValueOccupied = 2,
+    ObjectForKeyGrowthTimer = 3,
+    FloatValueGrowthTimer = 4,
+    InitSubDerivedItems = 5,
+    ObjectForKeyAvailableFood = 6,
+    FloatValueAvailableFood = 7,
+    Lrand48 = 8,
+    ObjectForKeySaveTime = 9,
+    DoubleValueSaveTime = 10,
+    WorldTime = 11,
+    IsGrowingInCompost = 12,
+    DieOfOldAge = 13,
+    ObjectType = 14,
+    WorldContentsChangedAtPos = 15,
+    DynamicWorldChangedAtPos = 16,
+    WorldTileQuery = 17
+};
 }  // namespace recovered
 }  // namespace blockheads

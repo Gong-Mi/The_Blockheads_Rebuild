@@ -36,7 +36,10 @@ class MsgDispatcher:
         def hook(uc_, address, size, data):
             recv = uc_.reg_read(UC_ARM_REG_R0)
             sel_ptr = uc_.reg_read(UC_ARM_REG_R1)
-            sel = bytes(uc_.mem_read(sel_ptr, 64)).split(b'\0')[0].decode()
+            # 256 bytes: the selector strings of the longest front methods
+            # (`initWithWorld:dynamicWorld:saveDict:cache:treeDensityNoiseFunction:
+            # seasonOffsetNoiseFunction:` is ~99 chars) do not fit in 64.
+            sel = bytes(uc_.mem_read(sel_ptr, 256)).split(b'\0')[0].decode()
             fn = self.handlers.get(sel)
             if fn is None:
                 raise AssertionError(('unimplemented message',

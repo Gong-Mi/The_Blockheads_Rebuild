@@ -105,7 +105,27 @@ CHEST_INIT_CODES = {
     "IntValueShelfItemDataBs": 29,
     "InitSubDerivedItems": 30
 }
-TABLES = {    'tree_grow': TREE_GROW_CODES,    'npc_loadvalues': NPC_LOADVALUES_CODES,    'freight_car_init': FREIGHT_CAR_INIT_CODES,    'trade_portal_price_offsets': TRADE_PORTAL_PRICE_OFFSETS_CODES,    'trading_post_init_slots': TRADING_POST_INIT_SLOTS_CODES,    'dynamic_object_init_derived_stuff': DYNAMIC_OBJECT_INIT_DERIVED_STUFF_CODES,    'chest_init': CHEST_INIT_CODES,}
+KELP_INIT_CODES = {
+    "MsgSendSuper": 0,
+    "ObjectForKeyOccupied": 1,
+    "IntValueOccupied": 2,
+    "ObjectForKeyGrowthTimer": 3,
+    "FloatValueGrowthTimer": 4,
+    "InitSubDerivedItems": 5,
+    "ObjectForKeyAvailableFood": 6,
+    "FloatValueAvailableFood": 7,
+    "Lrand48": 8,
+    "ObjectForKeySaveTime": 9,
+    "DoubleValueSaveTime": 10,
+    "WorldTime": 11,
+    "IsGrowingInCompost": 12,
+    "DieOfOldAge": 13,
+    "ObjectType": 14,
+    "WorldContentsChangedAtPos": 15,
+    "DynamicWorldChangedAtPos": 16,
+    "WorldTileQuery": 17
+}
+TABLES = {    'tree_grow': TREE_GROW_CODES,    'npc_loadvalues': NPC_LOADVALUES_CODES,    'freight_car_init': FREIGHT_CAR_INIT_CODES,    'trade_portal_price_offsets': TRADE_PORTAL_PRICE_OFFSETS_CODES,    'trading_post_init_slots': TRADING_POST_INIT_SLOTS_CODES,    'dynamic_object_init_derived_stuff': DYNAMIC_OBJECT_INIT_DERIVED_STUFF_CODES,    'chest_init': CHEST_INIT_CODES,    'kelp_init': KELP_INIT_CODES,}
 
 def self_test():
     for table, codes in TABLES.items():
