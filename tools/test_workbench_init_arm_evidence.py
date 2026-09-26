@@ -85,8 +85,8 @@ def main():
     assert '0x105FB40' in harness          # memcpy GOT
     assert 'recovered_workbench_init' in cmake
     assert 'test_workbench_init_arm_evidence.py' in workflow
-    assert 'implemented | 40' in workflow_android
-    assert 'semantics | 40' in workflow_android
+    assert 'implemented | 49' in workflow_android
+    assert 'semantics | 49' in workflow_android
     assert 'boundary: 0x00ae6490' in listing
     for anchor in (IMP, '0x00e8be80', '0x00ae5b7c'):
         assert anchor in listing, anchor

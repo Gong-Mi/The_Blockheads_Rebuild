@@ -56,6 +56,17 @@ add_library(blockheads_recovered_forwarder STATIC object_forwarder_init.cpp)
 target_include_directories(blockheads_recovered_forwarder PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(blockheads_recovered_forwarder PUBLIC cxx_std_17)
 
+# Tree-family LONG loader slice (batch b3i, executed): ONE shared recovered
+# contract for the nine byte-identical 62-word
+# initWithWorld:...:treeDensityNoiseFunction:seasonOffsetNoiseFunction: bodies,
+# plus per-class thin wrappers that bind their own superref/selector cells.
+add_library(blockheads_recovered_treefamily9_long STATIC treefamily9_long_init.cpp)
+target_include_directories(blockheads_recovered_treefamily9_long PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_treefamily9_long PUBLIC cxx_std_17)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(blockheads_recovered_treefamily9_long PUBLIC -fno-fast-math -ffp-contract=off)
+endif()
+
 # Tree loader stage-1 slice (batch b4d): recovered contract for the scalar
 # chains, the treeFruit reset/enumeration entry and the isStaticTree gate.
 add_library(blockheads_recovered_tree_stage1 STATIC tree_load_save_dict.cpp)
@@ -164,6 +175,15 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         target_link_libraries(test_object_forwarder_init PRIVATE blockheads_recovered_forwarder)
         target_compile_options(test_object_forwarder_init PRIVATE -UNDEBUG)
         add_test(NAME recovered_object_forwarder_init COMMAND test_object_forwarder_init)
+        # One shared thin driver, one CTest entry per tree class: each exercises
+        # that class's own superref/selector binding.
+        add_executable(test_treefamily9_long_init ../../tools/test_treefamily9_long_init.cpp)
+        target_link_libraries(test_treefamily9_long_init PRIVATE blockheads_recovered_treefamily9_long)
+        target_compile_options(test_treefamily9_long_init PRIVATE -UNDEBUG)
+        foreach(tree_class CactusTree CherryTree CoconutTree CoffeeTree GemTree LimeTree MangoTree MapleTree OrangeTree)
+            add_test(NAME recovered_treefamily9_${tree_class}_long_init
+                     COMMAND test_treefamily9_long_init ${tree_class})
+        endforeach()
         add_executable(test_tree_load_save_dict_stage1 ../../tools/test_tree_load_save_dict.cpp)
         target_link_libraries(test_tree_load_save_dict_stage1 PRIVATE blockheads_recovered_tree_stage1)
         target_compile_options(test_tree_load_save_dict_stage1 PRIVATE -UNDEBUG)

@@ -23,5 +23,7 @@ from .loader import ARMSession
 from .graph import FixtureGraph
 from .dispatch import MsgDispatcher
 from .world import WorldAnswers
+from .super_forward import SuperForwardDifferential
 
-__all__ = ['ARMSession', 'FixtureGraph', 'MsgDispatcher', 'WorldAnswers']
+__all__ = ['ARMSession', 'FixtureGraph', 'MsgDispatcher', 'WorldAnswers',
+           'SuperForwardDifferential']

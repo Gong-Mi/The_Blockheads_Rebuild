@@ -261,5 +261,8 @@ enum class WorkbenchInitCall : std::uint8_t {
     InitSubDerivedItems = 66,
     ReleaseSlot = 67
 };
+enum class TreeFamily9LongInitCall : std::uint8_t {
+    MsgSendSuper = 0
+};
 }  // namespace recovered
 }  // namespace blockheads
