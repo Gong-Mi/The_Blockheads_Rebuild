@@ -1,0 +1,88 @@
+name: Save assembly method
+on:
+  pull_request:
+    branches: [reverse-v3]
+  workflow_dispatch:
+jobs:
+  recovered:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        mode: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m pip install lmdb
+      - run: python3 tools/test_export_server_world.py
+      - run: python3 tools/test_dynamic_object_uniqueid_evidence.py
+      - run: python3 tools/test_dynamic_object_objecttype_evidence.py
+      - run: python3 tools/test_dynamic_object_positions_evidence.py
+      - run: python3 tools/test_dynamic_object_getsavedict_evidence.py
+      - run: python3 tools/test_dynamic_object_init_savedict_evidence.py
+      - run: python3 tools/test_dynamic_object_init_keys_evidence.py
+      - run: python3 tools/test_dynamic_object_type_matrix_evidence.py
+      - run: python3 tools/test_dynamic_object_type_objecttype_matrix_evidence.py
+      - run: python3 tools/test_dynamic_object_npctype_matrix_evidence.py
+      - run: python3 tools/test_dynamic_object_flags_evidence.py
+      - run: python3 tools/test_freeblock_getsavedict_evidence.py
+      - run: python3 tools/test_freeblock_save_keys_evidence.py
+      - run: python3 tools/test_npc_save_keys_evidence.py
+      - run: python3 tools/test_subclass_savedict_inventory_evidence.py
+      - run: python3 tools/test_npc_loadvalues_keys_evidence.py
+      - run: python3 tools/test_tree_savedict_keys_evidence.py
+      - run: python3 tools/test_item_savedict_keys_b2b_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2c_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2d_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2e_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2f_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2g_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2h_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2i_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2j_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2k_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2l_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2m_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2n_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2o_evidence.py
+      - run: python3 tools/test_subclass_savedict_keys_b2p_evidence.py
+      - run: python3 tools/test_tree_loadsavedictvalues_evidence.py
+      - run: python3 tools/test_treefamily_loadsavedictvalues_evidence.py
+      - run: python3 tools/test_craftableitem_initsavedict_evidence.py
+      - run: python3 tools/test_action_initsavedict_inventoryitems_evidence.py
+      - run: python3 tools/test_crystalmanager_loadfromsave_evidence.py
+      - run: python3 tools/test_forwarder5_initwithworld_evidence.py
+      - run: python3 tools/test_npc_initwithworld_evidence.py
+      - run: python3 tools/test_forwarder5b_initwithworld_evidence.py
+      - run: python3 tools/test_treefamily9_long_initwithworld_evidence.py
+      - run: python3 tools/test_midsize5_initwithworld_evidence.py
+      - run: python3 tools/test_midtier15_initwithworld_evidence.py
+      - run: python3 tools/test_uppermid15_initwithworld_evidence.py
+      - run: python3 tools/test_kelpvine_big_initwithworld_evidence.py
+      - run: python3 tools/test_chest_big_initwithworld_evidence.py
+      - run: python3 tools/test_bigtwo_initwithworld_evidence.py
+      - run: python3 tools/test_hooks6_persistence_evidence.py
+      - run: python3 tools/test_npc_initwithworld_arm_evidence.py
+      - run: python3 tools/test_plant_loadsave_arm_evidence.py
+      - run: python3 tools/test_forwarder_arm_evidence.py
+      - run: python3 tools/test_tree_loadsave_arm_evidence.py
+      - run: python3 tools/test_tree_load_records_arm_evidence.py
+      - run: python3 tools/gen_trace_codes.py --check
+      - run: python3 tools/test_npc_loadvalues_arm_evidence.py
+      - run: python3 tools/test_tree_grow_arm_evidence.py
+      - run: python3 tools/test_freight_car_init_arm_evidence.py
+      - run: python3 tools/test_trade_portal_price_offsets_arm_evidence.py
+      - run: python3 tools/test_trading_post_init_slots_arm_evidence.py
+      - run: python3 tools/test_dynamic_object_init_derived_stuff_arm_evidence.py
+      - run: python3 tools/test_chest_init_with_world_arm_evidence.py
+      - run: python3 tools/gen_dynamic_object_type_table.py --check
+      - run: python3 tools/test_client_app_skeleton_evidence.py
+      - run: python3 tools/test_kelp_plant_init_arm_evidence.py
+      - run: python3 tools/test_vine_plant_init_arm_evidence.py
+      - run: python3 tools/test_freeblock_init_arm_evidence.py
+      - run: python3 tools/test_workbench_init_arm_evidence.py
+      - run: python3 tools/test_treefamily9_long_init_arm_evidence.py
+      - run: python3 tools/test_ownkey5_init_arm_evidence.py
+      - run: cmake -S reconstruction/recovered -B build-npc -DCMAKE_BUILD_TYPE=Release && cmake --build build-npc --target test_npc_init_with_world && ./build-npc/test_npc_init_with_world
+      - run: cmake -S reconstruction/recovered -B build-method -DCMAKE_BUILD_TYPE=${{ matrix.mode }}
+      - run: cmake --build build-method -j2
+      - run: ctest --test-dir build-method --output-on-failure
+      - run: python3 tools/test_assemble_server_snapshot.py build-method/decode_original_block

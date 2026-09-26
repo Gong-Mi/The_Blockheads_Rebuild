@@ -1,0 +1,148 @@
+{
+  "batch": "b3h",
+  "census": {
+    "covered_after_b3h": 11,
+    "remaining_methods": 32,
+    "remaining_words": 10192,
+    "selector_methods": 43,
+    "selector_words": 10976,
+    "words_covered_after_b3h": 784
+  },
+  "claim": "Five more implementations of initWithWorld:dynamicWorld:saveDict:cache: (SurfaceBlock 57w, PassengerCar 60w, HandCar 60w, Mirror 71w, SnowSurfaceBlock 71w; 319 words total) share one behavioural shape \u2014 objc_msgSendSuper2 to [super initWithWorld:dynamicWorld:saveDict:cache:] with the own-class superref, nil guard returning nil, then return self \u2014 with three of them being super-only and two (Mirror, SnowSurfaceBlock) additionally calling [self initSubDerivedItems] (the second post-init hook name of the line, alongside b3f's loadDerivedStuff). Their runtime superclasses resolve in-file to DynamicObject / TrainCar / TrainCar / InteractionObject / DynamicObject, i.e. the selector is a pure forwarding convention across unrelated hierarchies rather than one shared body; none reads a CFString key or writes an ivar; static level-A evidence only",
+  "classes": [
+    {
+      "boundary": "0x00812f48",
+      "claim": "forwards to [super initWithWorld:dynamicWorld:saveDict:cache:] through objc_msgSendSuper2 with its own-class superref and returns nil on a nil super result before returning self; reads no CFString key and writes no own ivar",
+      "class": "SurfaceBlock",
+      "code_words": 57,
+      "hook": null,
+      "imp": "0x00812e64",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_SurfaceBlock",
+        "msgsend_got": null,
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "super_selector_cell": "0x00e81dcc",
+        "superref_slot": "0x00e8bd70"
+      },
+      "own_ivars": [],
+      "own_keys": [],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:",
+      "shape": "super_only",
+      "super_call_word_index": 37
+    },
+    {
+      "boundary": "0x0081bdb8",
+      "claim": "forwards to [super initWithWorld:dynamicWorld:saveDict:cache:] through objc_msgSendSuper2 with its own-class superref and returns nil on a nil super result before returning self; reads no CFString key and writes no own ivar",
+      "class": "PassengerCar",
+      "code_words": 60,
+      "hook": null,
+      "imp": "0x0081bcc8",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_PassengerCar",
+        "msgsend_got": null,
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "super_selector_cell": "0x00e81ec4",
+        "superref_slot": "0x00e8bd78"
+      },
+      "own_ivars": [],
+      "own_keys": [],
+      "runtime_superclass": "TrainCar",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:",
+      "shape": "super_only",
+      "super_call_word_index": 40
+    },
+    {
+      "boundary": "0x00a4f654",
+      "claim": "forwards to [super initWithWorld:dynamicWorld:saveDict:cache:] through objc_msgSendSuper2 with its own-class superref and returns nil on a nil super result before returning self; reads no CFString key and writes no own ivar",
+      "class": "HandCar",
+      "code_words": 60,
+      "hook": null,
+      "imp": "0x00a4f564",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_HandCar",
+        "msgsend_got": null,
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "super_selector_cell": "0x00e84fd4",
+        "superref_slot": "0x00e8be2c"
+      },
+      "own_ivars": [],
+      "own_keys": [],
+      "runtime_superclass": "TrainCar",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:",
+      "shape": "super_only",
+      "super_call_word_index": 40
+    },
+    {
+      "boundary": "0x00a9f550",
+      "claim": "forwards to [super initWithWorld:dynamicWorld:saveDict:cache:] through objc_msgSendSuper2 with its own-class superref and returns nil on a nil super result, then calls [self initSubDerivedItems] before returning self; reads no CFString key and writes no own ivar",
+      "class": "Mirror",
+      "code_words": 71,
+      "hook": {
+        "call_word_index": 59,
+        "selector": "initSubDerivedItems",
+        "selector_cell": "0x00e856c0"
+      },
+      "imp": "0x00a9f434",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_Mirror",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "super_selector_cell": "0x00e856c4",
+        "superref_slot": "0x00e8be5c"
+      },
+      "own_ivars": [],
+      "own_keys": [],
+      "runtime_superclass": "InteractionObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:",
+      "shape": "super_plus_initSubDerivedItems",
+      "super_call_word_index": 38
+    },
+    {
+      "boundary": "0x00d8d9b8",
+      "claim": "forwards to [super initWithWorld:dynamicWorld:saveDict:cache:] through objc_msgSendSuper2 with its own-class superref and returns nil on a nil super result, then calls [self initSubDerivedItems] before returning self; reads no CFString key and writes no own ivar",
+      "class": "SnowSurfaceBlock",
+      "code_words": 71,
+      "hook": {
+        "call_word_index": 59,
+        "selector": "initSubDerivedItems",
+        "selector_cell": "0x00e88d3c"
+      },
+      "imp": "0x00d8d89c",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_SnowSurfaceBlock",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "super_selector_cell": "0x00e88d4c",
+        "superref_slot": "0x00e8bf38"
+      },
+      "own_ivars": [],
+      "own_keys": [],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:",
+      "shape": "super_plus_initSubDerivedItems",
+      "super_call_word_index": 38
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "method": "five more initWithWorld:dynamicWorld:saveDict:cache: forwarders \u2014 super-only and initSubDerivedItems shapes (batch b3h)",
+  "pic_base": "0x0105faf4",
+  "schema": 1,
+  "selector": "initWithWorld:dynamicWorld:saveDict:cache:",
+  "shapes": {
+    "super_only": [
+      "SurfaceBlock",
+      "PassengerCar",
+      "HandCar"
+    ],
+    "super_plus_initSubDerivedItems": [
+      "Mirror",
+      "SnowSurfaceBlock"
+    ]
+  }
+}

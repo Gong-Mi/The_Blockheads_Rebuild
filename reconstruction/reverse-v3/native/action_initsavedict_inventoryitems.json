@@ -1,0 +1,329 @@
+{
+  "batch": "b3d",
+  "boundary": "0x00735e54",
+  "claim": "Action -[initWithSaveDict:inventoryItems:] (815 w) calls [super init] through its own-class superref, returns nil when that fails, restores 12 scalar/object keys through objectForKey: + boolValue/intValue/unsignedLongValue/retain/getBytes:length:, keeps interactionItemType and craftableObjectType in locals, and when interactionItemIndex > 0 walks the inventoryItems argument (objectAtIndex: \u2192 count-1 last element \u2192 subItems \u2192 subItemIndex \u2192 last element \u2192 itemType) storing the found record into interactionItem@16, resetting interactionItem/interactionItemIndex/interactionItemSubIndex to nil/-1/-1 on a type mismatch, then builds craftableItemObject@40 by dispatching craftableObjectType 1/2/other to BlockheadCraftableItemObject / PaintingCraftableItemObject / CraftableItemObject alloc + initWithSaveDict: (the b3c initialisers consume exactly that nested dictionary); animationTimer@68 is a 1.0f constant and interactionTestResult@52 a 12-byte inline record; static level-A only, no runtime roundtrip",
+  "class": "Action",
+  "code_words": 815,
+  "constants": {
+    "animationTimer@68": "1.0f literal (vmov.f32 0x73523c \u2192 vstr 0x735500)",
+    "interactionItem@16": "explicit nil reset (0x735518)",
+    "interactionObjectID@32": "64-bit store, high word zeroed (0x7359cc + 0x7359d4)",
+    "interactionTestResult@52": "inline record, getBytes:length: 12 (0x735be8)"
+  },
+  "craftable_dispatch": [
+    {
+      "class_object": "OBJC_CLASS_$_BlockheadCraftableItemObject",
+      "classref_slot": "0x00e8a544",
+      "craftableObjectType": 1,
+      "instance_size": 152
+    },
+    {
+      "class_object": "OBJC_CLASS_$_PaintingCraftableItemObject",
+      "classref_slot": "0x00e8a548",
+      "craftableObjectType": 2,
+      "instance_size": 136
+    },
+    {
+      "class_object": "OBJC_CLASS_$_CraftableItemObject",
+      "classref_slot": "0x00e8a54c",
+      "craftableObjectType": null,
+      "instance_size": 128
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "imp": "0x00735198",
+  "inventory_walk": {
+    "array_argument": "arg3 inventoryItems",
+    "call_sites": [
+      "0x735590 objectAtIndex: (index)",
+      "0x7355a8 count",
+      "0x735618 objectAtIndex:(count-1)",
+      "0x735668 count",
+      "0x735718 subItems",
+      "0x73573c objectAtIndex:(subIndex)",
+      "0x7357b8 count",
+      "0x7357d4 objectAtIndex:(count-1)",
+      "0x735818 itemType"
+    ],
+    "entry_gate": "interactionItemIndex@20 > 0 (cmp/ble 0x735534)",
+    "stores_to_interactionItem": [
+      "0x735648",
+      "0x735758",
+      "0x7357e8"
+    ],
+    "type_mismatch_reset": {
+      "compare": "0x735820 (itemType vs dict interactionItemType)",
+      "equal_branch": "0x735824 (keep)",
+      "mismatch_sets": {
+        "interactionItem@16": "nil (0x735858)",
+        "interactionItemIndex@20": "-1 (0x735878)",
+        "interactionItemSubIndex@22": "-1 (0x735868)"
+      }
+    }
+  },
+  "keys": [
+    {
+      "cfstring_object": "0x00f8cc98",
+      "conversion": "boolValue",
+      "conversion_site": "0x0073537c",
+      "ivar": "OBJC_IVAR_$_Action.inProgress",
+      "ivar_offset": 4,
+      "key": "inProgress",
+      "objectforkey_site": "0x0073536c",
+      "store_kind": "byte_store",
+      "store_offset": 4,
+      "store_site": "0x00735390"
+    },
+    {
+      "cfstring_object": "0x00f8cca8",
+      "conversion": "boolValue",
+      "conversion_site": "0x007353b8",
+      "ivar": "OBJC_IVAR_$_Action.isAI",
+      "ivar_offset": 6,
+      "key": "isAI",
+      "objectforkey_site": "0x007353a8",
+      "store_kind": "byte_store",
+      "store_offset": 6,
+      "store_site": "0x007353cc"
+    },
+    {
+      "cfstring_object": "0x00f8ccb8",
+      "conversion": "intValue",
+      "conversion_site": "0x007353f4",
+      "ivar": "OBJC_IVAR_$_Action.goalTilePos",
+      "ivar_offset": 8,
+      "key": "goalTilePos.x",
+      "objectforkey_site": "0x007353e4",
+      "store_kind": "word_store",
+      "store_offset": 8,
+      "store_site": "0x00735408"
+    },
+    {
+      "cfstring_object": "0x00f8ccc8",
+      "conversion": "intValue",
+      "conversion_site": "0x00735430",
+      "ivar": "OBJC_IVAR_$_Action.goalTilePos",
+      "ivar_offset": 8,
+      "key": "goalTilePos.y",
+      "objectforkey_site": "0x00735420",
+      "store_kind": "word_store_pair",
+      "store_offset": 12,
+      "store_site": "0x00735444"
+    },
+    {
+      "cfstring_object": "0x00f8ccd8",
+      "conversion": "intValue",
+      "conversion_site": "0x0073546c",
+      "ivar": "OBJC_IVAR_$_Action.interactionItemIndex",
+      "ivar_offset": 20,
+      "key": "interactionItemIndex",
+      "objectforkey_site": "0x0073545c",
+      "store_kind": "halfword_store",
+      "store_offset": 20,
+      "store_site": "0x00735480"
+    },
+    {
+      "cfstring_object": "0x00f8cce8",
+      "conversion": "intValue",
+      "conversion_site": "0x007354a8",
+      "ivar": "OBJC_IVAR_$_Action.interactionItemSubIndex",
+      "ivar_offset": 22,
+      "key": "interactionItemSubIndex",
+      "objectforkey_site": "0x00735498",
+      "store_kind": "halfword_store",
+      "store_offset": 22,
+      "store_site": "0x007354bc"
+    },
+    {
+      "cfstring_object": "0x00f8cd08",
+      "conversion": "intValue",
+      "conversion_site": "0x00735934",
+      "ivar": "OBJC_IVAR_$_Action.goalInteraction",
+      "ivar_offset": 24,
+      "key": "goalInteraction",
+      "objectforkey_site": "0x0073591c",
+      "store_kind": "word_store",
+      "store_offset": 24,
+      "store_site": "0x0073594c"
+    },
+    {
+      "cfstring_object": "0x00f8cd18",
+      "conversion": "intValue",
+      "conversion_site": "0x00735974",
+      "ivar": "OBJC_IVAR_$_Action.pathType",
+      "ivar_offset": 28,
+      "key": "pathType",
+      "objectforkey_site": "0x00735964",
+      "store_kind": "word_store",
+      "store_offset": 28,
+      "store_site": "0x0073598c"
+    },
+    {
+      "cfstring_object": "0x00f8cd28",
+      "conversion": "unsignedLongValue",
+      "conversion_site": "0x007359b4",
+      "ivar": "OBJC_IVAR_$_Action.interactionObjectID",
+      "ivar_offset": 32,
+      "key": "interactionObjectID",
+      "objectforkey_site": "0x007359a4",
+      "store_kind": "word_store_hi_zero",
+      "store_offset": 32,
+      "store_site": "0x007359cc"
+    },
+    {
+      "cfstring_object": "0x00f8cd58",
+      "conversion": "intValue",
+      "conversion_site": "0x00735cd4",
+      "ivar": "OBJC_IVAR_$_Action.craftCountOrExtraData",
+      "ivar_offset": 44,
+      "key": "craftCountOrExtraData",
+      "objectforkey_site": "0x00735cc4",
+      "store_kind": "halfword_store",
+      "store_offset": 44,
+      "store_site": "0x00735ce8"
+    },
+    {
+      "cfstring_object": "0x00f8cd68",
+      "conversion": "retain",
+      "conversion_site": "0x00735d10",
+      "ivar": "OBJC_IVAR_$_Action.inventoryChange",
+      "ivar_offset": 64,
+      "key": "inventoryChange",
+      "objectforkey_site": "0x00735d00",
+      "store_kind": "word_store",
+      "store_offset": 64,
+      "store_site": "0x00735d24"
+    },
+    {
+      "cfstring_object": "0x00f8cd78",
+      "conversion": "getBytes:length:",
+      "conversion_site": "0x00735d74",
+      "ivar": "OBJC_IVAR_$_Action.interactionTestResult",
+      "ivar_offset": 52,
+      "key": "interactionTestResult",
+      "objectforkey_site": "0x00735d3c",
+      "store_kind": "blob_store",
+      "store_offset": 52,
+      "store_site": "0x00735d74"
+    }
+  ],
+  "local_keys": [
+    {
+      "cfstring_object": "0x00f8ccf8",
+      "conversion_site": "0x007354e4",
+      "key": "interactionItemType",
+      "note": "captured into a stack local, compared later (interactionItemType: item type match; craftableObjectType: class dispatch)",
+      "objectforkey_site": "0x007354d4",
+      "stored_to": "0x007354e8"
+    },
+    {
+      "cfstring_object": "0x00f8cd48",
+      "conversion_site": "0x00735a5c",
+      "key": "craftableObjectType",
+      "note": "captured into a stack local, compared later (interactionItemType: item type match; craftableObjectType: class dispatch)",
+      "objectforkey_site": "0x00735a4c",
+      "stored_to": "0x00735a60"
+    }
+  ],
+  "method": "Action initWithSaveDict:inventoryItems: read-back evidence (batch b3d)",
+  "msgSend_veneer": {
+    "veneer": "0x001c281c",
+    "veneer_slot": "0x0105fb18",
+    "veneer_target": "objc_msgSend"
+  },
+  "object_keys": [
+    {
+      "cfstring_object": "0x00f8cd38",
+      "consumed_by": "alloc + initWithSaveDict: of the class selected by craftableObjectType",
+      "key": "craftableItemObject",
+      "nil_cmp_site": "0x007359fc",
+      "objectforkey_site": "0x007359ec"
+    }
+  ],
+  "pic_base": "0x0105faf4",
+  "pool_key_cells": {
+    "craftCountOrExtraData": "0x00f8cd58",
+    "craftableItemObject": "0x00f8cd38",
+    "craftableObjectType": "0x00f8cd48",
+    "goalInteraction": "0x00f8cd08",
+    "goalTilePos.x": "0x00f8ccb8",
+    "goalTilePos.y": "0x00f8ccc8",
+    "inProgress": "0x00f8cc98",
+    "interactionItemIndex": "0x00f8ccd8",
+    "interactionItemSubIndex": "0x00f8cce8",
+    "interactionItemType": "0x00f8ccf8",
+    "interactionObjectID": "0x00f8cd28",
+    "interactionTestResult": "0x00f8cd78",
+    "inventoryChange": "0x00f8cd68",
+    "isAI": "0x00f8cca8",
+    "pathType": "0x00f8cd18"
+  },
+  "pool_keys": [
+    "craftCountOrExtraData",
+    "craftableItemObject",
+    "craftableObjectType",
+    "goalInteraction",
+    "goalTilePos.x",
+    "goalTilePos.y",
+    "inProgress",
+    "interactionItemIndex",
+    "interactionItemSubIndex",
+    "interactionItemType",
+    "interactionObjectID",
+    "interactionTestResult",
+    "inventoryChange",
+    "isAI",
+    "pathType"
+  ],
+  "retain_sites": {
+    "interactionItem@16": "0x7358ec",
+    "inventoryChange@64": "0x735d10"
+  },
+  "save_side": {
+    "keys": [
+      "craftCountOrExtraData",
+      "craftableItemObject",
+      "goalInteraction",
+      "goalTilePos.x",
+      "goalTilePos.y",
+      "inProgress",
+      "interactionItemIndex",
+      "interactionItemSubIndex",
+      "interactionItemType",
+      "interactionObjectID",
+      "interactionTestResult",
+      "inventoryChange",
+      "isAI",
+      "pathType"
+    ],
+    "read_only": [
+      "craftableObjectType"
+    ],
+    "source": "subclass_savedict_keys_b2o.json",
+    "write_only": []
+  },
+  "schema": 1,
+  "selector": "initWithSaveDict:inventoryItems:",
+  "selrefs": [
+    "alloc",
+    "boolValue",
+    "count",
+    "getBytes:length:",
+    "init",
+    "initWithSaveDict:",
+    "intValue",
+    "itemType",
+    "objectAtIndex:",
+    "objectForKey:",
+    "retain",
+    "subItems",
+    "unsignedLongValue"
+  ],
+  "super_init": {
+    "call_site": "0x007351f4",
+    "class_object": "OBJC_CLASS_$_Action",
+    "got_slot": "0x0105b79c",
+    "selector": "init",
+    "superref_slot": "0x00e8bd04"
+  }
+}

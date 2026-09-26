@@ -1,0 +1,67 @@
+{
+  "batch": "b3g",
+  "boundary": "0x00644ca0",
+  "claim": "NPC -[initWithWorld:dynamicWorld:saveDict:cache:] (95 w) forwards to [super initWithWorld:dynamicWorld:saveDict:cache:] through objc_msgSendSuper2 with its own-class superref (OBJC_CLASS_$_NPC \u2192 runtime super resolved in-file), returns nil when that fails, then calls [self loadValuesFromSaveDict:saveDict] and finally seeds randomHarmFromHungerTimer@144 with 1.0f + 20.0f * (float(lrand48()) / 2^31f) \u2014 a random draw in [1, 21) coming from the local wrapper 0x006445d8 \u2192 ABI veneer 0x001c2804 \u2192 imported lrand48 (slot 0x0105fb10), so this loader is NOT deterministic and any differential roundtrip must control lrand48; static level-A evidence only",
+  "class": "NPC",
+  "code_words": 95,
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "hunger_timer_seed": {
+    "determinism": "NON-deterministic: seeded from lrand48()",
+    "formula": "randomHarmFromHungerTimer@144 = 1.0f + 20.0f * (float(lrand48()) / 2^31f)",
+    "ivar": "OBJC_IVAR_$_NPC.randomHarmFromHungerTimer",
+    "ivar_offset": 144,
+    "range": "[1.0, 21.0] (float32 rounds the largest lrand48 values up: v >= 2^31-2^7 lands on exactly 21.0f)",
+    "words": "vmov s0=1.0f (67) / vmov s2=20.0f (69) / vldr s4=2^31f (70) / vmov s6,r0 (71) / vcvt.f32.s32 (72) / vdiv (73) / vmul (74) / vadd (75) / vstr (79)"
+  },
+  "imp": "0x00644b24",
+  "lrand48_chain": {
+    "import": "lrand48",
+    "slot": "0x0105fb10",
+    "veneer": "0x001c2804",
+    "wrapper": "0x006445d8",
+    "wrapper_words": [
+      "e92d4800",
+      "e1a0b00d",
+      "ebedf887",
+      "e8bd8800"
+    ]
+  },
+  "method": "NPC initWithWorld:dynamicWorld:saveDict:cache: read-back evidence (batch b3g)",
+  "pic_base": "0x0105faf4",
+  "pool_keys": [],
+  "post_load": {
+    "argument": "saveDict (5th argument)",
+    "call_word_index": 61,
+    "selector": "loadValuesFromSaveDict:",
+    "selector_cell": "0x00e7f104"
+  },
+  "schema": 1,
+  "selector": "initWithWorld:dynamicWorld:saveDict:cache:",
+  "selrefs": [
+    "initWithWorld:dynamicWorld:saveDict:cache:",
+    "loadValuesFromSaveDict:"
+  ],
+  "shape": {
+    "loadValues_call_word_index": 61,
+    "lrand48_wrapper_call_word_index": 62,
+    "nil_guard_word_indices": [
+      44,
+      45
+    ],
+    "return_nil_word_indices": [
+      46,
+      47,
+      48
+    ],
+    "super_call_word_index": 38,
+    "timer_store_word_index": 79
+  },
+  "super_init": {
+    "call_word_index": 38,
+    "class_object": "OBJC_CLASS_$_NPC",
+    "got_slot": "0x0105b79c",
+    "runtime_superclass": "DynamicObject",
+    "selector": "initWithWorld:dynamicWorld:saveDict:cache:",
+    "superref_slot": "0x00e8bc84"
+  }
+}
