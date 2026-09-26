@@ -261,7 +261,22 @@ WORKBENCH_INIT_CODES = {
 TREEFAMILY9_LONG_INIT_CODES = {
     "MsgSendSuper": 0
 }
-TABLES = {    'tree_grow': TREE_GROW_CODES,    'npc_loadvalues': NPC_LOADVALUES_CODES,    'freight_car_init': FREIGHT_CAR_INIT_CODES,    'trade_portal_price_offsets': TRADE_PORTAL_PRICE_OFFSETS_CODES,    'trading_post_init_slots': TRADING_POST_INIT_SLOTS_CODES,    'dynamic_object_init_derived_stuff': DYNAMIC_OBJECT_INIT_DERIVED_STUFF_CODES,    'chest_init': CHEST_INIT_CODES,    'kelp_init': KELP_INIT_CODES,    'vine_init': VINE_INIT_CODES,    'freeblock_init': FREEBLOCK_INIT_CODES,    'workbench_init': WORKBENCH_INIT_CODES,    'treefamily9_long_init': TREEFAMILY9_LONG_INIT_CODES,}
+OWNKEY5_INIT_CODES = {
+    "MsgSendSuper": 0,
+    "ObjectForKey": 1,
+    "IntValue": 2,
+    "FloatValue": 3,
+    "BoolValue": 4,
+    "DoubleValue": 5,
+    "Retain": 6,
+    "StoreIvar": 7,
+    "InitSubDerivedItems": 8,
+    "UpdateTextures": 9,
+    "LoadSaveDictValues": 10,
+    "ObjectType": 11,
+    "DynamicWorldChangedAtPos": 12
+}
+TABLES = {    'tree_grow': TREE_GROW_CODES,    'npc_loadvalues': NPC_LOADVALUES_CODES,    'freight_car_init': FREIGHT_CAR_INIT_CODES,    'trade_portal_price_offsets': TRADE_PORTAL_PRICE_OFFSETS_CODES,    'trading_post_init_slots': TRADING_POST_INIT_SLOTS_CODES,    'dynamic_object_init_derived_stuff': DYNAMIC_OBJECT_INIT_DERIVED_STUFF_CODES,    'chest_init': CHEST_INIT_CODES,    'kelp_init': KELP_INIT_CODES,    'vine_init': VINE_INIT_CODES,    'freeblock_init': FREEBLOCK_INIT_CODES,    'workbench_init': WORKBENCH_INIT_CODES,    'treefamily9_long_init': TREEFAMILY9_LONG_INIT_CODES,    'ownkey5_init': OWNKEY5_INIT_CODES,}
 
 def self_test():
     for table, codes in TABLES.items():

@@ -84,8 +84,8 @@ def main():
     assert 'enumerationMutation' in harness or '0x0105FD1C' in harness
     assert 'recovered_freeblock_init' in cmake
     assert 'test_freeblock_init_arm_evidence.py' in workflow
-    assert 'implemented | 49' in workflow_android
-    assert 'semantics | 49' in workflow_android
+    assert 'implemented | 54' in workflow_android
+    assert 'semantics | 54' in workflow_android
     assert 'boundary: 0x00627f74' in listing
     for anchor in (IMP, '0x00e8bc78', '0x00627c40'):
         assert anchor in listing, anchor
