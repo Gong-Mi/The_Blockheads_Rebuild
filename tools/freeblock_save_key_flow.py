@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
-"""Bounded forward trace of FreeBlock -[getSaveDict] pairing blx sites to selector/key.
+"""Bounded linear candidate trace of FreeBlock -[getSaveDict].
 
 Semantics:
 - literal-cell loads are tagged CELL(celladdr); adding the PIC base resolves them
   to concrete addresses exactly like the checked-in recovery scripts do.
 - stack stores keep values in a simulated stack dict; loads check the stack first.
-- any value the trace cannot derive stays None; no site is promoted by proximity.
+- unresolved machine targets stay None; all call sites remain visible.
+- this is NOT a CFG evaluator or a key/value pairing proof: conditional paths,
+  Foundation behavior and value provenance require independent verification.
 """
 import json
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from capstone import Cs, CS_ARCH_ARM, CS_MODE_ARM
+from capstone import Cs, CS_ARCH_ARM, CS_MODE_ARM, CS_GRP_CALL, CS_GRP_JUMP
 from trace_objc_dispatch import ELFMemory
 
 START, CODE_END = 0x629804, 0x62A410
@@ -23,9 +25,12 @@ def sgn(v):
 
 
 def main(elf_path, start=None, end=None):
-    global START, CODE_END
-    if start is not None:
-        START, CODE_END = start, end
+    if (start is None) != (end is None):
+        raise ValueError("start and end must be supplied together")
+    if start is None:
+        start, end = START, CODE_END
+    if not (0 <= start < end <= 0x100000000) or start % 4 or end % 4:
+        raise ValueError("expected a nonempty, aligned ARM32 [start,end) interval")
     m = ELFMemory(Path(elf_path))
 
     def word(a):
@@ -79,12 +84,23 @@ def main(elf_path, start=None, end=None):
         return t[1]
 
     md = Cs(CS_ARCH_ARM, CS_MODE_ARM)
-    blob = m.data[m.offset(START, CODE_END - START):]
+    md.detail = True
+    offset = m.offset(start, end - start)
+    if offset is None:
+        raise ValueError("requested instruction interval is not file-backed")
+    blob = m.data[offset:offset + end - start]
+    if len(blob) != end - start:
+        raise ValueError("truncated instruction interval")
     rows = []
-    for ins in md.disasm(blob, START):
+    branches = []
+    decoded_end = start
+    for ins in md.disasm(blob, start):
         mn, ops = ins.mnemonic, ins.op_str
         a = ins.address
-        if mn.startswith('bl'):
+        decoded_end = a + ins.size
+        if ins.group(CS_GRP_JUMP) and not ins.group(CS_GRP_CALL):
+            branches.append({"site": f"0x{a:08x}", "mn": mn, "ops": ops})
+        if ins.group(CS_GRP_CALL):
             sel_name = None
             r1 = val('r1')
             if r1 is not None:
@@ -104,7 +120,7 @@ def main(elf_path, start=None, end=None):
             rows.append({'site': f'0x{a:08x}', 'mn': mn, 'ops': ops,
                          'r0': val('r0'), 'r1_sel': sel_name, 'r3_key': key,
                          'r2_key': key_text(val('r2')),
-                         'dispatch': mn_note or ('objc_msgSend' if mn == 'blx' else None)})
+                         'dispatch': mn_note})
             for c in ('r0', 'r1', 'r2', 'r3', 'r12'):
                 regs[c] = None
             continue
@@ -232,8 +248,16 @@ def main(elf_path, start=None, end=None):
         if parts and parts[0].startswith('r') or (parts and parts[0] in ('ip', 'lr', 'fp', 'sl')):
             regs[parts[0]] = None
 
+    if decoded_end != end:
+        raise ValueError(f"decoding stopped at {decoded_end:#x}, before {end:#x}")
     resolved = [r for r in rows if r['r1_sel'] or r['r3_key']]
-    print(json.dumps({'total_blx_bl_sites': len(rows), 'resolved_sites': resolved}, indent=1))
+    print(json.dumps({
+        'analysis_kind': 'linear-candidates-only',
+        'conditional_paths_evaluated': False,
+        'start': f'0x{start:08x}', 'end': f'0x{end:08x}',
+        'total_blx_bl_sites': len(rows), 'sites': rows,
+        'branch_sites': branches, 'resolved_sites': resolved,
+    }, indent=1))
 
 
 if __name__ == '__main__':

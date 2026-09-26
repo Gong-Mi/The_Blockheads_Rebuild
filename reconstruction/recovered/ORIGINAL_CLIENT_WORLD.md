@@ -22,7 +22,9 @@ Each loaded block retains the original 1.7.6 layout:
 
 Acceptance contracts:
 
-- ASCII `<signed-x>_<signed-y>` block keys are required;
+- ASCII `<signed-x>_<signed-y>` block keys are required, and `key_hex` must strictly match the hex encoding of `<x>_<y>`;
+- raw block filenames must strictly match `<x>_<y>.raw`;
+- `raw_sha256` checksum verification is enforced for each block file against the loaded bytes;
 - duplicate coordinates are rejected;
 - raw files must be exactly 65,541 bytes;
 - missing coordinates return `nullptr` without fabricating a block;

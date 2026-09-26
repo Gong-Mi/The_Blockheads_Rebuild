@@ -38,8 +38,8 @@ int main() {
     writeRaw(root / "blocks/-2_3.raw", 17, 0xa5, 0x12345678);
     writeRaw(root / "blocks/0_0.raw", 29, 0x5a, 0x01020304);
     writeIndex(root,
-        "2d325f33\t-2\t3\tblocks/-2_3.raw\tdeadbeef\t65541\n"
-        "305f30\t0\t0\tblocks/0_0.raw\tdeadbeef\t65541\n");
+        "2d325f33\t-2\t3\tblocks/-2_3.raw\t954394e953de740bdcad4ea4248552cd5a44bd89ddb4c74ea6f0f55ebcc414ac\t65541\n"
+        "305f30\t0\t0\tblocks/0_0.raw\t07913b029ea32a2eb16000705916f84ef28c43610212f9a3cf2a1a5fe0aded84\t65541\n");
 
     bh176::OriginalClientWorld world;
     std::string error;
@@ -52,13 +52,25 @@ int main() {
     assert(block->physicalBlockField24 == 0x12345678U);
     assert(world.blockAt(1, 3) == nullptr && "missing blocks are explicit cache misses");
 
+    // Check that checksum mismatch is rejected and preserves previous state
     writeIndex(root,
-        "2d325f33\t-2\t3\tblocks/-2_3.raw\tdeadbeef\t65541\n"
-        "305f30\t-2\t3\tblocks/0_0.raw\tdeadbeef\t65541\n");
+        "2d325f33\t-2\t3\tblocks/-2_3.raw\tdeadbeef00000000000000000000000000000000000000000000000000000000\t65541\n");
+    assert(!world.load(root, &error) && error.find("checksum") != std::string::npos);
+    assert(world.blockCount() == 2 && "failed load must not destroy previous state");
+
+    // Check that key_hex / coordinate mismatch is rejected
+    writeIndex(root,
+        "305f30\t-2\t3\tblocks/-2_3.raw\t954394e953de740bdcad4ea4248552cd5a44bd89ddb4c74ea6f0f55ebcc414ac\t65541\n");
+    assert(!world.load(root, &error) && error.find("coordinate") != std::string::npos);
+    assert(world.blockCount() == 2 && "failed load must not destroy previous state");
+
+    writeIndex(root,
+        "2d325f33\t-2\t3\tblocks/-2_3.raw\t954394e953de740bdcad4ea4248552cd5a44bd89ddb4c74ea6f0f55ebcc414ac\t65541\n"
+        "2d325f33\t-2\t3\tblocks/-2_3.raw\t954394e953de740bdcad4ea4248552cd5a44bd89ddb4c74ea6f0f55ebcc414ac\t65541\n");
     assert(!world.load(root, &error) && error.find("duplicate") != std::string::npos);
     assert(world.blockCount() == 2 && "failed load must not destroy previous state");
 
-    writeIndex(root, "2d325f33\t-2\t3\tblocks/-2_3.raw\tdeadbeef\t1\n");
+    writeIndex(root, "2d325f33\t-2\t3\tblocks/-2_3.raw\t954394e953de740bdcad4ea4248552cd5a44bd89ddb4c74ea6f0f55ebcc414ac\t1\n");
     assert(!world.load(root, &error) && error.find("size") != std::string::npos);
     assert(world.blockCount() == 2);
 

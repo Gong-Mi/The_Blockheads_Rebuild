@@ -1,7 +1,7 @@
 name: Save assembly method
 on:
   pull_request:
-    branches: [reverse-v3]
+    branches: [reverse-v3, methods/save]
   workflow_dispatch:
 jobs:
   recovered:
@@ -11,7 +11,10 @@ jobs:
         mode: [Debug, Release]
     steps:
       - uses: actions/checkout@v4
-      - run: python3 -m pip install lmdb
+      - run: python3 -m pip install lmdb capstone==5.0.7 pyelftools unicorn
+      - run: python3 tools/test_freeblock_save_key_flow.py
+      - run: python3 tools/test_savedict_arm_semantics.py
+      - run: python3 tools/test_trace_savedict_arm_features.py
       - run: python3 tools/test_export_server_world.py
       - run: python3 tools/test_dynamic_object_uniqueid_evidence.py
       - run: python3 tools/test_dynamic_object_objecttype_evidence.py
@@ -85,4 +88,4 @@ jobs:
       - run: cmake -S reconstruction/recovered -B build-method -DCMAKE_BUILD_TYPE=${{ matrix.mode }}
       - run: cmake --build build-method -j2
       - run: ctest --test-dir build-method --output-on-failure
-      - run: python3 tools/test_assemble_server_snapshot.py build-method/decode_original_block
+      - run: python3 tools/test_assemble_server_snapshot.py build-method/decode_original_block build-method/load_client_world
