@@ -135,6 +135,16 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(blockheads_recovered_workbench PUBLIC -fno-fast-math -ffp-contract=off)
 endif()
 
+# b3j "forward-then-read" loaders, executed (batch ownkey5): ONE shared engine
+# (ownkey_loader.cpp) plus five thin per-class descriptor tables
+# (ownkey5_init.cpp). The plans are data, not five copies of a function body.
+add_library(blockheads_recovered_ownkey5 STATIC ownkey5_init.cpp ownkey_loader.cpp)
+target_include_directories(blockheads_recovered_ownkey5 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_ownkey5 PUBLIC cxx_std_17)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(blockheads_recovered_ownkey5 PUBLIC -fno-fast-math -ffp-contract=off)
+endif()
+
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     include(CTest)
     if(BUILD_TESTING)
@@ -210,6 +220,10 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         target_link_libraries(test_workbench_init PRIVATE blockheads_recovered_workbench)
         target_compile_options(test_workbench_init PRIVATE -UNDEBUG)
         add_test(NAME recovered_workbench_init COMMAND test_workbench_init)
+        add_executable(test_ownkey5_init ../../tools/test_ownkey5_init.cpp)
+        target_link_libraries(test_ownkey5_init PRIVATE blockheads_recovered_ownkey5)
+        target_compile_options(test_ownkey5_init PRIVATE -UNDEBUG)
+        add_test(NAME recovered_ownkey5_init COMMAND test_ownkey5_init)
         add_executable(test_gameview_update ../../tools/test_gameview_update.cpp)
         target_link_libraries(test_gameview_update PRIVATE blockheads_recovered_view)
         add_test(NAME gameview_update COMMAND test_gameview_update)

@@ -261,5 +261,20 @@ enum class WorkbenchInitCall : std::uint8_t {
     InitSubDerivedItems = 66,
     ReleaseSlot = 67
 };
+enum class OwnKey5InitCall : std::uint8_t {
+    MsgSendSuper = 0,
+    ObjectForKey = 1,
+    IntValue = 2,
+    FloatValue = 3,
+    BoolValue = 4,
+    DoubleValue = 5,
+    Retain = 6,
+    StoreIvar = 7,
+    InitSubDerivedItems = 8,
+    UpdateTextures = 9,
+    LoadSaveDictValues = 10,
+    ObjectType = 11,
+    DynamicWorldChangedAtPos = 12
+};
 }  // namespace recovered
 }  // namespace blockheads
