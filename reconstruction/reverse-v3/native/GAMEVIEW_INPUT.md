@@ -12,6 +12,16 @@ Original ELF SHA256: `733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc3
 
 The gesture has 30 branch/join entries (20 conditional plus 10 unconditional); the small double-tap method's inventory includes BX LR as a return, not another conditional branch. Pools end at 0x92de5c/0x940f90/0x940ff0. ARM.exidx boundaries, symbol metadata and instruction words are pinned. `gameview_input_evidence.py` decodes PIC field/selector chains, VFP immediate bits, and PLT imports independently of disassembler labels. All gesture calls and branches have explicit reviewed routes in JSON, not merely a raw address count. Helper assembly covers Vector2 construction, identity, per-lane multiplication/division/addition/subtraction. No reciprocal replacement for the division helper.
 
+## Primary touch continuation
+
+| Method | Verified interval, exclusive end | Words | Calls / branches |
+|---|---|---:|---:|
+| `GameView startTouch:withTouch:withEvent:` | `0x0092be2c..0x0092c148` | 199 (includes pool) | 7 / 8 |
+| `GameView moveTouch:` | `0x0092c148..0x0092c3f4` | 171 (includes pool) | 4 / 10 |
+| `World moveTouch:index:` | `0x005b3278..0x005b3308` | 36 (includes pool) | 1 / 0 |
+
+Primary move plus its World forwarding tail are documented in `GAMEVIEW_MOVETOUCH.md`; the dynamic `UIManager`/menu callees are still external boundaries.
+
 ## Recovered behavior
 
 - pinchZoomToScale ignores the by-value float after spilling it. It writes pinchZooming=true then hasPinchVelocity=false. It does not set pinchScale and does not notify projection.
@@ -29,7 +39,7 @@ The gesture has 30 branch/join entries (20 conditional plus 10 unconditional); t
 
 Mandatory external calls remain interfaces: uiManager/currentTouchIsInAnyButtons, allowsPanning, setTranslatingToGoal, startPinchOrPan and GameView.updateTranslation. These callee bodies are NOT declared recovered. Existing FrameWorld methods and platform float classification also define acceptance boundaries. `std::isnan/isfinite` models classification, not imported implementation/FPSCR exception identity.
 
-This is single-owner synchronous callback execution, not an ObjC memory overlay. Input/window producers, primary/secondary touch callbacks, init/window sizing, World.update and Android gesture-to-frame plumbing remain unfinished. No original/runtime differential, Android foreground or device gameplay test was run. Method manifest: 15 implemented, zero original-runtime behavior-verified.
+This is single-owner synchronous callback execution, not an ObjC memory overlay. Primary start/move bodies now have typed recovered-method modules; primary end/cancel, secondary callbacks, init/window sizing, World.update and Android gesture-to-frame plumbing remain unfinished. No original/runtime differential, Android foreground or device gameplay test was run. Current input/update/sound manifest: 18 methods (GameView 7, World 8, MJSoundManager 3) implemented as recovered-method modules; zero original-runtime behavior-verified.
 
 ## Verification and reproduction
 

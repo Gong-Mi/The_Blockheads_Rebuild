@@ -469,6 +469,32 @@
    "evidence": "reconstruction/reverse-v3/native/GAMEVIEW_STARTTOUCH.md",
    "integration": "recovered-method-module",
    "scope": "Static bounded-body map (199 words, PIC base 0x0105faf4) with per-instruction anchors: startTouchHasntMoved/primaryTouchIsActiveInUI cleared before any gate; menu path iff mainMenuUI!=nil AND world==nil forwards [withTouch tapCount] to [mainMenuUI startTouch:tapCount:]; world path gates [world loadComplete] (sxtb) and [world isSimulating] (sxtb), re-sends tapCount, stores ONLY the low byte of [world startTouch:tapCount:index:0], and on [world touchIsInUI:] sxtb==0 sets startTouchHasntMoved=1 with a full-word CGPoint store. Receiver reloads and nil-dispatch chains modeled; withEvent never read. Local fixture tests O0/O2 only; not original ARM runtime differential, not UI/World callee internals, not a game adapter."
+  },
+  {
+   "implementation": "0x0092c148",
+   "class": "GameView",
+   "kind": "instance",
+   "selector": "moveTouch:",
+   "types": "v16@0:4{CGPoint=ff}8",
+   "entry_point": "blockheads::recovered::moveTouch",
+   "source": "reconstruction/recovered/gameview_move_touch.cpp",
+   "test": "tools/test_gameview_movetouch.cpp",
+   "evidence": "reconstruction/reverse-v3/native/GAMEVIEW_MOVETOUCH.md",
+   "integration": "recovered-method-module",
+   "scope": "Static complete bounded body (158 code words, 13 literal-pool words), all four calls/ten branches, receiver reloads and ordered 2.0f latch checks represented in a typed host module. Synthetic callback tests O0/O2 only; mainMenuUI/UIManager bodies, Android adapter and original-runtime equivalence remain unverified."
+  },
+  {
+   "implementation": "0x005b3278",
+   "class": "World",
+   "kind": "instance",
+   "selector": "moveTouch:index:",
+   "types": "v20@0:4{CGPoint=ff}8i16",
+   "entry_point": "blockheads::recovered::worldMoveTouch",
+   "source": "reconstruction/recovered/world_move_touch.cpp",
+   "test": "tools/test_gameview_movetouch.cpp",
+   "evidence": "reconstruction/reverse-v3/native/GAMEVIEW_MOVETOUCH.md",
+   "integration": "recovered-method-module",
+   "scope": "Complete 33-code-word forwarding body: nil-safe single UIManager moveTouch:index: dispatch preserving CGPoint and index, with no local state writes. Typed host fixture only; UIManager body, APK input wiring and original-runtime equivalence remain unverified."
   }
  ]
 }

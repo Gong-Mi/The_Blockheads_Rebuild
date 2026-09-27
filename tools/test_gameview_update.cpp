@@ -42,6 +42,7 @@ struct World final : FrameWorld {
     std::int8_t touchIsInUI(FrameVector2) override {
         event("touchisinui"); return 0;
     }
+    void moveTouch(FrameVector2, std::int32_t) override { event("movetouch"); }
 };
 struct Defaults final : FrameDefaults {
     Trace& trace; float f{}; double d{};

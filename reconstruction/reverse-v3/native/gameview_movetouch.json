@@ -1,0 +1,160 @@
+{
+  "batch": "GameView moveTouch: -> World moveTouch:index: forwarding tail",
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "methods": [
+    {
+      "arm_exidx_end": "0x0092c3f4",
+      "branches": [
+        {
+          "condition": "beq: mainMenuUI == nil -> World path",
+          "site": "0x0092c190",
+          "target": "0x0092c200"
+        },
+        {
+          "condition": "bne: world != nil -> World path",
+          "site": "0x0092c1b8",
+          "target": "0x0092c200"
+        },
+        {
+          "condition": "b: menu callback done -> epilogue",
+          "site": "0x0092c1fc",
+          "target": "0x0092c3b8"
+        },
+        {
+          "condition": "beq: loadComplete byte == 0 -> return",
+          "site": "0x0092c248",
+          "target": "0x0092c3b4"
+        },
+        {
+          "condition": "bne: isSimulating byte != 0 -> return",
+          "site": "0x0092c294",
+          "target": "0x0092c3b4"
+        },
+        {
+          "condition": "beq: primaryTouchIsActiveInUI == 0 -> skip indexed send",
+          "site": "0x0092c2b8",
+          "target": "0x0092c308"
+        },
+        {
+          "condition": "bgt: abs(deltaX) > 2.0 -> clear latch",
+          "site": "0x0092c348",
+          "target": "0x0092c390"
+        },
+        {
+          "condition": "ble: abs(deltaY) <= 2.0 or unordered -> preserve latch",
+          "site": "0x0092c38c",
+          "target": "0x0092c3b0"
+        },
+        {
+          "condition": "b: join",
+          "site": "0x0092c3b0",
+          "target": "0x0092c3b4"
+        },
+        {
+          "condition": "b: epilogue",
+          "site": "0x0092c3b4",
+          "target": "0x0092c3b8"
+        }
+      ],
+      "calls": [
+        {
+          "route": "bl objc_msgSend@plt",
+          "selector_route": "mainMenuUI -[moveTouch:]",
+          "site": "0x0092c1f8",
+          "target": "0x001c281c"
+        },
+        {
+          "route": "blx r2 via objc_msgSend GLOB_DAT",
+          "selector_route": "World -[loadComplete]",
+          "site": "0x0092c23c"
+        },
+        {
+          "route": "blx r2 via objc_msgSend GLOB_DAT",
+          "selector_route": "World -[isSimulating]",
+          "site": "0x0092c288"
+        },
+        {
+          "route": "bl objc_msgSend@plt",
+          "selector_route": "World -[moveTouch:index:] (index literal 0)",
+          "site": "0x0092c304",
+          "target": "0x001c281c"
+        }
+      ],
+      "claim": "bounded static method map + typed host snapshot; dynamic ObjC callees and original runtime are not verified",
+      "class": "GameView",
+      "code_end_exclusive": "0x0092c3c0",
+      "code_words": 158,
+      "implementation": "0x0092c148",
+      "ivars": [
+        {
+          "evidence": "previous hash-pinned GameView start-touch map",
+          "name": "mainMenuUI",
+          "offset": 20
+        },
+        {
+          "evidence": "previous hash-pinned GameView start-touch map",
+          "name": "world",
+          "offset": 24
+        },
+        {
+          "evidence": "previous hash-pinned GameView start/cancel-touch maps",
+          "name": "primaryTouchIsActiveInUI",
+          "offset": 496
+        },
+        {
+          "evidence": "previous hash-pinned GameView start-touch map",
+          "name": "startTouchPos",
+          "offset": 488
+        },
+        {
+          "evidence": "previous hash-pinned GameView start/cancel-touch maps",
+          "name": "startTouchHasntMoved",
+          "offset": 486
+        }
+      ],
+      "literal_pool_words": 13,
+      "pic_base": "0x0105faf4",
+      "selector": "moveTouch:",
+      "types": "v16@0:4{CGPoint=ff}8",
+      "verified_interval_words": 171
+    },
+    {
+      "arm_exidx_end": "0x005b3308",
+      "branches": [],
+      "calls": [
+        {
+          "route": "bl objc_msgSend@plt",
+          "selector_route": "UIManager -[moveTouch:index:]",
+          "site": "0x005b32f0",
+          "target": "0x001c281c"
+        }
+      ],
+      "claim": "bounded static method map + typed host snapshot; dynamic ObjC callees and original runtime are not verified",
+      "class": "World",
+      "code_end_exclusive": "0x005b32fc",
+      "code_words": 33,
+      "implementation": "0x005b3278",
+      "ivars": [
+        {
+          "evidence": "hash-pinned World start-touch map",
+          "name": "uiManager",
+          "offset": 240
+        }
+      ],
+      "literal_pool_words": 3,
+      "pic_base": "0x0105faf4",
+      "selector": "moveTouch:index:",
+      "types": "v20@0:4{CGPoint=ff}8i16",
+      "verified_interval_words": 36
+    }
+  ],
+  "replacement_boundary": {
+    "android_apk_input_path": "GameActivity.onScroll -> handlePanNative remains separate and does not invoke these recovered methods",
+    "apk_integration": false,
+    "host_module": "blockheads_recovered_view",
+    "host_test": "tools/test_gameview_movetouch.cpp",
+    "original_runtime_differential": false
+  },
+  "schema": 1,
+  "symbol_mapping_basis": "manual cross-reference to the existing pinned startTouch/cancelTouch ivar maps and the checked-in ObjC method table; this generator verifies instruction bytes/call/branch sets but does not redo that symbol-resolution pass"
+}

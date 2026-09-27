@@ -8,8 +8,8 @@ pool), verified against the pinned bytes
 the same compilation-unit family as -[init] and -[touchIsInUI:].
 
 This closes the primary-touch producer `startTouch:withTouch:withEvent:` from
-`GAMEVIEW_INPUT.md`/`GAME_ADAPTER_BOUNDARY.md`; move/end/cancel producers and
-`init` remain pending. The withEvent argument is spilled at entry
+`GAMEVIEW_INPUT.md`/`GAME_ADAPTER_BOUNDARY.md`; primary `moveTouch:` is now recovered
+in `GAMEVIEW_MOVETOUCH.md`. Primary end/cancel and `init` remain pending. The withEvent argument is spilled at entry
 (`str lr,[fp,#-0x30]`@0x0092be7c) and NEVER read again.
 
 ## Dispatch sites (all seven, with receiver provenance)
@@ -98,8 +98,9 @@ Static bounded-body map plus a typed host snapshot: no runtime receiver
 identity, no nil-`withTouch`/`mainMenuUI` dispatch proof (nil models the
 ObjC zero), no UIManager/World side-effect proof, no original-runtime
 differential, no Android device execution. This is single-owner synchronous
-dispatch; producers for move/end/cancel, `init` window construction and the
-game-loop adapter remain pending.
+dispatch; primary `moveTouch:` is separately recovered as documented in
+`GAMEVIEW_MOVETOUCH.md`, while primary end/cancel, `init` window construction
+and the game-loop adapter remain pending.
 
 ## Reproduce (local acceptance layer, requires original ELF)
 
