@@ -42,6 +42,7 @@ int main(int argc, char** argv) {
     const auto& report = app.report();
     std::cout << "client assembly app skeleton (stub framework)\n";
     std::cout << "  blocks:                " << report.blocks << "\n";
+    std::cout << "  worldTime (main/worldv2): " << app.worldTime() << "\n";
     std::cout << "  dynamic records:       " << report.dynamic_records << "\n";
     std::cout << "  dynamic objects:       " << report.dynamic_objects << "\n";
     std::cout << "    stub objects:        " << report.stub_objects << "\n";

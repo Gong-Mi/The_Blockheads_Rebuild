@@ -1,5 +1,7 @@
 #include "original_client_app.h"
 
+#include "plant_full.h"
+
 #include <array>
 #include <fstream>
 #include <set>
@@ -254,10 +256,81 @@ bool OriginalClientApp::open(const std::filesystem::path& snapshot_root,
     report_ = ClientAppReport{};
     report_.blocks = world_.blockCount();
     report_.dynamic_records = rows_.size();
+    // main-domain (worldv2) worldTime: the saveTime gate's other input. The
+    // domain is optional (older snapshots carry no main/); a missing index or
+    // record is NOT an error — world_time_ keeps its previous value (0.0 by
+    // default), exactly like the b5b harness. Never invented.
+    {
+        const auto main_index_path = snapshot_root / "main" / "index.tsv";
+        std::ifstream main_index(main_index_path);
+        std::string main_line;
+        if (main_index) {
+            std::size_t main_line_number = 0;
+            while (std::getline(main_index, main_line)) {
+                ++main_line_number;
+                if (main_line.empty() || main_line[0] == '#') continue;
+                std::array<std::string, 4> main_fields{};
+                // 4-field split (key_hex, file, raw_sha256, bytes); a comment
+                // or short line simply never matches the worldv2 key below
+                {
+                    std::istringstream main_fields_stream(main_line);
+                    std::string field;
+                    std::size_t fi = 0;
+                    while (fi < 4 && std::getline(main_fields_stream, field, '\t')) {
+                        main_fields[fi++] = field;
+                    }
+                }
+                if (main_fields[0] != "776f726c647632") continue;  // "worldv2"
+                const std::filesystem::path worldv2_path =
+                    snapshot_root / main_fields[1];
+                std::ifstream worldv2_file(worldv2_path, std::ios::binary);
+                if (!worldv2_file) break;
+                std::string worldv2_raw((std::istreambuf_iterator<char>(worldv2_file)),
+                                        std::istreambuf_iterator<char>());
+                SaveValue worldv2_plist;
+                std::string worldv2_error;
+                if (parseXmlPlist(worldv2_raw, worldv2_plist, &worldv2_error)) {
+                    const SaveDict worldv2_dict(worldv2_plist);
+                    const SaveValue* world_time_value =
+                        worldv2_dict.objectForKey("worldTime");
+                    if (world_time_value != nullptr) {
+                        world_time_ =
+                            SaveDict::doubleValue(world_time_value);
+                    }
+                }
+                break;
+            }
+        }
+    }
     return true;
 }
 
+void OriginalClientApp::registerRecoveredFactories() {
+    // Plant family (batch b5b): every type whose record carries the Plant-level
+    // key set (seasonOffset/age/gatherProgress/hasFloweredThisSeason/flowering/
+    // frozen/maxAgeGene/growthRateGene/saveTime). TulipPlant 59 additionally
+    // reads its own colorGenes/mateColorGenes/mixGenes after the chain; the
+    // factory detects those keys itself, so ONE factory serves the family.
+    // The registry Factory signature carries no world_time, so the factory
+    // closes over this app's worldTime() — the exact [world worldTime] the
+    // original passes into loadSaveDictValues's season gate. Re-registering
+    // per call is idempotent and picks up a setWorldTime() done after open().
+    const double world_time = world_time_;
+    const auto make_plant_factory = [world_time](int type_id) {
+        return [type_id, world_time](const SaveDict& entry, std::string* error) {
+            return plant_full_factory(type_id, entry, world_time, nullptr, error);
+        };
+    };
+    registry_.registerFactory(
+        59, make_plant_factory(59),
+        "plant full chain (Plant loadSaveDictValues executed",
+        ObjectLoadStatus::Recovered);
+}
+
 bool OriginalClientApp::loadDynamicObjects(std::string* error) {
+    // the recovered factories must see the CURRENT world_time (settable after
+    // open()); register them fresh on every load, right before they run
+    registerRecoveredFactories();
     if (rows_.empty() && report_.dynamic_records == 0 &&
         root_.empty()) {
         return fail(error, "open() must run before loadDynamicObjects()");

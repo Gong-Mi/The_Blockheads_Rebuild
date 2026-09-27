@@ -79,6 +79,21 @@ public:
     const ClientAppReport& report() const { return report_; }
     std::size_t saveDictStubHits() const { return save_dict_stub_hits_; }
 
+    // [world worldTime] at load time — the saveTime gate's other input
+    // (Plant loadSaveDictValues). Set from the assembled snapshot's main-db
+    // worldv2 record (worldTime key) before loadDynamicObjects(); an unset
+    // value defaults to 0.0 exactly like the b5b harness, which keeps the
+    // gate testable and never invents a clock.
+    void setWorldTime(double world_time) { world_time_ = world_time; }
+    double worldTime() const { return world_time_; }
+
+    // Registers the batch-recovered factories on this app's registry (today:
+    // the Plant family — TulipPlant 59 + every Plant subclass whose records
+    // carry only the Plant-level key set; see plant_full.h). Idempotent;
+    // called by open() so every caller (CLI, JNI, tests) gets the recovered
+    // chain without re-registering by hand.
+    void registerRecoveredFactories();
+
     // Stable JSON for the CLI/guard (keys sorted, no locale dependence).
     std::string toJson() const;
 
@@ -92,6 +107,7 @@ private:
     std::vector<ClientDynamicObject> objects_;
     ClientAppReport report_;
     std::size_t save_dict_stub_hits_ = 0;
+    double world_time_ = 0.0;
 };
 
 }  // namespace bh176

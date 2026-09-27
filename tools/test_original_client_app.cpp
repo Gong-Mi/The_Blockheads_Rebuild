@@ -312,6 +312,57 @@ int main() {
         assert(json.find("\"class_name\": \"AppleTree\"") != std::string::npos);
         assert(json.find("per-type loader not recovered") != std::string::npos);
 
+        // ---- recovered-factory registration (production path, plant family) --
+        // loadDynamicObjects() registers the b5b plant chain on every load:
+        // a TulipPlant-typed record (type 59) must come back Recovered through
+        // the same production registration the JNI/CLI paths use, not through
+        // a hand-rolled factory. The original fixture carries no type-59 row,
+        // so this swaps in a minimal two-row index (AppleTree + TulipPlant).
+        {
+            const std::string kTulipRecord = R"(<?xml version="1.0"?>
+<plist version="1.0"><dict><key>dynamicObjects</key><array>
+<dict><key>uniqueID</key><integer>91</integer><key>pos_x</key><integer>4</integer><key>pos_y</key><integer>2</integer><key>seasonOffset</key><integer>3</integer><key>maxAgeGene</key><integer>200</integer><key>saveTime</key><real>100.0</real><key>colorGenes</key><integer>13364</integer></dict>
+</array></dict></plist>
+)";
+            writeText(root / "dynamic/record5.plist", kTulipRecord);
+            const std::string tulip_index =
+                "key_hex\tx\ty\tfile\traw_sha256\tbytes\n" +
+                std::string("305f30\t0\t0\tdynamic/record0.plist\t") +
+                bh176::sha256Hex(kPlistOneObject) + "\t" +
+                std::to_string(std::string(kPlistOneObject).size()) + "\n" +
+                "345f322f3539\t4\t2\tdynamic/record5.plist\t" +
+                bh176::sha256Hex(kTulipRecord) + "\t" +
+                std::to_string(std::string(kTulipRecord).size()) + "\n";
+            writeText(root / "dynamic/index.tsv", tulip_index);
+            assert(app.open(root, &error));
+            app.setWorldTime(100.0);   // gate must NOT fire (100-100 < 1800)
+            assert(app.loadDynamicObjects(&error));
+            assert(app.report().dynamic_objects == 2);
+            assert(app.report().recovered_objects == 1);  // the TulipPlant
+            // the AppleTree row runs through this app's earlier Verified
+            // factory for type 1 (still registered; registerRecoveredFactories
+            // only adds the plant chain), so it counts as verified, not stub
+            assert(app.report().verified_objects == 1);
+            assert(app.report().stub_objects == 0);
+            bool saw_tulip = false;
+            for (const auto& object : app.objects()) {
+                if (object.type_id == 59) {
+                    saw_tulip = true;
+                    assert(object.status == bh176::ObjectLoadStatus::Recovered);
+                    assert(object.class_name == "TulipPlant");
+                    assert(object.unique_id == 91);
+                    assert(object.status_reason.find("plant full chain") !=
+                           std::string::npos);
+                }
+            }
+            assert(saw_tulip);
+            // the season gate: with world_time far past saveTime the chain still
+            // returns Recovered; the gate only clears hasFloweredThisSeason
+            app.setWorldTime(99999.0);
+            assert(app.loadDynamicObjects(&error));
+            assert(app.report().recovered_objects == 1);
+        }
+
         // ---- strict grammar controls: every row problem fails open() loudly ----
         const std::string good_index = dynamic_index;
         struct BadCase {
@@ -352,21 +403,22 @@ int main() {
 
         // ---- transactional contract: a failed re-open keeps every member ----
         // state as the last successful load left it (world, rows, objects,
-        // report, root).
+        // report, root). Current state: the two-row AppleTree+Tulip index
+        // from the recovered-factory block above (1 verified + 1 recovered).
         assert(app.report().blocks == 1);
-        assert(app.objects().size() == 3);
+        assert(app.objects().size() == 2);
         assert(app.root() == root);
         writeText(root / "dynamic/index.tsv", "wrong\theader\n");
         bh176::OriginalClientApp broken;
         assert(!broken.open(root, &error));
         assert(error.find("invalid dynamic/index.tsv header") != std::string::npos);
         assert(app.report().blocks == 1);
-        assert(app.objects().size() == 3);
+        assert(app.objects().size() == 2);
         assert(app.root() == root);
         // the same failure against an ALREADY-loaded instance: members intact
         assert(!app.open(root, &error));
-        assert(app.report().blocks == 1 && app.report().dynamic_records == 5);
-        assert(app.objects().size() == 3);
+        assert(app.report().blocks == 1 && app.report().dynamic_records == 2);
+        assert(app.objects().size() == 2);
 
         // escape path with an otherwise-valid shape must fail on path safety
         writeText(root / "dynamic/index.tsv",
