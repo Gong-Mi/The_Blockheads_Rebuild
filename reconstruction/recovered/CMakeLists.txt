@@ -309,6 +309,8 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             ../../app/src/main/cpp/dynamic_object_registry.cpp
             ../../app/src/main/cpp/original_client_app.cpp
             plant_full.cpp
+            tree_full.cpp
+            tree_load_save_dict.cpp
             npc_full.cpp
             npc_load_values_from_save_dict.cpp
             original_client_world.cpp)
@@ -328,6 +330,10 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         target_link_libraries(test_npc_full PRIVATE original_client_app)
         target_compile_options(test_npc_full PRIVATE -UNDEBUG)
         add_test(NAME npc_full COMMAND test_npc_full)
+        add_executable(test_tree_full ../../tools/test_tree_full.cpp)
+        target_link_libraries(test_tree_full PRIVATE original_client_app)
+        target_compile_options(test_tree_full PRIVATE -UNDEBUG)
+        add_test(NAME tree_full COMMAND test_tree_full)
         add_executable(client_app_skeleton_cli ../../tools/client_app_skeleton_cli.cpp)
         target_link_libraries(client_app_skeleton_cli PRIVATE original_client_app)
         # Tests using assert must still exercise their contracts in Release.

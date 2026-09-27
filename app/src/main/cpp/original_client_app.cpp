@@ -2,6 +2,7 @@
 
 #include "npc_full.h"
 #include "plant_full.h"
+#include "tree_full.h"
 
 #include <array>
 #include <fstream>
@@ -358,6 +359,24 @@ void OriginalClientApp::registerRecoveredFactories() {
         ObjectLoadStatus::Recovered);
     registry_.registerFactory(
         28, make_npc_factory(28), "npc full chain (b3g/b4f executed",
+        ObjectLoadStatus::Recovered);
+    // Tree family (bucket A, trees): AppleTree 1 / PineTree 4 / OrangeTree 7.
+    // Stage 1 keys are an executed differential (b4d); the gene/growth block
+    // is a static decode (b3a) — the factory's reason string states both
+    // levels, and saveTime is write-only for trees (no gate, unlike Plant).
+    const auto make_tree_factory = [](int type_id) {
+        return [type_id](const SaveDict& entry, std::string* error) {
+            return tree_full_factory(type_id, entry, nullptr, error);
+        };
+    };
+    registry_.registerFactory(
+        1, make_tree_factory(1), "tree full chain (stage1 executed b4d",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        4, make_tree_factory(4), "tree full chain (stage1 executed b4d",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        7, make_tree_factory(7), "tree full chain (stage1 executed b4d",
         ObjectLoadStatus::Recovered);
 }
 

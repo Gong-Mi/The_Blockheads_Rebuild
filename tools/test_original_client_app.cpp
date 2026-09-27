@@ -36,7 +36,7 @@ const char* kPlistOneObject = R"(<?xml version="1.0" encoding="UTF-8"?>
 				<real>2.5</real>
 			</array>
 			<key>objectType</key>
-			<integer>1</integer>
+			<integer>33</integer>
 		</dict>
 	</array>
 </dict>
@@ -273,7 +273,7 @@ int main() {
         assert(app.loadDynamicObjects(&error));
         {
             const auto& report = app.report();
-            assert(report.dynamic_objects == 3);            // type 1 + type 14 + type 9
+            assert(report.dynamic_objects == 3);            // type 33 + type 14 + type 9
             assert(report.stub_objects == 3);
             assert(report.recovered_objects == 0);
             assert(report.verified_objects == 0);
@@ -284,7 +284,7 @@ int main() {
             assert(report.type_key_used.at("objectType") == 1);
             assert(report.type_key_used.at("dynamicObjectType") == 1);
             assert(report.type_key_used.at("record_key") == 1);
-            assert(report.per_type.at(1) == 1);
+            assert(report.per_type.at(33) == 1);
             assert(report.per_type.at(14) == 1);
             assert(report.per_type.at(9) == 1);
             assert(report.shared_object_type_objects == 0);
@@ -292,11 +292,11 @@ int main() {
 
         // second pass with one type plugged in: status follows the registration
         app.registry().registerFactory(
-            1,
+            33,
             [](const bh176::SaveDict& in, std::string* err) {
                 if (err) err->clear();
                 auto object = bh176::DynamicObjectRegistry::baseStub(
-                    1, in);
+                    33, in);
                 object.status = bh176::ObjectLoadStatus::Verified;
                 object.status_reason = "test verified factory";
                 return object;
@@ -309,7 +309,7 @@ int main() {
 
         const std::string json = app.toJson();
         assert(json.find("\"verified_objects\": 1") != std::string::npos);
-        assert(json.find("\"class_name\": \"AppleTree\"") != std::string::npos);
+        assert(json.find("\"class_name\": \"ChilliPlant\"") != std::string::npos);
         assert(json.find("per-type loader not recovered") != std::string::npos);
 
         // ---- recovered-factory registration (production path, plant family) --
