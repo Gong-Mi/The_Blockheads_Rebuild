@@ -24,16 +24,22 @@ add_custom_command(
 # --- Zstd 编译配置 ---
 set(ZSTD_DIR external/zstd/lib)
 add_definitions(-DZSTD_DISABLE_ASM) # 禁用汇编以确保 Android 兼容性
-add_definitions(-DXXH_NAMESPACE=ZSTD_) # zstd 内部源引用 ZSTD_XXH64_*（命名空间版符号），
-# xxhash.c 必须以同前缀导出，否则 dlopen 报 cannot locate symbol "ZSTD_XXH64_update"
-# （2026-09-27 真机实测；上轮 APK 只定义了 ZSTD_DISABLE_ASM）
-include_directories(${ZSTD_DIR} ${ZSTD_DIR}/common)
+# xxhash 命名空间隔离（2026-09-27 真机实测 + 链接复现）：
+# zstd 源引用 ZSTD_XXH*，lz4 源引用 LZ4_XXH*（各自 xxhash.c 副本）。
+# 单一全局 -DXXH_NAMESPACE 会让两份 xxhash.c 导出同名符号，
+# 链接报 duplicate symbol: ZSTD_XXH_versionNumber/ZSTD_XXH32 …
+# 因此两个 vendored 库各自建 STATIC 目标、各带自己的宏，不再 glob 进 native-lib。
 file(GLOB ZSTD_SOURCES ${ZSTD_DIR}/common/*.c ${ZSTD_DIR}/compress/*.c ${ZSTD_DIR}/decompress/*.c)
+add_library(zstd-static STATIC ${ZSTD_SOURCES})
+target_compile_definitions(zstd-static PRIVATE XXH_NAMESPACE=ZSTD_)
+target_include_directories(zstd-static PUBLIC ${ZSTD_DIR} ${ZSTD_DIR}/common)
 
 # --- LZ4 编译配置 ---
 set(LZ4_DIR external/lz4/lib)
-include_directories(${LZ4_DIR})
 file(GLOB LZ4_SOURCES ${LZ4_DIR}/*.c)
+add_library(lz4-static STATIC ${LZ4_SOURCES})
+target_compile_definitions(lz4-static PRIVATE XXH_NAMESPACE=LZ4_)
+target_include_directories(lz4-static PUBLIC ${LZ4_DIR})
 
 add_library(native-lib SHARED
             game_engine.cpp
@@ -58,16 +64,18 @@ add_library(native-lib SHARED
             item_manager.cpp
             generated/game_item_data.cpp
             generated/game_recipe_data.cpp
-            settings_manager.cpp
-            ${ZSTD_SOURCES}
-            ${LZ4_SOURCES})
+            settings_manager.cpp)
 
 find_library(log-lib log)
 find_library(android-lib android)
 find_library(gles2-lib GLESv2)
 find_library(z-lib z)
 
+# the vendored compression libs carry their own XXH namespace; their PUBLIC
+# include dirs propagate to the sources that call ZSTD_*/LZ4_*
 target_link_libraries(native-lib
+                       zstd-static
+                       lz4-static
                        ${log-lib}
                        ${android-lib}
                        ${gles2-lib}

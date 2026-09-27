@@ -4,7 +4,9 @@ on:
   push:
     branches: [ main, master, rebuild-v2, reverse-v3 ]
   pull_request:
-    branches: [ main, master ]
+    # reverse-v3 is the reconstruction integration branch: every methods/*
+    # PR must pass the real Gradle build and packaged-APK contract here.
+    branches: [ main, master, reverse-v3 ]
   workflow_dispatch:
 
 jobs:

@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
-"""Validate the packaged APK contains the runtime contract checked in source."""
+"""Validate the packaged APK contains the runtime contract checked in source.
+
+The required-asset set is the checked-in baseline PLUS every exact string
+world_renderer.cpp passes to AAssetManager (loadTex/loadShaderSource), so a
+new renderer asset reference cannot ship without being packaged.
+"""
 from pathlib import Path
 import hashlib
+import re
 import sys
 import zipfile
 
+ROOT = Path(__file__).resolve().parents[1]
 REQUIRED_ASSETS = {
     "assets/Block.vsh",
     "assets/Block.fsh",
@@ -21,6 +28,8 @@ REQUIRED_ASSETS = {
     "assets/yakLegs.png",
     "assets/grizratBodyFront.png",
     "assets/grizratHead.png",
+    "assets/gamedata/items.json",
+    "assets/gamedata/recipes.json",
 }
 REQUIRED_NATIVE = {"lib/arm64-v8a/libnative-lib.so", "lib/armeabi-v7a/libnative-lib.so"}
 ORIGINAL_ASSET_HASHES = {
@@ -30,6 +39,13 @@ ORIGINAL_ASSET_HASHES = {
     "assets/HDTex/TileReflect.png": "4ef1575577a0dedc80a0c9f11c9427a8fdf5ea01c680d97d8b6d9ac91f9ac965",
     "assets/white.png": "22067ea4ca01ce5c8c655ca6956f10480257250e06babd1facc32b095f78d1c1",
 }
+NATIVE_OPEN_RE = re.compile(r'"([^"]+\.(?:png|fsh|vsh))"')
+
+
+def renderer_required() -> set:
+    """Exact asset strings the renderer passes to AAssetManager_open."""
+    src = (ROOT / "app/src/main/cpp/world_renderer.cpp").read_text()
+    return {"assets/" + n for n in NATIVE_OPEN_RE.findall(src)}
 
 
 def main() -> int:
@@ -40,6 +56,7 @@ def main() -> int:
     if not apk.is_file():
         print(f"APK not found: {apk}", file=sys.stderr)
         return 2
+    required = REQUIRED_ASSETS | renderer_required()
     with zipfile.ZipFile(apk) as zf:
         names = set(zf.namelist())
         packaged_hashes = {
@@ -48,7 +65,7 @@ def main() -> int:
             if name in names
         }
     errors = []
-    missing_assets = sorted(REQUIRED_ASSETS - names)
+    missing_assets = sorted(required - names)
     if missing_assets:
         errors.append("missing assets: " + ", ".join(missing_assets))
     for name, expected in ORIGINAL_ASSET_HASHES.items():
@@ -64,7 +81,7 @@ def main() -> int:
             print("FAIL", error)
         return 1
     native = sorted(REQUIRED_NATIVE & names)
-    print(f"apk-contract: PASS assets={len(REQUIRED_ASSETS)} native={','.join(native)}")
+    print(f"apk-contract: PASS assets={len(required)} native={','.join(native)}")
     return 0
 
 

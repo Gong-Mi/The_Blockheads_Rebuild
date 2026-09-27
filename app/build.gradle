@@ -23,7 +23,11 @@ android {
         signingConfig signingConfigs.debug
         externalNativeBuild {
             cmake {
-                cppFlags "-std=c++11 -frtti -fexceptions"
+                // The client-assembly path (OriginalClientApp/OriginalClientWorld)
+                // uses std::filesystem and std::from_chars: C++17 is a hard
+                // requirement of the committed sources, verified by direct
+                // compilation (C++11: "no member named 'filesystem'").
+                cppFlags "-std=c++17 -frtti -fexceptions"
             }
         }
     }
