@@ -326,6 +326,24 @@ void OriginalClientApp::registerRecoveredFactories() {
         59, make_plant_factory(59),
         "plant full chain (Plant loadSaveDictValues executed",
         ObjectLoadStatus::Recovered);
+    // SunflowerPlant 11 / CornPlant 12 / TomatoPlant 62: NO own
+    // initWithWorld/loadSaveDictValues in the pinned method map (0 entries
+    // each) — they inherit Plant's 0x009559d0 init chain, and their records
+    // carry exactly the Plant-level key set (no TulipPlant own keys, no
+    // AppleTree availableFood). The factory's Tulip own-key block is
+    // presence-gated, so the same chain serves them with tulip.present=false.
+    registry_.registerFactory(
+        11, make_plant_factory(11),
+        "plant full chain (Plant loadSaveDictValues executed",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        12, make_plant_factory(12),
+        "plant full chain (Plant loadSaveDictValues executed",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        62, make_plant_factory(62),
+        "plant full chain (Plant loadSaveDictValues executed",
+        ObjectLoadStatus::Recovered);
     // NPC family (bucket B): Dodo 13 / Donkey 28 — the executed b3g/b4f
     // chain (DynamicObject base + NPC init + loadValuesFromSaveDict G1-G3
     // + ungated slots). One factory serves the family: the forwarder5

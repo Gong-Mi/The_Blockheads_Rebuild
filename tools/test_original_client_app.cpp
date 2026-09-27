@@ -363,6 +363,40 @@ int main() {
             assert(app.report().recovered_objects == 1);
         }
 
+        // ---- Plant-family inheritance types (11/12/62) ---------------------
+        // SunflowerPlant/CornPlant/TomatoPlant have NO own loader in the
+        // pinned method map (they inherit Plant's init chain); their records
+        // carry the Plant-level key set only. The same production factory
+        // must serve them with the Tulip own-key block closed.
+        {
+            const std::string kPlantRecord = R"(<?xml version="1.0"?>
+<plist version="1.0"><dict><key>dynamicObjects</key><array>
+<dict><key>uniqueID</key><integer>80</integer><key>pos_x</key><integer>181</integer><key>pos_y</key><integer>531</integer><key>seasonOffset</key><integer>9</integer><key>maxAgeGene</key><integer>153</integer><key>growthRateGene</key><integer>168</integer><key>saveTime</key><real>900.0</real><key>availableFood</key><real>951.95</real></dict>
+</array></dict></plist>
+)";
+            writeText(root / "dynamic/record6.plist", kPlantRecord);
+            // key 9_6/11 (hex of "9_6/11"): typed record key, type 11
+            const std::string plant_index =
+                "key_hex\tx\ty\tfile\traw_sha256\tbytes\n" +
+                std::string("395f362f3131\t9\t6\tdynamic/record6.plist\t") +
+                bh176::sha256Hex(kPlantRecord) + "\t" +
+                std::to_string(std::string(kPlantRecord).size()) + "\n";
+            writeText(root / "dynamic/index.tsv", plant_index);
+            bh176::OriginalClientApp plant_app;
+            assert(plant_app.open(root, &error));
+            plant_app.setWorldTime(900.0);
+            assert(plant_app.loadDynamicObjects(&error));
+            assert(plant_app.report().dynamic_objects == 1);
+            assert(plant_app.report().recovered_objects == 1);
+            const auto& object = plant_app.objects().at(0);
+            assert(object.type_id == 11);
+            assert(object.class_name == "SunflowerPlant");
+            assert(object.unique_id == 80);
+            assert(object.status == bh176::ObjectLoadStatus::Recovered);
+            assert(object.status_reason.find("plant full chain") !=
+                   std::string::npos);
+        }
+
         // ---- strict grammar controls: every row problem fails open() loudly ----
         const std::string good_index = dynamic_index;
         struct BadCase {
