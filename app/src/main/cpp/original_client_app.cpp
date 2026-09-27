@@ -1,5 +1,6 @@
 #include "original_client_app.h"
 
+#include "npc_full.h"
 #include "plant_full.h"
 
 #include <array>
@@ -324,6 +325,21 @@ void OriginalClientApp::registerRecoveredFactories() {
     registry_.registerFactory(
         59, make_plant_factory(59),
         "plant full chain (Plant loadSaveDictValues executed",
+        ObjectLoadStatus::Recovered);
+    // NPC family (bucket B): Dodo 13 / Donkey 28 — the executed b3g/b4f
+    // chain (DynamicObject base + NPC init + loadValuesFromSaveDict G1-G3
+    // + ungated slots). One factory serves the family: the forwarder5
+    // bodies contribute no own save keys (zero-own-state readers).
+    const auto make_npc_factory = [](int type_id) {
+        return [type_id](const SaveDict& entry, std::string* error) {
+            return npc_full_factory(type_id, entry, nullptr, error);
+        };
+    };
+    registry_.registerFactory(
+        13, make_npc_factory(13), "npc full chain (b3g/b4f executed",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        28, make_npc_factory(28), "npc full chain (b3g/b4f executed",
         ObjectLoadStatus::Recovered);
 }
 
