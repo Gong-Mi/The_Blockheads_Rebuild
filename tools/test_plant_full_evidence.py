@@ -51,11 +51,25 @@ def main() -> None:
     require(app,
             ['record_key', '"objectType"', '"dynamicObjectType"',
              '"type_disagreement"', "key_type_id"])
-    # primary order: the record-key branch must precede the fallback branch
+    # primary order: the record-key branch must precede the fallback branch;
+    # anchor on the typed block itself (a bare "} else {" appears earlier in
+    # open(), so the fallback anchor must be searched AFTER the key branch)
     text = app.read_text(encoding="utf-8")
     key_branch = text.index("if (key_type_id >= 0) {")
-    fallback_branch = text.index('} else if (type_value != nullptr) {')
+    fallback_branch = text.index("} else {", key_branch)
     assert key_branch < fallback_branch, "record key must be the primary source"
+    # the fallback branch must read the dictionary itself (suffix-less keys
+    # only) and route to unidentified when no type key exists
+    fallback = text[fallback_branch:]
+    assert 'objectForKey("objectType")' in fallback, \
+        "the fallback branch must read objectType itself"
+    assert "unidentified_objects" in fallback, \
+        "a suffix-less entry without a type key must count unidentified"
+    # disagreement is counted only inside the record-key branch (typed
+    # routing), never in the fallback branch
+    key_block = text[key_branch:fallback_branch]
+    assert '"type_disagreement"' in key_block, \
+        "type_disagreement must be counted in the record-key branch"
     cmake = ROOT / "reconstruction/recovered/CMakeLists.txt"
     require(cmake, ["plant_full.cpp", "test_plant_full", "add_test(NAME plant_full"])
     print("plant-full-b5b-evidence: PASS")
