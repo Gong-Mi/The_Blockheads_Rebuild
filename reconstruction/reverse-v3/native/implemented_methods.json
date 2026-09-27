@@ -716,6 +716,32 @@
    "evidence": "reconstruction/reverse-v3/native/GAMEVIEW_MOVETOUCH.md",
    "integration": "recovered-method-module",
    "scope": "Complete 33-code-word forwarding body: nil-safe single UIManager moveTouch:index: dispatch preserving CGPoint and index, with no local state writes. Typed host fixture only; UIManager body, APK input wiring and original-runtime equivalence remain unverified."
+  },
+  {
+   "implementation": "0x00643b20",
+   "class": "NPC",
+   "kind": "instance",
+   "selector": "loadValuesFromSaveDict:",
+   "types": "v12@0:4@8",
+   "entry_point": "blockheads::recovered::npcLoadValuesFromSaveDict",
+   "source": "reconstruction/recovered/npc_load_values_from_save_dict.cpp",
+   "test": "tools/test_npc_init_with_world.cpp",
+   "evidence": "reconstruction/reverse-v3/native/NPC_LOADVALUES_ARM.md",
+   "integration": "recovered-method-module",
+   "scope": "Executed differential (b4f, Unicorn -O0/-O2 bit-exact on the 160-byte image + message trace): 3 probe-gated groups (G1 fullness{layTimer,damage,age}, G2 layCooldownTimer{tameCooldownTimer,mateCooldownTimer,hasBred,hasBeenFedByBlockheadOrChest,mateBreed}, G3 breed) + ungated tamedClientID/name/tameCountsByClientID copy + savedBlockheadIndex. Foundation retain/release and the mutable-dictionary copy are modeled synthetically (kNpcLoadDictCopyToken); original-runtime parity not claimed."
+  },
+  {
+   "implementation": "0x00644b24",
+   "class": "NPC",
+   "kind": "instance",
+   "selector": "initWithWorld:dynamicWorld:saveDict:cache:",
+   "types": "@24@0:4@8@12@16@20",
+   "entry_point": "blockheads::recovered::npcInitWithWorld",
+   "source": "reconstruction/recovered/npc_init_with_world.cpp",
+   "test": "tools/test_npc_init_with_world.cpp",
+   "evidence": "reconstruction/reverse-v3/native/NPC_INITWITHWORLD_ARM.md",
+   "integration": "recovered-method-module",
+   "scope": "Executed differential (b3g, Unicorn bit-exact): super init via objc_msgSendSuper2, nil propagation, [self loadValuesFromSaveDict:] dispatch, randomHarmFromHungerTimer@144 = 1.0f + 20.0f * (lrand48()/2^31f). lrand48 is hooked in the harness (non-deterministic in the original); the real super chain and Foundation live outside the contract."
   }
  ]
 }
