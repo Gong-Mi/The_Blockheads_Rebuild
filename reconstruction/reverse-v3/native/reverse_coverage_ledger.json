@@ -6,8 +6,8 @@
     "indexed": 10478,
     "refs": 170,
     "cfg": 169,
-    "semantics": 56,
-    "implemented": 56,
+    "semantics": 58,
+    "implemented": 58,
     "behavior-verified": 0
   },
   "entries": [
@@ -99806,13 +99806,26 @@
         "indexed": true,
         "refs": true,
         "cfg": true,
-        "semantics": false,
-        "implemented": false,
+        "semantics": true,
+        "implemented": true,
         "behavior-verified": false
       },
-      "semantic_status": "unknown",
-      "implementation_status": "not-audited",
-      "behavior_status": "not-tested"
+      "semantic_status": "reviewed-with-recorded-boundaries",
+      "implementation_status": "explicit-record",
+      "behavior_status": "not-tested",
+      "implementation_record": {
+        "implementation": "0x00643b20",
+        "class": "NPC",
+        "kind": "instance",
+        "selector": "loadValuesFromSaveDict:",
+        "types": "v12@0:4@8",
+        "entry_point": "blockheads::recovered::npcLoadValuesFromSaveDict",
+        "source": "reconstruction/recovered/npc_load_values_from_save_dict.cpp",
+        "test": "tools/test_npc_init_with_world.cpp",
+        "evidence": "reconstruction/reverse-v3/native/NPC_LOADVALUES_ARM.md",
+        "integration": "recovered-method-module",
+        "scope": "Executed differential (b4f, Unicorn -O0/-O2 bit-exact on the 160-byte image + message trace): 3 probe-gated groups (G1 fullness{layTimer,damage,age}, G2 layCooldownTimer{tameCooldownTimer,mateCooldownTimer,hasBred,hasBeenFedByBlockheadOrChest,mateBreed}, G3 breed) + ungated tamedClientID/name/tameCountsByClientID copy + savedBlockheadIndex. Foundation retain/release and the mutable-dictionary copy are modeled synthetically (kNpcLoadDictCopyToken); original-runtime parity not claimed."
+      }
     },
     {
       "implementation": "0x0064448c",
@@ -99896,13 +99909,26 @@
         "indexed": true,
         "refs": true,
         "cfg": true,
-        "semantics": false,
-        "implemented": false,
+        "semantics": true,
+        "implemented": true,
         "behavior-verified": false
       },
-      "semantic_status": "unknown",
-      "implementation_status": "not-audited",
-      "behavior_status": "not-tested"
+      "semantic_status": "reviewed-with-recorded-boundaries",
+      "implementation_status": "explicit-record",
+      "behavior_status": "not-tested",
+      "implementation_record": {
+        "implementation": "0x00644b24",
+        "class": "NPC",
+        "kind": "instance",
+        "selector": "initWithWorld:dynamicWorld:saveDict:cache:",
+        "types": "@24@0:4@8@12@16@20",
+        "entry_point": "blockheads::recovered::npcInitWithWorld",
+        "source": "reconstruction/recovered/npc_init_with_world.cpp",
+        "test": "tools/test_npc_init_with_world.cpp",
+        "evidence": "reconstruction/reverse-v3/native/NPC_INITWITHWORLD_ARM.md",
+        "integration": "recovered-method-module",
+        "scope": "Executed differential (b3g, Unicorn bit-exact): super init via objc_msgSendSuper2, nil propagation, [self loadValuesFromSaveDict:] dispatch, randomHarmFromHungerTimer@144 = 1.0f + 20.0f * (lrand48()/2^31f). lrand48 is hooked in the harness (non-deterministic in the original); the real super chain and Foundation live outside the contract."
+      }
     },
     {
       "implementation": "0x00644ca0",
