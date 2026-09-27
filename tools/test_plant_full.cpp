@@ -135,9 +135,11 @@ int main() {
         std::filesystem::create_directories(root / "blocks");
         std::filesystem::create_directories(root / "dynamic");
         writeRaw(root / "blocks/5_16.raw", 3);
+        // sha256 of the 65,541-byte payload (type 3 + zero fill); the loader
+        // verifies it (PR #7 4fd056c).
         writeText(root / "blocks/index.tsv",
                   "key_hex\tx\ty\tfile\traw_sha256\tbytes\n"
-                  "355f3136\t5\t16\tblocks/5_16.raw\tdeadbeef\t65541\n");
+                  "355f3136\t5\t16\tblocks/5_16.raw\tdf881221efb4dab14580a52cdb414aac8d45b6398c9db3dc70276984993fa9b0\t65541\n");
         writeText(root / "dynamic/record0.plist", kTulipPlist);
         // key 5_16/59 (hex of "5_16/59"): NO objectType in the dictionaries
         writeText(root / "dynamic/index.tsv",

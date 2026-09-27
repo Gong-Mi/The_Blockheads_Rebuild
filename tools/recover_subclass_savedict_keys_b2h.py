@@ -37,6 +37,27 @@ SUPER = {
  'OwnershipSign':(0x00A358E4, 0x00A35C0C, 0x00A35BCC, 0x00A35BD0, 0x00A35BD4, 0x00A35938),
  'CactusTree':  (0x00B53728, 0x00B53A50, 0x00B53A08, 0x00B53A0C, 0x00B53A10, 0x00B5377C),
 }
+
+CALL_MANIFESTS = {
+ 'TulipPlant': [0x009A18A8, 0x009A19C0, 0x009A19E4, 0x009A1A20, 0x009A1A44, 0x009A1A80, 0x009A1AA4, 0x009A1AE0, 0x009A1B04],
+ 'SteamTrain': [0x00D18ED8, 0x00D18FF0, 0x00D19014, 0x00D19050, 0x00D19074, 0x00D190B0, 0x00D190D4, 0x00D19110, 0x00D19134],
+ 'OwnershipSign': [0x00A35938, 0x00A35A04, 0x00A35A3C, 0x00A35AD8, 0x00A35AFC, 0x00A35B98, 0x00A35BBC],
+ 'CactusTree': [0x00B5377C, 0x00B538B4, 0x00B538D8, 0x00B53914, 0x00B53938, 0x00B53974, 0x00B53998, 0x00B539D4, 0x00B539F8],
+}
+
+BRANCH_MANIFESTS = {
+ 'TulipPlant': [],
+ 'SteamTrain': [],
+ 'OwnershipSign': [0x00A3596C, 0x00A35994, 0x00A35A60, 0x00A35B20],
+ 'CactusTree': [],
+}
+
+BODY_SHA256 = {
+ 'TulipPlant': '02751712c22382848a87ae8d4a3abbd518d7ef6479a11d4b4244b81a4bccff29',
+ 'SteamTrain': 'b53882a4019a9d5d50321ad77be4ee058c9b79de6bc60811ca316fd6ece4fc19',
+ 'OwnershipSign': '03db3baafaf27aa82b07bd32b69c6a69c78512e3dff6f3846c83efdd4e066ee7',
+ 'CactusTree': '93892c30515e781b0ee30aa3706574ba102cab11347ee0f86692a8440e95e00b',
+}
 # class, key, key_cell, cfstring_obj, ivar, off, conv, conv_site, conv_word,
 # ncell, conv_sel_cell, set_site, set_word, set_sel_cell
 KEYS = [
@@ -138,12 +159,23 @@ def recover(path):
         struct = rw(rebase(crc))
         if class_name(struct) != cls:
             raise ValueError(f'{cls}: super classref name-walk drift')
+        off_body = m.offset(imp, boundary - imp)
+        if off_body is None:
+            raise ValueError(f'{cls}: unmapped body')
+        body_bytes = m.data[off_body:off_body + (boundary - imp)]
+        actual_sha = hashlib.sha256(body_bytes).hexdigest()
+        if actual_sha != BODY_SHA256[cls]:
+            raise ValueError(f'{cls}: body sha256 drift')
         results[cls] = {'class': cls, 'imp': f'0x{imp:08x}',
                         'boundary': f'0x{boundary:08x}',
                         'code_words': (boundary - imp) // 4,
+                        'body_sha256': actual_sha,
                         'style': 'super_plus_own_keys',
                         'super_site': f'0x{site:08x}',
-                        'super_class_struct': f'0x{struct:08x}', 'keys': []}
+                        'super_class_struct': f'0x{struct:08x}',
+                        'call_sites': [f'0x{c:08x}' for c in CALL_MANIFESTS[cls]],
+                        'branch_sites': [f'0x{b:08x}' for b in BRANCH_MANIFESTS[cls]],
+                        'keys': []}
 
     for cls, key, kcell, obj, isym, off, conv, cs, cw, ncell, csr, ss, sw, ssc in KEYS:
         if abs32.get(obj) != '__CFConstantStringClassReference':

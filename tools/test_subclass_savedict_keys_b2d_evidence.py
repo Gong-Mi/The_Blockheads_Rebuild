@@ -1,11 +1,25 @@
 #!/usr/bin/env python3
 """Static contract for batch 2d getSaveDict key pairings."""
+import hashlib
 import json
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 NATIVE = ROOT / 'reconstruction/reverse-v3/native'
+
+EXPECTED_LISTING_SHA256 = {
+    'disasm_paintingcico_getsavedict.txt': '610dc77175e62858250aa3bd18c2b0db9ec0267275079cc233a764e4aec67f9d',
+    'disasm_normalplant_getsavedict.txt': '6823427ed712b86d5e3489c1b38c739e9613c90cfd11ac4d4bb69ba71e401d64',
+    'disasm_glowblock_getsavedict.txt': '34ec60de9edc1cb2f3c7335af18126622eab6691e69d9b79ecefe723abee41cd',
+    'disasm_gatherblock_getsavedict.txt': '261d82222931736aa1141617d5214b9b78c4fc643f55c4b3726d71ece79bd7da',
+}
+
+
+def get_body_bytes(text):
+    pairs = re.findall(r'^\s+(0x[0-9a-f]{8})\s+([0-9a-f]{8})\s', text, re.MULTILINE)
+    return b''.join(bytes.fromhex(w) for _, w in pairs)
+
 
 def main():
     r = json.loads((NATIVE / 'subclass_savedict_keys_b2d.json').read_text())
@@ -31,13 +45,15 @@ def main():
     assert [k['key'] for k in ga['keys']] == ['timer', 'lastKnownGatherValue']  # exec order
     assert ga['keys'][0]['conversion'] == 'numberWithFloat:' and ga['keys'][0]['ivar_offset'] == 56
     assert ga['keys'][1]['conversion'] == 'numberWithInt:' and ga['keys'][1]['ivar_offset'] == 60
-    for name, words in (('disasm_paintingcico_getsavedict.txt', 129),
-                        ('disasm_normalplant_getsavedict.txt', 136),
-                        ('disasm_glowblock_getsavedict.txt', 123),
-                        ('disasm_gatherblock_getsavedict.txt', 122)):
+    for name, expected_sha in EXPECTED_LISTING_SHA256.items():
         t = (NATIVE / name).read_text()
-        n = len(re.findall(r'^\s+0x[0-9a-f]{8}\s+[0-9a-f]{8}\s', t, re.MULTILINE))
-        assert n == words, (name, n)
+        raw = get_body_bytes(t)
+        actual_sha = hashlib.sha256(raw).hexdigest()
+        assert actual_sha == expected_sha, f"{name} body sha256 mismatch"
+
+    # Negative control: mutating an instruction must fail
+    fake = re.sub(r'(0x00869800\s+)[0-9a-f]{8}', r'\g<1>00000000', (NATIVE / 'disasm_gatherblock_getsavedict.txt').read_text())
+    assert hashlib.sha256(get_body_bytes(fake)).hexdigest() != EXPECTED_LISTING_SHA256['disasm_gatherblock_getsavedict.txt']
     print('subclass-savedict-keys-b2d-evidence: PASS')
 
 if __name__ == '__main__':

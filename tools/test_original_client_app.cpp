@@ -228,9 +228,12 @@ int main() {
         std::filesystem::create_directories(root / "blocks");
         std::filesystem::create_directories(root / "dynamic");
         writeRaw(root / "blocks/0_0.raw", 17);
+        // real sha256 of the 65,541-byte payload (type 17 + zero fill):
+        // OriginalClientWorld now verifies every block checksum (PR #7 4fd056c),
+        // a placeholder hash must make open() fail, not pass.
         writeText(root / "blocks/index.tsv",
                   "key_hex\tx\ty\tfile\traw_sha256\tbytes\n"
-                  "305f30\t0\t0\tblocks/0_0.raw\tdeadbeef\t65541\n");
+                  "305f30\t0\t0\tblocks/0_0.raw\ta6587fb969b02057e178d1621397b304fb0b42e0c205122bf52649537e9a0d65\t65541\n");
         writeText(root / "dynamic/record0.plist", kPlistOneObject);
         writeText(root / "dynamic/record1.plist", kPlistNoTypeAndOutOfRange);
         writeText(root / "dynamic/record2.plist", kPlistNotDynamic);

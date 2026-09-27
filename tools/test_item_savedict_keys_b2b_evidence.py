@@ -1,11 +1,24 @@
 #!/usr/bin/env python3
 """Static contract for batch 2b item subclass getSaveDict pairings."""
+import hashlib
 import json
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 NATIVE = ROOT / 'reconstruction/reverse-v3/native'
+
+EXPECTED_LISTING_SHA256 = {
+    'disasm_bed_getsavedict.txt': '2000176fcad9e1f75fbfb7573706e1149dda476d8925e01369566de9bb080c9f',
+    'disasm_trainstation_getsavedict.txt': '958bd2b14803a5dc686470623917ca8fd9eed72eb6116cc598899cc73c4c8bce',
+    'disasm_craftableitemobject_getsavedict.txt': 'e8b45b74c0d5589b152dafd078c92c30788bbf333bc54939d24eb658043abb27',
+}
+
+
+def get_body_bytes(text):
+    pairs = re.findall(r'^\s+(0x[0-9a-f]{8})\s+([0-9a-f]{8})\s', text, re.MULTILINE)
+    return b''.join(bytes.fromhex(w) for _, w in pairs)
+
 
 def main():
     r = json.loads((NATIVE / 'item_savedict_keys.json').read_text())
@@ -28,12 +41,15 @@ def main():
     for cls in classes.values():
         if cls['style'] == 'super_plus_own_keys':
             assert cls['super_site'].startswith('0x')
-    for name, words in (('disasm_bed_getsavedict.txt', 112),
-                        ('disasm_trainstation_getsavedict.txt', 68),
-                        ('disasm_craftableitemobject_getsavedict.txt', 78)):
+    for name, expected_sha in EXPECTED_LISTING_SHA256.items():
         t = (NATIVE / name).read_text()
-        n = len(re.findall(r'^\s+0x[0-9a-f]{8}\s+[0-9a-f]{8}\s', t, re.MULTILINE))
-        assert n == words, (name, n)
+        raw = get_body_bytes(t)
+        actual_sha = hashlib.sha256(raw).hexdigest()
+        assert actual_sha == expected_sha, f"{name} body sha256 mismatch"
+
+    # Negative control: mutating an instruction must fail
+    fake = re.sub(r'(0x00d41120\s+)[0-9a-f]{8}', r'\g<1>00000000', (NATIVE / 'disasm_bed_getsavedict.txt').read_text())
+    assert hashlib.sha256(get_body_bytes(fake)).hexdigest() != EXPECTED_LISTING_SHA256['disasm_bed_getsavedict.txt']
     print('item-savedict-keys-b2b-evidence: PASS')
 
 if __name__ == '__main__':

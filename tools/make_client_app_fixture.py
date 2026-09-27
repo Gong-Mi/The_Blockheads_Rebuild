@@ -51,9 +51,12 @@ def main() -> int:
     rows = ['key_hex\tx\ty\tfile\traw_sha256\tbytes']
     for i, (x, y, tile_type) in enumerate([(0, 0, 17), (1, 0, 29), (-1, -1, 3)]):
         name = write_block(root, x, y, tile_type)
+        # real sha256 of the block payload: OriginalClientWorld verifies every
+        # block checksum since PR #7 (4fd056c), so the fixture must carry true hashes
+        payload = (root / 'blocks' / name).read_bytes()
         rows.append('\t'.join([
             f'{x}_{y}'.encode().hex(), str(x), str(y), f'blocks/{name}',
-            'fixture-no-sha-check', str(BLOCK_PAYLOAD_SIZE),
+            hashlib.sha256(payload).hexdigest(), str(BLOCK_PAYLOAD_SIZE),
         ]))
     (root / 'blocks' / 'index.tsv').write_text('\n'.join(rows) + '\n')
 
