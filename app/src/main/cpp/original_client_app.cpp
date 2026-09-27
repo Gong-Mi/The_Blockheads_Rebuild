@@ -3,6 +3,7 @@
 #include "npc_full.h"
 #include "plant_full.h"
 #include "tree_full.h"
+#include "workbench_full.h"
 
 #include <array>
 #include <fstream>
@@ -377,6 +378,17 @@ void OriginalClientApp::registerRecoveredFactories() {
         ObjectLoadStatus::Recovered);
     registry_.registerFactory(
         7, make_tree_factory(7), "tree full chain (stage1 executed b4d",
+        ObjectLoadStatus::Recovered);
+    // Workbench (bucket C, the last snapshot stub): the b4q executed
+    // differential (16 scalars + lightDict presence); the InteractionObject
+    // super keys are static-only and NOT loaded — the reason states both.
+    const auto make_workbench_factory = [](int type_id) {
+        return [type_id](const SaveDict& entry, std::string* error) {
+            return workbench_full_factory(type_id, entry, nullptr, error);
+        };
+    };
+    registry_.registerFactory(
+        45, make_workbench_factory(45), "workbench full chain (b4q executed",
         ObjectLoadStatus::Recovered);
 }
 
