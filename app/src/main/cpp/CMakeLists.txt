@@ -57,6 +57,10 @@ add_library(native-lib SHARED
             # which broke configure for the whole Android build.
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/original_client_world.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/plant_full.cpp
+            # bucket B: the npc chain (factory + the executed b4f contract it
+            # runs; npc_full.cpp calls npc_load_values_run)
+            ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/npc_full.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/npc_load_values_from_save_dict.cpp
             original_save_dict.cpp
             dynamic_object_registry.cpp
             original_client_app.cpp
