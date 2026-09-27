@@ -20,6 +20,10 @@ public:
     const PhysicalBlockPayload* blockAt(std::int32_t x, std::int32_t y) const;
     std::size_t blockCount() const { return blocks_.size(); }
 
+    // Publish a fully-verified candidate world (transactional open in
+    // OriginalClientApp). Only called after every load check has passed.
+    void swap(OriginalClientWorld& other) noexcept { blocks_.swap(other.blocks_); }
+
 private:
     std::map<std::pair<std::int32_t, std::int32_t>, PhysicalBlockPayload> blocks_;
 };

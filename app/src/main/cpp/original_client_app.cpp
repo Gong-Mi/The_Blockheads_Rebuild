@@ -2,6 +2,7 @@
 
 #include <array>
 #include <fstream>
+#include <set>
 #include <sstream>
 
 namespace bh176 {
@@ -62,11 +63,82 @@ std::string jsonEscape(const std::string& text) {
     return out;
 }
 
+// Strict record-key grammar (DW_RECORD_KEY_TYPE_EVIDENCE.md). Accepted shapes:
+//   <int>_<int>              metadata-only row (no type suffix)
+//   <int>_<int>/<digits>     real archive row: the key carries the type id
+//   <opaque-without-slash>   prefix not in coordinate form (never typed)
+// Everything else (%@/%d, double slash, empty/non-digit suffix, coordinate
+// part present with unparseable prefix, non-lowercase/odd key_hex) fails
+// open() with the row number instead of being routed by guessing.
+struct ParsedRecordKey {
+    bool ok = false;
+    bool has_coord = false;
+    std::int32_t x = 0;
+    std::int32_t y = 0;
+    bool has_type = false;
+    long long type_id = -1;
+};
+
+bool parseCoordPrefix(const std::string& text, std::int32_t& x, std::int32_t& y) {
+    const auto us = text.find('_');
+    if (us == std::string::npos || us == 0 || us + 1 >= text.size() ||
+        text.find('_', us + 1) != std::string::npos) {
+        return false;
+    }
+    long long px = 0, py = 0;
+    if (!parseDecimal(text.substr(0, us), px) ||
+        !parseDecimal(text.substr(us + 1), py)) {
+        return false;
+    }
+    // 32-bit range without relying on <climits> macros being visible
+    if (px < -2147483648LL || px > 2147483647LL ||
+        py < -2147483648LL || py > 2147483647LL) {
+        return false;
+    }
+    x = static_cast<std::int32_t>(px);
+    y = static_cast<std::int32_t>(py);
+    return true;
+}
+
+ParsedRecordKey parseRecordKeyText(const std::string& text) {
+    ParsedRecordKey out;
+    if (text.empty() || text.find('\n') != std::string::npos ||
+        text.find('\t') != std::string::npos) {
+        return out;
+    }
+    const auto slash = text.find('/');
+    const bool has_slash = slash != std::string::npos;
+    if (has_slash) {
+        if (text.find('/', slash + 1) != std::string::npos) return out;
+        const std::string prefix = text.substr(0, slash);
+        const std::string suffix = text.substr(slash + 1);
+        if (suffix.empty() || suffix.size() > 18) return out;
+        for (const char c : suffix) {
+            if (c < '0' || c > '9') return out;
+        }
+        long long parsed = 0;
+        if (!parseDecimal(suffix, parsed)) return out;
+        if (!parseCoordPrefix(prefix, out.x, out.y)) return out;
+        out.has_coord = true;
+        out.has_type = true;
+        out.type_id = parsed;
+    } else {
+        out.has_coord = parseCoordPrefix(text, out.x, out.y);
+    }
+    out.ok = true;
+    return out;
+}
+
 }  // namespace
 
 bool OriginalClientApp::open(const std::filesystem::path& snapshot_root,
                              std::string* error) {
-    if (!world_.load(snapshot_root, error)) return false;
+    // Transactional: everything is parsed and verified into local state; the
+    // members (world_, root_, rows_, objects_, report_) are only replaced once
+    // every check passes. A failed open() leaves the previous successful
+    // state byte-for-byte intact, including the world's block map.
+    OriginalClientWorld candidate_world;
+    if (!candidate_world.load(snapshot_root, error)) return false;
 
     const auto index_path = snapshot_root / "dynamic" / "index.tsv";
     std::ifstream index(index_path);
@@ -78,6 +150,7 @@ bool OriginalClientApp::open(const std::filesystem::path& snapshot_root,
     }
 
     std::vector<DynamicRecordRow> next_rows;
+    std::set<std::string> seen_keys;
     std::size_t line_number = 1;
     while (std::getline(index, line)) {
         ++line_number;
@@ -97,8 +170,36 @@ bool OriginalClientApp::open(const std::filesystem::path& snapshot_root,
         if (row.key_hex.empty()) {
             return fail(error, "empty key_hex at line " + std::to_string(line_number));
         }
+        // strict lowercase hex, even length (same discipline as the block index)
+        for (const char c : row.key_hex) {
+            if (!((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f'))) {
+                return fail(error, "non-hex key at line " + std::to_string(line_number));
+            }
+        }
+        if (row.key_hex.size() % 2 != 0) {
+            return fail(error, "odd-length key_hex at line " +
+                                   std::to_string(line_number));
+        }
+        std::string key_text;
+        if (!hexDecode(row.key_hex, key_text)) {
+            return fail(error, "undecodable key_hex at line " +
+                                   std::to_string(line_number));
+        }
+        const ParsedRecordKey parsed = parseRecordKeyText(key_text);
+        if (!parsed.ok) {
+            return fail(error, "record key outside the strict grammar at line " +
+                                   std::to_string(line_number) + ": " + key_text);
+        }
+        if (!seen_keys.insert(row.key_hex).second) {
+            return fail(error, "duplicate dynamic record key at line " +
+                                   std::to_string(line_number) + ": " + key_text);
+        }
         row.file = fields[3];
         row.raw_sha256 = fields[4];
+        if (!isSha256Hex(row.raw_sha256)) {
+            return fail(error, "invalid raw_sha256 at line " +
+                                   std::to_string(line_number));
+        }
         long long value = 0;
         if (!parseDecimal(fields[5], value) || value < 0) {
             return fail(error, "invalid byte size at line " +
@@ -115,14 +216,38 @@ bool OriginalClientApp::open(const std::filesystem::path& snapshot_root,
             row.y = static_cast<std::int32_t>(y);
             row.has_coordinate = true;
         }
+        // coordinate columns must agree with the key's own coordinate part
+        if (parsed.has_coord) {
+            if (!row.has_coordinate || row.x != parsed.x || row.y != parsed.y) {
+                return fail(error, "dynamic index coordinate disagrees with key at line " +
+                                       std::to_string(line_number) + ": " + key_text);
+            }
+        } else if (row.has_coordinate) {
+            return fail(error, "dynamic index carries coordinates for a "
+                                   "non-coordinate key at line " +
+                                   std::to_string(line_number) + ": " + key_text);
+        }
         if (row.file.empty() || row.file.front() == '/' ||
             row.file.find("..") != std::string::npos) {
             return fail(error, "unsafe payload path at line " +
                                    std::to_string(line_number));
         }
+        // payload path must live under dynamic/ with a declared extension
+        {
+            const std::filesystem::path rel(row.file);
+            if (rel.is_absolute() || rel.filename().empty() ||
+                rel.parent_path() != "dynamic" ||
+                rel.extension().string().empty()) {
+                return fail(error, "payload path outside dynamic/ at line " +
+                                       std::to_string(line_number) + ": " + row.file);
+            }
+        }
+        row.key_type_id = parsed.has_type ? parsed.type_id : -1;
         next_rows.push_back(std::move(row));
     }
 
+    // all checks passed: publish the candidate state atomically
+    world_.swap(candidate_world);
     root_ = snapshot_root;
     rows_ = std::move(next_rows);
     objects_.clear();
@@ -165,6 +290,13 @@ bool OriginalClientApp::loadDynamicObjects(std::string* error) {
             report_.malformed_records++;
             continue;
         }
+        // payload digest must equal the index-declared raw_sha256 (validated
+        // shape in open()); one byte of corruption is a malformed record,
+        // never silently parsed (same contract as the block domain, PR #7).
+        if (sha256Hex(raw) != row.raw_sha256) {
+            report_.malformed_records++;
+            continue;
+        }
 
         SaveValue plist;
         std::string parse_error;
@@ -189,67 +321,48 @@ bool OriginalClientApp::loadDynamicObjects(std::string* error) {
             }
             const SaveDict entry_dict(*entry);
 
-            // Type id resolution (batch b5b). PRIMARY source: the record key
-            // suffix, proved by the original save/load key formats
-            // %d_%d/%d / %@_%d_%d/%d (DW_RECORD_KEY_TYPE_EVIDENCE.md) — the
-            // real archive's object dictionaries never carry a type. The
-            // dictionary keys stay as a FALLBACK for snapshot formats that
-            // embed them (assembly metadata); a disagreement between the two
-            // is counted, never silently resolved.
+            // Type id resolution (batch b5b, strict since PR #7/B). The record
+            // key suffix was parsed and validated in open() (row.key_type_id);
+            // this is the ONLY typed source. Dictionary objectType /
+            // dynamicObjectType remain a fallback solely for rows whose key
+            // carries no type suffix (metadata-only snapshot shape); a
+            // disagreement is counted, never silently resolved.
             const char* used_key = nullptr;
-            const SaveValue* type_value = nullptr;
-            long long key_type_id = -1;
-            {
-                // decode key_hex text once per object (format <x>_<y>/<type>)
-                std::string key_text;
-                key_text.reserve(row.key_hex.size() / 2);
-                for (std::size_t i = 0; i + 1 < row.key_hex.size(); i += 2) {
-                    const int hi = row.key_hex[i] <= '9' ? row.key_hex[i] - '0'
-                                                         : row.key_hex[i] - 'a' + 10;
-                    const int lo = row.key_hex[i + 1] <= '9'
-                                       ? row.key_hex[i + 1] - '0'
-                                       : row.key_hex[i + 1] - 'a' + 10;
-                    key_text.push_back(static_cast<char>(hi * 16 + lo));
-                }
-                const std::size_t slash = key_text.rfind('/');
-                if (slash != std::string::npos) {
-                    long long parsed = 0;
-                    bool ok = true;
-                    for (std::size_t i = slash + 1; i < key_text.size(); ++i) {
-                        const char c = key_text[i];
-                        if (c < '0' || c > '9') { ok = false; break; }
-                        parsed = parsed * 10 + (c - '0');
-                    }
-                    if (ok && slash + 1 < key_text.size()) key_type_id = parsed;
-                }
-            }
-            type_value = entry_dict.objectForKey("objectType");
-            if (type_value == nullptr) {
-                type_value = entry_dict.objectForKey("dynamicObjectType");
-            }
-            long long type_id;
+            long long type_id = -1;
+            const long long key_type_id = row.key_type_id;
             if (key_type_id >= 0) {
                 type_id = key_type_id;
                 used_key = "record_key";
-                if (type_value != nullptr &&
-                    SaveDict::intValue(type_value) != key_type_id) {
+                const SaveValue* dict_type = entry_dict.objectForKey("objectType");
+                if (dict_type == nullptr) {
+                    dict_type = entry_dict.objectForKey("dynamicObjectType");
+                }
+                if (dict_type != nullptr &&
+                    SaveDict::intValue(dict_type) != key_type_id) {
                     // the two sources disagree: counted, the record key wins
                     report_.type_key_used["type_disagreement"]++;
                 }
-            } else if (type_value != nullptr) {
+            } else {
+                const SaveValue* type_value = entry_dict.objectForKey("objectType");
+                if (type_value == nullptr) {
+                    type_value = entry_dict.objectForKey("dynamicObjectType");
+                }
+                if (type_value == nullptr) {
+                    report_.unidentified_objects++;
+                    continue;
+                }
                 type_id = SaveDict::intValue(type_value);
                 used_key = entry_dict.objectForKey("objectType") != nullptr
                                ? "objectType"
                                : "dynamicObjectType";
-            } else {
-                report_.unidentified_objects++;
-                continue;
             }
-            report_.type_key_used[used_key]++;
             if (type_id < 1 || type_id > 64) {
                 report_.out_of_range_objects++;
                 continue;
             }
+            // the key that supplied the type of a constructed object; a failed
+            // (out-of-range) resolution is counted above, never here
+            report_.type_key_used[used_key]++;
             ClientDynamicObject object;
             std::string construct_error;
             if (!registry_.construct(static_cast<int>(type_id), entry_dict,

@@ -141,10 +141,13 @@ int main() {
                   "key_hex\tx\ty\tfile\traw_sha256\tbytes\n"
                   "355f3136\t5\t16\tblocks/5_16.raw\tdf881221efb4dab14580a52cdb414aac8d45b6398c9db3dc70276984993fa9b0\t65541\n");
         writeText(root / "dynamic/record0.plist", kTulipPlist);
-        // key 5_16/59 (hex of "5_16/59"): NO objectType in the dictionaries
+        // key 5_16/59 (hex of "5_16/59"): NO objectType in the dictionaries;
+        // payload digest must be the real one (strict open() rejects
+        // placeholders like deadbeef by design, PR #7/B)
         writeText(root / "dynamic/index.tsv",
                   "key_hex\tx\ty\tfile\traw_sha256\tbytes\n"
-                  "355f31362f3539\t5\t16\tdynamic/record0.plist\tdeadbeef\t" +
+                  "355f31362f3539\t5\t16\tdynamic/record0.plist\t" +
+                      bh176::sha256Hex(kTulipPlist) + "\t" +
                       std::to_string(std::string(kTulipPlist).size()) + "\n");
 
         bh176::OriginalClientApp app;
@@ -182,7 +185,8 @@ int main() {
         writeText(root / "dynamic/record0.plist", disagreement);
         writeText(root / "dynamic/index.tsv",
                   "key_hex\tx\ty\tfile\traw_sha256\tbytes\n"
-                  "355f31362f3539\t5\t16\tdynamic/record0.plist\tdeadbeef\t" +
+                  "355f31362f3539\t5\t16\tdynamic/record0.plist\t" +
+                      bh176::sha256Hex(disagreement) + "\t" +
                       std::to_string(disagreement.size()) + "\n");
         assert(app.open(root, &error));  // re-open: the index carries new sizes
         assert(app.loadDynamicObjects(&error));

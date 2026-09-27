@@ -27,6 +27,7 @@
 #include "dynamic_object_registry.h"
 #include "original_client_world.h"
 #include "original_save_dict.h"
+#include "sha256_util.h"
 
 namespace bh176 {
 
@@ -38,6 +39,9 @@ struct DynamicRecordRow {
     std::string raw_sha256;
     std::size_t bytes = 0;
     bool has_coordinate = false;
+    // Type id parsed from the record key suffix (`<x>_<y>/<type>`); -1 when
+    // the key carries no type suffix (metadata-only snapshot shape).
+    long long key_type_id = -1;
 };
 
 struct ClientAppReport {

@@ -222,31 +222,44 @@ int main() {
     }
 
     // ---- app pipeline over a synthetic snapshot ----------------------------------
+    // Strict contract (post PR #7): every dynamic index row needs a 64-hex
+    // raw_sha256 that matches its payload, coordinates must agree with the key,
+    // and a failed open() must leave the previous state untouched.
     {
         const auto root = std::filesystem::temp_directory_path() / "bh-original-client-app-test";
         std::filesystem::remove_all(root);
         std::filesystem::create_directories(root / "blocks");
         std::filesystem::create_directories(root / "dynamic");
         writeRaw(root / "blocks/0_0.raw", 17);
-        // real sha256 of the 65,541-byte payload (type 17 + zero fill):
-        // OriginalClientWorld now verifies every block checksum (PR #7 4fd056c),
-        // a placeholder hash must make open() fail, not pass.
         writeText(root / "blocks/index.tsv",
                   "key_hex\tx\ty\tfile\traw_sha256\tbytes\n"
                   "305f30\t0\t0\tblocks/0_0.raw\ta6587fb969b02057e178d1621397b304fb0b42e0c205122bf52649537e9a0d65\t65541\n");
+        const std::string kRecordTyped = R"(<?xml version="1.0"?>
+<plist version="1.0"><dict><key>dynamicObjects</key><array>
+<dict><key>uniqueID</key><integer>21</integer><key>pos_x</key><integer>5</integer><key>pos_y</key><integer>-2</integer></dict>
+</array></dict></plist>
+)";
         writeText(root / "dynamic/record0.plist", kPlistOneObject);
         writeText(root / "dynamic/record1.plist", kPlistNoTypeAndOutOfRange);
+        writeText(root / "dynamic/record4.plist", kRecordTyped);
         writeText(root / "dynamic/record2.plist", kPlistNotDynamic);
         writeText(root / "dynamic/record3.bin", std::string("\x00\x01\x02binary", 9));
         const std::string dynamic_index =
             "key_hex\tx\ty\tfile\traw_sha256\tbytes\n"
-            "305f30\t0\t0\tdynamic/record0.plist\tdeadbeef\t" +
+            // metadata-only key: fallback to the per-object objectType
+            "305f30\t0\t0\tdynamic/record0.plist\t" + bh176::sha256Hex(kPlistOneObject) + "\t" +
             std::to_string(std::string(kPlistOneObject).size()) + "\n"
-            "305f31\t0\t0\tdynamic/record1.plist\tdeadbeef\t" +
+            // metadata-only key: unidentified + out-of-range + dynamicObjectType
+            "305f31\t0\t1\tdynamic/record1.plist\t" + bh176::sha256Hex(kPlistNoTypeAndOutOfRange) + "\t" +
             std::to_string(std::string(kPlistNoTypeAndOutOfRange).size()) + "\n"
-            "305f32\t0\t0\tdynamic/record2.plist\tdeadbeef\t" +
+            // real-archive key with type suffix: record_key is the typed source
+            "325f302f39\t2\t0\tdynamic/record4.plist\t" + bh176::sha256Hex(kRecordTyped) + "\t" +
+            std::to_string(std::string(kRecordTyped).size()) + "\n"
+            // opaque shapes (valid digests so they reach the plist stage)
+            "335f30\t3\t0\tdynamic/record2.plist\t" + bh176::sha256Hex(kPlistNotDynamic) + "\t" +
             std::to_string(std::string(kPlistNotDynamic).size()) + "\n"
-            "305f33\t1\t0\tdynamic/record3.bin\tdeadbeef\t9\n";
+            "305f33\t0\t3\tdynamic/record3.bin\t" +
+            bh176::sha256Hex(std::string("\x00\x01\x02binary", 9)) + "\t9\n";
         writeText(root / "dynamic/index.tsv", dynamic_index);
 
         bh176::OriginalClientApp app;
@@ -254,26 +267,28 @@ int main() {
         assert(app.open(root, &error));
         assert(error.empty());
         assert(app.report().blocks == 1);
-        assert(app.report().dynamic_records == 4);
+        assert(app.report().dynamic_records == 5);
         assert(app.world().blockAt(0, 0) != nullptr);
 
         assert(app.loadDynamicObjects(&error));
-        const auto& report = app.report();
-        assert(report.dynamic_objects == 2);            // type 1 + type 14
-        assert(report.stub_objects == 2);
-        assert(report.recovered_objects == 0);
-        assert(report.verified_objects == 0);
-        assert(report.unidentified_objects == 1);       // entry without a type key
-        assert(report.out_of_range_objects == 1);       // objectType 65
-        assert(report.opaque_records == 2);             // not-dynamic plist + binary
-        assert(report.malformed_records == 0);
-        // one valid objectType read + one out-of-range objectType read; one
-        // dynamicObjectType override read
-        assert(report.type_key_used.at("objectType") == 2);
-        assert(report.type_key_used.at("dynamicObjectType") == 1);
-        assert(report.per_type.at(1) == 1);
-        assert(report.per_type.at(14) == 1);
-        assert(report.shared_object_type_objects == 0);
+        {
+            const auto& report = app.report();
+            assert(report.dynamic_objects == 3);            // type 1 + type 14 + type 9
+            assert(report.stub_objects == 3);
+            assert(report.recovered_objects == 0);
+            assert(report.verified_objects == 0);
+            assert(report.unidentified_objects == 1);       // entry without a type key
+            assert(report.out_of_range_objects == 1);       // objectType 65
+            assert(report.opaque_records == 2);             // not-dynamic plist + binary
+            assert(report.malformed_records == 0);
+            assert(report.type_key_used.at("objectType") == 1);
+            assert(report.type_key_used.at("dynamicObjectType") == 1);
+            assert(report.type_key_used.at("record_key") == 1);
+            assert(report.per_type.at(1) == 1);
+            assert(report.per_type.at(14) == 1);
+            assert(report.per_type.at(9) == 1);
+            assert(report.shared_object_type_objects == 0);
+        }
 
         // second pass with one type plugged in: status follows the registration
         app.registry().registerFactory(
@@ -289,30 +304,89 @@ int main() {
             "verified test factory", bh176::ObjectLoadStatus::Verified);
         assert(app.loadDynamicObjects(&error));
         assert(app.report().verified_objects == 1);
-        assert(app.report().stub_objects == 1);
+        assert(app.report().stub_objects == 2);
         assert(app.report().recovered_objects == 0);
 
         const std::string json = app.toJson();
         assert(json.find("\"verified_objects\": 1") != std::string::npos);
-        assert(json.find("\"per_type\": {\"1\": 1, \"14\": 1}") != std::string::npos);
         assert(json.find("\"class_name\": \"AppleTree\"") != std::string::npos);
         assert(json.find("per-type loader not recovered") != std::string::npos);
 
-        // index-level failures still fail loudly
-        writeText(root / "dynamic/index.tsv",
-                  "key_hex\tx\ty\tfile\traw_sha256\tbytes\n"
-                  "305f30\t0\t0\t../escape.plist\tdeadbeef\t10\n");
-        bh176::OriginalClientApp unsafe;
-        assert(!unsafe.open(root, &error));
-        assert(error.find("unsafe payload path") != std::string::npos);
+        // ---- strict grammar controls: every row problem fails open() loudly ----
+        const std::string good_index = dynamic_index;
+        struct BadCase {
+            std::string row;
+            const char* expect;
+        };
+        const std::string k64hex = bh176::sha256Hex("x");
+        const std::string kPfx = "\t0\t0\tdynamic/record0.plist\t" + k64hex + "\t1\n";
+        const std::vector<BadCase> bad_cases = {
+            {"41FF41", "non-hex key"},
+            {"305f302", "odd-length key_hex"},
+            {"25402f2564", "record key outside the strict grammar"},       // %@/%d
+            {"305f302f353978", "record key outside the strict grammar"},   // 0_0/59x
+            {"305f30\t7\t7\tdynamic/record0.plist\t" + k64hex + "\t1\n",
+             "coordinate disagrees with key"},
+            {"414243\t0\t0\tdynamic/record0.plist\t" + k64hex + "\t1\n",
+             "coordinates for a non-coordinate key"},                       // "ABC"
+        };
+        for (const auto& bad : bad_cases) {
+            std::string row = bad.row;
+            if (row.size() < 20) row += kPfx;   // short hexes get the standard tail
+            const std::string index_text =
+                "key_hex\tx\ty\tfile\traw_sha256\tbytes\n" + row;
+            writeText(root / "dynamic/index.tsv", index_text);
+            bh176::OriginalClientApp probe;
+            assert(!probe.open(root, &error));
+            assert(error.find(bad.expect) != std::string::npos);
+        }
+        // duplicate keys must be refused
+        {
+            const std::string row = "305f30" + kPfx;
+            writeText(root / "dynamic/index.tsv",
+                      "key_hex\tx\ty\tfile\traw_sha256\tbytes\n" + row + row);
+            bh176::OriginalClientApp probe;
+            assert(!probe.open(root, &error));
+            assert(error.find("duplicate dynamic record key") != std::string::npos);
+        }
 
+        // ---- transactional contract: a failed re-open keeps every member ----
+        // state as the last successful load left it (world, rows, objects,
+        // report, root).
+        assert(app.report().blocks == 1);
+        assert(app.objects().size() == 3);
+        assert(app.root() == root);
         writeText(root / "dynamic/index.tsv", "wrong\theader\n");
         bh176::OriginalClientApp broken;
         assert(!broken.open(root, &error));
         assert(error.find("invalid dynamic/index.tsv header") != std::string::npos);
-
-        // a failed re-open must not destroy the previous state
         assert(app.report().blocks == 1);
+        assert(app.objects().size() == 3);
+        assert(app.root() == root);
+        // the same failure against an ALREADY-loaded instance: members intact
+        assert(!app.open(root, &error));
+        assert(app.report().blocks == 1 && app.report().dynamic_records == 5);
+        assert(app.objects().size() == 3);
+
+        // escape path with an otherwise-valid shape must fail on path safety
+        writeText(root / "dynamic/index.tsv",
+                  "key_hex\tx\ty\tfile\traw_sha256\tbytes\n"
+                  "305f30\t0\t0\t../escape.plist\t" + k64hex + "\t10\n");
+        bh176::OriginalClientApp unsafe;
+        assert(!unsafe.open(root, &error));
+        assert(error.find("unsafe payload path") != std::string::npos);
+
+        // payload corruption after a valid open(): digest mismatch is malformed,
+        // never a silently parsed record
+        writeText(root / "dynamic/index.tsv", good_index);
+        assert(app.open(root, &error));
+        assert(app.loadDynamicObjects(&error));
+        const std::size_t baseline_malformed = app.report().malformed_records;
+        writeText(root / "dynamic/record4.plist", kRecordTyped + "<!-- tampered -->");
+        assert(app.open(root, &error));
+        assert(app.loadDynamicObjects(&error));
+        assert(app.report().malformed_records == baseline_malformed + 1);
+        assert(app.report().per_type.count(9) == 0);
 
         std::filesystem::remove_all(root);
     }
