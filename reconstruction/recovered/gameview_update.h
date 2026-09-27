@@ -19,6 +19,8 @@ public:
     virtual std::int8_t startTouch(FrameVector2 point, std::int32_t tapCount,
                                    std::int32_t index) = 0;
     virtual std::int8_t touchIsInUI(FrameVector2 point) = 0;
+    // World -[moveTouch:index:] is a distinct indexed UI-forwarding selector.
+    virtual void moveTouch(FrameVector2 point, std::int32_t index) = 0;
 };
 class FrameDefaults {
 public:

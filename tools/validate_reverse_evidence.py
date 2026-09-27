@@ -39,6 +39,36 @@ def main() -> None:
         ],
     )
     require(
+        methods,
+        [
+            "0x0092c148\tGameView\tinstance\tmoveTouch:\tv16@0:4{CGPoint=ff}8",
+            "0x005b3278\tWorld\tinstance\tmoveTouch:index:\tv20@0:4{CGPoint=ff}8i16",
+            "0x00ad8048\tUIManager\tinstance\tmoveTouch:index:\tv20@0:4{CGPoint=ff}8i16",
+        ],
+    )
+    require(
+        NATIVE / "gameview_movetouch.json",
+        [
+            '"batch": "GameView moveTouch: -> World moveTouch:index: forwarding tail"',
+            '"verified_interval_words": 171',
+            '"verified_interval_words": 36',
+            '"apk_integration": false',
+            '"original_runtime_differential": false',
+        ],
+    )
+    require(
+        NATIVE / "disasm_gameview_movetouch.txt",
+        ["# GameView -[moveTouch:]", "# implementation: 0x0092c148", "# ARM.exidx end: 0x0092c3f4"],
+    )
+    require(
+        NATIVE / "disasm_world_movetouch.txt",
+        ["# World -[moveTouch:index:]", "# implementation: 0x005b3278", "# ARM.exidx end: 0x005b3308"],
+    )
+    require(
+        NATIVE / "GAMEVIEW_MOVETOUCH.md",
+        ["0x0092c1f8", "0x0092c304", "0x005b32f0", "does not call these recovered methods"],
+    )
+    require(
         NATIVE / "refs_world_lifecycle.tsv",
         [
             "%@/saves/%@/worldv2",
