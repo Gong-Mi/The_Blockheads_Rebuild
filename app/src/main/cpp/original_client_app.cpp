@@ -189,19 +189,63 @@ bool OriginalClientApp::loadDynamicObjects(std::string* error) {
             }
             const SaveDict entry_dict(*entry);
 
+            // Type id resolution (batch b5b). PRIMARY source: the record key
+            // suffix, proved by the original save/load key formats
+            // %d_%d/%d / %@_%d_%d/%d (DW_RECORD_KEY_TYPE_EVIDENCE.md) — the
+            // real archive's object dictionaries never carry a type. The
+            // dictionary keys stay as a FALLBACK for snapshot formats that
+            // embed them (assembly metadata); a disagreement between the two
+            // is counted, never silently resolved.
             const char* used_key = nullptr;
-            const SaveValue* type_value = entry_dict.objectForKey("objectType");
-            if (type_value != nullptr) used_key = "objectType";
+            const SaveValue* type_value = nullptr;
+            long long key_type_id = -1;
+            {
+                // decode key_hex text once per object (format <x>_<y>/<type>)
+                std::string key_text;
+                key_text.reserve(row.key_hex.size() / 2);
+                for (std::size_t i = 0; i + 1 < row.key_hex.size(); i += 2) {
+                    const int hi = row.key_hex[i] <= '9' ? row.key_hex[i] - '0'
+                                                         : row.key_hex[i] - 'a' + 10;
+                    const int lo = row.key_hex[i + 1] <= '9'
+                                       ? row.key_hex[i + 1] - '0'
+                                       : row.key_hex[i + 1] - 'a' + 10;
+                    key_text.push_back(static_cast<char>(hi * 16 + lo));
+                }
+                const std::size_t slash = key_text.rfind('/');
+                if (slash != std::string::npos) {
+                    long long parsed = 0;
+                    bool ok = true;
+                    for (std::size_t i = slash + 1; i < key_text.size(); ++i) {
+                        const char c = key_text[i];
+                        if (c < '0' || c > '9') { ok = false; break; }
+                        parsed = parsed * 10 + (c - '0');
+                    }
+                    if (ok && slash + 1 < key_text.size()) key_type_id = parsed;
+                }
+            }
+            type_value = entry_dict.objectForKey("objectType");
             if (type_value == nullptr) {
                 type_value = entry_dict.objectForKey("dynamicObjectType");
-                if (type_value != nullptr) used_key = "dynamicObjectType";
             }
-            if (type_value == nullptr) {
+            long long type_id;
+            if (key_type_id >= 0) {
+                type_id = key_type_id;
+                used_key = "record_key";
+                if (type_value != nullptr &&
+                    SaveDict::intValue(type_value) != key_type_id) {
+                    // the two sources disagree: counted, the record key wins
+                    report_.type_key_used["type_disagreement"]++;
+                }
+            } else if (type_value != nullptr) {
+                type_id = SaveDict::intValue(type_value);
+                used_key = entry_dict.objectForKey("objectType") != nullptr
+                               ? "objectType"
+                               : "dynamicObjectType";
+            } else {
                 report_.unidentified_objects++;
                 continue;
             }
             report_.type_key_used[used_key]++;
-            const long long type_id = SaveDict::intValue(type_value);
             if (type_id < 1 || type_id > 64) {
                 report_.out_of_range_objects++;
                 continue;

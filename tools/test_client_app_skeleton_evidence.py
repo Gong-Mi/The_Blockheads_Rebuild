@@ -101,18 +101,27 @@ def host_checks():
         assert r.returncode == 0, r.stdout + r.stderr
         report = json.loads(r.stdout)
     assert report['blocks'] == 3, report
-    assert report['dynamic_records'] == 4, report
-    # 6 entries: one without a type key, one out-of-range, four constructed
-    assert report['dynamic_objects'] == 4, report
-    assert report['stub_objects'] == 4, report
+    assert report['dynamic_records'] == 5, report
+    # b5b: six objects resolve through the record key (type 1), two through the
+    # per-object fallback on the type-less-key record (24, 13); one entry
+    # without any type stays unidentified, one objectType 65 stays out of
+    # range; opaque = the not-dynamic plist + the binary payload.
+    assert report['dynamic_objects'] == 8, report
+    assert report['stub_objects'] == 8, report
     assert report['verified_objects'] == 0 and report['recovered_objects'] == 0
     assert report['unidentified_objects'] == 1, report
     assert report['out_of_range_objects'] == 1, report
     assert report['opaque_records'] == 2, report
     assert report['malformed_records'] == 0, report
     assert report['shared_object_type_objects'] == 1, report
-    assert report['per_type'] == {'1': 1, '13': 1, '14': 1, '24': 1}, report
-    assert report['type_key_used'] == {'objectType': 4, 'dynamicObjectType': 1}, report
+    assert report['per_type'] == {'1': 6, '13': 1, '24': 1}, report
+    assert report['type_key_used'] == {'record_key': 6, 'type_disagreement': 4,
+                                       'objectType': 2,
+                                       'dynamicObjectType': 1}, report
+    by_id = {obj['unique_id']: obj for obj in report['objects']}
+    assert set(by_id) == {42, 77, 78, 5, 6, 7, 10, 11}, sorted(by_id)
+    assert all(by_id[uid]['type_id'] == 1 for uid in (42, 77, 78, 5, 6, 7))
+    assert by_id[10]['type_id'] == 24 and by_id[11]['type_id'] == 13
     statuses = {obj['status'] for obj in report['objects']}
     assert statuses == {'stub'}, statuses
     print(f'b5a evidence: CLI report over the synthetic snapshot PASS '

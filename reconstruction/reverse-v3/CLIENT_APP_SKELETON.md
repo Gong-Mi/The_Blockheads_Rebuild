@@ -23,8 +23,9 @@ snapshot root（tools/assemble_server_snapshot.py 的产物）
   │                           已存在的 b3 批次产物，本批复用不改
   └── dynamic/index.tsv     → OriginalClientApp::open
         └── 每个 payload     → parseXmlPlist（SaveDict 桩层）
-              └── dynamicObjects[] → 取 type 键（objectType，或组装元数据键
-                                     dynamicObjectType）→ DynamicObjectRegistry
+              └── dynamicObjects[] → 取 type：记录键后缀 `<x>_<y>/<type>`（b5b 主来源；
+                                     objectType/dynamicObjectType 仅作组装元数据回退，
+                                     分歧计入 type_disagreement）→ DynamicObjectRegistry
                     └── ClientDynamicObject（基类字段 + 装载状态）
                           └── report（按类型直方图 + 桩计数）+ toJson()
 ```
@@ -44,9 +45,10 @@ snapshot root（tools/assemble_server_snapshot.py 的产物）
 
 ## 桩的边界（明确写死，不允许漂移）
 
-- **类型选择键**：`objectType`（客户端可见类型号；56/64 类的类级常量等于类型号）
-  为主，`dynamicObjectType` 作为组装元数据覆盖键。两个键的使用次数都进报告
-  （`type_key_used`），因为真实 dw 记录里到底出现哪个键**尚未用真实快照证实**。
+- **类型选择键**：记录键后缀 `<x>_<y>/<type>` 为主来源（b5b，经真实存档快照证实：
+  10 条 dw 记录 16 个对象全部由键解析，`DW_RECORD_KEY_TYPE_EVIDENCE.md`）；
+  `objectType`/`dynamicObjectType` 仅作组装元数据回退，与键不一致时计入
+  `type_disagreement`，键获胜。三个来源的使用次数都进报告（`type_key_used`）。
 - **8 个共享 objectType 类**（13 Dodo / 25 DropBear / 28 Donkey / 35 ClownFish /
   36 Shark / 39 CaveTroll / 51 Scorpion / 63 Yak）没有类级 `objectType` 覆盖：
   仅凭类型号不足以定类，构造出的对象会被 `shared_object_type_objects` 计数标记。
@@ -77,8 +79,11 @@ python3 tools/test_client_app_skeleton_evidence.py             # 门禁（静态
 1. **b4 类执行差分每落地一个类型**：写 `reconstruction/recovered/<type>_load.cpp`
    契约 → 在该类型的工厂里调用它 → `registerFactory(id, …, Recovered)`；差分
    通过后再把状态改成 `Verified`。工厂槽已经存在，接入不需要改骨架。
-2. **真实 dw 记录键名证实后**：把 `objectType`/`dynamicObjectType` 的假设收敛成
-   单一确定键（在 `original_client_app.cpp` 里改一处），报告直方图会立刻反映。
+   b5b 已按此路径落地第一例：`plant_full_factory`（TulipPlant 59）在构造时执行
+   恢复链并把状态交给调用方，`plant_full` 测试在 O0/O2 下钉住。
+2. **真实 dw 记录键名证实**（b5b 已落地）：记录键后缀即类型来源，
+   回退键只在无键后缀的快照形状下生效；真实快照上
+   `unidentified_objects` 16 → 0（`DW_RECORD_KEY_TYPE_EVIDENCE.md`）。
 3. **接生产 APK `PersistenceManager`**（PR #3 未勾选项）：把
    `OriginalClientApp::open/loadDynamicObjects` 挂到 `GameActivity` 的起步路径，
    让替换端能直接吃原版快照。

@@ -63,19 +63,32 @@ def main() -> int:
         (root / 'dynamic' / name).write_bytes(data)
         dynamic_rows.append(dynamic_index_row(key, x, y, name, data))
 
-    # one AppleTree (type 1) and one FreeBlock (type 14) with the decoded base
-    # loader keys, plus an Oxygen-like shared-objectType NPC (13, Dodo)
+    # b5b: the record key carries the type ('<x>_<y>/<type>', proved in
+    # DW_RECORD_KEY_TYPE_EVIDENCE.md). Per-object objectType/dynamicObjectType
+    # entries are assembly metadata: a disagreement with the record key is
+    # counted (type_disagreement) and the record key wins — the real archive's
+    # object dictionaries carry no type at all; this fixture keeps the
+    # metadata-bearing shape so the disagreement counting is exercised.
     add_record('0_0/1', 0, 0, 'record0.plist', plistlib.dumps({'dynamicObjects': [
         {'uniqueID': 42, 'pos_x': 3, 'pos_y': -7, 'floatPos': [1.5, 2.5], 'objectType': 1},
         {'uniqueID': 77, 'pos_x': 10, 'pos_y': 11, 'objectType': 14},
         {'uniqueID': 78, 'pos_x': 12, 'pos_y': 13, 'objectType': 13},
     ]}))
-    # an entry with a missing type key, one with an out-of-range type, and one
-    # that uses the assembly metadata override key
+    # a record key WITH a type suffix whose metadata entries disagree: all
+    # three objects load as the record's type 1, two disagreements counted
     add_record('1_0/1', 1, 0, 'record1.plist', plistlib.dumps({'dynamicObjects': [
         {'uniqueID': 5},
         {'uniqueID': 6, 'objectType': 65},
         {'uniqueID': 7, 'dynamicObjectType': 24, 'pos_x': 1, 'pos_y': 2},
+    ]}))
+    # a record key with NO type suffix (metadata-only snapshot shape): the
+    # loader must fall back to the per-object keys and still report the
+    # unidentified / out-of-range shapes instead of guessing
+    add_record('4_0', 4, 0, 'record4.plist', plistlib.dumps({'dynamicObjects': [
+        {'uniqueID': 8},
+        {'uniqueID': 9, 'objectType': 65},
+        {'uniqueID': 10, 'dynamicObjectType': 24, 'pos_x': 1, 'pos_y': 2},
+        {'uniqueID': 11, 'objectType': 13},
     ]}))
     # a plist without a dynamicObjects array and a non-plist payload
     add_record('2_0/1', 2, 0, 'record2.plist',
