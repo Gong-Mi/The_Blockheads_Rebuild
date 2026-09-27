@@ -16,6 +16,9 @@
 #include "world_renderer.h"
 #include "settings_manager.h"
 
+// Original client assembly (batch b5a/b5b): the recovered original-save path.
+#include "original_client_app.h"
+
 #undef LOG_TAG
 #define LOG_TAG "BlockheadsNative"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
@@ -28,6 +31,10 @@ CraftingManager* g_crafting = nullptr;
 std::string g_storagePath;
 std::recursive_mutex g_engineMutex;
 FILE* g_logFile = nullptr;
+
+// The original-client assembly handle (kept alive for later slices; see the
+// OriginalClientApp wiring inside initNative).
+static bh176::OriginalClientApp g_originalClientApp;
 
 void logToFile(const char* fmt, ...) {
     if(!g_logFile) return;
@@ -126,6 +133,50 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
     if (!g_crafting) g_crafting = new CraftingManager();
     
     logToFile("Managers allocated");
+
+    // ---- Original client assembly path (b5b device wiring) ----------------
+    // If an assembled original save snapshot is present on the device, open it
+    // through the recovered client path and write the load report. This wires
+    // OriginalClientApp into the production APK's startup; it does not replace
+    // the replacement-world path below, and a missing snapshot is an explicit
+    // log line, never invented data.
+    {
+        const std::string snapshotDir = g_storagePath + "/original-snapshot";
+        std::string originalError;
+        if (g_originalClientApp.open(snapshotDir, &originalError)) {
+            if (g_originalClientApp.loadDynamicObjects(&originalError)) {
+                const bh176::ClientAppReport& r = g_originalClientApp.report();
+                logToFile("Original snapshot loaded: blocks=%zu records=%zu objects=%zu stub=%zu unidentified=%zu out_of_range=%zu opaque=%zu malformed=%zu",
+                          r.blocks, r.dynamic_records, r.dynamic_objects,
+                          r.stub_objects, r.unidentified_objects,
+                          r.out_of_range_objects, r.opaque_records,
+                          r.malformed_records);
+                for (const auto& entry : r.per_type) {
+                    logToFile("  original type %d: %zu object(s)", entry.first,
+                              entry.second);
+                }
+                const std::string reportPath =
+                    g_storagePath + "/original_snapshot_report.json";
+                FILE* reportFile = fopen(reportPath.c_str(), "w");
+                if (reportFile) {
+                    const std::string json = g_originalClientApp.toJson();
+                    fwrite(json.data(), 1, json.size(), reportFile);
+                    fclose(reportFile);
+                    logToFile("Original snapshot report written: %s",
+                              reportPath.c_str());
+                } else {
+                    logToFile("Original snapshot report NOT writable: %s",
+                              reportPath.c_str());
+                }
+            } else {
+                logToFile("Original snapshot open OK but dynamic load failed: %s",
+                          originalError.c_str());
+            }
+        } else {
+            logToFile("Original snapshot not present at %s (%s)",
+                      snapshotDir.c_str(), originalError.c_str());
+        }
+    }
 
     if (!PersistenceManager::loadWorld(g_storagePath.c_str(), g_world, g_entities)) {
         logToFile("No save found or load failed, generating new world...");

@@ -84,15 +84,31 @@ python3 tools/test_client_app_skeleton_evidence.py             # 门禁（静态
 2. **真实 dw 记录键名证实**（b5b 已落地）：记录键后缀即类型来源，
    回退键只在无键后缀的快照形状下生效；真实快照上
    `unidentified_objects` 16 → 0（`DW_RECORD_KEY_TYPE_EVIDENCE.md`）。
-3. **接生产 APK `PersistenceManager`**（PR #3 未勾选项）：把
-   `OriginalClientApp::open/loadDynamicObjects` 挂到 `GameActivity` 的起步路径，
-   让替换端能直接吃原版快照。
-4. **真机闭环**：`client_app_skeleton_cli` 的同一份逻辑在 Android 上跑，用真机
-   日志核对报告计数。
+3. **接生产 APK 启动路径**（b5b 设备片已落地）：`GameActivity` 的 `initNative`
+   在 Managers 分配后打开 `<files>/original-snapshot`（存在才开），计数进
+   `game_log.txt`，完整报告写 `original_snapshot_report.json`；缺失时显式一行
+   `not present`。替代世界 `world.bin` 路径不变，两条链互不替代。
+4. **真机闭环**（b5b 设备片已验收）：设备实产日志 `blocks=40 records=10
+   objects=16 stub=16 unidentified=0 out_of_range=0`，直方图与宿主 CLI 逐项一致；
+   快照推送与 APK 装配步骤见 PR #3 的进度评论与下节。
 
 ## 边界
 
 本批交付的是**骨架 + 桩 + 报告**：没有声称任何具体类型已反序列化，
-`Recovered`/`Verified` 计数在 CI 与宿主复现中都是 0，未接 APK 玩法、
-未做真机验收，「7 项基类字段之外」的一切都还是桩。CTest 侧新增
-`original_client_app`（保存/重载、桩计数、插槽晋级、路径与索引安全）。
+`Recovered`/`Verified` 计数在 CI 与宿主复现中都是 0（b5b 起按类型的工厂逐例
+推进），「7 项基类字段之外」的一切仍是桩。b5b 设备片已把该骨架接进启动路径并
+完成真机装载验收（见下节）；APK 玩法（渲染/交互消费原版世界）尚未接入。
+CTest 侧新增 `original_client_app`（保存/重载、桩计数、插槽晋级、路径与索引安全）。
+
+## 真机验收（2026-09-27，0.2-b5b + JNI 片）
+
+- 设备：`com.noodlecake.blockheads.rebuild` 0.2-b5b（手工装配，v1/v2/v3 签名）。
+- 快照：`reverse-probe-001` 组装产物（2.7MB / 53 文件）推到
+  `<external files>/original-snapshot/`。
+- `game_log.txt`（设备实产）：`Original snapshot loaded: blocks=40 records=10
+  objects=16 stub=16 unidentified=0 out_of_range=0 opaque=0 malformed=0`，
+  直方图 1:2 / 4:1 / 7:1 / 11:1 / 12:2 / 13:2 / 28:1 / 45:1 / 59:4 / 62:1。
+- `original_snapshot_report.json`：16 个对象（类名/坐标/stub 状态）。
+- 同轮替代世界 `world.bin` 照常加载，无崩溃；宿主 CLI 对同一快照的输出与设备
+  逐项一致（见 `REVERSE_COVERAGE_LEDGER` 之外的 `DW_RECORD_KEY_TYPE_EVIDENCE.md`
+  post-fix 段）。
