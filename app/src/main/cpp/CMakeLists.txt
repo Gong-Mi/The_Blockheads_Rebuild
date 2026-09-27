@@ -24,6 +24,9 @@ add_custom_command(
 # --- Zstd 编译配置 ---
 set(ZSTD_DIR external/zstd/lib)
 add_definitions(-DZSTD_DISABLE_ASM) # 禁用汇编以确保 Android 兼容性
+add_definitions(-DXXH_NAMESPACE=ZSTD_) # zstd 内部源引用 ZSTD_XXH64_*（命名空间版符号），
+# xxhash.c 必须以同前缀导出，否则 dlopen 报 cannot locate symbol "ZSTD_XXH64_update"
+# （2026-09-27 真机实测；上轮 APK 只定义了 ZSTD_DISABLE_ASM）
 include_directories(${ZSTD_DIR} ${ZSTD_DIR}/common)
 file(GLOB ZSTD_SOURCES ${ZSTD_DIR}/common/*.c ${ZSTD_DIR}/compress/*.c ${ZSTD_DIR}/decompress/*.c)
 
@@ -40,7 +43,14 @@ add_library(native-lib SHARED
             world_renderer.cpp
             compression_manager.cpp
             original_save_format.cpp
-            original_client_world.cpp
+            # b5b: original_client_world.cpp lives only in the reconstruction
+            # tree (the host CI target compiles it from there; see
+            # reconstruction/recovered/CMakeLists.txt). Pointing the APK build
+            # at the app-local name left the native-lib target with a missing
+            # source ("Cannot find source file: original_client_world.cpp"),
+            # which broke configure for the whole Android build.
+            ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/original_client_world.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/plant_full.cpp
             original_save_dict.cpp
             dynamic_object_registry.cpp
             original_client_app.cpp
