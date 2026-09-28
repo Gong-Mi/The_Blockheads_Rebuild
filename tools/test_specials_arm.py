@@ -67,6 +67,8 @@ ENTRIES = [
     ('Wire', 38, 0x0095002C, 0x00E8BDC0, 220),
     ('ElevatorShaft', 56, 0x00CAD2CC, 0x00E8BEE8, 214),
     ('ElevatorMotor', 55, 0x0070046C, 0x00E8BCE8, 218),
+    # the tree growth state machine (hooks6 batch; no super call, world-heavy)
+    ('Tree', 1, 0x004C2568, 0x00E8BC30, 546),
 ]
 CONV = {'intValue': ('int', INT_VALUE), 'boolValue': ('bool', BOOL_VALUE),
         'unsignedIntValue': ('uint', UINT_VALUE), 'floatValue': ('float', FLOAT_BITS)}
@@ -86,6 +88,11 @@ def main():
                     help='answer [world/dyn isServer] with 1 in dump mode')
     ap.add_argument('--trace', action='store_true',
                     help='record the last PCs and print them on a crash')
+    ap.add_argument('--static-tree', dest='static_tree', action='store_true',
+                    help='answer [self isStaticTree] with 1 (the static branch)')
+    ap.add_argument('--seed', default=None,
+                    help='comma list off=word (hex) written into the instance '
+                         'before the run, e.g. 96=0x32,92=0x64 (tree growth)')
     ap.add_argument('--emit-spec', metavar='CLASS',
                     help='run the class (lenient) and emit its key table JSON '
                          'from the memory-write hook + call trace')
@@ -249,6 +256,9 @@ def main():
                     uc_.reg_write(UC_ARM_REG_R0, len(ctx['data_bytes']))
                 else:
                     uc_.reg_write(UC_ARM_REG_R0, graph + 0x3000)
+            elif sel == 'isStaticTree':
+                ctx['calls'].append(f'isStaticTree(={1 if a.static_tree else 0})')
+                uc_.reg_write(UC_ARM_REG_R0, 1 if a.static_tree else 0)
             elif sel == 'maxNumberOfRiders':
                 ctx['calls'].append(sel)
                 uc_.reg_write(UC_ARM_REG_R0, 2)   # force the rider loop
@@ -432,6 +442,10 @@ def main():
         uc.mem_write(self_ptr, b'\x00' * IMAGE_SIZE)
         word(self_ptr + 4, world)    # the real super init stores world@4
         word(self_ptr + 8, dyn)      # ... and dynamicWorld@8
+        if a.seed:
+            for pair in a.seed.split(','):
+                off_s, val_s = pair.split('=')
+                word(self_ptr + int(off_s, 0), int(val_s, 0))
         sp = stack + 0x8000
         for reg, value in ((UC_ARM_REG_R0, self_ptr), (UC_ARM_REG_R1, sel_region),
                            (UC_ARM_REG_R2, world), (UC_ARM_REG_R3, dyn)):

@@ -70,7 +70,11 @@ def main() -> int:
         "worldWidthMacro",
         "plt_names",
         "0x00A93C64",  # ArtificialLight (dump-attested reads)
+        "('Tree', 1, 0x004C2568",   # the tree growth machine entry
+        "--static-tree",
     ])
+    require(ROOT / "reconstruction/reverse-v3/native/disasm_tree_growintimesincesaved.txt",
+            ["growInTimeSinceSaved"])
     require(ROOT / "reconstruction/recovered/artificial_light_full.h", [
         "READ ORDER is ARM-attested",
         "maxRed",

@@ -104,6 +104,28 @@ copy semantics, `worldWidthMacro`/`worldHeightMacro` answer 4 (returning 0
 spins the wrap helper forever), and `--trace` records the last PCs / call
 list / registers so a runaway execution is diagnosed instead of guessed.
 
+## Tree `growInTimeSinceSaved:` (0x004C2568, 546w) — decoded + two executed regimes
+
+The last static item of the save/load front is now driven under the harness
+(new `--seed off=hex` fixture writes and a `--static-tree` flag):
+
+- **static branch**: `isStaticTree == 1` -> the body returns **1** with NO
+  other calls and no stores (static trees do not grow);
+- **growth branch** (isStaticTree == 0): the body enters the state machine —
+  `dead@104` (STRB), the `maxAge@92`/`age@96` compare, `[world worldTime]`,
+  the growth-counter/growth-rate float math (`growthCounter@68`,
+  `growthRate@72`, `height@60`, `maxHeight@88`), an in-body call pair around
+  `height`/`pos`, `incrementHeight`, `updateGrowth:`, `isGrowingInCompost`,
+  the `age` vs `maxAge` death block (`removeAllOwnedTiles:`,
+  `timeDied@112`, `dead@104`) and `sowTreeNearParent:adult:adultMaxAge:` on
+  `dynamicWorld@8`; with the harness's stub values the machine funnels to the
+  final `updateGrowth:` + nil.
+- The full growth arithmetic is NOT modelled: driving the growth path
+  properly needs the method's `saveTime` DOUBLE argument wired (the generic
+  harness passes world/dyn in r2/r3), which is the next slice for this body.
+  The listing (disasm_tree_growintimesincesaved.txt) + both regime traces are
+  committed as the evidence baseline.
+
 ## Coverage
 
 Modelled and pinned (25/25 cases across the four-case scheme plus DropBear's
