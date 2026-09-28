@@ -1,5 +1,6 @@
 #include "original_client_app.h"
 
+#include "chest_full.h"
 #include "gatherblock_full.h"
 #include "kelpvine_full.h"
 #include "trainstation_full.h"
@@ -414,6 +415,17 @@ void OriginalClientApp::registerRecoveredFactories() {
         ObjectLoadStatus::Recovered);
     registry_.registerFactory(
         58, make_kelpvine_factory(58), "vine chain (b4o executed",
+        ObjectLoadStatus::Recovered);
+    // Chest 46: the b4m executed surface (chestType / safeClientID /
+    // saveItemSlots counts / shelf_0..3) + the stated InteractionObject
+    // static boundary; item payload decode stays in InventoryItem's domain.
+    const auto make_chest_factory = [](int type_id) {
+        return [type_id](const SaveDict& entry, std::string* error) {
+            return chest_full_factory(type_id, entry, nullptr, error);
+        };
+    };
+    registry_.registerFactory(
+        46, make_chest_factory(46), "chest full chain (b4m executed",
         ObjectLoadStatus::Recovered);
     // TrainStation 49: ownkey5 executed own key {text} + the same stated
     // InteractionObject static boundary as Workbench.

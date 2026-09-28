@@ -179,6 +179,12 @@ TYPED_RECORDS = {
         floatPos=[74.5, 510.0], age=900.0, dead=False, growthCounter=0.24,
         height=10, treeFruit=[], treeSeasonOffset=7,
     )),
+    # Chest: b4m executed surface (chestType / slots counts / shelf_0..3).
+    46: ("Chest", 180, 86, 517, dict(
+        floatPos=[86.5, 517.0], chestType=2,
+        saveItemSlots=[[{"itemType": 1, "uid": 1}], [], [], []],
+        shelfRenderItems_0=1, shelfItemDataBs_0=2,
+    )),
     # TrainStation: ownkey5 own key {text} + InteractionObject static boundary.
     49: ("TrainStation", 170, 85, 516, dict(
         floatPos=[85.5, 516.0], text="Depot A",
@@ -332,6 +338,7 @@ EXPECT_REASON = {
     33: "Plant loadSaveDictValues",
     61: "Plant loadSaveDictValues",
     49: "ownkey5",        # TrainStation own key {text} executed
+    46: "b4m",            # Chest executed read-back
 }
 
 
