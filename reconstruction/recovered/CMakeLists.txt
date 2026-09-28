@@ -315,6 +315,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             npc_load_values_from_save_dict.cpp
             workbench_full.cpp
             workbench_init.cpp
+            gatherblock_full.cpp
             original_client_world.cpp)
         target_include_directories(original_client_app PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}
@@ -340,6 +341,10 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         target_link_libraries(test_workbench_full PRIVATE original_client_app)
         target_compile_options(test_workbench_full PRIVATE -UNDEBUG)
         add_test(NAME workbench_full COMMAND test_workbench_full)
+        add_executable(test_gatherblock_full ../../tools/test_gatherblock_full.cpp)
+        target_link_libraries(test_gatherblock_full PRIVATE original_client_app)
+        target_compile_options(test_gatherblock_full PRIVATE -UNDEBUG)
+        add_test(NAME gatherblock_full COMMAND test_gatherblock_full)
         add_executable(client_app_skeleton_cli ../../tools/client_app_skeleton_cli.cpp)
         target_link_libraries(client_app_skeleton_cli PRIVATE original_client_app)
         # Standalone reverse-pipeline run test: assemble a snapshot fixture and

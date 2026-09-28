@@ -155,6 +155,10 @@ TYPED_RECORDS = {
         splitHeightA=3, splitHeightB=4, splitDirection=True,
         availableFood=12.5,
     )),
+    # GatherBlock: base + ownkey5 executed own keys (the full key set).
+    26: ("GatherBlock", 130, 98, 521, dict(
+        floatPos=[98.5, 521.0], timer=0.5, lastKnownGatherValue=42,
+    )),
     # GemTree: Tree + b3b own keys (own then super; gemTreeType/fruitYear).
     57: ("GemTree", 127, 96, 521, dict(
         floatPos=[96.5, 521.0], age=2200.0, dead=False,
@@ -257,6 +261,7 @@ EXPECT_REASON = {
     59: "Plant loadSaveDictValues",
     13: "b3g",           # NPC init executed
     45: "b4q",           # workbench executed differential
+    26: "ownkey5",       # GatherBlock own keys, executed
 }
 
 

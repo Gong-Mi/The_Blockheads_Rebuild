@@ -65,6 +65,7 @@ add_library(native-lib SHARED
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/tree_load_save_dict.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/workbench_full.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/workbench_init.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/gatherblock_full.cpp
             original_save_dict.cpp
             dynamic_object_registry.cpp
             original_client_app.cpp

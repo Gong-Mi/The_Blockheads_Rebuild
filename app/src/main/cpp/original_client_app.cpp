@@ -1,5 +1,6 @@
 #include "original_client_app.h"
 
+#include "gatherblock_full.h"
 #include "npc_full.h"
 #include "plant_full.h"
 #include "tree_full.h"
@@ -376,6 +377,16 @@ void OriginalClientApp::registerRecoveredFactories() {
         ObjectLoadStatus::Recovered);
     registry_.registerFactory(
         63, make_npc_factory(63), "npc full chain (b3g/b4f executed",
+        ObjectLoadStatus::Recovered);
+    // GatherBlock 26: base chain + ownkey5 executed own keys
+    // {timer@56, lastKnownGatherValue@60} — the full record key set.
+    const auto make_gatherblock_factory = [](int type_id) {
+        return [type_id](const SaveDict& entry, std::string* error) {
+            return gatherblock_full_factory(type_id, entry, nullptr, error);
+        };
+    };
+    registry_.registerFactory(
+        26, make_gatherblock_factory(26), "gatherblock full chain (ownkey5 executed",
         ObjectLoadStatus::Recovered);
     // Tree family (bucket A, trees): AppleTree 1 / PineTree 4 / OrangeTree 7.
     // Stage 1 keys are an executed differential (b4d); the gene/growth block
