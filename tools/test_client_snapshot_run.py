@@ -179,6 +179,10 @@ TYPED_RECORDS = {
         floatPos=[74.5, 510.0], age=900.0, dead=False, growthCounter=0.24,
         height=10, treeFruit=[], treeSeasonOffset=7,
     )),
+    # GlowBlock: base + listing-decoded own keys.
+    18: ("GlowBlock", 240, 96, 522, dict(
+        floatPos=[96.5, 522.0], tileType=7, lightDict={"radius": 3},
+    )),
     # Bed / Sign: executed InteractionObject super + listing-decoded own keys.
     23: ("Bed", 230, 94, 521, dict(
         floatPos=[94.5, 521.0], isInUse=True, beddingColor=70000, itemType=2,
@@ -381,6 +385,7 @@ EXPECT_REASON = {
     64: "zero-own-key",   # Mirror zero-own-key forwarder over the same chain
     23: "beddingColor@104-strh",  # Bed own keys (listing decode)
     47: "connectionType@112",      # Sign own keys (listing decode)
+    18: "tileType@60",             # GlowBlock own key (listing decode)
 }
 
 

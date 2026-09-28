@@ -3,6 +3,7 @@
 #include "bed_sign_full.h"
 #include "chest_full.h"
 #include "freeblock_full.h"
+#include "glowblock_full.h"
 #include "gatherblock_full.h"
 #include "interaction_full.h"
 #include "kelpvine_full.h"
@@ -430,6 +431,15 @@ void OriginalClientApp::registerRecoveredFactories() {
     };
     registry_.registerFactory(
         14, make_freeblock_factory(14), "freeblock full chain (b4p executed",
+        ObjectLoadStatus::Recovered);
+    // GlowBlock 18: DynamicObject base + {tileType@60, lightDict presence}.
+    const auto make_glowblock_factory = [](int type_id) {
+        return [type_id](const SaveDict& entry, std::string* error) {
+            return glowblock_full_factory(type_id, entry, nullptr, error);
+        };
+    };
+    registry_.registerFactory(
+        18, make_glowblock_factory(18), "glowblock full chain (listing decode",
         ObjectLoadStatus::Recovered);
     // Bed 23 / Sign 47: the executed InteractionObject super chain + each
     // class's own keys (decoded from their annotated listings; store widths

@@ -328,6 +328,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             interaction_full.cpp
             interaction_object_init.cpp
             bed_sign_full.cpp
+            glowblock_full.cpp
             chest_full.cpp
             freeblock_full.cpp
             tradeportal_full.cpp
@@ -378,6 +379,10 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         target_link_libraries(test_bed_sign_full PRIVATE original_client_app)
         target_compile_options(test_bed_sign_full PRIVATE -UNDEBUG)
         add_test(NAME bed_sign_full COMMAND test_bed_sign_full)
+        add_executable(test_glowblock_full ../../tools/test_glowblock_full.cpp)
+        target_link_libraries(test_glowblock_full PRIVATE original_client_app)
+        target_compile_options(test_glowblock_full PRIVATE -UNDEBUG)
+        add_test(NAME glowblock_full COMMAND test_glowblock_full)
         add_executable(test_chest_full ../../tools/test_chest_full.cpp)
         target_link_libraries(test_chest_full PRIVATE original_client_app)
         target_compile_options(test_chest_full PRIVATE -UNDEBUG)
