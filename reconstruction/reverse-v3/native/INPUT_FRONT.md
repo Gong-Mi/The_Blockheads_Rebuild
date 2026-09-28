@@ -210,6 +210,27 @@ production library), pinned by `tools/test_ui_control.cpp`: the gates, the
 send-on-start vs send-on-release flag, the lift-outside no-click, the hover
 membership, the cancel path.
 
+## The scrolling list: ScrollingButtons -moveTouch: (490w)
+
+`disasm_scrollingbuttons_touch.txt` — the horizontal craft list's drag
+logic. Ivars: `craftableItemButtons@72` (the buttons), `xScroll@104`,
+`scrollVelocity@108`, `lastX@112`, `startX@116`, `scrollInProgress@120`,
+`startTouchWasInView@121`, `workbench@68`.
+
+The body: takes the drag delta against `lastX@112`, toggles
+`scrollInProgress@120`, iterates `craftableItemButtons@72`
+(`countByEnumeratingWithState…`), applies the clamp through `setXScroll:`
+(velocity written to `scrollVelocity@108`), calls the internal relayout
+helper 0x00765D80, then runs **two further enumerations forwarding the
+event to every button** — `[button endTouch:]` (0x00765AB0) and
+`[button moveTouch:]` (0x00765C9C) — so each visible button tracks the
+drag for its own hover/highlight state, and finally stores the new
+`xScroll@104` (both the offset and its translation copy). The points handed
+to the buttons are built with the shared helpers 0x1C2924 / 0x1C2E28.
+
+So a scroll is: a clamped offset update + per-widget event forwarding — the
+same "the container drives its children" convention as the panels.
+
 ## Boundary
 
 The router is decoded and the family base is decoded; a full *model* now

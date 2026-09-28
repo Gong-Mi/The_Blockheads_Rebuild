@@ -96,6 +96,8 @@ def main() -> int:
     require(ROOT / "reconstruction/reverse-v3/native/disasm_craftui_starttouch.txt",
             ["CraftUI.scrollingButtons (slot 0x0105ef50) = 148",
              "CraftUI.countSlider (slot 0x0105ef9c) = 164"])
+    require(ROOT / "reconstruction/reverse-v3/native/disasm_scrollingbuttons_touch.txt",
+            ["OBJC_IVAR_$_ScrollingButtons.xScroll (slot 0x0105d5e8) = 104"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_mjview_touch.txt",
             ["OBJC_IVAR_$_MJView.subviews (slot 0x0105cda8) = 44",
              "countByEnumeratingWithState:objects:count:"])
