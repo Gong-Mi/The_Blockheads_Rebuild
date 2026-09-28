@@ -742,6 +742,19 @@
    "evidence": "reconstruction/reverse-v3/native/NPC_INITWITHWORLD_ARM.md",
    "integration": "recovered-method-module",
    "scope": "Executed differential (b3g, Unicorn bit-exact): super init via objc_msgSendSuper2, nil propagation, [self loadValuesFromSaveDict:] dispatch, randomHarmFromHungerTimer@144 = 1.0f + 20.0f * (lrand48()/2^31f). lrand48 is hooked in the harness (non-deterministic in the original); the real super chain and Foundation live outside the contract."
+  },
+  {
+   "implementation": "0x005f4634",
+   "class": "InteractionObject",
+   "kind": "instance",
+   "selector": "initWithWorld:dynamicWorld:saveDict:cache:",
+   "types": "@24@0:4@8@12@16@20",
+   "entry_point": "blockheads::recovered::interaction_init_run",
+   "source": "reconstruction/recovered/interaction_object_init.cpp",
+   "test": "tools/test_interaction_object_init.cpp",
+   "evidence": "reconstruction/reverse-v3/native/INTERACTION_OBJECT_INIT_ARM.md",
+   "integration": "recovered-method-module",
+   "scope": "Executed differential (352w, 8 cases, image + call trace bit-exact at -O0/-O2): super forward with nil propagation, isInUse/flipped boolValue bytes @68/@69, ownerID/ownerName retained @36/@84, paintColor unsignedIntValue STRH @88, the unconditional savedBlockheadIndex@80 = -1 default plus the currentBlockheadIndex probe/second-read intValue overwrite, and the THREE-gate world tail (isServer && ownerID!=nil && ownerName==nil) resolving ownerName via getOwnerNameForObjectOwnerID:. The ownerName-nil gate and the -1 default were caught by the differential against the static decode. Synthetic message graph; not Foundation, not the original runtime."
   }
  ]
 }

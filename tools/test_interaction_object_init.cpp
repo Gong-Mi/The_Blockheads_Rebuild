@@ -37,8 +37,7 @@ int main() {
         in.flipped_value = true;
         in.owner_id_present = true;
         in.owner_id_token = 0x0A000001;
-        in.owner_name_present = true;
-        in.owner_name_token = 0x0A000002;
+        // ownerName ABSENT: the ownerName==nil gate lets the resolution run
         in.paint_color_present = true;
         in.paint_color_value = 0x10005;  // will truncate to 0x0005
         in.blockhead_index_present = true;
@@ -89,14 +88,14 @@ int main() {
         for (std::uint8_t b : r.image) assert(b == 0);
     }
 
-    // ---- probe gate: blockhead absent -> no second read, no store --------
+    // ---- probe gate: blockhead absent -> the -1 default store stays ------
     {
         InteractionInitInputs in;
         in.blockhead_index_present = false;
         in.paint_color_present = true;
         in.paint_color_value = 4660;
         const auto r = interaction_init_run(in);
-        assert(word(r.image, 80) == 0);
+        assert(word(r.image, 80) == 0xFFFFFFFFu);  // the unconditional default
         for (auto c : r.calls) {
             assert(c != InteractionInitCall::ObjectForKeyCurrentBlockheadIndex);
             assert(c != InteractionInitCall::IntValueCurrentBlockheadIndex);
@@ -119,6 +118,22 @@ int main() {
         }
     }
 
+    // ---- tail gate: ownerName PRESENT -> world resolution SKIPPED ---------
+    {
+        InteractionInitInputs in;
+        in.owner_id_present = true;
+        in.owner_id_token = 0x0A000030;
+        in.owner_name_present = true;
+        in.owner_name_token = 0x0A000031;
+        in.is_server = true;
+        in.resolved_owner_name_token = 0x0A000032;
+        const auto r = interaction_init_run(in);
+        assert(word(r.image, 84) == 0x0A000031);  // the key value stays
+        for (auto c : r.calls) {
+            assert(c != InteractionInitCall::GetOwnerNameForObjectOwnerID);
+        }
+    }
+
     // ---- tail gate: server but ownerID nil -> no resolution ---------------
     {
         InteractionInitInputs in;
@@ -135,7 +150,11 @@ int main() {
     {
         InteractionInitInputs in;
         const auto r = interaction_init_run(in);
-        for (std::uint8_t b : r.image) assert(b == 0);
+        for (std::size_t i = 0; i < r.image.size(); ++i) {
+            if (i >= 80 && i < 84) continue;   // the -1 default store
+            assert(r.image[i] == 0);
+        }
+        assert(word(r.image, 80) == 0xFFFFFFFFu);
         assert(r.image[68] == 0 && r.image[69] == 0);
         assert(half(r.image, 88) == 0);
     }

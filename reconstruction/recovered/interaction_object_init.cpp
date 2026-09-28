@@ -65,6 +65,11 @@ InteractionInitResult interaction_init_run(const InteractionInitInputs& in) {
     calls.push_back(Call::UnsignedIntValuePaintColor);
     storeHalf(image, 88, in.paint_color_present ? in.paint_color_value : 0u);
 
+    // savedBlockheadIndex@80 default: -1 stored UNCONDITIONALLY before the
+    // probe (0x5f4948-0x5f495c; the same -1-default pattern as the NPC
+    // savedBlockheadIndexFuel).
+    storeWord(image, 80, 0xFFFFFFFFu);
+
     // currentBlockheadIndex: probe; the second read + intValue + store only
     // run when the probe is non-nil (the beq skip at 0x5f4980).
     calls.push_back(Call::ObjectForKeyCurrentBlockheadIndexProbe);
@@ -74,13 +79,21 @@ InteractionInitResult interaction_init_run(const InteractionInitInputs& in) {
         storeWord(image, 80, static_cast<std::uint32_t>(in.blockhead_index_value));
     }
 
-    // tail: [dynamicWorld isServer] gate, then the ownerID non-nil gate;
-    // only then the world-side name resolution is retained into ownerName@84.
+    // tail: THREE gates, decoded from 0x5f4a00-0x5f4b38 —
+    //   if (isServer)                 (sxtb/cmp/beq)
+    //   if (ownerID@36 != nil)        (cmp/beq -> epilogue)
+    //   if (ownerName@84 == nil)      (cmp/bne -> epilogue)
+    // then: ownerName@84 = retain([dynamicWorld
+    //                              getOwnerNameForObjectOwnerID:ownerID])
+    // (The ownerName-nil gate is what the first differential run caught:
+    // a present ownerName key SKIPS the world resolution.)
     calls.push_back(Call::IsServer);
     if (in.is_server) {
         std::uint32_t current_owner_id = 0;
+        std::uint32_t current_owner_name = 0;
         std::memcpy(&current_owner_id, image + 36, sizeof(current_owner_id));
-        if (current_owner_id != 0) {  // ownerID@36 non-nil gate
+        std::memcpy(&current_owner_name, image + 84, sizeof(current_owner_name));
+        if (current_owner_id != 0 && current_owner_name == 0) {
             calls.push_back(Call::GetOwnerNameForObjectOwnerID);
             calls.push_back(Call::RetainResolvedOwnerName);
             storeWord(image, 84, in.resolved_owner_name_token);

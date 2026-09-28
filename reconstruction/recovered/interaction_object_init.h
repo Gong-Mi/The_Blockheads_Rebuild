@@ -13,12 +13,18 @@
 //   ownerID    objectForKey -> retain             -> str   @36
 //   ownerName  objectForKey -> retain             -> str   @84
 //   paintColor objectForKey -> unsignedIntValue   -> STRH  @88 (halfword store!)
+//   savedBlockheadIndex@80 = -1                   -> str   @80 (unconditional
+//       default store BEFORE the probe, 0x5f4948-0x5f495c)
 //   currentBlockheadIndex: objectForKey PROBE; only when the probe is
-//       non-nil: objectForKey AGAIN -> intValue   -> str   @80
-//   tail (world-dependent): if ([self->dynamicWorld isServer]) and the image's
-//       ownerID@36 is non-nil:
+//       non-nil: objectForKey AGAIN -> intValue    -> str   @80 (overwrite)
+//   tail (world-dependent), THREE gates in the source order:
+//       if ([self->dynamicWorld isServer])          (sxtb/cmp/beq)
+//       if (ownerID@36 != nil)                      (cmp/beq -> epilogue)
+//       if (ownerName@84 == nil)                    (cmp/bne -> epilogue)
 //           ownerName@84 = retain([dynamicWorld
 //               getOwnerNameForObjectOwnerID:ownerID@36])
+//       (the ownerName-nil gate means a record that CARRIES ownerName skips
+//        the world resolution entirely)
 //
 // Image size: the deepest write is paintColor@88 (+2) — 96 bytes cover every
 // store of this contract (stated rationale, like the NPC 160-byte image).
