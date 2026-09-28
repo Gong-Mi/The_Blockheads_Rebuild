@@ -27,7 +27,8 @@ import sys
 from pathlib import Path
 
 from elftools.elf.elffile import ELFFile
-from unicorn import Uc, UC_ARCH_ARM, UC_MODE_ARM, UC_HOOK_CODE
+from unicorn import (Uc, UC_ARCH_ARM, UC_MODE_ARM, UC_HOOK_CODE,
+                     UC_HOOK_MEM_WRITE)
 from unicorn.arm_const import (UC_ARM_REG_R0, UC_ARM_REG_R1, UC_ARM_REG_R2,
                                UC_ARM_REG_R3, UC_ARM_REG_SP, UC_ARM_REG_LR,
                                UC_ARM_REG_PC, UC_ARM_REG_S0, UC_ARM_REG_C1_C0_2,
@@ -52,6 +53,20 @@ ENTRIES = [
     ('CaveTroll', 39, 0x00D538CC, 0x00E8BF2C, 408),
     ('ArtificialLight', 21, 0x00A93C64, 0x00E8BE48, 412),
     ('TrainCar', 43, 0x00A3892C, 0x00E8BE24, 363),
+    # mid-tier key-table classes (imps/superrefs from the batch jsons; used by
+    # --dump / --emit-spec; the pinned MODEL for them lives in the midtier
+    # harness/bridge)
+    ('Window', 31, 0x00C98944, 0x00E8BED4, 139),
+    ('Rail', 40, 0x0077AB90, 0x00E8BD24, 180),
+    ('Boat', 32, 0x0096B818, 0x00E8BDD4, 214),
+    ('Ladder', 19, 0x00AADCD4, 0x00E8BE68, 139),
+    ('Egg', 30, 0x00D4E30C, 0x00E8BF24, 236),
+    ('Column', 53, 0x00834A30, 0x00E8BD80, 197),
+    ('Stairs', 54, 0x006CC734, 0x00E8BCC0, 205),
+    ('Door', 20, 0x007694FC, 0x00E8BD1C, 210),
+    ('Wire', 38, 0x0095002C, 0x00E8BDC0, 220),
+    ('ElevatorShaft', 56, 0x00CAD2CC, 0x00E8BEE8, 214),
+    ('ElevatorMotor', 55, 0x0070046C, 0x00E8BCE8, 218),
 ]
 CONV = {'intValue': ('int', INT_VALUE), 'boolValue': ('bool', BOOL_VALUE),
         'unsignedIntValue': ('uint', UINT_VALUE), 'floatValue': ('float', FLOAT_BITS)}
@@ -71,6 +86,9 @@ def main():
                     help='answer [world/dyn isServer] with 1 in dump mode')
     ap.add_argument('--trace', action='store_true',
                     help='record the last PCs and print them on a crash')
+    ap.add_argument('--emit-spec', metavar='CLASS',
+                    help='run the class (lenient) and emit its key table JSON '
+                         'from the memory-write hook + call trace')
     a = ap.parse_args()
     if hashlib.sha256(a.elf.read_bytes()).hexdigest() != SHA:
         raise SystemExit('ELF SHA mismatch')
@@ -430,6 +448,75 @@ def main():
         return ret, list(ctx['calls']), bytes(image)
 
     ctx['is_server'] = 1 if a.is_server else 0
+    writes = []
+
+    def mem_write_hook(uc_, access, address, size, value, user):
+        if self_ptr <= address < self_ptr + IMAGE_SIZE:
+            writes.append((address - self_ptr, size, value))
+
+    uc.hook_add(UC_HOOK_MEM_WRITE, mem_write_hook, begin=self_ptr,
+                end=self_ptr + IMAGE_SIZE - 1)
+
+    if a.emit_spec:
+        target = None
+        for entry in ENTRIES:
+            if entry[0] == a.emit_spec:
+                target = entry
+        assert target is not None, f'no ENTRIES row for {a.emit_spec}'
+        cls, type_id, imp, superref, words = target
+        ctx['lenient'] = True
+        writes.clear()
+        ret, calls, image = arm_run(target, 0)
+        # pair each write with the most recent (key, conversion) from the trace
+        spec = {'class': cls, 'type_id': type_id, 'imp': f'0x{imp:08x}',
+                'code_words': words, 'calls': calls, 'keys': [], 'defaults': []}
+        conv_map = {'int': 'Int', 'bool': 'Bool', 'uint': 'UInt',
+                    'float': 'Float', 'retain': 'Object'}
+        # the k-th conversion pairs with the k-th instance write (each read
+        # stores exactly once in the flat-key bodies); writes issued BEFORE
+        # any conversion are the unconditional defaults.
+        events = []
+        cur_key = None
+        for c in calls:
+            if c.startswith('ofk:'):
+                cur_key = c[4:].split('(')[0]
+            elif c == 'retain' or c.startswith('retain('):
+                events.append((cur_key, 'Object'))
+            elif ':' in c and c.split(':')[0] in conv_map:
+                events.append((cur_key, conv_map[c.split(':')[0]]))
+        # pair each conversion with the first matching SUBSEQUENT write (the
+        # stub's return values are known constants, so value equality is the
+        # robust key — a pre-block default like Boat's -1@120 then falls out
+        # as a leftover => 'defaults')
+        expect = {'Int': 0x00012345, 'UInt': 0x0001FFF1, 'Bool': 1,
+                  'Float': 0x3FC00000}
+        taken = [False] * len(writes)
+        for key, conv in events:
+            for wi in range(len(writes)):
+                if taken[wi]:
+                    continue
+                off, size, val = writes[wi]
+                mask = (1 << (8 * size)) - 1
+                if conv == 'Object':
+                    match = 0x5E1B0000 <= val < 0x5E1C0000
+                else:
+                    match = (val & mask) == (expect[conv] & mask)
+                if match:
+                    taken[wi] = True
+                    spec['keys'].append({'key': key, 'conv': conv,
+                                         'width': size, 'offset': off,
+                                         'value': f'0x{val:08x}'})
+                    break
+        for wi, (off, size, val) in enumerate(writes):
+            if not taken[wi]:
+                spec['defaults'].append({'offset': off, 'width': size,
+                                         'value': f'0x{val:08x}'})
+        spec['writes_total'] = len(writes)
+        print(json.dumps(spec, indent=2))
+        out = a.output_dir / f'spec_{cls}.json'
+        out.write_text(json.dumps(spec, indent=2) + '\n')
+        print(f'wrote {out}')
+        return
 
     if a.dump:
         rows = []
