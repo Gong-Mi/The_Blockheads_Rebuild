@@ -155,6 +155,19 @@ TYPED_RECORDS = {
         splitHeightA=3, splitHeightB=4, splitDirection=True,
         availableFood=12.5,
     )),
+    # KelpPlant / VinePlant: the executed b4o/b4n twin chains.
+    34: ("KelpPlant", 140, 60, 500, dict(
+        floatPos=[60.5, 500.0], seasonOffset=5, age=300.0,
+        maxAgeGene=150, growthRateGene=160, saveTime=900.0,
+        numberOfOccupiedTilesAbove=6, growthTimer=1.25,
+        availableFood=55.5,
+    )),
+    58: ("VinePlant", 141, 61, 500, dict(
+        floatPos=[61.5, 500.0], seasonOffset=6, age=400.0,
+        maxAgeGene=151, growthRateGene=161, saveTime=900.0,
+        numberOfOccupiedTilesBelow=9, growthTimer=2.5,
+        availableFood=66.0,
+    )),
     # GatherBlock: base + ownkey5 executed own keys (the full key set).
     26: ("GatherBlock", 130, 98, 521, dict(
         floatPos=[98.5, 521.0], timer=0.5, lastKnownGatherValue=42,
@@ -262,6 +275,8 @@ EXPECT_REASON = {
     13: "b3g",           # NPC init executed
     45: "b4q",           # workbench executed differential
     26: "ownkey5",       # GatherBlock own keys, executed
+    34: "b4n",           # KelpPlant twin loader executed
+    58: "b4o",           # VinePlant twin loader executed
 }
 
 

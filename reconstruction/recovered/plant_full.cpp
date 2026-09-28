@@ -63,10 +63,13 @@ PlantFullState plant_full_load(const PlantFullInputs& inputs) {
     }
 
     // --- TulipPlant own keys (b3k static; present only on TulipPlant) ---
+    // The block opens on a Tulip-EXCLUSIVE key only (colorGenes / mixGenes /
+    // mateColorGenes). availableFood alone must NOT open it: kelp/vine/other
+    // plant subclasses carry their own availableFood that the Plant chain
+    // never reads (the subclass loaders own it, at their own offsets).
     if (entry.objectForKey("colorGenes") != nullptr ||
         entry.objectForKey("mixGenes") != nullptr ||
-        entry.objectForKey("mateColorGenes") != nullptr ||
-        entry.objectForKey("availableFood") != nullptr) {
+        entry.objectForKey("mateColorGenes") != nullptr) {
         state.tulip.present = true;
         state.tulip.available_food =
             SaveDict::floatValue(entry.objectForKey("availableFood"));

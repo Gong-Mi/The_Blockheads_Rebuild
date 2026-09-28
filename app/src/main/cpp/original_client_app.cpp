@@ -1,6 +1,7 @@
 #include "original_client_app.h"
 
 #include "gatherblock_full.h"
+#include "kelpvine_full.h"
 #include "npc_full.h"
 #include "plant_full.h"
 #include "tree_full.h"
@@ -377,6 +378,20 @@ void OriginalClientApp::registerRecoveredFactories() {
         ObjectLoadStatus::Recovered);
     registry_.registerFactory(
         63, make_npc_factory(63), "npc full chain (b3g/b4f executed",
+        ObjectLoadStatus::Recovered);
+    // KelpPlant 34 / VinePlant 58: the executed b4o/b4n twin chains
+    // (Plant chain reused via plant_full_load + the mirrored occupied axis).
+    const auto make_kelpvine_factory = [world_time](int type_id) {
+        return [type_id, world_time](const SaveDict& entry, std::string* error) {
+            return kelpvine_full_factory(type_id, entry, world_time, nullptr,
+                                         error);
+        };
+    };
+    registry_.registerFactory(
+        34, make_kelpvine_factory(34), "kelp chain (b4n executed",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        58, make_kelpvine_factory(58), "vine chain (b4o executed",
         ObjectLoadStatus::Recovered);
     // GatherBlock 26: base chain + ownkey5 executed own keys
     // {timer@56, lastKnownGatherValue@60} — the full record key set.
