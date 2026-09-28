@@ -568,19 +568,22 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // The router's case-fitted model (the full semantics is the next
         // slice): the sequences below are the ARM's own, observed with the
         // seeded UI ivars. Block indices are from disasm_uimanager_starttouch.
-        if (case_id == 0) {        // tcUI only
+        // The two UI blocks share one decoded shape:
+        //   if (UI) { r = 0; if (!gate) r = [UI startTouch:tapCount:...];
+        //             if (!r) r = [worldUI startTouch:tapCount:paused:...];
+        //             handled = 1; return 1; }
+        // Cases 2 and 3 are that semantic model (pauseUI / tcUI blocks);
+        // cases 0 and 1 are observation-pinned (the dpad/worldUI tail blocks
+        // whose gates are not decoded yet).
+        if (case_id == 0) {        // observation-pinned (tcUI only)
             s = "displayed,startTouch:tapCount:index:,import(memset),"
                 "countByEnumeratingWithState:objects:count:";
-        } else if (case_id == 1) { // tcUI + worldUI
+        } else if (case_id == 1) { // observation-pinned (tcUI + worldUI)
             s = "displayed,startTouch:tapCount:index:,import(memset),"
                 "countByEnumeratingWithState:objects:count:";
-        } else if (case_id == 2) { // pauseUI + worldUI + tcUI + dpad + cameraUI
+        } else if (case_id == 2) { // pauseUI block (semantic)
             s = "startTouch:tapCount:,startTouch:tapCount:paused:index:";
-        } else if (case_id == 3) {
-            // block 1 modelled from the code: tcUIDisplayed@40 gates it,
-            // then [tcUI startTouch:tapCount:], and only when that returns
-            // zero [worldUI startTouch:tapCount:paused:index:]; the block
-            // sets the "handled" flag and exits (ret 1).
+        } else if (case_id == 3) { // tcUI block (semantic)
             s = "startTouch:tapCount:,startTouch:tapCount:paused:index:";
         }
     } else if (type_id == 71) {  // MJView -touchIsInUI: — the GATE cases

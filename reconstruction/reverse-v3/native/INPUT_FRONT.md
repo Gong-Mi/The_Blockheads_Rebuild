@@ -61,13 +61,28 @@ So the family contract is: **the base answers "not handled / not in view"
 everywhere**, and each panel subclass overrides the touch/visibility methods
 with its own hit test and handling.
 
-### The router's block 1, modelled from the code
+### The router's UI blocks, modelled from the code
 
-Block 1 (0x00AD77A8..0x00AD78AC) decoded: gated by `tcUIDisplayed@40`; when
-set it calls `[tcUI startTouch:tapCount:point, tapCount]`, and only when that
-returns zero falls back to
-`[worldUI startTouch:tapCount:paused:index:point, tapCount, 1, index]`; either
-way the block sets the "handled" flag and exits with 1. Seeded
+Two blocks are decoded and share one shape:
+
+```
+if (UI) {                                  // the block's own ivar
+    r = 0;
+    if (!gate) r = [UI startTouch:tapCount:point, tapCount];
+    if (!r)     r = [worldUI startTouch:tapCount:paused:index:point,
+                     tapCount, 1, index];
+    handled = 1;                            // [fp-0x19]
+    return 1;
+}
+```
+
+- block 1 (0x00AD77A8..0x00AD78AC): gated by `tcUIDisplayed@40`;
+- block 2 (0x00AD78B0..0x00AD7A34): gated by `hidePauseUI@148`;
+- a nil `UI` falls through to the next block (cameraUI@100 follows block 2).
+
+So the router's pattern is "one UI consumes the touch, the world is notified
+with `paused:`" and the method returns 1; the worldUI-paused fallback runs
+only when the UI's own handler returned zero. Seeded
 (`tcUIDisplayed@40 = 1` + tcUI + worldUI) the ARM runs exactly that sequence
 and returns 1 — the router's differential case 3 is that semantic model, not
 a case fit. The remaining blocks (2-7) stay case-fitted until their gates
