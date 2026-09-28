@@ -2,6 +2,7 @@
 
 #include "bed_sign_full.h"
 #include "chest_full.h"
+#include "fire_torch_full.h"
 #include "freeblock_full.h"
 #include "glowblock_full.h"
 #include "gatherblock_full.h"
@@ -431,6 +432,19 @@ void OriginalClientApp::registerRecoveredFactories() {
     };
     registry_.registerFactory(
         14, make_freeblock_factory(14), "freeblock full chain (b4p executed",
+        ObjectLoadStatus::Recovered);
+    // FireObject 16 / Torch 17: DynamicObject base + the listing-decoded own
+    // keys (light child construction is the stated offline boundary).
+    const auto make_fire_torch_factory = [](int type_id) {
+        return [type_id](const SaveDict& entry, std::string* error) {
+            return fire_torch_full_factory(type_id, entry, nullptr, error);
+        };
+    };
+    registry_.registerFactory(
+        16, make_fire_torch_factory(16), "fireobject full chain (listing decode",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        17, make_fire_torch_factory(17), "torch full chain (listing decode",
         ObjectLoadStatus::Recovered);
     // GlowBlock 18: DynamicObject base + {tileType@60, lightDict presence}.
     const auto make_glowblock_factory = [](int type_id) {

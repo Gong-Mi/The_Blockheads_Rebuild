@@ -71,6 +71,7 @@ add_library(native-lib SHARED
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/interaction_full.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/bed_sign_full.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/glowblock_full.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/fire_torch_full.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/interaction_object_init.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/chest_full.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/freeblock_full.cpp

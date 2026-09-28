@@ -179,6 +179,16 @@ TYPED_RECORDS = {
         floatPos=[74.5, 510.0], age=900.0, dead=False, growthCounter=0.24,
         height=10, treeFruit=[], treeSeasonOffset=7,
     )),
+    # FireObject / Torch: base + listing-decoded own keys.
+    16: ("FireObject", 250, 97, 523, dict(
+        floatPos=[97.5, 523.0], burnTimer=0.75, spreadTimer_0=1.0,
+        spreadTimer_1=2.0, spreadTimer_2=3.0, spreadTimer_3=4.0,
+        lightDict={"radius": 2},
+    )),
+    17: ("Torch", 251, 98, 523, dict(
+        floatPos=[98.5, 523.0], itemType=9, connectionType=1, dataA=70000,
+        dataB=2, ownerID="c-7", lightDict={"radius": 4},
+    )),
     # GlowBlock: base + listing-decoded own keys.
     18: ("GlowBlock", 240, 96, 522, dict(
         floatPos=[96.5, 522.0], tileType=7, lightDict={"radius": 3},
@@ -386,6 +396,8 @@ EXPECT_REASON = {
     23: "beddingColor@104-strh",  # Bed own keys (listing decode)
     47: "connectionType@112",      # Sign own keys (listing decode)
     18: "tileType@60",             # GlowBlock own key (listing decode)
+    16: "burnTimer@56",            # FireObject own keys (listing decode)
+    17: "dataA@80-strh",           # Torch own keys (listing decode)
 }
 
 
