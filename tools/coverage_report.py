@@ -105,8 +105,8 @@ def main() -> int:
         except (json.JSONDecodeError, UnicodeDecodeError):
             continue
         classes = d.get("classes") if isinstance(d, dict) else None
-        if not classes:
-            continue
+        if not isinstance(classes, list):
+            continue   # e.g. the graph json's class COUNT, not a class list
         batch_files += 1
         for c in classes:
             if isinstance(c, dict) and c.get("imp"):
