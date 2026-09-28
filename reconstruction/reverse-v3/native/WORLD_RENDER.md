@@ -167,6 +167,27 @@ view:
   enable/disable pair is GL here; the text itself goes through the label's
   own render (the `Text` shader pair).
 
+## The blockhead item boxes (decoded: `Blockhead -drawBoxes:…`, 6474w)
+
+`disasm_blockhead_drawboxes.txt` — the biggest object body after the master
+draw, and the world's interactive overlay: the blockhead's carried items and
+action/​goal boxes.
+
+- **the inventory walk**: `inventoryItems@664` (55 refs) with `subItems`
+  (63), `count` (216!) and `objectAtIndex:` (197) — the body scans the
+  inventory arrays element by element, reading each `itemType` (161) and its
+  `dataB` (36);
+- **the state it visualises**: `state@56` (85), `actionQueue@1980` (31),
+  `goalInteraction` (29), `rideObject@628` (30), `selectedToolIndex@660`
+  (27), `uiManager` (23) and `itemWillBeRemovedFromInventory:` (21) — the
+  current action, goal, mount, selected tool and the UI coupling;
+- **the geometry**: the world kit (`world@4` 168, `worldWidthMacro` 32,
+  `pos@16` 79, `floatPos@24` 43) with `__wrap_powf` (the ease) and
+  **`__wrap_realloc` x2** — the vertex buffer grows dynamically as boxes are
+  appended;
+- **the draw**: its own pass — `glUseProgram` x2, the uniform/bind/attrib
+  set, and the single **`glDrawArrays`** in this body.
+
 ## Next slices
 
 `drawOpaqueObjects:` (the opaque batch), `drawInFrontOfBlocksObjects:`,
