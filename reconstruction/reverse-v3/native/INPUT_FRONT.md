@@ -122,6 +122,41 @@ The UIManager router's flat pass over `uiViews@140` is therefore a
 recursive descent expressed flat — and a full router *model* needs the
 widget-level behaviours, which is the next frontier.
 
+## The widget layer: the MJ toolkit (MJView / MJButton)
+
+The widgets the panels delegate to are members of a small in-house UI
+toolkit. 14 classes implement the widget-level pair `startTouch:` +
+`touchIsInUI:` (the one-argument forms), rooted at:
+
+- **MJView** (22 methods): geometry (`initWithFrame:cache:windowInfo:`,
+  `frame`/`setFrame:`, `windowInfo`, `color`/`setColor:` (an `MJColor`
+  struct), `alpha`, `hidden`, `ignoreEvents`), subviews
+  (`addSubview:`/`removeSubview:`), the touch contract
+  (`touchIsInUI:` 176w, `startTouch:` 176w, `moveTouch:` 156w,
+  `endTouch:` 156w, `hoverMove:` 156w) and `renderFrame:projectionMatrix:`
+  (271w);
+- **MJButton** (50 methods, an MJView subclass): two-layer titles
+  (`setTitle:`/`setTitleB:` + alignments + offsets), the texture set
+  (background / selected / highlighted / highlighted-selected / glyph, each
+  with its A/B variants), `setEnabled:`, `setSelected:`, `setHighlighted:`,
+  `tapAnimationDisabled`, `hoverSelectedDisabled`, and a 3071w
+  `renderFrame:projectionMatrix:`.
+
+The concrete widgets on top: `InventoryButton`, `NetPlayerButton`,
+`ScrollingButtons` (+ Paint/TradePortal variants), `ScrollingListTradePortal`,
+`ScrollingNetPlayerButtons`, `TableViewUI`, `SearchResultsUI`,
+`TradePortalGraph`, `MJControl`, `CreateCustomOptionsUI`, `NetPlayerUI`.
+
+### The three-layer picture
+
+1. **UIManager** — the flat router over the panels (`uiViews@140`);
+2. **GameUIView panels** — own rect + OR/delegate to widget children;
+3. **MJView/MJButton widgets** — the toolkit's own touch contract (and the
+   concrete widgets' behaviours on top).
+
+The next slice: MJView's `touchIsInUI:` / `startTouch:` (176w each), the
+widget-level hit test and handling that the panel delegation bottoms out in.
+
 ## Boundary
 
 The router is decoded and the family base is decoded; a full *model* now
