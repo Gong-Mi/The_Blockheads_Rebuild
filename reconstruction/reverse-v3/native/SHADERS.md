@@ -128,6 +128,18 @@ every GPU stage, while the remaining work is the CPU side: which quads are
 built, with which attributes/uniforms, in which order (the leaf painters'
 listsings).
 
+### The mapping sweep (draft)
+
+`tools/sweep_shader_mapping.py` disassembles every render-capable class's
+`initWith*` and reports the `shaderNamed:` call's literals; the result is
+committed as `native/shader_mapping.tsv` (draft). Reliability note: the
+**shader column is the named literal** (e.g. MJImageView -> MJButton, MapUI
+-> StandardObjectColored, MainMenuUI/PauseUI/OptionsUI/SoundOptionsUI ->
+StandardObject, Weather -> Rain/Snow), while the attrs/uniforms columns are
+a window heuristic that still picks up neighbouring literals — the row
+proven three ways (MJButton; see above) is the reference shape:
+`shader, attr1, attr2, uniform1..3`.
+
 ## How to inspect
 
 ```
