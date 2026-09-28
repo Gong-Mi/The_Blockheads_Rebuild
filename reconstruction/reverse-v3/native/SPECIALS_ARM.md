@@ -137,6 +137,21 @@ The last static item of the save/load front is now driven under the harness
       growthCounter@68 1.0 -> 0.0140625, maxHeightReached@64 := height.
   The listing (disasm_tree_growintimesincesaved.txt) + the three regime
   traces are committed as the evidence baseline.
+- **The gene block runs too** (the harness answers `macroTiles` with a
+  synthetic array and `loadPhysicalBlockForMacroTile:...` with a synthetic
+  tile, `--fake-tile gene|zero`): the chain is coordinate helper
+  (0xA12F24 validator -> 0xA12F64 wrap) -> macroTiles -> 0xA16CCC (index) ->
+  loadPhysicalBlockForMacroTile: -> tile+8 (contents) + idx<<6 -> the slot's
+  gene bytes at +7 / +0xe / +0x10 / +0x12 -> four `__aeabi_idiv` divisions ->
+  the increment. With a REAL `__aeabi_idiv` in the veneer handler (the
+  fallback returned 0, which hid the math) the block computes real values
+  (observed `__aeabi_idiv(22892,4)->5723`, `(243,2)->121`, `(5844,1024)->5`).
+- **The growth arithmetic** (listing 0x004c285c..0x004c2908): the height
+  factor `(1 - height/maxHeight + 0.2) * 0.5`, the double constant
+  0x3F747AE147AE147B (~0.005) times that factor times growthRate@72 times
+  the gene increment, and `(1 - growthCounter) / <that product>` compared
+  against the elapsed time. Observed growth-run end state:
+  growthCounter@68 = 0.140625, maxHeightReached@64 = height, return 1.
 
 ## Coverage
 

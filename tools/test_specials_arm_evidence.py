@@ -74,6 +74,8 @@ def main() -> int:
         "--static-tree",
         "--r2r3-double",            # the saveTime double wiring
         "--seed",
+        "--fake-tile",              # the synthetic tile world
+        "__aeabi_idiv",
     ])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_tree_growintimesincesaved.txt",
             ["growInTimeSinceSaved"])

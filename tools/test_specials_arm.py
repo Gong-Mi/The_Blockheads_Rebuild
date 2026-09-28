@@ -91,6 +91,10 @@ def main():
                     help='answer [world/dyn isServer] with 1 in dump mode')
     ap.add_argument('--trace', action='store_true',
                     help='record the last PCs and print them on a crash')
+    ap.add_argument('--fake-tile', choices=('gene', 'zero'), default=None,
+                    help='answer loadPhysicalBlockForMacroTile: with a '
+                         'synthetic tile whose slots carry the gene pattern '
+                         '(--fake-tile gene) or zeros (--fake-tile zero)')
     ap.add_argument('--r2r3-double', default=None,
                     help='pass the float64 VALUE in r2:r3 (for methods whose '
                          'first argument is a double, e.g. saveTime)')
@@ -134,13 +138,36 @@ def main():
         uc.mem_map(base, 0x1000)
     sel_region = 0x73000000
     uc.mem_map(sel_region, 0x1000)
+    # a synthetic tile world for the tree's gene read (--fake-tile): the tile
+    # struct's +8 word points at the contents base; each 64-byte slot carries
+    # the gene pattern (or zeros for the control run)
+    FTI = 0x60020000
+    uc.mem_map(FTI, 0x10000)
+    uc.mem_write(FTI + 8, struct.pack('<I', FTI + 0x1000))
+    # a synthetic macroTiles array (--fake-tile): entries point at one fake
+    # element (byte@+1 = 0, word@+4 = 0) -> the lookup reaches the loader
+    FTA, FTE = 0x60030000, 0x60030400
+    uc.mem_map(FTA, 0x10000)
+    for i in range(16):
+        uc.mem_write(FTA + i * 4, struct.pack('<I', FTE))
+    uc.mem_write(FTE + 4, struct.pack('<I', 0))
     uc.mem_write(sel_region, SUPER_SELECTOR.encode() + b'\0')
 
     def word(at, value):
         uc.mem_write(at, struct.pack('<I', value & 0xffffffff))
 
+
     def read_word(at):
         return int.from_bytes(bytes(uc.mem_read(at, 4)), 'little')
+    if a.fake_tile:
+        slot = bytearray(64)
+        if a.fake_tile == 'gene':
+            slot[7] = 0x08
+            slot[0xe:0x10] = (0x0200).to_bytes(2, 'little')
+            slot[0x10:0x12] = (0x0100).to_bytes(2, 'little')
+            slot[0x12:0x14] = (0x0040).to_bytes(2, 'little')
+        for i in range(0x4000 // 64):
+            uc.mem_write(FTI + 0x1000 + i * 64, bytes(slot))
 
     word(GOT_SUPER2, stub_super)
     word(GOT_MSGSEND, stub_send)
@@ -262,6 +289,12 @@ def main():
                     uc_.reg_write(UC_ARM_REG_R0, len(ctx['data_bytes']))
                 else:
                     uc_.reg_write(UC_ARM_REG_R0, graph + 0x3000)
+            elif sel.startswith('loadPhysicalBlockForMacroTile'):
+                ctx['calls'].append(
+                    f'loadPhysicalBlock(recv={recv:#x})'
+                    + (f' -> {FTI:#x} (fake tile)'
+                       if a.fake_tile else ''))
+                uc_.reg_write(UC_ARM_REG_R0, FTI if a.fake_tile else 0)
             elif sel == 'isStaticTree':
                 ctx['calls'].append(f'isStaticTree(={1 if a.static_tree else 0})')
                 uc_.reg_write(UC_ARM_REG_R0, 1 if a.static_tree else 0)
@@ -290,6 +323,11 @@ def main():
             elif sel in ('array',):
                 ctx['calls'].append('array')
                 uc_.reg_write(UC_ARM_REG_R0, 0x5E1C0000)
+            elif sel == 'macroTiles':
+                ctx['calls'].append(
+                    f'macroTiles(recv={recv:#x})'
+                    + (f' -> {FTA:#x} (fake array)' if a.fake_tile else ''))
+                uc_.reg_write(UC_ARM_REG_R0, FTA if a.fake_tile else 0)
             elif sel in ('worldWidthMacro', 'worldHeightMacro'):
                 # the coordinate-wrap helper loops on worldWidthMacro*32;
                 # returning 0 would spin forever. 4 macro-tiles = 128 tiles.
@@ -395,6 +433,21 @@ def main():
             ctx['calls'].append(f'alloc({name})')
             uc_.reg_write(UC_ARM_REG_R0, heap_ptr[0])
             heap_ptr[0] += 0x100
+        elif name in ('__aeabi_idiv', '__aeabi_uidiv', '__aeabi_idivmod',
+                      '__aeabi_uidivmod'):
+            a_ = uc_.reg_read(UC_ARM_REG_R0)
+            b_ = uc_.reg_read(UC_ARM_REG_R1)
+            if a_ >= 0x80000000:
+                a_ -= 0x100000000
+            if b_ >= 0x80000000:
+                b_ -= 0x100000000
+            q = abs(a_) // abs(b_) if b_ else 0
+            if (a_ < 0) != (b_ < 0):
+                q = -q
+            ctx['calls'].append(f'{name}({a_},{b_})->{q}')
+            uc_.reg_write(UC_ARM_REG_R0, q & 0xffffffff)
+            if name.endswith('mod'):
+                uc_.reg_write(UC_ARM_REG_R1, (a_ - q * b_) & 0xffffffff)
         elif name in ('lrand48',):
             ctx['calls'].append('lrand48')
             uc_.reg_write(UC_ARM_REG_R0, 12345)
