@@ -179,6 +179,10 @@ TYPED_RECORDS = {
         floatPos=[74.5, 510.0], age=900.0, dead=False, growthCounter=0.24,
         height=10, treeFruit=[], treeSeasonOffset=7,
     )),
+    # TrainStation: ownkey5 own key {text} + InteractionObject static boundary.
+    49: ("TrainStation", 170, 85, 516, dict(
+        floatPos=[85.5, 516.0], text="Depot A",
+    )),
     # Crop plants: Plant chain only (constant-accessor classes).
     10: ("FlaxPlant", 160, 80, 515, dict(
         floatPos=[80.5, 515.0], seasonOffset=1, age=100.0, maxAgeGene=140,
@@ -327,6 +331,7 @@ EXPECT_REASON = {
     27: "Plant loadSaveDictValues",
     33: "Plant loadSaveDictValues",
     61: "Plant loadSaveDictValues",
+    49: "ownkey5",        # TrainStation own key {text} executed
 }
 
 

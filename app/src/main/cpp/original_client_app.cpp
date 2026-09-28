@@ -2,6 +2,7 @@
 
 #include "gatherblock_full.h"
 #include "kelpvine_full.h"
+#include "trainstation_full.h"
 #include "npc_full.h"
 #include "plant_full.h"
 #include "tree_full.h"
@@ -413,6 +414,16 @@ void OriginalClientApp::registerRecoveredFactories() {
         ObjectLoadStatus::Recovered);
     registry_.registerFactory(
         58, make_kelpvine_factory(58), "vine chain (b4o executed",
+        ObjectLoadStatus::Recovered);
+    // TrainStation 49: ownkey5 executed own key {text} + the same stated
+    // InteractionObject static boundary as Workbench.
+    const auto make_trainstation_factory = [](int type_id) {
+        return [type_id](const SaveDict& entry, std::string* error) {
+            return trainstation_full_factory(type_id, entry, nullptr, error);
+        };
+    };
+    registry_.registerFactory(
+        49, make_trainstation_factory(49), "trainstation full chain (ownkey5 executed",
         ObjectLoadStatus::Recovered);
     // GatherBlock 26: base chain + ownkey5 executed own keys
     // {timer@56, lastKnownGatherValue@60} — the full record key set.
