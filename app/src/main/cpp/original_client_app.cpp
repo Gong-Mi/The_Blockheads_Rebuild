@@ -13,6 +13,7 @@
 #include "kelpvine_full.h"
 #include "tradeportal_full.h"
 #include "tradingpost_full.h"
+#include "traincar_full.h"
 #include "trainstation_full.h"
 #include "npc_full.h"
 #include "plant_full.h"
@@ -435,6 +436,23 @@ void OriginalClientApp::registerRecoveredFactories() {
     };
     registry_.registerFactory(
         14, make_freeblock_factory(14), "freeblock full chain (b4p executed",
+        ObjectLoadStatus::Recovered);
+    // TrainCar family: HandCar 41 / SteamTrain 42 / PassengerCar 44 — the
+    // TrainCar chain (listing decode; formatted currentBlockheadIndex_%d
+    // rider keys) + SteamTrain's own keys; 41/44 are zero-own-key.
+    const auto make_traincar_factory = [](int type_id) {
+        return [type_id](const SaveDict& entry, std::string* error) {
+            return traincar_full_factory(type_id, entry, nullptr, error);
+        };
+    };
+    registry_.registerFactory(
+        41, make_traincar_factory(41), "traincar zero-own (handcar",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        42, make_traincar_factory(42), "steamtrain full chain (TrainCar + own",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        44, make_traincar_factory(44), "traincar zero-own (passengercar",
         ObjectLoadStatus::Recovered);
     // Painting 52 / OwnershipSign 60: listing-decoded own keys (Painting's
     // isServer world steps and OwnershipSign's Sign chain stated).

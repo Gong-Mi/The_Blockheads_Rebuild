@@ -333,6 +333,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             midtier_full.cpp
             painting_full.cpp
             ownershipsign_full.cpp
+            traincar_full.cpp
             chest_full.cpp
             freeblock_full.cpp
             tradeportal_full.cpp
@@ -399,6 +400,10 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         target_link_libraries(test_painting_sign_full PRIVATE original_client_app)
         target_compile_options(test_painting_sign_full PRIVATE -UNDEBUG)
         add_test(NAME painting_sign_full COMMAND test_painting_sign_full)
+        add_executable(test_traincar_full ../../tools/test_traincar_full.cpp)
+        target_link_libraries(test_traincar_full PRIVATE original_client_app)
+        target_compile_options(test_traincar_full PRIVATE -UNDEBUG)
+        add_test(NAME traincar_full COMMAND test_traincar_full)
         add_executable(test_chest_full ../../tools/test_chest_full.cpp)
         target_link_libraries(test_chest_full PRIVATE original_client_app)
         target_compile_options(test_chest_full PRIVATE -UNDEBUG)

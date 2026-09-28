@@ -189,6 +189,19 @@ TYPED_RECORDS = {
     54: ("Stairs", 266, 105, 524, dict(configuration=2, itemType=7, ownerID="c", paintColor=3)),
     20: ("Door", 267, 106, 524, dict(blocked=True, ironPlaceClientID="x", itemType=4, ownerID="c")),
     38: ("Wire", 268, 107, 524, dict(configuration=1, itemType=2, solidConfiguration=3, ownerID="c")),
+    # TrainCar family.
+    41: ("HandCar", 290, 114, 528, dict(
+        engineCarID=1, leftCarID=2, rightCarID=3, engineIsRight=True,
+        ownerID="c", **{"currentBlockheadIndex_0": 42},
+    )),
+    42: ("SteamTrain", 291, 115, 528, dict(
+        engineCarID=1, fuelFraction=0.5, hasFuel=True, goingRight=False,
+        stopped=True, **{"currentBlockheadIndex_0": 7},
+    )),
+    44: ("PassengerCar", 292, 116, 528, dict(
+        engineCarID=1, leftCarID=9, **{"currentBlockheadIndex_0": 5,
+                                      "currentBlockheadIndex_1": 6},
+    )),
     # forwarder5b zeros: base-only record domains.
     22: ("SurfaceBlock", 280, 112, 527, dict(itemType=1)),
     29: ("SnowSurfaceBlock", 281, 113, 527, dict()),
@@ -444,6 +457,9 @@ EXPECT_REASON = {
     60: "landOwnerID@124",         # OwnershipSign own keys (listing decode)
     22: "zero-own-key",            # forwarder5b: SurfaceBlock
     29: "zero-own-key",            # forwarder5b: SnowSurfaceBlock
+    41: "zero-own-key",            # forwarder5b: HandCar
+    44: "zero-own-key",            # forwarder5b: PassengerCar
+    42: "TrainCar",                # SteamTrain: TrainCar chain + own keys
 }
 
 
