@@ -26,6 +26,9 @@
 //               w@60 ; .y w@64 ; paintColor UINT->STRH@84
 //   55 ElevatorMotor : itemType w@56 ; ownerID o@36 ; availableElectricity
 //               w@60 ; minY w@64 ; maxY UINT->STRH@68
+//   22 SurfaceBlock / 29 SnowSurfaceBlock: ZERO own keys — the forwarder5b
+//               pure super forwarders (57w super-only / 71w + initSubDerived
+//               Items); their whole record domain is the DynamicObject base.
 // All nine end with [self initSubDerivedItems] (no save state).
 #pragma once
 
@@ -51,6 +54,7 @@ struct MidtierTypeSpec {
     std::size_t key_count;
     bool blockhead_probe_default;  // Boat: @120 -1 default + probe overwrite
     const char* tail_hook;         // informational (initSubDerivedItems / loadDerivedStuff)
+    bool zero_own_keys = false;    // forwarder5b zeros: record domain = base only
 };
 
 struct MidtierFullState {

@@ -457,7 +457,7 @@ void OriginalClientApp::registerRecoveredFactories() {
     // Mid-tier static family: the nine table-driven classes (Window 31,
     // Rail 40, Boat 32, Ladder 19, Egg 30, Column 53, Stairs 54, Door 20,
     // Wire 38) — per-class key tables decoded from their annotated listings.
-    for (const int type_id : {19, 20, 30, 31, 32, 38, 40, 53, 54, 55, 56}) {
+    for (const int type_id : {19, 20, 22, 29, 30, 31, 32, 38, 40, 53, 54, 55, 56}) {
         registry_.registerFactory(
             type_id,
             [type_id](const SaveDict& entry, std::string* error) {

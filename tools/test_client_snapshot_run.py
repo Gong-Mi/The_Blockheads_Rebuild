@@ -189,6 +189,9 @@ TYPED_RECORDS = {
     54: ("Stairs", 266, 105, 524, dict(configuration=2, itemType=7, ownerID="c", paintColor=3)),
     20: ("Door", 267, 106, 524, dict(blocked=True, ironPlaceClientID="x", itemType=4, ownerID="c")),
     38: ("Wire", 268, 107, 524, dict(configuration=1, itemType=2, solidConfiguration=3, ownerID="c")),
+    # forwarder5b zeros: base-only record domains.
+    22: ("SurfaceBlock", 280, 112, 527, dict(itemType=1)),
+    29: ("SnowSurfaceBlock", 281, 113, 527, dict()),
     # Painting / OwnershipSign: listing-decoded own keys.
     52: ("Painting", 272, 110, 526, dict(
         itemType=9, ownerID="c", ownerName="bob",
@@ -439,6 +442,8 @@ EXPECT_REASON = {
     56: "key table",               # mid-tier: ElevatorShaft
     52: "outputImageData@60",      # Painting own keys (listing decode)
     60: "landOwnerID@124",         # OwnershipSign own keys (listing decode)
+    22: "zero-own-key",            # forwarder5b: SurfaceBlock
+    29: "zero-own-key",            # forwarder5b: SnowSurfaceBlock
 }
 
 

@@ -86,6 +86,8 @@ const MidtierTypeSpec* midtierTypeSpec(int type_id) {
         {38, kWire, 4, false, "initSubDerivedItems"},
         {56, kElevatorShaft, 5, false, "initSubDerivedItems"},
         {55, kElevatorMotor, 5, false, "initSubDerivedItems"},
+        {22, nullptr, 0, false, "", true},
+        {29, nullptr, 0, false, "initSubDerivedItems", true},
     };
     for (const auto& spec : specs) {
         if (spec.type_id == type_id) return &spec;
@@ -98,7 +100,7 @@ MidtierFullState midtier_full_load(const SaveDict& entry,
     MidtierFullState state;
     state.tail_hook = spec.tail_hook;
 
-    for (std::size_t i = 0; i < spec.key_count; ++i) {
+    for (std::size_t i = 0; spec.keys != nullptr && i < spec.key_count; ++i) {
         const MidtierKeySpec& key = spec.keys[i];
         const SaveValue* value = entry.objectForKey(key.key);
         state.present[key.key] = value != nullptr;
@@ -162,9 +164,13 @@ ClientDynamicObject midtier_full_factory(int type_id, const SaveDict& entry,
         DynamicObjectRegistry::baseStub(type_id, entry);
     object.status = ObjectLoadStatus::Recovered;
     object.status_reason =
-        "midtier full chain: DynamicObject base + the per-class key table "
-        "decoded from the annotated listing (sized ivar stores); tail hook "
-        "stated (no save state)";
+        spec->zero_own_keys
+            ? "midtier zero-own-key forwarder (forwarder5b): DynamicObject "
+              "base only; the class contributes no save keys (super "
+              "forward + optional initSubDerivedItems hook)"
+            : "midtier full chain: DynamicObject base + the per-class key "
+              "table decoded from the annotated listing (sized ivar stores); "
+              "tail hook stated (no save state)";
     return object;
 }
 

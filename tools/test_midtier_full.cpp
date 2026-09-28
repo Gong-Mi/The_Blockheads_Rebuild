@@ -28,7 +28,7 @@ const bh176::SaveDict load(int type_id, const char* plist,
         bh176::midtier_full_factory(type_id, entry, state, &error);
     assert(error.empty());
     assert(object.status == bh176::ObjectLoadStatus::Recovered);
-    assert(object.status_reason.find("key table") != std::string::npos);
+    assert(object.status_reason.find("midtier") != std::string::npos);
     return entry;
 }
 
@@ -156,6 +156,29 @@ int main() {
         assert(s.numbers.at("configuration") == 1.0);
         assert(s.numbers.at("solidConfiguration") == 3.0);
         assert(s.objects.at("ownerID"));
+    }
+
+    // ---- forwarder5b zeros: no own keys, base-only record domain --------
+    {
+        bh176::MidtierFullState s;
+        load(22, R"(<?xml version="1.0"?>
+<plist version="1.0"><dict><key>dynamicObjects</key><array>
+<dict><key>uniqueID</key><integer>280</integer><key>pos_x</key><integer>1</integer><key>pos_y</key><integer>2</integer><key>itemType</key><integer>99</integer></dict>
+</array></dict></plist>
+)", value, error, &s);
+        assert(s.numbers.empty());   // extra keys are ignored, never invented
+        assert(s.objects.empty());
+        assert(s.tail_hook.empty());
+    }
+    {
+        bh176::MidtierFullState s;
+        load(29, R"(<?xml version="1.0"?>
+<plist version="1.0"><dict><key>dynamicObjects</key><array>
+<dict><key>uniqueID</key><integer>281</integer><key>pos_x</key><integer>3</integer><key>pos_y</key><integer>4</integer></dict>
+</array></dict></plist>
+)", value, error, &s);
+        assert(s.tail_hook == "initSubDerivedItems");
+        assert(s.numbers.empty());
     }
 
     std::printf("test_midtier_full: PASS\n");
