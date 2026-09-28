@@ -471,6 +471,9 @@ void OriginalClientApp::registerRecoveredFactories() {
     registry_.registerFactory(
         44, make_traincar_factory(44), "traincar zero-own (passengercar",
         ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        43, make_traincar_factory(43), "freightcar (inherited TrainCar init",
+        ObjectLoadStatus::Recovered);
     // Painting 52 / OwnershipSign 60: listing-decoded own keys (Painting's
     // isServer world steps and OwnershipSign's Sign chain stated).
     const auto make_painting_factory = [](int type_id) {

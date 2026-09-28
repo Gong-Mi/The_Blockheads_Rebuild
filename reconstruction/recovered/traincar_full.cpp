@@ -107,8 +107,14 @@ ClientDynamicObject traincar_full_factory(int type_id, const SaveDict& entry,
               "rider keys, the three car IDs, engineIsRight) + own keys "
               "fuelFraction@260/hasFuel@268/goingRight@252/stopped@325; the "
               "loadDerivedStuff tail hook carries no save state"
-            : "traincar zero-own-key forwarder (forwarder5b): DynamicObject "
-              "base + the TrainCar chain (listing decode) only";
+            : type_id == 43
+                  ? "freightcar: the standard 4-arg init is INHERITED from "
+                    "TrainCar (no override in the method table; the chest/"
+                    "netData variants are spawn paths) — DynamicObject base "
+                    "+ the TrainCar chain (listing decode) only"
+                  : "traincar zero-own-key forwarder (forwarder5b): "
+                    "DynamicObject base + the TrainCar chain (listing "
+                    "decode) only";
     return object;
 }
 

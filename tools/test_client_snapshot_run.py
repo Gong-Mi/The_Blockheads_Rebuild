@@ -189,6 +189,11 @@ TYPED_RECORDS = {
     54: ("Stairs", 266, 105, 524, dict(configuration=2, itemType=7, ownerID="c", paintColor=3)),
     20: ("Door", 267, 106, 524, dict(blocked=True, ironPlaceClientID="x", itemType=4, ownerID="c")),
     38: ("Wire", 268, 107, 524, dict(configuration=1, itemType=2, solidConfiguration=3, ownerID="c")),
+    # FreightCar: the standard init is inherited from TrainCar.
+    43: ("FreightCar", 320, 120, 531, dict(
+        engineCarID=1, leftCarID=4, rightCarID=5, engineIsRight=False,
+        ownerID="c", **{"currentBlockheadIndex_0": 9},
+    )),
     # NPC specials.
     25: ("DropBear", 310, 118, 530, dict(
         fullness=0.5, courageMeter=0.25, provokeMeter=0.75, dropSpeed=1.5,
@@ -482,6 +487,7 @@ EXPECT_REASON = {
     21: "artificial light",        # light body (5-arg decode)
     25: "DropBear own body",      # NPC chain + own body (listing decode)
     39: "CaveTroll own body",      # NPC chain + own body (listing decode)
+    43: "INHERITED from TrainCar",  # FreightCar: no 4-arg override
 }
 
 

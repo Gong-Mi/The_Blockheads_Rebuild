@@ -23,6 +23,17 @@
 // HandCar (60w) and PassengerCar (60w) are the forwarder5b ZERO-own-key
 // super-only forwarders over TrainCar (own_keys empty in the batch's
 // evidence): their whole record domain is the base + the TrainCar chain.
+//
+// FreightCar 43 (super = TrainCar): the method table lists FOUR inits and
+// NONE of them is the standard 4-arg initWithWorld:dynamicWorld:saveDict:
+// cache: — the two extra-argument variants are the Chest-child spawn path
+// (initWithWorld:dynamicWorld:saveDict:chestSaveDict:cache:, 134w, builds a
+// Chest from its argument — HOOKS6_PERSISTENCE_CLOSEOUT.md) and the client
+// net-spawn path (initWithWorld:dynamicWorld:cache:netData:), plus the
+// atPosition:...:placedByClient: constructor. The dynamic-record loader's
+// selector is therefore INHERITED from TrainCar: a type-43 record loads the
+// base + the TrainCar chain and contributes no own keys. The chest variant's
+// caller stays out of scope: it is a spawn path, not the record loader.
 #pragma once
 
 #include "../../app/src/main/cpp/dynamic_object_registry.h"

@@ -244,18 +244,19 @@ int main() {
         app.registerRecoveredFactories();
         int stub_ids[3] = {0, 0, 0};
         int stub_found = 0;
-        for (int t = 1; t <= 64 && stub_found < 2; ++t) {
+        for (int t = 1; t <= 64 && stub_found < 1; ++t) {
             if (app.registry().hasConcreteFactory(t)) continue;
             if (bh176::dynamicObjectTypeHasSharedObjectType(t)) continue;
             stub_ids[stub_found++] = t;
         }
-        // After 60/64 types the non-shared stub pool is down to two ids
-        // (Blockhead 24 / FreightCar 43). The typed specimen reuses the
-        // second: the second pass below plugs only meta_type, so reuse is
-        // safe — distinctness was never required, only that each specimen
-        // has no factory at first pass.
-        assert(stub_found == 2);
-        stub_ids[2] = stub_ids[1];
+        // After FreightCar 43's registration the non-shared stub pool is a
+        // single id (Blockhead 24 — exempt as out-of-domain, see
+        // BLOCKHEAD24_OUT_OF_DOMAIN.md). All three specimen roles reuse it:
+        // distinctness was never required, only that the first pass finds no
+        // factory (the second pass plugs that one id, flipping all three).
+        assert(stub_found == 1);
+        stub_ids[1] = stub_ids[0];
+        stub_ids[2] = stub_ids[0];
         const int meta_type = stub_ids[0];
         const int dyn_type = stub_ids[1];
         const int typed_type = stub_ids[2];
@@ -336,12 +337,16 @@ int main() {
             assert(report.type_key_used.at("objectType") == 1);
             assert(report.type_key_used.at("dynamicObjectType") == 1);
             assert(report.type_key_used.at("record_key") == 1);
-            assert(report.per_type.at(meta_type) == 1);
-            // dyn_type carries the dyn specimen AND the typed specimen
-            // (typed_type reuses dyn_type by construction — see above).
-            assert(report.per_type.at(dyn_type) == 2);
-            assert(typed_type == dyn_type);
+            // all three specimens share the one remaining stub id
+            assert(report.per_type.at(meta_type) == 3);
+            assert(dyn_type == meta_type);
+            assert(typed_type == meta_type);
             assert(report.shared_object_type_objects == 0);
+            // first-pass JSON: the specimens are stubs here, so the default
+            // reason string is present (later the single remaining id is
+            // plugged and no stub is left in the output)
+            assert(app.toJson().find("per-type loader not recovered") !=
+                   std::string::npos);
         }
 
         // second pass with one type plugged in: status follows the registration
@@ -357,15 +362,15 @@ int main() {
             },
             "verified test factory", bh176::ObjectLoadStatus::Verified);
         assert(app.loadDynamicObjects(&error));
-        assert(app.report().verified_objects == 1);
-        assert(app.report().stub_objects == 2);
+        // the plugged id is the one all three specimens carry
+        assert(app.report().verified_objects == 3);
+        assert(app.report().stub_objects == 0);
         assert(app.report().recovered_objects == 0);
 
         const std::string json = app.toJson();
-        assert(json.find("\"verified_objects\": 1") != std::string::npos);
+        assert(json.find("\"verified_objects\": 3") != std::string::npos);
         // type-agnostic: the verified specimen's own reason marks it
         assert(json.find("test verified factory") != std::string::npos);
-        assert(json.find("per-type loader not recovered") != std::string::npos);
 
         // ---- recovered-factory registration (production path, plant family) --
         // loadDynamicObjects() registers the b5b plant chain on every load:
