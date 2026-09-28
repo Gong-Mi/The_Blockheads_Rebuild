@@ -119,6 +119,26 @@ const Row kCaveTroll[] = {   // drives the key list / presence indices only
     {"dead", C_BOOL, 1, 56},
 };
 
+// TrainCar (the family chain, executed as type 43's body — the freight/
+// hand/passenger cars all forward into it): own body, ARM-attested —
+//   * the rider loop: `for (i = 0; i < [self maxNumberOfRiders]; i++)` with
+//     the bound RE-EVALUATED per iteration (2 riders -> 3 bound calls):
+//     [NSString stringWithFormat:@"currentBlockheadIndex_%d", i] ->
+//     objectForKey: -> unsignedLongLongValue -> a u32 stored at @84 + i*4;
+//   * rightCarID -> unsignedLongLongValue -> u64 @144 ;
+//     leftCarID -> @152 ; engineCarID -> @160 ;
+//   * engineIsRight boolValue -> STRB @180 ;
+//   * ownerID retain -> @36 ; [self loadDerivedStuff] tail.
+// Harness stub constants the model pins: maxNumberOfRiders = 2,
+// unsignedLongLongValue -> 0x1122334455667788.
+const Row kTrainCar[] = {   // the chain's own keys (rider keys are stub-made)
+    {"rightCarID", C_UINT, 8, 152},   // the two u64 slots confirmed swapped:
+    {"leftCarID", C_UINT, 8, 144},    // left -> @144, right -> @152
+    {"engineCarID", C_UINT, 8, 160},
+    {"engineIsRight", C_BOOL, 1, 180},
+    {"ownerID", C_OBJECT, 4, 36},
+};
+
 const ClassRows kClasses[] = {
     {42, kSteamTrain, 4, nullptr, "", false, 0, 0, 0},
     {60, kOwnershipSign, 4, nullptr, "updateText", true, 15, 1, 30},
@@ -127,6 +147,7 @@ const ClassRows kClasses[] = {
      "loadDerivedStuff,removeFromMacroBlock,release", false, 0, 0, 0},
     {39, kCaveTroll, 4, "initSubDerivedStuffStuff",
      "initSubDerivedStuffStuff,macroTiles", false, 0, 0, 0},
+    {43, kTrainCar, 5, "loadDerivedStuff", "loadDerivedStuff", false, 0, 0, 0},
 };
 
 const ClassRows* specOf(int type_id) {
@@ -194,6 +215,32 @@ const char* recovered_specials_sequence(int type_id, int case_id) {
     const ClassRows* spec = specOf(type_id);
     if (spec == nullptr) return buffer.c_str();
     if (case_id == 2) return buffer.c_str();   // nil guard: nothing else runs
+    if (type_id == 43) {
+        // the TrainCar chain: rider loop (bound re-read per iteration)
+        const int riders = 2;
+        for (int i = 0; i < riders; ++i) {
+            const std::string idx = std::to_string(i);
+            buffer += ",maxNumberOfRiders,format->currentBlockheadIndex_" + idx;
+            buffer += ",ofk:currentBlockheadIndex_" + idx;
+            buffer += ",ull:currentBlockheadIndex_" + idx;
+        }
+        buffer += ",maxNumberOfRiders";
+        // the car-ID conversions are NIL-GUARDED by the body (an absent key
+        // yields ofk only; the store never happens)
+        const char* car_keys[3] = {"rightCarID", "leftCarID", "engineCarID"};
+        for (int k = 0; k < 3; ++k) {
+            buffer += ",ofk:";
+            buffer += car_keys[k];
+            if (presentFor(case_id, k)) {
+                buffer += ",ull:";
+                buffer += car_keys[k];
+            }
+        }
+        buffer += ",ofk:engineIsRight,bool:engineIsRight";
+        buffer += ",ofk:ownerID,retain";
+        buffer += ",loadDerivedStuff";
+        return buffer.c_str();
+    }
     if (type_id == 39) {
         const bool state_present = presentFor(case_id, 2);
         buffer += ",worldWidthMacro,macroTiles,worldWidthMacro,worldWidthMacro";
@@ -297,6 +344,34 @@ int recovered_specials_image(int type_id, int case_id, std::uint32_t token_base,
     const ClassRows* spec = specOf(type_id);
     if (spec == nullptr) return -1;
     if (case_id == 2) return n;
+    if (type_id == 43) {
+        // riders: u32 at @84 + i*4 (0x55667788), always present (stub-made)
+        for (int i = 0; i < 2; ++i) {
+            const std::uint32_t v = 0x55667788u;
+            for (int b = 0; b < 4; ++b) {
+                out[84 + i * 4 + b] =
+                    static_cast<unsigned char>((v >> (8 * b)) & 0xFFu);
+            }
+        }
+        // car IDs: u64 per case presence at @144/@152/@160
+        const int offs[3] = {152, 144, 160};   // right, left, engine
+        for (int k = 0; k < 3; ++k) {
+            if (!presentFor(case_id, k)) continue;
+            std::uint32_t lo = 0x55667788u, hi = 0x11223344u;
+            for (int b = 0; b < 4; ++b) {
+                out[offs[k] + b] = static_cast<unsigned char>((lo >> (8 * b)) & 0xFFu);
+                out[offs[k] + 4 + b] = static_cast<unsigned char>((hi >> (8 * b)) & 0xFFu);
+            }
+        }
+        if (presentFor(case_id, 3)) out[180] = 1;            // engineIsRight
+        if (presentFor(case_id, 4)) {                        // ownerID token
+            const std::uint32_t tok = token_base + 0x60u;    // stub token base
+            for (int b = 0; b < 4; ++b) {
+                out[36 + b] = static_cast<unsigned char>((tok >> (8 * b)) & 0xFFu);
+            }
+        }
+        return n;
+    }
     if (type_id == 39) {
         // dead STRB @56
         if (presentFor(case_id, 3)) out[56] = 1;

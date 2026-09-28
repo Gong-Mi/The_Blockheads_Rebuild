@@ -51,6 +51,7 @@ ENTRIES = [
     ('DropBear', 25, 0x0079D538, 0x00E8BD3C, 404),
     ('CaveTroll', 39, 0x00D538CC, 0x00E8BF2C, 408),
     ('ArtificialLight', 21, 0x00A93C64, 0x00E8BE48, 412),
+    ('TrainCar', 43, 0x00A3892C, 0x00E8BE24, 363),
 ]
 CONV = {'intValue': ('int', INT_VALUE), 'boolValue': ('bool', BOOL_VALUE),
         'unsignedIntValue': ('uint', UINT_VALUE), 'floatValue': ('float', FLOAT_BITS)}
@@ -146,11 +147,23 @@ def main():
            'world_time': 1000.0, 'max_age': 100000.0}
 
     def cstring(ptr):
-        return bytes(uc.mem_read(ptr, 128)).split(b'\0')[0].decode()
+        out = bytearray()
+        for i in range(128):
+            try:
+                byte = bytes(uc.mem_read(ptr + i, 1))
+            except Exception:
+                break
+            if byte == b'\0':
+                break
+            out += byte
+        return out.decode('latin1')
+
+    tokens_by_addr = {}
 
     def token_for(name):
         if name not in tokens:
             tokens[name] = TOKEN_BASE + len(tokens) * 0x10
+            tokens_by_addr[tokens[name]] = name
         return tokens[name]
 
     def hook(uc_, address, size, data):
@@ -174,7 +187,11 @@ def main():
                 uc_.reg_write(UC_ARM_REG_PC, uc_.reg_read(UC_ARM_REG_LR))
                 return
             if sel == 'objectForKey:':
-                name = cstring(read_word(uc_.reg_read(UC_ARM_REG_R2) + 8))
+                key_ptr = uc_.reg_read(UC_ARM_REG_R2)
+                if key_ptr in tokens_by_addr:
+                    name = tokens_by_addr[key_ptr]   # a stub-made NSString
+                else:
+                    name = cstring(read_word(key_ptr + 8))
                 if recv == save_dict:
                     tok = token_for(name)
                     if ctx.get('case') is not None:
@@ -214,6 +231,31 @@ def main():
                     uc_.reg_write(UC_ARM_REG_R0, len(ctx['data_bytes']))
                 else:
                     uc_.reg_write(UC_ARM_REG_R0, graph + 0x3000)
+            elif sel == 'maxNumberOfRiders':
+                ctx['calls'].append(sel)
+                uc_.reg_write(UC_ARM_REG_R0, 2)   # force the rider loop
+            elif sel == 'stringWithFormat:':
+                # the literal is a CFString object: its data pointer sits at +8
+                raw = uc_.reg_read(UC_ARM_REG_R2)
+                try:
+                    fmt = cstring(read_word(raw + 8))
+                except Exception:
+                    fmt = cstring(raw)
+                arg = uc_.reg_read(UC_ARM_REG_R3)
+                key = fmt.replace('%d', str(arg)) if '%d' in fmt else fmt
+                ctx['calls'].append(f'format->{key}')
+                tok = token_for(key)
+                uc_.reg_write(UC_ARM_REG_R0, tok)
+            elif sel == 'unsignedLongLongValue':
+                ctx['calls'].append('ull:' + (ctx['pending_key'] or '?'))
+                uc_.reg_write(UC_ARM_REG_R0, 0x55667788)
+                uc_.reg_write(UC_ARM_REG_R1, 0x11223344)
+            elif sel == 'addObject:':
+                ctx['calls'].append('addObject')
+                uc_.reg_write(UC_ARM_REG_R0, 0)
+            elif sel in ('array',):
+                ctx['calls'].append('array')
+                uc_.reg_write(UC_ARM_REG_R0, 0x5E1C0000)
             elif sel in ('worldWidthMacro', 'worldHeightMacro'):
                 # the coordinate-wrap helper loops on worldWidthMacro*32;
                 # returning 0 would spin forever. 4 macro-tiles = 128 tiles.
@@ -277,6 +319,8 @@ def main():
                 sym = symtab2.get_symbol(rel['r_info_sym'])
                 plt_names[PLT_FIRST + idx * PLT_STEP] = sym.name
                 idx += 1
+    # scratch regions for stub-created objects (tokens, the rider array)
+    uc.mem_map(TOKEN_BASE & ~0xFFF, 0x20000)
     heap_ptr = [graph + 0x8000]
     VTABLE_STUB = 0x72300000
     uc.mem_map(VTABLE_STUB, 0x1000)
@@ -454,7 +498,7 @@ def main():
         bridges[opt] = (keys_fn, seq_fn, img_fn, extra_fn)
 
     MODELLED = {'SteamTrain', 'OwnershipSign', 'Painting', 'DropBear',
-                'CaveTroll'}
+                'CaveTroll', 'TrainCar'}
     ctx['is_server'] = 1   # phase 2 always runs the server-gated paths
     rows = []
     for entry in ENTRIES:
