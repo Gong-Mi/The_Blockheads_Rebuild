@@ -469,6 +469,14 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             add_test(NAME key_table_extraction
                      COMMAND ${BH_PYTHON3}
                              ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_key_table_extraction.py)
+            add_executable(test_ui_pipeline
+                           ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_ui_pipeline.cpp)
+            target_include_directories(test_ui_pipeline PRIVATE
+                                       ${CMAKE_CURRENT_SOURCE_DIR})
+            target_link_libraries(test_ui_pipeline PRIVATE original_client_app)
+            target_compile_options(test_ui_pipeline PRIVATE -UNDEBUG)
+            add_test(NAME ui_pipeline COMMAND test_ui_pipeline)
+
             add_executable(test_ui_control
                            ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_ui_control.cpp)
             target_include_directories(test_ui_control PRIVATE
