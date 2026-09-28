@@ -78,8 +78,8 @@ DPad decoded (`disasm_dpad_touch.txt`):
 - `touchIsInViewAtAll:` (232w) is the real hit test: it rebases the point
   onto the window (`windowInfo@112` fields +8 / +0xc, then +0x10 / +0x14 /
   +0x1c for the dpad rect), builds a Vector2 via the 0x4D0480 helper, calls
-  the 0x0070591C point predicate (which calls 0x004D5170 and the 0x1C2B34 /
-  0x1C2B58 float helpers), then four bounding comparisons against
+  the 0x0070591C point predicate — which calls **sinf/cosf** (PLT 0x1C2B34 /
+  0x1C2B58) and so ROTATES the point before the four direction comparisons, then four bounding comparisons against
   literal-pool constants (0x4BDAAC on the path is an identity thunk that
   returns its argument, so the comparisons read the struct directly) — the
   four direction buttons. `rightSide@160` selects the mirrored layout.
@@ -165,7 +165,9 @@ The concrete widgets on top: `InventoryButton`, `NetPlayerButton`,
    (`countByEnumeratingWithState:objects:count:`) **recursing into each
    subview's `touchIsInUI:` / `startTouch:`** — the descent that bottoms out
    at the concrete widgets;
-4. the view's own frame test (the geometry helpers 0x1C2924 / 0x1C2E28);
+4. the view's own frame test (the 0x1C2924 / 0x1C2E28 codes on these
+   paths are `memset` and the fast-enumeration mutation guard — compiler
+   housekeeping, per PLT_VENEERS.md, not geometry);
 5. `startTouch:` stores the aggregate at a local (`strb [fp,#-0x21]`) and
    returns it — the "handled" flag the panels aggregate in turn.
 
@@ -173,6 +175,15 @@ With this the whole touch pipeline's structure is closed end to end:
 `UIManager` router -> `GameUIView` panels (rect + OR/delegate) -> `MJView`
 widgets (gates + subview recursion + frame test) -> concrete widget
 behaviours.
+
+### MJView -renderFrame:projectionMatrix: — the render walk mirrors the touch walk
+
+`disasm_mjview_render.txt` (271w): the `hidden@4` gate short-circuits, the
+own quad is set up (the `powf` easing is `__wrap_powf`, PLT 0x1C3F98), then
+the fast enumeration over `subviews@44` recursing into
+`[subview renderFrame:projectionMatrix:]` — the same gates + self + children
+shape as the touch walk. The render front's next slice is the quad pipeline
+those leaf calls bottom out in.
 
 ### The traversal, modelled: `reconstruction/recovered/ui_touch_router.*`
 
@@ -227,7 +238,8 @@ event to every button** — `[button endTouch:]` (0x00765AB0) and
 `[button moveTouch:]` (0x00765C9C) — so each visible button tracks the
 drag for its own hover/highlight state, and finally stores the new
 `xScroll@104` (both the offset and its translation copy). The points handed
-to the buttons are built with the shared helpers 0x1C2924 / 0x1C2E28.
+to the buttons go through the 0x1C2924 (`memset`) / 0x1C2E28
+(`objc_enumerationMutation`) compiler housekeeping (PLT_VENEERS.md).
 
 So a scroll is: a clamped offset update + per-widget event forwarding — the
 same "the container drives its children" convention as the panels.
