@@ -50,12 +50,31 @@ All three landed in the module (`kOwnershipDefaultRadius = 15`,
 `ownershipClampRadius`, the ID gate) with contract tests for the clamp, the
 default and the gate.
 
+### Painting 52 (0x00AA81E8, super = DynamicObject)
+
+Own body, ARM-attested: five reads in order — `itemType` intValue -> word
+@56, `outputImageData` retain -> @60, `hasVerifiedImageData` boolValue ->
+STRB @79, `ownerID` retain -> @36, `ownerName` retain -> @64 — then the two
+`[self->dynamicWorld isServer]` gates (the cell map in the annotated listing
+resolves both receivers to DynamicObject.dynamicWorld@8):
+
+- gate 1, when isServer AND `ownerID != nil` AND `ownerName == nil`:
+  `[dynamicWorld getOwnerNameForObjectOwnerID:self->ownerID]` -> retain ->
+  stored BACK into `ownerName` @64;
+- gate 2, when isServer: `[dynamicWorld playerIsBannedWithID:self->ownerID]`
+  -> STRB `hiddenDueToServerBan` @77;
+- `[self initSubDerivedItems]` tail hook.
+
+The harness runs phase 2 with isServer=1 and a fixed resolved token, so case
+3 (ownerID present, ownerName absent) exercises the resolve path and case 0
+the plain one. Both gates' conditions and store targets are now in the
+module's comment/reason (the world side itself stays not-run offline).
+
 ## Still to model
 
-Painting 52 (isServer-gated owner-name resolution + ban flag), DropBear 25
-(the maxAge/worldTime age step + eight own keys), CaveTroll 39 (the
-fromSquare travel-state block, the `dead` byte, `defendSquare.x/.y` and the
-`state` data blob copied through the in-ELF memcpy veneer 0x1C2894).
+DropBear 25 (the maxAge/worldTime age step + eight own keys) and CaveTroll 39
+(the fromSquare travel-state block, the `dead` byte, `defendSquare.x/.y` and
+the `state` data blob copied through the in-ELF memcpy veneer 0x1C2894).
 Their `--dump` output is one command away; the pinned models land here as
 they are written.
 

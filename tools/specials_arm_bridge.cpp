@@ -42,6 +42,18 @@ struct ClassRows {
     int clamp_hi;
 };
 
+// Painting 52 (0x00aa81e8, super = DynamicObject): own body, ARM-attested by
+// the per-case dumps + the annotated listing's cell map —
+//   5 key reads in order: itemType (intValue -> word @56), outputImageData
+//     (retain -> @60), hasVerifiedImageData (boolValue -> STRB @79), ownerID
+//     (retain -> @36), ownerName (retain -> @64);
+//   gate 1 [self->dynamicWorld isServer]: when true AND ownerID != nil AND
+//     ownerName == nil -> [dynamicWorld getOwnerNameForObjectOwnerID:ownerID]
+//     -> retain -> stored back into ownerName @64;
+//   gate 2 [self->dynamicWorld isServer]: when true ->
+//     [dynamicWorld playerIsBannedWithID:ownerID] -> STRB @77;
+//   [self initSubDerivedItems] tail hook.
+//
 // OwnershipSign 60 (0x00a34b18, super = Sign): its own body, ARM-attested
 // by the differential's per-case dump —
 //   * the w/h radii get a DEFAULT of 15 (movw lr, #0xf; two stores) before
@@ -62,9 +74,18 @@ const Row kOwnershipSign[] = {
     {"h", C_INT, 4, 136},
 };
 
+const Row kPainting[] = {
+    {"itemType", C_INT, 4, 56},
+    {"outputImageData", C_OBJECT, 4, 60},
+    {"hasVerifiedImageData", C_BOOL, 1, 79},
+    {"ownerID", C_OBJECT, 4, 36},
+    {"ownerName", C_OBJECT, 4, 64},
+};
+
 const ClassRows kClasses[] = {
     {42, kSteamTrain, 4, nullptr, "", false, 0, 0, 0},
     {60, kOwnershipSign, 4, nullptr, "updateText", true, 15, 1, 30},
+    {52, kPainting, 5, "initSubDerivedItems", "initSubDerivedItems", false, 0, 0, 0},
 };
 
 const ClassRows* specOf(int type_id) {
@@ -132,6 +153,29 @@ const char* recovered_specials_sequence(int type_id, int case_id) {
     const ClassRows* spec = specOf(type_id);
     if (spec == nullptr) return buffer.c_str();
     if (case_id == 2) return buffer.c_str();   // nil guard: nothing else runs
+    if (type_id == 52) {
+        // the five reads, then the two [dynamicWorld isServer] gates; object
+        // reads label as a bare `retain` (the harness's conversion label)
+        for (int i = 0; i < spec->count; ++i) {
+            buffer += ",ofk:";
+            buffer += spec->rows[i].key;
+            buffer += ',';
+            if (spec->rows[i].conv == C_OBJECT) {
+                buffer += "retain";
+            } else {
+                buffer += convLabel(spec->rows[i].conv);
+                buffer += ':';
+                buffer += spec->rows[i].key;
+            }
+        }
+        buffer += ",isServer";
+        // resolve only when ownerID != nil && ownerName == nil
+        if (presentFor(case_id, 3) && !presentFor(case_id, 4)) {
+            buffer += ",resolveOwnerName,retain";
+        }
+        buffer += ",isServer,playerIsBanned,initSubDerivedItems";
+        return buffer.c_str();
+    }
     if (type_id == 60) {
         // the ID probe gates the whole object block (per-case dump)
         buffer += ",ofk:landOwnerID";
@@ -184,6 +228,15 @@ int recovered_specials_image(int type_id, int case_id, std::uint32_t token_base,
     for (int i = 0; i < spec->count; ++i) {
         const Row& row = spec->rows[i];
         bool is_present = presentFor(case_id, i);
+        if (type_id == 52 && i == 4 && presentFor(case_id, 3) && !is_present) {
+            // resolved name lands in ownerName @64 (fixed token)
+            const std::uint32_t resolved = token_base + 0x100u;
+            for (int b = 0; b < 4; ++b) {
+                out[row.offset + b] =
+                    static_cast<unsigned char>((resolved >> (8 * b)) & 0xFFu);
+            }
+            continue;
+        }
         if (type_id == 60 && i == 1) {
             // the name is read (and retained) only inside the ID-gated block
             is_present = is_present && presentFor(case_id, 0);

@@ -39,6 +39,10 @@ PaintingFullState painting_full_load(const SaveDict& entry) {
 
     // the isServer-gated world steps (ownerName resolution, ban check) are
     // world state: not run offline; hiddenDueToServerBan keeps its default.
+    // Their exact conditions are ARM-attested (tools/test_specials_arm.py):
+    // resolution needs ownerID != nil && ownerName == nil and overwrites
+    // ownerName @64; the ban check stores playerIsBannedWithID:<ownerID>
+    // into STRB @77.
     state.hidden_due_to_server_ban = false;
     state.world_steps_not_run = true;
     return state;
@@ -56,8 +60,10 @@ ClientDynamicObject painting_full_factory(int type_id, const SaveDict& entry,
     object.status_reason =
         "painting full chain: DynamicObject base + own keys itemType@56/"
         "ownerID@36/ownerName@64/hasVerifiedImageData@79-strb/"
-        "outputImageData@60 (listing decode); the isServer-gated world steps "
-        "(ownerName resolution, ban check) are not run offline";
+        "outputImageData@60 (EXECUTED differential tools/test_specials_arm.py: "
+        "read order + both [dynamicWorld isServer] gates + the resolve "
+        "condition ownerID!=nil && ownerName==nil); the world-gated steps "
+        "themselves are not run offline";
     return object;
 }
 

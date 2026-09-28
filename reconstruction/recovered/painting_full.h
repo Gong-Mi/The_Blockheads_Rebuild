@@ -7,7 +7,13 @@
 //   ownerName    objectForKey -> retain   -> str  @64
 //   hasVerifiedImageData objectForKey -> boolValue -> STRB @79
 //   outputImageData      objectForKey -> (object)  -> imageData@60
-//   world steps (isServer-gated, NOT run offline):
+//   world steps (isServer-gated, NOT run offline) — conditions ARM-attested
+//   by tools/test_specials_arm.py:
+//     gate 1 [dynamicWorld isServer] AND ownerID != nil AND ownerName == nil
+//       -> [dynamicWorld getOwnerNameForObjectOwnerID:<ownerID>] -> retain ->
+//          stored back into ownerName @64;
+//     gate 2 [dynamicWorld isServer]
+//       -> [dynamicWorld playerIsBannedWithID:<ownerID>] -> STRB @77;
 //     ownerName@64 = retain([dynamicWorld getOwnerNameForObjectOwnerID:
 //                            ownerID@36])            when ownerName is nil
 //     hiddenDueToServerBan@77 = [dynamicWorld playerIsBannedWithID:ownerID]

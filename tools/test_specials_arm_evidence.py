@@ -41,14 +41,21 @@ def main() -> int:
         "id_present &&",
         "EXECUTED differential",
     ])
-    # the bridge pins both modelled classes and their semantics
+    # the bridge pins the modelled classes and their semantics
     require(ROOT / "tools/specials_arm_bridge.cpp", [
         "{42, kSteamTrain, 4, nullptr, \"\", false, 0, 0, 0}",
         "{60, kOwnershipSign, 4, nullptr, \"updateText\", true, 15, 1, 30}",
+        "{52, kPainting, 5, \"initSubDerivedItems\", \"initSubDerivedItems\", false, 0, 0, 0}",
         "0x4BE068",
         "movw lr, #0xf",
+        "resolveOwnerName",
+        "playerIsBanned",
     ])
-    # the harness pins the ELF + the five entries
+    require(ROOT / "reconstruction/recovered/painting_full.cpp", [
+        "EXECUTED differential",
+        "playerIsBannedWithID:",
+    ])
+    # Painting's pinned structure (MODEL: 52) + the harness's five entries
     require(ROOT / "tools/test_specials_arm.py", [
         ELF_SHA,
         "0x00D18834",  # SteamTrain

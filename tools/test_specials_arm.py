@@ -65,6 +65,8 @@ def main():
                     help='restrict to one class name')
     ap.add_argument('--dump-images', metavar='CLASS',
                     help='print labels + nonzero bytes for one class across cases')
+    ap.add_argument('--is-server', dest='is_server', action='store_true',
+                    help='answer [world/dyn isServer] with 1 in dump mode')
     a = ap.parse_args()
     if hashlib.sha256(a.elf.read_bytes()).hexdigest() != SHA:
         raise SystemExit('ELF SHA mismatch')
@@ -112,7 +114,8 @@ def main():
     tokens = {}
     ctx = {'class': None, 'super_result': self_ptr, 'expect_class': 0,
            'calls': [], 'pending_key': None, 'pending_token': 0,
-           'data_token': 0, 'data_bytes': b'\xAA\xBB\xCC\xDD'}
+           'data_token': 0, 'data_bytes': b'\xAA\xBB\xCC\xDD',
+           'is_server': 0, 'banned': 0, 'resolve_token': 0}
 
     def cstring(ptr):
         return bytes(uc.mem_read(ptr, 128)).split(b'\0')[0].decode()
@@ -183,6 +186,17 @@ def main():
                     uc_.reg_write(UC_ARM_REG_R0, len(ctx['data_bytes']))
                 else:
                     uc_.reg_write(UC_ARM_REG_R0, graph + 0x3000)
+            elif sel == 'isServer':
+                ctx['calls'].append('isServer' if recv != save_dict else 'isServer(saveDict?)')
+                uc_.reg_write(UC_ARM_REG_R0, ctx['is_server'])
+            elif sel.startswith('getOwnerNameForObjectOwnerID'):
+                ctx['calls'].append('resolveOwnerName')
+                # a FIXED token so the bridge can predict the stored value
+                ctx['resolve_token'] = TOKEN_BASE + 0x100
+                uc_.reg_write(UC_ARM_REG_R0, ctx['resolve_token'])
+            elif sel.startswith('playerIsBannedWithID') or sel.startswith('playerIsBanned'):
+                ctx['calls'].append('playerIsBanned')
+                uc_.reg_write(UC_ARM_REG_R0, ctx['banned'])
             elif sel in ('maxAge', 'worldTime'):
                 ctx['calls'].append(sel)
                 uc_.reg_write(UC_ARM_REG_R0, 0)
@@ -221,6 +235,8 @@ def main():
         ctx['pending_key'] = None
         tokens.clear()
         uc.mem_write(self_ptr, b'\x00' * IMAGE_SIZE)
+        word(self_ptr + 4, world)    # the real super init stores world@4
+        word(self_ptr + 8, dyn)      # ... and dynamicWorld@8
         sp = stack + 0x8000
         for reg, value in ((UC_ARM_REG_R0, self_ptr), (UC_ARM_REG_R1, sel_region),
                            (UC_ARM_REG_R2, world), (UC_ARM_REG_R3, dyn)):
@@ -232,8 +248,11 @@ def main():
         uc.emu_start(imp, stop, count=40000)
         assert uc.reg_read(UC_ARM_REG_PC) == stop, f'{cls}: no return'
         ret = uc.reg_read(UC_ARM_REG_R0)
-        image = bytes(uc.mem_read(self_ptr, IMAGE_SIZE))
-        return ret, list(ctx['calls']), image
+        image = bytearray(uc.mem_read(self_ptr, IMAGE_SIZE))
+        image[4:12] = b'\x00' * 8   # the stubbed super's base slots
+        return ret, list(ctx['calls']), bytes(image)
+
+    ctx['is_server'] = 1 if a.is_server else 0
 
     if a.dump:
         rows = []
@@ -301,7 +320,8 @@ def main():
         extra_fn.restype = ctypes.c_char_p
         bridges[opt] = (keys_fn, seq_fn, img_fn, extra_fn)
 
-    MODELLED = {'SteamTrain', 'OwnershipSign'}
+    MODELLED = {'SteamTrain', 'OwnershipSign', 'Painting'}
+    ctx['is_server'] = 1   # phase 2 always runs the server-gated paths
     rows = []
     for entry in ENTRIES:
         cls, type_id, imp, superref, words = entry
