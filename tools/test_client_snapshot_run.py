@@ -179,6 +179,16 @@ TYPED_RECORDS = {
         floatPos=[74.5, 510.0], age=900.0, dead=False, growthCounter=0.24,
         height=10, treeFruit=[], treeSeasonOffset=7,
     )),
+    # Mid-tier static family: the nine table-driven classes.
+    31: ("Window", 260, 99, 524, dict(itemType=5, ownerID="c")),
+    40: ("Rail", 261, 100, 524, dict(configuration=3, ownedByStation=True, itemType=8)),
+    32: ("Boat", 262, 101, 524, dict(currentBlockheadIndex=4, ownerID="c")),
+    19: ("Ladder", 263, 102, 524, dict(itemType=6, ownerID="c", paintColor=70000)),
+    30: ("Egg", 264, 103, 524, dict(breed=70000, genesDict={"g": 1}, hatchTimer=1.5)),
+    53: ("Column", 265, 104, 524, dict(configuration=2, itemType=7, ownerID="c", paintColor=3)),
+    54: ("Stairs", 266, 105, 524, dict(configuration=2, itemType=7, ownerID="c", paintColor=3)),
+    20: ("Door", 267, 106, 524, dict(blocked=True, ironPlaceClientID="x", itemType=4, ownerID="c")),
+    38: ("Wire", 268, 107, 524, dict(configuration=1, itemType=2, solidConfiguration=3, ownerID="c")),
     # FireObject / Torch: base + listing-decoded own keys.
     16: ("FireObject", 250, 97, 523, dict(
         floatPos=[97.5, 523.0], burnTimer=0.75, spreadTimer_0=1.0,
@@ -398,6 +408,15 @@ EXPECT_REASON = {
     18: "tileType@60",             # GlowBlock own key (listing decode)
     16: "burnTimer@56",            # FireObject own keys (listing decode)
     17: "dataA@80-strh",           # Torch own keys (listing decode)
+    31: "key table",               # mid-tier: Window
+    40: "key table",               # mid-tier: Rail
+    32: "key table",               # mid-tier: Boat
+    19: "key table",               # mid-tier: Ladder
+    30: "key table",               # mid-tier: Egg
+    53: "key table",               # mid-tier: Column
+    54: "key table",               # mid-tier: Stairs
+    20: "key table",               # mid-tier: Door
+    38: "key table",               # mid-tier: Wire
 }
 
 

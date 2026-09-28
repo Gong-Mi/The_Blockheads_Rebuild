@@ -5,6 +5,7 @@
 #include "fire_torch_full.h"
 #include "freeblock_full.h"
 #include "glowblock_full.h"
+#include "midtier_full.h"
 #include "gatherblock_full.h"
 #include "interaction_full.h"
 #include "kelpvine_full.h"
@@ -433,6 +434,18 @@ void OriginalClientApp::registerRecoveredFactories() {
     registry_.registerFactory(
         14, make_freeblock_factory(14), "freeblock full chain (b4p executed",
         ObjectLoadStatus::Recovered);
+    // Mid-tier static family: the nine table-driven classes (Window 31,
+    // Rail 40, Boat 32, Ladder 19, Egg 30, Column 53, Stairs 54, Door 20,
+    // Wire 38) — per-class key tables decoded from their annotated listings.
+    for (const int type_id : {19, 20, 30, 31, 32, 38, 40, 53, 54}) {
+        registry_.registerFactory(
+            type_id,
+            [type_id](const SaveDict& entry, std::string* error) {
+                return midtier_full_factory(type_id, entry, nullptr, error);
+            },
+            "midtier full chain (listing key table",
+            ObjectLoadStatus::Recovered);
+    }
     // FireObject 16 / Torch 17: DynamicObject base + the listing-decoded own
     // keys (light child construction is the stated offline boundary).
     const auto make_fire_torch_factory = [](int type_id) {

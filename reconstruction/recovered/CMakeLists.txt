@@ -330,6 +330,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             bed_sign_full.cpp
             glowblock_full.cpp
             fire_torch_full.cpp
+            midtier_full.cpp
             chest_full.cpp
             freeblock_full.cpp
             tradeportal_full.cpp
@@ -388,6 +389,10 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         target_link_libraries(test_fire_torch_full PRIVATE original_client_app)
         target_compile_options(test_fire_torch_full PRIVATE -UNDEBUG)
         add_test(NAME fire_torch_full COMMAND test_fire_torch_full)
+        add_executable(test_midtier_full ../../tools/test_midtier_full.cpp)
+        target_link_libraries(test_midtier_full PRIVATE original_client_app)
+        target_compile_options(test_midtier_full PRIVATE -UNDEBUG)
+        add_test(NAME midtier_full COMMAND test_midtier_full)
         add_executable(test_chest_full ../../tools/test_chest_full.cpp)
         target_link_libraries(test_chest_full PRIVATE original_client_app)
         target_compile_options(test_chest_full PRIVATE -UNDEBUG)
