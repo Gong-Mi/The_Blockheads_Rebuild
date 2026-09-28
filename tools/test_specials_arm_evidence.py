@@ -96,6 +96,11 @@ def main() -> int:
     require(ROOT / "reconstruction/reverse-v3/native/disasm_craftui_starttouch.txt",
             ["CraftUI.scrollingButtons (slot 0x0105ef50) = 148",
              "CraftUI.countSlider (slot 0x0105ef9c) = 164"])
+    require(ROOT / "reconstruction/reverse-v3/native/disasm_mjview_touch.txt",
+            ["OBJC_IVAR_$_MJView.subviews (slot 0x0105cda8) = 44",
+             "countByEnumeratingWithState:objects:count:"])
+    require(ROOT / "reconstruction/reverse-v3/native/INPUT_FRONT.md",
+            ["the MJ toolkit", "three-layer picture"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_gameuiview_all.txt",
             ["OBJC_IVAR_$_GameUIView.displayed (slot 0x0105dee0) = 4",
              "OBJC_IVAR_$_GameUIView.resourcesLoaded (slot 0x0105c494) = 16"])

@@ -154,8 +154,24 @@ The concrete widgets on top: `InventoryButton`, `NetPlayerButton`,
 3. **MJView/MJButton widgets** — the toolkit's own touch contract (and the
    concrete widgets' behaviours on top).
 
-The next slice: MJView's `touchIsInUI:` / `startTouch:` (176w each), the
-widget-level hit test and handling that the panel delegation bottoms out in.
+### MJView's touch contract, decoded (0x006614A8..0x00661A28)
+
+`disasm_mjview_touch.txt` — both 176w methods share one shape:
+
+1. `[self hidden]` -> return 0 / not handled;
+2. `[self ignoreEvents]` -> return 0 / not handled;
+3. the fast enumeration over `subviews@44`
+   (`countByEnumeratingWithState:objects:count:`) **recursing into each
+   subview's `touchIsInUI:` / `startTouch:`** — the descent that bottoms out
+   at the concrete widgets;
+4. the view's own frame test (the geometry helpers 0x1C2924 / 0x1C2E28);
+5. `startTouch:` stores the aggregate at a local (`strb [fp,#-0x21]`) and
+   returns it — the "handled" flag the panels aggregate in turn.
+
+With this the whole touch pipeline's structure is closed end to end:
+`UIManager` router -> `GameUIView` panels (rect + OR/delegate) -> `MJView`
+widgets (gates + subview recursion + frame test) -> concrete widget
+behaviours.
 
 ## Boundary
 
