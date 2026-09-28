@@ -327,6 +327,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             trainstation_full.cpp
             interaction_full.cpp
             interaction_object_init.cpp
+            bed_sign_full.cpp
             chest_full.cpp
             freeblock_full.cpp
             tradeportal_full.cpp
@@ -373,6 +374,10 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         target_link_libraries(test_interaction_full PRIVATE original_client_app)
         target_compile_options(test_interaction_full PRIVATE -UNDEBUG)
         add_test(NAME interaction_full COMMAND test_interaction_full)
+        add_executable(test_bed_sign_full ../../tools/test_bed_sign_full.cpp)
+        target_link_libraries(test_bed_sign_full PRIVATE original_client_app)
+        target_compile_options(test_bed_sign_full PRIVATE -UNDEBUG)
+        add_test(NAME bed_sign_full COMMAND test_bed_sign_full)
         add_executable(test_chest_full ../../tools/test_chest_full.cpp)
         target_link_libraries(test_chest_full PRIVATE original_client_app)
         target_compile_options(test_chest_full PRIVATE -UNDEBUG)

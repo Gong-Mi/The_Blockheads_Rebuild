@@ -179,6 +179,14 @@ TYPED_RECORDS = {
         floatPos=[74.5, 510.0], age=900.0, dead=False, growthCounter=0.24,
         height=10, treeFruit=[], treeSeasonOffset=7,
     )),
+    # Bed / Sign: executed InteractionObject super + listing-decoded own keys.
+    23: ("Bed", 230, 94, 521, dict(
+        floatPos=[94.5, 521.0], isInUse=True, beddingColor=70000, itemType=2,
+    )),
+    47: ("Sign", 231, 95, 521, dict(
+        floatPos=[95.5, 521.0], text="hello", connectionType=3,
+        offsetType=1,
+    )),
     # InteractionObject family: the executed 352w mid-chain init.
     15: ("InteractionObject", 220, 92, 520, dict(
         floatPos=[92.5, 520.0], isInUse=True, flipped=False,
@@ -371,6 +379,8 @@ EXPECT_REASON = {
     48: "sellSlot",       # TradingPost slot hook executed
     15: "executed 352w",  # InteractionObject executed differential
     64: "zero-own-key",   # Mirror zero-own-key forwarder over the same chain
+    23: "beddingColor@104-strh",  # Bed own keys (listing decode)
+    47: "connectionType@112",      # Sign own keys (listing decode)
 }
 
 

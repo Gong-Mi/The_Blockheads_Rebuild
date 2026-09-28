@@ -234,26 +234,70 @@ int main() {
         writeText(root / "blocks/index.tsv",
                   "key_hex\tx\ty\tfile\traw_sha256\tbytes\n"
                   "305f30\t0\t0\tblocks/0_0.raw\ta6587fb969b02057e178d1621397b304fb0b42e0c205122bf52649537e9a0d65\t65541\n");
+
+        // The specimen type ids are picked from the registry's CURRENT stub
+        // set so accumulated registrations can never break this fixture again
+        // (three hardcoded specimens have already been absorbed by real
+        // registrations). Shared-objectType types are skipped (the NPC family,
+        // different expectations).
+        bh176::OriginalClientApp app;
+        app.registerRecoveredFactories();
+        int stub_ids[3] = {0, 0, 0};
+        int stub_found = 0;
+        for (int t = 1; t <= 64 && stub_found < 3; ++t) {
+            if (app.registry().hasConcreteFactory(t)) continue;
+            if (bh176::dynamicObjectTypeHasSharedObjectType(t)) continue;
+            stub_ids[stub_found++] = t;
+        }
+        assert(stub_found == 3);
+        const int meta_type = stub_ids[0];
+        const int dyn_type = stub_ids[1];
+        const int typed_type = stub_ids[2];
+        const auto replace_once = [](std::string text, const std::string& from,
+                                     const std::string& to) {
+            const auto pos = text.find(from);
+            assert(pos != std::string::npos);
+            return text.substr(0, pos) + to + text.substr(pos + from.size());
+        };
+        const auto type_tag = [](int t) {
+            return std::string("<integer>") + std::to_string(t) + "</integer>";
+        };
+        const std::string record0 = replace_once(
+            kPlistOneObject, "<integer>23</integer>", type_tag(meta_type));
+        const std::string record1 = replace_once(
+            kPlistNoTypeAndOutOfRange, "<integer>22</integer>",
+            type_tag(dyn_type));
+        std::string typed_key_hex;
+        {
+            const std::string key_text = "2_0/" + std::to_string(typed_type);
+            static const char* digits = "0123456789abcdef";
+            for (const char ch : key_text) {
+                const unsigned char byte = static_cast<unsigned char>(ch);
+                typed_key_hex += digits[byte >> 4];
+                typed_key_hex += digits[byte & 0xF];
+            }
+        }
+
         const std::string kRecordTyped = R"(<?xml version="1.0"?>
 <plist version="1.0"><dict><key>dynamicObjects</key><array>
 <dict><key>uniqueID</key><integer>21</integer><key>pos_x</key><integer>5</integer><key>pos_y</key><integer>-2</integer></dict>
 </array></dict></plist>
 )";
-        writeText(root / "dynamic/record0.plist", kPlistOneObject);
-        writeText(root / "dynamic/record1.plist", kPlistNoTypeAndOutOfRange);
+        writeText(root / "dynamic/record0.plist", record0);
+        writeText(root / "dynamic/record1.plist", record1);
         writeText(root / "dynamic/record4.plist", kRecordTyped);
         writeText(root / "dynamic/record2.plist", kPlistNotDynamic);
         writeText(root / "dynamic/record3.bin", std::string("\x00\x01\x02binary", 9));
         const std::string dynamic_index =
             "key_hex\tx\ty\tfile\traw_sha256\tbytes\n"
             // metadata-only key: fallback to the per-object objectType
-            "305f30\t0\t0\tdynamic/record0.plist\t" + bh176::sha256Hex(kPlistOneObject) + "\t" +
-            std::to_string(std::string(kPlistOneObject).size()) + "\n"
+            "305f30\t0\t0\tdynamic/record0.plist\t" + bh176::sha256Hex(record0) + "\t" +
+            std::to_string(record0.size()) + "\n"
             // metadata-only key: unidentified + out-of-range + dynamicObjectType
-            "305f31\t0\t1\tdynamic/record1.plist\t" + bh176::sha256Hex(kPlistNoTypeAndOutOfRange) + "\t" +
-            std::to_string(std::string(kPlistNoTypeAndOutOfRange).size()) + "\n"
+            "305f31\t0\t1\tdynamic/record1.plist\t" + bh176::sha256Hex(record1) + "\t" +
+            std::to_string(record1.size()) + "\n"
             // real-archive key with type suffix: record_key is the typed source
-            "325f302f3330\t2\t0\tdynamic/record4.plist\t" + bh176::sha256Hex(kRecordTyped) + "\t" +
+            + typed_key_hex + "\t2\t0\tdynamic/record4.plist\t" + bh176::sha256Hex(kRecordTyped) + "\t" +
             std::to_string(std::string(kRecordTyped).size()) + "\n"
             // opaque shapes (valid digests so they reach the plist stage)
             "335f30\t3\t0\tdynamic/record2.plist\t" + bh176::sha256Hex(kPlistNotDynamic) + "\t" +
@@ -262,7 +306,6 @@ int main() {
             bh176::sha256Hex(std::string("\x00\x01\x02binary", 9)) + "\t9\n";
         writeText(root / "dynamic/index.tsv", dynamic_index);
 
-        bh176::OriginalClientApp app;
         std::string error;
         assert(app.open(root, &error));
         assert(error.empty());
@@ -287,19 +330,19 @@ int main() {
             assert(report.type_key_used.at("objectType") == 1);
             assert(report.type_key_used.at("dynamicObjectType") == 1);
             assert(report.type_key_used.at("record_key") == 1);
-            assert(report.per_type.at(23) == 1);
-            assert(report.per_type.at(22) == 1);
-            assert(report.per_type.at(30) == 1);
+            assert(report.per_type.at(meta_type) == 1);
+            assert(report.per_type.at(dyn_type) == 1);
+            assert(report.per_type.at(typed_type) == 1);
             assert(report.shared_object_type_objects == 0);
         }
 
         // second pass with one type plugged in: status follows the registration
         app.registry().registerFactory(
-            23,
-            [](const bh176::SaveDict& in, std::string* err) {
+            meta_type,
+            [meta_type](const bh176::SaveDict& in, std::string* err) {
                 if (err) err->clear();
                 auto object = bh176::DynamicObjectRegistry::baseStub(
-                    23, in);
+                    meta_type, in);
                 object.status = bh176::ObjectLoadStatus::Verified;
                 object.status_reason = "test verified factory";
                 return object;
@@ -312,7 +355,8 @@ int main() {
 
         const std::string json = app.toJson();
         assert(json.find("\"verified_objects\": 1") != std::string::npos);
-        assert(json.find("\"class_name\": \"Bed\"") != std::string::npos);
+        // type-agnostic: the verified specimen's own reason marks it
+        assert(json.find("test verified factory") != std::string::npos);
         assert(json.find("per-type loader not recovered") != std::string::npos);
 
         // ---- recovered-factory registration (production path, plant family) --
@@ -331,8 +375,8 @@ int main() {
             const std::string tulip_index =
                 "key_hex\tx\ty\tfile\traw_sha256\tbytes\n" +
                 std::string("305f30\t0\t0\tdynamic/record0.plist\t") +
-                bh176::sha256Hex(kPlistOneObject) + "\t" +
-                std::to_string(std::string(kPlistOneObject).size()) + "\n" +
+                bh176::sha256Hex(record0) + "\t" +
+                std::to_string(record0.size()) + "\n" +
                 "345f322f3539\t4\t2\tdynamic/record5.plist\t" +
                 bh176::sha256Hex(kTulipRecord) + "\t" +
                 std::to_string(std::string(kTulipRecord).size()) + "\n";

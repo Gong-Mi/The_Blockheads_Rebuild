@@ -1,5 +1,6 @@
 #include "original_client_app.h"
 
+#include "bed_sign_full.h"
 #include "chest_full.h"
 #include "freeblock_full.h"
 #include "gatherblock_full.h"
@@ -429,6 +430,21 @@ void OriginalClientApp::registerRecoveredFactories() {
     };
     registry_.registerFactory(
         14, make_freeblock_factory(14), "freeblock full chain (b4p executed",
+        ObjectLoadStatus::Recovered);
+    // Bed 23 / Sign 47: the executed InteractionObject super chain + each
+    // class's own keys (decoded from their annotated listings; store widths
+    // from the flow, incl. Bed's strh beddingColor and the itemType==0 -> 63
+    // default).
+    const auto make_bed_sign_factory = [](int type_id) {
+        return [type_id](const SaveDict& entry, std::string* error) {
+            return bed_sign_full_factory(type_id, entry, nullptr, error);
+        };
+    };
+    registry_.registerFactory(
+        23, make_bed_sign_factory(23), "bed full chain (interaction super executed",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        47, make_bed_sign_factory(47), "sign full chain (interaction super executed",
         ObjectLoadStatus::Recovered);
     // InteractionObject 15 / Mirror 64: the EXECUTED 352w mid-chain init.
     // Mirror itself is a zero-own-key super forwarder, so its whole record
