@@ -92,7 +92,8 @@ ClientDynamicObject interaction_full_factory(int type_id,
         type_id == 64
             ? "mirror full chain: DynamicObject base + InteractionObject "
               "init executed (352w differential; Mirror itself is a "
-              "zero-own-key 71w super forwarder) + world tail not "
+              "zero-own-key 71w super forwarder, its own body executed too: "
+              "tools/test_forwarder5b_arm.py) + world tail not "
               "evaluable offline"
             : "interactionobject full chain: DynamicObject base + the "
               "executed 352w init (8-case differential: six keys, strh "

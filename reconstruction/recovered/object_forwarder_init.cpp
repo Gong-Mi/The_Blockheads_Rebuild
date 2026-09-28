@@ -9,7 +9,9 @@ ForwarderResult forwarder_init_with_world(const ForwarderInputs& inputs) {
         result.returned_nil = true;
         return result;
     }
-    result.calls.push_back(ForwarderCall::PostInitHook);
+    if (inputs.hook_present) {
+        result.calls.push_back(ForwarderCall::PostInitHook);
+    }
     return result;
 }
 

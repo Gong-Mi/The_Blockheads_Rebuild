@@ -448,6 +448,9 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             add_test(NAME interaction_object_init_arm_evidence
                      COMMAND ${BH_PYTHON3}
                              ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_interaction_object_arm_evidence.py)
+            add_test(NAME forwarder5b_arm_evidence
+                     COMMAND ${BH_PYTHON3}
+                             ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_forwarder5b_arm_evidence.py)
         endif()
         # Tests using assert must still exercise their contracts in Release.
         foreach(test_target test_gameview_update test_projection_update test_world_view_contracts test_world_translation test_sound_manager test_original_save_format test_gameview_starttouch test_original_client_world test_gameview_movetouch)

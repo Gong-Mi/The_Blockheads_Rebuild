@@ -165,7 +165,8 @@ ClientDynamicObject midtier_full_factory(int type_id, const SaveDict& entry,
     object.status = ObjectLoadStatus::Recovered;
     object.status_reason =
         spec->zero_own_keys
-            ? "midtier zero-own-key forwarder (forwarder5b): DynamicObject "
+            ? "midtier zero-own-key forwarder (forwarder5b, EXECUTED "
+              "differential tools/test_forwarder5b_arm.py): DynamicObject "
               "base only; the class contributes no save keys (super "
               "forward + optional initSubDerivedItems hook)"
             : "midtier full chain: DynamicObject base + the per-class key "

@@ -112,7 +112,8 @@ ClientDynamicObject traincar_full_factory(int type_id, const SaveDict& entry,
                     "TrainCar (no override in the method table; the chest/"
                     "netData variants are spawn paths) — DynamicObject base "
                     "+ the TrainCar chain (listing decode) only"
-                  : "traincar zero-own-key forwarder (forwarder5b): "
+                  : "traincar zero-own-key forwarder (forwarder5b, "
+                    "EXECUTED differential tools/test_forwarder5b_arm.py): "
                     "DynamicObject base + the TrainCar chain (listing "
                     "decode) only";
     return object;

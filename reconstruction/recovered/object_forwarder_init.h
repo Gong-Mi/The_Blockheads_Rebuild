@@ -9,8 +9,11 @@
 //   [self loadDerivedStuff]                              (zero-argument hook)
 //   return self
 //
-// The contract is class-agnostic on purpose: the five bodies differ only in
-// their literal cells, so the same recovered behaviour must describe all five.
+// The contract is class-agnostic on purpose: the bodies differ only in their
+// literal cells (and, for forwarder5b, in whether they carry a post-init
+// hook), so the same recovered behaviour must describe all of them. The
+// forwarder5b differential (tools/test_forwarder5b_arm.py) executes the five
+// 5b bodies against this contract with hook_present per class.
 #pragma once
 
 #include <vector>
@@ -21,6 +24,12 @@ struct ForwarderInputs {
     // When true the stubbed objc_msgSendSuper2 returns nil, so the forwarder
     // must return nil without calling its post-init hook.
     bool super_returns_nil = false;
+    // The forwarder5b batch's five bodies split on this: SurfaceBlock /
+    // PassengerCar / HandCar are super-only (57-60 words, no hook), while
+    // Mirror / SnowSurfaceBlock (71 words) additionally call
+    // [self initSubDerivedItems]. Default true keeps the b3f five (which all
+    // call loadDerivedStuff) unchanged.
+    bool hook_present = true;
 };
 
 enum class ForwarderCall : int {

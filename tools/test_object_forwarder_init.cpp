@@ -49,7 +49,23 @@ int main() {
     expect(nil_trace == 0x80000001u, "nil trace literal sanity");
 
     if (failures == 0) {
-        std::printf("recovered_object_forwarder_init: PASS\n");
+        // forwarder5b shape: super-only (no post-init hook).
+    {
+        ForwarderInputs inputs;
+        inputs.hook_present = false;
+        const ForwarderResult ok = forwarder_init_with_world(inputs);
+        expect(!ok.returned_nil, "super-only returns self");
+        expect(ok.calls.size() == 1, "super-only makes one call");
+        expect(ok.calls[0] == ForwarderCall::SuperInit, "that call is super");
+
+        inputs.super_returns_nil = true;
+        const ForwarderResult nil = forwarder_init_with_world(inputs);
+        expect(nil.returned_nil, "super-only with nil super returns nil");
+        expect(nil.calls.size() == 1, "super-only nil keeps one call");
+        expect(nil.calls[0] == ForwarderCall::SuperInit, "still the super call");
+    }
+
+    std::printf("recovered_object_forwarder_init: PASS\n");
     }
     return failures == 0 ? 0 : 1;
 }
