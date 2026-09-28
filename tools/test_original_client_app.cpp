@@ -36,7 +36,7 @@ const char* kPlistOneObject = R"(<?xml version="1.0" encoding="UTF-8"?>
 				<real>2.5</real>
 			</array>
 			<key>objectType</key>
-			<integer>33</integer>
+			<integer>23</integer>
 		</dict>
 	</array>
 </dict>
@@ -253,7 +253,7 @@ int main() {
             "305f31\t0\t1\tdynamic/record1.plist\t" + bh176::sha256Hex(kPlistNoTypeAndOutOfRange) + "\t" +
             std::to_string(std::string(kPlistNoTypeAndOutOfRange).size()) + "\n"
             // real-archive key with type suffix: record_key is the typed source
-            "325f302f3130\t2\t0\tdynamic/record4.plist\t" + bh176::sha256Hex(kRecordTyped) + "\t" +
+            "325f302f3330\t2\t0\tdynamic/record4.plist\t" + bh176::sha256Hex(kRecordTyped) + "\t" +
             std::to_string(std::string(kRecordTyped).size()) + "\n"
             // opaque shapes (valid digests so they reach the plist stage)
             "335f30\t3\t0\tdynamic/record2.plist\t" + bh176::sha256Hex(kPlistNotDynamic) + "\t" +
@@ -276,7 +276,7 @@ int main() {
         assert(app.loadDynamicObjects(&error));
         {
             const auto& report = app.report();
-            assert(report.dynamic_objects == 3);            // type 33 + type 14 + type 10 (FlaxPlant: no factory)
+            assert(report.dynamic_objects == 3);            // type 33 + type 14 + type 30 (Egg: no factory)
             assert(report.stub_objects == 3);
             assert(report.recovered_objects == 0);
             assert(report.verified_objects == 0);
@@ -287,19 +287,19 @@ int main() {
             assert(report.type_key_used.at("objectType") == 1);
             assert(report.type_key_used.at("dynamicObjectType") == 1);
             assert(report.type_key_used.at("record_key") == 1);
-            assert(report.per_type.at(33) == 1);
+            assert(report.per_type.at(23) == 1);
             assert(report.per_type.at(14) == 1);
-            assert(report.per_type.at(10) == 1);
+            assert(report.per_type.at(30) == 1);
             assert(report.shared_object_type_objects == 0);
         }
 
         // second pass with one type plugged in: status follows the registration
         app.registry().registerFactory(
-            33,
+            23,
             [](const bh176::SaveDict& in, std::string* err) {
                 if (err) err->clear();
                 auto object = bh176::DynamicObjectRegistry::baseStub(
-                    33, in);
+                    23, in);
                 object.status = bh176::ObjectLoadStatus::Verified;
                 object.status_reason = "test verified factory";
                 return object;
@@ -312,7 +312,7 @@ int main() {
 
         const std::string json = app.toJson();
         assert(json.find("\"verified_objects\": 1") != std::string::npos);
-        assert(json.find("\"class_name\": \"ChilliPlant\"") != std::string::npos);
+        assert(json.find("\"class_name\": \"Bed\"") != std::string::npos);
         assert(json.find("per-type loader not recovered") != std::string::npos);
 
         // ---- recovered-factory registration (production path, plant family) --

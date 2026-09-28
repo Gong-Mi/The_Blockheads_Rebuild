@@ -179,6 +179,23 @@ TYPED_RECORDS = {
         floatPos=[74.5, 510.0], age=900.0, dead=False, growthCounter=0.24,
         height=10, treeFruit=[], treeSeasonOffset=7,
     )),
+    # Crop plants: Plant chain only (constant-accessor classes).
+    10: ("FlaxPlant", 160, 80, 515, dict(
+        floatPos=[80.5, 515.0], seasonOffset=1, age=100.0, maxAgeGene=140,
+        growthRateGene=150, saveTime=900.0,
+    )),
+    27: ("CarrotPlant", 161, 81, 515, dict(
+        floatPos=[81.5, 515.0], seasonOffset=2, age=200.0, maxAgeGene=141,
+        growthRateGene=151, saveTime=900.0,
+    )),
+    33: ("ChilliPlant", 162, 82, 515, dict(
+        floatPos=[82.5, 515.0], seasonOffset=3, age=300.0, maxAgeGene=142,
+        growthRateGene=152, saveTime=900.0,
+    )),
+    61: ("WheatPlant", 163, 83, 515, dict(
+        floatPos=[83.5, 515.0], seasonOffset=4, age=400.0, maxAgeGene=143,
+        growthRateGene=153, saveTime=900.0,
+    )),
     # KelpPlant / VinePlant: the executed b4o/b4n twin chains.
     34: ("KelpPlant", 140, 60, 500, dict(
         floatPos=[60.5, 500.0], seasonOffset=5, age=300.0,
@@ -306,6 +323,10 @@ EXPECT_REASON = {
     8: "b4d",
     9: "b4d",
     37: "b4d",
+    10: "Plant loadSaveDictValues",   # crops: inherited Plant chain
+    27: "Plant loadSaveDictValues",
+    33: "Plant loadSaveDictValues",
+    61: "Plant loadSaveDictValues",
 }
 
 

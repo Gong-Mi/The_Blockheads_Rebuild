@@ -348,6 +348,27 @@ void OriginalClientApp::registerRecoveredFactories() {
         62, make_plant_factory(62),
         "plant full chain (Plant loadSaveDictValues executed",
         ObjectLoadStatus::Recovered);
+    // Crop plants: FlaxPlant 10 / CarrotPlant 27 / ChilliPlant 33 /
+    // WheatPlant 61 — the pinned method map carries only constant accessors
+    // for them (objectType/plantType/maxAgeBase/...), zero own
+    // initWithWorld/loadSaveDictValues/getSaveDict: they inherit Plant's
+    // chain exactly like Sunflower/Corn/Tomato (11/12/62).
+    registry_.registerFactory(
+        10, make_plant_factory(10),
+        "plant full chain (Plant loadSaveDictValues executed",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        27, make_plant_factory(27),
+        "plant full chain (Plant loadSaveDictValues executed",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        33, make_plant_factory(33),
+        "plant full chain (Plant loadSaveDictValues executed",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        61, make_plant_factory(61),
+        "plant full chain (Plant loadSaveDictValues executed",
+        ObjectLoadStatus::Recovered);
     // NPC family (bucket B): Dodo 13 / Donkey 28 — the executed b3g/b4f
     // chain (DynamicObject base + NPC init + loadValuesFromSaveDict G1-G3
     // + ungated slots). One factory serves the family: the forwarder5
