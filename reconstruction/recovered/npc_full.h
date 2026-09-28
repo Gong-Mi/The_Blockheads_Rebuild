@@ -28,6 +28,21 @@
 //       loadDerivedStuff bodies are NOT recovered yet and contribute no
 //       save keys of their own (zero-own-state readers).
 //
+// NPC specials (this batch):
+//   DropBear 25 -(0x0079d538, 404w, super NPC): its own body reads, after the
+//       super init, eight own keys (annotated-listing decode) —
+//       courageMeter float @304 ; provokeMeter float @300 ; dropSpeed float
+//       @312 ; onGround byte @344 ; dropping byte @308 ; dropPos.x/.y int
+//       words @348/+4 ; goalTreeDirection int word @356 ; plus saveTime
+//       floatValue feeding the body's own age step (age@88 itself is the
+//       NPC chain's G1 store) and a loadDerivedStuff tail hook.
+//   CaveTroll 39 -(0x00d538cc, 408w, super NPC): its own body reads after
+//       the super init — dead byte (NPC.dead@56) ; defendSquare.x/.y int
+//       words @356/@360 ; state (the record's data blob -> the @208 state
+//       buffer, captured here as its hex + byte count) ; plus an
+//       initSubDerivedStuffStuff tail hook and world calls
+//       (removeFromMacroBlock / interactingTile).
+//
 // Save-record keys are therefore FULLY explained for the family:
 //   {uniqueID, pos_x, pos_y, floatPos}                     (base level)
 //   {fullness, layTimer, damage, age}                      (G1)
@@ -89,13 +104,40 @@ struct NpcFullState {
     float milk = 0.0f;   // @1136
     bool has_hair = false;
     float hair = 0.0f;   // @1140
+    // --- DropBear 25 own keys (annotated-listing decode) ---
+    bool has_courage_meter = false;
+    float courage_meter = 0.0f;        // @304
+    bool has_provoke_meter = false;
+    float provoke_meter = 0.0f;        // @300
+    bool has_drop_speed = false;
+    float drop_speed = 0.0f;           // @312
+    bool dropping = false;             // @308 byte
+    bool on_ground = false;            // @344 byte
+    bool has_drop_pos = false;
+    std::int32_t drop_pos_x = 0;       // @348
+    std::int32_t drop_pos_y = 0;       // @352
+    bool has_goal_tree_direction = false;
+    std::int32_t goal_tree_direction = 0;  // @356
+    bool has_save_time = false;        // read by the DropBear body's age step
+    float save_time = 0.0f;
+    // --- CaveTroll 39 own keys (annotated-listing decode) ---
+    bool dead = false;                 // NPC.dead@56 byte
+    bool has_defend_square = false;
+    std::int32_t defend_square_x = 0;  // @356
+    std::int32_t defend_square_y = 0;  // @360
+    bool has_state = false;            // the @208 state buffer's blob
+    std::size_t state_bytes = 0;
+    std::string state_hex;
+    bool own_body_listing_decoded = false;  // 25/39 own bodies are listing-level
 };
 
 // Reads ONE dynamic-object entry dictionary through the executed NPC chain
 // (the contract runs for real; the state is read back from its image).
 // Unknown keys are ignored, never invented; missing keys decode as nil
 // exactly like the harness (gates stay closed, ungated slots store nil).
-NpcFullState npc_full_load(const SaveDict& entry);
+// type_id selects the subclass own-key table (25 DropBear / 39 CaveTroll;
+// 0 = the generic NPC chain only, every other id the same).
+NpcFullState npc_full_load(const SaveDict& entry, int type_id = 0);
 
 // The registry factory for the NPC family (Dodo 13 / Donkey 28): executes
 // the recovered chain on construction and returns the registry-shaped

@@ -408,6 +408,14 @@ void OriginalClientApp::registerRecoveredFactories() {
     registry_.registerFactory(
         36, make_npc_factory(36), "npc full chain (b3g/b4f executed",
         ObjectLoadStatus::Recovered);
+    // NPC specials: DropBear 25 / CaveTroll 39 — the NPC chain plus each
+    // one's own body (annotated-listing decode).
+    registry_.registerFactory(
+        25, make_npc_factory(25), "npc full chain (b3g/b4f executed) + dropbear",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        39, make_npc_factory(39), "npc full chain (b3g/b4f executed) + cavetroll",
+        ObjectLoadStatus::Recovered);
     registry_.registerFactory(
         51, make_npc_factory(51), "npc full chain (b3g/b4f executed",
         ObjectLoadStatus::Recovered);

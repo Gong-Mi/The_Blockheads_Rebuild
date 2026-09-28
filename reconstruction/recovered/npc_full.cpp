@@ -28,7 +28,7 @@ float bitsToFloat(std::uint32_t bits) {
 
 }  // namespace
 
-NpcFullState npc_full_load(const SaveDict& entry) {
+NpcFullState npc_full_load(const SaveDict& entry, int type_id) {
     using blockheads::recovered::NpcLoadKey;
     using blockheads::recovered::NpcLoadValuesInputs;
     using blockheads::recovered::npc_load_values_run;
@@ -159,6 +159,67 @@ NpcFullState npc_full_load(const SaveDict& entry) {
         state.hair = SaveDict::floatValue(hair);
     }
 
+    // --- DropBear 25 own body (annotated-listing decode: eight own keys +
+    // saveTime; the own age step and the loadDerivedStuff tail hook carry no
+    // extra save state beyond these reads) ---
+    if (type_id == 25) {
+        if (const SaveValue* v = entry.objectForKey("courageMeter")) {
+            state.has_courage_meter = true;
+            state.courage_meter = SaveDict::floatValue(v);   // @304
+        }
+        if (const SaveValue* v = entry.objectForKey("provokeMeter")) {
+            state.has_provoke_meter = true;
+            state.provoke_meter = SaveDict::floatValue(v);   // @300
+        }
+        if (const SaveValue* v = entry.objectForKey("dropSpeed")) {
+            state.has_drop_speed = true;
+            state.drop_speed = SaveDict::floatValue(v);      // @312
+        }
+        const SaveValue* dropping = entry.objectForKey("dropping");
+        if (dropping != nullptr) state.dropping = SaveDict::boolValue(dropping);  // @308
+        const SaveValue* on_ground = entry.objectForKey("onGround");
+        if (on_ground != nullptr) state.on_ground = SaveDict::boolValue(on_ground);  // @344
+        const SaveValue* dx = entry.objectForKey("dropPos.x");
+        const SaveValue* dy = entry.objectForKey("dropPos.y");
+        if (dx != nullptr && dy != nullptr) {
+            state.has_drop_pos = true;
+            state.drop_pos_x = static_cast<std::int32_t>(SaveDict::intValue(dx));  // @348
+            state.drop_pos_y = static_cast<std::int32_t>(SaveDict::intValue(dy));  // @352
+        }
+        if (const SaveValue* v = entry.objectForKey("goalTreeDirection")) {
+            state.has_goal_tree_direction = true;
+            state.goal_tree_direction =
+                static_cast<std::int32_t>(SaveDict::intValue(v));  // @356
+        }
+        if (const SaveValue* v = entry.objectForKey("saveTime")) {
+            state.has_save_time = true;
+            state.save_time = SaveDict::floatValue(v);
+        }
+        state.own_body_listing_decoded = true;
+    }
+    // --- CaveTroll 39 own body (annotated-listing decode: dead byte +
+    // defendSquare.x/.y int words + the state data blob; the
+    // initSubDerivedStuffStuff tail hook carries no save state) ---
+    if (type_id == 39) {
+        const SaveValue* dead = entry.objectForKey("dead");
+        if (dead != nullptr) state.dead = SaveDict::boolValue(dead);  // NPC.dead@56
+        const SaveValue* fx = entry.objectForKey("defendSquare.x");
+        const SaveValue* fy = entry.objectForKey("defendSquare.y");
+        if (fx != nullptr && fy != nullptr) {
+            state.has_defend_square = true;
+            state.defend_square_x =
+                static_cast<std::int32_t>(SaveDict::intValue(fx));  // @356
+            state.defend_square_y =
+                static_cast<std::int32_t>(SaveDict::intValue(fy));  // @360
+        }
+        if (const SaveValue* v = entry.objectForKey("state")) {
+            state.has_state = true;
+            state.state_bytes = v->text.size() / 2;  // Data is kept as hex
+            state.state_hex = v->text;
+        }
+        state.own_body_listing_decoded = true;
+    }
+
     return state;
 }
 
@@ -167,7 +228,7 @@ ClientDynamicObject npc_full_factory(int type_id, const SaveDict& entry,
                                      std::string* error) {
     if (error) error->clear();
     // the recovered chain runs for real on construction
-    const NpcFullState state = npc_full_load(entry);
+    const NpcFullState state = npc_full_load(entry, type_id);
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
@@ -179,6 +240,21 @@ ClientDynamicObject npc_full_factory(int type_id, const SaveDict& entry,
         object.status_reason +=
             "; Yak own keys milk/hair (ownkey5 executed, presence-gated); "
             "the updateTextures tail hook carries no save state";
+    }
+    if (type_id == 25) {
+        object.status_reason +=
+            "; DropBear own body (listing decode): courageMeter@304/"
+            "provokeMeter@300/dropSpeed@312 floats, onGround@344/dropping@308 "
+            "bytes, dropPos.x/.y@348, goalTreeDirection@356, saveTime read; "
+            "the own age step and the loadDerivedStuff tail hook carry no "
+            "extra save state";
+    }
+    if (type_id == 39) {
+        object.status_reason +=
+            "; CaveTroll own body (listing decode): dead byte, "
+            "defendSquare.x/.y@356/@360, the state data blob (hex+size); the "
+            "initSubDerivedStuffStuff tail hook and the world calls "
+            "(removeFromMacroBlock/interactingTile) carry no save state";
     }
     return object;
 }

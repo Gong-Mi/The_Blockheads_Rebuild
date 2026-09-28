@@ -154,6 +154,68 @@ int main() {
     assert(!state.has_milk);
     assert(!state.has_hair);
 
+    // ---- DropBear 25: the NPC chain plus the eight own keys -------------
+    {
+        bh176::SaveValue value;
+        std::string error;
+        assert(bh176::parseXmlPlist(R"(<?xml version="1.0"?>
+<plist version="1.0"><dict><key>dynamicObjects</key><array>
+<dict><key>uniqueID</key><integer>310</integer><key>pos_x</key><integer>1</integer><key>pos_y</key><integer>2</integer><key>fullness</key><real>0.5</real><key>courageMeter</key><real>0.25</real><key>provokeMeter</key><real>0.75</real><key>dropSpeed</key><real>1.5</real><key>dropping</key><false/><key>onGround</key><true/><key>dropPos.x</key><integer>11</integer><key>dropPos.y</key><integer>12</integer><key>goalTreeDirection</key><integer>2</integer><key>saveTime</key><real>100.0</real></dict>
+</array></dict></plist>
+)", value, &error));
+        const bh176::SaveDict dict(value);
+        const bh176::SaveValue* objects = dict.objectForKey("dynamicObjects");
+        const bh176::SaveDict entry(*dict.objectAtIndex(objects, 0));
+        bh176::NpcFullState state;
+        bh176::ClientDynamicObject object =
+            bh176::npc_full_factory(25, entry, &state, &error);
+        assert(error.empty());
+        assert(object.class_name == "DropBear");
+        assert(object.status == bh176::ObjectLoadStatus::Recovered);
+        assert(object.status_reason.find("DropBear own body") != std::string::npos);
+        // the NPC chain still runs (G1 gate on fullness)
+        assert(state.g1_present);
+        assert(state.fullness == 0.5f);
+        // own keys
+        assert(state.has_courage_meter && state.courage_meter == 0.25f);
+        assert(state.has_provoke_meter && state.provoke_meter == 0.75f);
+        assert(state.has_drop_speed && state.drop_speed == 1.5f);
+        assert(!state.dropping);
+        assert(state.on_ground);
+        assert(state.has_drop_pos && state.drop_pos_x == 11 &&
+               state.drop_pos_y == 12);
+        assert(state.has_goal_tree_direction && state.goal_tree_direction == 2);
+        assert(state.has_save_time && state.save_time == 100.0f);
+        assert(state.own_body_listing_decoded);
+    }
+
+    // ---- CaveTroll 39: dead byte + defendSquare + the state blob ----------
+    {
+        bh176::SaveValue value;
+        std::string error;
+        assert(bh176::parseXmlPlist(R"(<?xml version="1.0"?>
+<plist version="1.0"><dict><key>dynamicObjects</key><array>
+<dict><key>uniqueID</key><integer>311</integer><key>pos_x</key><integer>3</integer><key>pos_y</key><integer>4</integer><key>dead</key><false/><key>defendSquare.x</key><integer>5</integer><key>defendSquare.y</key><integer>6</integer><key>state</key><data>AQIDBA==</data></dict>
+</array></dict></plist>
+)", value, &error));
+        const bh176::SaveDict dict(value);
+        const bh176::SaveValue* objects = dict.objectForKey("dynamicObjects");
+        const bh176::SaveDict entry(*dict.objectAtIndex(objects, 0));
+        bh176::NpcFullState state;
+        bh176::ClientDynamicObject object =
+            bh176::npc_full_factory(39, entry, &state, &error);
+        assert(object.class_name == "CaveTroll");
+        assert(object.status == bh176::ObjectLoadStatus::Recovered);
+        assert(object.status_reason.find("CaveTroll own body") != std::string::npos);
+        assert(!state.dead);
+        assert(state.has_defend_square && state.defend_square_x == 5 &&
+               state.defend_square_y == 6);
+        assert(state.has_state);
+        assert(state.state_bytes == 4);          // 01020304
+        assert(state.state_hex.size() == 8);
+        assert(state.own_body_listing_decoded);
+    }
+
     std::printf("test_npc_full: PASS\n");
     return 0;
 }

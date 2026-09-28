@@ -189,6 +189,16 @@ TYPED_RECORDS = {
     54: ("Stairs", 266, 105, 524, dict(configuration=2, itemType=7, ownerID="c", paintColor=3)),
     20: ("Door", 267, 106, 524, dict(blocked=True, ironPlaceClientID="x", itemType=4, ownerID="c")),
     38: ("Wire", 268, 107, 524, dict(configuration=1, itemType=2, solidConfiguration=3, ownerID="c")),
+    # NPC specials.
+    25: ("DropBear", 310, 118, 530, dict(
+        fullness=0.5, courageMeter=0.25, provokeMeter=0.75, dropSpeed=1.5,
+        dropping=False, onGround=True, saveTime=100.0,
+        **{"dropPos.x": 11, "dropPos.y": 12, "goalTreeDirection": 2},
+    )),
+    39: ("CaveTroll", 311, 119, 530, dict(
+        dead=False, **{"defendSquare.x": 5, "defendSquare.y": 6},
+        state=b"\x01\x02\x03\x04",
+    )),
     # ArtificialLight body.
     21: ("ArtificialLight", 300, 117, 529, dict(
         downlight=True, lightDirection=3, radius=4, maxRed=15, maxGreen=8,
@@ -345,6 +355,9 @@ def plist_value(value) -> str:
         return f"<real>{value!r}</real>"
     if isinstance(value, str):
         return f"<string>{value}</string>"
+    if isinstance(value, (bytes, bytearray)):
+        import base64
+        return f"<data>{base64.b64encode(bytes(value)).decode()}</data>"
     if isinstance(value, list):
         return "<array>" + "".join(plist_value(v) for v in value) + "</array>"
     if isinstance(value, dict):
@@ -467,6 +480,8 @@ EXPECT_REASON = {
     44: "zero-own-key",            # forwarder5b: PassengerCar
     42: "TrainCar",                # SteamTrain: TrainCar chain + own keys
     21: "artificial light",        # light body (5-arg decode)
+    25: "DropBear own body",      # NPC chain + own body (listing decode)
+    39: "CaveTroll own body",      # NPC chain + own body (listing decode)
 }
 
 
