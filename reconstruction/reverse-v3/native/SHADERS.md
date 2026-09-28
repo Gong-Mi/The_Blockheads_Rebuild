@@ -132,13 +132,13 @@ listsings).
 
 `tools/sweep_shader_mapping.py` disassembles every render-capable class's
 `initWith*` and reports the `shaderNamed:` call's literals; the result is
-committed as `native/shader_mapping.tsv` (draft). Reliability note: the
-**shader column is the named literal** (e.g. MJImageView -> MJButton, MapUI
--> StandardObjectColored, MainMenuUI/PauseUI/OptionsUI/SoundOptionsUI ->
-StandardObject, Weather -> Rain/Snow), while the attrs/uniforms columns are
-a window heuristic that still picks up neighbouring literals — the row
-proven three ways (MJButton; see above) is the reference shape:
-`shader, attr1, attr2, uniform1..3`.
+committed as `native/shader_mapping.tsv` (draft). The tool now loads the ELF once (`tools/listing_core.py`) and classifies
+the call's literals **against the shader source's own declarations**, so the
+columns are exact: the MJButton rows come out
+`attrs[position,texCoord] uniforms[mvp_matrix,texture,color]` — identical to
+the hand-proven row above. A literal that belongs to no declaration (e.g.
+`Rain` in Weather's Snow window — the class builds two shaders) is prefixed
+`?` rather than guessed.
 
 ## How to inspect
 

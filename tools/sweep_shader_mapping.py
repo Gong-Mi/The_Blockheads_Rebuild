@@ -14,9 +14,11 @@ three ways (SHADERS.md); this sweep extends it mechanically.
 """
 import argparse
 import re
-import subprocess
 import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from listing_core import Lister  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 NATIVE = ROOT / "reconstruction/reverse-v3/native"
@@ -42,32 +44,30 @@ def class_inits(tsv: Path):
         renders = any("render" in s for s, _ in ms)
         if not renders:
             continue
+        imps = sorted(int(i, 16) for _, i in ms)
         for sel, imp in ms:
             if sel == "init" or sel.startswith("initWith"):
-                rows.append((cls, sel, imp))
+                lo = int(imp, 16)
+                # the method's real end: the next IMP of the same class
+                nxt = next((i for i in imps if i > lo), lo + 0x2000)
+                rows.append((cls, sel, imp, lo, min(nxt, lo + 0x2000)))
     return rows
 
 
+LISTER = None
+
+
 def sweep(elf: Path, tsv: Path, out: Path):
+    global LISTER
+    LISTER = Lister(elf)
     inits = class_inits(tsv)
     seen = set()
     results = []
-    for cls, sel, imp in inits:
+    for cls, sel, imp, lo, hi in inits:
         if (cls, sel) in seen:
             continue
         seen.add((cls, sel))
-        lo = int(imp, 16)
-        # a generous window: the init body's first 0x1200 bytes
-        tmp = NATIVE / f".sweep_{cls}.txt"
-        proc = subprocess.run(
-            [sys.executable, str(ROOT / "tools/emit_annotated_method.py"),
-             f"{cls} -[{sel}]", "v8@0:4", hex(lo), hex(lo + 0x1200),
-             str(tmp)],
-            capture_output=True, text=True)
-        if proc.returncode != 0 or not tmp.exists():
-            continue
-        text = tmp.read_text()
-        tmp.unlink()
+        text = LISTER.emit(f"{cls} -[{sel}]", "v8@0:4", lo, hi)
         if SEL_REF not in text:
             continue
         # only the literals in the shaderNamed: call's own window — the
@@ -76,8 +76,21 @@ def sweep(elf: Path, tsv: Path, out: Path):
         # hundred bytes, so bound the window to the following lines.
         lines = text.splitlines()
         site = next(i for i, l in enumerate(lines) if SEL_REF in l)
-        window = "\n".join(lines[site:site + 260])
-        lits = re.findall(r"CFString key obj @0x[0-9a-f]+ '([^']+)'", window)
+        # the compiler builds the argument arrays BEFORE loading the
+        # selector, so the call's literals sit just before the site.
+        window = "\n".join(lines[max(0, site - 320):site + 40])
+        all_lits = re.findall(r"CFString key obj @0x[0-9a-f]+ '([^']+)'", window)
+        vsh = {p.stem for p in (ROOT / "reconstruction/reverse-v3/assets/shaders").glob("*.vsh")}
+        start = next((i for i, s in enumerate(all_lits) if s in vsh), None)
+        lits = []
+        if start is not None:
+            # shader/attribute/uniform names are bare identifiers; the first
+            # filename or UI string ends the call's own literal run.
+            for lit in all_lits[start:]:
+                if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", lit):
+                    lits.append(lit)
+                else:
+                    break
         # the shader file name is the first literal that matches a shipped
         # .vsh pair; the rest are the attributes and uniforms
         vsh = {p.stem for p in
@@ -87,8 +100,26 @@ def sweep(elf: Path, tsv: Path, out: Path):
             results.append((cls, sel, imp, "?", "", ""))
             continue
         rest = [s for s in lits if s != shader]
+        # classify by the shader SOURCE's declarations: the code builds the
+        # argument arrays right-to-left (ARM), so raw order is unreliable,
+        # but membership in the .vsh/.fsh attribute/uniform sets is exact.
+        sh_dir = ROOT / "reconstruction/reverse-v3/assets/shaders"
+        src = ""
+        for ext in (".vsh", ".fsh"):
+            p = sh_dir / (shader + ext)
+            if p.exists():
+                src += p.read_text() + "\n"
+        # the declaration may carry a precision qualifier (uniform highp
+        # vec4 color) — take the LAST identifier before the semicolon.
+        decl_attr = set(re.findall(r"attribute[^;]*?(\w+)\s*;", src))
+        decl_uni = set(re.findall(r"uniform[^;]*?(\w+)\s*;", src))
+        attrs = [s for s in rest if s in decl_attr and s not in decl_uni]
+        unis = [s for s in rest if s in decl_uni and s not in decl_attr]
+        unknown = [s for s in rest if s not in decl_attr and s not in decl_uni]
+        if unknown:
+            attrs = attrs + ["?" + ",".join(unknown)]
         results.append((cls, sel, imp, shader,
-                        ",".join(rest[:2]), ",".join(rest[2:])))
+                        ",".join(attrs), ",".join(unis)))
     out.write_text("class\tmethod\timp\tshader\tattributes\tuniforms\n"
                    + "\n".join("\t".join(r) for r in results) + "\n")
     print(f"wrote {out} ({len(results)} rows)")

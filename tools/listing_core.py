@@ -1,0 +1,166 @@
+#!/usr/bin/env python3
+"""listing_core — the annotated-listing engine, loaded ONCE.
+
+Refactored from tools/emit_annotated_method.py (same byte-format, same
+annotations: GOT imports, ivar-offset storage, selrefs, CFString objects,
+verified by cell classification over the file bytes + relocation tables).
+
+Why a class: building the maps costs an ELF parse + the relocation walk, so
+callers that emit dozens of listings (e.g. tools/sweep_shader_mapping.py)
+should keep one Lister alive instead of reloading per method.
+"""
+import hashlib
+import io
+from pathlib import Path
+
+import capstone
+from elftools.elf.elffile import ELFFile
+from elftools.elf.relocation import RelocationSection
+
+import sys
+
+TOOLS = Path(__file__).resolve().parent
+sys.path.insert(0, str(TOOLS))
+from trace_objc_dispatch import ELFMemory  # noqa: E402
+
+ELF = Path.home() / 'blockheads-work/extracted/lib/armeabi-v7a/libApplication.so'
+SHA = '733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7'
+BASE = 0x0105FAF4
+
+
+def signed(v):
+    return v - (1 << 32) if v & 0x80000000 else v
+
+
+class Lister:
+    """One ELF load; many listings."""
+
+    def __init__(self, elf_path: Path = ELF, sha: str = SHA):
+        raw = Path(elf_path).read_bytes()
+        if hashlib.sha256(raw).hexdigest() != sha:
+            raise SystemExit('ELF SHA mismatch')
+        self.m = ELFMemory(Path(elf_path))
+        self.elf = ELFFile(io.BytesIO(raw))
+        self.md = capstone.Cs(capstone.CS_ARCH_ARM, capstone.CS_MODE_ARM)
+        self.md.detail = False
+        self._build_maps()
+
+    def _build_maps(self):
+        abs32 = {}
+        for section in self.elf.iter_sections():
+            if isinstance(section, RelocationSection):
+                syms = self.elf.get_section(section['sh_link'])
+                for rel in section.iter_relocations():
+                    if rel['r_info_type'] == 2 and rel['r_info_sym']:
+                        abs32[rel['r_offset']] = syms.get_symbol(
+                            rel['r_info_sym']).name
+        self.abs32 = abs32
+        dynsym = self.elf.get_section_by_name('.dynsym')
+        self.ivar_addrs = {s['st_value']: s.name for s in dynsym.iter_symbols()
+                           if s['st_value'] and s.name.startswith(
+                               'OBJC_IVAR_$_')}
+
+    def _rw(self, a):
+        off = self.m.offset(a, 4)
+        return None if off is None else int.from_bytes(
+            self.m.data[off:off + 4], 'little')
+
+    def word(self, a):
+        return self.m.word(a)
+
+    def _cstr(self, a):
+        if a is None or a >= 0x1060488:
+            return None
+        off = self.m.offset(a, 1)
+        if off is None:
+            return None
+        end = self.m.data.find(b'\0', off, off + 96)
+        if end < 0:
+            return None
+        try:
+            s = self.m.data[off:end].decode('ascii')
+        except UnicodeDecodeError:
+            return None
+        return s if s.isprintable() else None
+
+    def cellinfo(self, vaddr):
+        m, rw = self.m, self._rw
+        w = rw(vaddr)
+        if w is None:
+            return None
+        t = (BASE + signed(w)) & 0xFFFFFFFF
+        imp = m.imports.get(t)
+        if imp:
+            return f'GOT {imp} slot 0x{t:08x} (relocated at load)'
+        name = self.abs32.get(t)
+        if name and name.startswith('OBJC_IVAR_$_'):
+            offv = rw(t)
+            return f'ivar-offset storage {name} = {offv}'
+        if self.ivar_addrs.get(t):
+            return f'ivar-offset storage {self.ivar_addrs[t]} = {rw(t)}'
+        if name and name.startswith('OBJC_CLASS_$_'):
+            return f'classref {name} slot 0x{t:08x} (relocated at load)'
+        if name == '__CFConstantStringClassReference':
+            da = rw(t + 8)
+            key = self._cstr(da)
+            ln = rw(t + 12)
+            if key is not None and ln is not None and ln == len(key.encode()):
+                return f'CFString key obj @0x{t:08x} {key!r}'
+            return f'CFString isa cell @0x{t:08x} data-ptr unresolved'
+        tw = rw(t)
+        if tw is None:
+            return f'slot 0x{t:08x} unmapped'
+        if tw == 0:
+            return f'slot 0x{t:08x} word 0 (load-relocated, unclassified)'
+        name = self.ivar_addrs.get(tw)
+        if name:
+            return f'ivar-offset storage {name} (slot 0x{t:08x}) = {rw(tw)}'
+        sel = m.selectors.get(tw)
+        if sel:
+            return f'selref/cstring @0x{tw:08x} {sel!r}'
+        return f'slot 0x{t:08x} word 0x{tw:08x}'
+
+    def emit(self, title, types, start, end):
+        """Return the listing text (the emit_annotated_method byte-format)."""
+        m, md = self.m, self.md
+        lines = [
+            f'# {title}',
+            f'# types: {types}',
+            f'# implementation: 0x{start:08x}',
+            f'# boundary: 0x{end:08x} (next method IMP from the pinned ObjC method map)',
+            '# generated by capstone 5 over the SHA-256-pinned ELF; PIC base 0x0105faf4',
+            '',
+        ]
+        off0 = m.offset(start, end - start)
+        count = 0
+        for a in range(start, end, 4):
+            w4 = m.data[off0 + (a - start): off0 + (a - start) + 4]
+            w = int.from_bytes(w4, 'little')
+            got = list(md.disasm(w4, a))
+            mn = got[0].mnemonic if got else 'invalid'
+            text = f'{mn} {got[0].op_str}'.strip() if mn != 'invalid' else 'invalid'
+            note = ''
+            if mn == "ldr" and w & 0x059F0000 == 0x059F0000 and ((w >> 12) & 0xF) != 15:
+                lit = (a + 8 + (w & 0xFFF)) & 0xFFFFFFFF
+                lw = self._rw(lit)
+                info = self.cellinfo(lit)
+                if lw is not None:
+                    note = f'  ; [0x{lit:08x}:4]=0x{lw:08x}'
+                    if info:
+                        note += f' -> {info}'
+            lines.append(f'            0x{a:08x}      {w4.hex()}       {text}{note}')
+            count += 1
+        return '\n'.join(lines) + '\n'
+
+    def verify(self, text, start, end):
+        """The coverage gate: every word present, in range, non-duplicated."""
+        import re
+        rows = re.findall(r'\b(0x[0-9a-fA-F]{8})\s+([0-9a-fA-F]{8})\s', text)
+        addrs = []
+        for addr, hx in rows:
+            addr = int(addr, 16)
+            if self.m.word(addr) != int.from_bytes(bytes.fromhex(hx), 'little'):
+                raise SystemExit(f'word drift {addr:#x}')
+            addrs.append(addr)
+        assert len(addrs) == len(set(addrs))
+        assert set(addrs) == set(range(start, end, 4))
