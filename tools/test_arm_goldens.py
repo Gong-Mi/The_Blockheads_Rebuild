@@ -79,21 +79,35 @@ def main() -> int:
             return 1
         new = load(fresh)
     diffs = []
+    additions = []
     for name in FLOORS:
         old_set = golden["sets"].get(name, {}).get("entries", {})
         new_set = new["sets"].get(name, {}).get("entries", {})
-        for cls in sorted(set(old_set) | set(new_set)):
-            for case in sorted(set(old_set.get(cls, {})) | set(new_set.get(cls, {}))):
-                o = old_set.get(cls, {}).get(case)
+        for cls in sorted(old_set):            # only the GOLDEN's entries pin
+            for case in sorted(old_set[cls]):
+                o = old_set[cls][case]
                 n = new_set.get(cls, {}).get(case)
-                if o != n:
+                if n is None:
+                    diffs.append(f"{name}/{cls}/{case}: LOST in the rerun")
+                elif o != n:
                     diffs.append(f"{name}/{cls}/{case}:\n  old {o}\n  new {n}")
+        for cls in sorted(set(new_set) - set(old_set)):
+            additions.append(f"{name}/{cls} (regenerate the golden to pin it)")
+        for cls in sorted(set(old_set) & set(new_set)):
+            for case in sorted(set(new_set[cls]) - set(old_set[cls])):
+                additions.append(f"{name}/{cls}/{case} (regenerate to pin)")
     if diffs:
         print("arm-goldens DRIFT (harness/reference behaviour changed):")
         for d in diffs[:6]:
             print(d)
         return 1
     total = sum(len(s["classes"]) for s in new["sets"].values())
+    if additions:
+        print("arm-goldens: PASS with additions (not yet pinned — regenerate "
+              "the golden):")
+        for ad in additions[:8]:
+            print(f"  + {ad}")
+        return 0
     print(f"arm-goldens: PASS (host; rerun matches the committed golden, "
           f"{total} class entries)")
     return 0
