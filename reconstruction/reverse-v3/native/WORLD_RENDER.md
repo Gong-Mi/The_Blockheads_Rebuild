@@ -149,6 +149,24 @@ That closes the world render front's map: entry (World -render:) -> batching
 (DynamicWorld) -> typed passes -> per-object renderers -> the batch API ->
 the __wrap_gl* surface -> the shader sources.
 
+## The blockhead name labels (decoded: `Blockhead -drawName:…`, 1606w)
+
+`disasm_blockhead_drawname.txt` — the floating name labels: the body is the
+**name resolution + positioning**, delegating the text draw to the label
+view:
+
+- the name source: `clientName@168` / `name@704` / `clientID@164` /
+  `state@56` / `isNet@52` / `visible@2092`, with the **live-player lookup**
+  (`livePlayerInfos` + `objectForKey:` x7 + `isEqualToString:` x6, and the
+  literal `client` / `server`) and `stringWithFormat:` /
+  `uppercaseString` for the display form;
+- the position: the world kit (`world@4` x9, `worldWidthMacro` x4) with the
+  `mod` / `supermod` selectors (the wrap that keeps a label on the visible
+  copy of the wrapped world);
+- the draw: `netTextView@172` (the label view) — only the attribute
+  enable/disable pair is GL here; the text itself goes through the label's
+  own render (the `Text` shader pair).
+
 ## Next slices
 
 `drawOpaqueObjects:` (the opaque batch), `drawInFrontOfBlocksObjects:`,
