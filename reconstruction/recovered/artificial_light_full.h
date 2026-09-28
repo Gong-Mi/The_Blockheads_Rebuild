@@ -59,6 +59,15 @@ struct LightFields {
     bool has_max_red = false;
     std::int32_t max_red = 0;              // @64
     bool tile_registration_not_run = true; // addToTiles is world state
+    // ARM-attested extras (tools/test_specials_arm.py): the downlight key does
+    // NOT store its own field — a true value forces lightDirection := 1 (a
+    // word store); the body derives diameter = radius << 1; contributionGrid/
+    // addedGrid come from two __wrap_calloc calls; parentObject is the 5th
+    // argument. The isClient gate runs BEFORE super: true -> [self release] +
+    // return nil.
+    bool downlight_forces_direction = false;
+    std::int32_t diameter = 0;
+    bool has_diameter = false;
 };
 
 // Decode a lightDict-shaped dictionary (the shared decoder).

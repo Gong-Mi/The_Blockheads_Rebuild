@@ -139,6 +139,29 @@ const Row kTrainCar[] = {   // the chain's own keys (rider keys are stub-made)
     {"ownerID", C_OBJECT, 4, 36},
 };
 
+// ArtificialLight 21 (0x00a93c64, super = DynamicObject): own body,
+// ARM-attested by the per-case dump + the memory-write trace —
+//   [self isClient] (true -> [self release] + nil); super; then EIGHT int
+//   reads stored in order: maxRed@64, maxGreen@68, maxBlue@72, maxHeat@76,
+//   radius@80, contributionGridOrigin.x@84, .y@88, lightDirection@96; the
+//   `downlight` boolValue read does NOT store its own field — a true value
+//   OVERWRITES lightDirection@96 with 1 (cell 0xffffef30 = lightDirection,
+//   store at 0xA94130 after the bool test);
+//   diameter@92 = radius << 1; two __wrap_calloc calls fill
+//   contributionGrid@56 / addedGrid@60 (stub returns 0); parentObject@100
+//   is the 5th ARGUMENT (zero under the harness); [self addToTiles] tail.
+const Row kArtificialLight[] = {
+    {"maxRed", C_INT, 4, 64},
+    {"maxGreen", C_INT, 4, 68},
+    {"maxBlue", C_INT, 4, 72},
+    {"maxHeat", C_INT, 4, 76},
+    {"radius", C_INT, 4, 80},
+    {"contributionGridOrigin.x", C_INT, 4, 84},
+    {"contributionGridOrigin.y", C_INT, 4, 88},
+    {"lightDirection", C_INT, 4, 96},
+    {"downlight", C_BOOL, 0, 0},     // read-only gate (no own store)
+};
+
 const ClassRows kClasses[] = {
     {42, kSteamTrain, 4, nullptr, "", false, 0, 0, 0},
     {60, kOwnershipSign, 4, nullptr, "updateText", true, 15, 1, 30},
@@ -148,6 +171,8 @@ const ClassRows kClasses[] = {
     {39, kCaveTroll, 4, "initSubDerivedStuffStuff",
      "initSubDerivedStuffStuff,macroTiles", false, 0, 0, 0},
     {43, kTrainCar, 5, "loadDerivedStuff", "loadDerivedStuff", false, 0, 0, 0},
+    {21, kArtificialLight, 9, "addToTiles", "isClient,addToTiles",
+     false, 0, 0, 0},
 };
 
 const ClassRows* specOf(int type_id) {
@@ -214,7 +239,24 @@ const char* recovered_specials_sequence(int type_id, int case_id) {
     buffer = "super";
     const ClassRows* spec = specOf(type_id);
     if (spec == nullptr) return buffer.c_str();
-    if (case_id == 2) return buffer.c_str();   // nil guard: nothing else runs
+    if (case_id == 2 && type_id != 21) {
+        return buffer.c_str();   // nil guard: nothing else runs (type 21 keeps
+                                 // its pre-super isClient gate)
+    }
+    if (type_id == 21) {
+        buffer = "isClient,super";   // the isClient gate runs BEFORE super
+        if (case_id == 2) return buffer.c_str();
+        for (int i = 0; i < spec->count; ++i) {
+            if (spec->rows[i].conv == C_BOOL) continue;   // the gate: no store
+            buffer += ",ofk:";
+            buffer += spec->rows[i].key;
+            buffer += ",int:";
+            buffer += spec->rows[i].key;
+        }
+        buffer += ",ofk:downlight,bool:downlight";
+        buffer += ",import(__wrap_calloc),import(__wrap_calloc),addToTiles";
+        return buffer.c_str();
+    }
     if (type_id == 43) {
         // the TrainCar chain: rider loop (bound re-read per iteration)
         const int riders = 2;
@@ -344,6 +386,30 @@ int recovered_specials_image(int type_id, int case_id, std::uint32_t token_base,
     const ClassRows* spec = specOf(type_id);
     if (spec == nullptr) return -1;
     if (case_id == 2) return n;
+    if (type_id == 21) {
+        for (int i = 0; i < spec->count; ++i) {
+            const Row& row = spec->rows[i];
+            if (row.conv == C_BOOL || row.width == 0) continue;  // the gate
+            if (!presentFor(case_id, i)) continue;
+            const std::uint32_t v = 0x00012345u;
+            for (int b2 = 0; b2 < 4; ++b2) {
+                out[row.offset + b2] = static_cast<unsigned char>((v >> (8 * b2)) & 0xFF);
+            }
+        }
+        // the downlight gate: true -> a WORD store of 1 into lightDirection@96
+        if (presentFor(case_id, 8)) {
+            for (int b2 = 0; b2 < 4; ++b2) {
+                out[96 + b2] = static_cast<unsigned char>((1u >> (8 * b2)) & 0xFF);
+            }
+        }
+        // diameter@92 = radius << 1 (radius present -> 2*0x12345)
+        const std::uint32_t diameter = presentFor(case_id, 4) ? 0x0002468Au : 0u;
+        for (int b2 = 0; b2 < 4; ++b2) {
+            out[92 + b2] = static_cast<unsigned char>((diameter >> (8 * b2)) & 0xFF);
+        }
+        // contributionGrid@56 / addedGrid@60 / parentObject@100 stay zero
+        return n;
+    }
     if (type_id == 43) {
         // riders: u32 at @84 + i*4 (0x55667788), always present (stub-made)
         for (int i = 0; i < 2; ++i) {

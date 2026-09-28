@@ -40,6 +40,12 @@ LightFields light_from_dict(const SaveDict& light) {
     fields.max_green = intKey(light, "maxGreen", &fields.has_max_green);
     fields.max_red = intKey(light, "maxRed", &fields.has_max_red);
     fields.tile_registration_not_run = true;
+    // the downlight gate: a true value lands as lightDirection = 1
+    if (fields.has_downlight && fields.downlight) {
+        fields.has_light_direction = true;
+        fields.light_direction = 1;
+        fields.downlight_forces_direction = true;
+    }
     return fields;
 }
 
@@ -54,7 +60,12 @@ ArtificialLightFullState artificial_light_full_load(const SaveDict& entry) {
     // The record itself carries the light keys (the dictionary a parent's
     // lightDict holds); parentObject is a constructor argument, not a key.
     state.light = light_from_dict(entry);
-    state.has_parent_object = false;
+    // diameter = radius << 1 (the body's derived store @92)
+    if (state.light.has_radius) {
+        state.light.has_diameter = true;
+        state.light.diameter = state.light.radius << 1;
+    }
+    state.has_parent_object = false;  // the 5th constructor argument
     return state;
 }
 
@@ -70,12 +81,16 @@ ClientDynamicObject artificial_light_full_factory(
         DynamicObjectRegistry::baseStub(type_id, entry);
     object.status = ObjectLoadStatus::Recovered;
     object.status_reason =
-        "artificial light body: the light key table decoded from the 5-arg "
-        "initWithWorld:dynamicWorld:saveDict:cache:parentObject: listing "
-        "(downlight/lightDirection/contributionGridOrigin.x+.y/radius/"
-        "maxRed/maxGreen/maxBlue/maxHeat); parentObject is a constructor "
-        "argument; tile registration (addToTiles) is world state - not run "
-        "offline";
+        "artificial light body (EXECUTED differential "
+        "tools/test_specials_arm.py: call order + the memory-write trace): "
+        "[self isClient] first (true -> [self release] + nil); super; the "
+        "eight int reads stored in order maxRed@64 maxGreen@68 maxBlue@72 "
+        "maxHeat@76 radius@80 contributionGridOrigin.x@84 .y@88 "
+        "lightDirection@96; the downlight boolValue read stores NO own field "
+        "and forces lightDirection := 1 when true; diameter@92 = radius << 1; "
+        "contributionGrid@56/addedGrid@60 from two __wrap_calloc calls; "
+        "parentObject@100 is the 5th argument; [self addToTiles] tile "
+        "registration is world state - not run offline";
     return object;
 }
 

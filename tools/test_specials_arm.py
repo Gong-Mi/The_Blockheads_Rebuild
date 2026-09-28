@@ -387,7 +387,8 @@ def main():
             uc_.reg_write(UC_ARM_REG_R0, 0)
         uc_.reg_write(UC_ARM_REG_PC, uc_.reg_read(UC_ARM_REG_LR))
 
-    uc.hook_add(UC_HOOK_CODE, veneer_hook, begin=PLT_FIRST, end=0x1C2E78)
+    # cover EVERY .plt entry: 611 rel.plt rows => the table runs up to .text
+    uc.hook_add(UC_HOOK_CODE, veneer_hook, begin=PLT_FIRST, end=0x1C4480)
 
     # the state-blob bytes live at graph+0x3000
     uc.mem_write(graph + 0x3000, ctx['data_bytes'])
@@ -412,7 +413,22 @@ def main():
         tokens.clear()
         if a.trace:
             pc_ring.clear()
-            uc.hook_add(UC_HOOK_CODE, lambda uc_, addr, size, data: pc_ring.append(addr))
+            ctx['low_jump_done'] = False
+
+            def trace_hook(uc_, addr, size, data):
+                if addr < 0x1000 and not ctx['low_jump_done']:
+                    ctx['low_jump_done'] = True
+                    print(f'  LOW JUMP in {cls}: entered {addr:#x}; '
+                          f'prev PCs {[hex(p) for p in list(pc_ring)[-8:]]}')
+                    print(f'    r0={uc_.reg_read(UC_ARM_REG_R0):#x} '
+                          f'r1={uc_.reg_read(UC_ARM_REG_R1):#x} '
+                          f'r2={uc_.reg_read(UC_ARM_REG_R2):#x} '
+                          f'r3={uc_.reg_read(UC_ARM_REG_R3):#x} '
+                          f'lr={uc_.reg_read(UC_ARM_REG_LR):#x} '
+                          f'sp={uc_.reg_read(UC_ARM_REG_SP):#x}')
+                    print(f'    calls: {ctx["calls"][-6:]}')
+                pc_ring.append(addr)
+            uc.hook_add(UC_HOOK_CODE, trace_hook)
         uc.mem_write(self_ptr, b'\x00' * IMAGE_SIZE)
         word(self_ptr + 4, world)    # the real super init stores world@4
         word(self_ptr + 8, dyn)      # ... and dynamicWorld@8
@@ -512,6 +528,8 @@ def main():
                 spec['defaults'].append({'offset': off, 'width': size,
                                          'value': f'0x{val:08x}'})
         spec['writes_total'] = len(writes)
+        spec['writes'] = [{'offset': o, 'width': s_, 'value': f'0x{v:08x}'}
+                          for o, s_, v in writes]
         print(json.dumps(spec, indent=2))
         out = a.output_dir / f'spec_{cls}.json'
         out.write_text(json.dumps(spec, indent=2) + '\n')
@@ -585,7 +603,7 @@ def main():
         bridges[opt] = (keys_fn, seq_fn, img_fn, extra_fn)
 
     MODELLED = {'SteamTrain', 'OwnershipSign', 'Painting', 'DropBear',
-                'CaveTroll', 'TrainCar'}
+                'CaveTroll', 'TrainCar', 'ArtificialLight'}
     ctx['is_server'] = 1   # phase 2 always runs the server-gated paths
     rows = []
     for entry in ENTRIES:

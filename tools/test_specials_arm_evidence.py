@@ -74,7 +74,12 @@ def main() -> int:
     require(ROOT / "reconstruction/recovered/artificial_light_full.h", [
         "READ ORDER is ARM-attested",
         "maxRed",
-        "downlight",
+        "downlight_forces_direction",
+        "diameter",
+    ])
+    require(ROOT / "tools/specials_arm_bridge.cpp", [
+        "{21, kArtificialLight, 9, \"addToTiles\", \"isClient,addToTiles\",",
+        "0x0002468A",
     ])
     # Painting's pinned structure (MODEL: 52) + the harness's five entries
     require(ROOT / "tools/test_specials_arm.py", [

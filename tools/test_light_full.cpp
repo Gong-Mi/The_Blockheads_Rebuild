@@ -42,7 +42,10 @@ int main() {
     assert(object.status == bh176::ObjectLoadStatus::Recovered);
     assert(object.status_reason.find("addToTiles") != std::string::npos);
     assert(state.light.has_downlight && state.light.downlight);
-    assert(state.light.has_light_direction && state.light.light_direction == 3);
+    // the downlight gate (ARM-attested): a true value FORCES direction = 1
+    assert(state.light.has_light_direction && state.light.light_direction == 1);
+    assert(state.light.downlight_forces_direction);
+    assert(state.light.has_diameter && state.light.diameter == 8);  // radius 4 << 1
     assert(state.light.has_radius && state.light.radius == 4);
     assert(state.light.has_max_red && state.light.max_red == 15);
     assert(state.light.has_max_green && state.light.max_green == 8);
@@ -52,6 +55,23 @@ int main() {
     assert(state.light.contribution_origin_x == 100);
     assert(state.light.contribution_origin_y == 200);
     assert(!state.has_parent_object);  // a constructor argument, not a key
+
+    // ---- control: downlight false keeps the record's own direction --------
+    {
+        bh176::SaveValue v;
+        std::string err;
+        const bh176::SaveDict rec = entryOf(R"(<?xml version="1.0"?>
+<plist version="1.0"><dict><key>dynamicObjects</key><array>
+<dict><key>uniqueID</key><integer>304</integer><key>downlight</key><false/><key>lightDirection</key><integer>3</integer><key>radius</key><integer>5</integer></dict>
+</array></dict></plist>
+)", v, err);
+        bh176::ArtificialLightFullState st;
+        bh176::artificial_light_full_factory(21, rec, &st, &err);
+        assert(st.light.has_downlight && !st.light.downlight);
+        assert(!st.light.downlight_forces_direction);
+        assert(st.light.light_direction == 3);   // untouched
+        assert(st.light.diameter == 10);
+    }
 
     // ---- the shared decoder is what the four classes call ----------------
     bh176::SaveValue v2;

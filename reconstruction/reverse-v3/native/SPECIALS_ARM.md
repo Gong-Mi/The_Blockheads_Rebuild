@@ -110,7 +110,31 @@ Modelled and pinned (25/25 cases across the four-case scheme plus DropBear's
 death case 4): SteamTrain 42, OwnershipSign 60, Painting 52, DropBear 25,
 CaveTroll 39.
 
-### ArtificialLight 21 — reads attested, tail NOT modelled (stated)
+### ArtificialLight 21 (0x00A93C64, super = DynamicObject) — MODELLED
+
+The tail turned out to be reachable once the .plt hook covered every entry
+(the body's first tail call sits at PLT entry 172, past the original hook
+range — the low-address walk was the unresolved lazy resolver). With the
+generic .plt handler in place the full body runs:
+
+- `[self isClient]` FIRST (before super): true -> `[self release]` + nil;
+- super; then EIGHT int reads stored in order — maxRed@64, maxGreen@68,
+  maxBlue@72, maxHeat@76, radius@80, contributionGridOrigin.x@84, .y@88,
+  lightDirection@96;
+- the `downlight` boolValue read stores NO own field: a true value OVERWRITES
+  lightDirection@96 with a word store of 1 (the cell map pins 0xffffef30 =
+  lightDirection@96; the earlier reading treated downlight as a plain field);
+- `diameter@92 = radius << 1` (the write trace showed 0x0002468A for the stub
+  radius 0x12345);
+- two `__wrap_calloc` calls fill contributionGrid@56 / addedGrid@60;
+  parentObject@100 is the 5th ARGUMENT (zero under the harness);
+- `[self addToTiles]` tail (world state, not run offline).
+
+The module now carries the gate (`downlight_forces_direction`), the derived
+diameter and the corrected reason; the contract test gained a downlight-false
+control.
+
+### Historical note: reads attested before the tail was cracked
 
 The 5-arg body's `--dump` is clean and pins the reads: `[self isClient]`
 first (true -> `[self release]` + return nil), the super 4-arg init, then
