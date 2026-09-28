@@ -62,6 +62,26 @@ everywhere**, and each panel subclass overrides the touch/visibility methods
 with its own hit test and handling. The next slice is the subclasses'
 overrides (e.g. `CraftUI`, `DPad`, `BlockheadUI`).
 
+## The first subclass overrides: DPad (0x0070561C..0x00705A1C)
+
+**All 23 GameUIView children override all five touch-contract methods**
+(`startTouch:tapCount:`, `touchIsInUI:`, `touchIsInViewAtAll:`, `moveTouch:`,
+`endTouch:`) — a family-wide convention. Size survey from the method table
+gaps: the overrides are tens to hundreds of words (BlockheadUI
+`touchIsInViewAtAll:` 99w, CraftUI 95w, DPad 232w; the accessor pairs
+~15-17w).
+
+DPad decoded (`disasm_dpad_touch.txt`):
+
+- `touchIsInUI:` (24w) is a pure forward: `return [self
+  touchIsInViewAtAll:point]` (the msgSend at 0x00705664, sxtb for the BOOL);
+- `touchIsInViewAtAll:` (232w) is the real hit test: it rebases the point
+  onto the window (`windowInfo@112` fields +8 / +0xc, then +0x10 / +0x14 /
+  +0x1c for the dpad rect), builds a Vector2 via the 0x4D0480 helper, calls
+  the internal predicate 0x0070591C, then runs four bounding comparisons
+  through the 0x4BDAAC accessor helper against literal-pool constants — the
+  four direction buttons. `rightSide@160` selects the mirrored layout.
+
 ## Boundary
 
 The router is decoded and the family base is decoded; a full *model* now
