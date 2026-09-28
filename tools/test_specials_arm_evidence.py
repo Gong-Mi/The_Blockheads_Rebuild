@@ -86,6 +86,9 @@ def main() -> int:
             ["startTouch:tapCount:index:"])
     require(ROOT / "reconstruction/reverse-v3/native/INPUT_FRONT.md",
             ["tcUI@32", "currentTouchIsInAnyButtons@154"])
+    require(ROOT / "reconstruction/reverse-v3/native/disasm_gameuiview_all.txt",
+            ["OBJC_IVAR_$_GameUIView.displayed (slot 0x0105dee0) = 4",
+             "OBJC_IVAR_$_GameUIView.resourcesLoaded (slot 0x0105c494) = 16"])
     require(ROOT / "reconstruction/recovered/artificial_light_full.h", [
         "READ ORDER is ARM-attested",
         "maxRed",

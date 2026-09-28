@@ -34,9 +34,38 @@ per-UI "displayed"-family flags; the many stack stores are argument setup.
   `[pauseUI startTouch:tapCount:]` then `[worldUI startTouch:tapCount:paused:index:]`
   and returns **1** (the touch is reported consumed).
 
+## The UI family base: GameUIView (0x00CA9D84..0x00CAA248, 15 methods)
+
+The router's `uiViews` family resolves to **GameUIView** (23 of the 38
+`startTouch:tapCount:` classes carry `super == GameUIView`; the other 15
+just lack their superref cell in the metadata). The whole base is
+consecutive in .text and now decoded
+(`disasm_gameuiview_all.txt`):
+
+| method | base behaviour |
+|---|---|
+| `displayed` | `return displayed@4` |
+| `setDisplayed:` | `displayed@4 = arg` + resets `displayStartAnimationTimer` |
+| `loadResources` | `resourcesLoaded@16 = 1` |
+| `canDismiss` | `return 1` |
+| `stopBlockheadInteractingWhenDismissed` | `return 0` |
+| `dismissWhenBlockheadStopsInteracting` | real body: consults `stopBlockheadInteractingWhenDismissed` |
+| `touchIsInUI:` / `touchIsInViewAtAll:` | `return 0` (the base is never hit) |
+| `startTouch:tapCount:` | `return 0` (not handled) |
+| `moveTouch:` / `endTouch:` | no-ops |
+| `windowInfoChanged:` | no-op (subclasses that care override it) |
+| `center:` | builds a Vector2 via 0x4D0480 |
+| `render:translation:pinchScale:` | the only substantial base method: lazily calls `loadResources` when `resourcesLoaded@16 == 0`, then the appear-animation (`displayStartAnimationTimer`, `displayStartScale@12`, a 0.2 ease constant) into the quad draw path (0x1C3F98 / 0x1C2954 / 0x582A14) |
+
+So the family contract is: **the base answers "not handled / not in view"
+everywhere**, and each panel subclass overrides the touch/visibility methods
+with its own hit test and handling. The next slice is the subclasses'
+overrides (e.g. `CraftUI`, `DPad`, `BlockheadUI`).
+
 ## Boundary
 
-The router is decoded; a full *model* needs the UI element classes'
-`startTouch:tapCount:` contracts (the views/panels — a separate family, not
-yet on the frontier). The differential for this method stays dump/trace-only
-(type_id 0 entry) until those contracts exist.
+The router is decoded and the family base is decoded; a full *model* now
+needs the per-subclass overrides (a bounded list: the 23-38 classes above;
+their overrides are short by construction — the base being trivial confirms
+the convention). The differential for the router stays dump/trace-only
+(type_id 0 entry) until enough overrides exist to model a whole pass.
