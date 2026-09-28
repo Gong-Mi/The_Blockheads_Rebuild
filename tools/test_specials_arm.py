@@ -69,6 +69,9 @@ ENTRIES = [
     ('ElevatorMotor', 55, 0x0070046C, 0x00E8BCE8, 218),
     # the tree growth state machine (hooks6 batch; no super call, world-heavy)
     ('Tree', 1, 0x004C2568, 0x00E8BC30, 546),
+    # the input front: UIManager's touch routing (type_id 0 = trace-only,
+    # no DynamicObject model; dump mode drives it)
+    ('UIManager', 0, 0x00AD7748, 0x00000000, 576),
 ]
 CONV = {'intValue': ('int', INT_VALUE), 'boolValue': ('bool', BOOL_VALUE),
         'unsignedIntValue': ('uint', UINT_VALUE), 'floatValue': ('float', FLOAT_BITS)}

@@ -75,6 +75,13 @@ def main() -> int:
     ])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_tree_growintimesincesaved.txt",
             ["growInTimeSinceSaved"])
+    require(ROOT / "tools/test_specials_arm.py", [
+        "('UIManager', 0, 0x00AD7748",  # the input-front router entry
+    ])
+    require(ROOT / "reconstruction/reverse-v3/native/disasm_uimanager_starttouch.txt",
+            ["startTouch:tapCount:index:"])
+    require(ROOT / "reconstruction/reverse-v3/native/INPUT_FRONT.md",
+            ["tcUI@32", "currentTouchIsInAnyButtons@154"])
     require(ROOT / "reconstruction/recovered/artificial_light_full.h", [
         "READ ORDER is ARM-attested",
         "maxRed",
