@@ -72,7 +72,7 @@ ENTRIES = [
     ('Tree', 1, 0x004C2568, 0x00E8BC30, 546),
     # the input front: UIManager's touch routing (type_id 0 = trace-only,
     # no DynamicObject model; dump mode drives it)
-    ('UIManager', 0, 0x00AD7748, 0x00000000, 576),
+    ('UIManager', 72, 0x00AD7748, 0x00000000, 576),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -568,7 +568,7 @@ def main():
         # 4..11 (world@4 / dynamicWorld@8) — stub artifacts, normalized away.
         # The UI entries keep those offsets: @4 is MJView.hidden and @8 is
         # the frame, real state the differential must compare.
-        if cls not in ('MJView', 'MJControl'):
+        if cls not in ('MJView', 'MJControl', 'UIManager'):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -777,6 +777,13 @@ def main():
                 '80=0x0,84=0x0,88=0x42c80000,92=0x42c80000,71=0x1,60=0x60030000'),
             2: ('50,50',
                 '80=0x0,84=0x0,88=0x42c80000,92=0x42c80000,71=0x0,60=0x60030000'),
+        },
+        'UIManager': {
+            # the router's observed cases (the seeds are the UI ivars).
+            0: ('50,50', '32=0x60020200'),
+            1: ('50,50', '32=0x60020200,20=0x60020000'),
+            2: ('50,50',
+                '20=0x60020000,24=0x60020100,32=0x60020200,36=0x60020300,100=0x60020400'),
         },
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view

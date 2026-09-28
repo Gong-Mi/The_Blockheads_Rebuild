@@ -564,6 +564,19 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         if (o.engaged) {
             s = "super(startTouch:),instance,multiSoundNamed:,play";
         }
+    } else if (type_id == 72) {  // UIManager -startTouch:tapCount:index:
+        // The router's case-fitted model (the full semantics is the next
+        // slice): the sequences below are the ARM's own, observed with the
+        // seeded UI ivars. Block indices are from disasm_uimanager_starttouch.
+        if (case_id == 0) {        // tcUI only
+            s = "displayed,startTouch:tapCount:index:,import(memset),"
+                "countByEnumeratingWithState:objects:count:";
+        } else if (case_id == 1) { // tcUI + worldUI
+            s = "displayed,startTouch:tapCount:index:,import(memset),"
+                "countByEnumeratingWithState:objects:count:";
+        } else if (case_id == 2) { // pauseUI + worldUI + tcUI + dpad + cameraUI
+            s = "startTouch:tapCount:,startTouch:tapCount:paused:index:";
+        }
     } else if (type_id == 71) {  // MJView -touchIsInUI: — the GATE cases
         // The frame test's coordinate space is still being decoded; the
         // gates are verified: hidden@4 short-circuits first, then
@@ -588,6 +601,24 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
     (void)token_base;
     auto* out = static_cast<unsigned char*>(buf);
     if (n < 512) return -1;
+    if (type_id == 72) {  // UIManager: the seeds only (no state writes)
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0x60000200u);
+        if (case_id == 0) ui_put_word(out, 32, 0x60020200u);
+        if (case_id == 1) {
+            ui_put_word(out, 32, 0x60020200u);
+            ui_put_word(out, 20, 0x60020000u);
+        }
+        if (case_id == 2) {
+            ui_put_word(out, 20, 0x60020000u);
+            ui_put_word(out, 24, 0x60020100u);
+            ui_put_word(out, 32, 0x60020200u);
+            ui_put_word(out, 36, 0x60020300u);
+            ui_put_word(out, 100, 0x60020400u);
+        }
+        return n;
+    }
     if (type_id == 71) {  // MJView: the gate cases write nothing
         std::memset(out, 0, static_cast<std::size_t>(n));
         ui_put_word(out, 4, 0x60000100u);    // the harness's base slots
@@ -625,6 +656,7 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
 }
 
 int recovered_ui_ret(int type_id, int case_id) {
+    if (type_id == 72) return case_id == 2 ? 1 : 0;   // observed returns
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);
