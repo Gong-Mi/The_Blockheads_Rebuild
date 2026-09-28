@@ -40,6 +40,39 @@ rect; the draw stage then batches whatever the objects marked visible.
 draws — the smallest of the draw methods and the natural bridge between the
 save/load front and the render front.
 
+## The object side: the base draw is a no-op (decoded)
+
+`DynamicObject -draw:projectionMatrix:modelViewMatrix:cameraMinXWorld:…`
+(0x0083AC50, 138w) turns out to be an **empty method with nine arguments**:
+the whole body is the argument-saving prologue and the epilogue — the base
+class draws nothing, exactly like the UI family's base. The per-type draw
+lives in the overrides: `FreeBlock -draw:` is 4835w, `Blockhead -draw:…` is
+the blockhead's own, and `GlowBlock` / `GatherBlock` / `Tree` simply inherit
+the no-op (they are drawn through the static-geometry batches below).
+
+## The static-geometry batch API (the map piece)
+
+`DynamicObject`'s render surface (from its method table) is a **batch
+builder**: per-geometry-type count accessors paired with the data-add
+methods that the world's batching calls:
+
+| count accessor | add method |
+|---|---|
+| `staticGeometryDrawCubeCount` | `addDrawCubeData:fromIndex:` |
+| `staticGeometryDrawCubeCountTrans` | `addDrawCubeDataTrans:fromIndex:` |
+| `staticGeometryDrawQuadCountForMacroPos:` | `addDrawQuadData:fromIndex:forMacroPos:` |
+| `staticGeometryForegroundDrawQuadCountForMacroPos:` | `addForegroundDrawQuadData:fromIndex:forMacroPos:` |
+| `staticGeometryDrawItemQuadCount` | `addDrawItemQuadData:fromIndex:` |
+| `staticGeometryCylinderCount` (+ `…Trans`) | `addCylinderData:fromIndex:` (+ `Trans`) |
+| `staticGeometryDodoEggCount` | `addDodoEggDrawQuadData:fromIndex:` |
+| `lightGlowQuadCount` | `addLightGlowQuadData:fromIndex:` (798w) |
+
+So every world object contributes its geometry into per-type static batches
+(cubes, normal/foreground/item quads, cylinders, dodo eggs, light-glow
+quads), and the world's `drawOpaqueObjects:` fan-out (decoded above) calls
+each object's `draw:` for whatever is *not* static. That is the batching
+model the 7203w master draw orchestrates.
+
 ## Next slices
 
 `drawOpaqueObjects:` (the opaque batch), `drawInFrontOfBlocksObjects:`,
