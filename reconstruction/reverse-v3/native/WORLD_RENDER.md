@@ -100,6 +100,29 @@ The same shape holds for the other object draws (Blockhead's family), so the
 object layer is a set of per-type renderers over the shared batch API and
 the recovered shader set.
 
+## The light layer (decoded accessors + the glow batch builder)
+
+The world's lights are the save front's own light objects (Torch,
+GlowBlock, ArtificialLight, FireObject) seen from the render side:
+
+- `DynamicObject -lightPos` (41w) = `(pos.x@16, pos.y@16+4, -1.0)` built
+  through the 3-float constructor `0x004B52AC` — the light's screen position
+  with z = -1 (in front of the blocks);
+- `DynamicObject -getLightRGB` (17w) = the base returns a constant RGB
+  (also through 0x004B52AC); the subclasses override it with their light
+  colours — the same values the save front decodes from their save dicts;
+- `isUplight` / `isDownlight` (7w each) select the glow direction;
+- `addLightGlowQuadData:fromIndex:` (0x0083BC18, 798w) is the **batch
+  builder**: it reads `lightPos`, `getLightRGB`, the up/down flags and
+  `lightGlowQuadCount`, and writes the glow quad's vertices into the batch
+  buffer — the body is almost entirely the float/vertex math (hence few
+  annotations), the interface is the seven refs above.
+
+So the light pipeline: each light emits its glow quad into the
+`lightGlowQuadCount`/`addLightGlowQuadData:` batch, drawn by the master
+draw; the UI shader `LightQuads.vsh/fsh` (in the asset set) is its GPU
+half.
+
 ## Next slices
 
 `drawOpaqueObjects:` (the opaque batch), `drawInFrontOfBlocksObjects:`,
