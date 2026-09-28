@@ -106,9 +106,21 @@ list / registers so a runaway execution is diagnosed instead of guessed.
 
 ## Coverage
 
-All five specials are modelled and pinned: SteamTrain 42, OwnershipSign 60,
-Painting 52, DropBear 25, CaveTroll 39 — 25/25 cases across the four-case
-scheme (plus DropBear's death case 4).
+Modelled and pinned (25/25 cases across the four-case scheme plus DropBear's
+death case 4): SteamTrain 42, OwnershipSign 60, Painting 52, DropBear 25,
+CaveTroll 39.
+
+### ArtificialLight 21 — reads attested, tail NOT modelled (stated)
+
+The 5-arg body's `--dump` is clean and pins the reads: `[self isClient]`
+first (true -> `[self release]` + return nil), the super 4-arg init, then
+**nine reads in this order** — maxRed, maxGreen, maxBlue, maxHeat, radius,
+contributionGridOrigin.x, contributionGridOrigin.y, lightDirection,
+downlight (intValue x7 + boolValue; the reverse of the first listing pass's
+order, now corrected in the module's header). The tail builds real C++
+objects (diameter/contributionGrid) and calls `[self addToTiles]` — beyond
+the synthetic graph — so ArtificialLight stays dump-attested for the reads
+and is NOT in the pinned model set.
 
 Boundary: Unicorn with a synthetic ObjC graph — not Foundation, not the
 original-app runtime, not device gameplay. The device pass (0.2-b5f

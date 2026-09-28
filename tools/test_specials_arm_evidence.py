@@ -68,6 +68,13 @@ def main() -> int:
     require(ROOT / "tools/test_specials_arm.py", [
         "VENEER_MEMCPY = 0x1C2894",
         "worldWidthMacro",
+        "plt_names",
+        "0x00A93C64",  # ArtificialLight (dump-attested reads)
+    ])
+    require(ROOT / "reconstruction/recovered/artificial_light_full.h", [
+        "READ ORDER is ARM-attested",
+        "maxRed",
+        "downlight",
     ])
     # Painting's pinned structure (MODEL: 52) + the harness's five entries
     require(ROOT / "tools/test_specials_arm.py", [

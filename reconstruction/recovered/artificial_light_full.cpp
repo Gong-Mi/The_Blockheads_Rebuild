@@ -58,6 +58,8 @@ ArtificialLightFullState artificial_light_full_load(const SaveDict& entry) {
     return state;
 }
 
+// The reads are captured key-by-key (order-insensitive), but the body's
+// actual order is maxRed..downlight (ARM-attested, see the header).
 ClientDynamicObject artificial_light_full_factory(
     int type_id, const SaveDict& entry, ArtificialLightFullState* out_state,
     std::string* error) {

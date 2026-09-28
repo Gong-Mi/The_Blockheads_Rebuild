@@ -50,6 +50,7 @@ ENTRIES = [
     ('Painting', 52, 0x00AA81E8, 0x00E8BE64, 358),
     ('DropBear', 25, 0x0079D538, 0x00E8BD3C, 404),
     ('CaveTroll', 39, 0x00D538CC, 0x00E8BF2C, 408),
+    ('ArtificialLight', 21, 0x00A93C64, 0x00E8BE48, 412),
 ]
 CONV = {'intValue': ('int', INT_VALUE), 'boolValue': ('bool', BOOL_VALUE),
         'unsignedIntValue': ('uint', UINT_VALUE), 'floatValue': ('float', FLOAT_BITS)}
@@ -218,6 +219,12 @@ def main():
                 # returning 0 would spin forever. 4 macro-tiles = 128 tiles.
                 ctx['calls'].append(sel)
                 uc_.reg_write(UC_ARM_REG_R0, 4)
+            elif sel in ('alloc', 'allocWithZone:'):
+                ctx['calls'].append('alloc')
+                ptr = heap_ptr[0]
+                heap_ptr[0] += 0x100
+                word(ptr, VTABLE_STUB)      # the fake vtable pointer
+                uc_.reg_write(UC_ARM_REG_R0, ptr)
             elif sel == 'isServer':
                 ctx['calls'].append('isServer' if recv != save_dict else 'isServer(saveDict?)')
                 uc_.reg_write(UC_ARM_REG_R0, ctx['is_server'])
@@ -251,23 +258,74 @@ def main():
     for addr in (stub_super, stub_send):
         uc.hook_add(UC_HOOK_CODE, hook, begin=addr, end=addr + 4)
 
-    # The in-ELF PLT veneer for memcpy (0x1C2894 -> GOT slot 0x105FB40,
-    # rel.plt idx 16): CaveTroll's state blob copy calls it.
+    # The .plt: entry i sits at 0x1C27D4 + i*12 and belongs to rel.plt[i].
+    # A generic handler serves every imported call the bodies make, so no
+    # body trips the unresolved lazy resolver.
     VENEER_MEMCPY = 0x1C2894
+    PLT_FIRST = 0x1C27D4
+    PLT_STEP = 12
+    plt_names = {}
+    with a.elf.open('rb') as f2:
+        elf2 = ELFFile(f2)
+        from elftools.elf.relocation import RelocationSection
+        idx = 0
+        for sec in elf2.iter_sections():
+            if sec['sh_type'] not in ('SHT_REL', 'SHT_RELA') or 'plt' not in sec.name:
+                continue
+            symtab2 = elf2.get_section(sec['sh_link'])
+            for rel in sec.iter_relocations():
+                sym = symtab2.get_symbol(rel['r_info_sym'])
+                plt_names[PLT_FIRST + idx * PLT_STEP] = sym.name
+                idx += 1
+    heap_ptr = [graph + 0x8000]
+    VTABLE_STUB = 0x72300000
+    uc.mem_map(VTABLE_STUB, 0x1000)
+    uc.mem_write(VTABLE_STUB, b'\x00' * 0x40)
+
+    def vcall_hook(uc_, address, size, data):
+        # any virtual call arriving at the fake vtable's entry page
+        ctx['calls'].append(f'vcall@{address - VTABLE_STUB:#x}')
+        target = VTABLE_STUB + 0x80
+        # jump into the tail of the page: a `bx lr` we place there
+        uc_.reg_write(UC_ARM_REG_PC, target)
+
+    uc.hook_add(UC_HOOK_CODE, vcall_hook, begin=VTABLE_STUB, end=VTABLE_STUB + 0x100)
+    # a one-instruction `bx lr` trampoline at VTABLE_STUB+0x80 area
+    # (0xE12FFF1E = bx lr)
+    uc.mem_write(VTABLE_STUB + 0x80, bytes.fromhex('1eff2fe1'))
 
     def veneer_hook(uc_, address, size, data):
-        assert address == VENEER_MEMCPY, hex(address)
-        dest = uc_.reg_read(UC_ARM_REG_R0)
-        src = uc_.reg_read(UC_ARM_REG_R1)
-        count = uc_.reg_read(UC_ARM_REG_R2)
-        if count:
-            uc_.mem_write(dest, bytes(uc_.mem_read(src, count)))
-        ctx['calls'].append('memcpy')
-        uc_.reg_write(UC_ARM_REG_R0, dest)
+        name = plt_names.get(address)
+        if name is None:
+            return          # mid-entry instruction: let the stub run
+        if name in ('objc_msgSend', 'objc_msgSendSuper2'):
+            # these slots are already patched to jump straight at the stubs;
+            # let the PLT entry execute (it lands in the stub) instead of
+            # hijacking it here
+            return
+        r0 = uc_.reg_read(UC_ARM_REG_R0)
+        if name == 'memcpy':
+            dest = r0
+            src = uc_.reg_read(UC_ARM_REG_R1)
+            count = uc_.reg_read(UC_ARM_REG_R2)
+            if count:
+                uc_.mem_write(dest, bytes(uc_.mem_read(src, count)))
+            ctx['calls'].append('memcpy')
+            uc_.reg_write(UC_ARM_REG_R0, dest)
+        elif name in ('malloc', 'operator new(unsigned int)',
+                      '_Znwj', '_Znaj'):
+            ctx['calls'].append(f'alloc({name})')
+            uc_.reg_write(UC_ARM_REG_R0, heap_ptr[0])
+            heap_ptr[0] += 0x100
+        elif name in ('lrand48',):
+            ctx['calls'].append('lrand48')
+            uc_.reg_write(UC_ARM_REG_R0, 12345)
+        else:
+            ctx['calls'].append(f'import({name})')
+            uc_.reg_write(UC_ARM_REG_R0, 0)
         uc_.reg_write(UC_ARM_REG_PC, uc_.reg_read(UC_ARM_REG_LR))
 
-    uc.hook_add(UC_HOOK_CODE, veneer_hook, begin=VENEER_MEMCPY,
-                end=VENEER_MEMCPY + 4)
+    uc.hook_add(UC_HOOK_CODE, veneer_hook, begin=PLT_FIRST, end=0x1C2E78)
 
     # the state-blob bytes live at graph+0x3000
     uc.mem_write(graph + 0x3000, ctx['data_bytes'])

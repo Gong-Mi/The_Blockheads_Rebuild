@@ -1,6 +1,15 @@
 // ArtificialLight loader (type 21) — the light child body, plus the shared
 // lightDict decoder the four light-owning classes now use.
 //
+// The 5-arg body's READ ORDER is ARM-attested (tools/test_specials_arm.py,
+// --dump): [self isClient] first (true -> [self release] + return nil), then
+// the super 4-arg init, then the nine reads in this order — maxRed,
+// maxGreen, maxBlue, maxHeat, radius, contributionGridOrigin.x,
+// contributionGridOrigin.y, lightDirection, downlight (intValue x7 +
+// boolValue) — then the C++ tail (diameter/contributionGrid construction,
+// [self addToTiles]) which the synthetic harness does not model (it builds
+// real C++ objects).
+//
 // ArtificialLight -(0x00a93c64, 412w) initWithWorld:dynamicWorld:saveDict:
 // cache:parentObject: — decoded from its annotated listing:
 //   [isClient] check + a release of the previous child
