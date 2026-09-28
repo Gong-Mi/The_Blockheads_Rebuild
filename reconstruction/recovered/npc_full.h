@@ -30,12 +30,14 @@
 //
 // NPC specials (this batch):
 //   DropBear 25 -(0x0079d538, 404w, super NPC): its own body reads, after the
-//       super init, eight own keys (annotated-listing decode) —
-//       courageMeter float @304 ; provokeMeter float @300 ; dropSpeed float
-//       @312 ; onGround byte @344 ; dropping byte @308 ; dropPos.x/.y int
-//       words @348/+4 ; goalTreeDirection int word @356 ; plus saveTime
-//       floatValue feeding the body's own age step (age@88 itself is the
-//       NPC chain's G1 store) and a loadDerivedStuff tail hook.
+//       super init, nine keys in ARM-attested order (EXECUTED differential
+//       tools/test_specials_arm.py) — provokeMeter float @300 ; courageMeter
+//       float @304 ; dropping byte @308 ; dropSpeed float @312 ; onGround
+//       byte @344 ; dropPos.x/.y int words @348/@352 ; goalTreeDirection int
+//       word @356 ; saveTime floatValue. The AGE STEP then runs:
+//       age@88 += ([world worldTime] (a DOUBLE) - saveTime); when
+//       age > [self maxAge] the body calls removeFromMacroBlock + release and
+//       returns NIL; otherwise loadDerivedStuff + return self.
 //   CaveTroll 39 -(0x00d538cc, 408w, super NPC): its own body reads after
 //       the super init — dead byte (NPC.dead@56) ; defendSquare.x/.y int
 //       words @356/@360 ; state (the record's data blob -> the @208 state

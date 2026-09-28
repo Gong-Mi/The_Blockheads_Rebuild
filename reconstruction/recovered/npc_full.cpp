@@ -243,11 +243,15 @@ ClientDynamicObject npc_full_factory(int type_id, const SaveDict& entry,
     }
     if (type_id == 25) {
         object.status_reason +=
-            "; DropBear own body (listing decode): courageMeter@304/"
-            "provokeMeter@300/dropSpeed@312 floats, onGround@344/dropping@308 "
-            "bytes, dropPos.x/.y@348, goalTreeDirection@356, saveTime read; "
-            "the own age step and the loadDerivedStuff tail hook carry no "
-            "extra save state";
+            "; DropBear own body (EXECUTED differential "
+            "tools/test_specials_arm.py: read order + the age step + the "
+            "death branch): provokeMeter float@300/courageMeter float@304/"
+            "dropSpeed float@312, dropping STRB@308/onGround STRB@344, "
+            "dropPos.x/.y @348/@352, goalTreeDirection@356, then "
+            "age@88 += ([world worldTime] - saveTime); when "
+            "age > [self maxAge] the body calls removeFromMacroBlock + release "
+            "and RETURNS NIL (dies of old age), else it calls "
+            "loadDerivedStuff — the world inputs are not evaluable offline";
     }
     if (type_id == 39) {
         object.status_reason +=

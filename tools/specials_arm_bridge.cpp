@@ -82,10 +82,33 @@ const Row kPainting[] = {
     {"ownerName", C_OBJECT, 4, 64},
 };
 
+// DropBear 25 (0x0079d538, super = NPC): own body, ARM-attested by the dump —
+//   8 own keys in order: provokeMeter float @300, courageMeter float @304,
+//   dropping STRB @308, dropSpeed float @312, onGround STRB @344,
+//   dropPos.x int @348, dropPos.y int @352, goalTreeDirection int @356;
+//   then the AGE STEP: saveTime floatValue + [world worldTime] (read as a
+//   DOUBLE via vmov d1, r0, r1) -> age@88 += (worldTime - saveTime); then
+//   [self maxAge] compared against age: age > maxAge -> [self
+//   removeFromMacroBlock] + [self release] + return NIL (dies of old age);
+//   else [self loadDerivedStuff] + return self.
+const Row kDropBear[] = {
+    {"provokeMeter", C_FLOAT, 4, 300},
+    {"courageMeter", C_FLOAT, 4, 304},
+    {"dropping", C_BOOL, 1, 308},
+    {"dropSpeed", C_FLOAT, 4, 312},
+    {"onGround", C_BOOL, 1, 344},
+    {"dropPos.x", C_INT, 4, 348},
+    {"dropPos.y", C_INT, 4, 352},
+    {"goalTreeDirection", C_INT, 4, 356},
+    {"saveTime", C_FLOAT, 0, 0},      // read-only: feeds the age step
+};
+
 const ClassRows kClasses[] = {
     {42, kSteamTrain, 4, nullptr, "", false, 0, 0, 0},
     {60, kOwnershipSign, 4, nullptr, "updateText", true, 15, 1, 30},
     {52, kPainting, 5, "initSubDerivedItems", "initSubDerivedItems", false, 0, 0, 0},
+    {25, kDropBear, 9, "loadDerivedStuff",
+     "loadDerivedStuff,removeFromMacroBlock,release", false, 0, 0, 0},
 };
 
 const ClassRows* specOf(int type_id) {
@@ -153,6 +176,28 @@ const char* recovered_specials_sequence(int type_id, int case_id) {
     const ClassRows* spec = specOf(type_id);
     if (spec == nullptr) return buffer.c_str();
     if (case_id == 2) return buffer.c_str();   // nil guard: nothing else runs
+    if (type_id == 25) {
+        for (int i = 0; i < spec->count; ++i) {
+            const Row& row = spec->rows[i];
+            buffer += ",ofk:";
+            buffer += row.key;
+            buffer += ',';
+            if (row.conv == C_OBJECT) {
+                buffer += "retain";
+            } else {
+                buffer += convLabel(row.conv);
+                buffer += ':';
+                buffer += row.key;
+            }
+        }
+        buffer += ",worldTime,maxAge";
+        if (case_id == 4) {
+            buffer += ",removeFromMacroBlock,release";   // dies of old age
+        } else {
+            buffer += ",loadDerivedStuff";
+        }
+        return buffer.c_str();
+    }
     if (type_id == 52) {
         // the five reads, then the two [dynamicWorld isServer] gates; object
         // reads label as a bare `retain` (the harness's conversion label)
@@ -215,6 +260,16 @@ int recovered_specials_image(int type_id, int case_id, std::uint32_t token_base,
     const ClassRows* spec = specOf(type_id);
     if (spec == nullptr) return -1;
     if (case_id == 2) return n;
+    if (type_id == 25) {
+        // the age step: age@88 = 0 + (worldTime 1000.0 - saveTime), where the
+        // harness's floatValue stub gives 1.5 when the saveTime key is present
+        // and 0.0 when absent -> 998.5f (0x4479A000) or 1000.0f (0x447A0000).
+        const std::uint32_t age = presentFor(case_id, 8) ? 0x4479A000u
+                                                         : 0x447A0000u;
+        for (int b = 0; b < 4; ++b) {
+            out[88 + b] = static_cast<unsigned char>((age >> (8 * b)) & 0xFFu);
+        }
+    }
     if (spec->default_value != 0) {
         for (int i = 0; i < spec->count; ++i) {
             const Row& row = spec->rows[i];
@@ -227,6 +282,7 @@ int recovered_specials_image(int type_id, int case_id, std::uint32_t token_base,
     }
     for (int i = 0; i < spec->count; ++i) {
         const Row& row = spec->rows[i];
+        if (spec->rows[i].width == 0) continue;   // read-only row (saveTime)
         bool is_present = presentFor(case_id, i);
         if (type_id == 52 && i == 4 && presentFor(case_id, 3) && !is_present) {
             // resolved name lands in ownerName @64 (fixed token)

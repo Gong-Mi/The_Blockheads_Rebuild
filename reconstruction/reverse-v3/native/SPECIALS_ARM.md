@@ -70,13 +70,25 @@ The harness runs phase 2 with isServer=1 and a fixed resolved token, so case
 the plain one. Both gates' conditions and store targets are now in the
 module's comment/reason (the world side itself stays not-run offline).
 
+### DropBear 25 (0x0079D538, super = NPC)
+
+Own body, ARM-attested: nine reads in order — provokeMeter float @300,
+courageMeter float @304, dropping STRB @308, dropSpeed float @312, onGround
+STRB @344, dropPos.x int @348, dropPos.y int @352, goalTreeDirection int
+@356, saveTime float — then the AGE STEP:
+`age@88 += ([world worldTime] − saveTime)`, where worldTime is read as a
+**double** (`vmov d1, r0, r1`). Then `[self maxAge]` is compared against the
+age: `age > maxAge` -> `[self removeFromMacroBlock]` + `[self release]` +
+**return NIL** (dies of old age); else `[self loadDerivedStuff]` + return
+self. The death branch is exercised as case 4 (maxAge stub set to 0) and is
+now documented in the npc_full module's reason.
+
 ## Still to model
 
-DropBear 25 (the maxAge/worldTime age step + eight own keys) and CaveTroll 39
-(the fromSquare travel-state block, the `dead` byte, `defendSquare.x/.y` and
-the `state` data blob copied through the in-ELF memcpy veneer 0x1C2894).
-Their `--dump` output is one command away; the pinned models land here as
-they are written.
+CaveTroll 39 (the fromSquare travel-state block, the `dead` byte,
+`defendSquare.x/.y` and the `state` data blob copied through the in-ELF
+memcpy veneer 0x1C2894). Its `--dump` output is one command away; the pinned
+model lands here as it is written.
 
 Boundary: Unicorn with a synthetic ObjC graph — not Foundation, not the
 original-app runtime, not device gameplay. The device pass (0.2-b5f

@@ -115,7 +115,8 @@ def main():
     ctx = {'class': None, 'super_result': self_ptr, 'expect_class': 0,
            'calls': [], 'pending_key': None, 'pending_token': 0,
            'data_token': 0, 'data_bytes': b'\xAA\xBB\xCC\xDD',
-           'is_server': 0, 'banned': 0, 'resolve_token': 0}
+           'is_server': 0, 'banned': 0, 'resolve_token': 0,
+           'world_time': 1000.0, 'max_age': 100000.0}
 
     def cstring(ptr):
         return bytes(uc.mem_read(ptr, 128)).split(b'\0')[0].decode()
@@ -197,12 +198,18 @@ def main():
             elif sel.startswith('playerIsBannedWithID') or sel.startswith('playerIsBanned'):
                 ctx['calls'].append('playerIsBanned')
                 uc_.reg_write(UC_ARM_REG_R0, ctx['banned'])
-            elif sel in ('maxAge', 'worldTime'):
+            elif sel == 'maxAge':
                 ctx['calls'].append(sel)
-                uc_.reg_write(UC_ARM_REG_R0, 0)
-                if sel == 'worldTime':
-                    uc_.reg_write(UC_ARM_REG_R0, 1000)
-                    uc_.reg_write(UC_ARM_REG_S0, struct.unpack('<I', struct.pack('<f', 1000.0))[0])
+                bits = struct.unpack('<I', struct.pack('<f', ctx['max_age']))[0]
+                uc_.reg_write(UC_ARM_REG_R0, bits)
+            elif sel == 'worldTime':
+                ctx['calls'].append(sel)
+                # the body reads it as a DOUBLE via vmov d1, r0, r1
+                dbits = struct.unpack('<Q', struct.pack('<d', ctx['world_time']))[0]
+                uc_.reg_write(UC_ARM_REG_R0, dbits & 0xffffffff)
+                uc_.reg_write(UC_ARM_REG_R1, (dbits >> 32) & 0xffffffff)
+                uc_.reg_write(UC_ARM_REG_S0,
+                              struct.unpack('<I', struct.pack('<f', ctx['world_time']))[0])
             else:
                 ctx['calls'].append(f'{sel}(recv={hex(recv)})')
                 uc_.reg_write(UC_ARM_REG_R0, 0)
@@ -320,7 +327,7 @@ def main():
         extra_fn.restype = ctypes.c_char_p
         bridges[opt] = (keys_fn, seq_fn, img_fn, extra_fn)
 
-    MODELLED = {'SteamTrain', 'OwnershipSign', 'Painting'}
+    MODELLED = {'SteamTrain', 'OwnershipSign', 'Painting', 'DropBear'}
     ctx['is_server'] = 1   # phase 2 always runs the server-gated paths
     rows = []
     for entry in ENTRIES:
@@ -330,10 +337,14 @@ def main():
         keys_fn, seq_fn, img_fn, extra_fn = bridges[0]
         key_list = keys_fn(type_id).decode().split(',')
         ctx['extras'] = set(x for x in extra_fn(type_id).decode().split(',') if x)
-        for case_id in (0, 1, 2, 3):
+        for case_id in (0, 1, 2, 3, 4):
             ctx['idx_by_name'] = {name: i for i, name in enumerate(key_list)}
+            death = (cls == 'DropBear' and case_id == 4)
+            ctx['max_age'] = 0.0 if death else 100000.0
+            ctx['world_time'] = 1000.0
+            ctx['death_case'] = death
             ret, calls, image = arm_run(entry, case_id)
-            expected_ret = 0 if case_id == 2 else self_ptr
+            expected_ret = 0 if (case_id == 2 or (death and cls == 'DropBear')) else self_ptr
             assert ret == expected_ret, (cls, case_id, hex(ret))
             for opt in (0, 2):
                 keys_fn, seq_fn, img_fn, extra_fn = bridges[opt]

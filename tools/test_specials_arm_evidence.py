@@ -46,6 +46,9 @@ def main() -> int:
         "{42, kSteamTrain, 4, nullptr, \"\", false, 0, 0, 0}",
         "{60, kOwnershipSign, 4, nullptr, \"updateText\", true, 15, 1, 30}",
         "{52, kPainting, 5, \"initSubDerivedItems\", \"initSubDerivedItems\", false, 0, 0, 0}",
+        "{25, kDropBear, 9, \"loadDerivedStuff\",",
+        "dies of old age",
+        "0x4479A000",
         "0x4BE068",
         "movw lr, #0xf",
         "resolveOwnerName",
@@ -54,6 +57,10 @@ def main() -> int:
     require(ROOT / "reconstruction/recovered/painting_full.cpp", [
         "EXECUTED differential",
         "playerIsBannedWithID:",
+    ])
+    require(ROOT / "reconstruction/recovered/npc_full.cpp", [
+        "EXECUTED differential",
+        "RETURNS NIL (dies of old age)",
     ])
     # Painting's pinned structure (MODEL: 52) + the harness's five entries
     require(ROOT / "tools/test_specials_arm.py", [
