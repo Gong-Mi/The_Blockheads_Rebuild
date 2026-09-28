@@ -81,7 +81,8 @@ def main() -> int:
             ["growInTimeSinceSaved"])
     require(ROOT / "tools/test_specials_arm.py", [
         "('UIManager', 0, 0x00AD7748",  # the input-front router entry
-        "('MJControl', 0, 0x009F6894",   # the UI front's first differential class
+        "('MJControl', 70, 0x009F6894",  # the UI front's first differential class
+        "('MJView', 71, 0x006614A8",     # the view gates
         "recovered_ui_seq", "UI_CASES",
     ])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_uimanager_starttouch.txt",

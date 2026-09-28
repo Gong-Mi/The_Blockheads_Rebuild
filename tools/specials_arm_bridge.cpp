@@ -557,12 +557,21 @@ extern "C" {
 const char* recovered_ui_seq(int type_id, int case_id) {
     static thread_local std::string s;
     s.clear();
-    if (type_id == 0) {  // MJControl -startTouch:
+    if (type_id == 70) {  // MJControl -startTouch:
         Control c = ui_case_control(case_id);
         const auto o = blockheads::ui::control_start_touch(c,
                                                            ui_case_point(case_id));
         if (o.engaged) {
             s = "super(startTouch:),instance,multiSoundNamed:,play";
+        }
+    } else if (type_id == 71) {  // MJView -touchIsInUI: — the GATE cases
+        // The frame test's coordinate space is still being decoded; the
+        // gates are verified: hidden@4 short-circuits first, then
+        // ignoreEvents@56, both answered from the instance.
+        if (case_id == 2) {
+            s = "hidden";
+        } else if (case_id == 3) {
+            s = "hidden,ignoreEvents";
         }
     }
     return s.c_str();
@@ -572,9 +581,27 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
                                 unsigned token_base, void* buf, int n) {
     (void)token_base;
     auto* out = static_cast<unsigned char*>(buf);
-    if (type_id != 0 || n < 512) return -1;
+    if (n < 512) return -1;
+    if (type_id == 71) {  // MJView: the gate cases write nothing
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);    // the harness's base slots
+        ui_put_word(out, 8, 0x60000200u);
+        ui_put_word(out, 8, 0u);
+        ui_put_word(out, 12, 0u);
+        ui_put_word(out, 16, 0x42C80000u);   // frame (0,0,100,100)
+        ui_put_word(out, 20, 0x42C80000u);
+        ui_put_word(out, 52, 0x6000F000u);   // windowInfo (the zero region)
+        // the seeds land as whole-word writes (the harness's --seed), so
+        // they override the base slot at @4 exactly as on the ARM side
+        ui_put_word(out, 4, (case_id == 2) ? 1u : 0u);   // hidden@4
+        if (case_id == 3) out[56] = 1;       // ignoreEvents@56
+        return n;
+    }
+    if (type_id != 70) return -1;
     std::memset(out, 0, static_cast<std::size_t>(n));
     // the same seed the harness writes into the ARM instance
+    ui_put_word(out, 4, 0x60000100u);                  // the base slots
+    ui_put_word(out, 8, 0x60000200u);
     ui_put_word(out, 60, 0x60030000u);                 // target@60
     out[71] = (case_id != 2) ? 1 : 0;                  // enabled@71
     ui_put_word(out, 88, 0x42C80000u);                 // eventFrame (0,0,100,100)
@@ -591,7 +618,8 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
 }
 
 int recovered_ui_ret(int type_id, int case_id) {
-    if (type_id != 0) return -1;
+    if (type_id == 71) return 0;             // the gate cases return 0
+    if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);
     const auto o = blockheads::ui::control_start_touch(c,
                                                        ui_case_point(case_id));

@@ -74,7 +74,8 @@ ENTRIES = [
     # no DynamicObject model; dump mode drives it)
     ('UIManager', 0, 0x00AD7748, 0x00000000, 576),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
-    ('MJControl', 0, 0x009F6894, 0x00E8BE18, 240),
+    ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
+    ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
 ]
 CONV = {'intValue': ('int', INT_VALUE), 'boolValue': ('bool', BOOL_VALUE),
         'unsignedIntValue': ('uint', UINT_VALUE), 'floatValue': ('float', FLOAT_BITS)}
@@ -362,6 +363,12 @@ def main():
             elif sel.startswith('playerIsBannedWithID') or sel.startswith('playerIsBanned'):
                 ctx['calls'].append('playerIsBanned')
                 uc_.reg_write(UC_ARM_REG_R0, ctx['banned'])
+            elif sel in ('hidden', 'ignoreEvents'):
+                # MJView getters: answer from the instance's own ivar so the
+                # seeds drive the gates (hidden@4 / ignoreEvents@56).
+                off = 4 if sel == 'hidden' else 56
+                ctx['calls'].append(f'{sel}(recv={hex(recv)})')
+                uc_.reg_write(UC_ARM_REG_R0, read_word(self_ptr + off) & 0xFF)
             elif sel == 'maxAge':
                 ctx['calls'].append(sel)
                 bits = struct.unpack('<I', struct.pack('<f', ctx['max_age']))[0]
@@ -557,7 +564,12 @@ def main():
             raise AssertionError(f'{cls}: no return')
         ret = uc.reg_read(UC_ARM_REG_R0)
         image = bytearray(uc.mem_read(self_ptr, IMAGE_SIZE))
-        image[4:12] = b'\x00' * 8   # the stubbed super's base slots
+        # The DynamicObject entries carry the stubbed super's base slots at
+        # 4..11 (world@4 / dynamicWorld@8) — stub artifacts, normalized away.
+        # The UI entries keep those offsets: @4 is MJView.hidden and @8 is
+        # the frame, real state the differential must compare.
+        if cls not in ('MJView', 'MJControl'):
+            image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
     ctx['is_server'] = 1 if a.is_server else 0
@@ -765,6 +777,14 @@ def main():
                 '80=0x0,84=0x0,88=0x42c80000,92=0x42c80000,71=0x1,60=0x60030000'),
             2: ('50,50',
                 '80=0x0,84=0x0,88=0x42c80000,92=0x42c80000,71=0x0,60=0x60030000'),
+        },
+        'MJView': {
+            # the gate cases: hidden@4 (2) and ignoreEvents@56 (3); the
+            # frame-test case stays out until its coordinate space is decoded.
+            2: ('50,50',
+                '4=0x1,56=0x0,8=0x0,12=0x0,16=0x42c80000,20=0x42c80000,52=0x6000f000'),
+            3: ('50,50',
+                '4=0x0,56=0x1,8=0x0,12=0x0,16=0x42c80000,20=0x42c80000,52=0x6000f000'),
         },
     }
     ui_modelled = []
