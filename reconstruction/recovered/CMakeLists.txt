@@ -467,7 +467,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             add_test(NAME key_table_extraction
                      COMMAND ${BH_PYTHON3}
                              ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_key_table_extraction.py)
-            add_executable(test_tree_growth EXCLUDE_FROM_ALL
+            add_executable(test_tree_growth
                            ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_tree_growth.cpp)
             target_include_directories(test_tree_growth PRIVATE
                                        ${CMAKE_CURRENT_SOURCE_DIR})
