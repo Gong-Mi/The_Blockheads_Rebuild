@@ -231,6 +231,27 @@ to the buttons are built with the shared helpers 0x1C2924 / 0x1C2E28.
 So a scroll is: a clamped offset update + per-widget event forwarding — the
 same "the container drives its children" convention as the panels.
 
+## The vertical list: TableViewUI (0x006F0968..0x006F20B0)
+
+`disasm_tableviewui_touch.txt` — the vertical twin of ScrollingButtons.
+Ivars: `optionButtons@64` (the rows), `optionExtraControls@68` (per-row
+extra controls), `yScroll@80`, `scrollVelocity@84`, `lastY@88`, `startY@92`,
+`scrollInProgress@96`, `startTouchWasInView@97`, `extraControlWasTouched@98`.
+
+- `startTouch:` (392w) resets `extraControlWasTouched@98` /
+  `scrollInProgress@96`, then walks `optionExtraControls@68` **first**
+  (`[extra startTouch:]`, recording `extraControlWasTouched@98` when one
+  engages), then `optionButtons@64` (`[button startTouch:]`), and records
+  `startTouchWasInView@97`;
+- `moveTouch:` (632w) / `endTouch:` (320w): the delta against `lastY@88`,
+  `scrollInProgress@96`, the clamped `yScroll@80` + `scrollVelocity@84`
+  through the internal selection helper 0x006F1B84, then the per-child
+  forwarding (`[moveTouch:]` / `[endTouch:]`) to both the row buttons and
+  the extra controls.
+
+So both lists share one convention: an offset + velocity with per-child event
+forwarding, and the extra controls take precedence over the rows.
+
 ## Boundary
 
 The router is decoded and the family base is decoded; a full *model* now
