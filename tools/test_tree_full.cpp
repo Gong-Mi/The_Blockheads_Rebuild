@@ -159,6 +159,22 @@ int main() {
     assert(!state4.has_cactus_own);
     assert(!state4.has_available_food);
 
+    // ---- CactusTree partial own keys: any present key opens the block -----
+    const char* kCactusPartial = R"(<?xml version="1.0"?>
+<plist version="1.0"><dict><key>dynamicObjects</key><array>
+<dict><key>uniqueID</key><integer>128</integer><key>pos_x</key><integer>97</integer><key>pos_y</key><integer>521</integer><key>splitHeightA</key><integer>7</integer></dict>
+</array></dict></plist>
+)";
+    bh176::SaveValue value5;
+    const bh176::SaveDict entry5 = entryOf(kCactusPartial, value5, error);
+    bh176::TreeFullState state5;
+    bh176::tree_full_factory(5, entry5, &state5, &error);
+    assert(state5.has_cactus_own);           // the block opened on one key
+    assert(state5.split_height_a == 7);
+    assert(state5.split_height_b == 0);      // absent keys decode as nil
+    assert(!state5.split_direction);
+    assert(state5.cactus_available_food == 0.0f);
+
     std::printf("test_tree_full: PASS\n");
     return 0;
 }

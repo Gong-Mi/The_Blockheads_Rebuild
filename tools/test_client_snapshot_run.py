@@ -242,6 +242,32 @@ def build_snapshot(root: Path) -> None:
           f"{len(worldv2.encode())}\n")
 
 
+# Evidence-level honesty pins: the reason string of each type must name the
+# evidence grade of its chain (executed batch or static table). This keeps
+# the "state what is executed vs static" discipline load-bearing in the run.
+EXPECT_REASON = {
+    63: "ownkey5",       # Yak own keys, executed
+    35: "b4f",           # forwarder5 zero-own-state + b4f NPC chain
+    36: "b4f",
+    51: "b4f",
+    5: "b3b",            # CactusTree own-key read-back table (static)
+    6: "b3b",            # CoconutTree (own keys empty)
+    57: "b3b",           # GemTree own keys
+    1: "b4d",            # tree stage-1 executed differential
+    59: "Plant loadSaveDictValues",
+    13: "b3g",           # NPC init executed
+    45: "b4q",           # workbench executed differential
+}
+
+
+def registered_type_ids() -> set:
+    """Every registerFactory id in the app registry source — the fixture
+    must cover them, so a new registration cannot land without run cover."""
+    app = (Path(__file__).resolve().parents[1] /
+           "app/src/main/cpp/original_client_app.cpp").read_text()
+    return {int(m) for m in re.findall(r"registerFactory\(\s*(\d+),", app)}
+
+
 def field(text: str, label: str) -> int:
     m = re.search(rf"{re.escape(label)}:?\s+(\d+)", text)
     if m is None:
@@ -257,6 +283,12 @@ def main() -> int:
     if not cli.is_file():
         print(f"CLI binary not found: {cli}")
         return 2
+
+    missing_cover = registered_type_ids() - set(TYPED_RECORDS)
+    if missing_cover:
+        print(f"registered types missing from the run fixture: "
+              f"{sorted(missing_cover)} — extend TYPED_RECORDS")
+        return 1
 
     with tempfile.TemporaryDirectory(prefix="bh-reverse-run-") as tmp:
         root = Path(tmp) / "snapshot"
@@ -316,6 +348,11 @@ def main() -> int:
                 errors.append(f"type {t}: class {obj['class_name']}")
             if obj["unique_id"] != expected_ids[t]:
                 errors.append(f"type {t}: uid {obj['unique_id']}")
+            needle = EXPECT_REASON.get(t)
+            if needle and needle not in obj.get("reason", ""):
+                errors.append(
+                    f"type {t}: reason misses evidence grade '{needle}' "
+                    f"(got: {obj.get('reason', '')})")
         if errors:
             print("json assertions failed: " + "; ".join(errors))
             print(json.dumps(report, indent=2)[:4000])

@@ -269,6 +269,9 @@ int main() {
         assert(app.report().blocks == 1);
         assert(app.report().dynamic_records == 5);
         assert(app.world().blockAt(0, 0) != nullptr);
+        // no main/ domain in this fixture: the worldTime input stays at its
+        // default 0.0 — never invented (the game_log reports it explicitly)
+        assert(app.worldTime() == 0.0);
 
         assert(app.loadDynamicObjects(&error));
         {
