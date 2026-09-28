@@ -55,10 +55,14 @@ int main() {
     assert(state.remove_check_count == 0.0f);
     assert(state.height == 1);
     assert(state.age > 1422.0f && state.age < 1423.0f);
-    // fruit_count is stage 1's explicit unknown domain: the executed
-    // differential only covers an EMPTY treeFruit array, so a non-empty
-    // array yields the -1 sentinel (never an invented count)
+    // fruit_count is stage 1's explicit unknown domain for a non-empty
+    // array (the write count needs the world tile gate, b4e) — the -1
+    // sentinel stays, but the per-fruit KEY values are now decoded:
     assert(state.fruit_count == -1);
+    assert(state.fruits_read.size() == 1);
+    assert(state.fruits_read[0].pos_x == 113);
+    assert(state.fruits_read[0].pos_y == 526);
+    assert(!state.fruits_read[0].has_created_free_block);
     assert(!state.static_gate_fired);
     // gene/growth block (static decode, non-static tree -> loaded)
     assert(state.max_height_reached == 1);
@@ -74,8 +78,11 @@ int main() {
 
     // ---- the isStaticTree gate control (stage-1 semantics) ---------------
     const bh176::TreeFullState gated =
-        bh176::tree_full_load(entry, /*is_static_tree=*/true);
+        bh176::tree_full_load(entry, /*is_static_tree=*/true, /*type_id=*/1);
     assert(gated.static_gate_fired);
+    // the fruit array is read BEFORE the isStaticTree gate (stage-1 order):
+    // the entries decode even when the gene block is skipped
+    assert(gated.fruits_read.size() == 1);
     // the gene/growth block is skipped: fields stay at their defaults even
     // though every gene key is present in the record
     assert(gated.max_height_reached == 0);

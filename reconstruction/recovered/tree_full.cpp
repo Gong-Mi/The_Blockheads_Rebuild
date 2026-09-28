@@ -41,6 +41,29 @@ TreeFullState tree_full_load(const SaveDict& entry, bool is_static_tree,
     stage1.fruit_array_count = static_cast<int>(SaveDict::count(tree_fruit));
     stage1.is_static_tree = is_static_tree;
 
+    // b4e stage-2 upgrade: decode the per-fruit KEY values. The record
+    // writing is gated on the world tile identity check, which needs world
+    // state and is NOT evaluable offline — the decoded entries are exposed
+    // and tree_write_fruit_records() remains the contract for a world-aware
+    // caller (its identity_matches input is exactly that gate).
+    if (tree_fruit != nullptr && tree_fruit->isArray()) {
+        const std::size_t fruit_n = SaveDict::count(tree_fruit);
+        state.fruits_read.reserve(fruit_n);
+        for (std::size_t i = 0; i < fruit_n; ++i) {
+            const SaveValue* elem = entry.objectAtIndex(tree_fruit, i);
+            if (elem == nullptr || !elem->isDict()) continue;
+            const SaveDict fruit(*elem);
+            TreeFullState::FruitEntry fe;
+            fe.pos_x = static_cast<std::int32_t>(
+                SaveDict::intValue(fruit.objectForKey("pos.x")));
+            fe.pos_y = static_cast<std::int32_t>(
+                SaveDict::intValue(fruit.objectForKey("pos.y")));
+            fe.has_created_free_block =
+                SaveDict::boolValue(fruit.objectForKey("hasCreatedFreeBlockThisSeason"));
+            state.fruits_read.push_back(fe);
+        }
+    }
+
     const auto stage1_fields = tree_load_save_dict_stage1(stage1);
     state.tree_season_offset = stage1_fields.tree_season_offset;
     state.dead = stage1_fields.dead != 0;
@@ -129,7 +152,9 @@ ClientDynamicObject tree_full_factory(int type_id, const SaveDict& entry,
     object.status_reason =
         "tree full chain: DynamicObject base + Tree stage1 (executed b4d) + "
         "gene/growth block (static b3a offsets) + own keys (b3b read-back "
-        "static, presence-gated)";
+        "static, presence-gated) + fruit entries decoded (b4e stage-2); the "
+        "fruit WRITE gate is the world tile identity check (not evaluable "
+        "offline)";
     return object;
 }
 

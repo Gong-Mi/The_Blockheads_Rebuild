@@ -32,6 +32,7 @@
 
 #include <cstdint>
 #include <string>
+#include <vector>
 
 namespace bh176 {
 
@@ -68,8 +69,21 @@ struct TreeFullState {
     float remove_check_count = 0.0f;
     std::int32_t height = 0;
     float age = 0.0f;
-    std::int32_t fruit_count = 0;      // enumeration count of treeFruit
+    std::int32_t fruit_count = 0;      // stage-1 contract value; -1 for a
+                                       // non-empty array (write count needs
+                                       // the world tile gate, b4e)
     bool static_gate_fired = false;    // isStaticTree == true
+    // b4e stage-2 upgrade: the per-fruit KEY values are decoded (the record
+    // writing itself is gated on the world tile identity check
+    // [tile+0x28/@0x2c]==uniqueID && tileIsKindOfSelf:, which is NOT
+    // evaluable offline — tree_write_fruit_records() is the contract for
+    // world-aware callers).
+    struct FruitEntry {
+        std::int32_t pos_x = 0;                 // +0
+        std::int32_t pos_y = 0;                 // +4
+        bool has_created_free_block = false;    // +8
+    };
+    std::vector<FruitEntry> fruits_read;
     // gene/growth block (static decode; loaded for non-static trees)
     std::int32_t max_height_reached = 0;
     std::uint16_t growth_rate_gene = 0;
