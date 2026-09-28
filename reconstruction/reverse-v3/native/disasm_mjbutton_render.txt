@@ -651,7 +651,7 @@
             0x00d13110      0c10a0e1       mov r1, ip
             0x00d13114      e8c29de5       ldr ip, [sp, #0x2e8]
             0x00d13118      3cff2fe1       blx ip
-            0x00d1311c      05bfd2eb       bl #0x1c2d38
+            0x00d1311c      05bfd2eb       bl #0x1c2d38  ; -> __wrap_glUseProgram
             0x00d13120      001000e3       movw r1, #0
             0x00d13124      f0019fe5       ldr r0, [pc, #0x1f0]  ; [0x00d1331c:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0 (relocated at load)
             0x00d13128      18239de5       ldr r2, [sp, #0x318]
@@ -694,7 +694,7 @@
             0x00d131bc      c0229de5       ldr r2, [sp, #0x2c0]
             0x00d131c0      32ff2fe1       blx r2
             0x00d131c4      cc129de5       ldr r1, [sp, #0x2cc]
-            0x00d131c8      04bfd2eb       bl #0x1c2de0
+            0x00d131c8      04bfd2eb       bl #0x1c2de0  ; -> __wrap_glUniform1i
             0x00d131cc      e80c9fe5       ldr r0, [pc, #0xce8]  ; [0x00d13ebc:4]=0xffffd4a0 -> ivar-offset storage OBJC_IVAR_$_MJControl.enabled (slot 0x0105cf94) = 71
             0x00d131d0      18139de5       ldr r1, [sp, #0x318]
             0x00d131d4      010090e7       ldr r0, [r0, r1]
@@ -775,7 +775,7 @@
             0x00d13300      103a13ee       vmov r3, s6
             0x00d13304      10ca14ee       vmov ip, s8
             0x00d13308      00c08de5       str ip, [sp]
-            0x00d1330c      94c2d2eb       bl #0x1c3d64
+            0x00d1330c      94c2d2eb       bl #0x1c3d64  ; -> __wrap_glUniform4f
             0x00d13310      550000ea       b #0xd1346c
             0x00d13314      ccd33400       eorseq sp, r4, ip, asr #7
             0x00d13318      44fcffff       invalid
@@ -862,7 +862,7 @@
             0x00d1345c      103a13ee       vmov r3, s6
             0x00d13460      10ca14ee       vmov ip, s8
             0x00d13464      00c08de5       str ip, [sp]
-            0x00d13468      3dc2d2eb       bl #0x1c3d64
+            0x00d13468      3dc2d2eb       bl #0x1c3d64  ; -> __wrap_glUniform4f
             0x00d1346c      b00f9fe5       ldr r0, [pc, #0xfb0]  ; [0x00d14424:4]=0xffdb936c -> slot 0x00e18e60 word 0x3f800000
             0x00d13470      b01f9fe5       ldr r1, [pc, #0xfb0]  ; [0x00d14428:4]=0x0034c678 -> slot 0x013ac16c unmapped
             0x00d13474      01108fe0       add r1, pc, r1
@@ -1122,7 +1122,7 @@
             0x00d1386c      14329de5       ldr r3, [sp, #0x214]
             0x00d13870      ff2003e2       and r2, r3, #0xff
             0x00d13874      f4319de5       ldr r3, [sp, #0x1f4]
-            0x00d13878      55bdd2eb       bl #0x1c2dd4
+            0x00d13878      55bdd2eb       bl #0x1c2dd4  ; -> __wrap_glUniformMatrix4fv
             0x00d1387c      000000e3       movw r0, #0
             0x00d13880      8c189de5       ldr r1, [sp, #0x88c]
             0x00d13884      000051e1       cmp r1, r0
@@ -1145,7 +1145,7 @@
             0x00d138c8      e8018de5       str r0, [sp, #0x1e8]
             0x00d138cc      0100a0e1       mov r0, r1
             0x00d138d0      e8119de5       ldr r1, [sp, #0x1e8]
-            0x00d138d4      7ebcd2eb       bl #0x1c2ad4
+            0x00d138d4      7ebcd2eb       bl #0x1c2ad4  ; -> __wrap_glBindTexture
             0x00d138d8      000000e3       movw r0, #0
             0x00d138dc      031000e3       movw r1, #3
             0x00d138e0      062401e3       movw r2, #0x1406
@@ -1157,7 +1157,7 @@
             0x00d138f8      e4e19de5       ldr lr, [sp, #0x1e4]
             0x00d138fc      00e08de5       str lr, [sp]
             0x00d13900      04c08de5       str ip, [sp, #4]
-            0x00d13904      38bdd2eb       bl #0x1c2dec
+            0x00d13904      38bdd2eb       bl #0x1c2dec  ; -> __wrap_glVertexAttribPointer
             0x00d13908      010000e3       movw r0, #1
             0x00d1390c      021000e3       movw r1, #2
             0x00d13910      062401e3       movw r2, #0x1406
@@ -1168,7 +1168,7 @@
             0x00d13924      ff3003e2       and r3, r3, #0xff
             0x00d13928      00c08de5       str ip, [sp]
             0x00d1392c      04e08de5       str lr, [sp, #4]
-            0x00d13930      2dbdd2eb       bl #0x1c2dec
+            0x00d13930      2dbdd2eb       bl #0x1c2dec  ; -> __wrap_glVertexAttribPointer
             0x00d13934      e10d00e3       movw r0, #0xde1
             0x00d13938      24161fe5       ldr r1, [pc, #-0x624]
             0x00d1393c      18239de5       ldr r2, [sp, #0x318]
@@ -1187,7 +1187,7 @@
             0x00d13970      d8018de5       str r0, [sp, #0x1d8]
             0x00d13974      0100a0e1       mov r0, r1
             0x00d13978      d8119de5       ldr r1, [sp, #0x1d8]
-            0x00d1397c      54bcd2eb       bl #0x1c2ad4
+            0x00d1397c      54bcd2eb       bl #0x1c2ad4  ; -> __wrap_glBindTexture
             0x00d13980      000000e3       movw r0, #0
             0x00d13984      281d9fe5       ldr r1, [pc, #0xd28]  ; [0x00d146b4:4]=0xffffd454 -> ivar-offset storage OBJC_IVAR_$_MJButton.title (slot 0x0105cf48) = 100
             0x00d13988      18239de5       ldr r2, [sp, #0x318]
@@ -1204,7 +1204,7 @@
             0x00d139b4      fc3c9fe5       ldr r3, [pc, #0xcfc]  ; [0x00d146b8:4]=0xffe17178 -> slot 0x00e76c6c word 0x00010000
             0x00d139b8      18c39de5       ldr ip, [sp, #0x318]
             0x00d139bc      0c3083e0       add r3, r3, ip
-            0x00d139c0      0cbdd2eb       bl #0x1c2df8
+            0x00d139c0      0cbdd2eb       bl #0x1c2df8  ; -> __wrap_glDrawElements
             0x00d139c4      130000ea       b #0xd13a18
             0x00d139c8      bcd4ffff       invalid
             0x00d139cc      4cfcffff       invalid
@@ -1225,7 +1225,7 @@
             0x00d13a08      ac3c9fe5       ldr r3, [pc, #0xcac]  ; [0x00d146bc:4]=0xffe1719c -> slot 0x00e76c90 word 0x00060000
             0x00d13a0c      18c39de5       ldr ip, [sp, #0x318]
             0x00d13a10      0c3083e0       add r3, r3, ip
-            0x00d13a14      f7bcd2eb       bl #0x1c2df8
+            0x00d13a14      f7bcd2eb       bl #0x1c2df8  ; -> __wrap_glDrawElements
             0x00d13a18      ffffffea       b #0xd13a1c
             0x00d13a1c      000000e3       movw r0, #0
             0x00d13a20      981c9fe5       ldr r1, [pc, #0xc98]  ; [0x00d146c0:4]=0xfffffc3c -> ivar-offset storage OBJC_IVAR_$_MJButton.glyphTextureB (slot 0x0105f730) = 192
@@ -1467,7 +1467,7 @@
             0x00d13dd0      bc419de5       ldr r4, [sp, #0x1bc]
             0x00d13dd4      00408de5       str r4, [sp]
             0x00d13dd8      04c08de5       str ip, [sp, #4]
-            0x00d13ddc      02bcd2eb       bl #0x1c2dec
+            0x00d13ddc      02bcd2eb       bl #0x1c2dec  ; -> __wrap_glVertexAttribPointer
             0x00d13de0      010000e3       movw r0, #1
             0x00d13de4      021000e3       movw r1, #2
             0x00d13de8      062401e3       movw r2, #0x1406
@@ -1477,7 +1477,7 @@
             0x00d13df8      ff3003e2       and r3, r3, #0xff
             0x00d13dfc      00c08de5       str ip, [sp]
             0x00d13e00      04e08de5       str lr, [sp, #4]
-            0x00d13e04      f8bbd2eb       bl #0x1c2dec
+            0x00d13e04      f8bbd2eb       bl #0x1c2dec  ; -> __wrap_glVertexAttribPointer
             0x00d13e08      e10d00e3       movw r0, #0xde1
             0x00d13e0c      f81a1fe5       ldr r1, [pc, #-0xaf8]
             0x00d13e10      18239de5       ldr r2, [sp, #0x318]
@@ -1501,7 +1501,7 @@
             0x00d13e58      b0018de5       str r0, [sp, #0x1b0]
             0x00d13e5c      0100a0e1       mov r0, r1
             0x00d13e60      b0119de5       ldr r1, [sp, #0x1b0]
-            0x00d13e64      1abbd2eb       bl #0x1c2ad4
+            0x00d13e64      1abbd2eb       bl #0x1c2ad4  ; -> __wrap_glBindTexture
             0x00d13e68      000000e3       movw r0, #0
             0x00d13e6c      40189fe5       ldr r1, [pc, #0x840]  ; [0x00d146b4:4]=0xffffd454 -> ivar-offset storage OBJC_IVAR_$_MJButton.title (slot 0x0105cf48) = 100
             0x00d13e70      18239de5       ldr r2, [sp, #0x318]
@@ -1518,7 +1518,7 @@
             0x00d13e9c      14389fe5       ldr r3, [pc, #0x814]  ; [0x00d146b8:4]=0xffe17178 -> slot 0x00e76c6c word 0x00010000
             0x00d13ea0      18c39de5       ldr ip, [sp, #0x318]
             0x00d13ea4      0c3083e0       add r3, r3, ip
-            0x00d13ea8      d2bbd2eb       bl #0x1c2df8
+            0x00d13ea8      d2bbd2eb       bl #0x1c2df8  ; -> __wrap_glDrawElements
             0x00d13eac      0c0000ea       b #0xd13ee4
             0x00d13eb0      2c8ae2ff       invalid
             0x00d13eb4      288ae2ff       invalid
@@ -1532,7 +1532,7 @@
             0x00d13ed4      e0379fe5       ldr r3, [pc, #0x7e0]  ; [0x00d146bc:4]=0xffe1719c -> slot 0x00e76c90 word 0x00060000
             0x00d13ed8      18c39de5       ldr ip, [sp, #0x318]
             0x00d13edc      0c3083e0       add r3, r3, ip
-            0x00d13ee0      c4bbd2eb       bl #0x1c2df8
+            0x00d13ee0      c4bbd2eb       bl #0x1c2df8  ; -> __wrap_glDrawElements
             0x00d13ee4      ffffffea       b #0xd13ee8
             0x00d13ee8      000000e3       movw r0, #0
             0x00d13eec      e41f9fe5       ldr r1, [pc, #0xfe4]  ; [0x00d14ed8:4]=0xfffffc40 -> ivar-offset storage OBJC_IVAR_$_MJButton.glyphTexture (slot 0x0105f734) = 132
@@ -1867,7 +1867,7 @@
             0x00d14410      103a13ee       vmov r3, s6
             0x00d14414      10ca14ee       vmov ip, s8
             0x00d14418      00c08de5       str ip, [sp]
-            0x00d1441c      50bed2eb       bl #0x1c3d64
+            0x00d1441c      50bed2eb       bl #0x1c3d64  ; -> __wrap_glUniform4f
             0x00d14420      630000ea       b #0xd145b4
             0x00d14424      6c93dbff       invalid
             0x00d14428      78c63400       eorseq ip, r4, r8, ror r6
@@ -1968,7 +1968,7 @@
             0x00d145a4      103a13ee       vmov r3, s6
             0x00d145a8      10ca14ee       vmov ip, s8
             0x00d145ac      00c08de5       str ip, [sp]
-            0x00d145b0      ebbdd2eb       bl #0x1c3d64
+            0x00d145b0      ebbdd2eb       bl #0x1c3d64  ; -> __wrap_glUniform4f
             0x00d145b4      000000e3       movw r0, #0
             0x00d145b8      031000e3       movw r1, #3
             0x00d145bc      062401e3       movw r2, #0x1406
@@ -1979,7 +1979,7 @@
             0x00d145d0      48e19de5       ldr lr, [sp, #0x148]
             0x00d145d4      00e08de5       str lr, [sp]
             0x00d145d8      04c08de5       str ip, [sp, #4]
-            0x00d145dc      02bad2eb       bl #0x1c2dec
+            0x00d145dc      02bad2eb       bl #0x1c2dec  ; -> __wrap_glVertexAttribPointer
             0x00d145e0      010000e3       movw r0, #1
             0x00d145e4      021000e3       movw r1, #2
             0x00d145e8      062401e3       movw r2, #0x1406
@@ -1989,7 +1989,7 @@
             0x00d145f8      ff3003e2       and r3, r3, #0xff
             0x00d145fc      00c08de5       str ip, [sp]
             0x00d14600      04e08de5       str lr, [sp, #4]
-            0x00d14604      f8b9d2eb       bl #0x1c2dec
+            0x00d14604      f8b9d2eb       bl #0x1c2dec  ; -> __wrap_glVertexAttribPointer
             0x00d14608      e10d00e3       movw r0, #0xde1
             0x00d1460c      cc189fe5       ldr r1, [pc, #0x8cc]  ; [0x00d14ee0:4]=0xffffbcac -> GOT objc_msgSend slot 0x0105b7a0 (relocated at load)
             0x00d14610      18239de5       ldr r2, [sp, #0x318]
@@ -2013,7 +2013,7 @@
             0x00d14658      3c018de5       str r0, [sp, #0x13c]
             0x00d1465c      0100a0e1       mov r0, r1
             0x00d14660      3c119de5       ldr r1, [sp, #0x13c]
-            0x00d14664      1ab9d2eb       bl #0x1c2ad4
+            0x00d14664      1ab9d2eb       bl #0x1c2ad4  ; -> __wrap_glBindTexture
             0x00d14668      000000e3       movw r0, #0
             0x00d1466c      90189fe5       ldr r1, [pc, #0x890]  ; [0x00d14f04:4]=0xffffd454 -> ivar-offset storage OBJC_IVAR_$_MJButton.title (slot 0x0105cf48) = 100
             0x00d14670      18239de5       ldr r2, [sp, #0x318]
@@ -2030,7 +2030,7 @@
             0x00d1469c      6c389fe5       ldr r3, [pc, #0x86c]  ; [0x00d14f10:4]=0xffe17178 -> slot 0x00e76c6c word 0x00010000
             0x00d146a0      18c39de5       ldr ip, [sp, #0x318]
             0x00d146a4      0c3083e0       add r3, r3, ip
-            0x00d146a8      d2b9d2eb       bl #0x1c2df8
+            0x00d146a8      d2b9d2eb       bl #0x1c2df8  ; -> __wrap_glDrawElements
             0x00d146ac      120000ea       b #0xd146fc
             0x00d146b0      308ae2ff       invalid
             0x00d146b4      54d4ffff       invalid
@@ -2050,7 +2050,7 @@
             0x00d146ec      18389fe5       ldr r3, [pc, #0x818]  ; [0x00d14f0c:4]=0xffe1719c -> slot 0x00e76c90 word 0x00060000
             0x00d146f0      18c39de5       ldr ip, [sp, #0x318]
             0x00d146f4      0c3083e0       add r3, r3, ip
-            0x00d146f8      beb9d2eb       bl #0x1c2df8
+            0x00d146f8      beb9d2eb       bl #0x1c2df8  ; -> __wrap_glDrawElements
             0x00d146fc      ffffffea       b #0xd14700
             0x00d14700      000000e3       movw r0, #0
             0x00d14704      24189fe5       ldr r1, [pc, #0x824]  ; [0x00d14f30:4]=0xfffffc20 -> ivar-offset storage OBJC_IVAR_$_MJButton.titleView (slot 0x0105f714) = 128
@@ -2252,7 +2252,7 @@
             0x00d14a14      102a10ee       vmov r2, s0
             0x00d14a18      14019de5       ldr r0, [sp, #0x114]
             0x00d14a1c      f4109de5       ldr r1, [sp, #0xf4]
-            0x00d14a20      7db7d2eb       bl #0x1c281c
+            0x00d14a20      7db7d2eb       bl #0x1c281c  ; -> objc_msgSend
             0x00d14a24      000000e3       movw r0, #0
             0x00d14a28      10159fe5       ldr r1, [pc, #0x510]  ; [0x00d14f40:4]=0xfffffc24 -> ivar-offset storage OBJC_IVAR_$_MJButton.titleViewB (slot 0x0105f718) = 248
             0x00d14a2c      18239de5       ldr r2, [sp, #0x318]
@@ -2453,7 +2453,7 @@
             0x00d14d38      102a10ee       vmov r2, s0
             0x00d14d3c      cc009de5       ldr r0, [sp, #0xcc]
             0x00d14d40      ac109de5       ldr r1, [sp, #0xac]
-            0x00d14d44      b4b6d2eb       bl #0x1c281c
+            0x00d14d44      b4b6d2eb       bl #0x1c281c  ; -> objc_msgSend
             0x00d14d48      d60f8de2       add r0, sp, #0x358
             0x00d14d4c      cc189de5       ldr r1, [sp, #0x8cc]
             0x00d14d50      1c239de5       ldr r2, [sp, #0x31c]
@@ -2550,7 +2550,7 @@
             0x00d14ebc      102a10ee       vmov r2, s0
             0x00d14ec0      d60f8de2       add r0, sp, #0x358
             0x00d14ec4      88109de5       ldr r1, [sp, #0x88]
-            0x00d14ec8      cbb6d2eb       bl #0x1c29fc
+            0x00d14ec8      cbb6d2eb       bl #0x1c29fc  ; -> objc_msgSendSuper2
             0x00d14ecc      20d04be2       sub sp, fp, #0x20
             0x00d14ed0      028bbdec       vpop {d8}
             0x00d14ed4      f08dbde8       pop {r4, r5, r6, r7, r8, sl, fp, pc}

@@ -46,6 +46,14 @@ class Lister:
         self._build_maps()
 
     def _build_maps(self):
+        # the PLT veneer names: 0x1C27D4 + idx*12 over .rel.plt order.
+        plt = {}
+        rel = self.elf.get_section_by_name('.rel.plt')
+        syms = self.elf.get_section_by_name('.dynsym')
+        if rel is not None:
+            for idx, r in enumerate(rel.iter_relocations()):
+                plt[0x1C27D4 + idx * 12] = syms.get_symbol(r['r_info_sym']).name
+        self.plt_names = plt
         abs32 = {}
         for section in self.elf.iter_sections():
             if isinstance(section, RelocationSection):
@@ -140,6 +148,14 @@ class Lister:
             mn = got[0].mnemonic if got else 'invalid'
             text = f'{mn} {got[0].op_str}'.strip() if mn != 'invalid' else 'invalid'
             note = ''
+            # a direct branch into the PLT range: name the import.
+            if mn in ("bl", "blx") and got and got[0].op_str.startswith('#'):
+                try:
+                    tgt = int(got[0].op_str[1:], 16)
+                except ValueError:
+                    tgt = None
+                if tgt is not None and tgt in self.plt_names:
+                    note = f'  ; -> {self.plt_names[tgt]}'
             if mn == "ldr" and w & 0x059F0000 == 0x059F0000 and ((w >> 12) & 0xF) != 15:
                 lit = (a + 8 + (w & 0xFFF)) & 0xFFFFFFFF
                 lw = self._rw(lit)

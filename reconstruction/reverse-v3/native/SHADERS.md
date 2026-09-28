@@ -140,6 +140,30 @@ the hand-proven row above. A literal that belongs to no declaration (e.g.
 `Rain` in Weather's Snow window — the class builds two shaders) is prefixed
 `?` rather than guessed.
 
+### The CPU-side quad pipeline, from the named GL calls
+
+The listing engine now annotates every `bl` into the PLT range with its
+import name (the `__wrap_gl*` shims), so `disasm_mjbutton_render.txt` reads
+as the actual draw sequence. MJButton's 3071w body, by layer:
+
+```
+__wrap_glUseProgram            ; the button shader
+__wrap_glUniform1i             ; the sampler (texture unit)
+__wrap_glUniform4f  x2         ; the colour uniforms
+__wrap_glUniformMatrix4fv      ; mvp_matrix
+__wrap_glBindTexture           ; the state-selected background texture
+__wrap_glVertexAttribPointer x2; position, texCoord
+__wrap_glDrawElements   x2     ; the quad's two triangles
+(… the same block again for the second background layer)
+__wrap_glUniform4f  x2         ; the glyph/title colours
+__wrap_glBindTexture + attribs + __wrap_glDrawElements x2
+```
+
+23 named GL calls in all: one `glUseProgram`, the uniform pushes, then
+per-layer `glBindTexture` -> two `glVertexAttribPointer` -> two
+`glDrawElements`. That is the whole CPU-side quad pipeline the SHADERS.md
+source layer feeds — no inference left in the draw path.
+
 ## How to inspect
 
 ```
