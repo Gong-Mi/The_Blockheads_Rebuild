@@ -342,6 +342,16 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         add_test(NAME workbench_full COMMAND test_workbench_full)
         add_executable(client_app_skeleton_cli ../../tools/client_app_skeleton_cli.cpp)
         target_link_libraries(client_app_skeleton_cli PRIVATE original_client_app)
+        # Standalone reverse-pipeline run test: assemble a snapshot fixture and
+        # run the loader through the CLI. No APK, no Gradle, no device — this
+        # is the "the reverse pipeline actually runs" gate.
+        find_program(BH_PYTHON3 python3)
+        if(BH_PYTHON3)
+            add_test(NAME client_snapshot_run
+                     COMMAND ${BH_PYTHON3}
+                             ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_client_snapshot_run.py
+                             $<TARGET_FILE:client_app_skeleton_cli>)
+        endif()
         # Tests using assert must still exercise their contracts in Release.
         foreach(test_target test_gameview_update test_projection_update test_world_view_contracts test_world_translation test_sound_manager test_original_save_format test_gameview_starttouch test_original_client_world test_gameview_movetouch)
             target_compile_options(${test_target} PRIVATE -UNDEBUG)
