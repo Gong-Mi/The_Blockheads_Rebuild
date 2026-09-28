@@ -73,6 +73,33 @@ quads), and the world's `drawOpaqueObjects:` fan-out (decoded above) calls
 each object's `draw:` for whatever is *not* static. That is the batching
 model the 7203w master draw orchestrates.
 
+## The first real object draw: `FreeBlock -draw:…` (0x0062F868, 4835w)
+
+`disasm_freeblock_draw.txt` — the free block (the save front's type 14) is
+also a rich *renderer*, and its structure reads directly off the listing:
+
+- **multi-pass GL**: four `__wrap_glUseProgram`, five `glUniform1i`, nine
+  `glUniform4f`, five `glUniformMatrix4fv`, six `glBindTexture`, two
+  `glActiveTexture`, plus the attribute enable/disable pair — with the
+  uniform pushes going through the cached `uniformLocations` array
+  (19 `intValue`/`objectAtIndex:` lookups). No direct `glDrawElements` in
+  this body: the geometry goes through the static batches / the shared
+  draw-quad path;
+- **the instance state it reads**: `bounceTimer@68` (the pick-up bounce),
+  `rotation@76`, `blockCube@88` (the cube model), `paintColor@152` (the
+  painted tint), `pos@16`/`floatPos@24` (the interpolated position) and
+  `needsRemoved@48`;
+- **the macro-coordinate transform**: `world@4` (14 refs) and
+  `worldWidthMacro` (12) with `macroTiles` — the same coordinate kit the
+  save front's tree/dodo math uses;
+- **lazy resource build**: two `shaderNamed:attributes:uniforms:` and two
+  `cache textureNamed:` calls inside the draw (the shaders/textures are
+  built on first draw, then reused).
+
+The same shape holds for the other object draws (Blockhead's family), so the
+object layer is a set of per-type renderers over the shared batch API and
+the recovered shader set.
+
 ## Next slices
 
 `drawOpaqueObjects:` (the opaque batch), `drawInFrontOfBlocksObjects:`,
