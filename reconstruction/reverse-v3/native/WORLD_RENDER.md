@@ -123,6 +123,32 @@ So the light pipeline: each light emits its glow quad into the
 draw; the UI shader `LightQuads.vsh/fsh` (in the asset set) is its GPU
 half.
 
+## The master draw (0x008D4FF0, 7203w) — the orchestration
+
+`disasm_dw_master_draw.txt` — the annotated sites (24 in the whole body)
+tell the story: the method is a long sequence of **typed draw passes**, each
+one an enumeration of `dynamicObjects@60` whose members are filtered by
+their inline type/flag checks (the 7000+ words are that filtering math plus
+the transforms) and then drawn with their own
+`draw:projectionMatrix:modelViewMatrix:cameraMinXWorld:…`:
+
+```
+netBlockheadsWithDisconnectedClients@52 …   (the blockhead collections first)
+blockheads@44 …
+dynamicObjects@60 -> draw:…   x11 passes
+```
+
+So the world frame is: blockheads first, then ~11 object layers over the
+dynamic-object collection (the opaque / item / light / foreground / …
+passes), each object drawing itself; the `drawOpaqueObjects:`-family methods
+are the same passes factored out for the callers that need one layer alone,
+and the static-geometry batches carry the geometry that does not need a
+per-object call.
+
+That closes the world render front's map: entry (World -render:) -> batching
+(DynamicWorld) -> typed passes -> per-object renderers -> the batch API ->
+the __wrap_gl* surface -> the shader sources.
+
 ## Next slices
 
 `drawOpaqueObjects:` (the opaque batch), `drawInFrontOfBlocksObjects:`,
