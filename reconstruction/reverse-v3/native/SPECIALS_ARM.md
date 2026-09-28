@@ -120,11 +120,23 @@ The last static item of the save/load front is now driven under the harness
   `timeDied@112`, `dead@104`) and `sowTreeNearParent:adult:adultMaxAge:` on
   `dynamicWorld@8`; with the harness's stub values the machine funnels to the
   final `updateGrowth:` + nil.
-- The full growth arithmetic is NOT modelled: driving the growth path
-  properly needs the method's `saveTime` DOUBLE argument wired (the generic
-  harness passes world/dyn in r2/r3), which is the next slice for this body.
-  The listing (disasm_tree_growintimesincesaved.txt) + both regime traces are
-  committed as the evidence baseline.
+- The full growth arithmetic is NOT modelled yet, but the growth path now
+  EXECUTES: the harness wires the method's `saveTime` DOUBLE into r2:r3
+  (`--r2r3-double`, applied AFTER the generic register setup) and the state
+  is seeded with correct types (maxAge@92 / age@96 are floats, timeDied@112
+  a double). Verified gates (listing 0x004c2568..0x004c2df0):
+    * `isStaticTree != 0` -> return 1 (no growth);
+    * `dead@104 != 0` -> tail (return nil);
+    * `age + (worldTime - saveTime) >= maxAge` -> the death block
+      (removeAllOwnedTiles:, timeDied@112, dead@104);
+    * `height >= maxHeight || (worldTime - saveTime) <= 0` -> no-grow tail;
+    * otherwise the growth block runs: the worldWidthMacro/macroTiles
+      coordinate math, `incrementHeight`, `updateGrowth:`, and the
+      writes — observed on a growth run (age 50/maxAge 100/height 3/
+      maxHeight 10, saveTime 975 vs worldTime 1000): return 1,
+      growthCounter@68 1.0 -> 0.0140625, maxHeightReached@64 := height.
+  The listing (disasm_tree_growintimesincesaved.txt) + the three regime
+  traces are committed as the evidence baseline.
 
 ## Coverage
 

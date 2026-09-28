@@ -91,6 +91,9 @@ def main():
                     help='answer [world/dyn isServer] with 1 in dump mode')
     ap.add_argument('--trace', action='store_true',
                     help='record the last PCs and print them on a crash')
+    ap.add_argument('--r2r3-double', default=None,
+                    help='pass the float64 VALUE in r2:r3 (for methods whose '
+                         'first argument is a double, e.g. saveTime)')
     ap.add_argument('--static-tree', dest='static_tree', action='store_true',
                     help='answer [self isStaticTree] with 1 (the static branch)')
     ap.add_argument('--seed', default=None,
@@ -453,6 +456,11 @@ def main():
         for reg, value in ((UC_ARM_REG_R0, self_ptr), (UC_ARM_REG_R1, sel_region),
                            (UC_ARM_REG_R2, world), (UC_ARM_REG_R3, dyn)):
             uc.reg_write(reg, value)
+        if a.r2r3_double is not None:
+            import struct as _s
+            lo, hi = _s.unpack('<II', _s.pack('<d', float(a.r2r3_double)))
+            uc.reg_write(UC_ARM_REG_R2, lo)
+            uc.reg_write(UC_ARM_REG_R3, hi)
         uc.reg_write(UC_ARM_REG_SP, sp)
         uc.reg_write(UC_ARM_REG_LR, stop)
         word(sp, save_dict)

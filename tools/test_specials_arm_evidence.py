@@ -72,6 +72,8 @@ def main() -> int:
         "0x00A93C64",  # ArtificialLight (dump-attested reads)
         "('Tree', 1, 0x004C2568",   # the tree growth machine entry
         "--static-tree",
+        "--r2r3-double",            # the saveTime double wiring
+        "--seed",
     ])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_tree_growintimesincesaved.txt",
             ["growInTimeSinceSaved"])
