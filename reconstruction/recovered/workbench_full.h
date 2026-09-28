@@ -30,6 +30,8 @@
 
 #include "../../app/src/main/cpp/dynamic_object_registry.h"
 #include "../../app/src/main/cpp/original_save_dict.h"
+
+#include "artificial_light_full.h"
 #include "workbench_init.h"
 
 #include <cstdint>
@@ -65,6 +67,7 @@ struct WorkbenchFullState {
     // lightDict: presence is the executed fact; the ArtificialLight body
     // is outside the b4q differential
     bool light_present = false;
+    LightFields light;  // decoded via the ArtificialLight key table (shared decoder)
     // the InteractionObject static set — NOT loaded (no recovered module);
     // reported so callers can see the boundary instead of assuming zero
     bool interaction_static_keys_present = false;

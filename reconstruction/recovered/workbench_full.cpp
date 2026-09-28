@@ -133,6 +133,9 @@ WorkbenchFullState workbench_full_load(const SaveDict& entry) {
     state.saved_blockhead_index_fuel =
         static_cast<std::int32_t>(readWord(image, 116));
     state.light_present = in.light_dict_present;
+    if (const SaveValue* light_dict = entry.objectForKey("lightDict")) {
+        state.light = light_from_dict(SaveDict(*light_dict));
+    }
 
     // --- the InteractionObject static boundary --------------------------
     // flipped/paintColor/ownerID/ownerName/currentBlockheadIndex have
@@ -156,7 +159,8 @@ ClientDynamicObject workbench_full_factory(int type_id, const SaveDict& entry,
     object.status = ObjectLoadStatus::Recovered;
     object.status_reason =
         "workbench full chain: DynamicObject base + Workbench b4q executed "
-        "(16 scalars + lightDict presence); InteractionObject super keys "
+        "(16 scalars + lightDict decoded via the ArtificialLight key table, "
+        "tile registration not run); InteractionObject super keys "
         "static-only (not loaded); saveTime write-only";
     return object;
 }

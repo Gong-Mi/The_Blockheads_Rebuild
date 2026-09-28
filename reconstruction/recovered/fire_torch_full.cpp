@@ -58,6 +58,9 @@ FireTorchFullState fire_torch_full_load(const SaveDict& entry, int type_id) {
         state.has_owner_id = entry.objectForKey("ownerID") != nullptr;
     }
     state.light_present = entry.objectForKey("lightDict") != nullptr;
+    if (const SaveValue* light_dict = entry.objectForKey("lightDict")) {
+        state.light = light_from_dict(SaveDict(*light_dict));
+    }
     state.light_child_not_run = true;
     state.world_post_step_not_run = true;
     return state;

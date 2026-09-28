@@ -189,6 +189,12 @@ TYPED_RECORDS = {
     54: ("Stairs", 266, 105, 524, dict(configuration=2, itemType=7, ownerID="c", paintColor=3)),
     20: ("Door", 267, 106, 524, dict(blocked=True, ironPlaceClientID="x", itemType=4, ownerID="c")),
     38: ("Wire", 268, 107, 524, dict(configuration=1, itemType=2, solidConfiguration=3, ownerID="c")),
+    # ArtificialLight body.
+    21: ("ArtificialLight", 300, 117, 529, dict(
+        downlight=True, lightDirection=3, radius=4, maxRed=15, maxGreen=8,
+        maxBlue=2, maxHeat=1, **{"contributionGridOrigin.x": 100,
+                                 "contributionGridOrigin.y": 200},
+    )),
     # TrainCar family.
     41: ("HandCar", 290, 114, 528, dict(
         engineCarID=1, leftCarID=2, rightCarID=3, engineIsRight=True,
@@ -460,6 +466,7 @@ EXPECT_REASON = {
     41: "zero-own-key",            # forwarder5b: HandCar
     44: "zero-own-key",            # forwarder5b: PassengerCar
     42: "TrainCar",                # SteamTrain: TrainCar chain + own keys
+    21: "artificial light",        # light body (5-arg decode)
 }
 
 

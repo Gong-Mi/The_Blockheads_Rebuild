@@ -244,12 +244,18 @@ int main() {
         app.registerRecoveredFactories();
         int stub_ids[3] = {0, 0, 0};
         int stub_found = 0;
-        for (int t = 1; t <= 64 && stub_found < 3; ++t) {
+        for (int t = 1; t <= 64 && stub_found < 2; ++t) {
             if (app.registry().hasConcreteFactory(t)) continue;
             if (bh176::dynamicObjectTypeHasSharedObjectType(t)) continue;
             stub_ids[stub_found++] = t;
         }
-        assert(stub_found == 3);
+        // After 60/64 types the non-shared stub pool is down to two ids
+        // (Blockhead 24 / FreightCar 43). The typed specimen reuses the
+        // second: the second pass below plugs only meta_type, so reuse is
+        // safe — distinctness was never required, only that each specimen
+        // has no factory at first pass.
+        assert(stub_found == 2);
+        stub_ids[2] = stub_ids[1];
         const int meta_type = stub_ids[0];
         const int dyn_type = stub_ids[1];
         const int typed_type = stub_ids[2];
@@ -331,8 +337,10 @@ int main() {
             assert(report.type_key_used.at("dynamicObjectType") == 1);
             assert(report.type_key_used.at("record_key") == 1);
             assert(report.per_type.at(meta_type) == 1);
-            assert(report.per_type.at(dyn_type) == 1);
-            assert(report.per_type.at(typed_type) == 1);
+            // dyn_type carries the dyn specimen AND the typed specimen
+            // (typed_type reuses dyn_type by construction — see above).
+            assert(report.per_type.at(dyn_type) == 2);
+            assert(typed_type == dyn_type);
             assert(report.shared_object_type_objects == 0);
         }
 

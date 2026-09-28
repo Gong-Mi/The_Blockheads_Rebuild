@@ -15,6 +15,8 @@
 #include "../../app/src/main/cpp/dynamic_object_registry.h"
 #include "../../app/src/main/cpp/original_save_dict.h"
 
+#include "artificial_light_full.h"
+
 #include <cstdint>
 #include <string>
 
@@ -32,6 +34,7 @@ struct GlowBlockFullState {
     bool has_tile_type = false;
     std::int32_t tile_type = 0;   // @60 word
     bool light_present = false;   // lightDict key; child body not recovered
+    LightFields light;  // decoded via the ArtificialLight key table (shared decoder)
     bool light_child_not_run = true;
 };
 

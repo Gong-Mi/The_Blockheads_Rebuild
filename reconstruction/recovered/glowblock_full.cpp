@@ -32,6 +32,9 @@ GlowBlockFullState glowblock_full_load(const SaveDict& entry) {
     // ArtificialLight 5-arg construction is not run offline (its body is
     // outside the recovered set).
     state.light_present = entry.objectForKey("lightDict") != nullptr;
+    if (const SaveValue* light_dict = entry.objectForKey("lightDict")) {
+        state.light = light_from_dict(SaveDict(*light_dict));
+    }
     state.light_child_not_run = true;
     return state;
 }

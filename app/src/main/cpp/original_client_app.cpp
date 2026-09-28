@@ -13,6 +13,7 @@
 #include "kelpvine_full.h"
 #include "tradeportal_full.h"
 #include "tradingpost_full.h"
+#include "artificial_light_full.h"
 #include "traincar_full.h"
 #include "trainstation_full.h"
 #include "npc_full.h"
@@ -437,6 +438,14 @@ void OriginalClientApp::registerRecoveredFactories() {
     registry_.registerFactory(
         14, make_freeblock_factory(14), "freeblock full chain (b4p executed",
         ObjectLoadStatus::Recovered);
+    // ArtificialLight 21: the light body (5-arg init decode); the same key
+    // table feeds the four light classes' lightDict decode.
+    registry_.registerFactory(
+        21,
+        [](const SaveDict& entry, std::string* error) {
+            return artificial_light_full_factory(21, entry, nullptr, error);
+        },
+        "artificial light body (5-arg init decode", ObjectLoadStatus::Recovered);
     // TrainCar family: HandCar 41 / SteamTrain 42 / PassengerCar 44 — the
     // TrainCar chain (listing decode; formatted currentBlockheadIndex_%d
     // rider keys) + SteamTrain's own keys; 41/44 are zero-own-key.

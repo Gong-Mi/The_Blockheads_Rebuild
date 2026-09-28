@@ -29,6 +29,8 @@
 #include "../../app/src/main/cpp/dynamic_object_registry.h"
 #include "../../app/src/main/cpp/original_save_dict.h"
 
+#include "artificial_light_full.h"
+
 #include <array>
 #include <cstdint>
 #include <string>
@@ -60,6 +62,7 @@ struct FireTorchFullState {
     bool has_owner_id = false;           // @36 retained slot
     // shared boundaries
     bool light_present = false;          // lightDict key
+    LightFields light;  // decoded via the ArtificialLight key table (shared decoder)
     bool light_child_not_run = true;
     bool world_post_step_not_run = true;  // FireObject's macroTiles update
 };

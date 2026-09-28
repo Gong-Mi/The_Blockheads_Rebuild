@@ -334,6 +334,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             painting_full.cpp
             ownershipsign_full.cpp
             traincar_full.cpp
+            artificial_light_full.cpp
             chest_full.cpp
             freeblock_full.cpp
             tradeportal_full.cpp
@@ -400,6 +401,11 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         target_link_libraries(test_painting_sign_full PRIVATE original_client_app)
         target_compile_options(test_painting_sign_full PRIVATE -UNDEBUG)
         add_test(NAME painting_sign_full COMMAND test_painting_sign_full)
+        add_executable(test_light_full ../../tools/test_light_full.cpp)
+        target_link_libraries(test_light_full PRIVATE original_client_app)
+        target_compile_options(test_light_full PRIVATE -UNDEBUG)
+        add_test(NAME light_full COMMAND test_light_full)
+
         add_executable(test_traincar_full ../../tools/test_traincar_full.cpp)
         target_link_libraries(test_traincar_full PRIVATE original_client_app)
         target_compile_options(test_traincar_full PRIVATE -UNDEBUG)
