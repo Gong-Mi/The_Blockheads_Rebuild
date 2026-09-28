@@ -254,6 +254,18 @@ production library), pinned by `tools/test_ui_control.cpp`: the gates, the
 send-on-start vs send-on-release flag, the lift-outside no-click, the hover
 membership, the cancel path.
 
+#### The frame test is a helper call, not inline math (pending slice)
+
+Decoding `MJView -touchIsInUI:` past the gates (`disasm_mjview_touchisinui.txt`)
+shows the hit test is an **indirect call through a saved pointer** — the
+prologue stashes the point at `[fp-0x18..-0x14]` and the body issues
+`blx lr` with the view + the point before the subview enumeration; a zero
+result returns 0 immediately (`beq` to the exit), otherwise the enumeration
+runs and each subview's `touchIsInUI:` is OR-ed in. So the seeded inside
+case returning 0 is explained: the helper (not inline comparisons) does the
+geometry, and its identity is the next decode. The frame-test differential
+case stays out until then — the two gate cases below are what entered.
+
 ### The UI front enters the ARM differential
 
 `tools/test_specials_arm.py` (the general differential engine) gained what
