@@ -90,6 +90,9 @@ def main() -> int:
             ["touchIsInViewAtAll:",
              "OBJC_IVAR_$_DPad.rightSide (slot 0x0105d31c) = 160",
              "OBJC_IVAR_$_DPad.windowInfo (slot 0x0105d340) = 112"])
+    require(ROOT / "reconstruction/reverse-v3/native/disasm_craftui_touch.txt",
+            ["OBJC_IVAR_$_CraftUI.scrollingButtons (slot 0x0105cbf4) = 148",
+             "OBJC_IVAR_$_CraftUI.craftButton (slot 0x0105cc04) = 208"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_gameuiview_all.txt",
             ["OBJC_IVAR_$_GameUIView.displayed (slot 0x0105dee0) = 4",
              "OBJC_IVAR_$_GameUIView.resourcesLoaded (slot 0x0105c494) = 16"])

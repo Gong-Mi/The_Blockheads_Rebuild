@@ -82,6 +82,26 @@ DPad decoded (`disasm_dpad_touch.txt`):
   through the 0x4BDAAC accessor helper against literal-pool constants — the
   four direction buttons. `rightSide@160` selects the mirrored layout.
 
+## The composition pattern: CraftUI (0x00B80EB4..0x00B817A4)
+
+CraftUI's overrides reveal the family's *composition* convention
+(`disasm_craftui_touch.txt`):
+
+- `touchIsInViewAtAll:` (95w) is the panel's own rect test: the point against
+  `translationOffset@212` + `windowInfo@128` bounds via the 0x4BDAAC
+  accessor and four fused compares (x-min/x-max/y-min/y-max, plus an
+  `x >= 0` edge);
+- `touchIsInUI:` (134w) repeats the rect test and then **ORs the child
+  widgets' own tests**: `[scrollingButtons@148 touchIsInUI:]`,
+  `[craftButton@208 touchIsInUI:]`, `[countSlider@164 touchIsInUI:]`
+  (msgSend at 0x1C281C). So a panel "is in UI" when the point is in its
+  rect *or* in any of its widgets — the recursive composition that makes the
+  UIManager router's flat `uiViews` pass well-defined.
+
+The same accessor helpers (0x4BDAAC for Vector2 reads, 0x4D0480 for
+construction, 0x1C281C for msgSend) recur across DPad and CraftUI — the
+family is written against a small shared geometry kit.
+
 ## Boundary
 
 The router is decoded and the family base is decoded; a full *model* now
