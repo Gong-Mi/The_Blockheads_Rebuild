@@ -102,6 +102,26 @@ The same accessor helpers (0x4BDAAC for Vector2 reads, 0x4D0480 for
 construction, 0x1C281C for msgSend) recur across DPad and CraftUI — the
 family is written against a small shared geometry kit.
 
+## The delegation pattern: CraftUI -startTouch:tapCount: (137w)
+
+`disasm_craftui_starttouch.txt` shows the handling side mirrors the
+visibility side exactly: after the same window/translationOffset rect math
+(0x4BDAAC), the panel **delegates to its widget children in order** —
+`[scrollingButtons@148 startTouch:tapCount:]`,
+`[craftButton@208 startTouch:tapCount:]`,
+`[countSlider@164 startTouch:tapCount:]` — taking the first non-zero
+(handled) result (sxtb after each msgSend at 0x1C281C).
+
+So the family decomposes cleanly:
+- **GameUIView** (base): "not handled / not in view" defaults + the render
+  animation;
+- **panels**: own-rect test, then OR/delegate to their widget children;
+- **widgets** (buttons, sliders, scrolling lists): the actual behaviours.
+
+The UIManager router's flat pass over `uiViews@140` is therefore a
+recursive descent expressed flat — and a full router *model* needs the
+widget-level behaviours, which is the next frontier.
+
 ## Boundary
 
 The router is decoded and the family base is decoded; a full *model* now

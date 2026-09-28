@@ -93,6 +93,9 @@ def main() -> int:
     require(ROOT / "reconstruction/reverse-v3/native/disasm_craftui_touch.txt",
             ["OBJC_IVAR_$_CraftUI.scrollingButtons (slot 0x0105ef50) = 148",
              "OBJC_IVAR_$_CraftUI.craftButton (slot 0x0105ef6c) = 208"])
+    require(ROOT / "reconstruction/reverse-v3/native/disasm_craftui_starttouch.txt",
+            ["CraftUI.scrollingButtons (slot 0x0105ef50) = 148",
+             "CraftUI.countSlider (slot 0x0105ef9c) = 164"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_gameuiview_all.txt",
             ["OBJC_IVAR_$_GameUIView.displayed (slot 0x0105dee0) = 4",
              "OBJC_IVAR_$_GameUIView.resourcesLoaded (slot 0x0105c494) = 16"])
