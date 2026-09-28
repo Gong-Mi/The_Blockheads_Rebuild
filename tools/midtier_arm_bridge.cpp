@@ -63,6 +63,12 @@ const char* recovered_midtier_key_list(int type_id) {
     return buffer.c_str();
 }
 
+// The class's tail hook selector (empty when it has none).
+const char* recovered_midtier_tail_hook(int type_id) {
+    const bh176::MidtierTypeSpec* spec = bh176::midtierTypeSpec(type_id);
+    return (spec != nullptr && spec->tail_hook != nullptr) ? spec->tail_hook : "";
+}
+
 // The parent key of a nested read (empty string when the key is a root read).
 const char* recovered_midtier_nested_in(int type_id, const char* key) {
     static const char* empty = "";
@@ -71,7 +77,8 @@ const char* recovered_midtier_nested_in(int type_id, const char* key) {
                                                            : empty;
 }
 
-// case 0: every key present; case 1: even-index keys present; case 2: nil super.
+// case 0: every key present; case 1: even-index keys present;
+// case 2: nil super; case 3: odd-index keys present (the complement).
 const char* recovered_midtier_sequence(int type_id, int case_id) {
     static std::string buffer;
     buffer = "super";
@@ -82,6 +89,35 @@ const char* recovered_midtier_sequence(int type_id, int case_id) {
     }
     const bh176::MidtierTypeSpec* spec = bh176::midtierTypeSpec(type_id);
     if (spec == nullptr || spec->keys == nullptr) return buffer.c_str();
+    if (spec->blockhead_probe_default) {
+        // Boat: the probe read, then (only when the probe is non-nil) the
+        // second read + intValue; then ownerID; then the tail hook. ARM:
+        // cmp probe_result, 0 ; beq skip-store.
+        const bh176::MidtierKeySpec& probe = spec->keys[0];
+        buffer += ",ofk:";
+        buffer += probe.key;
+        const bool probe_present =
+            (case_id == 0) || (case_id == 1) || (case_id == 3 && false);
+        if (probe_present) {
+            buffer += ",ofk:";
+            buffer += probe.key;
+            buffer += ",int:";
+            buffer += probe.key;
+        }
+        for (std::size_t i = 1; i < spec->key_count; ++i) {
+            const bh176::MidtierKeySpec& key = spec->keys[i];
+            buffer += ",ofk:";
+            buffer += key.key;
+            buffer += ',';
+            buffer += convLabel(key.conv);
+            buffer += ':';
+            buffer += key.key;
+        }
+        if (spec->tail_hook != nullptr && spec->tail_hook[0] != '\0') {
+            buffer += ",hook";
+        }
+        return buffer.c_str();
+    }
     for (std::size_t i = 0; i < spec->key_count; ++i) {
         const bh176::MidtierKeySpec& key = spec->keys[i];
         buffer += ",ofk:";
@@ -107,7 +143,8 @@ int recovered_midtier_image(int type_id, int case_id, std::uint32_t token_base,
     if (spec == nullptr || spec->keys == nullptr) return -1;
     for (std::size_t i = 0; i < spec->key_count; ++i) {
         const bh176::MidtierKeySpec& key = spec->keys[i];
-        bool present = (case_id == 0) || (i % 2 == 0);
+        bool present = (case_id == 0) || (case_id == 1 && (i % 2 == 0)) ||
+                       (case_id == 3 && (i % 2 == 1));
         if (present && key.nested_in != nullptr) {
             // a nested key needs its parent present too (nil child => nil read)
             for (std::size_t p = 0; p < spec->key_count; ++p) {
@@ -119,8 +156,14 @@ int recovered_midtier_image(int type_id, int case_id, std::uint32_t token_base,
                 }
             }
         }
-        const std::uint32_t value =
+        std::uint32_t value =
             present ? valueOf(key, static_cast<int>(i), token_base) : 0u;
+        if (spec->blockhead_probe_default && i == 0 && !present) {
+            value = 0xFFFFFFFFu;   // the -1 default store survives
+        }
+        if (key.zero_to_one && value == 0u) {
+            value = 1u;            // Wire's store-back normalization
+        }
         if (key.offset < 0 || key.offset + 4 > n) return -2;
         for (int b = 0; b < 4; ++b) {
             const int bytes = (key.width == bh176::MidtierKeySpec::Width::Word)

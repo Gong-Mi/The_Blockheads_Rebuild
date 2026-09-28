@@ -171,6 +171,28 @@ int main() {
         assert(s.objects.at("ownerID"));
     }
 
+    // ---- Wire: solidConfiguration's zero->1 store-back (ARM-attested) ----
+    {
+        bh176::MidtierFullState s;
+        load(38, R"(<?xml version="1.0"?>
+<plist version="1.0"><dict><key>dynamicObjects</key><array>
+<dict><key>uniqueID</key><integer>280</integer><key>itemType</key><integer>2</integer><key>configuration</key><integer>5</integer><key>solidConfiguration</key><integer>0</integer><key>ownerID</key><string>c</string></dict>
+</array></dict></plist>
+)", value, error, &s);
+        assert(s.numbers.at("solidConfiguration") == 1.0);   // 0 -> 1
+        assert(s.numbers.at("configuration") == 5.0);         // untouched
+    }
+    {
+        // a NONZERO solidConfiguration survives as-is
+        bh176::MidtierFullState s;
+        load(38, R"(<?xml version="1.0"?>
+<plist version="1.0"><dict><key>dynamicObjects</key><array>
+<dict><key>uniqueID</key><integer>281</integer><key>itemType</key><integer>2</integer><key>configuration</key><integer>5</integer><key>solidConfiguration</key><integer>7</integer><key>ownerID</key><string>c</string></dict>
+</array></dict></plist>
+)", value, error, &s);
+        assert(s.numbers.at("solidConfiguration") == 7.0);
+    }
+
     // ---- ElevatorMotor: ARM-attested widths/conversions ------------------
     {
         // availableElectricity is UNSIGNED-int -> STRH@60 (truncates), minY

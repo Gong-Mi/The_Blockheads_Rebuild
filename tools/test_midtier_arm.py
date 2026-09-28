@@ -47,6 +47,7 @@ TOKEN_BASE = 0x5E1A0000
 
 # (class, type id, imp, superref slot) — cells from the batch json
 ENTRIES = [
+    ('Boat', 32, 0x0096B818, 0x00E8BDD4),
     ('Window', 31, 0x00C98944, 0x00E8BED4),
     ('Rail', 40, 0x0077AB90, 0x00E8BD24),
     ('Ladder', 19, 0x00AADCD4, 0x00E8BE68),
@@ -73,6 +74,8 @@ def main():
     ap.add_argument('--output-dir', type=Path, required=True)
     ap.add_argument('--dump', action='store_true',
                     help='print each class\'s ARM read order and exit')
+    ap.add_argument('--dump-images', metavar='CLASS',
+                    help='print ARM vs spec images for one class and exit')
     a = ap.parse_args()
     if hashlib.sha256(a.elf.read_bytes()).hexdigest() != SHA:
         raise SystemExit('ELF SHA mismatch')
@@ -121,7 +124,8 @@ def main():
                                     graph + 0x300, graph + 0x400)
     ctx = {'case': 0, 'super_result': self_ptr, 'expect_class': 0,
            'keys': {}, 'pending_key': None, 'pending_token': 0,
-           'labels': [], 'lenient': False, 'token_names': {}, 'nested': {}}
+           'labels': [], 'lenient': False, 'token_names': {}, 'nested': {},
+           'hook_name': HOOK_SELECTOR}
 
     def cstring(ptr):
         return bytes(uc.mem_read(ptr, 96)).split(b'\0')[0].decode()
@@ -212,7 +216,7 @@ def main():
                     else:            # retain
                         value = recv
                 uc_.reg_write(UC_ARM_REG_R0, value & 0xffffffff)
-            elif sel == HOOK_SELECTOR:
+            elif sel == ctx['hook_name']:
                 assert recv == self_ptr, ('hook receiver', hex(recv))
                 ctx['labels'].append('hook')
                 uc_.reg_write(UC_ARM_REG_R0, 0)
@@ -245,6 +249,9 @@ def main():
         nested_fn = cdll.recovered_midtier_nested_in
         nested_fn.argtypes = [ctypes.c_int32, ctypes.c_char_p]
         nested_fn.restype = ctypes.c_char_p
+        hook_fn = cdll.recovered_midtier_tail_hook
+        hook_fn.argtypes = [ctypes.c_int32]
+        hook_fn.restype = ctypes.c_char_p
         seq_fn = cdll.recovered_midtier_sequence
         seq_fn.argtypes = [ctypes.c_int32, ctypes.c_int32]
         seq_fn.restype = ctypes.c_char_p
@@ -252,12 +259,13 @@ def main():
         img_fn.argtypes = [ctypes.c_int32, ctypes.c_int32, ctypes.c_uint32,
                            ctypes.c_char_p, ctypes.c_int]
         img_fn.restype = ctypes.c_int
-        bridges[opt] = (keys_fn, seq_fn, img_fn, nested_fn)
+        bridges[opt] = (keys_fn, seq_fn, img_fn, nested_fn, hook_fn)
 
     def arm_run(entry, case_id):
         cls, type_id, imp, superref = entry
-        keys_fn, seq_fn, img_fn, nested_fn = bridges[0]
+        keys_fn, seq_fn, img_fn, nested_fn, hook_fn = bridges[0]
         key_list = keys_fn(type_id).decode().split(',')
+        ctx['hook_name'] = hook_fn(type_id).decode()
         ctx['case'] = case_id
         ctx['expect_class'] = read_word(superref)
         ctx['super_result'] = 0 if case_id == 2 else self_ptr
@@ -269,7 +277,8 @@ def main():
             if parent:
                 ctx['nested'][name] = parent
         for idx, name in enumerate(key_list):
-            present = (case_id == 0) or (idx % 2 == 0)
+            present = ((case_id == 0) or (case_id == 1 and idx % 2 == 0)
+                       or (case_id == 3 and idx % 2 == 1))
             if case_id == 2:
                 present = False
             ctx['keys'][name] = (idx, present)
@@ -292,9 +301,27 @@ def main():
         image = bytes(uc.mem_read(self_ptr, IMAGE_SIZE))
         return ret, list(ctx['labels']), image
 
+    if a.dump_images:
+        target = a.dump_images
+        for entry in ENTRIES:
+            if entry[0] != target:
+                continue
+            keys_fn, seq_fn, img_fn, nested_fn, hook_fn = bridges[0]
+            for case_id in (0, 1, 2, 3):
+                ret, labels, image = arm_run(entry, case_id)
+                buf = ctypes.create_string_buffer(IMAGE_SIZE)
+                img_fn(entry[1], case_id, TOKEN_BASE, buf, IMAGE_SIZE)
+                print(f'--- {target} case {case_id} labels={labels}')
+                for lo in (32, 56, 60, 64, 68, 84, 120):
+                    arm = image[lo:lo+4].hex()
+                    cpp = buf.raw[lo:lo+4].hex()
+                    mark = ' <-- diff' if arm != cpp else ''
+                    print(f'    +{lo}: arm={arm} cpp={cpp}{mark}')
+        return
+
     if getattr(a, 'dump', False):
         ctx['lenient'] = True
-        keys_fn, seq_fn, img_fn, nested_fn = bridges[0]
+        keys_fn, seq_fn, img_fn, nested_fn, hook_fn = bridges[0]
         for entry in ENTRIES:
             cls, type_id, imp, superref = entry
             ret, labels, _ = arm_run(entry, 0)
@@ -306,12 +333,12 @@ def main():
     rows = []
     for entry in ENTRIES:
         cls, type_id, imp, superref = entry
-        for case_id in (0, 1, 2):
+        for case_id in (0, 1, 2, 3):
             ret, labels, image = arm_run(entry, case_id)
             expected_ret = 0 if case_id == 2 else self_ptr
             assert ret == expected_ret, (cls, case_id, hex(ret))
             for opt in (0, 2):
-                keys_fn, seq_fn, img_fn, nested_fn = bridges[opt]
+                keys_fn, seq_fn, img_fn, nested_fn, hook_fn = bridges[opt]
                 expected_seq = seq_fn(type_id, case_id).decode()
                 assert ','.join(labels) == expected_seq, \
                     (cls, case_id, opt, ','.join(labels), expected_seq)

@@ -61,6 +61,10 @@ struct MidtierKeySpec {
     // differential (tools/test_midtier_arm.py) pinned. Absent parent =>
     // absent nested key.
     const char* nested_in = nullptr;
+    // Wire's solidConfiguration: the body stores the intValue, loads it BACK
+    // and rewrites 1 when it is zero (cmp/store-back loop at 0x00950218..;
+    // ARM-attested). So an absent/zero key lands as 1.
+    bool zero_to_one = false;
 };
 
 struct MidtierTypeSpec {

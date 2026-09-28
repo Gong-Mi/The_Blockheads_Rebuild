@@ -25,6 +25,9 @@ CORRECTIONS = {
     "motor maxY word": ("midtier_full.cpp", '"maxY", K::Conv::UInt, K::Width::Word, 68}'),
     "nested_in field": ("midtier_full.h", "const char* nested_in = nullptr;"),
     "nested lookup": ("midtier_full.cpp", "parent->isDict()"),
+    "wire zero->one": ("midtier_full.cpp",
+                       '{"solidConfiguration", K::Conv::Int, K::Width::Word, 64, nullptr, true}'),
+    "boat probe default": ("midtier_full.cpp", "blockhead_probe_default"),
 }
 
 
@@ -50,6 +53,7 @@ def main() -> int:
         "0x00D4E30C",  # Egg
         "0x00CAD2CC",  # ElevatorShaft
         "0x0070046C",  # ElevatorMotor
+        "0x0096B818",  # Boat
         "vmov s0, r0",  # the float-return ABI note
         "recovered_midtier_nested_in",
     ])
@@ -84,7 +88,7 @@ def main() -> int:
             print(proc.stdout)
             print(proc.stderr)
             return 1
-        print("midtier-arm: PASS (differential executed, 30/30 cases match)")
+        print("midtier-arm: PASS (differential executed, 44/44 cases match)")
         return 0
 
     print("midtier-arm: PASS (constants; run with --elf to execute)")

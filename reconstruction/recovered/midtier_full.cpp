@@ -67,7 +67,7 @@ const K kElevatorMotor[] = {
 const K kWire[] = {
     {"itemType", K::Conv::Int, K::Width::Word, 56},
     {"configuration", K::Conv::Int, K::Width::Word, 60},
-    {"solidConfiguration", K::Conv::Int, K::Width::Word, 64},
+    {"solidConfiguration", K::Conv::Int, K::Width::Word, 64, nullptr, true},
     {"ownerID", K::Conv::Object, K::Width::Word, 36},
 };
 
@@ -143,6 +143,9 @@ MidtierFullState midtier_full_load(const SaveDict& entry,
                     static_cast<std::int32_t>(converted) & 0xFFFF)));
         } else if (key.width == K::Width::Byte) {
             converted = (converted != 0.0) ? 1.0 : 0.0;
+        }
+        if (key.zero_to_one && converted == 0.0) {
+            converted = 1.0;   // Wire: the store-back normalization
         }
         state.numbers[key.key] = converted;
     }
