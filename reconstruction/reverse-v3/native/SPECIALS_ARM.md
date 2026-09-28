@@ -152,6 +152,21 @@ The last static item of the save/load front is now driven under the harness
   the gene increment, and `(1 - growthCounter) / <that product>` compared
   against the elapsed time. Observed growth-run end state:
   growthCounter@68 = 0.140625, maxHeightReached@64 = height, return 1.
+- **The counter arithmetic is transcribed AND prediction-verified**:
+  with `P = 0.005 x (1 - height/maxHeight + 0.2) x 0.5 x growthRate@72 x
+  geneIncrement` (the gene increment is the division chain's result),
+  * grow branch (elapsed >= (1-counter)/P): `elapsed -= (1-counter)/P`,
+    `age += (1-counter)/P`, `growthCounter := 0.0`, `incrementHeight`,
+    `maxHeightReached := max(maxHeightReached, height)`, then
+    `updateGrowth:`;
+  * else: `growthCounter += (1-counter) * (elapsed / ((1-counter)/P))`,
+    i.e. `+= elapsed * P`, and the elapsed is set to the -1.0 sentinel
+    before the machine loops back to 0x004c26bc.
+  Prediction check (seed counter 1.0, counter reset to 0.0 on the first
+  grow pass, then the accumulation pass): elapsed 25 -> 0.140625 and
+  elapsed 10 -> 0.05625 = 0.140625 * 10/25 (exactly linear), and the implied
+  P = 0.005625 = 0.005 * 0.45 * 0.5 * 5 matches the observed
+  `__aeabi_idiv(5844,1024) -> 5` gene increment.
 
 ## Coverage
 
