@@ -78,8 +78,10 @@ DPad decoded (`disasm_dpad_touch.txt`):
 - `touchIsInViewAtAll:` (232w) is the real hit test: it rebases the point
   onto the window (`windowInfo@112` fields +8 / +0xc, then +0x10 / +0x14 /
   +0x1c for the dpad rect), builds a Vector2 via the 0x4D0480 helper, calls
-  the internal predicate 0x0070591C, then runs four bounding comparisons
-  through the 0x4BDAAC accessor helper against literal-pool constants — the
+  the 0x0070591C point predicate (which calls 0x004D5170 and the 0x1C2B34 /
+  0x1C2B58 float helpers), then four bounding comparisons against
+  literal-pool constants (0x4BDAAC on the path is an identity thunk that
+  returns its argument, so the comparisons read the struct directly) — the
   four direction buttons. `rightSide@160` selects the mirrored layout.
 
 ## The composition pattern: CraftUI (0x00B80EB4..0x00B817A4)
@@ -88,8 +90,7 @@ CraftUI's overrides reveal the family's *composition* convention
 (`disasm_craftui_touch.txt`):
 
 - `touchIsInViewAtAll:` (95w) is the panel's own rect test: the point against
-  `translationOffset@212` + `windowInfo@128` bounds via the 0x4BDAAC
-  accessor and four fused compares (x-min/x-max/y-min/y-max, plus an
+  `translationOffset@212` + `windowInfo@128` bounds and four fused compares (x-min/x-max/y-min/y-max, plus an
   `x >= 0` edge);
 - `touchIsInUI:` (134w) repeats the rect test and then **ORs the child
   widgets' own tests**: `[scrollingButtons@148 touchIsInUI:]`,
@@ -98,15 +99,15 @@ CraftUI's overrides reveal the family's *composition* convention
   rect *or* in any of its widgets — the recursive composition that makes the
   UIManager router's flat `uiViews` pass well-defined.
 
-The same accessor helpers (0x4BDAAC for Vector2 reads, 0x4D0480 for
-construction, 0x1C281C for msgSend) recur across DPad and CraftUI — the
-family is written against a small shared geometry kit.
+The same tiny helpers recur across DPad and CraftUI: 0x4D0480 (a 12-word
+Vector2 builder — byte-identical twins live at 0x00765D80 and 0x006F1B84),
+0x4BDAAC (an identity thunk returning its argument) and 0x1C281C (msgSend).
 
 ## The delegation pattern: CraftUI -startTouch:tapCount: (137w)
 
 `disasm_craftui_starttouch.txt` shows the handling side mirrors the
 visibility side exactly: after the same window/translationOffset rect math
-(0x4BDAAC), the panel **delegates to its widget children in order** —
+(the same small geometry kit), the panel **delegates to its widget children in order** —
 `[scrollingButtons@148 startTouch:tapCount:]`,
 `[craftButton@208 startTouch:tapCount:]`,
 `[countSlider@164 startTouch:tapCount:]` — taking the first non-zero
@@ -220,8 +221,8 @@ logic. Ivars: `craftableItemButtons@72` (the buttons), `xScroll@104`,
 The body: takes the drag delta against `lastX@112`, toggles
 `scrollInProgress@120`, iterates `craftableItemButtons@72`
 (`countByEnumeratingWithState…`), applies the clamp through `setXScroll:`
-(velocity written to `scrollVelocity@108`), calls the internal relayout
-helper 0x00765D80, then runs **two further enumerations forwarding the
+(velocity written to `scrollVelocity@108`), calls the 0x00765D80 Vector2
+builder, then runs **two further enumerations forwarding the
 event to every button** — `[button endTouch:]` (0x00765AB0) and
 `[button moveTouch:]` (0x00765C9C) — so each visible button tracks the
 drag for its own hover/highlight state, and finally stores the new
@@ -245,7 +246,7 @@ extra controls), `yScroll@80`, `scrollVelocity@84`, `lastY@88`, `startY@92`,
   `startTouchWasInView@97`;
 - `moveTouch:` (632w) / `endTouch:` (320w): the delta against `lastY@88`,
   `scrollInProgress@96`, the clamped `yScroll@80` + `scrollVelocity@84`
-  through the internal selection helper 0x006F1B84, then the per-child
+  and the 0x006F1B84 Vector2 builder for the forwarded points, then the per-child
   forwarding (`[moveTouch:]` / `[endTouch:]`) to both the row buttons and
   the extra controls.
 
