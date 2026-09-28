@@ -52,10 +52,26 @@ int main() {
     count_slider.ignore_events = true;
     assert(!count_slider.touch_is_in_ui({70, 135}));
 
+    // 4b. A view WITHOUT handles_own_rect (the MJView base shape) ignores
+    //     its own rect entirely — the point never matters without subviews
+    //     (the ARM observation: the seeded inside case still returned 0).
+    {
+        Node base_only;
+        base_only.rect = {0, 0, 100, 100};
+        base_only.handles_own_rect = false;
+        assert(!base_only.touch_is_in_ui({50, 50}));
+        Node child;                 // a leaf widget: it serves its own rect
+        child.rect = {0, 0, 10, 10};
+        child.handles_own_rect = true;
+        base_only.subviews = {&child};
+        assert(base_only.touch_is_in_ui({5, 5}));
+        assert(!base_only.touch_is_in_ui({50, 50}));
+    }
+
     // 5. The recursion order: with two overlapping subviews the first in
     //    the list wins the "in UI" answer (and start_touch's first-wins).
-    Node a; a.rect = {0, 0, 100, 100};
-    Node b; b.rect = {0, 0, 100, 100};
+    Node a; a.rect = {0, 0, 100, 100}; a.handles_own_rect = true;
+    Node b; b.rect = {0, 0, 100, 100}; b.handles_own_rect = true;
     Node parent; parent.rect = {0, 0, 100, 100};
     parent.subviews = {&a, &b};
     assert(parent.touch_is_in_ui({50, 50}));
@@ -63,9 +79,11 @@ int main() {
 
     // 6. The router: a flat list of views; the first in-UI view is the
     //    ui_hit; the first handler is handled_by; later views untouched.
-    Node tcUI; tcUI.rect = {0, 0, 100, 100};
+    Node tcUI; tcUI.rect = {0, 0, 100, 100}; tcUI.handles_own_rect = true;
     Node worldUI; worldUI.rect = {0, 0, 400, 400};
+    worldUI.handles_own_rect = true;
     Node pauseUI; pauseUI.rect = {200, 200, 50, 50};
+    pauseUI.handles_own_rect = true;
     pauseUI.hidden = true;  // display-gated panel: skipped entirely
     std::vector<Node*> views = {&tcUI, &worldUI, &pauseUI};
     const auto r = route(views, {50, 60});
@@ -73,7 +91,7 @@ int main() {
     assert(r.handled_by == &tcUI);
 
     // The no-view-hit case: everything reports not-in-UI / not-handled.
-    Node far; far.rect = {1000, 1000, 10, 10};
+    Node far; far.rect = {1000, 1000, 10, 10}; far.handles_own_rect = true;
     std::vector<Node*> none = {&far};
     const auto r2 = route(none, {50, 60});
     assert(r2.ui_hit == nullptr && r2.handled_by == nullptr);

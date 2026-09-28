@@ -568,7 +568,13 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // The frame test's coordinate space is still being decoded; the
         // gates are verified: hidden@4 short-circuits first, then
         // ignoreEvents@56, both answered from the instance.
-        if (case_id == 2) {
+        if (case_id == 0 || case_id == 1) {
+            // empty subviews: the gates pass, then the enumeration's first
+            // call (memset clears the state) returns nothing — the method
+            // returns 0 without ever looking at the point.
+            s = "hidden,ignoreEvents,import(memset),"
+                "countByEnumeratingWithState:objects:count:";
+        } else if (case_id == 2) {
             s = "hidden";
         } else if (case_id == 3) {
             s = "hidden,ignoreEvents";
@@ -595,6 +601,7 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         // they override the base slot at @4 exactly as on the ARM side
         ui_put_word(out, 4, (case_id == 2) ? 1u : 0u);   // hidden@4
         if (case_id == 3) out[56] = 1;       // ignoreEvents@56
+        (void)case_id;
         return n;
     }
     if (type_id != 70) return -1;

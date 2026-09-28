@@ -779,8 +779,12 @@ def main():
                 '80=0x0,84=0x0,88=0x42c80000,92=0x42c80000,71=0x0,60=0x60030000'),
         },
         'MJView': {
-            # the gate cases: hidden@4 (2) and ignoreEvents@56 (3); the
-            # frame-test case stays out until its coordinate space is decoded.
+            # 0/1: the empty-subviews cases (inside/outside — the base view
+            # has no self test, so both are 0); 2/3: the gate cases.
+            0: ('50,50',
+                '4=0x0,56=0x0,8=0x0,12=0x0,16=0x42c80000,20=0x42c80000,52=0x6000f000'),
+            1: ('500,500',
+                '4=0x0,56=0x0,8=0x0,12=0x0,16=0x42c80000,20=0x42c80000,52=0x6000f000'),
             2: ('50,50',
                 '4=0x1,56=0x0,8=0x0,12=0x0,16=0x42c80000,20=0x42c80000,52=0x6000f000'),
             3: ('50,50',
