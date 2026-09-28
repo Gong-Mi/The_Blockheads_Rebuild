@@ -59,7 +59,19 @@ consecutive in .text and now decoded
 
 So the family contract is: **the base answers "not handled / not in view"
 everywhere**, and each panel subclass overrides the touch/visibility methods
-with its own hit test and handling. The next slice is the subclasses'
+with its own hit test and handling.
+
+### The router's block 1, modelled from the code
+
+Block 1 (0x00AD77A8..0x00AD78AC) decoded: gated by `tcUIDisplayed@40`; when
+set it calls `[tcUI startTouch:tapCount:point, tapCount]`, and only when that
+returns zero falls back to
+`[worldUI startTouch:tapCount:paused:index:point, tapCount, 1, index]`; either
+way the block sets the "handled" flag and exits with 1. Seeded
+(`tcUIDisplayed@40 = 1` + tcUI + worldUI) the ARM runs exactly that sequence
+and returns 1 — the router's differential case 3 is that semantic model, not
+a case fit. The remaining blocks (2-7) stay case-fitted until their gates
+are decoded the same way. The next slice is the subclasses'
 overrides (e.g. `CraftUI`, `DPad`, `BlockheadUI`).
 
 ## The first subclass overrides: DPad (0x0070561C..0x00705A1C)

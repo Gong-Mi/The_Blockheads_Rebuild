@@ -576,6 +576,12 @@ const char* recovered_ui_seq(int type_id, int case_id) {
                 "countByEnumeratingWithState:objects:count:";
         } else if (case_id == 2) { // pauseUI + worldUI + tcUI + dpad + cameraUI
             s = "startTouch:tapCount:,startTouch:tapCount:paused:index:";
+        } else if (case_id == 3) {
+            // block 1 modelled from the code: tcUIDisplayed@40 gates it,
+            // then [tcUI startTouch:tapCount:], and only when that returns
+            // zero [worldUI startTouch:tapCount:paused:index:]; the block
+            // sets the "handled" flag and exits (ret 1).
+            s = "startTouch:tapCount:,startTouch:tapCount:paused:index:";
         }
     } else if (type_id == 71) {  // MJView -touchIsInUI: — the GATE cases
         // The frame test's coordinate space is still being decoded; the
@@ -617,6 +623,11 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
             ui_put_word(out, 36, 0x60020300u);
             ui_put_word(out, 100, 0x60020400u);
         }
+        if (case_id == 3) {
+            ui_put_word(out, 40, 1u);          // tcUIDisplayed@40
+            ui_put_word(out, 32, 0x60020200u);
+            ui_put_word(out, 20, 0x60020000u);
+        }
         return n;
     }
     if (type_id == 71) {  // MJView: the gate cases write nothing
@@ -656,7 +667,7 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
 }
 
 int recovered_ui_ret(int type_id, int case_id) {
-    if (type_id == 72) return case_id == 2 ? 1 : 0;   // observed returns
+    if (type_id == 72) return (case_id == 2 || case_id == 3) ? 1 : 0;
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);
