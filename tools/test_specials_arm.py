@@ -72,6 +72,8 @@ ENTRIES = [
     # the input front: UIManager's touch routing (type_id 0 = trace-only,
     # no DynamicObject model; dump mode drives it)
     ('UIManager', 0, 0x00AD7748, 0x00000000, 576),
+    # the UI front: MJControl's press lifecycle + MJView's touch contract
+    ('MJControl', 0, 0x009F6894, 0x00E8BE18, 240),
 ]
 CONV = {'intValue': ('int', INT_VALUE), 'boolValue': ('bool', BOOL_VALUE),
         'unsignedIntValue': ('uint', UINT_VALUE), 'floatValue': ('float', FLOAT_BITS)}
@@ -95,6 +97,9 @@ def main():
                     help='answer loadPhysicalBlockForMacroTile: with a '
                          'synthetic tile whose slots carry the gene pattern '
                          '(--fake-tile gene) or zeros (--fake-tile zero)')
+    ap.add_argument('--r2r3-floats', default=None,
+                    help='pass two float32 VALUES in r2:r3 (CGPoint args), '
+                         'e.g. "50.0,50.0"')
     ap.add_argument('--r2r3-double', default=None,
                     help='pass the float64 VALUE in r2:r3 (for methods whose '
                          'first argument is a double, e.g. saveTime)')
@@ -233,9 +238,15 @@ def main():
             sp = uc_.reg_read(UC_ARM_REG_SP)
             assert recv == self_ptr, ('super receiver', hex(recv))
             assert cls == ctx['expect_class'], ('super class', hex(cls))
-            assert sel == SUPER_SELECTOR, sel
-            ctx['calls'].append('super')
-            uc_.reg_write(UC_ARM_REG_R0, ctx['super_result'])
+            if sel == SUPER_SELECTOR:
+                ctx['calls'].append('super')
+                uc_.reg_write(UC_ARM_REG_R0, ctx['super_result'])
+            else:
+                # a real super call ([super startTouch:point]): answer with
+                # the base default (0) and record it by name — the model side
+                # emits the same label.
+                ctx['calls'].append(f'super({sel})')
+                uc_.reg_write(UC_ARM_REG_R0, 0)
         elif address == stub_send:
             recv = uc_.reg_read(UC_ARM_REG_R0)
             sel = cstring(uc_.reg_read(UC_ARM_REG_R1))
@@ -514,6 +525,13 @@ def main():
             lo, hi = _s.unpack('<II', _s.pack('<d', float(a.r2r3_double)))
             uc.reg_write(UC_ARM_REG_R2, lo)
             uc.reg_write(UC_ARM_REG_R3, hi)
+        if a.r2r3_floats is not None:
+            import struct as _s
+            xs, ys = a.r2r3_floats.split(',')
+            uc.reg_write(UC_ARM_REG_R2,
+                         _s.unpack('<I', _s.pack('<f', float(xs)))[0])
+            uc.reg_write(UC_ARM_REG_R3,
+                         _s.unpack('<I', _s.pack('<f', float(ys)))[0])
         uc.reg_write(UC_ARM_REG_SP, sp)
         uc.reg_write(UC_ARM_REG_LR, stop)
         word(sp, save_dict)

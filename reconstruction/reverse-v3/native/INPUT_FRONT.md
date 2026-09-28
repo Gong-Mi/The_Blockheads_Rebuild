@@ -235,7 +235,9 @@ the concrete widgets' behaviours left to their own layer.
 `sendsEventOnTouchStart@72`, `eventFrame@80`, `startTouchAnimationTimer@96`:
 
 - the four touch methods share the gates (MJView `hidden@4` / `ignoreEvents`,
-  plus `enabled@71`) then the `eventFrame@80` test (helper 0x009F66F0) with
+  plus `enabled@71`); `startTouchAnimationTimer@96` is a **float** the press
+  sets to 1.0 (the execution-level trace below settles it — an earlier note
+  called it a double) then the `eventFrame@80` test (helper 0x009F66F0) with
   the edge chain 0x009F744C/0x009F74A8/0x009F7504/0x009F7560;
 - `startTouch:` sets `hover@68 = 1`, and on a hit: if
   `sendsEventOnTouchStart@72` -> `sendAction`, the
@@ -251,6 +253,28 @@ the concrete widgets' behaviours left to their own layer.
 production library), pinned by `tools/test_ui_control.cpp`: the gates, the
 send-on-start vs send-on-release flag, the lift-outside no-click, the hover
 membership, the cancel path.
+
+### The UI front enters the ARM differential
+
+`tools/test_specials_arm.py` (the general differential engine) gained what
+the UI methods need: `--r2r3-floats` (CGPoint arguments in r2:r3) and a
+generalized super channel (a real `[super startTouch:point]` is answered by
+name; only the loaders' synthetic selector keeps the stub-super path). With
+`MJControl` entered (`startTouch:` 0x009F6894, superref 0x00E8BE18) the press
+EXECUTES and is observable:
+
+```
+--- MJControl ret=0x00000001
+    super(startTouch:)          ; the MJView base answers 0
+    instance(recv=0xe91fe8)     ; [SoundManager instance]
+    multiSoundNamed:(recv=0x0)  ; the clickDown sound
+    play(recv=0x0)
+    image: hover@68 = 1, receivedTouchStart@70 = 1, @96 = 1.0f
+```
+
+That trace is the UI front's first execution-level evidence (the state
+machine's writes are the compared artifact, as with the save front). The
+bridge model + cases + guard are the next slice.
 
 ## The scrolling list: ScrollingButtons -moveTouch: (490w)
 
