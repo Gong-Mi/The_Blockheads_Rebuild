@@ -184,7 +184,7 @@ TYPED_RECORDS = {
     40: ("Rail", 261, 100, 524, dict(configuration=3, ownedByStation=True, itemType=8)),
     32: ("Boat", 262, 101, 524, dict(currentBlockheadIndex=4, ownerID="c")),
     19: ("Ladder", 263, 102, 524, dict(itemType=6, ownerID="c", paintColor=70000)),
-    30: ("Egg", 264, 103, 524, dict(breed=70000, genesDict={"g": 1}, hatchTimer=1.5)),
+    30: ("Egg", 264, 103, 524, dict(genesDict={"breed": 70000}, hatchTimer=1.5)),
     53: ("Column", 265, 104, 524, dict(configuration=2, itemType=7, ownerID="c", paintColor=3)),
     54: ("Stairs", 266, 105, 524, dict(configuration=2, itemType=7, ownerID="c", paintColor=3)),
     20: ("Door", 267, 106, 524, dict(blocked=True, ironPlaceClientID="x", itemType=4, ownerID="c")),

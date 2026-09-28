@@ -3,29 +3,38 @@
 // key tables and store widths are decoded from the per-class annotated
 // listings (emit_annotated_method.py over the pinned ELF; coverage gates OK).
 //
+// Read order and nesting are ARM-attested (the differential pins the call
+// sequence): 7 of the 10 flat classes read their keys in a different order
+// than the first listing pass suggested, and Egg reads breed through its
+// genesDict child.
+//
 // Decoded per class (key / conversion / store):
+// Orders below are the ARM-attested read order (tools/test_midtier_arm.py);
+// the first listing pass had a different order for seven of them and those
+// are corrected here.
 //   31 Window : itemType int->word@56 ; ownerID retain->word@36
-//   40 Rail   : configuration int->word@60 ; ownedByStation bool->STRB@65 ;
-//               itemType int->word@56
+//   40 Rail   : itemType int->word@56 ; ownedByStation bool->STRB@65 ;
+//               configuration int->word@60
 //   32 Boat   : currentBlockheadIndex PROBE (savedBlockheadIndex@120 = -1
 //               default first, intValue overwrite when non-nil) ;
 //               ownerID retain->word@36 ; [self loadDerivedStuff] tail hook
-//   19 Ladder : ownerID retain->word@36 ; paintColor unsignedInt->STRH@60 ;
-//               itemType int->word@56
-//   30 Egg    : genesDict retain->word@56 ; breed int->STRH@60 ;
-//               hatchTimer float->word@64
-//   53 Column : ownerID retain->word@36 ; configuration int->word@64 ;
-//               paintColor unsignedInt->STRH@60 ; itemType int->word@56
-//   54 Stairs : ownerID retain->word@36 ; configuration int->word@60 ;
-//               itemType int->word@56 ; paintColor unsignedInt->STRH@64
-//   20 Door   : ownerID retain->word@36 ; blocked bool->STRB@68 ;
-//               ironPlaceClientID retain->word@72 ; itemType int->word@64
+//   19 Ladder : itemType int->word@56 ; paintColor unsignedInt->STRH@60 ;
+//               ownerID retain->word@36
+//   30 Egg    : hatchTimer float->word@64 ; genesDict retain->word@56 ;
+//               breed int->STRH@60 read INSIDE genesDict (nested: the body
+//               goes through self->genesDict; a top-level breed is not read)
+//   53 Column : itemType int->word@56 ; configuration int->word@64 ;
+//               paintColor unsignedInt->STRH@60 ; ownerID retain->word@36
+//   54 Stairs : itemType int->word@56 ; configuration int->word@60 ;
+//               ownerID retain->word@36 ; paintColor unsignedInt->STRH@64
+//   20 Door   : itemType int->word@64 ; blocked bool->STRB@68 ;
+//               ironPlaceClientID retain->word@72 ; ownerID retain->word@36
 //   38 Wire   : itemType int->word@56 ; configuration int->word@60 ;
 //               solidConfiguration int->word@64 ; ownerID retain->word@36
-//   56 ElevatorShaft : itemType w@56 ; ownerID o@36 ; lastKnownMotorPos.x
-//               w@60 ; .y w@64 ; paintColor UINT->STRH@84
-//   55 ElevatorMotor : itemType w@56 ; ownerID o@36 ; availableElectricity
-//               w@60 ; minY w@64 ; maxY UINT->STRH@68
+//   56 ElevatorShaft : itemType int->w@56 ; lastKnownMotorPos.x w@60 ;
+//               .y w@64 ; ownerID o@36 ; paintColor UINT->STRH@84
+//   55 ElevatorMotor : itemType int->w@56 ; availableElectricity UINT->STRH@60 ;
+//               minY UINT->w@64 ; maxY UINT->w@68 ; ownerID o@36
 //   22 SurfaceBlock / 29 SnowSurfaceBlock: ZERO own keys — the forwarder5b
 //               pure super forwarders (57w super-only / 71w + initSubDerived
 //               Items); their whole record domain is the DynamicObject base.
@@ -46,6 +55,12 @@ struct MidtierKeySpec {
     enum class Conv { Int, Bool, UInt, Float, Object } conv;
     enum class Width { Word, Half, Byte } width;
     int offset;
+    // Non-null when the body reads this key from a CHILD dictionary (the
+    // parent key's value) instead of the record root — e.g. Egg's breed is
+    // read as [[self->genesDict] objectForKey:@"breed"], which the ARM
+    // differential (tools/test_midtier_arm.py) pinned. Absent parent =>
+    // absent nested key.
+    const char* nested_in = nullptr;
 };
 
 struct MidtierTypeSpec {

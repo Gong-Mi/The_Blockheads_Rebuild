@@ -97,17 +97,30 @@ int main() {
         assert(s.objects.at("ownerID"));
     }
 
-    // ---- Egg: breed STRH + hatchTimer float + genesDict slot --------------
+    // ---- Egg: breed read INSIDE the genesDict child (ARM-attested) --------
     {
         bh176::MidtierFullState s;
         load(30, R"(<?xml version="1.0"?>
 <plist version="1.0"><dict><key>dynamicObjects</key><array>
-<dict><key>uniqueID</key><integer>265</integer><key>breed</key><integer>70000</integer><key>genesDict</key><dict><key>g</key><integer>1</integer></dict><key>hatchTimer</key><real>1.5</real></dict>
+<dict><key>uniqueID</key><integer>265</integer><key>genesDict</key><dict><key>breed</key><integer>70000</integer></dict><key>hatchTimer</key><real>1.5</real></dict>
 </array></dict></plist>
 )", value, error, &s);
-        assert(s.numbers.at("breed") == 4464.0);       // STRH truncation
+        assert(s.numbers.at("breed") == 4464.0);       // STRH truncation, nested
         assert(s.numbers.at("hatchTimer") == 1.5);
         assert(s.objects.at("genesDict"));
+    }
+    {
+        // control: a TOP-LEVEL breed is NOT read (the body goes through the
+        // child dictionary only); an absent child leaves breed absent.
+        bh176::MidtierFullState s;
+        load(30, R"(<?xml version="1.0"?>
+<plist version="1.0"><dict><key>dynamicObjects</key><array>
+<dict><key>uniqueID</key><integer>266</integer><key>breed</key><integer>5</integer><key>hatchTimer</key><real>2.0</real></dict>
+</array></dict></plist>
+)", value, error, &s);
+        assert(!s.present.at("breed"));
+        assert(!s.objects.at("genesDict"));
+        assert(s.numbers.at("hatchTimer") == 2.0);
     }
 
     // ---- Column / Stairs: paintColor STRH at the per-class offsets --------
@@ -156,6 +169,33 @@ int main() {
         assert(s.numbers.at("configuration") == 1.0);
         assert(s.numbers.at("solidConfiguration") == 3.0);
         assert(s.objects.at("ownerID"));
+    }
+
+    // ---- ElevatorMotor: ARM-attested widths/conversions ------------------
+    {
+        // availableElectricity is UNSIGNED-int -> STRH@60 (truncates), minY
+        // and maxY are unsigned words @64/@68 (no truncation).
+        bh176::MidtierFullState s;
+        load(55, R"(<?xml version="1.0"?>
+<plist version="1.0"><dict><key>dynamicObjects</key><array>
+<dict><key>uniqueID</key><integer>270</integer><key>itemType</key><integer>3</integer><key>ownerID</key><string>c</string><key>availableElectricity</key><integer>70000</integer><key>minY</key><integer>1</integer><key>maxY</key><integer>2</integer></dict>
+</array></dict></plist>
+)", value, error, &s);
+        assert(s.numbers.at("availableElectricity") == 4464.0);  // STRH
+        assert(s.numbers.at("minY") == 1.0);                      // word
+        assert(s.numbers.at("maxY") == 2.0);                      // word
+    }
+    {
+        // ElevatorShaft: pos.x/.y words @60/@64, paintColor UINT->STRH@84.
+        bh176::MidtierFullState s;
+        load(56, R"(<?xml version="1.0"?>
+<plist version="1.0"><dict><key>dynamicObjects</key><array>
+<dict><key>uniqueID</key><integer>271</integer><key>itemType</key><integer>3</integer><key>ownerID</key><string>c</string><key>lastKnownMotorPos.x</key><integer>10</integer><key>lastKnownMotorPos.y</key><integer>20</integer><key>paintColor</key><integer>70000</integer></dict>
+</array></dict></plist>
+)", value, error, &s);
+        assert(s.numbers.at("lastKnownMotorPos.x") == 10.0);
+        assert(s.numbers.at("lastKnownMotorPos.y") == 20.0);
+        assert(s.numbers.at("paintColor") == 4464.0);             // STRH
     }
 
     // ---- forwarder5b zeros: no own keys, base-only record domain --------

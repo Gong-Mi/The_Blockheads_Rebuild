@@ -14,55 +14,55 @@ const K kWindow[] = {
     {"ownerID", K::Conv::Object, K::Width::Word, 36},
 };
 const K kRail[] = {
-    {"configuration", K::Conv::Int, K::Width::Word, 60},
-    {"ownedByStation", K::Conv::Bool, K::Width::Byte, 65},
     {"itemType", K::Conv::Int, K::Width::Word, 56},
+    {"ownedByStation", K::Conv::Bool, K::Width::Byte, 65},
+    {"configuration", K::Conv::Int, K::Width::Word, 60},
 };
 const K kBoat[] = {
     {"currentBlockheadIndex", K::Conv::Int, K::Width::Word, 120},
     {"ownerID", K::Conv::Object, K::Width::Word, 36},
 };
 const K kLadder[] = {
-    {"ownerID", K::Conv::Object, K::Width::Word, 36},
-    {"paintColor", K::Conv::UInt, K::Width::Half, 60},
     {"itemType", K::Conv::Int, K::Width::Word, 56},
+    {"paintColor", K::Conv::UInt, K::Width::Half, 60},
+    {"ownerID", K::Conv::Object, K::Width::Word, 36},
 };
 const K kEgg[] = {
-    {"genesDict", K::Conv::Object, K::Width::Word, 56},
-    {"breed", K::Conv::Int, K::Width::Half, 60},
     {"hatchTimer", K::Conv::Float, K::Width::Word, 64},
+    {"genesDict", K::Conv::Object, K::Width::Word, 56},
+    {"breed", K::Conv::Int, K::Width::Half, 60, "genesDict"},
 };
 const K kColumn[] = {
-    {"ownerID", K::Conv::Object, K::Width::Word, 36},
+    {"itemType", K::Conv::Int, K::Width::Word, 56},
     {"configuration", K::Conv::Int, K::Width::Word, 64},
     {"paintColor", K::Conv::UInt, K::Width::Half, 60},
-    {"itemType", K::Conv::Int, K::Width::Word, 56},
+    {"ownerID", K::Conv::Object, K::Width::Word, 36},
 };
 const K kStairs[] = {
-    {"ownerID", K::Conv::Object, K::Width::Word, 36},
-    {"configuration", K::Conv::Int, K::Width::Word, 60},
     {"itemType", K::Conv::Int, K::Width::Word, 56},
+    {"configuration", K::Conv::Int, K::Width::Word, 60},
+    {"ownerID", K::Conv::Object, K::Width::Word, 36},
     {"paintColor", K::Conv::UInt, K::Width::Half, 64},
 };
 const K kDoor[] = {
-    {"ownerID", K::Conv::Object, K::Width::Word, 36},
+    {"itemType", K::Conv::Int, K::Width::Word, 64},
     {"blocked", K::Conv::Bool, K::Width::Byte, 68},
     {"ironPlaceClientID", K::Conv::Object, K::Width::Word, 72},
-    {"itemType", K::Conv::Int, K::Width::Word, 64},
+    {"ownerID", K::Conv::Object, K::Width::Word, 36},
 };
 const K kElevatorShaft[] = {
     {"itemType", K::Conv::Int, K::Width::Word, 56},
-    {"ownerID", K::Conv::Object, K::Width::Word, 36},
     {"lastKnownMotorPos.x", K::Conv::Int, K::Width::Word, 60},
     {"lastKnownMotorPos.y", K::Conv::Int, K::Width::Word, 64},
+    {"ownerID", K::Conv::Object, K::Width::Word, 36},
     {"paintColor", K::Conv::UInt, K::Width::Half, 84},
 };
 const K kElevatorMotor[] = {
     {"itemType", K::Conv::Int, K::Width::Word, 56},
+    {"availableElectricity", K::Conv::UInt, K::Width::Half, 60},
+    {"minY", K::Conv::UInt, K::Width::Word, 64},
+    {"maxY", K::Conv::UInt, K::Width::Word, 68},
     {"ownerID", K::Conv::Object, K::Width::Word, 36},
-    {"availableElectricity", K::Conv::Int, K::Width::Word, 60},
-    {"minY", K::Conv::Int, K::Width::Word, 64},
-    {"maxY", K::Conv::UInt, K::Width::Half, 68},
 };
 const K kWire[] = {
     {"itemType", K::Conv::Int, K::Width::Word, 56},
@@ -102,7 +102,18 @@ MidtierFullState midtier_full_load(const SaveDict& entry,
 
     for (std::size_t i = 0; spec.keys != nullptr && i < spec.key_count; ++i) {
         const MidtierKeySpec& key = spec.keys[i];
-        const SaveValue* value = entry.objectForKey(key.key);
+        // Nested reads (ARM-attested): the body goes through the child
+        // dictionary it just loaded, so an absent/non-dict parent means an
+        // absent nested key.
+        const SaveValue* value = nullptr;
+        if (key.nested_in != nullptr) {
+            const SaveValue* parent = entry.objectForKey(key.nested_in);
+            if (parent != nullptr && parent->isDict()) {
+                value = SaveDict(*parent).objectForKey(key.key);
+            }
+        } else {
+            value = entry.objectForKey(key.key);
+        }
         state.present[key.key] = value != nullptr;
         if (key.conv == K::Conv::Object) {
             state.objects[key.key] = value != nullptr;  // presence only
@@ -170,8 +181,9 @@ ClientDynamicObject midtier_full_factory(int type_id, const SaveDict& entry,
               "base only; the class contributes no save keys (super "
               "forward + optional initSubDerivedItems hook)"
             : "midtier full chain: DynamicObject base + the per-class key "
-              "table decoded from the annotated listing (sized ivar stores); "
-              "tail hook stated (no save state)";
+              "table (read ORDER and nesting ARM-attested by "
+              "tools/test_midtier_arm.py; sized ivar stores); tail hook "
+              "stated (no save state)";
     return object;
 }
 
