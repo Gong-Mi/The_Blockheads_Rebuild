@@ -185,6 +185,31 @@ handles it). The test pins the gates, the subview order, the panel's
 own-rect OR and the router pass — the structure the listings attest, with
 the concrete widgets' behaviours left to their own layer.
 
+### The control behaviours, modelled: `ui_control.*` (MJControl)
+
+`disasm_mjcontrol_all.txt` decoded the widget layer's control base
+(0x009F6198..0x009F7470) — ivars `target@60`, `action@64`, `hover@68`,
+`wasClicked@69`, `receivedTouchStart@70`, `enabled@71`,
+`sendsEventOnTouchStart@72`, `eventFrame@80`, `startTouchAnimationTimer@96`:
+
+- the four touch methods share the gates (MJView `hidden@4` / `ignoreEvents`,
+  plus `enabled@71`) then the `eventFrame@80` test (helper 0x009F66F0) with
+  the edge chain 0x009F744C/0x009F74A8/0x009F7504/0x009F7560;
+- `startTouch:` sets `hover@68 = 1`, and on a hit: if
+  `sendsEventOnTouchStart@72` -> `sendAction`, the
+  `startTouchAnimationTimer@96` reset, the `clickDown.wav` sound, and
+  `receivedTouchStart@70 = 1`;
+- `endTouch:` resets `receivedTouchStart@70` / `hover@68`, and on a hit: if
+  the start did not send -> `sendAction`, the `click.wav` sound, and
+  `wasClicked@69 = 1`;
+- `sendAction` (50w): `[target@60 performSelector:action@64 withObject:…]`;
+- `cancelAnyTouchStarts`: `receivedTouchStart@70 = 0`.
+
+`ui_control.cpp` models exactly that lifecycle (CTest `ui_control`, in the
+production library), pinned by `tools/test_ui_control.cpp`: the gates, the
+send-on-start vs send-on-release flag, the lift-outside no-click, the hover
+membership, the cancel path.
+
 ## Boundary
 
 The router is decoded and the family base is decoded; a full *model* now

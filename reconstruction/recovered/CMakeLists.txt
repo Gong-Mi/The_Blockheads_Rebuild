@@ -319,6 +319,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             tree_full.cpp
             tree_growth.cpp
             ui_touch_router.cpp
+            ui_control.cpp
             tree_load_save_dict.cpp
             npc_full.cpp
             npc_load_values_from_save_dict.cpp
@@ -468,6 +469,14 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             add_test(NAME key_table_extraction
                      COMMAND ${BH_PYTHON3}
                              ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_key_table_extraction.py)
+            add_executable(test_ui_control
+                           ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_ui_control.cpp)
+            target_include_directories(test_ui_control PRIVATE
+                                       ${CMAKE_CURRENT_SOURCE_DIR})
+            target_link_libraries(test_ui_control PRIVATE original_client_app)
+            target_compile_options(test_ui_control PRIVATE -UNDEBUG)
+            add_test(NAME ui_control COMMAND test_ui_control)
+
             add_executable(test_ui_touch_router
                            ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_ui_touch_router.cpp)
             target_include_directories(test_ui_touch_router PRIVATE

@@ -64,6 +64,7 @@ add_library(native-lib SHARED
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/tree_full.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/tree_growth.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/ui_touch_router.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/ui_control.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/tree_load_save_dict.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/workbench_full.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/workbench_init.cpp
