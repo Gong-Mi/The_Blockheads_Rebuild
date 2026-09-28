@@ -12,9 +12,12 @@ bool hit(const Control& c, Point p) {
 PressOutcome control_start_touch(Control& c, Point p) {
     PressOutcome out;
     if (!control_gates_pass(c)) return out;  // hidden/enabled/ignore gates
-    c.hover = true;                          // hover@68 = 1
+    // The ARM trace settles the order: the hit test runs BEFORE any state
+    // write — a press outside the event frame leaves hover@68 at 0 and
+    // makes no calls at all (differential case 1).
     if (!hit(c, p)) return out;
     out.engaged = true;
+    c.hover = true;                          // hover@68 = 1 (on a hit)
     if (c.sends_event_on_touch_start) {
         out.sent_action = true;              // sendAction -> target/action
     }

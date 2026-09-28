@@ -41,6 +41,15 @@ int main() {
         const auto e = control_end_touch(c, inside);
         assert(e.engaged && !e.sent_action);  // clickDown already fired it
     }
+    // The differential's case 1: a press OUTSIDE the event frame makes no
+    // calls and leaves the state untouched (hover stays 0, nothing armed).
+    {
+        Control c;
+        c.event_frame = {0, 0, 100, 100};
+        const auto s = control_start_touch(c, outside);
+        assert(!s.engaged && !s.sound_down && !c.hover &&
+               !c.received_touch_start);
+    }
     // A lift outside the event frame: engaged at the start, no click at the end.
     {
         Control c;

@@ -81,6 +81,8 @@ def main() -> int:
             ["growInTimeSinceSaved"])
     require(ROOT / "tools/test_specials_arm.py", [
         "('UIManager', 0, 0x00AD7748",  # the input-front router entry
+        "('MJControl', 0, 0x009F6894",   # the UI front's first differential class
+        "recovered_ui_seq", "UI_CASES",
     ])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_uimanager_starttouch.txt",
             ["startTouch:tapCount:index:"])
@@ -105,6 +107,8 @@ def main() -> int:
              "countByEnumeratingWithState:objects:count:"])
     require(ROOT / "reconstruction/reverse-v3/native/INPUT_FRONT.md",
             ["the MJ toolkit", "three-layer picture"])
+    require(ROOT / "tools/specials_arm_bridge.cpp",
+            ["recovered_ui_seq", "recovered_ui_ret", "ui_control.h"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_gameuiview_all.txt",
             ["OBJC_IVAR_$_GameUIView.displayed (slot 0x0105dee0) = 4",
              "OBJC_IVAR_$_GameUIView.resourcesLoaded (slot 0x0105c494) = 16"])

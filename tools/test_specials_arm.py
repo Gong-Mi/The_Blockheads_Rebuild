@@ -21,6 +21,7 @@ import argparse
 import ctypes
 import hashlib
 import json
+import re
 import struct
 import subprocess
 import sys
@@ -658,6 +659,8 @@ def main():
             subprocess.run(['clang++', '-std=c++17', '-O0', '-UNDEBUG',
                             '-fno-fast-math', '-ffp-contract=off', '-fPIC',
                             '-shared', str(repo / 'tools/specials_arm_bridge.cpp'),
+                            str(repo / 'reconstruction/recovered/ui_control.cpp'),
+                            str(repo / 'reconstruction/recovered/ui_touch_router.cpp'),
                             '-o', str(lib)], check=True)
             cdll = ctypes.CDLL(str(lib))
             keys_fn = cdll.recovered_specials_key_list
@@ -681,6 +684,8 @@ def main():
         subprocess.run(['clang++', '-std=c++17', f'-O{opt}', '-UNDEBUG',
                         '-fno-fast-math', '-ffp-contract=off', '-fPIC', '-shared',
                         str(repo / 'tools/specials_arm_bridge.cpp'),
+                        str(repo / 'reconstruction/recovered/ui_control.cpp'),
+                        str(repo / 'reconstruction/recovered/ui_touch_router.cpp'),
                         '-o', str(lib)], check=True)
         cdll = ctypes.CDLL(str(lib))
         keys_fn = cdll.recovered_specials_key_list
@@ -696,7 +701,18 @@ def main():
         extra_fn = cdll.recovered_specials_extra
         extra_fn.argtypes = [ctypes.c_int32]
         extra_fn.restype = ctypes.c_char_p
-        bridges[opt] = (keys_fn, seq_fn, img_fn, extra_fn)
+        ui_seq_fn = cdll.recovered_ui_seq
+        ui_seq_fn.argtypes = [ctypes.c_int32, ctypes.c_int32]
+        ui_seq_fn.restype = ctypes.c_char_p
+        ui_img_fn = cdll.recovered_ui_img
+        ui_img_fn.argtypes = [ctypes.c_int32, ctypes.c_int32, ctypes.c_uint32,
+                              ctypes.c_char_p, ctypes.c_int]
+        ui_img_fn.restype = ctypes.c_int
+        ui_ret_fn = cdll.recovered_ui_ret
+        ui_ret_fn.argtypes = [ctypes.c_int32, ctypes.c_int32]
+        ui_ret_fn.restype = ctypes.c_int
+        bridges[opt] = (keys_fn, seq_fn, img_fn, extra_fn,
+                        ui_seq_fn, ui_img_fn, ui_ret_fn)
 
     MODELLED = {'SteamTrain', 'OwnershipSign', 'Painting', 'DropBear',
                 'CaveTroll', 'TrainCar', 'ArtificialLight'}
@@ -706,7 +722,7 @@ def main():
         cls, type_id, imp, superref, words = entry
         if cls not in MODELLED:
             continue
-        keys_fn, seq_fn, img_fn, extra_fn = bridges[0]
+        keys_fn, seq_fn, img_fn, extra_fn, ui_seq_fn, ui_img_fn, ui_ret_fn = bridges[0]
         key_list = keys_fn(type_id).decode().split(',')
         ctx['extras'] = set(x for x in extra_fn(type_id).decode().split(',') if x)
         for case_id in (0, 1, 2, 3, 4):
@@ -719,7 +735,7 @@ def main():
             expected_ret = 0 if (case_id == 2 or (death and cls == 'DropBear')) else self_ptr
             assert ret == expected_ret, (cls, case_id, hex(ret))
             for opt in (0, 2):
-                keys_fn, seq_fn, img_fn, extra_fn = bridges[opt]
+                keys_fn, seq_fn, img_fn, extra_fn, ui_seq_fn, ui_img_fn, ui_ret_fn = bridges[opt]
                 expected_seq = seq_fn(type_id, case_id).decode()
                 assert ','.join(calls) == expected_seq, \
                     (cls, case_id, opt, ','.join(calls), expected_seq)
@@ -737,8 +753,57 @@ def main():
                          'arm_return': f'0x{ret:08x}', 'calls': calls,
                          'image_sha256': hashlib.sha256(image).hexdigest()[:32]})
 
+    # ---- phase 2b: the UI front (MJControl -startTouch:) ------------------
+    # The seeds mirror the harness's --seed runs the model was built from;
+    # the labels are compared with the (recv=0x…) decorations stripped (those
+    # are stub artifacts, not semantics).
+    UI_CASES = {
+        'MJControl': {
+            0: ('50,50',
+                '80=0x0,84=0x0,88=0x42c80000,92=0x42c80000,71=0x1,60=0x60030000'),
+            1: ('500,500',
+                '80=0x0,84=0x0,88=0x42c80000,92=0x42c80000,71=0x1,60=0x60030000'),
+            2: ('50,50',
+                '80=0x0,84=0x0,88=0x42c80000,92=0x42c80000,71=0x0,60=0x60030000'),
+        },
+    }
+    ui_modelled = []
+    for entry in ENTRIES:
+        cls, type_id, imp, superref, words = entry
+        if cls not in UI_CASES:
+            continue
+        ui_modelled.append(cls)
+        for case_id, (pt, seed) in sorted(UI_CASES[cls].items()):
+            a.seed = seed
+            a.r2r3_floats = pt
+            ret, calls, image = arm_run(entry, case_id)
+            arm_seq = ','.join(re.sub(r'\(recv=[^)]*\)', '', c) for c in calls)
+            for opt in (0, 2):
+                ui_seq_fn, ui_img_fn, ui_ret_fn = bridges[opt][4:]
+                expected_seq = ui_seq_fn(type_id, case_id).decode()
+                assert arm_seq == expected_seq, \
+                    (cls, case_id, opt, arm_seq, expected_seq)
+                expected_ret = ui_ret_fn(type_id, case_id)
+                assert ret == expected_ret, (cls, case_id, opt, hex(ret))
+                buf = ctypes.create_string_buffer(IMAGE_SIZE)
+                assert ui_img_fn(type_id, case_id, TOKEN_BASE, buf,
+                                 IMAGE_SIZE) == IMAGE_SIZE
+                if buf.raw != image:
+                    for off in range(IMAGE_SIZE):
+                        if buf.raw[off] != image[off]:
+                            print(f'  {cls} case {case_id} image diff at '
+                                  f'+{off}: arm={image[off]:02x} '
+                                  f'cpp={buf.raw[off]:02x}')
+                assert buf.raw == image, (cls, case_id, opt, 'image mismatch')
+            rows.append({'class': cls, 'type_id': type_id, 'case': case_id,
+                         'arm_return': f'0x{ret:08x}', 'calls': calls,
+                         'image_sha256': hashlib.sha256(image).hexdigest()[:32]})
+        a.seed = None
+        a.r2r3_floats = None
+
     report = {'sha256': SHA, 'batch': 'specials',
-              'classes': sorted(MODELLED), 'cases': len(rows), 'match': True,
+              'classes': sorted(MODELLED | set(ui_modelled)),
+              'cases': len(rows), 'match': True,
               'rows': rows,
               'boundary': ('Unicorn execution of the original special-loader '
                            'bodies with a synthetic ObjC graph against the '

@@ -12,6 +12,8 @@
 #include <cstring>
 #include <string>
 
+#include "../reconstruction/recovered/ui_control.h"
+
 namespace {
 
 enum Conv { C_INT, C_BOOL, C_UINT, C_FLOAT, C_OBJECT };
@@ -520,6 +522,80 @@ int recovered_specials_image(int type_id, int case_id, std::uint32_t token_base,
         }
     }
     return n;
+}
+
+// ---- the UI front: MJControl's press lifecycle -------------------------
+// The model IS the production module (reconstruction/recovered/ui_control.h),
+// included here so the differential verifies the shipped code rather than a
+// copy. Cases (observed on the ARM first, then encoded):
+//   0: inside, enabled  -> super + the sound + hover/received/timer writes, ret 1
+//   1: outside          -> no calls, no writes, ret 0
+//   2: disabled         -> no calls, no writes, ret 0
+}  // extern "C"
+
+namespace {
+using blockheads::ui::Control;
+using blockheads::ui::Point;
+
+Control ui_case_control(int case_id) {
+    Control c;
+    c.event_frame = {0.0f, 0.0f, 100.0f, 100.0f};
+    c.enabled = (case_id != 2);
+    return c;
+}
+Point ui_case_point(int case_id) {
+    return case_id == 1 ? Point{500.0f, 500.0f} : Point{50.0f, 50.0f};
+}
+void ui_put_word(unsigned char* out, int off, std::uint32_t v) {
+    for (int b = 0; b < 4; ++b) {
+        out[off + b] = static_cast<unsigned char>((v >> (8 * b)) & 0xFFu);
+    }
+}
+}  // namespace
+
+extern "C" {
+const char* recovered_ui_seq(int type_id, int case_id) {
+    static thread_local std::string s;
+    s.clear();
+    if (type_id == 0) {  // MJControl -startTouch:
+        Control c = ui_case_control(case_id);
+        const auto o = blockheads::ui::control_start_touch(c,
+                                                           ui_case_point(case_id));
+        if (o.engaged) {
+            s = "super(startTouch:),instance,multiSoundNamed:,play";
+        }
+    }
+    return s.c_str();
+}
+
+extern "C" int recovered_ui_img(int type_id, int case_id,
+                                unsigned token_base, void* buf, int n) {
+    (void)token_base;
+    auto* out = static_cast<unsigned char*>(buf);
+    if (type_id != 0 || n < 512) return -1;
+    std::memset(out, 0, static_cast<std::size_t>(n));
+    // the same seed the harness writes into the ARM instance
+    ui_put_word(out, 60, 0x60030000u);                 // target@60
+    out[71] = (case_id != 2) ? 1 : 0;                  // enabled@71
+    ui_put_word(out, 88, 0x42C80000u);                 // eventFrame (0,0,100,100)
+    ui_put_word(out, 92, 0x42C80000u);
+    Control c = ui_case_control(case_id);
+    const auto o = blockheads::ui::control_start_touch(c,
+                                                       ui_case_point(case_id));
+    if (o.engaged) {
+        out[68] = c.hover ? 1 : 0;                     // hover@68
+        out[70] = c.received_touch_start ? 1 : 0;      // receivedTouchStart@70
+        ui_put_word(out, 96, 0x3F800000u);             // the timer float = 1.0
+    }
+    return n;
+}
+
+int recovered_ui_ret(int type_id, int case_id) {
+    if (type_id != 0) return -1;
+    Control c = ui_case_control(case_id);
+    const auto o = blockheads::ui::control_start_touch(c,
+                                                       ui_case_point(case_id));
+    return o.engaged ? 1 : 0;
 }
 
 }  // extern "C"
