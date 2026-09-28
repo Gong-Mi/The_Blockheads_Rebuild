@@ -436,6 +436,25 @@ void OriginalClientApp::registerRecoveredFactories() {
     registry_.registerFactory(
         57, make_tree_factory(57), "tree full chain (stage1 executed b4d",
         ObjectLoadStatus::Recovered);
+    // The five pure trees: the 31-word GetSaveDict pure-forward shape
+    // (25-word core sha-gated identical to the registered OrangeTree) and
+    // zero own load keys (no own loadSaveDictValues in the pinned map) —
+    // see TREEFAMILY9_PURE_TREES.md.
+    registry_.registerFactory(
+        2, make_tree_factory(2), "tree full chain (stage1 executed b4d",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        3, make_tree_factory(3), "tree full chain (stage1 executed b4d",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        8, make_tree_factory(8), "tree full chain (stage1 executed b4d",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        9, make_tree_factory(9), "tree full chain (stage1 executed b4d",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        37, make_tree_factory(37), "tree full chain (stage1 executed b4d",
+        ObjectLoadStatus::Recovered);
     // Workbench (bucket C, the last snapshot stub): the b4q executed
     // differential (16 scalars + lightDict presence); the InteractionObject
     // super keys are static-only and NOT loaded — the reason states both.

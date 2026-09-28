@@ -155,6 +155,30 @@ TYPED_RECORDS = {
         splitHeightA=3, splitHeightB=4, splitDirection=True,
         availableFood=12.5,
     )),
+    # The five pure trees: Tree chain only (TREEFAMILY9_PURE_TREES.md).
+    2: ("MapleTree", 150, 70, 510, dict(
+        floatPos=[70.5, 510.0], age=500.0, dead=False, growthCounter=0.2,
+        growthRate=0.3, growthRateGene=180, height=6, maxAge=18000.0,
+        maxHeight=16, maxHeightGene=190, maxHeightReached=6,
+        removeCheckCount=0.0, saveTime=900.0, timeDied=0.0, treeFruit=[],
+        treeSeasonOffset=3,
+    )),
+    3: ("MangoTree", 151, 71, 510, dict(
+        floatPos=[71.5, 510.0], age=600.0, dead=False, growthCounter=0.21,
+        height=7, treeFruit=[], treeSeasonOffset=4,
+    )),
+    8: ("CherryTree", 152, 72, 510, dict(
+        floatPos=[72.5, 510.0], age=700.0, dead=False, growthCounter=0.22,
+        height=8, treeFruit=[], treeSeasonOffset=5,
+    )),
+    9: ("CoffeeTree", 153, 73, 510, dict(
+        floatPos=[73.5, 510.0], age=800.0, dead=False, growthCounter=0.23,
+        height=9, treeFruit=[], treeSeasonOffset=6,
+    )),
+    37: ("LimeTree", 155, 74, 510, dict(
+        floatPos=[74.5, 510.0], age=900.0, dead=False, growthCounter=0.24,
+        height=10, treeFruit=[], treeSeasonOffset=7,
+    )),
     # KelpPlant / VinePlant: the executed b4o/b4n twin chains.
     34: ("KelpPlant", 140, 60, 500, dict(
         floatPos=[60.5, 500.0], seasonOffset=5, age=300.0,
@@ -277,6 +301,11 @@ EXPECT_REASON = {
     26: "ownkey5",       # GatherBlock own keys, executed
     34: "b4n",           # KelpPlant twin loader executed
     58: "b4o",           # VinePlant twin loader executed
+    2: "b4d",            # pure trees: Tree stage-1 executed
+    3: "b4d",
+    8: "b4d",
+    9: "b4d",
+    37: "b4d",
 }
 
 

@@ -253,7 +253,7 @@ int main() {
             "305f31\t0\t1\tdynamic/record1.plist\t" + bh176::sha256Hex(kPlistNoTypeAndOutOfRange) + "\t" +
             std::to_string(std::string(kPlistNoTypeAndOutOfRange).size()) + "\n"
             // real-archive key with type suffix: record_key is the typed source
-            "325f302f39\t2\t0\tdynamic/record4.plist\t" + bh176::sha256Hex(kRecordTyped) + "\t" +
+            "325f302f3130\t2\t0\tdynamic/record4.plist\t" + bh176::sha256Hex(kRecordTyped) + "\t" +
             std::to_string(std::string(kRecordTyped).size()) + "\n"
             // opaque shapes (valid digests so they reach the plist stage)
             "335f30\t3\t0\tdynamic/record2.plist\t" + bh176::sha256Hex(kPlistNotDynamic) + "\t" +
@@ -276,7 +276,7 @@ int main() {
         assert(app.loadDynamicObjects(&error));
         {
             const auto& report = app.report();
-            assert(report.dynamic_objects == 3);            // type 33 + type 14 + type 9
+            assert(report.dynamic_objects == 3);            // type 33 + type 14 + type 10 (FlaxPlant: no factory)
             assert(report.stub_objects == 3);
             assert(report.recovered_objects == 0);
             assert(report.verified_objects == 0);
@@ -289,7 +289,7 @@ int main() {
             assert(report.type_key_used.at("record_key") == 1);
             assert(report.per_type.at(33) == 1);
             assert(report.per_type.at(14) == 1);
-            assert(report.per_type.at(9) == 1);
+            assert(report.per_type.at(10) == 1);
             assert(report.shared_object_type_objects == 0);
         }
 
