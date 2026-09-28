@@ -103,12 +103,30 @@ const Row kDropBear[] = {
     {"saveTime", C_FLOAT, 0, 0},      // read-only: feeds the age step
 };
 
+// CaveTroll 39 (0x00d538cc, super = NPC): own body, ARM-attested by the
+// dump — super, then the coordinate-wrap helper queries [world
+// worldWidthMacro] (via the in-ELF helper at 0xA12F64), then the reads:
+// defendSquare.x intValue -> word @356, defendSquare.y intValue -> word @360,
+// state -> [bytes]/[length] -> memcpy (PLT veneer 0x1C2894, GOT slot
+// 0x105FB40) into the @208 blob, dead boolValue -> STRB @56; then the wrap
+// helper runs again around the tail [self initSubDerivedStuffStuff]. The
+// world-derived movement slots (travelSpeed@312 = 4.0f, travelFraction@400 =
+// 1.0f) are pinned to the harness's worldWidthMacro=4 stub.
+const Row kCaveTroll[] = {   // drives the key list / presence indices only
+    {"defendSquare.x", C_INT, 4, 356},
+    {"defendSquare.y", C_INT, 4, 360},
+    {"state", C_OBJECT, 4, 208},
+    {"dead", C_BOOL, 1, 56},
+};
+
 const ClassRows kClasses[] = {
     {42, kSteamTrain, 4, nullptr, "", false, 0, 0, 0},
     {60, kOwnershipSign, 4, nullptr, "updateText", true, 15, 1, 30},
     {52, kPainting, 5, "initSubDerivedItems", "initSubDerivedItems", false, 0, 0, 0},
     {25, kDropBear, 9, "loadDerivedStuff",
      "loadDerivedStuff,removeFromMacroBlock,release", false, 0, 0, 0},
+    {39, kCaveTroll, 4, "initSubDerivedStuffStuff",
+     "initSubDerivedStuffStuff,macroTiles", false, 0, 0, 0},
 };
 
 const ClassRows* specOf(int type_id) {
@@ -176,6 +194,25 @@ const char* recovered_specials_sequence(int type_id, int case_id) {
     const ClassRows* spec = specOf(type_id);
     if (spec == nullptr) return buffer.c_str();
     if (case_id == 2) return buffer.c_str();   // nil guard: nothing else runs
+    if (type_id == 39) {
+        const bool state_present = presentFor(case_id, 2);
+        buffer += ",worldWidthMacro,macroTiles,worldWidthMacro,worldWidthMacro";
+        buffer += ",ofk:defendSquare.x,int:defendSquare.x";
+        buffer += ",ofk:defendSquare.y,int:defendSquare.y";
+        buffer += ",ofk:state";
+        if (state_present) {
+            buffer += ",bytes,length,memcpy";
+        }
+        buffer += ",ofk:dead,bool:dead";
+        // the second wrap group runs only when the state blob was present
+        // (the movement-state re-init block sits behind it; per-case dump:
+        // case 0/1 with state -> group, case 3 without state -> no group)
+        if (presentFor(case_id, 2)) {
+            buffer += ",worldWidthMacro,macroTiles,worldWidthMacro,worldWidthMacro";
+        }
+        buffer += ",initSubDerivedStuffStuff";
+        return buffer.c_str();
+    }
     if (type_id == 25) {
         for (int i = 0; i < spec->count; ++i) {
             const Row& row = spec->rows[i];
@@ -260,6 +297,32 @@ int recovered_specials_image(int type_id, int case_id, std::uint32_t token_base,
     const ClassRows* spec = specOf(type_id);
     if (spec == nullptr) return -1;
     if (case_id == 2) return n;
+    if (type_id == 39) {
+        // dead STRB @56
+        if (presentFor(case_id, 3)) out[56] = 1;
+        // defendSquare.x/.y words @356/@360
+        const std::uint32_t dv = 0x00012345u;
+        if (presentFor(case_id, 0)) {
+            for (int b = 0; b < 4; ++b)
+                out[356 + b] = static_cast<unsigned char>((dv >> (8 * b)) & 0xFF);
+        }
+        if (presentFor(case_id, 1)) {
+            for (int b = 0; b < 4; ++b)
+                out[360 + b] = static_cast<unsigned char>((dv >> (8 * b)) & 0xFF);
+        }
+        // the state blob @208 (the harness fixture's 4 bytes) when present
+        if (presentFor(case_id, 2)) {
+            out[208] = 0xAA; out[209] = 0xBB; out[210] = 0xCC; out[211] = 0xDD;
+        }
+        // world-derived movement slots under the worldWidthMacro=4 stub
+        const std::uint32_t speed = 0x40800000u;     // 4.0f
+        const std::uint32_t frac = 0x3F800000u;      // 1.0f
+        for (int b = 0; b < 4; ++b) {
+            out[312 + b] = static_cast<unsigned char>((speed >> (8 * b)) & 0xFF);
+            out[400 + b] = static_cast<unsigned char>((frac >> (8 * b)) & 0xFF);
+        }
+        return n;
+    }
     if (type_id == 25) {
         // the age step: age@88 = 0 + (worldTime 1000.0 - saveTime), where the
         // harness's floatValue stub gives 1.5 when the saveTime key is present

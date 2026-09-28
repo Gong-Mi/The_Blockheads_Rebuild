@@ -67,6 +67,8 @@ def main():
                     help='print labels + nonzero bytes for one class across cases')
     ap.add_argument('--is-server', dest='is_server', action='store_true',
                     help='answer [world/dyn isServer] with 1 in dump mode')
+    ap.add_argument('--trace', action='store_true',
+                    help='record the last PCs and print them on a crash')
     a = ap.parse_args()
     if hashlib.sha256(a.elf.read_bytes()).hexdigest() != SHA:
         raise SystemExit('ELF SHA mismatch')
@@ -79,6 +81,8 @@ def main():
                  for s in elf.iter_segments() if s['p_type'] == 'PT_LOAD']
 
     uc = Uc(UC_ARCH_ARM, UC_MODE_ARM)
+    from collections import deque
+    pc_ring = deque(maxlen=256)
     uc.reg_write(UC_ARM_REG_C1_C0_2, uc.reg_read(UC_ARM_REG_C1_C0_2) | (0xF << 20))
     uc.reg_write(UC_ARM_REG_FPEXC, 0x40000000)
     pages = set()
@@ -107,6 +111,28 @@ def main():
 
     word(GOT_SUPER2, stub_super)
     word(GOT_MSGSEND, stub_send)
+    # The binary has a SECOND set of msgSend pointers: the PLT's own GOT slots
+    # (rel.plt, e.g. objc_msgSend at 0x105FB18). Bodies that call the PLT
+    # stub (CaveTroll does) would otherwise run the unresolved lazy resolver
+    # into address 0. Patch EVERY slot whose import is one of our stubs.
+    from elftools.elf.relocation import RelocationSection
+    with a.elf.open('rb') as f2:
+        elf2 = ELFFile(f2)
+        plt_slots = 0
+        for sec in elf2.iter_sections():
+            if sec['sh_type'] not in ('SHT_REL', 'SHT_RELA'):
+                continue
+            symtab2 = elf2.get_section(sec['sh_link'])
+            for rel in sec.iter_relocations():
+                sym = symtab2.get_symbol(rel['r_info_sym'])
+                if sym.name == 'objc_msgSend':
+                    word(rel['r_offset'], stub_send)
+                    plt_slots += 1
+                elif sym.name in ('objc_msgSendSuper2',):
+                    word(rel['r_offset'], stub_super)
+                    plt_slots += 1
+    if a.trace:
+        print(f'  patched {plt_slots} PLT msgSend slot(s)')
 
     self_ptr = graph + 0x1000
     world, dyn, save_dict, cache = (graph + 0x100, graph + 0x200,
@@ -187,6 +213,11 @@ def main():
                     uc_.reg_write(UC_ARM_REG_R0, len(ctx['data_bytes']))
                 else:
                     uc_.reg_write(UC_ARM_REG_R0, graph + 0x3000)
+            elif sel in ('worldWidthMacro', 'worldHeightMacro'):
+                # the coordinate-wrap helper loops on worldWidthMacro*32;
+                # returning 0 would spin forever. 4 macro-tiles = 128 tiles.
+                ctx['calls'].append(sel)
+                uc_.reg_write(UC_ARM_REG_R0, 4)
             elif sel == 'isServer':
                 ctx['calls'].append('isServer' if recv != save_dict else 'isServer(saveDict?)')
                 uc_.reg_write(UC_ARM_REG_R0, ctx['is_server'])
@@ -220,6 +251,24 @@ def main():
     for addr in (stub_super, stub_send):
         uc.hook_add(UC_HOOK_CODE, hook, begin=addr, end=addr + 4)
 
+    # The in-ELF PLT veneer for memcpy (0x1C2894 -> GOT slot 0x105FB40,
+    # rel.plt idx 16): CaveTroll's state blob copy calls it.
+    VENEER_MEMCPY = 0x1C2894
+
+    def veneer_hook(uc_, address, size, data):
+        assert address == VENEER_MEMCPY, hex(address)
+        dest = uc_.reg_read(UC_ARM_REG_R0)
+        src = uc_.reg_read(UC_ARM_REG_R1)
+        count = uc_.reg_read(UC_ARM_REG_R2)
+        if count:
+            uc_.mem_write(dest, bytes(uc_.mem_read(src, count)))
+        ctx['calls'].append('memcpy')
+        uc_.reg_write(UC_ARM_REG_R0, dest)
+        uc_.reg_write(UC_ARM_REG_PC, uc_.reg_read(UC_ARM_REG_LR))
+
+    uc.hook_add(UC_HOOK_CODE, veneer_hook, begin=VENEER_MEMCPY,
+                end=VENEER_MEMCPY + 4)
+
     # the state-blob bytes live at graph+0x3000
     uc.mem_write(graph + 0x3000, ctx['data_bytes'])
 
@@ -241,6 +290,9 @@ def main():
         ctx['calls'] = []
         ctx['pending_key'] = None
         tokens.clear()
+        if a.trace:
+            pc_ring.clear()
+            uc.hook_add(UC_HOOK_CODE, lambda uc_, addr, size, data: pc_ring.append(addr))
         uc.mem_write(self_ptr, b'\x00' * IMAGE_SIZE)
         word(self_ptr + 4, world)    # the real super init stores world@4
         word(self_ptr + 8, dyn)      # ... and dynamicWorld@8
@@ -252,8 +304,24 @@ def main():
         uc.reg_write(UC_ARM_REG_LR, stop)
         word(sp, save_dict)
         word(sp + 4, cache)
-        uc.emu_start(imp, stop, count=40000)
-        assert uc.reg_read(UC_ARM_REG_PC) == stop, f'{cls}: no return'
+        try:
+            uc.emu_start(imp, stop, count=40000)
+        except Exception as e:
+            if a.trace:
+                print(f'  CRASH in {cls}: {e}')
+                print(f'  last PCs: {[hex(p) for p in pc_ring]}')
+                print(f'  calls: {ctx["calls"]}')
+                print(f'  registers: r0={uc.reg_read(UC_ARM_REG_R0):#x} '
+                      f'r1={uc.reg_read(UC_ARM_REG_R1):#x} '
+                      f'r2={uc.reg_read(UC_ARM_REG_R2):#x} '
+                      f'lr={uc.reg_read(UC_ARM_REG_LR):#x}')
+            raise
+        if uc.reg_read(UC_ARM_REG_PC) != stop:
+            if a.trace:
+                print(f'  NO-RETURN in {cls}: pc={uc.reg_read(UC_ARM_REG_PC):#x}')
+                print(f'  last PCs: {[hex(p) for p in list(pc_ring)[-40:]]}')
+                print(f'  calls: {ctx["calls"]}')
+            raise AssertionError(f'{cls}: no return')
         ret = uc.reg_read(UC_ARM_REG_R0)
         image = bytearray(uc.mem_read(self_ptr, IMAGE_SIZE))
         image[4:12] = b'\x00' * 8   # the stubbed super's base slots
@@ -327,7 +395,8 @@ def main():
         extra_fn.restype = ctypes.c_char_p
         bridges[opt] = (keys_fn, seq_fn, img_fn, extra_fn)
 
-    MODELLED = {'SteamTrain', 'OwnershipSign', 'Painting', 'DropBear'}
+    MODELLED = {'SteamTrain', 'OwnershipSign', 'Painting', 'DropBear',
+                'CaveTroll'}
     ctx['is_server'] = 1   # phase 2 always runs the server-gated paths
     rows = []
     for entry in ENTRIES:

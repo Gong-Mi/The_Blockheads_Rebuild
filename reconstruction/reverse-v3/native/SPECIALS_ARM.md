@@ -83,12 +83,32 @@ age: `age > maxAge` -> `[self removeFromMacroBlock]` + `[self release]` +
 self. The death branch is exercised as case 4 (maxAge stub set to 0) and is
 now documented in the npc_full module's reason.
 
-## Still to model
+### CaveTroll 39 (0x00D538CC, super = NPC)
 
-CaveTroll 39 (the fromSquare travel-state block, the `dead` byte,
-`defendSquare.x/.y` and the `state` data blob copied through the in-ELF
-memcpy veneer 0x1C2894). Its `--dump` output is one command away; the pinned
-model lands here as it is written.
+Own body, ARM-attested: super, then the coordinate-wrap helper — an in-ELF
+function at 0xA12F64 that calls `[world worldWidthMacro]`/`macroTiles` and
+wraps a coordinate into `worldWidthMacro*32` — runs before the reads:
+`defendSquare.x` intValue -> word @356, `defendSquare.y` intValue -> word
+@360, `state` probe -> when present `[bytes]`/`[length]` -> **memcpy** (the
+PLT veneer 0x1C2894, GOT slot 0x105FB40) into the @208 blob, `dead`
+boolValue -> STRB @56. When the state blob was present the wrap helper runs
+AGAIN (the movement-state re-init block), then `[self
+initSubDerivedStuffStuff]`. `travelSpeed@312`/`travelFraction@400` are
+world-derived (4.0f / 1.0f under the harness's worldWidthMacro=4 stub).
+
+Harness facts this class forced (all now generic in the runner): the binary
+has a SECOND set of msgSend pointers — the PLT's own GOT slots (rel.plt,
+objc_msgSend at 0x105FB18); bodies that call the PLT stub (CaveTroll does)
+need EVERY slot patched by symbol. The memcpy veneer is stubbed with real
+copy semantics, `worldWidthMacro`/`worldHeightMacro` answer 4 (returning 0
+spins the wrap helper forever), and `--trace` records the last PCs / call
+list / registers so a runaway execution is diagnosed instead of guessed.
+
+## Coverage
+
+All five specials are modelled and pinned: SteamTrain 42, OwnershipSign 60,
+Painting 52, DropBear 25, CaveTroll 39 — 25/25 cases across the four-case
+scheme (plus DropBear's death case 4).
 
 Boundary: Unicorn with a synthetic ObjC graph — not Foundation, not the
 original-app runtime, not device gameplay. The device pass (0.2-b5f

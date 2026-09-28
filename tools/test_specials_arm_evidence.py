@@ -49,6 +49,8 @@ def main() -> int:
         "{25, kDropBear, 9, \"loadDerivedStuff\",",
         "dies of old age",
         "0x4479A000",
+        "{39, kCaveTroll, 4, \"initSubDerivedStuffStuff\",",
+        "0x1C2894",
         "0x4BE068",
         "movw lr, #0xf",
         "resolveOwnerName",
@@ -61,6 +63,11 @@ def main() -> int:
     require(ROOT / "reconstruction/recovered/npc_full.cpp", [
         "EXECUTED differential",
         "RETURNS NIL (dies of old age)",
+        "memcpy veneer",
+    ])
+    require(ROOT / "tools/test_specials_arm.py", [
+        "VENEER_MEMCPY = 0x1C2894",
+        "worldWidthMacro",
     ])
     # Painting's pinned structure (MODEL: 52) + the harness's five entries
     require(ROOT / "tools/test_specials_arm.py", [

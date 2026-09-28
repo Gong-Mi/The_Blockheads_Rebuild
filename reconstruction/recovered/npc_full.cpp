@@ -255,10 +255,13 @@ ClientDynamicObject npc_full_factory(int type_id, const SaveDict& entry,
     }
     if (type_id == 39) {
         object.status_reason +=
-            "; CaveTroll own body (listing decode): dead byte, "
-            "defendSquare.x/.y@356/@360, the state data blob (hex+size); the "
-            "initSubDerivedStuffStuff tail hook and the world calls "
-            "(removeFromMacroBlock/interactingTile) carry no save state";
+            "; CaveTroll own body (EXECUTED differential "
+            "tools/test_specials_arm.py: call order incl. the state-presence "
+            "gate around the movement-state re-init): dead STRB@56, "
+            "defendSquare.x/.y@356/@360, the state data blob (hex+size) copied "
+            "through the in-binary memcpy veneer into @208; the wrap helper's "
+            "[world worldWidthMacro] queries and the world-derived "
+            "travelSpeed@312/travelFraction@400 are not evaluable offline";
     }
     return object;
 }

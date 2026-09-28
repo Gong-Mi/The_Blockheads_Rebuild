@@ -38,12 +38,16 @@
 //       age@88 += ([world worldTime] (a DOUBLE) - saveTime); when
 //       age > [self maxAge] the body calls removeFromMacroBlock + release and
 //       returns NIL; otherwise loadDerivedStuff + return self.
-//   CaveTroll 39 -(0x00d538cc, 408w, super NPC): its own body reads after
-//       the super init — dead byte (NPC.dead@56) ; defendSquare.x/.y int
-//       words @356/@360 ; state (the record's data blob -> the @208 state
-//       buffer, captured here as its hex + byte count) ; plus an
-//       initSubDerivedStuffStuff tail hook and world calls
-//       (removeFromMacroBlock / interactingTile).
+//   CaveTroll 39 -(0x00d538cc, 408w, super NPC): its own body, ARM-attested
+//       by the EXECUTED differential (tools/test_specials_arm.py) — super,
+//       then the coordinate-wrap helper ([world worldWidthMacro] queries),
+//       then: defendSquare.x/.y intValue -> words @356/@360 ; state probe;
+//       when present: [bytes]/[length] -> memcpy (PLT veneer 0x1C2894) into
+//       the @208 blob ; dead boolValue -> STRB @56 ; when the state blob was
+//       present the wrap helper runs again (the movement-state re-init),
+//       then [self initSubDerivedStuffStuff]. travelSpeed@312/travelFraction
+//       @400 are world-derived (4.0f / 1.0f under the harness's
+//       worldWidthMacro=4 stub).
 //
 // Save-record keys are therefore FULLY explained for the family:
 //   {uniqueID, pos_x, pos_y, floatPos}                     (base level)
