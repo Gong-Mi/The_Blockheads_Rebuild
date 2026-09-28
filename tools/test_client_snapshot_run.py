@@ -179,6 +179,14 @@ TYPED_RECORDS = {
         floatPos=[74.5, 510.0], age=900.0, dead=False, growthCounter=0.24,
         height=10, treeFruit=[], treeSeasonOffset=7,
     )),
+    # InteractionObject family: the executed 352w mid-chain init.
+    15: ("InteractionObject", 220, 92, 520, dict(
+        floatPos=[92.5, 520.0], isInUse=True, flipped=False,
+        paintColor=70000, currentBlockheadIndex=5, ownerID="c-1",
+    )),
+    64: ("Mirror", 221, 93, 520, dict(
+        floatPos=[93.5, 520.0], isInUse=False, flipped=True, paintColor=2,
+    )),
     # TradePortal: static own keys + the executed b4i clamp hook.
     50: ("TradePortal", 200, 89, 519, dict(
         floatPos=[89.5, 519.0], level=1,
@@ -361,6 +369,8 @@ EXPECT_REASON = {
     14: "b4p",            # FreeBlock executed read-back
     50: "b4i",            # TradePortal clamp hook executed
     48: "sellSlot",       # TradingPost slot hook executed
+    15: "executed 352w",  # InteractionObject executed differential
+    64: "zero-own-key",   # Mirror zero-own-key forwarder over the same chain
 }
 
 

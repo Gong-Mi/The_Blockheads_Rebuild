@@ -3,6 +3,7 @@
 #include "chest_full.h"
 #include "freeblock_full.h"
 #include "gatherblock_full.h"
+#include "interaction_full.h"
 #include "kelpvine_full.h"
 #include "tradeportal_full.h"
 #include "tradingpost_full.h"
@@ -428,6 +429,20 @@ void OriginalClientApp::registerRecoveredFactories() {
     };
     registry_.registerFactory(
         14, make_freeblock_factory(14), "freeblock full chain (b4p executed",
+        ObjectLoadStatus::Recovered);
+    // InteractionObject 15 / Mirror 64: the EXECUTED 352w mid-chain init.
+    // Mirror itself is a zero-own-key super forwarder, so its whole record
+    // domain is the InteractionObject key set.
+    const auto make_interaction_factory = [](int type_id) {
+        return [type_id](const SaveDict& entry, std::string* error) {
+            return interaction_full_factory(type_id, entry, nullptr, error);
+        };
+    };
+    registry_.registerFactory(
+        15, make_interaction_factory(15), "interaction full chain (352w executed",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        64, make_interaction_factory(64), "mirror full chain (zero-own + executed super",
         ObjectLoadStatus::Recovered);
     // TradePortal 50 / TradingPost 48: static own keys (UPPERMID15) + the
     // executed normalization/slot hooks; InteractionObject boundary stated.
