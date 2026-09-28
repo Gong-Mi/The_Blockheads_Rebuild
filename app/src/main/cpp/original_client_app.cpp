@@ -1,6 +1,7 @@
 #include "original_client_app.h"
 
 #include "chest_full.h"
+#include "freeblock_full.h"
 #include "gatherblock_full.h"
 #include "kelpvine_full.h"
 #include "trainstation_full.h"
@@ -415,6 +416,16 @@ void OriginalClientApp::registerRecoveredFactories() {
         ObjectLoadStatus::Recovered);
     registry_.registerFactory(
         58, make_kelpvine_factory(58), "vine chain (b4o executed",
+        ObjectLoadStatus::Recovered);
+    // FreeBlock 14: the b4p executed save surface (12 keys + subItems
+    // counts); world tail + item decode stated as not run/not performed.
+    const auto make_freeblock_factory = [](int type_id) {
+        return [type_id](const SaveDict& entry, std::string* error) {
+            return freeblock_full_factory(type_id, entry, nullptr, error);
+        };
+    };
+    registry_.registerFactory(
+        14, make_freeblock_factory(14), "freeblock full chain (b4p executed",
         ObjectLoadStatus::Recovered);
     // Chest 46: the b4m executed surface (chestType / safeClientID /
     // saveItemSlots counts / shelf_0..3) + the stated InteractionObject

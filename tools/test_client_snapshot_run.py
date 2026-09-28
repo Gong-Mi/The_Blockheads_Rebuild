@@ -179,6 +179,14 @@ TYPED_RECORDS = {
         floatPos=[74.5, 510.0], age=900.0, dead=False, growthCounter=0.24,
         height=10, treeFruit=[], treeSeasonOffset=7,
     )),
+    # FreeBlock: b4p executed save surface (12 keys, subItems counts).
+    14: ("FreeBlock", 190, 87, 518, dict(
+        floatPos=[87.5, 518.0], bounceTimer=0.1, fallSpeed=0.2,
+        creationTime=100.0, **{"floatPos[VX]": 87.5, "floatPos[VY]": 518.0},
+        hovers=True, itemType=3, dataA=1, dataB=2,
+        subItems=[[{"itemType": 1}], []],
+        dynamicObjectSaveDict={"seed": 1}, priorityBlockheadUinqueID=0,
+    )),
     # Chest: b4m executed surface (chestType / slots counts / shelf_0..3).
     46: ("Chest", 180, 86, 517, dict(
         floatPos=[86.5, 517.0], chestType=2,
@@ -339,6 +347,7 @@ EXPECT_REASON = {
     61: "Plant loadSaveDictValues",
     49: "ownkey5",        # TrainStation own key {text} executed
     46: "b4m",            # Chest executed read-back
+    14: "b4p",            # FreeBlock executed read-back
 }
 
 

@@ -319,6 +319,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             kelpvine_full.cpp
             trainstation_full.cpp
             chest_full.cpp
+            freeblock_full.cpp
             original_client_world.cpp)
         target_include_directories(original_client_app PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}
@@ -360,6 +361,10 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         target_link_libraries(test_chest_full PRIVATE original_client_app)
         target_compile_options(test_chest_full PRIVATE -UNDEBUG)
         add_test(NAME chest_full COMMAND test_chest_full)
+        add_executable(test_freeblock_full ../../tools/test_freeblock_full.cpp)
+        target_link_libraries(test_freeblock_full PRIVATE original_client_app)
+        target_compile_options(test_freeblock_full PRIVATE -UNDEBUG)
+        add_test(NAME freeblock_full COMMAND test_freeblock_full)
         add_executable(client_app_skeleton_cli ../../tools/client_app_skeleton_cli.cpp)
         target_link_libraries(client_app_skeleton_cli PRIVATE original_client_app)
         # Standalone reverse-pipeline run test: assemble a snapshot fixture and

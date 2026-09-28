@@ -58,7 +58,7 @@ const char* kPlistNoTypeAndOutOfRange = R"(<?xml version="1.0"?>
 		</dict>
 		<dict>
 			<key>dynamicObjectType</key>
-			<integer>14</integer>
+			<integer>22</integer>
 			<key>uniqueID</key>
 			<integer>9</integer>
 		</dict>
@@ -288,7 +288,7 @@ int main() {
             assert(report.type_key_used.at("dynamicObjectType") == 1);
             assert(report.type_key_used.at("record_key") == 1);
             assert(report.per_type.at(23) == 1);
-            assert(report.per_type.at(14) == 1);
+            assert(report.per_type.at(22) == 1);
             assert(report.per_type.at(30) == 1);
             assert(report.shared_object_type_objects == 0);
         }

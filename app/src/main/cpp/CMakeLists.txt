@@ -69,6 +69,7 @@ add_library(native-lib SHARED
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/kelpvine_full.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/trainstation_full.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/chest_full.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/freeblock_full.cpp
             original_save_dict.cpp
             dynamic_object_registry.cpp
             original_client_app.cpp
