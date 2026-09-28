@@ -77,11 +77,28 @@ def sweep(elf: Path, tsv: Path, out: Path):
         # copy, sounds); the call's arguments live within the next few
         # hundred bytes, so bound the window to the following lines.
         lines = text.splitlines()
-        site = next(i for i, l in enumerate(lines) if SEL_REF in l)
+        sites = [i for i, l in enumerate(lines) if SEL_REF in l]
         # the compiler builds the argument arrays BEFORE loading the
-        # selector, so the call's literals sit just before the site.
-        window = "\n".join(lines[max(0, site - 320):site + 40])
-        all_lits = re.findall(r"CFString key obj @0x[0-9a-f]+ '([^']+)'", window)
+        # selector, so the call's literals sit just before the site; a
+        # method may build SEVERAL shaders (Weather: Snow + Rain), so scan
+        # each call site's own backward window and merge the results.
+        all_lits = []
+        for i, site in enumerate(sites):
+            # each call's own neighbourhood: clipped at the midpoints to the
+            # neighbouring sites (a method may build several shaders).
+            lo_ = (sites[i - 1] + site) // 2 if i else max(0, site - 200)
+            hi_ = ((site + sites[i + 1]) // 2
+                   if i + 1 < len(sites) else min(len(lines), site + 200))
+            seg = "\n".join(lines[lo_:hi_])
+            all_lits.extend(re.findall(
+                r"CFString key obj @0x[0-9a-f]+ '([^']+)'", seg))
+        seen_lit = set()
+        dedup = []
+        for lit in all_lits:
+            if lit not in seen_lit:
+                seen_lit.add(lit)
+                dedup.append(lit)
+        all_lits = dedup
         vsh = {p.stem for p in (ROOT / "reconstruction/reverse-v3/assets/shaders").glob("*.vsh")}
         start = next((i for i, s in enumerate(all_lits) if s in vsh), None)
         lits = []
