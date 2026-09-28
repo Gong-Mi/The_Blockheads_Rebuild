@@ -185,6 +185,36 @@ the fast enumeration over `subviews@44` recursing into
 shape as the touch walk. The render front's next slice is the quad pipeline
 those leaf calls bottom out in.
 
+### The render front: the base recurses, the leaves paint
+
+`MJView -renderFrame:projectionMatrix:` (271w) turns out to be a **pure
+container**: the `hidden@4` gate, then the subview enumeration calling
+`[subview renderFrame:projectionMatrix:]` — **no draw call of its own** (the
+`memset`/enumeration-mutation codes are the loop housekeeping). So the
+render front's real body is in the leaf painters.
+
+**MJButton -renderFrame:projectionMatrix: (3071w)** — the button painter
+(`disasm_mjbutton_render.txt`), structure read from its selector/ivar
+references:
+
+- its own GL program: `shader@108` with a cached `uniformLocations` array
+  (six `intValue` / `objectAtIndex:` lookups pushing the per-part uniforms,
+  including the atlas `maxS`/`maxT`);
+- the state-driven texture set: `backgroundTexture@112`,
+  `backgroundSelectedTexture@116`, `backgroundHighlightedTexture@120`,
+  `backgroundHighlightedSelectedTexture@124` selected from
+  `isSelected@168` / `hoverSelectedDisabled@169` / `Control.hover@68` /
+  `Control.enabled@71` / `View.color@28`;
+- the two glyph layers (`glyphTexture@132`, `glyphTextureB@192`,
+  `glyphColor@152`) and the two title views (`titleView@128`,
+  `titleViewB@248`);
+- the tap animation: `lastRenderTime@264` against
+  `timeIntervalSinceReferenceDate` with `startTouchAnimationTimer@96` (the
+  timer `startTouch:`/`endTouch:` reset).
+
+The next slice: the quad pipeline the shader path feeds (the leaf calls'
+GL side), and the panels' own render overrides (e.g. DPad's 1960w).
+
 ### The traversal, modelled: `reconstruction/recovered/ui_touch_router.*`
 
 The decoded traversal semantics are now a module (CTest `ui_touch_router`,
