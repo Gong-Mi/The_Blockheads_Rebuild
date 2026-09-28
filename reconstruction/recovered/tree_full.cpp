@@ -3,7 +3,8 @@
 
 namespace bh176 {
 
-TreeFullState tree_full_load(const SaveDict& entry, bool is_static_tree) {
+TreeFullState tree_full_load(const SaveDict& entry, bool is_static_tree,
+                             int type_id) {
     using blockheads::recovered::TreeLoadInputs;
     using blockheads::recovered::tree_load_save_dict_stage1;
 
@@ -69,12 +70,46 @@ TreeFullState tree_full_load(const SaveDict& entry, bool is_static_tree) {
         state.max_age = SaveDict::floatValue(entry.objectForKey("maxAge"));
     }
 
-    // --- AppleTree/PineTree own key (ownkey5 static: availableFood -> @136);
-    // presence-gated exactly like the Tulip own-key block ---
-    if (entry.objectForKey("availableFood") != nullptr) {
-        state.has_available_food = true;
-        state.available_food =
-            SaveDict::floatValue(entry.objectForKey("availableFood"));
+    // --- per-class own keys (b3b read-back tables, static) ----------------
+    // CactusTree 5: read order super-then-own; availableFood lands at @148
+    // (a DIFFERENT ivar than the fruit trees' @136), plus splitHeightA@136,
+    // splitHeightB@140, splitDirection@144.
+    const bool is_cactus = (type_id == 5);
+    if (is_cactus) {
+        const SaveValue* a = entry.objectForKey("splitHeightA");
+        const SaveValue* b = entry.objectForKey("splitHeightB");
+        const SaveValue* d = entry.objectForKey("splitDirection");
+        const SaveValue* food = entry.objectForKey("availableFood");
+        if (a != nullptr || b != nullptr || d != nullptr || food != nullptr) {
+            state.has_cactus_own = true;
+            state.split_height_a = static_cast<std::int32_t>(
+                SaveDict::intValue(a));
+            state.split_height_b = static_cast<std::int32_t>(
+                SaveDict::intValue(b));
+            state.split_direction = SaveDict::boolValue(d);
+            state.cactus_available_food = SaveDict::floatValue(food);
+        }
+    } else {
+        // AppleTree 1 / PineTree 4 (and the generic unit-test path): the
+        // availableFood own key maps to @136. Presence-gated exactly like
+        // the Tulip own-key block.
+        if (entry.objectForKey("availableFood") != nullptr) {
+            state.has_available_food = true;
+            state.available_food =
+                SaveDict::floatValue(entry.objectForKey("availableFood"));
+        }
+    }
+    // GemTree 57: read order own-then-super; gemTreeType@136, fruitYear@140.
+    {
+        const SaveValue* t = entry.objectForKey("gemTreeType");
+        const SaveValue* y = entry.objectForKey("fruitYear");
+        if (t != nullptr || y != nullptr) {
+            state.has_gem_own = true;
+            state.gem_tree_type =
+                static_cast<std::int32_t>(SaveDict::intValue(t));
+            state.fruit_year =
+                static_cast<std::int32_t>(SaveDict::intValue(y));
+        }
     }
     return state;
 }
@@ -85,15 +120,16 @@ ClientDynamicObject tree_full_factory(int type_id, const SaveDict& entry,
     if (error) error->clear();
     // A loaded tree record is a real tree: [self isStaticTree] is false and
     // the gene/growth block runs (the static-gate control lives in the test).
-    const TreeFullState state = tree_full_load(entry, /*is_static_tree=*/false);
+    const TreeFullState state =
+        tree_full_load(entry, /*is_static_tree=*/false, type_id);
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
     object.status = ObjectLoadStatus::Recovered;
     object.status_reason =
         "tree full chain: DynamicObject base + Tree stage1 (executed b4d) + "
-        "gene/growth block (static b3a offsets) + availableFood own key "
-        "(static, presence-gated)";
+        "gene/growth block (static b3a offsets) + own keys (b3b read-back "
+        "static, presence-gated)";
     return object;
 }
 

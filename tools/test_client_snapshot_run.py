@@ -108,6 +108,62 @@ TYPED_RECORDS = {
         hasFloweredThisSeason=False, maxAge=15729.88, maxAgeGene=182,
         saveTime=900.0, seasonOffset=-4,
     )),
+    # --- family expansion (2026-09-28) ---------------------------------------
+    # ClownFish/Shark/Scorpion share the forwarder5 zero-own-state body with
+    # Dodo, so their records carry the NPC key set exactly.
+    35: ("ClownFish", 121, 90, 520, dict(
+        floatPos=[90.5, 520.0], age=800.0, breed=0, damage=0,
+        fullness=400.0, hasBeenFedByBlockheadOrChest=False, hasBred=False,
+        layCooldownTimer=10.0, layTimer=0.0, mateBreed=0,
+        mateCooldownTimer=0.0, saveTime=900.0, tameCooldownTimer=0.0,
+    )),
+    36: ("Shark", 122, 91, 520, dict(
+        floatPos=[91.5, 520.0], age=900.0, breed=0, damage=0,
+        fullness=500.0, hasBeenFedByBlockheadOrChest=False, hasBred=False,
+        layCooldownTimer=11.0, layTimer=0.0, mateBreed=0,
+        mateCooldownTimer=0.0, saveTime=900.0, tameCooldownTimer=0.0,
+    )),
+    51: ("Scorpion", 123, 92, 520, dict(
+        floatPos=[92.5, 520.0], age=1000.0, breed=0, damage=0,
+        fullness=600.0, hasBeenFedByBlockheadOrChest=False, hasBred=False,
+        layCooldownTimer=12.0, layTimer=0.0, mateBreed=0,
+        mateCooldownTimer=0.0, saveTime=900.0, tameCooldownTimer=0.0,
+    )),
+    # Yak = the NPC chain + ownkey5 own keys milk/hair (executed).
+    63: ("Yak", 124, 93, 520, dict(
+        floatPos=[93.5, 520.0], age=1100.0, breed=0, damage=0,
+        fullness=700.0, hasBeenFedByBlockheadOrChest=False, hasBred=False,
+        layCooldownTimer=13.0, layTimer=0.0, mateBreed=0,
+        mateCooldownTimer=0.0, saveTime=900.0, tameCooldownTimer=0.0,
+        milk=2.5, hair=12.0,
+    )),
+    # CoconutTree: the Tree chain is its whole record (b3b: own keys empty).
+    6: ("CoconutTree", 125, 94, 521, dict(
+        floatPos=[94.5, 521.0], age=2000.0, dead=False,
+        growthCounter=0.1, growthRate=0.2, growthRateGene=200, height=3,
+        maxAge=20000.0, maxHeight=12, maxHeightGene=210,
+        maxHeightReached=3, removeCheckCount=0.0, saveTime=900.0,
+        timeDied=0.0, treeFruit=[], treeSeasonOffset=0,
+    )),
+    # CactusTree: Tree + b3b own keys (super then own; availableFood@148).
+    5: ("CactusTree", 126, 95, 521, dict(
+        floatPos=[95.5, 521.0], age=2100.0, dead=False,
+        growthCounter=0.11, growthRate=0.21, growthRateGene=201, height=4,
+        maxAge=21000.0, maxHeight=13, maxHeightGene=211,
+        maxHeightReached=4, removeCheckCount=0.0, saveTime=900.0,
+        timeDied=0.0, treeFruit=[], treeSeasonOffset=1,
+        splitHeightA=3, splitHeightB=4, splitDirection=True,
+        availableFood=12.5,
+    )),
+    # GemTree: Tree + b3b own keys (own then super; gemTreeType/fruitYear).
+    57: ("GemTree", 127, 96, 521, dict(
+        floatPos=[96.5, 521.0], age=2200.0, dead=False,
+        growthCounter=0.12, growthRate=0.22, growthRateGene=202, height=5,
+        maxAge=22000.0, maxHeight=14, maxHeightGene=212,
+        maxHeightReached=5, removeCheckCount=0.0, saveTime=900.0,
+        timeDied=0.0, treeFruit=[], treeSeasonOffset=2,
+        gemTreeType=2, fruitYear=3,
+    )),
 }
 
 WORLD_TIME = 900.0
@@ -216,10 +272,10 @@ def main() -> int:
 
         try:
             assert field(out, "blocks") == 1, out
-            assert field(out, "dynamic records") == 10, out
-            assert field(out, "dynamic objects") == 10, out
+            assert field(out, "dynamic records") == len(TYPED_RECORDS), out
+            assert field(out, "dynamic objects") == len(TYPED_RECORDS), out
             assert field(out, "stub objects") == 0, out
-            assert field(out, "recovered objects") == 10, out
+            assert field(out, "recovered objects") == len(TYPED_RECORDS), out
             assert field(out, "unidentified objects") == 0, out
             assert field(out, "out-of-range types") == 0, out
             assert field(out, "opaque records") == 0, out
@@ -246,7 +302,7 @@ def main() -> int:
         expected_names = {type_id: rec[0]
                           for type_id, rec in TYPED_RECORDS.items()}
         errors = []
-        if report["recovered_objects"] != 10:
+        if report["recovered_objects"] != len(TYPED_RECORDS):
             errors.append(f"recovered={report['recovered_objects']}")
         if report["stub_objects"] != 0:
             errors.append(f"stub={report['stub_objects']}")
@@ -265,7 +321,8 @@ def main() -> int:
             print(json.dumps(report, indent=2)[:4000])
             return 1
 
-    print("client-snapshot-run: PASS (10/10 recovered through the CLI)")
+    n = len(TYPED_RECORDS)
+    print(f"client-snapshot-run: PASS ({n}/{n} recovered through the CLI)")
     return 0
 
 

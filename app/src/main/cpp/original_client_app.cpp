@@ -361,6 +361,22 @@ void OriginalClientApp::registerRecoveredFactories() {
     registry_.registerFactory(
         28, make_npc_factory(28), "npc full chain (b3g/b4f executed",
         ObjectLoadStatus::Recovered);
+    // NPC family expansion: the forwarder5 five are word-for-word identical
+    // zero-own-state readers (ClownFish 35 / Shark 36 / Scorpion 51 join the
+    // already-registered Dodo 13 / DonkeyLike 28), and Yak 63 = the same
+    // chain + ownkey5 own keys {milk, hair} (executed; presence-gated).
+    registry_.registerFactory(
+        35, make_npc_factory(35), "npc full chain (b3g/b4f executed",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        36, make_npc_factory(36), "npc full chain (b3g/b4f executed",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        51, make_npc_factory(51), "npc full chain (b3g/b4f executed",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        63, make_npc_factory(63), "npc full chain (b3g/b4f executed",
+        ObjectLoadStatus::Recovered);
     // Tree family (bucket A, trees): AppleTree 1 / PineTree 4 / OrangeTree 7.
     // Stage 1 keys are an executed differential (b4d); the gene/growth block
     // is a static decode (b3a) — the factory's reason string states both
@@ -378,6 +394,21 @@ void OriginalClientApp::registerRecoveredFactories() {
         ObjectLoadStatus::Recovered);
     registry_.registerFactory(
         7, make_tree_factory(7), "tree full chain (stage1 executed b4d",
+        ObjectLoadStatus::Recovered);
+    // Tree family expansion: CactusTree 5 / CoconutTree 6 / GemTree 57.
+    // CoconutTree's own-key set is EMPTY (b3b: super only) — the Tree chain
+    // is its whole record. CactusTree and GemTree carry own keys with b3b
+    // read-back tables (splitHeightA/B/Direction/availableFood@148 and
+    // gemTreeType/fruitYear); the factory captures them presence-gated and
+    // the reason names the static evidence level.
+    registry_.registerFactory(
+        5, make_tree_factory(5), "tree full chain (stage1 executed b4d",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        6, make_tree_factory(6), "tree full chain (stage1 executed b4d",
+        ObjectLoadStatus::Recovered);
+    registry_.registerFactory(
+        57, make_tree_factory(57), "tree full chain (stage1 executed b4d",
         ObjectLoadStatus::Recovered);
     // Workbench (bucket C, the last snapshot stub): the b4q executed
     // differential (16 scalars + lightDict presence); the InteractionObject

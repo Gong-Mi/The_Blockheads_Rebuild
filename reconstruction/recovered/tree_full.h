@@ -78,15 +78,34 @@ struct TreeFullState {
     float growth_rate = 0.0f;
     float growth_counter = 0.0f;
     float max_age = 0.0f;
-    // AppleTree/PineTree own key (static)
+    // AppleTree/PineTree own key (b3b read-back, static): availableFood
+    // floatValue -> @136. Presence-gated.
     bool has_available_food = false;
     float available_food = 0.0f;
+    // CactusTree own keys (b3b read-back, static; read order: super then own):
+    // splitHeightA@136 word, splitHeightB@140 word, splitDirection@144 byte,
+    // availableFood@148 float (the same key name as the fruit trees but a
+    // DIFFERENT ivar offset on this class).
+    bool has_cactus_own = false;
+    std::int32_t split_height_a = 0;
+    std::int32_t split_height_b = 0;
+    bool split_direction = false;
+    float cactus_available_food = 0.0f;
+    // GemTree own keys (b3b read-back, static; read order: own then super):
+    // gemTreeType@136 word, fruitYear@140 word.
+    bool has_gem_own = false;
+    std::int32_t gem_tree_type = 0;
+    std::int32_t fruit_year = 0;
 };
 
 // Reads ONE dynamic-object entry dictionary through the Tree chain.
 // is_static_tree models [self isStaticTree]; real loaded trees are false.
-// Unknown keys are ignored, never invented; a missing key decodes as nil.
-TreeFullState tree_full_load(const SaveDict& entry, bool is_static_tree);
+// type_id selects the per-class own-key block (5 CactusTree, 57 GemTree,
+// 1/4 fruit trees); 0 keeps the generic presence-gated behaviour the unit
+// tests use. Unknown keys are ignored, never invented; a missing key
+// decodes as nil.
+TreeFullState tree_full_load(const SaveDict& entry, bool is_static_tree,
+                             int type_id = 0);
 
 // The registry factory for the tree family (AppleTree 1 / PineTree 4 /
 // OrangeTree 7). The stage-1 keys are an executed contract; the gene/growth

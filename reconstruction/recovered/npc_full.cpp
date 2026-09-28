@@ -147,6 +147,18 @@ NpcFullState npc_full_load(const SaveDict& entry) {
     state.saved_blockhead_index =
         static_cast<std::int32_t>(loadWord(image, 136));
 
+    // --- Yak own keys (ownkey5 executed: milk@1136 then hair@1140, each
+    // floatValue into its own ivar; the updateTextures tail hook carries no
+    // save state). Presence-gated: only Yak records carry these keys. ---
+    if (const SaveValue* milk = entry.objectForKey("milk")) {
+        state.has_milk = true;
+        state.milk = SaveDict::floatValue(milk);
+    }
+    if (const SaveValue* hair = entry.objectForKey("hair")) {
+        state.has_hair = true;
+        state.hair = SaveDict::floatValue(hair);
+    }
+
     return state;
 }
 
@@ -163,6 +175,11 @@ ClientDynamicObject npc_full_factory(int type_id, const SaveDict& entry,
     object.status_reason =
         "npc full chain executed: DynamicObject base + NPC "
         "initWithWorld/loadValuesFromSaveDict (executed b3g/b4f)";
+    if (type_id == 63) {
+        object.status_reason +=
+            "; Yak own keys milk/hair (ownkey5 executed, presence-gated); "
+            "the updateTextures tail hook carries no save state";
+    }
     return object;
 }
 

@@ -123,6 +123,37 @@ int main() {
     assert(state3.g1_present);
     assert(state3.damage == 4464);
 
+    // ---- Yak: the same NPC chain + ownkey5 own keys {milk, hair} ---------
+    const char* kYakRecord = R"(<?xml version="1.0"?>
+<plist version="1.0"><dict><key>dynamicObjects</key><array>
+<dict><key>uniqueID</key><integer>124</integer><key>pos_x</key><integer>93</integer><key>pos_y</key><integer>520</integer><key>age</key><real>1100.0</real><key>fullness</key><real>700.0</real><key>milk</key><real>2.5</real><key>hair</key><real>12.0</real></dict>
+</array></dict></plist>
+)";
+    bh176::SaveValue value4;
+    assert(bh176::parseXmlPlist(kYakRecord, value4, &error));
+    const bh176::SaveDict dict4(value4);
+    const bh176::SaveValue* objects4 = dict4.objectForKey("dynamicObjects");
+    const bh176::SaveValue* entry4 = dict4.objectAtIndex(objects4, 0);
+    const bh176::SaveDict entry4_dict(*entry4);
+    bh176::NpcFullState state4;
+    bh176::ClientDynamicObject object4 =
+        bh176::npc_full_factory(63, entry4_dict, &state4, &error);
+    assert(error.empty());
+    assert(object4.class_name == "Yak");
+    assert(object4.unique_id == 124);
+    assert(object4.status == bh176::ObjectLoadStatus::Recovered);
+    assert(object4.status_reason.find("Yak own keys") != std::string::npos);
+    assert(object4.status_reason.find("ownkey5 executed") != std::string::npos);
+    // the NPC chain still ran (G1 group open, fullness stored)
+    assert(state4.g1_present);
+    assert(state4.fullness > 699.0f && state4.fullness < 701.0f);
+    // the ownkey5 own keys, each into its own slot
+    assert(state4.has_milk && state4.milk == 2.5f);
+    assert(state4.has_hair && state4.hair == 12.0f);
+    // a Dodo record must NOT get yak own keys
+    assert(!state.has_milk);
+    assert(!state.has_hair);
+
     std::printf("test_npc_full: PASS\n");
     return 0;
 }

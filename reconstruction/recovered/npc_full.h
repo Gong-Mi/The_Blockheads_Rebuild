@@ -82,6 +82,13 @@ struct NpcFullState {
     bool has_name = false;
     bool has_tame_counts = false;
     std::int32_t saved_blockhead_index = -1;  // @136
+    // Yak own keys (ownkey5 executed; read order milk then hair, each key
+    // stores into its OWN ivar — the b3j static order was corrected by the
+    // ARM run). Presence-gated: only Yak records carry them.
+    bool has_milk = false;
+    float milk = 0.0f;   // @1136
+    bool has_hair = false;
+    float hair = 0.0f;   // @1140
 };
 
 // Reads ONE dynamic-object entry dictionary through the executed NPC chain

@@ -114,6 +114,51 @@ int main() {
     assert(state2.max_height_reached == 0);
     assert(state2.fruit_count == 0);
 
+    // ---- CactusTree: own keys route to the @148 block --------------------
+    const char* kCactusRecord = R"(<?xml version="1.0"?>
+<plist version="1.0"><dict><key>dynamicObjects</key><array>
+<dict><key>uniqueID</key><integer>126</integer><key>pos_x</key><integer>95</integer><key>pos_y</key><integer>521</integer><key>age</key><real>2100.0</real><key>height</key><integer>4</integer><key>splitHeightA</key><integer>3</integer><key>splitHeightB</key><integer>4</integer><key>splitDirection</key><true/><key>availableFood</key><real>12.5</real></dict>
+</array></dict></plist>
+)";
+    bh176::SaveValue value3;
+    const bh176::SaveDict entry3 = entryOf(kCactusRecord, value3, error);
+    bh176::TreeFullState state3;
+    bh176::ClientDynamicObject object3 =
+        bh176::tree_full_factory(5, entry3, &state3, &error);
+    assert(error.empty());
+    assert(object3.class_name == "CactusTree");
+    assert(object3.status == bh176::ObjectLoadStatus::Recovered);
+    assert(state3.has_cactus_own);
+    assert(state3.split_height_a == 3);
+    assert(state3.split_height_b == 4);
+    assert(state3.split_direction);
+    assert(state3.cactus_available_food > 12.4f &&
+           state3.cactus_available_food < 12.6f);
+    // the cactus availableFood must NOT land in the fruit-tree @136 slot
+    assert(!state3.has_available_food);
+    assert(state3.available_food == 0.0f);
+
+    // ---- GemTree: own keys (gemTreeType/fruitYear) ------------------------
+    const char* kGemRecord = R"(<?xml version="1.0"?>
+<plist version="1.0"><dict><key>dynamicObjects</key><array>
+<dict><key>uniqueID</key><integer>127</integer><key>pos_x</key><integer>96</integer><key>pos_y</key><integer>521</integer><key>age</key><real>2200.0</real><key>height</key><integer>5</integer><key>gemTreeType</key><integer>2</integer><key>fruitYear</key><integer>3</integer></dict>
+</array></dict></plist>
+)";
+    bh176::SaveValue value4;
+    const bh176::SaveDict entry4 = entryOf(kGemRecord, value4, error);
+    bh176::TreeFullState state4;
+    bh176::ClientDynamicObject object4 =
+        bh176::tree_full_factory(57, entry4, &state4, &error);
+    assert(error.empty());
+    assert(object4.class_name == "GemTree");
+    assert(object4.status == bh176::ObjectLoadStatus::Recovered);
+    assert(state4.has_gem_own);
+    assert(state4.gem_tree_type == 2);
+    assert(state4.fruit_year == 3);
+    // no cactus/fruit own keys on a gem record
+    assert(!state4.has_cactus_own);
+    assert(!state4.has_available_food);
+
     std::printf("test_tree_full: PASS\n");
     return 0;
 }
