@@ -173,6 +173,18 @@ With this the whole touch pipeline's structure is closed end to end:
 widgets (gates + subview recursion + frame test) -> concrete widget
 behaviours.
 
+### The traversal, modelled: `reconstruction/recovered/ui_touch_router.*`
+
+The decoded traversal semantics are now a module (CTest `ui_touch_router`,
+linked into the production library alongside `tree_growth`): a `Node`
+(rect + the MJView `hidden` / `ignoreEvents` gates + the ordered
+`subviews`) whose `touch_is_in_ui` / `start_touch` implement the gates ->
+subview recursion -> frame test shape, and the UIManager-style `route()`
+flat pass (first in-UI view wins; the touch is offered in order until one
+handles it). The test pins the gates, the subview order, the panel's
+own-rect OR and the router pass — the structure the listings attest, with
+the concrete widgets' behaviours left to their own layer.
+
 ## Boundary
 
 The router is decoded and the family base is decoded; a full *model* now
