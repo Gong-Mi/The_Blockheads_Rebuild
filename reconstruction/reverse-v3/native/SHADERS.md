@@ -51,6 +51,31 @@ texture selection, the `color`/`texture` uniforms). **`Text.fsh` is the same
 formula**; the two title layers differ only in the glyph texture and the
 color pushed.
 
+### The class → shader mapping, proven three ways
+
+`MJButton -initWithFrame:cache:windowInfo:textureName:` (0x00D11768) builds
+its shader with the literal constants:
+
+```
+[shaderNamed:@"MJButton"
+ attributes:[NSArray arrayWithObjects:@"position", @"texCoord", nil]
+ uniforms:[NSArray arrayWithObjects:@"mvp_matrix", @"texture", @"color", nil]]
+```
+
+Three independent records agree exactly:
+
+1. the disassembly's CFString refs — "MJButton", "position", "texCoord",
+   "mvp_matrix", "texture", "color" (0x00FADE78..0x00FADEC8);
+2. the shader source in `assets/GameResources/MJButton.vsh/fsh` —
+   `attribute vec4 position; attribute vec4 texCoord;` /
+   `uniform mat4 mvp_matrix; uniform sampler2D texture; uniform vec4 color;`;
+3. the class's ivar map — `shader@108` set at the call, with
+   `backgroundTexture@112` following via `[cache textureNamed:…]`.
+
+The API used here, `shaderNamed:attributes:uniforms:`, is the seam every
+class's render setup goes through, so the rest of the inventory can be
+mapped the same way (class init constants ↔ the .vsh/.fsh pair).
+
 ## The world pipeline
 
 `Basic.vsh`/`Basic.fsh` carry the world's lit/fogged path (the `cloud`
