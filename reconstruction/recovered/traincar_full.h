@@ -10,7 +10,9 @@
 //   rightCarID  -> unsignedLongLongValue -> remoteRightCarID@152 (u64)
 //   leftCarID   -> unsignedLongLongValue -> remoteLeftCarID@144 (u64)
 //   engineCarID -> unsignedLongLongValue -> remoteEngineCarID@160 (u64)
-//   [self loadDerivedStuff] tail hook (no save state)
+//   [self loadDerivedStuff] tail hook — this hook is on the TrainCar chain
+//   (the super); SteamTrain's OWN body calls no hook (ARM-attested by
+//   tools/test_specials_arm.py)
 //   ownerID     -> retain -> @36 (DynamicObject slot)
 //   engineIsRight -> boolValue -> STRB @180
 //
@@ -71,7 +73,9 @@ struct TrainCarFullState {
     bool has_fuel = false;                // @268 STRB
     bool going_right = false;             // @252 STRB
     bool stopped = false;                 // @325 STRB
-    bool tail_hook_not_run = true;        // loadDerivedStuff carries no save state
+    // SteamTrain's own body has no tail hook; the loadDerivedStuff hook lives
+    // on the TrainCar chain (the stubbed super) and carries no save state.
+    bool tail_hook_not_run = true;
 };
 
 TrainCarFullState traincar_full_load(const SaveDict& entry, int type_id);

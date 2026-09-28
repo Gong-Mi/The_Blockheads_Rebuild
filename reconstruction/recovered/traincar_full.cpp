@@ -105,8 +105,10 @@ ClientDynamicObject traincar_full_factory(int type_id, const SaveDict& entry,
             ? "steamtrain full chain: DynamicObject base + the TrainCar "
               "chain (listing decode: formatted currentBlockheadIndex_%d "
               "rider keys, the three car IDs, engineIsRight) + own keys "
-              "fuelFraction@260/hasFuel@268/goingRight@252/stopped@325; the "
-              "loadDerivedStuff tail hook carries no save state"
+              "fuelFraction@260/hasFuel@268/goingRight@252/stopped@325 "
+              "(order ARM-attested by tools/test_specials_arm.py); the body "
+              "calls NO own hook — the loadDerivedStuff hook is the TrainCar "
+              "chain's (the stubbed super) and carries no save state"
             : type_id == 43
                   ? "freightcar: the standard 4-arg init is INHERITED from "
                     "TrainCar (no override in the method table; the chest/"

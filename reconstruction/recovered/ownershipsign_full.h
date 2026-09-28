@@ -21,6 +21,18 @@
 
 namespace bh176 {
 
+// The body's defaults and the clamp applied to a present radius value
+// (ARM-attested: movw lr,#0xf defaults; clampf(x, 1.0, 30.0) at 0x4BE068).
+constexpr std::int32_t kOwnershipDefaultRadius = 15;
+constexpr std::int32_t kOwnershipRadiusMin = 1;
+constexpr std::int32_t kOwnershipRadiusMax = 30;
+
+inline std::int32_t ownershipClampRadius(std::int32_t value) {
+    if (value < kOwnershipRadiusMin) return kOwnershipRadiusMin;
+    if (value > kOwnershipRadiusMax) return kOwnershipRadiusMax;
+    return value;
+}
+
 struct OwnershipSignFullState {
     // base loader (through the Sign chain's base handling)
     std::uint64_t unique_id = 0;

@@ -82,7 +82,38 @@ int main() {
     bh176::OwnershipSignFullState state3;
     bh176::ownershipsign_full_factory(60, empty, &state3, &error);
     assert(!state3.has_text && !state3.has_w && !state3.has_h);
-    assert(state3.width_radius == 0);
+    // the body's DEFAULT radius is 15 (ARM-attested), not 0
+    assert(state3.width_radius == 15 && state3.height_radius == 15);
+
+    // ---- ARM-attested semantics: clamp + the ID gate ---------------------
+    {
+        // a present radius clamps into [1, 30]; a tiny one clamps up to 1
+        bh176::SaveValue value4;
+        const bh176::SaveDict clamped = entryOf(R"(<?xml version="1.0"?>
+<plist version="1.0"><dict><key>dynamicObjects</key><array>
+<dict><key>uniqueID</key><integer>275</integer><key>pos_x</key><integer>3</integer><key>pos_y</key><integer>4</integer><key>landOwnerID</key><string>o</string><key>w</key><integer>70000</integer><key>h</key><integer>0</integer></dict>
+</array></dict></plist>
+)", value4, error);
+        bh176::OwnershipSignFullState state4;
+        bh176::ownershipsign_full_factory(60, clamped, &state4, &error);
+        assert(state4.has_w && state4.width_radius == 30);   // clamped down
+        assert(state4.has_h && state4.height_radius == 1);   // clamped up (0 -> 1)
+    }
+    {
+        // with a nil landOwnerID the body never reads landOwnerName: the
+        // record may carry a name, the loader must not claim it
+        bh176::SaveValue value5;
+        const bh176::SaveDict gated = entryOf(R"(<?xml version="1.0"?>
+<plist version="1.0"><dict><key>dynamicObjects</key><array>
+<dict><key>uniqueID</key><integer>276</integer><key>pos_x</key><integer>5</integer><key>pos_y</key><integer>6</integer><key>landOwnerName</key><string>n</string><key>w</key><integer>7</integer></dict>
+</array></dict></plist>
+)", value5, error);
+        bh176::OwnershipSignFullState state5;
+        bh176::ownershipsign_full_factory(60, gated, &state5, &error);
+        assert(!state5.has_land_owner_id);
+        assert(!state5.has_land_owner_name);   // gated off despite the record
+        assert(state5.has_w && state5.width_radius == 7);
+    }
 
     std::printf("test_painting_sign_full: PASS\n");
     return 0;

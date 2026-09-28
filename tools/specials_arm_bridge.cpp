@@ -1,0 +1,212 @@
+// Optional ARM differential bridge for the "special" loaders whose bodies are
+// not flat key tables (tools/test_specials_arm.py). Incremental: classes are
+// added here as their dumps get modelled and pinned.
+//
+// Modelled so far:
+//   SteamTrain 42 (0x00d18834, super = TrainCar): its own body reads, in this
+//     order — fuelFraction (floatValue -> word @260), hasFuel (boolValue ->
+//     STRB @268), goingRight (boolValue -> STRB @252), stopped (boolValue ->
+//     STRB @325) — and calls NO post-init hook (the loadDerivedStuff hook
+//     belongs to the TrainCar super chain, which the stub super2 stands for).
+#include <cstdint>
+#include <cstring>
+#include <string>
+
+namespace {
+
+enum Conv { C_INT, C_BOOL, C_UINT, C_FLOAT, C_OBJECT };
+
+struct Row {
+    const char* key;
+    Conv conv;
+    int width;   // bytes actually stored
+    int offset;
+};
+
+const Row kSteamTrain[] = {
+    {"fuelFraction", C_FLOAT, 4, 260},
+    {"hasFuel", C_BOOL, 1, 268},
+    {"goingRight", C_BOOL, 1, 252},
+    {"stopped", C_BOOL, 1, 325},
+};
+
+struct ClassRows {
+    int type_id;
+    const Row* rows;
+    int count;
+    const char* hook;            // nullptr when the body has no own hook
+    const char* extras;          // comma-joined extra selectors the stub serves
+    bool gated_reads;            // true: a nil probe skips the value read (w/h)
+    int default_value;           // stored before the reads (OwnershipSign: 30)
+    int clamp_lo;                // 0 = no clamp (OwnershipSign w/h: 1..30)
+    int clamp_hi;
+};
+
+// OwnershipSign 60 (0x00a34b18, super = Sign): its own body, ARM-attested
+// by the differential's per-case dump —
+//   * the w/h radii get a DEFAULT of 15 (movw lr, #0xf; two stores) before
+//     any read;
+//   * `ofk:landOwnerID` is a probe: only when it is non-nil does the object
+//     block run — [old autorelease] x2 (the stale ivar values, nil on a
+//     fresh object), then [[saveDict objectForKey:@"landOwnerID"] retain]
+//     stored @124 and [[saveDict objectForKey:@"landOwnerName"] retain]
+//     stored @128 (the name is read inside the same block);
+//   * each radius then probes its own key: non-nil -> a SECOND read +
+//     intValue + the float clamp helper (0x4BE068 = clampf(x, 1.0, 30.0),
+//     runs natively in the harness) lands the value; nil -> the 15 stays;
+//   * finally [self updateText] (a declared extra selector).
+const Row kOwnershipSign[] = {
+    {"landOwnerID", C_OBJECT, 4, 124},
+    {"landOwnerName", C_OBJECT, 4, 128},
+    {"w", C_INT, 4, 132},
+    {"h", C_INT, 4, 136},
+};
+
+const ClassRows kClasses[] = {
+    {42, kSteamTrain, 4, nullptr, "", false, 0, 0, 0},
+    {60, kOwnershipSign, 4, nullptr, "updateText", true, 15, 1, 30},
+};
+
+const ClassRows* specOf(int type_id) {
+    for (const ClassRows& c : kClasses) {
+        if (c.type_id == type_id) return &c;
+    }
+    return nullptr;
+}
+
+const char* convLabel(Conv conv) {
+    switch (conv) {
+        case C_INT: return "int";
+        case C_BOOL: return "bool";
+        case C_UINT: return "uint";
+        case C_FLOAT: return "float";
+        case C_OBJECT: return "retain";
+    }
+    return "?";
+}
+
+std::uint32_t valueOf(const Row& row, int index, std::uint32_t token_base) {
+    switch (row.conv) {
+        case C_INT: return 0x00012345u;
+        case C_BOOL: return 1u;
+        case C_UINT: return 0x0001FFF1u;
+        case C_FLOAT: return 0x3FC00000u;   // 1.5f
+        case C_OBJECT: return token_base + static_cast<std::uint32_t>(index) * 0x10u;
+    }
+    return 0;
+}
+
+bool presentFor(int case_id, int index) {
+    switch (case_id) {
+        case 0: return true;
+        case 1: return index % 2 == 0;
+        case 3: return index % 2 == 1;
+        default: return false;   // case 2: nil super, no reads
+    }
+}
+
+}  // namespace
+
+extern "C" {
+
+const char* recovered_specials_key_list(int type_id) {
+    static std::string buffer;
+    buffer.clear();
+    const ClassRows* spec = specOf(type_id);
+    if (spec == nullptr) return buffer.c_str();
+    for (int i = 0; i < spec->count; ++i) {
+        if (i != 0) buffer += ',';
+        buffer += spec->rows[i].key;
+    }
+    return buffer.c_str();
+}
+
+const char* recovered_specials_extra(int type_id) {
+    const ClassRows* spec = specOf(type_id);
+    return (spec != nullptr) ? spec->extras : "";
+}
+
+const char* recovered_specials_sequence(int type_id, int case_id) {
+    static std::string buffer;
+    buffer = "super";
+    const ClassRows* spec = specOf(type_id);
+    if (spec == nullptr) return buffer.c_str();
+    if (case_id == 2) return buffer.c_str();   // nil guard: nothing else runs
+    if (type_id == 60) {
+        // the ID probe gates the whole object block (per-case dump)
+        buffer += ",ofk:landOwnerID";
+        if (presentFor(case_id, 0)) {
+            buffer += ",autorelease,autorelease,ofk:landOwnerID,retain";
+            buffer += ",ofk:landOwnerName,retain";
+        }
+        for (int i = 2; i < spec->count; ++i) {
+            buffer += ",ofk:";
+            buffer += spec->rows[i].key;
+            if (presentFor(case_id, i)) {
+                buffer += ",ofk:";
+                buffer += spec->rows[i].key;
+                buffer += ",int:";
+                buffer += spec->rows[i].key;
+            }
+        }
+        buffer += ",updateText";
+        return buffer.c_str();
+    }
+    for (int i = 0; i < spec->count; ++i) {
+        buffer += ",ofk:";
+        buffer += spec->rows[i].key;
+        buffer += ',';
+        buffer += convLabel(spec->rows[i].conv);
+        buffer += ':';
+        buffer += spec->rows[i].key;
+    }
+    if (spec->hook != nullptr) buffer += ",hook";
+    return buffer.c_str();
+}
+
+int recovered_specials_image(int type_id, int case_id, std::uint32_t token_base,
+                             unsigned char* out, int n) {
+    if (out == nullptr || n <= 0) return -1;
+    std::memset(out, 0, static_cast<std::size_t>(n));
+    const ClassRows* spec = specOf(type_id);
+    if (spec == nullptr) return -1;
+    if (case_id == 2) return n;
+    if (spec->default_value != 0) {
+        for (int i = 0; i < spec->count; ++i) {
+            const Row& row = spec->rows[i];
+            if (row.conv != C_INT) continue;
+            const std::uint32_t dv = static_cast<std::uint32_t>(spec->default_value);
+            for (int b = 0; b < row.width; ++b) {
+                out[row.offset + b] = static_cast<unsigned char>((dv >> (8 * b)) & 0xFF);
+            }
+        }
+    }
+    for (int i = 0; i < spec->count; ++i) {
+        const Row& row = spec->rows[i];
+        bool is_present = presentFor(case_id, i);
+        if (type_id == 60 && i == 1) {
+            // the name is read (and retained) only inside the ID-gated block
+            is_present = is_present && presentFor(case_id, 0);
+        }
+        std::uint32_t value =
+            is_present ? valueOf(row, i, token_base) : 0u;
+        if (spec->default_value != 0 && row.conv == C_INT && !presentFor(case_id, i)) {
+            continue;   // the default survives the absent probe
+        }
+        if (spec->clamp_hi != 0 && row.conv == C_INT && presentFor(case_id, i)) {
+            const std::int32_t v = static_cast<std::int32_t>(value);
+            const std::int32_t lo = spec->clamp_lo;
+            const std::int32_t hi = spec->clamp_hi;
+            const std::int32_t clamped = v < lo ? lo : (v > hi ? hi : v);
+            value = static_cast<std::uint32_t>(clamped);
+        }
+        if (row.offset < 0 || row.offset + 4 > n) return -2;
+        for (int b = 0; b < row.width; ++b) {
+            out[row.offset + b] =
+                static_cast<unsigned char>((value >> (8 * b)) & 0xFFu);
+        }
+    }
+    return n;
+}
+
+}  // extern "C"
