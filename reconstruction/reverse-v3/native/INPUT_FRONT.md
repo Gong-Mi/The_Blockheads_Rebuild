@@ -80,9 +80,24 @@ if (UI) {                                  // the block's own ivar
 - block 2 (0x00AD78B0..0x00AD7A34): gated by `hidePauseUI@148`;
 - a nil `UI` falls through to the next block (cameraUI@100 follows block 2).
 
+And the tail blocks (decoded the same way):
+
+- the dpad block (0x00AD7B70..): gated by `[dpad displayed]` (a real method
+  call — the stub answers 0, which is why cases 0/1 show the call and move
+  on); on a displayed dpad it calls `[dpad startTouch:tapCount:index:...]`
+  and only a nonzero result sets handled + returns 1 — a miss FALLS THROUGH
+  (no worldUI-paused fallback here);
+- the worldUI block (0x00AD7C3C..): `r = [worldUI startTouch:tapCount:index:…]`
+  then **`currentTouchIsInAnyButtons@154 = r`** (a real state write), and
+  `if (r || mapDisplayed@152)` exits, else runs the `uiViews@140`
+  enumeration (the `memset` + countByEnumerating tail the empty-UI cases
+  show).
+
 So the router's pattern is "one UI consumes the touch, the world is notified
 with `paused:`" and the method returns 1; the worldUI-paused fallback runs
-only when the UI's own handler returned zero. Seeded
+only when the UI's own handler returned zero. Every router differential case
+(both semantic and observation-pinned styles) is now explainable from the
+decoded blocks; the cameraUI block and the uiViews loop's body stay open. Seeded
 (`tcUIDisplayed@40 = 1` + tcUI + worldUI) the ARM runs exactly that sequence
 and returns 1 — the router's differential case 3 is that semantic model, not
 a case fit. The remaining blocks (2-7) stay case-fitted until their gates

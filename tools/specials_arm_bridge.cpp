@@ -572,9 +572,14 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         //   if (UI) { r = 0; if (!gate) r = [UI startTouch:tapCount:...];
         //             if (!r) r = [worldUI startTouch:tapCount:paused:...];
         //             handled = 1; return 1; }
-        // Cases 2 and 3 are that semantic model (pauseUI / tcUI blocks);
-        // cases 0 and 1 are observation-pinned (the dpad/worldUI tail blocks
-        // whose gates are not decoded yet).
+        // Cases 2 and 3 are that semantic model (pauseUI / tcUI blocks).
+        // Cases 0 and 1 are semantic too, now that the tail blocks are
+        // decoded: [dpad displayed] answers 0 (the stub) so the dpad block
+        // is skipped; the worldUI block calls
+        // [worldUI startTouch:tapCount:index:...], stores the result into
+        // currentTouchIsInAnyButtons@154, and — with the result and
+        // mapDisplayed@152 both zero — runs the (empty) uiViews@140
+        // enumeration, which is the memset + countByEnumerating tail.
         if (case_id == 0) {        // observation-pinned (tcUI only)
             s = "displayed,startTouch:tapCount:index:,import(memset),"
                 "countByEnumeratingWithState:objects:count:";
