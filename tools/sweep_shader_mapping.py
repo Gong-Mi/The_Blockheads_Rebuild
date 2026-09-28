@@ -41,8 +41,9 @@ def class_inits(tsv: Path):
             continue
         per_class.setdefault(cls, []).append((sel, imp))
     for cls, ms in per_class.items():
-        renders = any("render" in s for s, _ in ms)
-        if not renders:
+        # widen: every class whose init mentions shaderNamed: counts; the
+        # render-name filter is kept as a flag for the narrow pass.
+        if NARROW and not any("render" in s for s, _ in ms):
             continue
         imps = sorted(int(i, 16) for _, i in ms)
         for sel, imp in ms:
@@ -55,6 +56,7 @@ def class_inits(tsv: Path):
 
 
 LISTER = None
+NARROW = False
 
 
 def sweep(elf: Path, tsv: Path, out: Path):
@@ -136,7 +138,11 @@ def main():
                                  "cache/scratch/all-methods.tsv"))
     ap.add_argument("--out", type=Path,
                     default=NATIVE / "shader_mapping.tsv")
+    ap.add_argument("--narrow", action="store_true",
+                    help="only classes with a render* method (the old pass)")
     a = ap.parse_args()
+    global NARROW
+    NARROW = a.narrow
     sweep(a.elf, a.methods, a.out)
     return 0
 
