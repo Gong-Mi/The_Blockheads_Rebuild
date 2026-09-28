@@ -4,6 +4,8 @@
 #include "freeblock_full.h"
 #include "gatherblock_full.h"
 #include "kelpvine_full.h"
+#include "tradeportal_full.h"
+#include "tradingpost_full.h"
 #include "trainstation_full.h"
 #include "npc_full.h"
 #include "plant_full.h"
@@ -426,6 +428,24 @@ void OriginalClientApp::registerRecoveredFactories() {
     };
     registry_.registerFactory(
         14, make_freeblock_factory(14), "freeblock full chain (b4p executed",
+        ObjectLoadStatus::Recovered);
+    // TradePortal 50 / TradingPost 48: static own keys (UPPERMID15) + the
+    // executed normalization/slot hooks; InteractionObject boundary stated.
+    const auto make_tradeportal_factory = [](int type_id) {
+        return [type_id](const SaveDict& entry, std::string* error) {
+            return tradeportal_full_factory(type_id, entry, nullptr, error);
+        };
+    };
+    registry_.registerFactory(
+        50, make_tradeportal_factory(50), "tradeportal full chain (b4i hook executed",
+        ObjectLoadStatus::Recovered);
+    const auto make_tradingpost_factory = [](int type_id) {
+        return [type_id](const SaveDict& entry, std::string* error) {
+            return tradingpost_full_factory(type_id, entry, nullptr, error);
+        };
+    };
+    registry_.registerFactory(
+        48, make_tradingpost_factory(48), "tradingpost full chain (slot hook executed",
         ObjectLoadStatus::Recovered);
     // Chest 46: the b4m executed surface (chestType / safeClientID /
     // saveItemSlots counts / shelf_0..3) + the stated InteractionObject

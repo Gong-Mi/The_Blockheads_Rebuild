@@ -320,6 +320,9 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             trainstation_full.cpp
             chest_full.cpp
             freeblock_full.cpp
+            tradeportal_full.cpp
+            tradingpost_full.cpp
+            trade_portal_price_offsets.cpp
             original_client_world.cpp)
         target_include_directories(original_client_app PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}
@@ -365,6 +368,14 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         target_link_libraries(test_freeblock_full PRIVATE original_client_app)
         target_compile_options(test_freeblock_full PRIVATE -UNDEBUG)
         add_test(NAME freeblock_full COMMAND test_freeblock_full)
+        add_executable(test_tradeportal_full ../../tools/test_tradeportal_full.cpp)
+        target_link_libraries(test_tradeportal_full PRIVATE original_client_app)
+        target_compile_options(test_tradeportal_full PRIVATE -UNDEBUG)
+        add_test(NAME tradeportal_full COMMAND test_tradeportal_full)
+        add_executable(test_tradingpost_full ../../tools/test_tradingpost_full.cpp)
+        target_link_libraries(test_tradingpost_full PRIVATE original_client_app)
+        target_compile_options(test_tradingpost_full PRIVATE -UNDEBUG)
+        add_test(NAME tradingpost_full COMMAND test_tradingpost_full)
         add_executable(client_app_skeleton_cli ../../tools/client_app_skeleton_cli.cpp)
         target_link_libraries(client_app_skeleton_cli PRIVATE original_client_app)
         # Standalone reverse-pipeline run test: assemble a snapshot fixture and

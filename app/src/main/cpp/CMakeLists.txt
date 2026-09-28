@@ -70,6 +70,9 @@ add_library(native-lib SHARED
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/trainstation_full.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/chest_full.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/freeblock_full.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/tradeportal_full.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/tradingpost_full.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/../../../../reconstruction/recovered/trade_portal_price_offsets.cpp
             original_save_dict.cpp
             dynamic_object_registry.cpp
             original_client_app.cpp

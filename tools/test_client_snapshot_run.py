@@ -179,6 +179,17 @@ TYPED_RECORDS = {
         floatPos=[74.5, 510.0], age=900.0, dead=False, growthCounter=0.24,
         height=10, treeFruit=[], treeSeasonOffset=7,
     )),
+    # TradePortal: static own keys + the executed b4i clamp hook.
+    50: ("TradePortal", 200, 89, 519, dict(
+        floatPos=[89.5, 519.0], level=1,
+        localPriceOffsets={"wood": 0.25, "stone": 3.5},
+    )),
+    # TradingPost: static own keys + the executed sellSlot hook (counts only).
+    48: ("TradingPost", 201, 90, 519, dict(
+        floatPos=[90.5, 519.0], coinCount=12, priceTier=2,
+        sellerClientID="client-9", sellerClientName="seller",
+        sellSlot=[{"itemType": 1}, {"itemType": 11}],
+    )),
     # FreeBlock: b4p executed save surface (12 keys, subItems counts).
     14: ("FreeBlock", 190, 87, 518, dict(
         floatPos=[87.5, 518.0], bounceTimer=0.1, fallSpeed=0.2,
@@ -348,6 +359,8 @@ EXPECT_REASON = {
     49: "ownkey5",        # TrainStation own key {text} executed
     46: "b4m",            # Chest executed read-back
     14: "b4p",            # FreeBlock executed read-back
+    50: "b4i",            # TradePortal clamp hook executed
+    48: "sellSlot",       # TradingPost slot hook executed
 }
 
 
