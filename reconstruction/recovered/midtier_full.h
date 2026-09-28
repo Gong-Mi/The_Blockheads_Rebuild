@@ -22,6 +22,10 @@
 //               ironPlaceClientID retain->word@72 ; itemType int->word@64
 //   38 Wire   : itemType int->word@56 ; configuration int->word@60 ;
 //               solidConfiguration int->word@64 ; ownerID retain->word@36
+//   56 ElevatorShaft : itemType w@56 ; ownerID o@36 ; lastKnownMotorPos.x
+//               w@60 ; .y w@64 ; paintColor UINT->STRH@84
+//   55 ElevatorMotor : itemType w@56 ; ownerID o@36 ; availableElectricity
+//               w@60 ; minY w@64 ; maxY UINT->STRH@68
 // All nine end with [self initSubDerivedItems] (no save state).
 #pragma once
 

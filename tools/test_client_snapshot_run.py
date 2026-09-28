@@ -189,6 +189,24 @@ TYPED_RECORDS = {
     54: ("Stairs", 266, 105, 524, dict(configuration=2, itemType=7, ownerID="c", paintColor=3)),
     20: ("Door", 267, 106, 524, dict(blocked=True, ironPlaceClientID="x", itemType=4, ownerID="c")),
     38: ("Wire", 268, 107, 524, dict(configuration=1, itemType=2, solidConfiguration=3, ownerID="c")),
+    # Painting / OwnershipSign: listing-decoded own keys.
+    52: ("Painting", 272, 110, 526, dict(
+        itemType=9, ownerID="c", ownerName="bob",
+        hasVerifiedImageData=True, outputImageData="blob",
+    )),
+    60: ("OwnershipSign", 273, 111, 526, dict(
+        text="mine", connectionType=1, offsetType=2, landOwnerID="c",
+        landOwnerName="bob", w=5, h=6,
+    )),
+    # Elevator pair (mid-tier tables).
+    55: ("ElevatorMotor", 270, 108, 525, dict(
+        itemType=3, ownerID="c", availableElectricity=70000, minY=1, maxY=2,
+    )),
+    56: ("ElevatorShaft", 271, 109, 525, dict(
+        itemType=3, ownerID="c", **{"lastKnownMotorPos.x": 10,
+                                     "lastKnownMotorPos.y": 20},
+        paintColor=70000,
+    )),
     # FireObject / Torch: base + listing-decoded own keys.
     16: ("FireObject", 250, 97, 523, dict(
         floatPos=[97.5, 523.0], burnTimer=0.75, spreadTimer_0=1.0,
@@ -417,6 +435,10 @@ EXPECT_REASON = {
     54: "key table",               # mid-tier: Stairs
     20: "key table",               # mid-tier: Door
     38: "key table",               # mid-tier: Wire
+    55: "key table",               # mid-tier: ElevatorMotor
+    56: "key table",               # mid-tier: ElevatorShaft
+    52: "outputImageData@60",      # Painting own keys (listing decode)
+    60: "landOwnerID@124",         # OwnershipSign own keys (listing decode)
 }
 
 

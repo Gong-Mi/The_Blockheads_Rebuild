@@ -6,6 +6,8 @@
 #include "freeblock_full.h"
 #include "glowblock_full.h"
 #include "midtier_full.h"
+#include "ownershipsign_full.h"
+#include "painting_full.h"
 #include "gatherblock_full.h"
 #include "interaction_full.h"
 #include "kelpvine_full.h"
@@ -434,10 +436,28 @@ void OriginalClientApp::registerRecoveredFactories() {
     registry_.registerFactory(
         14, make_freeblock_factory(14), "freeblock full chain (b4p executed",
         ObjectLoadStatus::Recovered);
+    // Painting 52 / OwnershipSign 60: listing-decoded own keys (Painting's
+    // isServer world steps and OwnershipSign's Sign chain stated).
+    const auto make_painting_factory = [](int type_id) {
+        return [type_id](const SaveDict& entry, std::string* error) {
+            return painting_full_factory(type_id, entry, nullptr, error);
+        };
+    };
+    registry_.registerFactory(
+        52, make_painting_factory(52), "painting full chain (listing decode",
+        ObjectLoadStatus::Recovered);
+    const auto make_ownershipsign_factory = [](int type_id) {
+        return [type_id](const SaveDict& entry, std::string* error) {
+            return ownershipsign_full_factory(type_id, entry, nullptr, error);
+        };
+    };
+    registry_.registerFactory(
+        60, make_ownershipsign_factory(60), "ownershipsign full chain (listing decode",
+        ObjectLoadStatus::Recovered);
     // Mid-tier static family: the nine table-driven classes (Window 31,
     // Rail 40, Boat 32, Ladder 19, Egg 30, Column 53, Stairs 54, Door 20,
     // Wire 38) — per-class key tables decoded from their annotated listings.
-    for (const int type_id : {19, 20, 30, 31, 32, 38, 40, 53, 54}) {
+    for (const int type_id : {19, 20, 30, 31, 32, 38, 40, 53, 54, 55, 56}) {
         registry_.registerFactory(
             type_id,
             [type_id](const SaveDict& entry, std::string* error) {

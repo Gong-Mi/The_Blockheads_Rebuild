@@ -50,6 +50,20 @@ const K kDoor[] = {
     {"ironPlaceClientID", K::Conv::Object, K::Width::Word, 72},
     {"itemType", K::Conv::Int, K::Width::Word, 64},
 };
+const K kElevatorShaft[] = {
+    {"itemType", K::Conv::Int, K::Width::Word, 56},
+    {"ownerID", K::Conv::Object, K::Width::Word, 36},
+    {"lastKnownMotorPos.x", K::Conv::Int, K::Width::Word, 60},
+    {"lastKnownMotorPos.y", K::Conv::Int, K::Width::Word, 64},
+    {"paintColor", K::Conv::UInt, K::Width::Half, 84},
+};
+const K kElevatorMotor[] = {
+    {"itemType", K::Conv::Int, K::Width::Word, 56},
+    {"ownerID", K::Conv::Object, K::Width::Word, 36},
+    {"availableElectricity", K::Conv::Int, K::Width::Word, 60},
+    {"minY", K::Conv::Int, K::Width::Word, 64},
+    {"maxY", K::Conv::UInt, K::Width::Half, 68},
+};
 const K kWire[] = {
     {"itemType", K::Conv::Int, K::Width::Word, 56},
     {"configuration", K::Conv::Int, K::Width::Word, 60},
@@ -70,6 +84,8 @@ const MidtierTypeSpec* midtierTypeSpec(int type_id) {
         {54, kStairs, 4, false, "initSubDerivedItems"},
         {20, kDoor, 4, false, "initSubDerivedItems"},
         {38, kWire, 4, false, "initSubDerivedItems"},
+        {56, kElevatorShaft, 5, false, "initSubDerivedItems"},
+        {55, kElevatorMotor, 5, false, "initSubDerivedItems"},
     };
     for (const auto& spec : specs) {
         if (spec.type_id == type_id) return &spec;
