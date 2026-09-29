@@ -674,4 +674,55 @@ PanelTrace freeofferui_end_touch(const ChildReply* exit_btn,
     return t;
 }
 
+// --- the AddCreditUI panel ------------------------------------------------
+
+PanelTrace addcredit_ui_start_touch(bool in_progress,
+                                    const ChildReply* cancel,
+                                    const ChildReply* week,
+                                    const ChildReply* month) {
+    (void)cancel;
+    (void)week;
+    (void)month;
+    PanelTrace t;
+    if (in_progress) {
+        t.handled = 1;                 // gate: 1, zero calls
+        return t;
+    }
+    t.calls.push_back("startTouch:");  // cancelButton@128
+    t.calls.push_back("startTouch:");  // add1WeekButton@132
+    t.calls.push_back("startTouch:");  // add1MonthButton@136
+    t.handled = 0;                     // the constant local (quirk)
+    return t;
+}
+
+PanelTrace addcredit_ui_move_touch(bool in_progress,
+                                   const ChildReply* cancel,
+                                   const ChildReply* week,
+                                   const ChildReply* month) {
+    (void)cancel;
+    (void)week;
+    (void)month;
+    PanelTrace t;
+    if (in_progress) return t;         // gate: no calls
+    t.calls.push_back("moveTouch:");   // cancelButton@128
+    t.calls.push_back("moveTouch:");   // add1WeekButton@132
+    t.calls.push_back("moveTouch:");   // add1MonthButton@136
+    return t;
+}
+
+PanelTrace addcredit_ui_end_touch(bool in_progress,
+                                  const ChildReply* cancel,
+                                  const ChildReply* week,
+                                  const ChildReply* month) {
+    (void)cancel;
+    (void)week;
+    (void)month;
+    PanelTrace t;
+    if (in_progress) return t;
+    t.calls.push_back("endTouch:");    // cancelButton@128
+    t.calls.push_back("endTouch:");    // add1WeekButton@132
+    t.calls.push_back("endTouch:");    // add1MonthButton@136
+    return t;
+}
+
 }  // namespace blockheads::ui

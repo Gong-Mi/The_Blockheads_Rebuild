@@ -247,6 +247,17 @@ in that order. 10 cases (the const-1 far-point control, both children alone
 + all-miss per chain, the void orders receiver-verified) execute under
 Unicorn.
 
+## The AddCreditUI panel (types 142..146) — decoded
+
+`disasm_addcredit_ui_touch.txt` (365w): `touchIsInViewAtAll:` (32w) is
+the constant 1 (dead rebase); `touchIsInUI:` (32w) the constant 0.
+`startTouch:tapCount:` (111w) gates on the inProgress@160 byte first:
+set -> return 1 with ZERO child calls; clear -> message ALL THREE
+[cancelButton@128, add1WeekButton@132, add1MonthButton@136] with the
+one-arg `startTouch:` and return the constant 0 (the replies land in
+dead slots). `moveTouch:` / `endTouch:` (95w each) gate the same way,
+then message all three. 10 cases execute under Unicorn.
+
 ## The FreeOfferUI panel (types 137..141) — decoded
 
 `disasm_freeofferui_touch.txt` (350w): `touchIsInViewAtAll:` (32w) is the

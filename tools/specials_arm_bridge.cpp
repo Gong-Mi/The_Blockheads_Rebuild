@@ -966,6 +966,26 @@ blockheads::ui::Point regen_point(int case_id) {
     }
 }
 
+// --- the AddCreditUI panel's differential inputs --------------------------
+constexpr unsigned AC_CAN = 0x60020600u;
+constexpr unsigned AC_WK = 0x60020700u;
+constexpr unsigned AC_MO = 0x60020800u;
+
+bool ac_in_progress(int which, int case_id) {
+    return ((which == 144 || which == 145 || which == 146)
+            && case_id == 1);
+}
+
+void ac_seeds_for(unsigned char* out, int which, int case_id) {
+    ui_put_word(out, 112, 0x60001000u);
+    ui_put_word(out, 8, 0u);
+    ui_put_word(out, 12, 0u);
+    ui_put_word(out, 128, AC_CAN);
+    ui_put_word(out, 132, AC_WK);
+    ui_put_word(out, 136, AC_MO);
+    if (ac_in_progress(which, case_id)) ui_put_word(out, 160, 1u);
+}
+
 // --- the FreeOfferUI panel's differential inputs --------------------------
 constexpr unsigned FOF_EX = 0x60020600u;
 constexpr unsigned FOF_B0 = 0x60020700u;
@@ -1194,6 +1214,24 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // the constant-verdict panels: no calls (the literal verdicts)
     } else if (type_id >= 97 && type_id <= 101) {
         // the WorkbenchProgressBarUI panel: no calls (rect + constants)
+    } else if (type_id >= 142 && type_id <= 146) {
+        // the AddCreditUI panel: const rect/inUI + the gated triples
+        const bool ip = ac_in_progress(type_id, case_id);
+        blockheads::ui::PanelTrace t;
+        if (type_id == 144) {
+            t = blockheads::ui::addcredit_ui_start_touch(
+                ip, &kChildMiss, &kChildMiss, &kChildMiss);
+        } else if (type_id == 145) {
+            t = blockheads::ui::addcredit_ui_move_touch(
+                ip, &kChildMiss, &kChildMiss, &kChildMiss);
+        } else if (type_id == 146) {
+            t = blockheads::ui::addcredit_ui_end_touch(
+                ip, &kChildMiss, &kChildMiss, &kChildMiss);
+        }
+        for (const char* c : t.calls) {
+            if (!s.empty()) s += ',';
+            s += c;
+        }
     } else if (type_id >= 137 && type_id <= 141) {
         // the FreeOfferUI panel: const rect/inUI + the button walks
         const blockheads::ui::ChildReply* buys[3];
@@ -1385,6 +1423,14 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         wpb_seeds_for(out, case_id);
+        return n;
+    }
+    if (type_id >= 142 && type_id <= 146) {  // AddCreditUI
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0u);
+        ui_put_word(out, 12, 0u);
+        ac_seeds_for(out, type_id, case_id);
         return n;
     }
     if (type_id >= 137 && type_id <= 141) {  // FreeOfferUI
@@ -1628,6 +1674,14 @@ int recovered_ui_ret(int type_id, int case_id) {
         return blockheads::ui::freeofferui_start_touch(ex, buys, 3).handled;
     }
     if (type_id == 140 || type_id == 141) return 0;  // void (not compared)
+    if (type_id == 142) return blockheads::ui::kAddCreditUiRect ? 1 : 0;
+    if (type_id == 143) return blockheads::ui::kAddCreditUiInUi;
+    if (type_id == 144) {
+        return blockheads::ui::addcredit_ui_start_touch(
+            ac_in_progress(144, case_id), &kChildMiss, &kChildMiss,
+            &kChildMiss).handled;
+    }
+    if (type_id == 145 || type_id == 146) return 0;  // void (not compared)
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);

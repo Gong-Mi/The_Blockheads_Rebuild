@@ -383,4 +383,27 @@ PanelTrace freeofferui_end_touch(const ChildReply* exit_btn,
                                  const ChildReply* const* buy_arr,
                                  int offer_count);
 
+// --- the AddCreditUI panel ------------------------------------------------
+// rect (32w) is the constant 1; touchIsInUI: (32w) the constant 0.
+// startTouch:tapCount: (111w) gates on inProgress@160: set -> return 1
+// with ZERO calls; clear -> message ALL THREE [cancelButton@128,
+// add1WeekButton@132, add1MonthButton@136] with the one-arg startTouch:
+// and return the constant 0 (the replies land in dead slots).
+// moveTouch:/endTouch: (95w each) gate the same way, then message all
+// three.
+constexpr bool kAddCreditUiRect = true;
+constexpr int kAddCreditUiInUi = 0;
+PanelTrace addcredit_ui_start_touch(bool in_progress,
+                                    const ChildReply* cancel,
+                                    const ChildReply* week,
+                                    const ChildReply* month);
+PanelTrace addcredit_ui_move_touch(bool in_progress,
+                                   const ChildReply* cancel,
+                                   const ChildReply* week,
+                                   const ChildReply* month);
+PanelTrace addcredit_ui_end_touch(bool in_progress,
+                                  const ChildReply* cancel,
+                                  const ChildReply* week,
+                                  const ChildReply* month);
+
 }  // namespace blockheads::ui

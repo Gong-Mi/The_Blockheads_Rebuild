@@ -159,6 +159,12 @@ ENTRIES = [
     ('FreeOfferUIPress', 139, 0x00DB0070, 0x00000000, 108),
     ('FreeOfferUIMove', 140, 0x00DB0220, 0x00000000, 89),
     ('FreeOfferUIEnd', 141, 0x00DB0384, 0x00000000, 89),
+    # the AddCreditUI panel: const rect/inUI + the inProgress-gated triples
+    ('AddCreditUIRect', 142, 0x00D3533C, 0x00000000, 32),
+    ('AddCreditUIInUI', 143, 0x00D353BC, 0x00000000, 32),
+    ('AddCreditUIPress', 144, 0x00D3543C, 0x00000000, 111),
+    ('AddCreditUIMove', 145, 0x00D355F8, 0x00000000, 95),
+    ('AddCreditUIEnd', 146, 0x00D35774, 0x00000000, 95),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -712,7 +718,8 @@ def main():
                                'MainMenuUI', 'WPBarUI', 'CameraUI',
                                'PetUI', 'WearUI', 'RegenerateUI',
                                'TPBuyUI', 'SoundOptionsUI',
-                               'InventoryFullUI', 'FreeOfferUI')):
+                               'InventoryFullUI', 'FreeOfferUI',
+                               'AddCreditUI')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -970,6 +977,15 @@ def main():
 
     FOF_EX = 0x60020600
     FOF_B0, FOF_B1, FOF_B2 = 0x60020700, 0x60020800, 0x60020900
+
+    AC_CAN, AC_WK, AC_MO = 0x60020600, 0x60020700, 0x60020800
+
+    def ac_seeds(in_progress=0):
+        # AddCreditUI: windowInfo@112 = self_ptr; cancelButton@128;
+        # add1WeekButton@132; add1MonthButton@136; inProgress byte @160
+        return ('112=0x60001000,8=0,12=0,'
+                f'128=0x{AC_CAN:08x},132=0x{AC_WK:08x},136=0x{AC_MO:08x},'
+                f'160={in_progress}')
 
     def fof_seeds():
         # FreeOfferUI: windowInfo@144 = self_ptr; exitButton@152;
@@ -1555,6 +1571,33 @@ def main():
             0: ('50,50', fof_seeds(), {
                 'void': True,
                 'expect_recv': [FOF_EX, FOF_B0, FOF_B1, FOF_B2]})},
+        'AddCreditUIRect': {
+            # constant 1 (dead rebase)
+            0: ('50,50', ac_seeds(), {}),
+            1: ('9999,9999', ac_seeds(), {}),
+        },
+        'AddCreditUIInUI': {
+            # constant 0
+            0: ('50,50', ac_seeds(), {}),
+            1: ('9999,9999', ac_seeds(), {}),
+        },
+        'AddCreditUIPress': {
+            # 0: clear -> all three, 0
+            0: ('50,50', ac_seeds(), {
+                'expect_recv': [AC_CAN, AC_WK, AC_MO]}),
+            # 1: inProgress -> zero calls, 1
+            1: ('50,50', ac_seeds(in_progress=1), {}),
+        },
+        'AddCreditUIMove': {
+            0: ('50,50', ac_seeds(), {
+                'void': True, 'expect_recv': [AC_CAN, AC_WK, AC_MO]}),
+            1: ('50,50', ac_seeds(in_progress=1), {'void': True}),
+        },
+        'AddCreditUIEnd': {
+            0: ('50,50', ac_seeds(), {
+                'void': True, 'expect_recv': [AC_CAN, AC_WK, AC_MO]}),
+            1: ('50,50', ac_seeds(in_progress=1), {'void': True}),
+        },
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.

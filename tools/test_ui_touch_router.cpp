@@ -653,10 +653,28 @@ int main() {
                == "endTouch:,endTouch:,endTouch:,endTouch:");
     }
 
+    // --- the AddCreditUI panel ---------------------------------------------
+    {
+        static_assert(kAddCreditUiRect && kAddCreditUiInUi == 0,
+                      "AddCreditUI's decoded constants");
+        // the gate: inProgress -> 1, zero calls
+        auto t = addcredit_ui_start_touch(true, nullptr, nullptr, nullptr);
+        assert(t.calls.empty() && t.handled == 1);
+        t = addcredit_ui_move_touch(true, nullptr, nullptr, nullptr);
+        assert(t.calls.empty());
+        // clear: all three messages, the constant 0
+        t = addcredit_ui_start_touch(false, nullptr, nullptr, nullptr);
+        assert(join_trace(t.calls)
+               == "startTouch:,startTouch:,startTouch:");
+        assert(t.handled == 0);
+        t = addcredit_ui_end_touch(false, nullptr, nullptr, nullptr);
+        assert(join_trace(t.calls) == "endTouch:,endTouch:,endTouch:");
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
                 " block chain x19, craftui x16, dpad x11, blockhead x28,"
                 " const x17, wpbar x11, camera x10, pet x13, wear x14,"
                 " regen x14, tpbuy x18, sound x7, invfull x12, "
-                "freeoffer x9)\n");
+                "freeoffer x9, addcredit x10)\n");
     return 0;
 }

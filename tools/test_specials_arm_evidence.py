@@ -146,6 +146,9 @@ def main() -> int:
         # the FreeOfferUI panel
         "('FreeOfferUIRect', 137, 0x00DAFF70",
         "def fof_seeds():",
+        # the AddCreditUI panel
+        "('AddCreditUIRect', 142, 0x00D3533C",
+        "def ac_seeds(in_progress=0):",
     ])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_uimanager_starttouch.txt",
             ["startTouch:tapCount:index:"])
@@ -172,7 +175,9 @@ def main() -> int:
              "soundoptionsui_start_touch", "soundoptionsui_end_touch",
              "inventoryfullui_touch_is_in_view_at_all",
              "kInventoryFullUiInUi", "freeofferui_start_touch",
-             "freeofferui_move_touch", "freeofferui_end_touch"])
+             "freeofferui_move_touch", "freeofferui_end_touch",
+             "addcredit_ui_start_touch", "addcredit_ui_end_touch",
+             "kAddCreditUiInUi"])
     require(ROOT / "reconstruction/recovered/ui_touch_router.cpp",
             ["startTouch:tapCount:paused:index:", "import(memset)",
              "touchIsInViewAtAll:", "x > -130.0f && x < 130.0f",
@@ -182,7 +187,8 @@ def main() -> int:
             ["block chain x19", "touchIsInViewAtAll:", "craftui x16",
              "dpad x11", "blockhead x28", "const x17", "wpbar x11",
              "camera x10", "pet x13", "wear x14", "regen x14",
-             "tpbuy x18", "sound x7", "invfull x12", "freeoffer x9"])
+             "tpbuy x18", "sound x7", "invfull x12", "freeoffer x9",
+             "addcredit x10"])
     # the constant-verdict listings
     require(ROOT / "reconstruction/reverse-v3/native/disasm_mapui_touch.txt",
             ["MapUI -[touch family]", "implementation: 0x009cb460"])
@@ -231,7 +237,8 @@ def main() -> int:
              "pet_child", "pet_seeds_for", "wear_child", "wear_seeds_for",
              "regen_child", "regen_point", "tpb_child", "tpb_seeds_for",
              "snd_seeds_for", "inv_seeds_for", "inv_point",
-             "fof_seeds_for", "fof_buys"])
+             "fof_seeds_for", "fof_buys", "ac_seeds_for",
+             "ac_in_progress"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_gameuiview_all.txt",
             ["OBJC_IVAR_$_GameUIView.displayed (slot 0x0105dee0) = 4",
              "OBJC_IVAR_$_GameUIView.resourcesLoaded (slot 0x0105c494) = 16"])
@@ -268,14 +275,14 @@ def main() -> int:
             print(proc.stdout)
             print(proc.stderr)
             return 1
-        # the run's own report pins the case totals: 35 modelled + 206 UI
+        # the run's own report pins the case totals: 35 modelled + 216 UI
         # rows (router 19 + CraftUI 16 + DPad 11 + BlockheadUI 28 +
         # const 17 + WPBar 11 + Camera 10 + Pet 13 + Wear 14 + Regen 14 +
-        # TPBuy 18 + Sound 7 + InvFull 12 + FreeOffer 9 + MJControl 3 +
-        # MJView 4)
+        # TPBuy 18 + Sound 7 + InvFull 12 + FreeOffer 9 + AddCredit 10 +
+        # MJControl 3 + MJView 4)
         import json
         report = json.loads((out / "specials-arm-result.json").read_text())
-        assert report["cases"] == 241, report["cases"]
+        assert report["cases"] == 251, report["cases"]
         assert report["match"] is True
         ui_rows = [r for r in report["rows"] if r["class"] == "UIManager"]
         assert len(ui_rows) == 19, len(ui_rows)
@@ -327,11 +334,15 @@ def main() -> int:
         fof_rows = [r for r in report["rows"]
                     if r["class"].startswith("FreeOfferUI")]
         assert len(fof_rows) == 9, len(fof_rows)
+        ac_rows = [r for r in report["rows"]
+                   if r["class"].startswith("AddCreditUI")]
+        assert len(ac_rows) == 10, len(ac_rows)
         print("specials-arm: PASS (differential executed, modelled cases "
               "match; router 19/19, craftui 16/16, dpad 11/11, "
               "blockhead 28/28, const 17/17, wpbar 11/11, camera 10/10, "
               "pet 13/13, wear 14/14, regen 14/14, tpbuy 18/18, "
-              "sound 7/7, invfull 12/12, freeoffer 9/9)")
+              "sound 7/7, invfull 12/12, freeoffer 9/9, "
+              "addcredit 10/10)")
         return 0
 
     print("specials-arm: PASS (constants; run with --elf to execute)")
