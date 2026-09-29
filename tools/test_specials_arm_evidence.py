@@ -128,6 +128,18 @@ def main() -> int:
             ["touchIsInViewAtAll:",
              "OBJC_IVAR_$_DPad.rightSide (slot 0x0105d31c) = 160",
              "OBJC_IVAR_$_DPad.windowInfo (slot 0x0105d340) = 112"])
+    # the BlockheadUI batch's first evidence artifacts (the decode front
+    # that follows the DPad one)
+    require(ROOT / "reconstruction/reverse-v3/native/disasm_blockheadui_touch.txt",
+            ["BlockheadUI -[touch block]",
+             "implementation: 0x006fd188",
+             "boundary: 0x006fd69c"])
+    require(ROOT / "reconstruction/reverse-v3/native/disasm_blockheadui_starttouch.txt",
+            ["implementation: 0x006fd69c",
+             "boundary: 0x006fda2c"])
+    require(ROOT / "reconstruction/reverse-v3/native/disasm_blockheadui_moveend.txt",
+            ["implementation: 0x006fda2c",
+             "boundary: 0x006fdf24"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_craftui_touch.txt",
             ["OBJC_IVAR_$_CraftUI.scrollingButtons (slot 0x0105ef50) = 148",
              "OBJC_IVAR_$_CraftUI.craftButton (slot 0x0105ef6c) = 208"])
