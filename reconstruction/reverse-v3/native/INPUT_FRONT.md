@@ -247,6 +247,15 @@ in that order. 10 cases (the const-1 far-point control, both children alone
 + all-miss per chain, the void orders receiver-verified) execute under
 Unicorn.
 
+## The HungerUI panel (types 152..156) — decoded
+
+`disasm_hungerui_touch.txt` (393w): `touchIsInViewAtAll:` (95w) — local =
+point - windowInfo(+8/+0xc) - translationOffset(@152); x in (-80, 80),
+y in (0, 92), all edges exclusive. The four chains message the SINGLE
+child eatButton@68: `touchIsInUI:` (69w) / `startTouch:tapCount:` (93w)
+return its reply; `moveTouch:` / `endTouch:` (68w each) are void.
+13 cases execute under Unicorn.
+
 ## The ControlOptionsUI panel (types 147..151) — decoded
 
 `disasm_controloptionsui_touch.txt` (374w): `touchIsInViewAtAll:` (32w)

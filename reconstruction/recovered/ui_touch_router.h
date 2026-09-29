@@ -428,4 +428,16 @@ PanelTrace controloptionsui_end_touch(const ChildReply* ok,
                                       const ChildReply* direct,
                                       const ChildReply* dpad_side);
 
+// --- the HungerUI panel ---------------------------------------------------
+// rect (95w): local = point - windowInfo(+8/+0xc) - translationOffset
+// (@152); x in (-80, 80), y in (0, 92), all edges exclusive. The chains
+// message the SINGLE child eatButton@68: touchIsInUI: (69w) /
+// startTouch:tapCount: (93w) return its reply; moveTouch:/endTouch:
+// (68w each) are void.
+bool hungerui_touch_is_in_view_at_all(Point p, const PanelFrame& f);
+PanelTrace hungerui_touch_is_in_ui(const ChildReply* eat);
+PanelTrace hungerui_start_touch(const ChildReply* eat);
+PanelTrace hungerui_move_touch(const ChildReply* eat);
+PanelTrace hungerui_end_touch(const ChildReply* eat);
+
 }  // namespace blockheads::ui

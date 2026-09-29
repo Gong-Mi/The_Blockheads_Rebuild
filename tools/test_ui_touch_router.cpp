@@ -688,10 +688,31 @@ int main() {
                == "endTouch:,endTouch:,endTouch:,endTouch:");
     }
 
+    // --- the HungerUI panel ------------------------------------------------
+    {
+        const PanelFrame origin{};
+        assert(hungerui_touch_is_in_view_at_all({0, 46}, origin));
+        assert(!hungerui_touch_is_in_view_at_all({80, 46}, origin));
+        assert(!hungerui_touch_is_in_view_at_all({-80, 46}, origin));
+        assert(!hungerui_touch_is_in_view_at_all({0, 0}, origin));
+        assert(!hungerui_touch_is_in_view_at_all({0, 92}, origin));
+        assert(hungerui_touch_is_in_view_at_all({79, 91}, origin));
+        const PanelFrame off{0, 0, 5, 0};
+        assert(hungerui_touch_is_in_view_at_all({84, 46}, off));
+        const ChildReply hit{true, false};
+        auto t = hungerui_touch_is_in_ui(&hit);
+        assert(join_trace(t.calls) == "touchIsInUI:" && t.handled == 1);
+        assert(hungerui_touch_is_in_ui(nullptr).handled == 0);
+        assert(join_trace(hungerui_move_touch(nullptr).calls)
+               == "moveTouch:");
+        assert(join_trace(hungerui_end_touch(nullptr).calls)
+               == "endTouch:");
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
                 " block chain x19, craftui x16, dpad x11, blockhead x28,"
                 " const x17, wpbar x11, camera x10, pet x13, wear x14,"
                 " regen x14, tpbuy x18, sound x7, invfull x12, "
-                "freeoffer x9, addcredit x10, ctrlopts x7)\n");
+                "freeoffer x9, addcredit x10, ctrlopts x7, hunger x13)\n");
     return 0;
 }

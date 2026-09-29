@@ -966,6 +966,44 @@ blockheads::ui::Point regen_point(int case_id) {
     }
 }
 
+// --- the HungerUI panel's differential inputs -----------------------------
+blockheads::ui::PanelFrame hgr_frame(int case_id) {
+    switch (case_id) {
+        case 6: return {0.0f, 0.0f, 5.0f, 0.0f};
+        default: return {};
+    }
+}
+
+blockheads::ui::Point hgr_point(int case_id) {
+    switch (case_id) {
+        case 1: return {80.0f, 46.0f};
+        case 2: return {-80.0f, 46.0f};
+        case 3: return {0.0f, 0.0f};
+        case 4: return {0.0f, 92.0f};
+        case 5: return {79.0f, 91.0f};
+        case 6: return {84.0f, 46.0f};
+        default: return {0.0f, 46.0f};
+    }
+}
+
+void hgr_seeds_for(unsigned char* out, int case_id) {
+    ui_put_word(out, 144, 0x60001000u);
+    const auto f = hgr_frame(case_id);
+    ui_put_word(out, 8, float_bits(f.window_x));
+    ui_put_word(out, 12, float_bits(f.window_y));
+    ui_put_word(out, 152, float_bits(f.offset_x));
+    ui_put_word(out, 156, float_bits(f.offset_y));
+    ui_put_word(out, 68, 0x60020600u);       // eatButton
+}
+
+const blockheads::ui::ChildReply* hgr_child(int which, int case_id) {
+    // 153/154: case 1 pins the child's reply
+    if ((which == 153 || which == 154) && case_id == 1) {
+        return (which == 154) ? &kChildHandles : &kChildInUi;
+    }
+    return &kChildMiss;
+}
+
 // --- the ControlOptionsUI panel's differential inputs ---------------------
 constexpr unsigned CO_OK = 0x60020600u;
 constexpr unsigned CO_TI = 0x60020700u;
@@ -1230,6 +1268,23 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // the constant-verdict panels: no calls (the literal verdicts)
     } else if (type_id >= 97 && type_id <= 101) {
         // the WorkbenchProgressBarUI panel: no calls (rect + constants)
+    } else if (type_id >= 152 && type_id <= 156) {
+        // the HungerUI panel: the single-child chains (152 makes no calls)
+        const auto* eat = hgr_child(type_id, case_id);
+        blockheads::ui::PanelTrace t;
+        if (type_id == 153) {
+            t = blockheads::ui::hungerui_touch_is_in_ui(eat);
+        } else if (type_id == 154) {
+            t = blockheads::ui::hungerui_start_touch(eat);
+        } else if (type_id == 155) {
+            t = blockheads::ui::hungerui_move_touch(eat);
+        } else if (type_id == 156) {
+            t = blockheads::ui::hungerui_end_touch(eat);
+        }
+        for (const char* c : t.calls) {
+            if (!s.empty()) s += ',';
+            s += c;
+        }
     } else if (type_id >= 147 && type_id <= 151) {
         // the ControlOptionsUI panel: const rect/inUI + four-child chains
         blockheads::ui::PanelTrace t;
@@ -1456,6 +1511,14 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         wpb_seeds_for(out, case_id);
+        return n;
+    }
+    if (type_id >= 152 && type_id <= 156) {  // HungerUI
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0u);
+        ui_put_word(out, 12, 0u);
+        hgr_seeds_for(out, case_id);
         return n;
     }
     if (type_id >= 147 && type_id <= 151) {  // ControlOptionsUI
@@ -1730,6 +1793,19 @@ int recovered_ui_ret(int type_id, int case_id) {
             &kChildMiss, &kChildMiss, &kChildMiss, &kChildMiss).handled;
     }
     if (type_id == 150 || type_id == 151) return 0;  // void (not compared)
+    if (type_id == 152) {
+        return blockheads::ui::hungerui_touch_is_in_view_at_all(
+            hgr_point(case_id), hgr_frame(case_id)) ? 1 : 0;
+    }
+    if (type_id == 153) {
+        return blockheads::ui::hungerui_touch_is_in_ui(
+            hgr_child(153, case_id)).handled;
+    }
+    if (type_id == 154) {
+        return blockheads::ui::hungerui_start_touch(
+            hgr_child(154, case_id)).handled;
+    }
+    if (type_id == 155 || type_id == 156) return 0;  // void (not compared)
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);

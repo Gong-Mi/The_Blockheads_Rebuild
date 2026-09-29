@@ -171,6 +171,12 @@ ENTRIES = [
     ('ControlOptionsUIPress', 149, 0x006DA970, 0x00000000, 114),
     ('ControlOptionsUIMove', 150, 0x006DAB38, 0x00000000, 98),
     ('ControlOptionsUIEnd', 151, 0x006DACC0, 0x00000000, 98),
+    # the HungerUI panel: a rect + the single eatButton chain
+    ('HungerUIRect', 152, 0x0063D524, 0x00000000, 95),
+    ('HungerUIInUI', 153, 0x0063D6A0, 0x00000000, 69),
+    ('HungerUIPress', 154, 0x0063D7B4, 0x00000000, 93),
+    ('HungerUIMove', 155, 0x0063D928, 0x00000000, 68),
+    ('HungerUIEnd', 156, 0x0063DA38, 0x00000000, 68),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -725,7 +731,8 @@ def main():
                                'PetUI', 'WearUI', 'RegenerateUI',
                                'TPBuyUI', 'SoundOptionsUI',
                                'InventoryFullUI', 'FreeOfferUI',
-                               'AddCreditUI', 'ControlOptionsUI')):
+                               'AddCreditUI', 'ControlOptionsUI',
+                               'HungerUI')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -988,6 +995,14 @@ def main():
 
     CO_OK, CO_TI, CO_DI, CO_DP = (0x60020600, 0x60020700, 0x60020800,
                                   0x60020900)
+
+    HGR_EAT = 0x60020600
+
+    def hgr_seeds(wx=0.0, wy=0.0, ox=0.0, oy=0.0):
+        # HungerUI: windowInfo@144 = self_ptr; translationOffset at
+        # 152/156; eatButton@68
+        return (f'144=0x60001000,8={fb(wx)},12={fb(wy)},'
+                f'152={fb(ox)},156={fb(oy)},68=0x{HGR_EAT:08x}')
 
     def co_seeds():
         # ControlOptionsUI: windowInfo@96 = self_ptr; OKButton@104;
@@ -1636,6 +1651,34 @@ def main():
             0: ('50,50', co_seeds(), {
                 'void': True,
                 'expect_recv': [CO_OK, CO_TI, CO_DI, CO_DP]})},
+        'HungerUIRect': {
+            # x in (-80, 80), y in (0, 92), all edges exclusive
+            0: ('0,46', hgr_seeds(), {}),        # centre
+            1: ('80,46', hgr_seeds(), {}),       # x == 80
+            2: ('-80,46', hgr_seeds(), {}),      # x == -80
+            3: ('0,0', hgr_seeds(), {}),         # y == 0
+            4: ('0,92', hgr_seeds(), {}),        # y == 92
+            5: ('79,91', hgr_seeds(), {}),       # inside margins
+            6: ('84,46', hgr_seeds(0, 0, 5, 0), {}),   # x=79 (in)
+        },
+        'HungerUIInUI': {
+            0: ('50,46', hgr_seeds(), {'expect_recv': [HGR_EAT]}),
+            1: ('50,46', hgr_seeds(), {
+                'expect_recv': [HGR_EAT],
+                'ret1': {HGR_EAT: ['touchIsInUI:']}}),
+        },
+        'HungerUIPress': {
+            0: ('50,46', hgr_seeds(), {'expect_recv': [HGR_EAT]}),
+            1: ('50,46', hgr_seeds(), {
+                'expect_recv': [HGR_EAT],
+                'ret1': {HGR_EAT: ['startTouch:']}}),
+        },
+        'HungerUIMove': {
+            0: ('50,46', hgr_seeds(), {
+                'void': True, 'expect_recv': [HGR_EAT]})},
+        'HungerUIEnd': {
+            0: ('50,46', hgr_seeds(), {
+                'void': True, 'expect_recv': [HGR_EAT]})},
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.

@@ -776,4 +776,40 @@ PanelTrace controloptionsui_end_touch(const ChildReply* ok,
     return t;
 }
 
+// --- the HungerUI panel ---------------------------------------------------
+
+bool hungerui_touch_is_in_view_at_all(Point p, const PanelFrame& f) {
+    const float x = p.x - f.window_x - f.offset_x;
+    const float y = p.y - f.window_y - f.offset_y;
+    return x > -80.0f && x < 80.0f && y > 0.0f && y < 92.0f;
+}
+
+PanelTrace hungerui_touch_is_in_ui(const ChildReply* eat) {
+    PanelTrace t;
+    const bool r = child_in_ui(eat, t);
+    t.handled = r ? 1 : 0;
+    return t;
+}
+
+PanelTrace hungerui_start_touch(const ChildReply* eat) {
+    PanelTrace t;
+    const bool r = child_start(eat, t);
+    t.handled = r ? 1 : 0;
+    return t;
+}
+
+PanelTrace hungerui_move_touch(const ChildReply* eat) {
+    (void)eat;
+    PanelTrace t;
+    t.calls.push_back("moveTouch:");   // eatButton@68
+    return t;
+}
+
+PanelTrace hungerui_end_touch(const ChildReply* eat) {
+    (void)eat;
+    PanelTrace t;
+    t.calls.push_back("endTouch:");    // eatButton@68
+    return t;
+}
+
 }  // namespace blockheads::ui
