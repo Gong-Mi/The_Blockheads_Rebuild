@@ -494,4 +494,36 @@ PanelTrace addfuelui_start_touch(const ChildReply* const* items,
 PanelTrace addfuelui_move_touch(const ChildReply* const* items, int count);
 PanelTrace addfuelui_end_touch(const ChildReply* const* items, int count);
 
+// --- the PaintMixUI panel -------------------------------------------------
+// rect (95w): local = point - windowInfo(+8/+0xc) - translationOffset
+// (@160); x in (-130, 130), y in (0, 262), all edges exclusive. The
+// inUI/press chains are workbench.level-gated: [scrollingButtons[0] ...]
+// always; [workbench level] decides whether scrollingButtons[1]
+// (level > 0, then a SECOND level probe for scrollingButtons[2] with
+// level > 1) runs; countSlider@128 and craftButton@120 follow
+// unconditionally, each behind the local short-circuit.
+// moveTouch:/endTouch: (195w each): SB0 always, the same level gates,
+// then countSlider and craftButton — no short-circuit.
+bool paintmixui_touch_is_in_view_at_all(Point p, const PanelFrame& f);
+PanelTrace paintmixui_touch_is_in_ui(int level, const ChildReply* sb0,
+                                     const ChildReply* sb1,
+                                     const ChildReply* sb2,
+                                     const ChildReply* slider,
+                                     const ChildReply* craft);
+PanelTrace paintmixui_start_touch(int level, const ChildReply* sb0,
+                                  const ChildReply* sb1,
+                                  const ChildReply* sb2,
+                                  const ChildReply* slider,
+                                  const ChildReply* craft);
+PanelTrace paintmixui_move_touch(int level, const ChildReply* sb0,
+                                 const ChildReply* sb1,
+                                 const ChildReply* sb2,
+                                 const ChildReply* slider,
+                                 const ChildReply* craft);
+PanelTrace paintmixui_end_touch(int level, const ChildReply* sb0,
+                                const ChildReply* sb1,
+                                const ChildReply* sb2,
+                                const ChildReply* slider,
+                                const ChildReply* craft);
+
 }  // namespace blockheads::ui

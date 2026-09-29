@@ -247,6 +247,20 @@ in that order. 10 cases (the const-1 far-point control, both children alone
 + all-miss per chain, the void orders receiver-verified) execute under
 Unicorn.
 
+## The PaintMixUI panel (types 172..176) — decoded
+
+`disasm_paintmixui_touch.txt` (1000w): `touchIsInViewAtAll:` (95w) — x in
+(-130, 130), y in (0, 262), all edges exclusive. The inUI (255w) / press
+(260w) chains are **workbench.level-gated**: `[scrollingButtons[0] ...]`
+always; `[workbench level]` decides whether `scrollingButtons[1]`
+(level > 0, then a SECOND level probe for `scrollingButtons[2]` with
+level > 1) runs; countSlider@128 and craftButton@120 follow
+unconditionally, each behind the local short-circuit.
+`moveTouch:` / `endTouch:` (195w each): SB0 always, the same level
+gates, then countSlider and craftButton — no short-circuit. 19 cases
+execute under Unicorn (the edge set + the level 0/1/2 walks + the
+answers; the fixture's `retv` pins the probe values).
+
 ## The AddFuelUI panel (types 167..171) — decoded
 
 `disasm_addfuelui_touch.txt` (800w): `touchIsInViewAtAll:` (95w) — x in

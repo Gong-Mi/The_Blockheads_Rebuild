@@ -195,6 +195,12 @@ ENTRIES = [
     ('AddFuelUIPress', 169, 0x009B79C8, 0x00000000, 183),
     ('AddFuelUIMove', 170, 0x009B7CA4, 0x00000000, 171),
     ('AddFuelUIEnd', 171, 0x009B7F50, 0x00000000, 171),
+    # the PaintMixUI panel: a rect + the workbench.level-gated chains
+    ('PaintMixUIRect', 172, 0x006723E8, 0x00000000, 95),
+    ('PaintMixUIInUI', 173, 0x00672564, 0x00000000, 255),
+    ('PaintMixUIPress', 174, 0x00672960, 0x00000000, 260),
+    ('PaintMixUIMove', 175, 0x00672D70, 0x00000000, 195),
+    ('PaintMixUIEnd', 176, 0x0067307C, 0x00000000, 195),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -380,6 +386,13 @@ def main():
                 uc_.reg_write(UC_ARM_REG_PC, uc_.reg_read(UC_ARM_REG_LR))
                 return
             fixture = ctx.get('ui_fixture') or {}
+            retv = (fixture.get('retv') or {}).get(recv)
+            if retv is not None and sel in retv:
+                # a pinned integer answer (e.g. the workbench level)
+                ctx['calls'].append(f'{sel}(recv={hex(recv)})')
+                uc_.reg_write(UC_ARM_REG_R0, retv[sel])
+                uc_.reg_write(UC_ARM_REG_PC, uc_.reg_read(UC_ARM_REG_LR))
+                return
             pinned = (fixture.get('ret1') or {}).get(recv)
             if pinned is not None and sel in pinned:
                 # the UI fixture's per-receiver answer (a pinned 1)
@@ -751,7 +764,7 @@ def main():
                                'InventoryFullUI', 'FreeOfferUI',
                                'AddCreditUI', 'ControlOptionsUI',
                                'HungerUI', 'JetPackUI', 'SleepProgressUI',
-                               'AddFuelUI')):
+                               'AddFuelUI', 'PaintMixUI')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -1021,6 +1034,22 @@ def main():
     SLP_AB, SLP_CB = 0x60020600, 0x60020700
     AFU_LIST = 0x6000f000
     AFU_B0, AFU_B1, AFU_B2 = 0x60020600, 0x60020700, 0x60020800
+    PMM_WB = 0x6000e000
+    PMM_SB0, PMM_SB1, PMM_SB2 = 0x60020600, 0x60020700, 0x60020800
+    PMM_SL, PMM_CR = 0x60020900, 0x60020a00
+
+    def pmm_seeds(wx=0.0, wy=0.0, ox=0.0, oy=0.0):
+        # PaintMixUI: windowInfo@96 = self_ptr; translationOffset at
+        # 160/164; workbench@104; scrollingButtons 140/144/148;
+        # countSlider@128; craftButton@120
+        return (f'96=0x60001000,8={fb(wx)},12={fb(wy)},'
+                f'160={fb(ox)},164={fb(oy)},104=0x{PMM_WB:08x},'
+                f'140=0x{PMM_SB0:08x},144=0x{PMM_SB1:08x},'
+                f'148=0x{PMM_SB2:08x},128=0x{PMM_SL:08x},'
+                f'120=0x{PMM_CR:08x}')
+
+    def pmm_lv(level):
+        return {'retv': {PMM_WB: {'level': level}}}
 
     def afu_seeds(wx=0.0, wy=0.0, ox=0.0, oy=0.0):
         # AddFuelUI: windowInfo@128 = self_ptr; translationOffset at
@@ -1839,6 +1868,53 @@ def main():
             0: ('50,54', afu_seeds(), dict(afu_enum(), **{'void': True}))},
         'AddFuelUIEnd': {
             0: ('50,54', afu_seeds(), dict(afu_enum(), **{'void': True}))},
+        'PaintMixUIRect': {
+            # x in (-130, 130), y in (0, 262), all edges exclusive
+            0: ('0,131', pmm_seeds(), {}),        # centre
+            1: ('130,131', pmm_seeds(), {}),      # x == 130
+            2: ('-130,131', pmm_seeds(), {}),     # x == -130
+            3: ('0,0', pmm_seeds(), {}),          # y == 0
+            4: ('0,262', pmm_seeds(), {}),        # y == 262
+            5: ('129,261', pmm_seeds(), {}),      # inside margins
+            6: ('134,131', pmm_seeds(0, 0, 5, 0), {}),  # x=129 (in)
+        },
+        'PaintMixUIInUI': {
+            # level 0: SB1/SB2 unreachable
+            0: ('50,131', pmm_seeds(), pmm_lv(0)),
+            # level 0 + SB0 answers: [SB0, level] then 1
+            1: ('50,131', pmm_seeds(),
+                dict(pmm_lv(0), ret1={PMM_SB0: ['touchIsInUI:']})),
+            # level 1: SB1 reachable, SB2 not
+            2: ('50,131', pmm_seeds(), pmm_lv(1)),
+            # level 2: the full walk
+            3: ('50,131', pmm_seeds(),
+                dict(pmm_lv(2), expect_recv=[PMM_SB0, PMM_WB, PMM_SB1,
+                                             PMM_WB, PMM_SB2, PMM_SL,
+                                             PMM_CR])),
+            # level 2 + SB2 answers: stops there, 1
+            4: ('50,131', pmm_seeds(),
+                dict(pmm_lv(2), ret1={PMM_SB2: ['touchIsInUI:']})),
+        },
+        'PaintMixUIPress': {
+            0: ('50,131', pmm_seeds(), pmm_lv(0)),
+            1: ('50,131', pmm_seeds(), pmm_lv(1)),
+            # level 2 + countSlider answers, 1
+            2: ('50,131', pmm_seeds(),
+                dict(pmm_lv(2), ret1={PMM_SL: ['startTouch:']})),
+        },
+        'PaintMixUIMove': {
+            0: ('50,131', pmm_seeds(), dict(pmm_lv(0), **{'void': True})),
+            1: ('50,131', pmm_seeds(),
+                dict(pmm_lv(2), **{'void': True,
+                                   'expect_recv': [PMM_SB0, PMM_WB,
+                                                   PMM_SB1, PMM_WB,
+                                                   PMM_SB2, PMM_SL,
+                                                   PMM_CR]})),
+        },
+        'PaintMixUIEnd': {
+            0: ('50,131', pmm_seeds(), dict(pmm_lv(0), **{'void': True})),
+            1: ('50,131', pmm_seeds(), dict(pmm_lv(2), **{'void': True})),
+        },
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.

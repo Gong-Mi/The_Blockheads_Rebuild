@@ -966,6 +966,65 @@ blockheads::ui::Point regen_point(int case_id) {
     }
 }
 
+// --- the PaintMixUI panel's differential inputs ---------------------------
+constexpr unsigned PMM_WB = 0x6000e000u;   // the workbench (level probe)
+constexpr unsigned PMM_SB0 = 0x60020600u;
+constexpr unsigned PMM_SB1 = 0x60020700u;
+constexpr unsigned PMM_SB2 = 0x60020800u;
+constexpr unsigned PMM_SL = 0x60020900u;
+constexpr unsigned PMM_CR = 0x60020a00u;
+
+int pmm_level(int which, int case_id) {
+    if (which == 173) return case_id <= 1 ? 0 : (case_id == 2 ? 1 : 2);
+    if (which == 174) return case_id == 0 ? 0 : (case_id == 1 ? 1 : 2);
+    if (which == 175 || which == 176) return case_id == 0 ? 0 : 2;
+    return 0;
+}
+
+blockheads::ui::PanelFrame pmm_frame(int case_id) {
+    switch (case_id) {
+        case 6: return {0.0f, 0.0f, 5.0f, 0.0f};
+        default: return {};
+    }
+}
+
+blockheads::ui::Point pmm_point(int case_id) {
+    switch (case_id) {
+        case 1: return {130.0f, 131.0f};
+        case 2: return {-130.0f, 131.0f};
+        case 3: return {0.0f, 0.0f};
+        case 4: return {0.0f, 262.0f};
+        case 5: return {129.0f, 261.0f};
+        case 6: return {134.0f, 131.0f};
+        default: return {0.0f, 131.0f};
+    }
+}
+
+void pmm_seeds_for(unsigned char* out, int case_id) {
+    ui_put_word(out, 96, 0x60001000u);
+    const auto f = pmm_frame(case_id);
+    ui_put_word(out, 8, float_bits(f.window_x));
+    ui_put_word(out, 12, float_bits(f.window_y));
+    ui_put_word(out, 160, float_bits(f.offset_x));
+    ui_put_word(out, 164, float_bits(f.offset_y));
+    ui_put_word(out, 104, PMM_WB);           // workbench
+    ui_put_word(out, 140, PMM_SB0);          // scrollingButtons[0..2]
+    ui_put_word(out, 144, PMM_SB1);
+    ui_put_word(out, 148, PMM_SB2);
+    ui_put_word(out, 128, PMM_SL);           // countSlider
+    ui_put_word(out, 120, PMM_CR);           // craftButton
+}
+
+const blockheads::ui::ChildReply* pmm_child(int which, int slot,
+                                            int case_id) {
+    // inUI: case 1 -> SB0 answers, case 4 -> SB2 answers
+    if (which == 173 && case_id == 1 && slot == 0) return &kChildInUi;
+    if (which == 173 && case_id == 4 && slot == 2) return &kChildInUi;
+    // press: case 2 -> countSlider answers
+    if (which == 174 && case_id == 2 && slot == 3) return &kChildHandles;
+    return &kChildMiss;
+}
+
 // --- the AddFuelUI panel's differential inputs ----------------------------
 constexpr unsigned AFU_LIST = 0x6000f000u;   // the fuelButtons array
 constexpr unsigned AFU_B0 = 0x60020600u;
@@ -1412,6 +1471,32 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // the constant-verdict panels: no calls (the literal verdicts)
     } else if (type_id >= 97 && type_id <= 101) {
         // the WorkbenchProgressBarUI panel: no calls (rect + constants)
+    } else if (type_id >= 172 && type_id <= 176) {
+        // the PaintMixUI panel: the level-gated chains
+        const int lv = pmm_level(type_id, case_id);
+        const auto* sb0 = pmm_child(type_id, 0, case_id);
+        const auto* sb1 = pmm_child(type_id, 1, case_id);
+        const auto* sb2 = pmm_child(type_id, 2, case_id);
+        const auto* sl = pmm_child(type_id, 3, case_id);
+        const auto* cr = pmm_child(type_id, 4, case_id);
+        blockheads::ui::PanelTrace t;
+        if (type_id == 173) {
+            t = blockheads::ui::paintmixui_touch_is_in_ui(lv, sb0, sb1, sb2,
+                                                          sl, cr);
+        } else if (type_id == 174) {
+            t = blockheads::ui::paintmixui_start_touch(lv, sb0, sb1, sb2,
+                                                       sl, cr);
+        } else if (type_id == 175) {
+            t = blockheads::ui::paintmixui_move_touch(lv, sb0, sb1, sb2,
+                                                      sl, cr);
+        } else if (type_id == 176) {
+            t = blockheads::ui::paintmixui_end_touch(lv, sb0, sb1, sb2,
+                                                     sl, cr);
+        }
+        for (const char* c : t.calls) {
+            if (!s.empty()) s += ',';
+            s += c;
+        }
     } else if (type_id >= 167 && type_id <= 171) {
         // the AddFuelUI panel: the fuelButtons enumeration walks
         const blockheads::ui::ChildReply* items[3] = {
@@ -1714,6 +1799,14 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         wpb_seeds_for(out, case_id);
+        return n;
+    }
+    if (type_id >= 172 && type_id <= 176) {  // PaintMixUI
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0u);
+        ui_put_word(out, 12, 0u);
+        pmm_seeds_for(out, case_id);
         return n;
     }
     if (type_id >= 167 && type_id <= 171) {  // AddFuelUI
@@ -2071,6 +2164,23 @@ int recovered_ui_ret(int type_id, int case_id) {
                                                                case_id) >= 0
                                                      ? 1 : 0;
     if (type_id == 170 || type_id == 171) return 0;  // void (not compared)
+    if (type_id == 172) {
+        return blockheads::ui::paintmixui_touch_is_in_view_at_all(
+            pmm_point(case_id), pmm_frame(case_id)) ? 1 : 0;
+    }
+    if (type_id == 173) {
+        return blockheads::ui::paintmixui_touch_is_in_ui(
+            pmm_level(173, case_id), pmm_child(173, 0, case_id),
+            pmm_child(173, 1, case_id), pmm_child(173, 2, case_id),
+            pmm_child(173, 3, case_id), pmm_child(173, 4, case_id)).handled;
+    }
+    if (type_id == 174) {
+        return blockheads::ui::paintmixui_start_touch(
+            pmm_level(174, case_id), pmm_child(174, 0, case_id),
+            pmm_child(174, 1, case_id), pmm_child(174, 2, case_id),
+            pmm_child(174, 3, case_id), pmm_child(174, 4, case_id)).handled;
+    }
+    if (type_id == 175 || type_id == 176) return 0;  // void (not compared)
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);

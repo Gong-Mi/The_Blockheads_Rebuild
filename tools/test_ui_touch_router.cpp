@@ -797,11 +797,53 @@ int main() {
                != std::string::npos);
     }
 
+    // --- the PaintMixUI panel ----------------------------------------------
+    {
+        const PanelFrame origin{};
+        assert(paintmixui_touch_is_in_view_at_all({0, 131}, origin));
+        assert(!paintmixui_touch_is_in_view_at_all({130, 131}, origin));
+        assert(!paintmixui_touch_is_in_view_at_all({-130, 131}, origin));
+        assert(!paintmixui_touch_is_in_view_at_all({0, 262}, origin));
+        // level 0: SB1/SB2 unreachable
+        auto t = paintmixui_touch_is_in_ui(0, nullptr, nullptr, nullptr,
+                                           nullptr, nullptr);
+        assert(join_trace(t.calls)
+               == "touchIsInUI:,level,touchIsInUI:,touchIsInUI:");
+        // level 1: SB1 reachable (two probes)
+        t = paintmixui_touch_is_in_ui(1, nullptr, nullptr, nullptr,
+                                      nullptr, nullptr);
+        assert(join_trace(t.calls)
+               == "touchIsInUI:,level,touchIsInUI:,level,"
+                  "touchIsInUI:,touchIsInUI:");
+        // level 2: the full walk
+        t = paintmixui_touch_is_in_ui(2, nullptr, nullptr, nullptr,
+                                      nullptr, nullptr);
+        assert(join_trace(t.calls)
+               == "touchIsInUI:,level,touchIsInUI:,level,touchIsInUI:,"
+                  "touchIsInUI:,touchIsInUI:");
+        // SB2 answers at level 2: stops there
+        const ChildReply hit{true, false};
+        t = paintmixui_touch_is_in_ui(2, nullptr, nullptr, &hit,
+                                      nullptr, nullptr);
+        assert(join_trace(t.calls)
+               == "touchIsInUI:,level,touchIsInUI:,level,touchIsInUI:");
+        assert(t.handled == 1);
+        t = paintmixui_move_touch(2, nullptr, nullptr, nullptr,
+                                  nullptr, nullptr);
+        assert(join_trace(t.calls)
+               == "moveTouch:,level,moveTouch:,level,moveTouch:,"
+                  "moveTouch:,moveTouch:");
+        t = paintmixui_end_touch(0, nullptr, nullptr, nullptr,
+                                 nullptr, nullptr);
+        assert(join_trace(t.calls)
+               == "endTouch:,level,endTouch:,endTouch:");
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
                 " block chain x19, craftui x16, dpad x11, blockhead x28,"
                 " const x17, wpbar x11, camera x10, pet x13, wear x14,"
                 " regen x14, tpbuy x18, sound x7, invfull x12, "
                 "freeoffer x9, addcredit x10, ctrlopts x7, hunger x13,"
-                " jetpack x15, sleepprog x19, addfuel x15)\n");
+                " jetpack x15, sleepprog x19, addfuel x15, paintmix x19)\n");
     return 0;
 }

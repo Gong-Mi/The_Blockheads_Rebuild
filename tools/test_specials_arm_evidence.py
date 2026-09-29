@@ -164,6 +164,9 @@ def main() -> int:
         # the AddFuelUI panel
         "('AddFuelUIRect', 167, 0x009B784C",
         "def afu_seeds(wx=0.0, wy=0.0, ox=0.0, oy=0.0):",
+        # the PaintMixUI panel
+        "('PaintMixUIRect', 172, 0x006723E8",
+        "def pmm_seeds(wx=0.0, wy=0.0, ox=0.0, oy=0.0):",
     ])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_uimanager_starttouch.txt",
             ["startTouch:tapCount:index:"])
@@ -198,7 +201,8 @@ def main() -> int:
              "jetpackui_touch_is_in_view_at_all", "jetpackui_end_touch",
              "sleepprogressui_touch_is_in_view_at_all",
              "sleepprogressui_end_touch", "addfuelui_touch_is_in_view_at_all",
-             "addfuelui_end_touch"])
+             "addfuelui_end_touch", "paintmixui_touch_is_in_view_at_all",
+             "paintmixui_end_touch"])
     require(ROOT / "reconstruction/recovered/ui_touch_router.cpp",
             ["startTouch:tapCount:paused:index:", "import(memset)",
              "touchIsInViewAtAll:", "x > -130.0f && x < 130.0f",
@@ -210,7 +214,8 @@ def main() -> int:
              "camera x10", "pet x13", "wear x14", "regen x14",
              "tpbuy x18", "sound x7", "invfull x12", "freeoffer x9",
              "addcredit x10", "ctrlopts x7", "hunger x13",
-             "jetpack x15", "sleepprog x19", "addfuel x15"])
+             "jetpack x15", "sleepprog x19", "addfuel x15",
+             "paintmix x19"])
     # the constant-verdict listings
     require(ROOT / "reconstruction/reverse-v3/native/disasm_mapui_touch.txt",
             ["MapUI -[touch family]", "implementation: 0x009cb460"])
@@ -262,7 +267,8 @@ def main() -> int:
              "fof_seeds_for", "fof_buys", "ac_seeds_for",
              "ac_in_progress", "co_seeds_for", "hgr_seeds_for",
              "hgr_child", "jpk_seeds_for", "jpk_child", "slp_seeds_for",
-             "slp_child", "slp_med", "afu_seeds_for", "afu_hit_index"])
+             "slp_child", "slp_med", "afu_seeds_for", "afu_hit_index",
+             "pmm_seeds_for", "pmm_child", "pmm_level"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_gameuiview_all.txt",
             ["OBJC_IVAR_$_GameUIView.displayed (slot 0x0105dee0) = 4",
              "OBJC_IVAR_$_GameUIView.resourcesLoaded (slot 0x0105c494) = 16"])
@@ -299,15 +305,15 @@ def main() -> int:
             print(proc.stdout)
             print(proc.stderr)
             return 1
-        # the run's own report pins the case totals: 35 modelled + 285 UI
+        # the run's own report pins the case totals: 35 modelled + 304 UI
         # rows (router 19 + CraftUI 16 + DPad 11 + BlockheadUI 28 +
         # const 17 + WPBar 11 + Camera 10 + Pet 13 + Wear 14 + Regen 14 +
         # TPBuy 18 + Sound 7 + InvFull 12 + FreeOffer 9 + AddCredit 10 +
         # CtrlOpts 7 + Hunger 13 + JetPack 15 + SleepProg 19 + AddFuel 15
-        # + MJControl 3 + MJView 4)
+        # + PaintMix 19 + MJControl 3 + MJView 4)
         import json
         report = json.loads((out / "specials-arm-result.json").read_text())
-        assert report["cases"] == 320, report["cases"]
+        assert report["cases"] == 339, report["cases"]
         assert report["match"] is True
         ui_rows = [r for r in report["rows"] if r["class"] == "UIManager"]
         assert len(ui_rows) == 19, len(ui_rows)
@@ -377,13 +383,16 @@ def main() -> int:
         afu_rows = [r for r in report["rows"]
                     if r["class"].startswith("AddFuelUI")]
         assert len(afu_rows) == 15, len(afu_rows)
+        pmm_rows = [r for r in report["rows"]
+                    if r["class"].startswith("PaintMixUI")]
+        assert len(pmm_rows) == 19, len(pmm_rows)
         print("specials-arm: PASS (differential executed, modelled cases "
               "match; router 19/19, craftui 16/16, dpad 11/11, "
               "blockhead 28/28, const 17/17, wpbar 11/11, camera 10/10, "
               "pet 13/13, wear 14/14, regen 14/14, tpbuy 18/18, "
               "sound 7/7, invfull 12/12, freeoffer 9/9, "
               "addcredit 10/10, ctrlopts 7/7, hunger 13/13, "
-              "jetpack 15/15, sleepprog 19/19, addfuel 15/15)")
+              "jetpack 15/15, sleepprog 19/19, addfuel 15/15, paintmix 19/19)")
         return 0
 
     print("specials-arm: PASS (constants; run with --elf to execute)")

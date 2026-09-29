@@ -987,4 +987,104 @@ PanelTrace addfuelui_end_touch(const ChildReply* const* items, int count) {
     return t;
 }
 
+// --- the PaintMixUI panel -------------------------------------------------
+
+bool paintmixui_touch_is_in_view_at_all(Point p, const PanelFrame& f) {
+    const float x = p.x - f.window_x - f.offset_x;
+    const float y = p.y - f.window_y - f.offset_y;
+    return x > -130.0f && x < 130.0f && y > 0.0f && y < 262.0f;
+}
+
+PanelTrace paintmixui_touch_is_in_ui(int level, const ChildReply* sb0,
+                                     const ChildReply* sb1,
+                                     const ChildReply* sb2,
+                                     const ChildReply* slider,
+                                     const ChildReply* craft) {
+    PanelTrace t;
+    bool local = child_in_ui(sb0, t);        // scrollingButtons[0]
+    t.calls.push_back("level");              // the first workbench probe
+    if (level > 0) {
+        if (!local) local = child_in_ui(sb1, t);   // scrollingButtons[1]
+        t.calls.push_back("level");          // the second probe
+        if (level > 1) {
+            if (!local) local = child_in_ui(sb2, t);  // [2]
+        }
+    }
+    if (!local) local = child_in_ui(slider, t);    // countSlider@128
+    if (!local) local = child_in_ui(craft, t);     // craftButton@120
+    t.handled = local ? 1 : 0;
+    return t;
+}
+
+PanelTrace paintmixui_start_touch(int level, const ChildReply* sb0,
+                                  const ChildReply* sb1,
+                                  const ChildReply* sb2,
+                                  const ChildReply* slider,
+                                  const ChildReply* craft) {
+    PanelTrace t;
+    bool local = child_start(sb0, t);
+    t.calls.push_back("level");
+    if (level > 0) {
+        if (!local) local = child_start(sb1, t);
+        t.calls.push_back("level");
+        if (level > 1) {
+            if (!local) local = child_start(sb2, t);
+        }
+    }
+    if (!local) local = child_start(slider, t);
+    if (!local) local = child_start(craft, t);
+    t.handled = local ? 1 : 0;
+    return t;
+}
+
+PanelTrace paintmixui_move_touch(int level, const ChildReply* sb0,
+                                 const ChildReply* sb1,
+                                 const ChildReply* sb2,
+                                 const ChildReply* slider,
+                                 const ChildReply* craft) {
+    (void)sb0;
+    (void)sb1;
+    (void)sb2;
+    (void)slider;
+    (void)craft;
+    PanelTrace t;
+    t.calls.push_back("moveTouch:");   // scrollingButtons[0]
+    t.calls.push_back("level");
+    if (level > 0) {
+        t.calls.push_back("moveTouch:");   // scrollingButtons[1]
+        t.calls.push_back("level");
+        if (level > 1) {
+            t.calls.push_back("moveTouch:");   // scrollingButtons[2]
+        }
+    }
+    t.calls.push_back("moveTouch:");   // countSlider@128
+    t.calls.push_back("moveTouch:");   // craftButton@120
+    return t;
+}
+
+PanelTrace paintmixui_end_touch(int level, const ChildReply* sb0,
+                                const ChildReply* sb1,
+                                const ChildReply* sb2,
+                                const ChildReply* slider,
+                                const ChildReply* craft) {
+    (void)sb0;
+    (void)sb1;
+    (void)sb2;
+    (void)slider;
+    (void)craft;
+    PanelTrace t;
+    t.calls.push_back("endTouch:");    // scrollingButtons[0]
+    t.calls.push_back("level");
+    if (level > 0) {
+        t.calls.push_back("endTouch:");    // scrollingButtons[1]
+        t.calls.push_back("level");
+        if (level > 1) {
+            t.calls.push_back("endTouch:");    // scrollingButtons[2]
+        }
+    }
+    t.calls.push_back("endTouch:");    // countSlider@128
+    t.calls.push_back("endTouch:");    // craftButton@120
+    return t;
+}
+
 }  // namespace blockheads::ui
