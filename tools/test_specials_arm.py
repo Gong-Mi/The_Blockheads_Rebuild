@@ -92,6 +92,19 @@ ENTRIES = [
     ('BlockheadUIPress', 82, 0x006FD69C, 0x00000000, 228),
     ('BlockheadUIMove', 83, 0x006FDA2C, 0x00000000, 159),
     ('BlockheadUIEnd', 84, 0x006FDCA8, 0x00000000, 159),
+    # the constant-verdict panels: the rect / in-UI bodies are literals
+    ('MapUIRect', 85, 0x009CB460, 0x00000000, 32),
+    ('MapUIInUI', 86, 0x009CB4E0, 0x00000000, 32),
+    ('MapUIPress', 87, 0x009CB560, 0x00000000, 12),
+    ('MapUIMove', 88, 0x009CB590, 0x00000000, 7),
+    ('MapUIEnd', 89, 0x009CB5AC, 0x00000000, 7),
+    ('OptionsUIRect', 90, 0x008477C8, 0x00000000, 32),
+    ('OptionsUIInUI', 91, 0x00847848, 0x00000000, 32),
+    ('ShareUIRect', 92, 0x009C3244, 0x00000000, 32),
+    ('ShareUIInUI', 93, 0x009C32C4, 0x00000000, 32),
+    ('PauseUIRect', 94, 0x009E8E70, 0x00000000, 32),
+    ('MainMenuUIRect', 95, 0x00A09CF0, 0x00000000, 32),
+    ('MainMenuUIInUI', 96, 0x00A09D70, 0x00000000, 32),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -640,7 +653,9 @@ def main():
         # frame, and the CraftUI fixture reads its window floats back from
         # @8/+0xc — real state the differential must compare.
         if not cls.startswith(('MJView', 'MJControl', 'UIManager',
-                               'CraftUI', 'DPad', 'BlockheadUI')):
+                               'CraftUI', 'DPad', 'BlockheadUI',
+                               'MapUI', 'OptionsUI', 'ShareUI', 'PauseUI',
+                               'MainMenuUI')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -876,6 +891,11 @@ def main():
         return (f'176=0x60001000,76={1 if sd else 0},'
                 f'80=0x{BH_WB:08x},96=0x{BH_NE:08x},92=0x{BH_STOP:08x},'
                 f'84=0x{BH_SLEEP:08x},88=0x{BH_MED:08x}')
+
+    def cv_seeds(off):
+        # the constant-verdict fixture: windowInfo = self_ptr so the dead
+        # rebase reads land in the instance
+        return f'{off}=0x60001000,8={fb(0)},12={fb(0)}'
 
     UI_CASES = {
         'MJControl': {
@@ -1124,6 +1144,35 @@ def main():
                 'void': True,
                 'expect_recv': [BH_WB, BH_NE, BH_STOP]}),
         },
+        'MapUIRect': {
+            # rect 0: even an inside-candidate point answers 0
+            0: ('50,50', cv_seeds(96), {}),
+            1: ('999,999', cv_seeds(96), {}),
+        },
+        'MapUIInUI': {0: ('50,50', cv_seeds(96), {})},
+        'MapUIPress': {0: ('50,50', cv_seeds(96), {})},
+        'MapUIMove': {0: ('50,50', cv_seeds(96), {'void': True})},
+        'MapUIEnd': {0: ('50,50', cv_seeds(96), {'void': True})},
+        'OptionsUIRect': {
+            # rect 1: a far point still answers 1
+            0: ('50,50', cv_seeds(96), {}),
+            1: ('999,999', cv_seeds(96), {}),
+        },
+        'OptionsUIInUI': {0: ('50,50', cv_seeds(96), {})},
+        'ShareUIRect': {
+            0: ('50,50', cv_seeds(96), {}),
+            1: ('999,999', cv_seeds(96), {}),
+        },
+        'ShareUIInUI': {0: ('50,50', cv_seeds(96), {})},
+        'PauseUIRect': {
+            0: ('50,50', cv_seeds(96), {}),
+            1: ('999,999', cv_seeds(96), {}),
+        },
+        'MainMenuUIRect': {
+            0: ('50,50', cv_seeds(128), {}),
+            1: ('999,999', cv_seeds(128), {}),
+        },
+        'MainMenuUIInUI': {0: ('50,50', cv_seeds(128), {})},
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.

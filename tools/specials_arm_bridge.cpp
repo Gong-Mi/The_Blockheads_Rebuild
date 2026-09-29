@@ -815,6 +815,35 @@ blockheads::ui::BlockheadChildren blockhead_children_for(int case_id,
     if (case_id == 7) c.meditate = yes;
     return c;
 }
+
+// --- the constant-verdict panels' differential inputs ---------------------
+// windowInfo = self_ptr (the dead rebase reads land in the instance); the
+// constants themselves live in ui_touch_router.h.
+int constant_panel_window_offset(int type_id) {
+    return (type_id == 95 || type_id == 96) ? 128 : 96;  // MainMenuUI
+}
+
+void constant_panel_seeds(unsigned char* out, int type_id) {
+    ui_put_word(out, constant_panel_window_offset(type_id), 0x60001000u);
+    ui_put_word(out, 8, 0u);
+    ui_put_word(out, 12, 0u);
+}
+
+int constant_panel_ret(int type_id) {
+    switch (type_id) {
+        case 85: return blockheads::ui::kMapUiRect ? 1 : 0;
+        case 86: return blockheads::ui::kMapUiInUi ? 1 : 0;
+        case 87: return blockheads::ui::kMapUiPress;
+        case 90: return blockheads::ui::kOptionsUiRect ? 1 : 0;
+        case 91: return blockheads::ui::kOptionsUiInUi ? 1 : 0;
+        case 92: return blockheads::ui::kShareUiRect ? 1 : 0;
+        case 93: return blockheads::ui::kShareUiInUi ? 1 : 0;
+        case 94: return blockheads::ui::kPauseUiRect ? 1 : 0;
+        case 95: return blockheads::ui::kMainMenuUiRect ? 1 : 0;
+        case 96: return blockheads::ui::kMainMenuUiInUi ? 1 : 0;
+        default: return 0;   // 88/89: the void stubs
+    }
+}
 }  // namespace
 
 extern "C" {
@@ -885,6 +914,8 @@ const char* recovered_ui_seq(int type_id, int case_id) {
             if (!s.empty()) s += ',';
             s += c;
         }
+    } else if (type_id >= 85 && type_id <= 96) {
+        // the constant-verdict panels: no calls (the literal verdicts)
     } else if (type_id == 71) {  // MJView -touchIsInUI: — the GATE cases
         // The frame test's coordinate space is still being decoded; the
         // gates are verified: hidden@4 short-circuits first, then
@@ -936,6 +967,13 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         blockhead_seeds(out, type_id, case_id);
+        return n;
+    }
+    if (type_id >= 85 && type_id <= 96) {  // the constant-verdict panels
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0x60000200u);
+        constant_panel_seeds(out, type_id);
         return n;
     }
     if (type_id == 71) {  // MJView: the gate cases write nothing
@@ -1013,6 +1051,7 @@ int recovered_ui_ret(int type_id, int case_id) {
             blockheads::ui::Point{50.0f, 50.0f}).handled;
     }
     if (type_id == 83 || type_id == 84) return 0;  // void (not compared)
+    if (type_id >= 85 && type_id <= 96) return constant_panel_ret(type_id);
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);

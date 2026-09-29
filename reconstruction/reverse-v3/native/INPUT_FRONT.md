@@ -199,6 +199,27 @@ BlockheadUI enters the differential (28 cases, types 80..84):
 - `BlockheadUIMove` / `BlockheadUIEnd` 0/1: the four-call chain and the
   gate's three-call early exit, receiver-verified per case.
 
+## The constant-verdict panels (types 85..96) — decoded
+
+Five panels' rect / in-UI bodies turn out to be LITERALS: the point is
+rebased into dead locals (the `windowInfo(+8/+0xc)` reads happen; the
+results are discarded) and the method returns the class constant
+(`movw lr, #N; sxtb r0, lr`) — no receiver is ever messaged:
+
+| panel | `touchIsInViewAtAll:` | `touchIsInUI:` | note |
+|---|---|---|---|
+| MapUI (0x009CB460, 96..96..12..7w) | 0 | 0 | press returns 0; move/end are 7w stubs |
+| OptionsUI (0x008477C8) | 1 | 0 | |
+| ShareUI (0x009C3244) | 1 | 0 | |
+| PauseUI (0x009E8E70) | 1 | (79w, undecoded) | |
+| MainMenuUI (0x00A09CF0, windowInfo@128) | 1 | 1 | |
+
+All twelve bodies execute under Unicorn (17 cases): the const-0 panels take
+an inside-candidate point and still answer 0, the const-1 panels take a
+far-away point and still answer 1 — the invariance IS the assertion. The
+`windowInfo` offsets differ per class (96; MainMenuUI 128) and are part of
+the fixture.
+
 ## The composition pattern: CraftUI (0x00B80EB4..0x00B817A4) — decoded
 
 CraftUI's five override bodies are decoded from the instruction stream

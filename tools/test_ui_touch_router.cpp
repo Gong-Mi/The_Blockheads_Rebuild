@@ -446,7 +446,21 @@ int main() {
         assert(join_trace(en1.calls) == "endTouch:,endTouch:,endTouch:");
     }
 
+    // --- the constant-verdict panels (decoded literals) -------------------
+    {
+        static_assert(!kMapUiRect && !kMapUiInUi && kMapUiPress == 0,
+                      "MapUI's decoded verdicts");
+        static_assert(kOptionsUiRect && !kOptionsUiInUi,
+                      "OptionsUI's decoded verdicts");
+        static_assert(kShareUiRect && !kShareUiInUi,
+                      "ShareUI's decoded verdicts");
+        static_assert(kPauseUiRect, "PauseUI's decoded verdict");
+        static_assert(kMainMenuUiRect && kMainMenuUiInUi,
+                      "MainMenuUI's decoded verdicts");
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
-                " block chain x19, craftui x16, dpad x11, blockhead x28)\n");
+                " block chain x19, craftui x16, dpad x11, blockhead x28,"
+                " const x17)\n");
     return 0;
 }

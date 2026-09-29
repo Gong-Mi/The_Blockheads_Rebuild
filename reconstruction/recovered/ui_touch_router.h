@@ -224,4 +224,25 @@ PanelTrace blockheadui_start_touch(const BlockheadChildren& c, Point p);
 PanelTrace blockheadui_move_touch(const BlockheadChildren& c, Point p);
 PanelTrace blockheadui_end_touch(const BlockheadChildren& c, Point p);
 
+// --- the constant-verdict panels (decoded) --------------------------------
+// These panels' rect / in-UI bodies rebase the point into dead locals (the
+// windowInfo(+8/+0xc) reads happen; the results are discarded) and return
+// the class's literal (`movw lr, #N; sxtb r0, lr`) — no receiver is ever
+// messaged and nothing is written. Arm-attested per class:
+//   MapUI      rect 0 / inUI 0 (its press returns 0; move/end are 7w stubs)
+//   OptionsUI  rect 1 / inUI 0
+//   ShareUI    rect 1 / inUI 0
+//   PauseUI    rect 1 (its in-UI is 79w and not yet decoded)
+//   MainMenuUI rect 1 / inUI 1
+constexpr bool kMapUiRect = false;
+constexpr bool kMapUiInUi = false;
+constexpr int kMapUiPress = 0;
+constexpr bool kOptionsUiRect = true;
+constexpr bool kOptionsUiInUi = false;
+constexpr bool kShareUiRect = true;
+constexpr bool kShareUiInUi = false;
+constexpr bool kPauseUiRect = true;
+constexpr bool kMainMenuUiRect = true;
+constexpr bool kMainMenuUiInUi = true;
+
 }  // namespace blockheads::ui
