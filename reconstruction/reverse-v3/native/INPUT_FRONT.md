@@ -131,18 +131,43 @@ gaps: the overrides are tens to hundreds of words (BlockheadUI
 `touchIsInViewAtAll:` 99w, CraftUI 95w, DPad 232w; the accessor pairs
 ~15-17w).
 
-DPad decoded (`disasm_dpad_touch.txt`):
+DPad decoded and differentially executed (`disasm_dpad_touch.txt`):
 
 - `touchIsInUI:` (24w) is a pure forward: `return [self
   touchIsInViewAtAll:point]` (the msgSend at 0x00705664, sxtb for the BOOL);
-- `touchIsInViewAtAll:` (232w) is the real hit test: it rebases the point
-  onto the window (`windowInfo@112` fields +8 / +0xc, then +0x10 / +0x14 /
-  +0x1c for the dpad rect), builds a Vector2 via the 0x4D0480 helper, calls
-  the 0x0070591C point predicate — which calls **sinf/cosf** (PLT 0x1C2B34 /
-  0x1C2B58) and so ROTATES the point before the four direction comparisons, then four bounding comparisons against
-  literal-pool constants (0x4BDAAC on the path is an identity thunk that
-  returns its argument, so the comparisons read the struct directly) — the
-  four direction buttons. `rightSide@160` selects the mirrored layout.
+- `touchIsInViewAtAll:` (232w) is the rotated-diamond hit test, decoded exactly:
+  1. `x1 = point.x - windowInfo[+8]`, `y1 = point.y - windowInfo[+0xc]`;
+  2. `px = (x1 - X) - 80` where `X` is `((-windowInfo[+8]) + windowInfo[+0x10])
+     + 40` on the left side and `(windowInfo[+8] - windowInfo[+0x14]) - 200`
+     on the right side (`rightSide@160` selects the mirrored layout);
+     `py = (y1 - ((windowInfo[+0x1c] - windowInfo[+0xc]) + 40)) - 80`;
+  3. the 0x0070591C helper rotates `(px, py)` by the movw/movt constant
+     **0xBF490FDB = -pi/4** via `sinf`/`cosf` (PLT 0x1C2B34 / 0x1C2B58; the
+     softfp ABI rides the arg/return in R0 — the caller's `vmov` pair):
+     `out.x = x*cos - y*sin`, `out.y = y*cos + x*sin`;
+  4. the result is `-80 < out.x < 80 && -80 < out.y < 80` — every edge
+     EXCLUSIVE (four fused compares; the 0x4BDAAC identity thunk hands the
+     vector pointer back to the compares).
+
+  Two decode corrections the differential caught (the first pass had both
+  wrong and the day-one ARM run returned 0 where the model said 1): the
+  y-chain's middle constant is **+40** (the same pool word as the left-side
+  `X`), not -80; and the angle is `0xBF490FDB` (-pi/4) — reading the
+  `movw #0x0fdb` / `movt #0xbf49` pair as one word had produced the
+  non-constant 0xBF49FDB6. A mid-run probe (reading the method's stack at
+  the first compare) showed the true rotated vector, and both corrections
+  made model and ARM agree bit-for-bit.
+
+### DPad enters the differential (11 cases, types 78..79)
+
+`DPadInUI` 0/1: the forward with the callee's reply pinned 0/1 (via `ret1`
+on self). `DPadRect` 0..8: center / +rx out / +ry out / corner in / corner
+out on the zero frame, then three cases that would FLIP if a term were
+omitted — `windowInfo[+0x10]`, `windowInfo[+0x1c]`, and the rightSide
+layout — plus the right-side edge case. The body's own calls are exactly
+`import(sinf),import(cosf)` (everything else is direct .text helpers); the
+harness answers `sinf`/`cosf` with the true float values (a platform-libm
+stand-in) and every case keeps a wide margin to the +-80 edges.
 
 ## The composition pattern: CraftUI (0x00B80EB4..0x00B817A4) — decoded
 

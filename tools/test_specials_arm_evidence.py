@@ -99,22 +99,31 @@ def main() -> int:
         "('CraftUIEnd', 77, 0x00B81608",
         "expect_recv", "CHILD_SB, CHILD_CB, CHILD_CS",
         "CHILD_CB, CHILD_CS, CHILD_SB",
+        # the DPad panel: the forward + the rotated hit test, with the
+        # platform-libm sinf/cosf stand-in
+        "('DPadInUI', 78, 0x0070561C",
+        "('DPadRect', 79, 0x0070567C",
+        "def dpad_frame(rs, wx8, wy, w10, w14, w1c):",
+        "elif name in ('sinf', 'cosf'):",
     ])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_uimanager_starttouch.txt",
             ["startTouch:tapCount:index:"])
     require(ROOT / "reconstruction/reverse-v3/native/INPUT_FRONT.md",
             ["tcUI@32", "currentTouchIsInAnyButtons@154", "hidePauseUI@148",
              "run_ui_router", "19 cases", "children's OR ONLY",
-             "CB, CS, SB"])
+             "CB, CS, SB", "rotated-diamond hit test", "0xBF490FDB"])
     require(ROOT / "reconstruction/recovered/ui_touch_router.h",
             ["run_ui_router", "RouterInputs", "RouterTrace",
              "current_touch_is_in_any_buttons", "hide_pause_ui",
-             "craftui_touch_is_in_view_at_all", "craftui_move_touch"])
+             "craftui_touch_is_in_view_at_all", "craftui_move_touch",
+             "dpad_touch_is_in_view_at_all", "DPadFrame"])
     require(ROOT / "reconstruction/recovered/ui_touch_router.cpp",
             ["startTouch:tapCount:paused:index:", "import(memset)",
-             "touchIsInViewAtAll:", "x > -130.0f && x < 130.0f"])
+             "touchIsInViewAtAll:", "x > -130.0f && x < 130.0f",
+             "0xBF490FDBu"])
     require(ROOT / "tools/test_ui_touch_router.cpp",
-            ["block chain x19", "touchIsInViewAtAll:", "craftui x16"])
+            ["block chain x19", "touchIsInViewAtAll:", "craftui x16",
+             "dpad x11"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_dpad_touch.txt",
             ["touchIsInViewAtAll:",
              "OBJC_IVAR_$_DPad.rightSide (slot 0x0105d31c) = 160",
@@ -138,7 +147,8 @@ def main() -> int:
             ["recovered_ui_seq", "recovered_ui_ret", "ui_control.h",
              "ui_touch_router.h", "run_ui_router", "ui_router_case",
              "ui_router_seeds", "ui_router_seeds(out, case_id)",
-             "craftui_trace", "craftui_seeds", "craftui_child"])
+             "craftui_trace", "craftui_seeds", "craftui_child",
+             "dpad_point_for", "dpad_seeds", "dpad_touch_is_in_view_at_all"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_gameuiview_all.txt",
             ["OBJC_IVAR_$_GameUIView.displayed (slot 0x0105dee0) = 4",
              "OBJC_IVAR_$_GameUIView.resourcesLoaded (slot 0x0105c494) = 16"])
@@ -175,11 +185,11 @@ def main() -> int:
             print(proc.stdout)
             print(proc.stderr)
             return 1
-        # the run's own report pins the case totals: 35 modelled + 42 UI
-        # rows (router 19 + CraftUI 16 + MJControl 3 + MJView 4)
+        # the run's own report pins the case totals: 35 modelled + 53 UI
+        # rows (router 19 + CraftUI 16 + DPad 11 + MJControl 3 + MJView 4)
         import json
         report = json.loads((out / "specials-arm-result.json").read_text())
-        assert report["cases"] == 77, report["cases"]
+        assert report["cases"] == 88, report["cases"]
         assert report["match"] is True
         ui_rows = [r for r in report["rows"] if r["class"] == "UIManager"]
         assert len(ui_rows) == 19, len(ui_rows)
@@ -188,8 +198,11 @@ def main() -> int:
         craftui_rows = [r for r in report["rows"]
                         if r["class"].startswith("CraftUI")]
         assert len(craftui_rows) == 16, len(craftui_rows)
+        dpad_rows = [r for r in report["rows"]
+                     if r["class"].startswith("DPad")]
+        assert len(dpad_rows) == 11, len(dpad_rows)
         print("specials-arm: PASS (differential executed, modelled cases "
-              "match; router 19/19, craftui 16/16)")
+              "match; router 19/19, craftui 16/16, dpad 11/11)")
         return 0
 
     print("specials-arm: PASS (constants; run with --elf to execute)")

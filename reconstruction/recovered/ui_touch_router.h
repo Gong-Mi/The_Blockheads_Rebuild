@@ -159,4 +159,27 @@ PanelTrace craftui_move_touch(const ChildReply* sb, const ChildReply* cb,
 PanelTrace craftui_end_touch(const ChildReply* sb, const ChildReply* cb,
                              const ChildReply* cs);
 
+// --- the DPad panel (the rotated hit test) -------------------------------
+// DPad -touchIsInViewAtAll: (0x0070567C..0x007058F8, 232w) with its rotation
+// helper (0x0070591C, inside the method's span): the local point is rebased
+// through the window fields, rotated by the constant angle (0xBF490FDB,
+// movw/movt = -pi/4; sinf/cosf), then tested against the +-80 square, all
+// edges exclusive. windowInfo[+8]/[+0xc] are the window origin;
+// [+0x10]/[+0x14]/[+0x1c] feed the dpad's own offsets; rightSide@160 selects
+// the mirrored layout. DPad -touchIsInUI: (24w) is the pure forward to
+// touchIsInViewAtAll:.
+struct DPadFrame {
+    float window_x = 0.0f;    // windowInfo[+8]
+    float window_y = 0.0f;    // windowInfo[+0xc]
+    float w10 = 0.0f;         // windowInfo[+0x10]
+    float w14 = 0.0f;         // windowInfo[+0x14]
+    float w1c = 0.0f;         // windowInfo[+0x1c]
+    bool right_side = false;  // rightSide@160
+};
+
+bool dpad_touch_is_in_view_at_all(Point p, const DPadFrame& f);
+
+// The forward: the reply of [self touchIsInViewAtAll:point] (sxtb'd).
+bool dpad_touch_is_in_ui(bool in_view_at_all);
+
 }  // namespace blockheads::ui

@@ -1,6 +1,10 @@
 // ui_touch_router.cpp — the traversal (see ui_touch_router.h).
 #include "ui_touch_router.h"
 
+#include <cmath>
+#include <cstdint>
+#include <cstring>
+
 namespace blockheads::ui {
 
 bool Node::touch_is_in_ui(Point p) const {
@@ -231,5 +235,45 @@ PanelTrace craftui_end_touch(const ChildReply* sb, const ChildReply* cb,
     child_end(sb, t);
     return t;
 }
+
+// --- the DPad panel -------------------------------------------------------
+
+namespace {
+
+// the fixed rotation angle, arm-attested as the r3 bits 0xBF490FDB
+// (movw #0x0fdb + movt #0xbf49) = -0.7853982 = -pi/4
+float dpad_rotation_angle() {
+    std::uint32_t bits = 0xBF490FDBu;
+    float a = 0.0f;
+    std::memcpy(&a, &bits, sizeof(a));
+    return a;
+}
+
+}  // namespace
+
+bool dpad_touch_is_in_view_at_all(Point p, const DPadFrame& f) {
+    // the ARM's exact f32 op order (the listing's vsub/vadd chains)
+    const float x1 = p.x - f.window_x;
+    const float y1 = p.y - f.window_y;
+    float px;
+    if (f.right_side) {
+        const float b = (f.window_x - f.w14) - 200.0f;
+        px = (x1 - b) - 80.0f;
+    } else {
+        const float a = ((-f.window_x) + f.w10) + 40.0f;
+        px = (x1 - a) - 80.0f;
+    }
+    // the y chain's middle constant is +40 (the same pool entry as A's)
+    const float py = (y1 - ((f.w1c - f.window_y) + 40.0f)) - 80.0f;
+    // the helper (0x0070591C): out.x = x*cos - y*sin, out.y = y*cos + x*sin
+    const float ang = dpad_rotation_angle();
+    const float ca = std::cos(ang);
+    const float sa = std::sin(ang);
+    const float rx = (px * ca) - (py * sa);
+    const float ry = (py * ca) + (px * sa);
+    return rx > -80.0f && rx < 80.0f && ry > -80.0f && ry < 80.0f;
+}
+
+bool dpad_touch_is_in_ui(bool in_view_at_all) { return in_view_at_all; }
 
 }  // namespace blockheads::ui

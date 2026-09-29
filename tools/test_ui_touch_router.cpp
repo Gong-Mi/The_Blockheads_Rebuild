@@ -340,7 +340,38 @@ int main() {
         assert(join_trace(en.calls) == "endTouch:,endTouch:,endTouch:");
     }
 
+    // --- the DPad panel (the rotated hit test) ---------------------------
+    // The differential rows' points and expectations (tools/test_specials_arm.py
+    // DPadRect): the zero frame gives px = x-120, py = y-120; the rotation is
+    // -pi/4 and the square is +-80, all edges exclusive.
+    {
+        const DPadFrame origin{};
+        assert(dpad_touch_is_in_view_at_all({120, 120}, origin));
+        assert(!dpad_touch_is_in_view_at_all(
+            {165.96194458007812f, 194.2462158203125f}, origin));
+        assert(!dpad_touch_is_in_view_at_all(
+            {74.03805541992188f, 194.2462158203125f}, origin));
+        assert(dpad_touch_is_in_view_at_all({120, 197.78173828125f}, origin));
+        assert(!dpad_touch_is_in_view_at_all(
+            {120, 240.20816040039062f}, origin));
+        // the window fields enter the rebase: each of these would flip
+        // without its term
+        const DPadFrame w10{0, 0, 40, 0, 0, false};
+        assert(dpad_touch_is_in_view_at_all(
+            {215.86143493652344f, 175.86143493652344f}, w10));
+        const DPadFrame w1c{0, 0, 0, 0, 25, false};
+        assert(dpad_touch_is_in_view_at_all(
+            {64.13856506347656f, 200.86143493652344f}, w1c));
+        const DPadFrame right{50, 7, 0, 30, 0, true};
+        assert(dpad_touch_is_in_view_at_all({-50, 120}, right));
+        assert(!dpad_touch_is_in_view_at_all(
+            {-4.038055419921875f, 194.2462158203125f}, right));
+        // touchIsInUI: — the pure forward
+        assert(!dpad_touch_is_in_ui(false));
+        assert(dpad_touch_is_in_ui(true));
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
-                " block chain x19, craftui x16)\n");
+                " block chain x19, craftui x16, dpad x11)\n");
     return 0;
 }

@@ -81,6 +81,10 @@ ENTRIES = [
     ('CraftUIPress', 75, 0x00B81248, 0x00000000, 137),
     ('CraftUIMove', 76, 0x00B8146C, 0x00000000, 103),
     ('CraftUIEnd', 77, 0x00B81608, 0x00000000, 103),
+    # the DPad panel: the pure forward + the rotated hit test (the 232w body
+    # with its 0x0070591C rotation helper inside the span)
+    ('DPadInUI', 78, 0x0070561C, 0x00000000, 24),
+    ('DPadRect', 79, 0x0070567C, 0x00000000, 232),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -510,6 +514,21 @@ def main():
             uc_.reg_write(UC_ARM_REG_R0, q & 0xffffffff)
             if name.endswith('mod'):
                 uc_.reg_write(UC_ARM_REG_R1, (a_ - q * b_) & 0xffffffff)
+        elif name in ('sinf', 'cosf'):
+            # the DPad hit test's rotation: answer with the true float value
+            # (a platform-libm stand-in; softfp: the arg/return ride in R0 —
+            # the caller's vmov r0, s0 / vmov s0, r0 pair). The model side
+            # computes the same math; the tested points keep margins far
+            # from the +-80 edges, so any 1-ulp libm difference cannot flip
+            # a comparison.
+            import math as _math
+            a_bits = uc_.reg_read(UC_ARM_REG_R0)
+            angle = struct.unpack('<f', struct.pack('<I', a_bits))[0]
+            value = _math.sin(angle) if name == 'sinf' else _math.cos(angle)
+            uc_.reg_write(UC_ARM_REG_R0,
+                          struct.unpack('<I',
+                                        struct.pack('<f', value))[0])
+            ctx['calls'].append(f'import({name})')
         elif name in ('lrand48',):
             ctx['calls'].append('lrand48')
             uc_.reg_write(UC_ARM_REG_R0, 12345)
@@ -614,7 +633,7 @@ def main():
         # frame, and the CraftUI fixture reads its window floats back from
         # @8/+0xc — real state the differential must compare.
         if not cls.startswith(('MJView', 'MJControl', 'UIManager',
-                               'CraftUI')):
+                               'CraftUI', 'DPad')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -829,6 +848,12 @@ def main():
     CHILD_SEEDS = (f'148=0x{CHILD_SB:08x},208=0x{CHILD_CB:08x},'
                    f'164=0x{CHILD_CS:08x}')
 
+    def dpad_frame(rs, wx8, wy, w10, w14, w1c):
+        # the DPad fixture: windowInfo = self_ptr; the method reads the
+        # fields from self+8/+0xc/+0x10/+0x14/+0x1c and rightSide@160 (byte)
+        return (f'112=0x60001000,8={fb(wx8)},12={fb(wy)},16={fb(w10)},'
+                f'20={fb(w14)},28={fb(w1c)},160={1 if rs else 0}')
+
     UI_CASES = {
         'MJControl': {
             0: ('50,50',
@@ -962,6 +987,35 @@ def main():
             0: ('50,50', f'{frame(0, 0, 0, 0)},{CHILD_SEEDS}',
                 {'void': True,
                  'expect_recv': [CHILD_CB, CHILD_CS, CHILD_SB]}),
+        },
+        'DPadInUI': {
+            # touchIsInUI: — the pure forward to touchIsInViewAtAll: (the
+            # reply is the fixture's, pinned via ret1 on self)
+            0: ('50,50', '', {}),
+            1: ('50,50', '',
+                {'ret1': {0x60001000: ['touchIsInViewAtAll:']}}),
+        },
+        'DPadRect': {
+            # touchIsInViewAtAll: — the +-80 square after rebasing + rotating
+            # by -pi/4 (0xBF490FDB); every case keeps a wide margin to the
+            # edges, and 5/6/7 distinguish the w10 / w1c / rightSide terms
+            # from their omission (each would flip the result)
+            0: ('120.0,120.0', dpad_frame(0, 0, 0, 0, 0, 0), {}),  # center
+            1: ('165.96194458007812,194.2462158203125',
+                dpad_frame(0, 0, 0, 0, 0, 0), {}),                 # rx=+85
+            2: ('74.03805541992188,194.2462158203125',
+                dpad_frame(0, 0, 0, 0, 0, 0), {}),                 # ry=+85
+            3: ('120.0,197.78173828125',
+                dpad_frame(0, 0, 0, 0, 0, 0), {}),                 # (55,55) in
+            4: ('120.0,240.20816040039062',
+                dpad_frame(0, 0, 0, 0, 0, 0), {}),                 # (85,85) out
+            5: ('215.86143493652344,175.86143493652344',
+                dpad_frame(0, 0, 0, 40, 0, 0), {}),   # w10=40: rx=79 (in)
+            6: ('64.13856506347656,200.86143493652344',
+                dpad_frame(0, 0, 0, 0, 0, 25), {}),   # w1c=25: ry=79 (in)
+            7: ('-50.0,120.0', dpad_frame(1, 50, 7, 0, 30, 0), {}),  # mirrored
+            8: ('-4.038055419921875,194.2462158203125',
+                dpad_frame(1, 50, 7, 0, 30, 0), {}),               # rx=+85
         },
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view

@@ -714,6 +714,43 @@ void craftui_seeds(unsigned char* out, int which, int case_id) {
         ui_put_word(out, 164, 0x60020800u);
     }
 }
+
+// --- the DPad panel's differential inputs ---------------------------------
+// The seeds mirror the harness's dpad_frame fixture: windowInfo = self_ptr,
+// the five window fields at 8/12/16/20/28 and rightSide@160.
+blockheads::ui::DPadFrame dpad_frame_for(int case_id) {
+    switch (case_id) {
+        case 5: return {0.0f, 0.0f, 40.0f, 0.0f, 0.0f, false};
+        case 6: return {0.0f, 0.0f, 0.0f, 0.0f, 25.0f, false};
+        case 7: case 8: return {50.0f, 7.0f, 0.0f, 30.0f, 0.0f, true};
+        default: return {};
+    }
+}
+
+blockheads::ui::Point dpad_point_for(int case_id) {
+    switch (case_id) {
+        case 1: return {165.96194458007812f, 194.2462158203125f};
+        case 2: return {74.03805541992188f, 194.2462158203125f};
+        case 3: return {120.0f, 197.78173828125f};
+        case 4: return {120.0f, 240.20816040039062f};
+        case 5: return {215.86143493652344f, 175.86143493652344f};
+        case 6: return {64.13856506347656f, 200.86143493652344f};
+        case 7: return {-50.0f, 120.0f};
+        case 8: return {-4.038055419921875f, 194.2462158203125f};
+        default: return {120.0f, 120.0f};
+    }
+}
+
+void dpad_seeds(unsigned char* out, int case_id) {
+    ui_put_word(out, 112, 0x60001000u);      // windowInfo = self_ptr
+    const auto f = dpad_frame_for(case_id);
+    ui_put_word(out, 8, float_bits(f.window_x));
+    ui_put_word(out, 12, float_bits(f.window_y));
+    ui_put_word(out, 16, float_bits(f.w10));
+    ui_put_word(out, 20, float_bits(f.w14));
+    ui_put_word(out, 28, float_bits(f.w1c));
+    ui_put_word(out, 160, f.right_side ? 1u : 0u);
+}
 }  // namespace
 
 extern "C" {
@@ -751,6 +788,13 @@ const char* recovered_ui_seq(int type_id, int case_id) {
                 s += c;
             }
         }
+    } else if (type_id == 78) {
+        // DPad -touchIsInUI: — the pure forward's one call
+        s = "touchIsInViewAtAll:";
+    } else if (type_id == 79) {
+        // DPad -touchIsInViewAtAll: — the rotation's two PLT calls (the
+        // rest of the body is direct .text helpers, not recorded)
+        s = "import(sinf),import(cosf)";
     } else if (type_id == 71) {  // MJView -touchIsInUI: — the GATE cases
         // The frame test's coordinate space is still being decoded; the
         // gates are verified: hidden@4 short-circuits first, then
@@ -788,6 +832,13 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
     if (type_id >= 73 && type_id <= 77) {  // CraftUI: the seeds only
         std::memset(out, 0, static_cast<std::size_t>(n));
         craftui_seeds(out, type_id, case_id);
+        return n;
+    }
+    if (type_id == 78 || type_id == 79) {  // DPad: the base slots + frame
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0x60000200u);
+        if (type_id == 79) dpad_seeds(out, case_id);
         return n;
     }
     if (type_id == 71) {  // MJView: the gate cases write nothing
@@ -840,6 +891,13 @@ int recovered_ui_ret(int type_id, int case_id) {
         return craftui_trace(type_id, case_id).handled;
     }
     if (type_id == 76 || type_id == 77) return 0;  // void (not compared)
+    if (type_id == 78) {  // the forward: the fixture's reply on self
+        return blockheads::ui::dpad_touch_is_in_ui(case_id == 1) ? 1 : 0;
+    }
+    if (type_id == 79) {
+        return blockheads::ui::dpad_touch_is_in_view_at_all(
+            dpad_point_for(case_id), dpad_frame_for(case_id)) ? 1 : 0;
+    }
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);
