@@ -135,6 +135,12 @@ ENTRIES = [
     ('RegenerateUIPress', 119, 0x009D3010, 0x00000000, 127),
     ('RegenerateUIMove', 120, 0x009D320C, 0x00000000, 87),
     ('RegenerateUIEnd', 121, 0x009D3368, 0x00000000, 87),
+    # the TradingPostBuyUI panel: closed-gated chains + countSlider/buyButton
+    ('TPBuyUIRect', 122, 0x00713EB4, 0x00000000, 98),
+    ('TPBuyUIInUI', 123, 0x0071403C, 0x00000000, 130),
+    ('TPBuyUIPress', 124, 0x00714244, 0x00000000, 131),
+    ('TPBuyUIMove', 125, 0x00714450, 0x00000000, 107),
+    ('TPBuyUIEnd', 126, 0x007145FC, 0x00000000, 107),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -686,7 +692,8 @@ def main():
                                'CraftUI', 'DPad', 'BlockheadUI',
                                'MapUI', 'OptionsUI', 'ShareUI', 'PauseUI',
                                'MainMenuUI', 'WPBarUI', 'CameraUI',
-                               'PetUI', 'WearUI', 'RegenerateUI')):
+                               'PetUI', 'WearUI', 'RegenerateUI',
+                               'TPBuyUI')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -939,6 +946,14 @@ def main():
 
     WEAR_WB = 0x60020600
     REGEN_DB, REGEN_CB = 0x60020600, 0x60020700
+    TPB_SL, TPB_BUY = 0x60020600, 0x60020700
+
+    def tpb_seeds(closed=0):
+        # TradingPostBuyUI: windowInfo@144 = self_ptr; translationOffset at
+        # 152/156; countSlider@164; buyButton@192; closed byte @172
+        return ('144=0x60001000,8=0,12=0,152=0,156=0,'
+                f'164=0x{TPB_SL:08x},192=0x{TPB_BUY:08x},172={closed}')
+
 
     def regen_seeds():
         # RegenerateUI: windowInfo@96 = self_ptr; translationOffset at
@@ -1384,6 +1399,47 @@ def main():
         'RegenerateUIEnd': {
             0: ('50,50', regen_seeds(), {
                 'void': True, 'expect_recv': [REGEN_DB, REGEN_CB]})},
+        'TPBuyUIRect': {
+            # x in (-82, 82), y in (-16, 190), all edges exclusive
+            0: ('0,87', tpb_seeds(), {}),        # centre
+            1: ('82,87', tpb_seeds(), {}),       # x == 82
+            2: ('-82,87', tpb_seeds(), {}),      # x == -82
+            3: ('0,-16', tpb_seeds(), {}),       # y == -16
+            4: ('0,190', tpb_seeds(), {}),       # y == 190
+            5: ('81,189', tpb_seeds(), {}),      # inside margins
+        },
+        'TPBuyUIInUI': {
+            0: ('50,87', tpb_seeds(), {
+                'expect_recv': [TPB_SL, TPB_BUY]}),
+            1: ('50,87', tpb_seeds(), {
+                'expect_recv': [TPB_SL],
+                'ret1': {TPB_SL: ['touchIsInUI:']}}),
+            2: ('50,87', tpb_seeds(), {
+                'expect_recv': [TPB_SL, TPB_BUY],
+                'ret1': {TPB_BUY: ['startTouch:']}}),
+            3: ('50,87', tpb_seeds(closed=1), {}),
+        },
+        'TPBuyUIPress': {
+            0: ('50,87', tpb_seeds(), {
+                'expect_recv': [TPB_SL, TPB_BUY]}),
+            1: ('50,87', tpb_seeds(), {
+                'expect_recv': [TPB_SL],
+                'ret1': {TPB_SL: ['startTouch:']}}),
+            2: ('50,87', tpb_seeds(), {
+                'expect_recv': [TPB_SL, TPB_BUY],
+                'ret1': {TPB_BUY: ['startTouch:']}}),
+            3: ('50,87', tpb_seeds(closed=1), {}),
+        },
+        'TPBuyUIMove': {
+            0: ('50,87', tpb_seeds(), {
+                'void': True, 'expect_recv': [TPB_SL, TPB_BUY]}),
+            1: ('50,87', tpb_seeds(closed=1), {'void': True}),
+        },
+        'TPBuyUIEnd': {
+            0: ('50,87', tpb_seeds(), {
+                'void': True, 'expect_recv': [TPB_SL, TPB_BUY]}),
+            1: ('50,87', tpb_seeds(closed=1), {'void': True}),
+        },
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.

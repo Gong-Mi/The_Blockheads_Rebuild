@@ -247,6 +247,19 @@ in that order. 10 cases (the const-1 far-point control, both children alone
 + all-miss per chain, the void orders receiver-verified) execute under
 Unicorn.
 
+## The TradingPostBuyUI panel (types 122..126) — decoded
+
+`disasm_tradingpostbuyui_touch.txt` (573w): `touchIsInViewAtAll:` (98w) —
+x in (-82, 82), y in (-16, 190). ALL four chains gate on the
+`closed@172` byte first: closed != 0 returns 0 with ZERO child calls
+(move/end skip too). Open, `touchIsInUI:` (130w) /
+`startTouch:tapCount:` (131w) are the two-child OR countSlider@164 ->
+buyButton@192, short-circuit. The inUI fall-through messages buyButton
+with the one-arg `startTouch:` — an original-code quirk the differential
+pins via both the receiver trace and the pinned reply. `moveTouch:` /
+`endTouch:` (107w each) message BOTH children. 18 cases execute under
+Unicorn.
+
 ## The RegenerateUI panel (types 117..121) — decoded
 
 `disasm_regenerateui_touch.txt` (518w): `touchIsInViewAtAll:` (95w) — local

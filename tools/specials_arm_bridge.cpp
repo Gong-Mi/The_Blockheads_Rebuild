@@ -966,6 +966,57 @@ blockheads::ui::Point regen_point(int case_id) {
     }
 }
 
+// --- the TradingPostBuyUI panel's differential inputs ---------------------
+constexpr unsigned TPB_SL = 0x60020600u;
+constexpr unsigned TPB_BUY = 0x60020700u;
+
+blockheads::ui::Point tpb_point(int case_id) {
+    switch (case_id) {
+        case 1: return {82.0f, 87.0f};
+        case 2: return {-82.0f, 87.0f};
+        case 3: return {0.0f, -16.0f};
+        case 4: return {0.0f, 190.0f};
+        case 5: return {81.0f, 189.0f};
+        default: return {0.0f, 87.0f};
+    }
+}
+
+bool tpb_gate_closed(int which, int case_id) {
+    // 123/124 case 3 and 125/126 case 1 seed the closed byte
+    if ((which == 123 || which == 124) && case_id == 3) return true;
+    if ((which == 125 || which == 126) && case_id == 1) return true;
+    return false;
+}
+
+void tpb_seeds_for(unsigned char* out, int case_id, int which) {
+    ui_put_word(out, 144, 0x60001000u);
+    ui_put_word(out, 8, 0u);
+    ui_put_word(out, 12, 0u);
+    ui_put_word(out, 152, 0u);
+    ui_put_word(out, 156, 0u);
+    ui_put_word(out, 164, TPB_SL);
+    ui_put_word(out, 192, TPB_BUY);
+    if (tpb_gate_closed(which, case_id)) {
+        ui_put_word(out, 172, 1u);
+    }
+}
+
+const blockheads::ui::ChildReply* tpb_child(int which, int slot,
+                                            int case_id) {
+    // 123/124: case 1 pins countSlider, case 2 pins buyButton. The inUI
+    // answers through the in_ui family; the press and the inUI's
+    // startTouch: fall-through both answer through the handles family.
+    if ((which == 123 || which == 124) && case_id >= 1 && case_id <= 2) {
+        if (slot == 0 && case_id == 1) {
+            return (which == 124) ? &kChildHandles : &kChildInUi;
+        }
+        if (slot == 1 && case_id == 2) {
+            return &kChildHandles;
+        }
+    }
+    return &kChildMiss;
+}
+
 const blockheads::ui::ChildReply* regen_child(int which, int slot,
                                               int case_id) {
     // 118/119: case 1 pins dieButton, case 2 pins completeButton
@@ -1081,6 +1132,25 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // the constant-verdict panels: no calls (the literal verdicts)
     } else if (type_id >= 97 && type_id <= 101) {
         // the WorkbenchProgressBarUI panel: no calls (rect + constants)
+    } else if (type_id >= 122 && type_id <= 126) {
+        // the TradingPostBuyUI panel: closed-gated chains (122 no calls)
+        const bool closed = tpb_gate_closed(type_id, case_id);
+        const auto* sl = tpb_child(type_id, 0, case_id);
+        const auto* buy = tpb_child(type_id, 1, case_id);
+        blockheads::ui::PanelTrace t;
+        if (type_id == 123) {
+            t = blockheads::ui::tpbuyui_touch_is_in_ui(closed, sl, buy);
+        } else if (type_id == 124) {
+            t = blockheads::ui::tpbuyui_start_touch(closed, sl, buy);
+        } else if (type_id == 125) {
+            t = blockheads::ui::tpbuyui_move_touch(closed, sl, buy);
+        } else if (type_id == 126) {
+            t = blockheads::ui::tpbuyui_end_touch(closed, sl, buy);
+        }
+        for (const char* c : t.calls) {
+            if (!s.empty()) s += ',';
+            s += c;
+        }
     } else if (type_id >= 117 && type_id <= 121) {
         // the RegenerateUI panel: the two-button chains (117 no calls)
         const auto* db = regen_child(type_id, 0, case_id);
@@ -1216,6 +1286,14 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         wpb_seeds_for(out, case_id);
+        return n;
+    }
+    if (type_id >= 122 && type_id <= 126) {  // TradingPostBuyUI
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0u);
+        ui_put_word(out, 12, 0u);
+        tpb_seeds_for(out, case_id, type_id);
         return n;
     }
     if (type_id >= 117 && type_id <= 121) {  // RegenerateUI
@@ -1384,6 +1462,21 @@ int recovered_ui_ret(int type_id, int case_id) {
             .handled;
     }
     if (type_id == 120 || type_id == 121) return 0;  // void (not compared)
+    if (type_id == 122) {
+        return blockheads::ui::tpbuyui_touch_is_in_view_at_all(
+            tpb_point(case_id), {}) ? 1 : 0;
+    }
+    if (type_id == 123) {
+        return blockheads::ui::tpbuyui_touch_is_in_ui(
+            tpb_gate_closed(123, case_id), tpb_child(123, 0, case_id),
+            tpb_child(123, 1, case_id)).handled;
+    }
+    if (type_id == 124) {
+        return blockheads::ui::tpbuyui_start_touch(
+            tpb_gate_closed(124, case_id), tpb_child(124, 0, case_id),
+            tpb_child(124, 1, case_id)).handled;
+    }
+    if (type_id == 125 || type_id == 126) return 0;  // void (not compared)
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);

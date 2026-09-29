@@ -526,4 +526,61 @@ PanelTrace regenerateui_end_touch(const ChildReply* die,
     return t;
 }
 
+// --- the TradingPostBuyUI panel -------------------------------------------
+
+bool tpbuyui_touch_is_in_view_at_all(Point p, const PanelFrame& f) {
+    const float x = p.x - f.window_x - f.offset_x;
+    const float y = p.y - f.window_y - f.offset_y;
+    return x > -82.0f && x < 82.0f && y > -16.0f && y < 190.0f;
+}
+
+PanelTrace tpbuyui_touch_is_in_ui(bool closed, const ChildReply* slider,
+                                  const ChildReply* buy) {
+    PanelTrace t;
+    if (closed) {
+        t.handled = 0;                 // closed gate: zero calls
+        return t;
+    }
+    bool any = child_in_ui(slider, t);
+    // the ARM's fall-through messages buyButton with startTouch:
+    if (!any) any = child_start(buy, t);
+    t.handled = any ? 1 : 0;
+    return t;
+}
+
+PanelTrace tpbuyui_start_touch(bool closed, const ChildReply* slider,
+                               const ChildReply* buy) {
+    PanelTrace t;
+    if (closed) {
+        t.handled = 0;
+        return t;
+    }
+    bool any = child_start(slider, t);
+    if (!any) any = child_start(buy, t);
+    t.handled = any ? 1 : 0;
+    return t;
+}
+
+PanelTrace tpbuyui_move_touch(bool closed, const ChildReply* slider,
+                              const ChildReply* buy) {
+    (void)slider;
+    (void)buy;
+    PanelTrace t;
+    if (closed) return t;              // gate skips both calls
+    t.calls.push_back("moveTouch:");   // countSlider@164
+    t.calls.push_back("moveTouch:");   // buyButton@192
+    return t;
+}
+
+PanelTrace tpbuyui_end_touch(bool closed, const ChildReply* slider,
+                             const ChildReply* buy) {
+    (void)slider;
+    (void)buy;
+    PanelTrace t;
+    if (closed) return t;
+    t.calls.push_back("endTouch:");    // countSlider@164
+    t.calls.push_back("endTouch:");    // buyButton@192
+    return t;
+}
+
 }  // namespace blockheads::ui

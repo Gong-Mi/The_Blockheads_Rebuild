@@ -314,4 +314,22 @@ PanelTrace regenerateui_move_touch(const ChildReply* die,
 PanelTrace regenerateui_end_touch(const ChildReply* die,
                                   const ChildReply* complete);
 
+// --- the TradingPostBuyUI panel -------------------------------------------
+// rect (98w): x in (-82, 82), y in (-16, 190), all edges exclusive. ALL
+// four chains gate on the closed@172 byte: closed != 0 -> return 0 with
+// ZERO child calls (move/end skip too). Open: touchIsInUI: (130w) /
+// startTouch:tapCount: (131w) are the two-child OR countSlider@164 ->
+// buyButton@192, short-circuit; NOTE the inUI fall-through messages
+// buyButton with startTouch: (an original-code quirk the differential
+// pins). moveTouch:/endTouch: (107w each) message BOTH children.
+bool tpbuyui_touch_is_in_view_at_all(Point p, const PanelFrame& f);
+PanelTrace tpbuyui_touch_is_in_ui(bool closed, const ChildReply* slider,
+                                  const ChildReply* buy);
+PanelTrace tpbuyui_start_touch(bool closed, const ChildReply* slider,
+                               const ChildReply* buy);
+PanelTrace tpbuyui_move_touch(bool closed, const ChildReply* slider,
+                              const ChildReply* buy);
+PanelTrace tpbuyui_end_touch(bool closed, const ChildReply* slider,
+                             const ChildReply* buy);
+
 }  // namespace blockheads::ui

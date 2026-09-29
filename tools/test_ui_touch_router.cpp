@@ -568,9 +568,37 @@ int main() {
         assert(join_trace(t.calls) == "endTouch:,endTouch:");
     }
 
+    // --- the TradingPostBuyUI panel ----------------------------------------
+    {
+        const PanelFrame origin{};
+        assert(tpbuyui_touch_is_in_view_at_all({0, 87}, origin));
+        assert(!tpbuyui_touch_is_in_view_at_all({82, 87}, origin));
+        assert(!tpbuyui_touch_is_in_view_at_all({-82, 87}, origin));
+        assert(!tpbuyui_touch_is_in_view_at_all({0, -16}, origin));
+        assert(!tpbuyui_touch_is_in_view_at_all({0, 190}, origin));
+        assert(tpbuyui_touch_is_in_view_at_all({81, 189}, origin));
+        // the closed gate: zero calls, 0
+        auto t = tpbuyui_touch_is_in_ui(true, nullptr, nullptr);
+        assert(t.calls.empty() && t.handled == 0);
+        t = tpbuyui_move_touch(true, nullptr, nullptr);
+        assert(t.calls.empty());
+        // open: the two-child OR; the inUI fall-through is startTouch:
+        const ChildReply hit{true, false};    // in_ui family
+        const ChildReply hit_h{false, true};  // handles family
+        t = tpbuyui_touch_is_in_ui(false, &hit, nullptr);
+        assert(join_trace(t.calls) == "touchIsInUI:" && t.handled == 1);
+        t = tpbuyui_touch_is_in_ui(false, nullptr, &hit_h);
+        assert(join_trace(t.calls) == "touchIsInUI:,startTouch:");
+        assert(t.handled == 1);
+        t = tpbuyui_start_touch(false, &hit_h, nullptr);
+        assert(join_trace(t.calls) == "startTouch:" && t.handled == 1);
+        t = tpbuyui_end_touch(false, nullptr, nullptr);
+        assert(join_trace(t.calls) == "endTouch:,endTouch:");
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
                 " block chain x19, craftui x16, dpad x11, blockhead x28,"
                 " const x17, wpbar x11, camera x10, pet x13, wear x14,"
-                " regen x14)\n");
+                " regen x14, tpbuy x18)\n");
     return 0;
 }
