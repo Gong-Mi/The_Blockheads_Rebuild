@@ -141,6 +141,12 @@ ENTRIES = [
     ('TPBuyUIPress', 124, 0x00714244, 0x00000000, 131),
     ('TPBuyUIMove', 125, 0x00714450, 0x00000000, 107),
     ('TPBuyUIEnd', 126, 0x007145FC, 0x00000000, 107),
+    # the SoundOptionsUI panel: const rect/inUI + the three-child chains
+    ('SoundOptionsUIRect', 127, 0x00AE122C, 0x00000000, 32),
+    ('SoundOptionsUIInUI', 128, 0x00AE12AC, 0x00000000, 32),
+    ('SoundOptionsUIPress', 129, 0x00AE132C, 0x00000000, 95),
+    ('SoundOptionsUIMove', 130, 0x00AE14A8, 0x00000000, 82),
+    ('SoundOptionsUIEnd', 131, 0x00AE15F0, 0x00000000, 82),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -693,7 +699,7 @@ def main():
                                'MapUI', 'OptionsUI', 'ShareUI', 'PauseUI',
                                'MainMenuUI', 'WPBarUI', 'CameraUI',
                                'PetUI', 'WearUI', 'RegenerateUI',
-                               'TPBuyUI')):
+                               'TPBuyUI', 'SoundOptionsUI')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -947,6 +953,15 @@ def main():
     WEAR_WB = 0x60020600
     REGEN_DB, REGEN_CB = 0x60020600, 0x60020700
     TPB_SL, TPB_BUY = 0x60020600, 0x60020700
+    SND_OK, SND_MU, SND_SO = 0x60020600, 0x60020700, 0x60020800
+
+    def snd_seeds():
+        # SoundOptionsUI: windowInfo@96 = self_ptr; OKButton@104;
+        # musicSlider@112; soundSlider@120
+        return ('96=0x60001000,8=0,12=0,'
+                f'104=0x{SND_OK:08x},112=0x{SND_MU:08x},'
+                f'120=0x{SND_SO:08x}')
+
 
     def tpb_seeds(closed=0):
         # TradingPostBuyUI: windowInfo@144 = self_ptr; translationOffset at
@@ -1440,6 +1455,26 @@ def main():
                 'void': True, 'expect_recv': [TPB_SL, TPB_BUY]}),
             1: ('50,87', tpb_seeds(closed=1), {'void': True}),
         },
+        'SoundOptionsUIRect': {
+            # constant 1 (dead rebase)
+            0: ('50,50', snd_seeds(), {}),
+            1: ('9999,9999', snd_seeds(), {}),
+        },
+        'SoundOptionsUIInUI': {
+            # constant 0
+            0: ('50,50', snd_seeds(), {}),
+            1: ('9999,9999', snd_seeds(), {}),
+        },
+        'SoundOptionsUIPress': {
+            0: ('50,50', snd_seeds(), {
+                'expect_recv': [SND_OK, SND_MU, SND_SO]}),
+        },
+        'SoundOptionsUIMove': {
+            0: ('50,50', snd_seeds(), {
+                'void': True, 'expect_recv': [SND_OK, SND_MU, SND_SO]})},
+        'SoundOptionsUIEnd': {
+            0: ('50,50', snd_seeds(), {
+                'void': True, 'expect_recv': [SND_OK, SND_MU, SND_SO]})},
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.

@@ -583,4 +583,46 @@ PanelTrace tpbuyui_end_touch(bool closed, const ChildReply* slider,
     return t;
 }
 
+// --- the SoundOptionsUI panel ---------------------------------------------
+
+PanelTrace soundoptionsui_start_touch(const ChildReply* ok,
+                                      const ChildReply* music,
+                                      const ChildReply* sound) {
+    (void)ok;
+    (void)music;
+    (void)sound;
+    PanelTrace t;
+    t.calls.push_back("startTouch:");  // OKButton@104
+    t.calls.push_back("startTouch:");  // musicSlider@112
+    t.calls.push_back("startTouch:");  // soundSlider@120
+    t.handled = 0;                     // the constant local (quirk)
+    return t;
+}
+
+PanelTrace soundoptionsui_move_touch(const ChildReply* ok,
+                                     const ChildReply* music,
+                                     const ChildReply* sound) {
+    (void)ok;
+    (void)music;
+    (void)sound;
+    PanelTrace t;
+    t.calls.push_back("moveTouch:");   // OKButton@104
+    t.calls.push_back("moveTouch:");   // musicSlider@112
+    t.calls.push_back("moveTouch:");   // soundSlider@120
+    return t;
+}
+
+PanelTrace soundoptionsui_end_touch(const ChildReply* ok,
+                                    const ChildReply* music,
+                                    const ChildReply* sound) {
+    (void)ok;
+    (void)music;
+    (void)sound;
+    PanelTrace t;
+    t.calls.push_back("endTouch:");    // OKButton@104
+    t.calls.push_back("endTouch:");    // musicSlider@112
+    t.calls.push_back("endTouch:");    // soundSlider@120
+    return t;
+}
+
 }  // namespace blockheads::ui

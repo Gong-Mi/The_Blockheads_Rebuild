@@ -137,6 +137,9 @@ def main() -> int:
         # the TradingPostBuyUI panel
         "('TPBuyUIRect', 122, 0x00713EB4",
         "def tpb_seeds(closed=0):",
+        # the SoundOptionsUI panel
+        "('SoundOptionsUIRect', 127, 0x00AE122C",
+        "def snd_seeds():",
     ])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_uimanager_starttouch.txt",
             ["startTouch:tapCount:index:"])
@@ -168,7 +171,7 @@ def main() -> int:
             ["block chain x19", "touchIsInViewAtAll:", "craftui x16",
              "dpad x11", "blockhead x28", "const x17", "wpbar x11",
              "camera x10", "pet x13", "wear x14", "regen x14",
-             "tpbuy x18"])
+             "tpbuy x18", "sound x7"])
     # the constant-verdict listings
     require(ROOT / "reconstruction/reverse-v3/native/disasm_mapui_touch.txt",
             ["MapUI -[touch family]", "implementation: 0x009cb460"])
@@ -215,7 +218,8 @@ def main() -> int:
              "constant_panel_seeds", "constant_panel_ret",
              "wpb_seeds_for", "cam_child", "cam_seeds_for",
              "pet_child", "pet_seeds_for", "wear_child", "wear_seeds_for",
-             "regen_child", "regen_point", "tpb_child", "tpb_seeds_for"])
+             "regen_child", "regen_point", "tpb_child", "tpb_seeds_for",
+             "snd_seeds_for"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_gameuiview_all.txt",
             ["OBJC_IVAR_$_GameUIView.displayed (slot 0x0105dee0) = 4",
              "OBJC_IVAR_$_GameUIView.resourcesLoaded (slot 0x0105c494) = 16"])
@@ -252,13 +256,13 @@ def main() -> int:
             print(proc.stdout)
             print(proc.stderr)
             return 1
-        # the run's own report pins the case totals: 35 modelled + 178 UI
+        # the run's own report pins the case totals: 35 modelled + 185 UI
         # rows (router 19 + CraftUI 16 + DPad 11 + BlockheadUI 28 +
         # const 17 + WPBar 11 + Camera 10 + Pet 13 + Wear 14 + Regen 14 +
-        # TPBuy 18 + MJControl 3 + MJView 4)
+        # TPBuy 18 + Sound 7 + MJControl 3 + MJView 4)
         import json
         report = json.loads((out / "specials-arm-result.json").read_text())
-        assert report["cases"] == 213, report["cases"]
+        assert report["cases"] == 220, report["cases"]
         assert report["match"] is True
         ui_rows = [r for r in report["rows"] if r["class"] == "UIManager"]
         assert len(ui_rows) == 19, len(ui_rows)
@@ -301,10 +305,14 @@ def main() -> int:
         tpb_rows = [r for r in report["rows"]
                     if r["class"].startswith("TPBuyUI")]
         assert len(tpb_rows) == 18, len(tpb_rows)
+        snd_rows = [r for r in report["rows"]
+                    if r["class"].startswith("SoundOptionsUI")]
+        assert len(snd_rows) == 7, len(snd_rows)
         print("specials-arm: PASS (differential executed, modelled cases "
               "match; router 19/19, craftui 16/16, dpad 11/11, "
               "blockhead 28/28, const 17/17, wpbar 11/11, camera 10/10, "
-              "pet 13/13, wear 14/14, regen 14/14, tpbuy 18/18)")
+              "pet 13/13, wear 14/14, regen 14/14, tpbuy 18/18, "
+              "sound 7/7)")
         return 0
 
     print("specials-arm: PASS (constants; run with --elf to execute)")

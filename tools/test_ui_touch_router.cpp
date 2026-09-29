@@ -596,9 +596,24 @@ int main() {
         assert(join_trace(t.calls) == "endTouch:,endTouch:");
     }
 
+    // --- the SoundOptionsUI panel ------------------------------------------
+    {
+        static_assert(kSoundOptionsUiRect && kSoundOptionsUiInUi == 0,
+                      "SoundOptionsUI's decoded constants");
+        auto t = soundoptionsui_start_touch(nullptr, nullptr, nullptr);
+        // all three children, and the return is the constant 0 (quirk)
+        assert(join_trace(t.calls)
+               == "startTouch:,startTouch:,startTouch:");
+        assert(t.handled == 0);
+        t = soundoptionsui_move_touch(nullptr, nullptr, nullptr);
+        assert(join_trace(t.calls) == "moveTouch:,moveTouch:,moveTouch:");
+        t = soundoptionsui_end_touch(nullptr, nullptr, nullptr);
+        assert(join_trace(t.calls) == "endTouch:,endTouch:,endTouch:");
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
                 " block chain x19, craftui x16, dpad x11, blockhead x28,"
                 " const x17, wpbar x11, camera x10, pet x13, wear x14,"
-                " regen x14, tpbuy x18)\n");
+                " regen x14, tpbuy x18, sound x7)\n");
     return 0;
 }

@@ -247,6 +247,17 @@ in that order. 10 cases (the const-1 far-point control, both children alone
 + all-miss per chain, the void orders receiver-verified) execute under
 Unicorn.
 
+## The SoundOptionsUI panel (types 127..131) — decoded
+
+`disasm_soundoptionsui_touch.txt` (323w): `touchIsInViewAtAll:` (32w) is
+the constant 1 (a dead windowInfo read precedes it); `touchIsInUI:` (32w)
+the constant 0. `startTouch:tapCount:` (95w) messages ALL THREE children
+[OKButton@104, musicSlider@112, soundSlider@120] with the one-arg
+`startTouch:` and returns the constant local 0 — the three replies land in
+dead stack slots (an original-code quirk pinned by the differential).
+`moveTouch:` / `endTouch:` (82w each) message all three. 7 cases execute
+under Unicorn.
+
 ## The TradingPostBuyUI panel (types 122..126) — decoded
 
 `disasm_tradingpostbuyui_touch.txt` (573w): `touchIsInViewAtAll:` (98w) —

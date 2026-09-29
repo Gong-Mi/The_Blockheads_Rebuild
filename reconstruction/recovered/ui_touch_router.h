@@ -332,4 +332,23 @@ PanelTrace tpbuyui_move_touch(bool closed, const ChildReply* slider,
 PanelTrace tpbuyui_end_touch(bool closed, const ChildReply* slider,
                              const ChildReply* buy);
 
+// --- the SoundOptionsUI panel ---------------------------------------------
+// rect (32w) is the constant 1 (dead windowInfo read); touchIsInUI: (32w)
+// the constant 0. startTouch:tapCount: (95w) messages ALL THREE children
+// [OKButton@104, musicSlider@112, soundSlider@120] with the one-arg
+// startTouch: and returns the constant local 0 — the child replies land in
+// dead stack slots (an original-code quirk). moveTouch:/endTouch: (82w
+// each) message all three.
+constexpr bool kSoundOptionsUiRect = true;
+constexpr int kSoundOptionsUiInUi = 0;
+PanelTrace soundoptionsui_start_touch(const ChildReply* ok,
+                                      const ChildReply* music,
+                                      const ChildReply* sound);
+PanelTrace soundoptionsui_move_touch(const ChildReply* ok,
+                                     const ChildReply* music,
+                                     const ChildReply* sound);
+PanelTrace soundoptionsui_end_touch(const ChildReply* ok,
+                                    const ChildReply* music,
+                                    const ChildReply* sound);
+
 }  // namespace blockheads::ui
