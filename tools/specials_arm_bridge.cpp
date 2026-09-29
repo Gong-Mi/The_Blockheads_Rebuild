@@ -13,6 +13,7 @@
 #include <string>
 
 #include "../reconstruction/recovered/ui_control.h"
+#include "../reconstruction/recovered/ui_touch_router.h"
 
 namespace {
 
@@ -551,6 +552,96 @@ void ui_put_word(unsigned char* out, int off, std::uint32_t v) {
         out[off + b] = static_cast<unsigned char>((v >> (8 * b)) & 0xFFu);
     }
 }
+
+// --- the UIManager router's differential inputs --------------------------
+// The receivers the harness seeds and the replies its UI_CASES fixture pins
+// (tools/test_specials_arm.py): the model walks the decoded block chain
+// (ui_touch_router.h) with exactly those replies. The seed words mirror the
+// harness's --seed writes; the only observable write the body makes is
+// currentTouchIsInAnyButtons@154.
+const blockheads::ui::Receiver kStubReply{};              // answers 0
+const blockheads::ui::Receiver kHandles{true, false, false, false};
+const blockheads::ui::Receiver kHandlesPaused{false, true, false, false};
+const blockheads::ui::Receiver kShownOnly{false, false, true, false};
+const blockheads::ui::Receiver kShownHandles{true, false, true, false};
+const blockheads::ui::Receiver kShownInView{false, false, true, true};
+
+blockheads::ui::RouterInputs ui_router_case(int case_id) {
+    blockheads::ui::RouterInputs in;
+    switch (case_id) {
+        case 0: in.tc_ui = &kStubReply; break;
+        case 1: in.tc_ui = &kStubReply; in.world_ui = &kStubReply; break;
+        case 2: in.world_ui = &kStubReply; in.pause_ui = &kStubReply;
+                in.tc_ui = &kStubReply; in.dpad = &kStubReply;
+                in.camera_ui = &kStubReply; break;
+        case 3: in.tc_ui_displayed = true; in.tc_ui = &kStubReply;
+                in.world_ui = &kStubReply; break;
+        case 4: in.pause_ui = &kStubReply; in.hide_pause_ui = true; break;
+        case 5: in.camera_ui = &kStubReply; break;
+        case 6: in.world_ui = &kStubReply; in.map_displayed = true; break;
+        case 7: in.tc_ui_displayed = true; in.tc_ui = &kHandles;
+                in.world_ui = &kStubReply; break;
+        case 8: in.camera_ui = &kHandles; break;
+        case 9: in.dpad = &kShownOnly; in.world_ui = &kStubReply; break;
+        case 10: in.dpad = &kShownHandles; break;
+        case 11: in.world_ui = &kHandles; break;
+        case 12: in.world_ui = &kStubReply;
+                 in.ui_views = {&kStubReply}; break;
+        case 13: in.world_ui = &kStubReply;
+                 in.ui_views = {&kShownHandles}; break;
+        case 14: in.world_ui = &kStubReply;
+                 in.ui_views = {&kShownInView}; break;
+        case 15: in.world_ui = &kStubReply;
+                 in.ui_views = {&kShownOnly}; break;
+        case 16: in.camera_ui = &kStubReply;
+                 in.world_ui = &kHandlesPaused; break;
+        case 17: in.world_ui = &kStubReply;
+                 in.ui_views = {&kStubReply, &kShownHandles}; break;
+        case 18: in.world_ui = &kStubReply;
+                 in.ui_views = {&kShownInView, &kShownHandles}; break;
+        default: break;
+    }
+    return in;
+}
+
+void ui_router_seeds(unsigned char* out, int case_id) {
+    // the same seed words the harness writes into the ARM instance — they
+    // are part of the compared image
+    ui_put_word(out, 4, 0x60000100u);
+    ui_put_word(out, 8, 0x60000200u);
+    switch (case_id) {
+        case 0: ui_put_word(out, 32, 0x60020200u); break;
+        case 1: ui_put_word(out, 32, 0x60020200u);
+                ui_put_word(out, 20, 0x60020000u); break;
+        case 2: ui_put_word(out, 20, 0x60020000u);
+                ui_put_word(out, 24, 0x60020100u);
+                ui_put_word(out, 32, 0x60020200u);
+                ui_put_word(out, 36, 0x60020300u);
+                ui_put_word(out, 100, 0x60020400u); break;
+        case 3: ui_put_word(out, 40, 1u);
+                ui_put_word(out, 32, 0x60020200u);
+                ui_put_word(out, 20, 0x60020000u); break;
+        case 4: ui_put_word(out, 24, 0x60020100u);
+                ui_put_word(out, 148, 1u); break;
+        case 5: ui_put_word(out, 100, 0x60020400u); break;
+        case 6: ui_put_word(out, 20, 0x60020000u);
+                ui_put_word(out, 152, 1u); break;
+        case 7: ui_put_word(out, 40, 1u);
+                ui_put_word(out, 32, 0x60020200u);
+                ui_put_word(out, 20, 0x60020000u); break;
+        case 8: ui_put_word(out, 100, 0x60020400u); break;
+        case 9: ui_put_word(out, 36, 0x60020300u);
+                ui_put_word(out, 20, 0x60020000u); break;
+        case 10: ui_put_word(out, 36, 0x60020300u); break;
+        case 11: ui_put_word(out, 20, 0x60020000u); break;
+        case 12: case 13: case 14: case 15:
+        case 17: case 18:
+            ui_put_word(out, 20, 0x60020000u);
+            ui_put_word(out, 140, 0x60020500u); break;
+        case 16: ui_put_word(out, 100, 0x60020400u);
+                 ui_put_word(out, 20, 0x60020000u); break;
+    }
+}
 }  // namespace
 
 extern "C" {
@@ -565,31 +656,16 @@ const char* recovered_ui_seq(int type_id, int case_id) {
             s = "super(startTouch:),instance,multiSoundNamed:,play";
         }
     } else if (type_id == 72) {  // UIManager -startTouch:tapCount:index:
-        // The router's case-fitted model (the full semantics is the next
-        // slice): the sequences below are the ARM's own, observed with the
-        // seeded UI ivars. Block indices are from disasm_uimanager_starttouch.
-        // The two UI blocks share one decoded shape:
-        //   if (UI) { r = 0; if (!gate) r = [UI startTouch:tapCount:...];
-        //             if (!r) r = [worldUI startTouch:tapCount:paused:...];
-        //             handled = 1; return 1; }
-        // Cases 2 and 3 are that semantic model (pauseUI / tcUI blocks).
-        // Cases 0 and 1 are semantic too, now that the tail blocks are
-        // decoded: [dpad displayed] answers 0 (the stub) so the dpad block
-        // is skipped; the worldUI block calls
-        // [worldUI startTouch:tapCount:index:...], stores the result into
-        // currentTouchIsInAnyButtons@154, and — with the result and
-        // mapDisplayed@152 both zero — runs the (empty) uiViews@140
-        // enumeration, which is the memset + countByEnumerating tail.
-        if (case_id == 0) {        // observation-pinned (tcUI only)
-            s = "displayed,startTouch:tapCount:index:,import(memset),"
-                "countByEnumeratingWithState:objects:count:";
-        } else if (case_id == 1) { // observation-pinned (tcUI + worldUI)
-            s = "displayed,startTouch:tapCount:index:,import(memset),"
-                "countByEnumeratingWithState:objects:count:";
-        } else if (case_id == 2) { // pauseUI block (semantic)
-            s = "startTouch:tapCount:,startTouch:tapCount:paused:index:";
-        } else if (case_id == 3) { // tcUI block (semantic)
-            s = "startTouch:tapCount:,startTouch:tapCount:paused:index:";
+        // The router's FULL semantic model (ui_touch_router.h): the block
+        // chain decoded from disasm_uimanager_starttouch.txt, walked with
+        // the case's receiver replies (ui_router_case above). The trace's
+        // selector sequence is what the ARM records — no case-fitted
+        // strings remain.
+        const auto trace = blockheads::ui::run_ui_router(
+            ui_router_case(case_id), blockheads::ui::Point{50.0f, 50.0f});
+        for (const char* c : trace.calls) {
+            if (!s.empty()) s += ',';
+            s += c;
         }
     } else if (type_id == 71) {  // MJView -touchIsInUI: — the GATE cases
         // The frame test's coordinate space is still being decoded; the
@@ -615,27 +691,14 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
     (void)token_base;
     auto* out = static_cast<unsigned char*>(buf);
     if (n < 512) return -1;
-    if (type_id == 72) {  // UIManager: the seeds only (no state writes)
+    if (type_id == 72) {  // UIManager: the seeds + the @154 write
         std::memset(out, 0, static_cast<std::size_t>(n));
-        ui_put_word(out, 4, 0x60000100u);
-        ui_put_word(out, 8, 0x60000200u);
-        if (case_id == 0) ui_put_word(out, 32, 0x60020200u);
-        if (case_id == 1) {
-            ui_put_word(out, 32, 0x60020200u);
-            ui_put_word(out, 20, 0x60020000u);
-        }
-        if (case_id == 2) {
-            ui_put_word(out, 20, 0x60020000u);
-            ui_put_word(out, 24, 0x60020100u);
-            ui_put_word(out, 32, 0x60020200u);
-            ui_put_word(out, 36, 0x60020300u);
-            ui_put_word(out, 100, 0x60020400u);
-        }
-        if (case_id == 3) {
-            ui_put_word(out, 40, 1u);          // tcUIDisplayed@40
-            ui_put_word(out, 32, 0x60020200u);
-            ui_put_word(out, 20, 0x60020000u);
-        }
+        ui_router_seeds(out, case_id);
+        // the model's observable write: the currentTouchIsInAnyButtons@154
+        // byte (a 0 write is a no-op on the zeroed image)
+        const auto trace = blockheads::ui::run_ui_router(
+            ui_router_case(case_id), blockheads::ui::Point{50.0f, 50.0f});
+        if (trace.current_touch_is_in_any_buttons) out[154] = 1;
         return n;
     }
     if (type_id == 71) {  // MJView: the gate cases write nothing
@@ -675,7 +738,11 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
 }
 
 int recovered_ui_ret(int type_id, int case_id) {
-    if (type_id == 72) return (case_id == 2 || case_id == 3) ? 1 : 0;
+    if (type_id == 72) {
+        return blockheads::ui::run_ui_router(
+            ui_router_case(case_id),
+            blockheads::ui::Point{50.0f, 50.0f}).handled;
+    }
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);

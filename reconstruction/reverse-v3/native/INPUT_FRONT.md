@@ -82,6 +82,10 @@ if (UI) {                                  // the block's own ivar
 
 And the tail blocks (decoded the same way):
 
+- the cameraUI block (0x00AD7A38..): `if (cameraUI)` — the two-call shape
+  (`startTouch:tapCount:` then, on zero, `startTouch:tapCount:paused:index:`),
+  but the block stores the MERGED result as handled and returns it (0 when
+  both calls answer zero) — unlike blocks 1/2 which store an unconditional 1;
 - the dpad block (0x00AD7B70..): gated by `[dpad displayed]` (a real method
   call — the stub answers 0, which is why cases 0/1 show the call and move
   on); on a displayed dpad it calls `[dpad startTouch:tapCount:index:...]`
@@ -92,17 +96,31 @@ And the tail blocks (decoded the same way):
   `if (r || mapDisplayed@152)` exits, else runs the `uiViews@140`
   enumeration (the `memset` + countByEnumerating tail the empty-UI cases
   show).
+- the uiViews loop body (0x00AD7CFC..0x00AD7FA8, the fast enumeration over
+  `uiViews@140`): per view `[view displayed]` (0 -> skipped), then
+  `[view startTouch:tapCount:]` (nonzero -> `currentTouchIsInAnyButtons@154 = 1`
+  and return 1), else `[view touchIsInViewAtAll:]` — a view that contains
+  the point ENDS the search there (returning @154), and an exhausted
+  enumeration returns @154 too (the second `countByEnumerating` call).
+
+The complete chain, then, is: block 1 `tcUI` (gated on `tcUIDisplayed@40`) ->
+block 2 `pauseUI` (nil falls through; `hidePauseUI@148` set returns 1 with NO
+call at all) -> block 3 `cameraUI` (nil falls through; merged result is the
+return) -> block 4 `dpad` (`[dpad displayed]` gates; a miss falls through) ->
+block 5 `worldUI` (the `currentTouchIsInAnyButtons@154` write; `r != 0` or
+`mapDisplayed@152` ends the route) -> block 6 the `uiViews` enumeration.
 
 So the router's pattern is "one UI consumes the touch, the world is notified
 with `paused:`" and the method returns 1; the worldUI-paused fallback runs
-only when the UI's own handler returned zero. Every router differential case
-(both semantic and observation-pinned styles) is now explainable from the
-decoded blocks; the cameraUI block and the uiViews loop's body stay open. Seeded
-(`tcUIDisplayed@40 = 1` + tcUI + worldUI) the ARM runs exactly that sequence
-and returns 1 — the router's differential case 3 is that semantic model, not
-a case fit. The remaining blocks (2-7) stay case-fitted until their gates
-are decoded the same way. The next slice is the subclasses'
-overrides (e.g. `CraftUI`, `DPad`, `BlockheadUI`).
+only when the UI's own handler returned zero. Every block is now decoded and
+the router's model is fully semantic (`run_ui_router`, below): the
+differential's 19 cases (tools/test_specials_arm.py, cases 0..18) walk every
+block and branch — the gate variants, both fallback shapes, the dpad
+hit/miss, the `@154` write, the `mapDisplayed` exit and the enumeration's
+skip/handle/in-view/exhausted paths — with the call sequences, the `@154`
+byte and the return value all compared against Unicorn executions of the
+original body at -O0/-O2. No case-fitted strings remain. The next slice is
+the subclasses' overrides (e.g. `CraftUI`, `DPad`, `BlockheadUI`).
 
 ## The first subclass overrides: DPad (0x0070561C..0x00705A1C)
 
@@ -262,12 +280,24 @@ GL side), and the panels' own render overrides (e.g. DPad's 1960w).
 The decoded traversal semantics are now a module (CTest `ui_touch_router`,
 linked into the production library alongside `tree_growth`): a `Node`
 (rect + the MJView `hidden` / `ignoreEvents` gates + the ordered
-`subviews`) whose `touch_is_in_ui` / `start_touch` implement the gates ->
-subview recursion -> frame test shape, and the UIManager-style `route()`
-flat pass (first in-UI view wins; the touch is offered in order until one
-handles it). The test pins the gates, the subview order, the panel's
-own-rect OR and the router pass — the structure the listings attest, with
-the concrete widgets' behaviours left to their own layer.
+`subviews` + the `displayed` gate) whose `touch_is_in_ui` / `start_touch`
+implement the gates -> subview recursion -> frame test shape, and the
+UIManager-style `route()` flat pass (a non-displayed view is skipped; the
+first in-UI view wins; the touch is offered in order until one handles it).
+The test pins the gates, the subview order, the panel's own-rect OR and the
+router pass — the structure the listings attest, with the concrete widgets'
+behaviours left to their own layer.
+
+Next to it, `run_ui_router` is the router's FULL block chain (the section
+above): `RouterInputs` carries the four gates and the six receivers,
+`RouterTrace` is the compared artifact — the selector sequence (with the
+enumeration's `import(memset)` housekeeping), the
+`currentTouchIsInAnyButtons@154` byte and the returned value. The bridge
+(`tools/specials_arm_bridge.cpp`, type 72) drives exactly this model with
+the differential's per-case receiver replies — `recovered_ui_seq`,
+`recovered_ui_img` and `recovered_ui_ret` are all computed from
+`run_ui_router`, so the ARM differential now judges the model, not
+case-fitted strings.
 
 ### The control behaviours, modelled: `ui_control.*` (MJControl)
 
@@ -378,8 +408,12 @@ forwarding, and the extra controls take precedence over the rows.
 
 ## Boundary
 
-The router is decoded and the family base is decoded; a full *model* now
-needs the per-subclass overrides (a bounded list: the 23-38 classes above;
-their overrides are short by construction — the base being trivial confirms
-the convention). The differential for the router stays dump/trace-only
-(type_id 0 entry) until enough overrides exist to model a whole pass.
+The router is decoded AND differentially executed: `run_ui_router` walks the
+full block chain, and every row of the router's 19-case differential (cases
+0..18 in the UI_CASES table) matches the Unicorn execution of the original
+body at -O0/-O2 — the call sequence, the `currentTouchIsInAnyButtons@154`
+byte and the return value. The family base is decoded too; what remains is
+the per-subclass overrides (a bounded list: the 23-38 classes above; their
+overrides are short by construction — the base being trivial confirms the
+convention) and the concrete widget behaviours the fixture's replies stand
+in for.

@@ -7,13 +7,17 @@
 //     their ivar order (scrollingButtons -> craftButton -> countSlider);
 //   - the panel's own-rect OR (CraftUI touchIsInUI: = own rect ||
 //     widgets);
-//   - the router's flat pass over uiViews: the first in-UI view is the
-//     ui_hit, and the touch is offered to views in order until one handles
-//     it (first-wins).
+//   - the router's flat pass over uiViews: the displayed gate skips a
+//     hidden view, the first in-UI view is the ui_hit, and the touch is
+//     offered to views in order until one handles it (first-wins);
+//   - run_ui_router: the router's full block chain — one case per
+//     differential row (the expected selector traces, return values and the
+//     currentTouchIsInAnyButtons@154 write).
 #include "ui_touch_router.h"
 
 #include <cassert>
 #include <cstdio>
+#include <string>
 
 using namespace blockheads::ui;
 
@@ -102,6 +106,172 @@ int main() {
     const auto r3 = route(gated, {210, 210});
     assert(r3.ui_hit == nullptr && r3.handled_by == nullptr);
 
-    std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass)\n");
+    // 7. The enumeration's per-view displayed gate: a view answering
+    //    displayed=0 is skipped entirely (the ARM checks [view displayed]
+    //    before either touch call), so a later view still gets the touch.
+    Node unshown;
+    unshown.rect = {0, 0, 100, 100};
+    unshown.handles_own_rect = true;
+    unshown.displayed = false;
+    Node shown;
+    shown.rect = {0, 0, 100, 100};
+    shown.handles_own_rect = true;
+    std::vector<Node*> gated2 = {&unshown, &shown};
+    const auto r4 = route(gated2, {50, 50});
+    assert(r4.ui_hit == &shown && r4.handled_by == &shown);
+    // ... and when it is the only view, nothing is offered at all.
+    std::vector<Node*> only_unshown = {&unshown};
+    const auto r5 = route(only_unshown, {50, 50});
+    assert(r5.ui_hit == nullptr && r5.handled_by == nullptr);
+
+    // --- the UIManager router's block chain (run_ui_router) --------------
+    // One case per differential row (tools/test_specials_arm.py UI_CASES for
+    // UIManager): the expected selector trace, the returned BOOL and the
+    // currentTouchIsInAnyButtons@154 byte. The differential executes the
+    // same inputs under Unicorn against the original body.
+    {
+        const Receiver plain_stub{};                       // answers 0
+        const Receiver handles{true, false, false, false};
+        const Receiver handles_paused{false, true, false, false};
+        const Receiver shown_only{false, false, true, false};
+        const Receiver shown_handles{true, false, true, false};
+        const Receiver shown_in_view{false, false, true, true};
+
+        struct Case {
+            int id;
+            const char* trace;
+            int handled;
+            bool buttons;
+        };
+        const Case cases[] = {
+            // 0/1: the fall-through chain to the empty uiViews pass.
+            {0, "displayed,startTouch:tapCount:index:,import(memset),"
+                "countByEnumeratingWithState:objects:count:", 0, false},
+            {1, "displayed,startTouch:tapCount:index:,import(memset),"
+                "countByEnumeratingWithState:objects:count:", 0, false},
+            // 2: the pauseUI block (pauseUI call + paused fallback, 1).
+            {2, "startTouch:tapCount:,startTouch:tapCount:paused:index:",
+             1, false},
+            // 3: the tcUI block (gate set; tcUI call + paused fallback, 1).
+            {3, "startTouch:tapCount:,startTouch:tapCount:paused:index:",
+             1, false},
+            // 4: hidePauseUI set: no call at all, still 1.
+            {4, "", 1, false},
+            // 5: the cameraUI block: call + fallback, the MERGED result (0)
+            //    is the block's return.
+            {5, "startTouch:tapCount:,startTouch:tapCount:paused:index:",
+             0, false},
+            // 6: mapDisplayed set: the worldUI block exits before the views.
+            {6, "displayed,startTouch:tapCount:index:", 0, false},
+            // 7: the tcUI call handles: the paused fallback is skipped.
+            {7, "startTouch:tapCount:", 1, false},
+            // 8: the cameraUI call handles: the fallback is skipped, 1.
+            {8, "startTouch:tapCount:", 1, false},
+            // 9: a displayed dpad misses: falls through to the worldUI
+            //    block + the empty views pass.
+            {9, "displayed,startTouch:tapCount:index:,"
+                "startTouch:tapCount:index:,import(memset),"
+                "countByEnumeratingWithState:objects:count:", 0, false},
+            // 10: a displayed dpad handles: 1 right away (no worldUI call).
+            {10, "displayed,startTouch:tapCount:index:", 1, false},
+            // 11: the worldUI call handles: @154 becomes 1 and is returned.
+            {11, "displayed,startTouch:tapCount:index:", 1, true},
+            // 12: a hidden view in the batch is skipped; the exhausted
+            //     enumeration calls countByEnumerating once more.
+            {12, "displayed,startTouch:tapCount:index:,import(memset),"
+                 "countByEnumeratingWithState:objects:count:,displayed,"
+                 "countByEnumeratingWithState:objects:count:", 0, false},
+            // 13: a displayed view handles: @154 = 1, return 1, loop out.
+            {13, "displayed,startTouch:tapCount:index:,import(memset),"
+                 "countByEnumeratingWithState:objects:count:,displayed,"
+                 "startTouch:tapCount:", 1, true},
+            // 14: a displayed view contains the point but does not handle:
+            //     the search ends there (no further batch call).
+            {14, "displayed,startTouch:tapCount:index:,import(memset),"
+                 "countByEnumeratingWithState:objects:count:,displayed,"
+                 "startTouch:tapCount:,touchIsInViewAtAll:", 0, false},
+            // 15: a displayed view misses both: the batch is exhausted.
+            {15, "displayed,startTouch:tapCount:index:,import(memset),"
+                 "countByEnumeratingWithState:objects:count:,displayed,"
+                 "startTouch:tapCount:,touchIsInViewAtAll:,"
+                 "countByEnumeratingWithState:objects:count:", 0, false},
+            // 16: cameraUI misses, the paused fallback handles: the merged
+            //     result is 1.
+            {16, "startTouch:tapCount:,startTouch:tapCount:paused:index:",
+             1, false},
+            // 17: batch order: the hidden first view is skipped, the second
+            //     displayed view handles.
+            {17, "displayed,startTouch:tapCount:index:,import(memset),"
+                 "countByEnumeratingWithState:objects:count:,displayed,"
+                 "displayed,startTouch:tapCount:", 1, true},
+            // 18: a view that contains the point ends the search even when a
+            //     later view would handle (its calls never happen).
+            {18, "displayed,startTouch:tapCount:index:,import(memset),"
+                 "countByEnumeratingWithState:objects:count:,displayed,"
+                 "startTouch:tapCount:,touchIsInViewAtAll:", 0, false},
+        };
+
+        for (const Case& c : cases) {
+            RouterInputs in;
+            switch (c.id) {
+                case 0: in.tc_ui = &plain_stub; break;
+                case 1: in.tc_ui = &plain_stub;
+                        in.world_ui = &plain_stub; break;
+                case 2: in.world_ui = &plain_stub;
+                        in.pause_ui = &plain_stub;
+                        in.tc_ui = &plain_stub;
+                        in.dpad = &plain_stub;
+                        in.camera_ui = &plain_stub; break;
+                case 3: in.tc_ui_displayed = true;
+                        in.tc_ui = &plain_stub;
+                        in.world_ui = &plain_stub; break;
+                case 4: in.pause_ui = &plain_stub;
+                        in.hide_pause_ui = true; break;
+                case 5: in.camera_ui = &plain_stub; break;
+                case 6: in.world_ui = &plain_stub;
+                        in.map_displayed = true; break;
+                case 7: in.tc_ui_displayed = true;
+                        in.tc_ui = &handles;
+                        in.world_ui = &plain_stub; break;
+                case 8: in.camera_ui = &handles; break;
+                case 9: in.dpad = &shown_only;
+                        in.world_ui = &plain_stub; break;
+                case 10: in.dpad = &shown_handles; break;
+                case 11: in.world_ui = &handles; break;
+                case 12: in.world_ui = &plain_stub;
+                         in.ui_views = {&plain_stub}; break;
+                case 13: in.world_ui = &plain_stub;
+                         in.ui_views = {&shown_handles}; break;
+                case 14: in.world_ui = &plain_stub;
+                         in.ui_views = {&shown_in_view}; break;
+                case 15: in.world_ui = &plain_stub;
+                         in.ui_views = {&shown_only}; break;
+                case 16: in.camera_ui = &plain_stub;
+                         in.world_ui = &handles_paused; break;
+                case 17: in.world_ui = &plain_stub;
+                         in.ui_views = {&plain_stub, &shown_handles}; break;
+                case 18: in.world_ui = &plain_stub;
+                         in.ui_views = {&shown_in_view, &shown_handles};
+                         break;
+                default: assert(false);
+            }
+            const RouterTrace t = run_ui_router(in, {50, 50});
+            std::string got;
+            for (const char* s : t.calls) {
+                if (!got.empty()) got += ',';
+                got += s;
+            }
+            if (got != c.trace) {
+                std::printf("router case %d trace mismatch:\n  got  %s\n"
+                            "  want %s\n", c.id, got.c_str(), c.trace);
+            }
+            assert(got == c.trace);
+            assert(t.handled == c.handled);
+            assert(t.current_touch_is_in_any_buttons == c.buttons);
+        }
+    }
+
+    std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
+                " block chain x19)\n");
     return 0;
 }

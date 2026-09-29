@@ -83,13 +83,28 @@ def main() -> int:
         "('UIManager', 72, 0x00AD7748",  # the input-front router entry
         "('MJControl', 70, 0x009F6894",  # the UI front's first differential class
         "('MJView', 71, 0x006614A8",     # the view gates
-        "('UIManager', 72, 0x00AD7748",  # the router
         "recovered_ui_seq", "UI_CASES",
+        # the router's block-chain fixture surface: per-receiver answers
+        # ('ret1'), the uiViews enumeration batch ('views'/'enum_recv') and
+        # the fixture switch that feeds them
+        "ui_fixture", "enum_recv",
+        "startTouch:tapCount:paused:index:']}}",  # case 16's paused answer
+        "touchIsInViewAtAll:']}}",                # case 14/18's in-view answer
+        "hidePauseUI@148 set: the pauseUI block returns 1, no call",
     ])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_uimanager_starttouch.txt",
             ["startTouch:tapCount:index:"])
     require(ROOT / "reconstruction/reverse-v3/native/INPUT_FRONT.md",
-            ["tcUI@32", "currentTouchIsInAnyButtons@154"])
+            ["tcUI@32", "currentTouchIsInAnyButtons@154", "hidePauseUI@148",
+             "run_ui_router", "19 cases"])
+    require(ROOT / "reconstruction/recovered/ui_touch_router.h",
+            ["run_ui_router", "RouterInputs", "RouterTrace",
+             "current_touch_is_in_any_buttons", "hide_pause_ui"])
+    require(ROOT / "reconstruction/recovered/ui_touch_router.cpp",
+            ["startTouch:tapCount:paused:index:", "import(memset)",
+             "touchIsInViewAtAll:"])
+    require(ROOT / "tools/test_ui_touch_router.cpp",
+            ["block chain x19", "touchIsInViewAtAll:"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_dpad_touch.txt",
             ["touchIsInViewAtAll:",
              "OBJC_IVAR_$_DPad.rightSide (slot 0x0105d31c) = 160",
@@ -110,7 +125,9 @@ def main() -> int:
     require(ROOT / "reconstruction/reverse-v3/native/INPUT_FRONT.md",
             ["the MJ toolkit", "three-layer picture"])
     require(ROOT / "tools/specials_arm_bridge.cpp",
-            ["recovered_ui_seq", "recovered_ui_ret", "ui_control.h"])
+            ["recovered_ui_seq", "recovered_ui_ret", "ui_control.h",
+             "ui_touch_router.h", "run_ui_router", "ui_router_case",
+             "ui_router_seeds", "ui_router_seeds(out, case_id)"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_gameuiview_all.txt",
             ["OBJC_IVAR_$_GameUIView.displayed (slot 0x0105dee0) = 4",
              "OBJC_IVAR_$_GameUIView.resourcesLoaded (slot 0x0105c494) = 16"])
@@ -147,7 +164,18 @@ def main() -> int:
             print(proc.stdout)
             print(proc.stderr)
             return 1
-        print("specials-arm: PASS (differential executed, modelled cases match)")
+        # the run's own report pins the case totals: 35 modelled + 26 UI
+        # rows, of which the router's full block chain is 19 cases
+        import json
+        report = json.loads((out / "specials-arm-result.json").read_text())
+        assert report["cases"] == 61, report["cases"]
+        assert report["match"] is True
+        ui_rows = [r for r in report["rows"] if r["class"] == "UIManager"]
+        assert len(ui_rows) == 19, len(ui_rows)
+        assert {f'0x{r["arm_return"][-1]}' for r in ui_rows
+                if r["case"] in (7, 8, 10, 11, 13, 16, 17)} == {'0x1'}
+        print("specials-arm: PASS (differential executed, modelled cases "
+              "match; router 19/19)")
         return 0
 
     print("specials-arm: PASS (constants; run with --elf to execute)")

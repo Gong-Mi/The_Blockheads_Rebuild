@@ -70,8 +70,9 @@ ENTRIES = [
     ('ElevatorMotor', 55, 0x0070046C, 0x00E8BCE8, 218),
     # the tree growth state machine (hooks6 batch; no super call, world-heavy)
     ('Tree', 1, 0x004C2568, 0x00E8BC30, 546),
-    # the input front: UIManager's touch routing (type_id 0 = trace-only,
-    # no DynamicObject model; dump mode drives it)
+    # the input front: UIManager's touch routing (the router's full block
+    # chain, run_ui_router in ui_touch_router.h; the UI_CASES fixture drives
+    # it — dump mode still records it leniently)
     ('UIManager', 72, 0x00AD7748, 0x00000000, 576),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
@@ -257,6 +258,34 @@ def main():
                 uc_.reg_write(UC_ARM_REG_R0, 0)
                 uc_.reg_write(UC_ARM_REG_PC, uc_.reg_read(UC_ARM_REG_LR))
                 return
+            fixture = ctx.get('ui_fixture') or {}
+            pinned = (fixture.get('ret1') or {}).get(recv)
+            if pinned is not None and sel in pinned:
+                # the UI fixture's per-receiver answer (a pinned 1)
+                ctx['calls'].append(f'{sel}(recv={hex(recv)})')
+                uc_.reg_write(UC_ARM_REG_R0, 1)
+                uc_.reg_write(UC_ARM_REG_PC, uc_.reg_read(UC_ARM_REG_LR))
+                return
+            if (sel == 'countByEnumeratingWithState:objects:count:'
+                    and fixture.get('enum_recv')
+                    and recv == fixture['enum_recv']):
+                # the uiViews fixture: the FIRST call answers the batch (the
+                # state's itemsPtr@+4 / mutationsPtr@+8 are filled), every
+                # later call answers 0 (the exhausted enumeration)
+                items = fixture.get('views') or []
+                state = uc_.reg_read(UC_ARM_REG_R2)
+                ctx['ui_enum_calls'] = ctx.get('ui_enum_calls', 0) + 1
+                if ctx['ui_enum_calls'] == 1 and items:
+                    for k, ptr in enumerate(items):
+                        word(UI_ITEMS + k * 4, ptr)
+                    word(state + 4, UI_ITEMS)
+                    word(state + 8, UI_MUT)
+                    uc_.reg_write(UC_ARM_REG_R0, len(items))
+                else:
+                    uc_.reg_write(UC_ARM_REG_R0, 0)
+                ctx['calls'].append(f'{sel}(recv={hex(recv)})')
+                uc_.reg_write(UC_ARM_REG_PC, uc_.reg_read(UC_ARM_REG_LR))
+                return
             if sel == 'objectForKey:':
                 key_ptr = uc_.reg_read(UC_ARM_REG_R2)
                 if key_ptr in tokens_by_addr:
@@ -416,6 +445,13 @@ def main():
     VTABLE_STUB = 0x72300000
     uc.mem_map(VTABLE_STUB, 0x1000)
     uc.mem_write(VTABLE_STUB, b'\x00' * 0x40)
+    # the router differential's uiViews fixture: the fast-enumeration items
+    # array plus the stable mutations marker the mutation guard compares
+    UI_FIX = 0x74000000
+    uc.mem_map(UI_FIX, 0x1000)
+    UI_ITEMS = UI_FIX + 0x100
+    UI_MUT = UI_FIX + 0x200
+    word(UI_MUT, 0)
 
     def vcall_hook(uc_, address, size, data):
         # any virtual call arriving at the fake vtable's entry page
@@ -498,6 +534,7 @@ def main():
         ctx['expect_class'] = read_word(superref)
         ctx['calls'] = []
         ctx['pending_key'] = None
+        ctx['ui_enum_calls'] = 0
         tokens.clear()
         if a.trace:
             pc_ring.clear()
@@ -772,31 +809,102 @@ def main():
     UI_CASES = {
         'MJControl': {
             0: ('50,50',
-                '80=0x0,84=0x0,88=0x42c80000,92=0x42c80000,71=0x1,60=0x60030000'),
+                '80=0x0,84=0x0,88=0x42c80000,92=0x42c80000,71=0x1,60=0x60030000',
+                {}),
             1: ('500,500',
-                '80=0x0,84=0x0,88=0x42c80000,92=0x42c80000,71=0x1,60=0x60030000'),
+                '80=0x0,84=0x0,88=0x42c80000,92=0x42c80000,71=0x1,60=0x60030000',
+                {}),
             2: ('50,50',
-                '80=0x0,84=0x0,88=0x42c80000,92=0x42c80000,71=0x0,60=0x60030000'),
+                '80=0x0,84=0x0,88=0x42c80000,92=0x42c80000,71=0x0,60=0x60030000',
+                {}),
         },
         'UIManager': {
-            # the router's observed cases (the seeds are the UI ivars).
-            0: ('50,50', '32=0x60020200'),
-            1: ('50,50', '32=0x60020200,20=0x60020000'),
+            # the router's block-chain cases: the seeds are the UI ivars,
+            # 'ret1' pins a receiver's method to answer 1, and 'views' is
+            # the uiViews@140 batch the enumeration fixture serves. Every
+            # row is mirrored by ui_touch_router.h's run_ui_router (the
+            # bridge's ui_router_case) — no case-fitted strings.
+            0: ('50,50', '32=0x60020200', {}),
+            1: ('50,50', '32=0x60020200,20=0x60020000', {}),
             2: ('50,50',
-                '20=0x60020000,24=0x60020100,32=0x60020200,36=0x60020300,100=0x60020400'),
-            3: ('50,50', '40=0x1,32=0x60020200,20=0x60020000'),
+                '20=0x60020000,24=0x60020100,32=0x60020200,36=0x60020300,100=0x60020400',
+                {}),
+            3: ('50,50', '40=0x1,32=0x60020200,20=0x60020000', {}),
+            # 4: hidePauseUI@148 set: the pauseUI block returns 1, no call
+            4: ('50,50', '24=0x60020100,148=0x1', {}),
+            # 5: the cameraUI block: call + paused fallback, merged result 0
+            5: ('50,50', '100=0x60020400', {}),
+            # 6: mapDisplayed@152 set: exits before the uiViews pass
+            6: ('50,50', '20=0x60020000,152=0x1', {}),
+            # 7: the tcUI call handles: the paused fallback is skipped
+            7: ('50,50', '40=0x1,32=0x60020200,20=0x60020000',
+                {'ret1': {0x60020200: ['startTouch:tapCount:']}}),
+            # 8: the cameraUI call handles: no fallback, returns 1
+            8: ('50,50', '100=0x60020400',
+                {'ret1': {0x60020400: ['startTouch:tapCount:']}}),
+            # 9: a displayed dpad misses: falls through to the worldUI block
+            9: ('50,50', '36=0x60020300,20=0x60020000',
+                {'ret1': {0x60020300: ['displayed']}}),
+            # 10: a displayed dpad handles: returns 1 right away
+            10: ('50,50', '36=0x60020300',
+                 {'ret1': {0x60020300: ['displayed',
+                                        'startTouch:tapCount:index:']}}),
+            # 11: the worldUI call handles: @154 becomes 1 and is returned
+            11: ('50,50', '20=0x60020000',
+                 {'ret1': {0x60020000: ['startTouch:tapCount:index:']}}),
+            # 12: a hidden view in the batch is skipped (displayed=0)
+            12: ('50,50', '20=0x60020000,140=0x60020500',
+                 {'enum_recv': 0x60020500, 'views': [0x60020600]}),
+            # 13: a displayed view handles: @154 = 1, return 1
+            13: ('50,50', '20=0x60020000,140=0x60020500',
+                 {'enum_recv': 0x60020500, 'views': [0x60020600],
+                  'ret1': {0x60020600: ['displayed',
+                                        'startTouch:tapCount:']}}),
+            # 14: a displayed view contains the point but does not handle:
+            # the search ends there (no further batch call)
+            14: ('50,50', '20=0x60020000,140=0x60020500',
+                 {'enum_recv': 0x60020500, 'views': [0x60020600],
+                  'ret1': {0x60020600: ['displayed',
+                                        'touchIsInViewAtAll:']}}),
+            # 15: a displayed view misses both: the batch is exhausted
+            15: ('50,50', '20=0x60020000,140=0x60020500',
+                 {'enum_recv': 0x60020500, 'views': [0x60020600],
+                  'ret1': {0x60020600: ['displayed']}}),
+            # 16: cameraUI misses, the paused fallback handles: merged 1
+            16: ('50,50', '100=0x60020400,20=0x60020000',
+                 {'ret1': {0x60020000: ['startTouch:tapCount:paused:index:']}}),
+            # 17: batch order: the hidden first view is skipped, the second
+            # displayed view handles
+            17: ('50,50', '20=0x60020000,140=0x60020500',
+                 {'enum_recv': 0x60020500,
+                  'views': [0x60020600, 0x60020700],
+                  'ret1': {0x60020700: ['displayed',
+                                        'startTouch:tapCount:']}}),
+            # 18: the in-view view ends the search before a view that would
+            # have handled (its calls never happen)
+            18: ('50,50', '20=0x60020000,140=0x60020500',
+                 {'enum_recv': 0x60020500,
+                  'views': [0x60020600, 0x60020700],
+                  'ret1': {0x60020600: ['displayed',
+                                        'touchIsInViewAtAll:'],
+                           0x60020700: ['displayed',
+                                        'startTouch:tapCount:']}}),
         },
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.
             0: ('50,50',
-                '4=0x0,56=0x0,8=0x0,12=0x0,16=0x42c80000,20=0x42c80000,52=0x6000f000'),
+                '4=0x0,56=0x0,8=0x0,12=0x0,16=0x42c80000,20=0x42c80000,52=0x6000f000',
+                {}),
             1: ('500,500',
-                '4=0x0,56=0x0,8=0x0,12=0x0,16=0x42c80000,20=0x42c80000,52=0x6000f000'),
+                '4=0x0,56=0x0,8=0x0,12=0x0,16=0x42c80000,20=0x42c80000,52=0x6000f000',
+                {}),
             2: ('50,50',
-                '4=0x1,56=0x0,8=0x0,12=0x0,16=0x42c80000,20=0x42c80000,52=0x6000f000'),
+                '4=0x1,56=0x0,8=0x0,12=0x0,16=0x42c80000,20=0x42c80000,52=0x6000f000',
+                {}),
             3: ('50,50',
-                '4=0x0,56=0x1,8=0x0,12=0x0,16=0x42c80000,20=0x42c80000,52=0x6000f000'),
+                '4=0x0,56=0x1,8=0x0,12=0x0,16=0x42c80000,20=0x42c80000,52=0x6000f000',
+                {}),
         },
     }
     ui_modelled = []
@@ -805,9 +913,10 @@ def main():
         if cls not in UI_CASES:
             continue
         ui_modelled.append(cls)
-        for case_id, (pt, seed) in sorted(UI_CASES[cls].items()):
+        for case_id, (pt, seed, fixture) in sorted(UI_CASES[cls].items()):
             a.seed = seed
             a.r2r3_floats = pt
+            ctx['ui_fixture'] = fixture
             ret, calls, image = arm_run(entry, case_id)
             arm_seq = ','.join(re.sub(r'\(recv=[^)]*\)', '', c) for c in calls)
             for opt in (0, 2):
@@ -832,6 +941,7 @@ def main():
                          'image_sha256': hashlib.sha256(image).hexdigest()[:32]})
         a.seed = None
         a.r2r3_floats = None
+        ctx['ui_fixture'] = {}
 
     report = {'sha256': SHA, 'batch': 'specials',
               'classes': sorted(MODELLED | set(ui_modelled)),

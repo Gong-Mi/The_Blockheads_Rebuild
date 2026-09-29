@@ -33,6 +33,10 @@ bool Node::start_touch(Point p) const {
 RouterResult route(std::vector<Node*>& views, Point p) {
     RouterResult out;
     for (Node* v : views) {
+        // The router's uiViews enumeration gates every view on [view
+        // displayed] first (the GameUIView base's displayed@4; the ARM
+        // never calls the view's touch methods when it answers 0).
+        if (!v->displayed) continue;
         if (out.ui_hit == nullptr && v->touch_is_in_ui(p)) {
             out.ui_hit = v;
         }
@@ -42,6 +46,117 @@ RouterResult route(std::vector<Node*>& views, Point p) {
         }
     }
     return out;
+}
+
+namespace {
+
+// The three call forms the router's blocks use; each records the selector
+// and returns the receiver's reply (0 on a nil receiver: msgSend to nil).
+bool call_plain(const Receiver* r, RouterTrace& t) {
+    t.calls.push_back("startTouch:tapCount:");
+    return r != nullptr && r->handles;
+}
+
+bool call_paused(const Receiver* r, RouterTrace& t) {
+    t.calls.push_back("startTouch:tapCount:paused:index:");
+    return r != nullptr && r->handles_paused;
+}
+
+bool call_index(const Receiver* r, RouterTrace& t) {
+    t.calls.push_back("startTouch:tapCount:index:");
+    return r != nullptr && r->handles;
+}
+
+}  // namespace
+
+RouterTrace run_ui_router(const RouterInputs& in, Point p) {
+    (void)p;  // the point/tapCount/index reach the receivers; the receivers'
+              // replies (the fixture) stand in for their geometry here
+    RouterTrace t;
+
+    // Block 1 (0x00AD77A8..): gated on tcUIDisplayed@40 — when it is set
+    // the tcUI call runs, and only a zero result falls through to the
+    // worldUI paused: fallback; either way the block returns 1.
+    if (in.tc_ui_displayed) {
+        if (!call_plain(in.tc_ui, t)) call_paused(in.world_ui, t);
+        t.handled = 1;
+        return t;
+    }
+
+    // Block 2 (0x00AD78B0..): a nil pauseUI falls through to the cameraUI
+    // block; a set hidePauseUI@148 returns 1 with NO call at all; otherwise
+    // the pauseUI call + the paused fallback, always returning 1.
+    if (in.pause_ui != nullptr) {
+        if (in.hide_pause_ui) {
+            t.handled = 1;
+            return t;
+        }
+        if (!call_plain(in.pause_ui, t)) call_paused(in.world_ui, t);
+        t.handled = 1;
+        return t;
+    }
+
+    // Block 3 (0x00AD7A38..): a nil cameraUI falls through to the dpad
+    // block; otherwise the cameraUI call + the paused fallback, and the
+    // MERGED result is the block's return value (this block stores the call
+    // result — unlike blocks 1/2 which store an unconditional 1).
+    if (in.camera_ui != nullptr) {
+        bool r = call_plain(in.camera_ui, t);
+        if (!r) r = call_paused(in.world_ui, t);
+        t.handled = r ? 1 : 0;
+        return t;
+    }
+
+    // Block 4 (0x00AD7B70..): [dpad displayed] gates the dpad call (a real
+    // call — the stub answers 0); a nonzero dpad result returns 1, a miss
+    // falls through (no paused fallback here).
+    t.calls.push_back("displayed");
+    if (in.dpad != nullptr && in.dpad->displayed) {
+        if (call_index(in.dpad, t)) {
+            t.handled = 1;
+            return t;
+        }
+    }
+
+    // Block 5 (0x00AD7C3C..): the worldUI call's result lands in
+    // currentTouchIsInAnyButtons@154 (a real state write); a nonzero result
+    // or a displayed map ends the route with that byte as the result.
+    const bool world_r = call_index(in.world_ui, t);
+    t.current_touch_is_in_any_buttons = world_r;
+    if (world_r || in.map_displayed) {
+        t.handled = t.current_touch_is_in_any_buttons ? 1 : 0;
+        return t;
+    }
+
+    // Block 6 (0x00AD7CFC..0x00AD7FA8): the uiViews@140 fast enumeration.
+    // Per view: the displayed gate, the call (a hit sets @154 and returns
+    // 1), then touchIsInViewAtAll: — a view that contains the point ends
+    // the search (with @154 as the result), and so does an exhausted
+    // enumeration. The enumeration's setup memset is recorded as an import.
+    t.calls.push_back("import(memset)");
+    t.calls.push_back("countByEnumeratingWithState:objects:count:");
+    bool exited_in_view = false;
+    for (const Receiver* v : in.ui_views) {
+        t.calls.push_back("displayed");
+        if (v == nullptr || !v->displayed) continue;
+        if (call_plain(v, t)) {
+            t.current_touch_is_in_any_buttons = true;
+            t.handled = 1;
+            return t;
+        }
+        t.calls.push_back("touchIsInViewAtAll:");
+        if (v->in_view) {  // the loop exits without another batch call
+            exited_in_view = true;
+            break;
+        }
+    }
+    if (!exited_in_view && !in.ui_views.empty()) {
+        // one batch: the exhausted enumeration calls countByEnumerating once
+        // more, which returns 0
+        t.calls.push_back("countByEnumeratingWithState:objects:count:");
+    }
+    t.handled = t.current_touch_is_in_any_buttons ? 1 : 0;
+    return t;
 }
 
 }  // namespace blockheads::ui
