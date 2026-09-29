@@ -459,8 +459,25 @@ int main() {
                       "MainMenuUI's decoded verdicts");
     }
 
+    // --- the WorkbenchProgressBarUI panel ---------------------------------
+    {
+        const PanelFrame origin{};
+        assert(wbpbarui_touch_is_in_view_at_all({0, 51}, origin));
+        assert(!wbpbarui_touch_is_in_view_at_all({120, 51}, origin));
+        assert(!wbpbarui_touch_is_in_view_at_all({-120, 51}, origin));
+        assert(!wbpbarui_touch_is_in_view_at_all({0, 0}, origin));
+        assert(!wbpbarui_touch_is_in_view_at_all({0, 102}, origin));
+        const PanelFrame off{0, 0, 5, 0};
+        assert(wbpbarui_touch_is_in_view_at_all({122, 51}, off));
+        const PanelFrame wx{20, 0, 0, 0};
+        assert(wbpbarui_touch_is_in_view_at_all({137, 51}, wx));
+        static_assert(!kWorkbenchProgressBarInUi
+                      && kWorkbenchProgressBarPress == 0,
+                      "WorkbenchProgressBarUI's decoded constants");
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
                 " block chain x19, craftui x16, dpad x11, blockhead x28,"
-                " const x17)\n");
+                " const x17, wpbar x11)\n");
     return 0;
 }

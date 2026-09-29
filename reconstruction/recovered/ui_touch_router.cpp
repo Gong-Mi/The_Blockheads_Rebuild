@@ -350,4 +350,14 @@ PanelTrace blockheadui_end_touch(const BlockheadChildren& c, Point p) {
     return t;
 }
 
+// --- the WorkbenchProgressBarUI panel -------------------------------------
+
+bool wbpbarui_touch_is_in_view_at_all(Point p, const PanelFrame& f) {
+    // the ARM's four fused compares; the rebase is the CraftUI frame kit
+    // with translationOffset at 120 (/124)
+    const float x = p.x - f.window_x - f.offset_x;
+    const float y = p.y - f.window_y - f.offset_y;
+    return x > -120.0f && x < 120.0f && y > 0.0f && y < 102.0f;
+}
+
 }  // namespace blockheads::ui

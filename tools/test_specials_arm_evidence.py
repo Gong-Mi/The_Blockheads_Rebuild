@@ -119,6 +119,9 @@ def main() -> int:
         "('MainMenuUIInUI', 96, 0x00A09D70",
         "def cv_seeds(off):",
         "the constant-verdict fixture",
+        # the WorkbenchProgressBarUI panel
+        "('WPBarUIRect', 97, 0x00734850",
+        "def wpb_seeds(wx, wy, ox, oy):",
     ])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_uimanager_starttouch.txt",
             ["startTouch:tapCount:index:"])
@@ -134,7 +137,9 @@ def main() -> int:
              "dpad_touch_is_in_view_at_all", "DPadFrame",
              "blockheadui_touch_is_in_view_at_all", "BlockheadChildren",
              "blockheadui_start_touch", "blockheadui_move_touch",
-             "blockheadui_end_touch", "kMapUiRect", "kMainMenuUiInUi"])
+             "blockheadui_end_touch", "kMapUiRect", "kMainMenuUiInUi",
+             "wbpbarui_touch_is_in_view_at_all",
+             "kWorkbenchProgressBarInUi"])
     require(ROOT / "reconstruction/recovered/ui_touch_router.cpp",
             ["startTouch:tapCount:paused:index:", "import(memset)",
              "touchIsInViewAtAll:", "x > -130.0f && x < 130.0f",
@@ -142,7 +147,7 @@ def main() -> int:
              "blockhead_move_end_chain"])
     require(ROOT / "tools/test_ui_touch_router.cpp",
             ["block chain x19", "touchIsInViewAtAll:", "craftui x16",
-             "dpad x11", "blockhead x28", "const x17"])
+             "dpad x11", "blockhead x28", "const x17", "wpbar x11"])
     # the constant-verdict listings
     require(ROOT / "reconstruction/reverse-v3/native/disasm_mapui_touch.txt",
             ["MapUI -[touch family]", "implementation: 0x009cb460"])
@@ -186,7 +191,8 @@ def main() -> int:
              "craftui_trace", "craftui_seeds", "craftui_child",
              "dpad_point_for", "dpad_seeds", "dpad_touch_is_in_view_at_all",
              "blockhead_seeds", "blockhead_children_for", "blockhead_sd",
-             "constant_panel_seeds", "constant_panel_ret"])
+             "constant_panel_seeds", "constant_panel_ret",
+             "wpb_seeds_for"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_gameuiview_all.txt",
             ["OBJC_IVAR_$_GameUIView.displayed (slot 0x0105dee0) = 4",
              "OBJC_IVAR_$_GameUIView.resourcesLoaded (slot 0x0105c494) = 16"])
@@ -223,12 +229,12 @@ def main() -> int:
             print(proc.stdout)
             print(proc.stderr)
             return 1
-        # the run's own report pins the case totals: 35 modelled + 98 UI
+        # the run's own report pins the case totals: 35 modelled + 109 UI
         # rows (router 19 + CraftUI 16 + DPad 11 + BlockheadUI 28 +
-        # const 17 + MJControl 3 + MJView 4)
+        # const 17 + WPBar 11 + MJControl 3 + MJView 4)
         import json
         report = json.loads((out / "specials-arm-result.json").read_text())
-        assert report["cases"] == 133, report["cases"]
+        assert report["cases"] == 144, report["cases"]
         assert report["match"] is True
         ui_rows = [r for r in report["rows"] if r["class"] == "UIManager"]
         assert len(ui_rows) == 19, len(ui_rows)
@@ -253,9 +259,12 @@ def main() -> int:
         far = {r["class"]: r["arm_return"] for r in const_rows
                if r["case"] == 1 and r["class"] != "MapUIRect"}
         assert far and all(v == '0x00000001' for v in far.values()), far
+        wpbar_rows = [r for r in report["rows"]
+                      if r["class"].startswith("WPBarUI")]
+        assert len(wpbar_rows) == 11, len(wpbar_rows)
         print("specials-arm: PASS (differential executed, modelled cases "
               "match; router 19/19, craftui 16/16, dpad 11/11, "
-              "blockhead 28/28, const 17/17)")
+              "blockhead 28/28, const 17/17, wpbar 11/11)")
         return 0
 
     print("specials-arm: PASS (constants; run with --elf to execute)")

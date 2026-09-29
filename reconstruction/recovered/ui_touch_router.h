@@ -245,4 +245,15 @@ constexpr bool kPauseUiRect = true;
 constexpr bool kMainMenuUiRect = true;
 constexpr bool kMainMenuUiInUi = true;
 
+// --- the WorkbenchProgressBarUI panel -------------------------------------
+// rect (95w): the same four-compare shape as CraftUI with its own numbers —
+// local = point - windowInfo(+8/+0xc) - translationOffset(@120/@124);
+// x in (-120, 120), y in (0, 102), every edge exclusive. Everything else is
+// constant: touchIsInUI: returns 0 (59w, the rebase is dead), the press
+// returns 0 (61w), moveTouch:/endTouch: are empty void bodies (56w each) —
+// no receiver is ever messaged.
+bool wbpbarui_touch_is_in_view_at_all(Point p, const PanelFrame& f);
+constexpr bool kWorkbenchProgressBarInUi = false;
+constexpr int kWorkbenchProgressBarPress = 0;
+
 }  // namespace blockheads::ui

@@ -220,6 +220,22 @@ far-away point and still answer 1 — the invariance IS the assertion. The
 `windowInfo` offsets differ per class (96; MainMenuUI 128) and are part of
 the fixture.
 
+## The WorkbenchProgressBarUI panel (types 97..101) — decoded
+
+`disasm_workbenchprogressbarui_touch.txt` (the whole family, 327w):
+
+- `touchIsInViewAtAll:` (95w) is the CraftUI-shaped four-compare rect with
+  its own numbers: local = point - windowInfo(+8/+0xc) -
+  translationOffset(@120/@124); `x in (-120, 120)`, `y in (0, 102)`, every
+  edge exclusive;
+- `touchIsInUI:` (59w) rebases into dead locals and returns 0;
+  `startTouch:tapCount:` (61w) returns 0; `moveTouch:` / `endTouch:`
+  (56w each) are empty void bodies — no receiver is ever messaged.
+
+11 cases (the five edges + two term-flips + the four constants) execute
+under Unicorn; `wbpbarui_touch_is_in_view_at_all` + the two decoded
+constants are the model.
+
 ## The composition pattern: CraftUI (0x00B80EB4..0x00B817A4) — decoded
 
 CraftUI's five override bodies are decoded from the instruction stream

@@ -105,6 +105,12 @@ ENTRIES = [
     ('PauseUIRect', 94, 0x009E8E70, 0x00000000, 32),
     ('MainMenuUIRect', 95, 0x00A09CF0, 0x00000000, 32),
     ('MainMenuUIInUI', 96, 0x00A09D70, 0x00000000, 32),
+    # the WorkbenchProgressBarUI panel: a rect test + constant no-ops
+    ('WPBarUIRect', 97, 0x00734850, 0x00000000, 95),
+    ('WPBarUIInUI', 98, 0x00734764, 0x00000000, 59),
+    ('WPBarUIPress', 99, 0x007349CC, 0x00000000, 61),
+    ('WPBarUIMove', 100, 0x00734AC0, 0x00000000, 56),
+    ('WPBarUIEnd', 101, 0x00734BA0, 0x00000000, 56),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -655,7 +661,7 @@ def main():
         if not cls.startswith(('MJView', 'MJControl', 'UIManager',
                                'CraftUI', 'DPad', 'BlockheadUI',
                                'MapUI', 'OptionsUI', 'ShareUI', 'PauseUI',
-                               'MainMenuUI')):
+                               'MainMenuUI', 'WPBarUI')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -896,6 +902,12 @@ def main():
         # the constant-verdict fixture: windowInfo = self_ptr so the dead
         # rebase reads land in the instance
         return f'{off}=0x60001000,8={fb(0)},12={fb(0)}'
+
+    def wpb_seeds(wx, wy, ox, oy):
+        # WorkbenchProgressBarUI: windowInfo@96 = self_ptr;
+        # translationOffset = the floats at 120/124
+        return (f'96=0x60001000,8={fb(wx)},12={fb(wy)},'
+                f'120={fb(ox)},124={fb(oy)}')
 
     UI_CASES = {
         'MJControl': {
@@ -1173,6 +1185,23 @@ def main():
             1: ('999,999', cv_seeds(128), {}),
         },
         'MainMenuUIInUI': {0: ('50,50', cv_seeds(128), {})},
+        'WPBarUIRect': {
+            # x in (-120, 120), y in (0, 102), all edges exclusive; 5/6
+            # distinguish the offset / window terms
+            0: ('0,51', wpb_seeds(0, 0, 0, 0), {}),       # centre
+            1: ('120,51', wpb_seeds(0, 0, 0, 0), {}),     # x == 120
+            2: ('-120,51', wpb_seeds(0, 0, 0, 0), {}),    # x == -120
+            3: ('0,0', wpb_seeds(0, 0, 0, 0), {}),        # y == 0
+            4: ('0,102', wpb_seeds(0, 0, 0, 0), {}),      # y == 102
+            5: ('122,51', wpb_seeds(0, 0, 5, 0), {}),     # x=117 (in)
+            6: ('137,51', wpb_seeds(20, 0, 0, 0), {}),    # x=117 (in)
+        },
+        'WPBarUIInUI': {0: ('50,50', wpb_seeds(0, 0, 0, 0), {})},
+        'WPBarUIPress': {0: ('50,50', wpb_seeds(0, 0, 0, 0), {})},
+        'WPBarUIMove': {
+            0: ('50,50', wpb_seeds(0, 0, 0, 0), {'void': True})},
+        'WPBarUIEnd': {
+            0: ('50,50', wpb_seeds(0, 0, 0, 0), {'void': True})},
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.

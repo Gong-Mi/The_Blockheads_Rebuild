@@ -844,6 +844,36 @@ int constant_panel_ret(int type_id) {
         default: return 0;   // 88/89: the void stubs
     }
 }
+
+// --- the WorkbenchProgressBarUI panel's differential inputs ---------------
+blockheads::ui::PanelFrame wpb_frame(int case_id) {
+    switch (case_id) {
+        case 5: return {0.0f, 0.0f, 5.0f, 0.0f};
+        case 6: return {20.0f, 0.0f, 0.0f, 0.0f};
+        default: return {};
+    }
+}
+
+blockheads::ui::Point wpb_point(int case_id) {
+    switch (case_id) {
+        case 1: return {120.0f, 51.0f};
+        case 2: return {-120.0f, 51.0f};
+        case 3: return {0.0f, 0.0f};
+        case 4: return {0.0f, 102.0f};
+        case 5: return {122.0f, 51.0f};
+        case 6: return {137.0f, 51.0f};
+        default: return {0.0f, 51.0f};
+    }
+}
+
+void wpb_seeds_for(unsigned char* out, int case_id) {
+    ui_put_word(out, 96, 0x60001000u);       // windowInfo = self_ptr
+    const auto f = wpb_frame(case_id);
+    ui_put_word(out, 8, float_bits(f.window_x));
+    ui_put_word(out, 12, float_bits(f.window_y));
+    ui_put_word(out, 120, float_bits(f.offset_x));
+    ui_put_word(out, 124, float_bits(f.offset_y));
+}
 }  // namespace
 
 extern "C" {
@@ -916,6 +946,8 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         }
     } else if (type_id >= 85 && type_id <= 96) {
         // the constant-verdict panels: no calls (the literal verdicts)
+    } else if (type_id >= 97 && type_id <= 101) {
+        // the WorkbenchProgressBarUI panel: no calls (rect + constants)
     } else if (type_id == 71) {  // MJView -touchIsInUI: — the GATE cases
         // The frame test's coordinate space is still being decoded; the
         // gates are verified: hidden@4 short-circuits first, then
@@ -974,6 +1006,13 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         constant_panel_seeds(out, type_id);
+        return n;
+    }
+    if (type_id >= 97 && type_id <= 101) {  // WorkbenchProgressBarUI
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0x60000200u);
+        wpb_seeds_for(out, case_id);
         return n;
     }
     if (type_id == 71) {  // MJView: the gate cases write nothing
@@ -1052,6 +1091,13 @@ int recovered_ui_ret(int type_id, int case_id) {
     }
     if (type_id == 83 || type_id == 84) return 0;  // void (not compared)
     if (type_id >= 85 && type_id <= 96) return constant_panel_ret(type_id);
+    if (type_id == 97) {
+        return blockheads::ui::wbpbarui_touch_is_in_view_at_all(
+            wpb_point(case_id), wpb_frame(case_id)) ? 1 : 0;
+    }
+    if (type_id == 98) return blockheads::ui::kWorkbenchProgressBarInUi ? 1 : 0;
+    if (type_id == 99) return blockheads::ui::kWorkbenchProgressBarPress;
+    if (type_id == 100 || type_id == 101) return 0;  // void (not compared)
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);
