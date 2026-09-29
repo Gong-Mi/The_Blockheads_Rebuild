@@ -580,4 +580,28 @@ PanelTrace optionsui_end_touch(const ChildReply* mpw,
                                const ChildReply* ctl,
                                const ChildReply* const* buttons /* 6 */);
 
+// --- the MainMenuUI panel (the press batch) -------------------------------
+// startTouch:tapCount: (437w): attemptingToConnectToWorld@468 -> 0 with
+// NO calls; else tcUI@444 -> addCreditUI@476 -> mainMenuOptionsUI@48
+// (each nil-checked, the first non-nil takes [sub startTouch:tapCount:pt
+// tapCount] and its reply is returned); else loading@408 -> 0; else the
+// selection dispatch currentMainMenuSelection@452 (3 -> loadWorldUI@456,
+// 1 -> createWorldUI@460, 2 -> joinWorldUI@464, each [startTouch:pt],
+// short-circuit OR'd with) timeCrystalButton@420 -> moreGamesButton@432
+// -> settingsButton@440. Then the state writes: startTouchWasInView@361
+// = !local, scrollInProgress@360 = 0, lastX@356 = x_local, and
+// scrollTargetIndex@364 = -3 when startTouchWasInView. Returns local.
+PanelTrace mainmenuui_start_touch(bool connecting,
+                                  const ChildReply* tc_ui,
+                                  const ChildReply* add_credit,
+                                  const ChildReply* mm_options,
+                                  bool loading,
+                                  int selection,
+                                  const ChildReply* load_world,
+                                  const ChildReply* create_world,
+                                  const ChildReply* join_world,
+                                  const ChildReply* time_crystal,
+                                  const ChildReply* more_games,
+                                  const ChildReply* settings);
+
 }  // namespace blockheads::ui

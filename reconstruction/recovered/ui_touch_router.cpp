@@ -1279,4 +1279,57 @@ PanelTrace optionsui_end_touch(const ChildReply* mpw,
     return t;
 }
 
+// --- the MainMenuUI panel (the press batch) -------------------------------
+
+PanelTrace mainmenuui_start_touch(bool connecting,
+                                  const ChildReply* tc_ui,
+                                  const ChildReply* add_credit,
+                                  const ChildReply* mm_options,
+                                  bool loading,
+                                  int selection,
+                                  const ChildReply* load_world,
+                                  const ChildReply* create_world,
+                                  const ChildReply* join_world,
+                                  const ChildReply* time_crystal,
+                                  const ChildReply* more_games,
+                                  const ChildReply* settings) {
+    PanelTrace t;
+    if (connecting) {                        // attemptingToConnectToWorld@468
+        t.handled = 0;
+        return t;
+    }
+    if (tc_ui != nullptr) {                  // tcUI@444
+        t.calls.push_back("startTouch:tapCount:");
+        t.handled = tc_ui->handles ? 1 : 0;
+        return t;
+    }
+    if (add_credit != nullptr) {             // addCreditUI@476
+        t.calls.push_back("startTouch:tapCount:");
+        t.handled = add_credit->handles ? 1 : 0;
+        return t;
+    }
+    if (mm_options != nullptr) {             // mainMenuOptionsUI@48
+        t.calls.push_back("startTouch:tapCount:");
+        t.handled = mm_options->handles ? 1 : 0;
+        return t;
+    }
+    if (loading) {                           // loading@408
+        t.handled = 0;
+        return t;
+    }
+    bool local = false;
+    if (selection == 3) {                    // loadWorldUI@456
+        if (!local) local = child_start(load_world, t);
+    } else if (selection == 1) {             // createWorldUI@460
+        if (!local) local = child_start(create_world, t);
+    } else if (selection == 2) {             // joinWorldUI@464
+        if (!local) local = child_start(join_world, t);
+    }
+    if (!local) local = child_start(time_crystal, t);   // @420
+    if (!local) local = child_start(more_games, t);     // @432
+    if (!local) local = child_start(settings, t);       // @440
+    t.handled = local ? 1 : 0;
+    return t;
+}
+
 }  // namespace blockheads::ui

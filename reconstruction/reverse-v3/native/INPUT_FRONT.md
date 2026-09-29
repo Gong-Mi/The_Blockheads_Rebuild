@@ -247,6 +247,22 @@ in that order. 10 cases (the const-1 far-point control, both children alone
 + all-miss per chain, the void orders receiver-verified) execute under
 Unicorn.
 
+## MainMenuUI's press (type 187) — decoded
+
+`disasm_mainmenuui_touch2.txt` (2185w; the move/end batches follow):
+`startTouch:tapCount:` (437w): attemptingToConnectToWorld@468 -> 0 with
+NO calls; else tcUI@444 -> addCreditUI@476 -> mainMenuOptionsUI@48 (each
+nil-checked, the first non-nil takes `[sub startTouch:tapCount:pt
+tapCount]` and its reply is returned); else loading@408 -> 0; else the
+selection dispatch currentMainMenuSelection@452 (3 -> loadWorldUI@456,
+1 -> createWorldUI@460, 2 -> joinWorldUI@464, each `[startTouch:pt]`,
+short-circuit OR'd with) timeCrystalButton@420 -> moreGamesButton@432 ->
+settingsButton@440. Then the STATE WRITES (the first method in the
+family that writes self): startTouchWasInView@361 = !local,
+scrollInProgress@360 = 0, lastX@356 = x_local, and scrollTargetIndex@364
+= -3 when startTouchWasInView. 10 cases execute under Unicorn (image
+differential includes the state writes).
+
 ## OptionsUI's press/move/end (types 184..186) — decoded
 
 `disasm_optionsui_touch2.txt` (705w): `startTouch:tapCount:` (265w) runs

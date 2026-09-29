@@ -918,12 +918,44 @@ int main() {
                   "endTouch:,endTouch:,endTouch:");
     }
 
+    // --- the MainMenuUI press (the gates + dispatch) -----------------------
+    {
+        const ChildReply hit_h{false, true};
+        // the connecting gate: zero calls
+        auto t = mainmenuui_start_touch(true, nullptr, nullptr, nullptr,
+                                        false, 0, nullptr, nullptr,
+                                        nullptr, nullptr, nullptr, nullptr);
+        assert(t.calls.empty() && t.handled == 0);
+        // the sub-UI cascade
+        t = mainmenuui_start_touch(false, &hit_h, nullptr, nullptr, false, 0,
+                                   nullptr, nullptr, nullptr, nullptr,
+                                   nullptr, nullptr);
+        assert(join_trace(t.calls) == "startTouch:tapCount:");
+        assert(t.handled == 1);
+        // the loading gate
+        t = mainmenuui_start_touch(false, nullptr, nullptr, nullptr, true, 0,
+                                   nullptr, nullptr, nullptr, nullptr,
+                                   nullptr, nullptr);
+        assert(t.calls.empty() && t.handled == 0);
+        // selection 3: the dispatch + the three buttons
+        t = mainmenuui_start_touch(false, nullptr, nullptr, nullptr, false, 3,
+                                   nullptr, nullptr, nullptr, nullptr,
+                                   nullptr, nullptr);
+        assert(join_trace(t.calls)
+               == "startTouch:,startTouch:,startTouch:,startTouch:");
+        // timeCrystal answers at selection 0: short-circuits
+        t = mainmenuui_start_touch(false, nullptr, nullptr, nullptr, false, 0,
+                                   nullptr, nullptr, nullptr, &hit_h,
+                                   nullptr, nullptr);
+        assert(join_trace(t.calls) == "startTouch:" && t.handled == 1);
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
                 " block chain x19, craftui x16, dpad x11, blockhead x28,"
                 " const x17, wpbar x11, camera x10, pet x13, wear x14,"
                 " regen x14, tpbuy x18, sound x7, invfull x12, "
                 "freeoffer x9, addcredit x10, ctrlopts x7, hunger x13,"
                 " jetpack x15, sleepprog x19, addfuel x15, paintmix x19,"
-                " pauseui2 x16, shareui2 x3, optionsui2 x12)\n");
+                " pauseui2 x16, shareui2 x3, optionsui2 x12, mainmenu x10)\n");
     return 0;
 }

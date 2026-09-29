@@ -214,6 +214,8 @@ ENTRIES = [
     ('OptionsUIPress2', 184, 0x008478C8, 0x00000000, 265),
     ('OptionsUIMove2', 185, 0x00847CEC, 0x00000000, 220),
     ('OptionsUIEnd2', 186, 0x0084805C, 0x00000000, 220),
+    # MainMenuUI's press batch (the rect/inUI were task 46's; move/end next)
+    ('MainMenuUIPress2', 187, 0x00A09DF0, 0x00000000, 437),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -1079,6 +1081,27 @@ def main():
     OPT_OK, OPT_HD = 0x60021000, 0x60021100
     OPT_SNDB, OPT_CTLB = 0x60021200, 0x60021300
     OPT_RESTORE, OPT_MPB = 0x60021400, 0x60021500
+
+    MM_TC, MM_AC, MM_MO = 0x6000d500, 0x6000d600, 0x6000d700
+    MM_LW, MM_CW, MM_JOIN = 0x60022000, 0x60022100, 0x60022200
+    MM_TCB, MM_MGB, MM_SB = 0x60022300, 0x60022400, 0x60022500
+
+    def mm_seeds(case):
+        # MainMenuUI: windowInfo@128 (scratch); tcUI@444; addCredit@476;
+        # mmOptions@48; loading byte@408; selection@452; loadWorld@456;
+        # createWorld@460; joinWorld@464; timeCrystal@420; moreGames@432;
+        # settings@440; connecting byte@468
+        tcu = f'0x{MM_TC:08x}' if case == 1 else '0'
+        ac = f'0x{MM_AC:08x}' if case == 2 else '0'
+        mo = f'0x{MM_MO:08x}' if case == 3 else '0'
+        lod = 1 if case == 4 else 0
+        sel = 3 if case == 5 else (1 if case == 6 else
+                                   (2 if case == 7 else 0))
+        con = 1 if case == 0 else 0
+        return (f'128=0x60001000,444={tcu},476={ac},48={mo},408={lod},'
+                f'452={sel},456=0x{MM_LW:08x},460=0x{MM_CW:08x},'
+                f'464=0x{MM_JOIN:08x},420=0x{MM_TCB:08x},'
+                f'432=0x{MM_MGB:08x},440=0x{MM_SB:08x},468={con}')
 
     def opt_seeds(case):
         # OptionsUI: windowInfo@96 (scratch); mpw@136; sound@140; control@144;
@@ -2043,6 +2066,32 @@ def main():
             1: ('50,50', opt_seeds(1), {'void': True}),
             2: ('50,50', opt_seeds(2), {'void': True}),
             3: ('50,50', opt_seeds(3), {'void': True}),
+        },
+        'MainMenuUIPress2': {
+            # 0: the connecting gate -> zero calls
+            0: ('50,50', mm_seeds(0), {}),
+            # 1: tcUI non-nil, miss -> [tcUI st:tc:], 0
+            1: ('50,50', mm_seeds(1), {}),
+            # 2: addCreditUI non-nil, miss
+            2: ('50,50', mm_seeds(2), {}),
+            # 3: mainMenuOptionsUI non-nil, miss
+            3: ('50,50', mm_seeds(3), {}),
+            # 4: the loading gate -> zero calls
+            4: ('50,50', mm_seeds(4), {}),
+            # 5: selection 3 -> [loadWorld, timeCrystal, moreGames, settings]
+            5: ('50,50', mm_seeds(5), {
+                'expect_recv': [MM_LW, MM_TCB, MM_MGB, MM_SB]}),
+            # 6: selection 1 -> [createWorld, tcb, mgb, sb]
+            6: ('50,50', mm_seeds(6), {}),
+            # 7: selection 2 -> [joinWorld, tcb, mgb, sb]
+            7: ('50,50', mm_seeds(7), {}),
+            # 8: selection 0 -> the three buttons only
+            8: ('50,50', mm_seeds(8), {
+                'expect_recv': [MM_TCB, MM_MGB, MM_SB]}),
+            # 9: timeCrystal answers -> [timeCrystal] only, 1
+            9: ('50,50', mm_seeds(9), {
+                'expect_recv': [MM_TCB],
+                'ret1': {MM_TCB: ['startTouch:']}}),
         },
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view

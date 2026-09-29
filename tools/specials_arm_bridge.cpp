@@ -966,6 +966,60 @@ blockheads::ui::Point regen_point(int case_id) {
     }
 }
 
+// --- the MainMenuUI panel's differential inputs (the press batch) ---------
+constexpr unsigned MM_TC = 0x6000d500u;
+constexpr unsigned MM_AC = 0x6000d600u;
+constexpr unsigned MM_MO = 0x6000d700u;
+constexpr unsigned MM_LW = 0x60022000u;
+constexpr unsigned MM_CW = 0x60022100u;
+constexpr unsigned MM_JOIN = 0x60022200u;
+constexpr unsigned MM_TCB = 0x60022300u;
+constexpr unsigned MM_MGB = 0x60022400u;
+constexpr unsigned MM_SB = 0x60022500u;
+
+bool mm_connecting(int c) { return c == 0; }
+bool mm_loading(int c) { return c == 4; }
+int mm_selection(int c) {
+    return c == 5 ? 3 : (c == 6 ? 1 : (c == 7 ? 2 : 0));
+}
+const blockheads::ui::ChildReply* mm_tc(int c) {
+    return c == 1 ? &kChildMiss : nullptr;
+}
+const blockheads::ui::ChildReply* mm_ac(int c) {
+    return c == 2 ? &kChildMiss : nullptr;
+}
+const blockheads::ui::ChildReply* mm_mo(int c) {
+    return c == 3 ? &kChildMiss : nullptr;
+}
+const blockheads::ui::ChildReply* mm_lw(int c) {
+    return c == 5 ? &kChildMiss : nullptr;
+}
+const blockheads::ui::ChildReply* mm_cw(int c) {
+    return c == 6 ? &kChildMiss : nullptr;
+}
+const blockheads::ui::ChildReply* mm_jw(int c) {
+    return c == 7 ? &kChildMiss : nullptr;
+}
+const blockheads::ui::ChildReply* mm_tcb(int c) {
+    return c == 9 ? &kChildHandles : &kChildMiss;
+}
+
+void mm_seeds_for(unsigned char* out, int case_id) {
+    ui_put_word(out, 128, 0x60001000u);      // windowInfo (scratch)
+    ui_put_word(out, 444, case_id == 1 ? MM_TC : 0u);
+    ui_put_word(out, 476, case_id == 2 ? MM_AC : 0u);
+    ui_put_word(out, 48, case_id == 3 ? MM_MO : 0u);
+    ui_put_word(out, 408, case_id == 4 ? 1u : 0u);
+    ui_put_word(out, 452, static_cast<unsigned>(mm_selection(case_id)));
+    ui_put_word(out, 456, MM_LW);
+    ui_put_word(out, 460, MM_CW);
+    ui_put_word(out, 464, MM_JOIN);
+    ui_put_word(out, 420, MM_TCB);
+    ui_put_word(out, 432, MM_MGB);
+    ui_put_word(out, 440, MM_SB);
+    if (case_id == 0) ui_put_word(out, 468, 1u);
+}
+
 // --- the OptionsUI panel's differential inputs (the second batch) ---------
 constexpr unsigned OPT_MPW = 0x6000d200u;
 constexpr unsigned OPT_SND = 0x6000d300u;
@@ -1588,6 +1642,18 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // the constant-verdict panels: no calls (the literal verdicts)
     } else if (type_id >= 97 && type_id <= 101) {
         // the WorkbenchProgressBarUI panel: no calls (rect + constants)
+    } else if (type_id == 187) {
+        // the MainMenuUI press: gates + dispatch + the three buttons
+        blockheads::ui::PanelTrace t =
+            blockheads::ui::mainmenuui_start_touch(
+                mm_connecting(case_id), mm_tc(case_id), mm_ac(case_id),
+                mm_mo(case_id), mm_loading(case_id), mm_selection(case_id),
+                mm_lw(case_id), mm_cw(case_id), mm_jw(case_id),
+                mm_tcb(case_id), &kChildMiss, &kChildMiss);
+        for (const char* c : t.calls) {
+            if (!s.empty()) s += ',';
+            s += c;
+        }
     } else if (type_id >= 184 && type_id <= 186) {
         // the OptionsUI panel: the sub-UI cascade + the six buttons
         const auto* mpw = opt_child(type_id, case_id, 0);
@@ -1975,6 +2041,27 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         wpb_seeds_for(out, case_id);
+        return n;
+    }
+    if (type_id == 187) {  // MainMenuUI press
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0x60000200u);    // the harness base (see seeds)
+        ui_put_word(out, 12, 0u);
+        mm_seeds_for(out, case_id);
+        if (case_id >= 5) {
+            // the method's own state writes (the tail cases only).
+            // lastX = x_local = 50.0f - float(the self+8 base word
+            // 0x60000200, read as the windowInfo@128 object's +8) =
+            // 0xE0000200 (verified against the ARM).
+            ui_put_word(out, 356, 0xE0000200u);   // lastX
+            ui_put_word(out, 360, 0u);            // scrollInProgress = 0
+            const bool hit = (case_id == 9);      // the local
+            ui_put_word(out, 361, hit ? 0u : 1u); // startTouchWasInView
+            if (!hit) {
+                ui_put_word(out, 364, 0xFFFFFFFDu);  // scrollTargetIndex = -3
+            }
+        }
         return n;
     }
     if (type_id >= 184 && type_id <= 186) {  // OptionsUI (the second batch)
@@ -2410,6 +2497,13 @@ int recovered_ui_ret(int type_id, int case_id) {
             opt_child(184, case_id, 2), btns).handled;
     }
     if (type_id == 185 || type_id == 186) return 0;  // void (not compared)
+    if (type_id == 187) {
+        return blockheads::ui::mainmenuui_start_touch(
+            mm_connecting(case_id), mm_tc(case_id), mm_ac(case_id),
+            mm_mo(case_id), mm_loading(case_id), mm_selection(case_id),
+            mm_lw(case_id), mm_cw(case_id), mm_jw(case_id),
+            mm_tcb(case_id), &kChildMiss, &kChildMiss).handled;
+    }
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);
