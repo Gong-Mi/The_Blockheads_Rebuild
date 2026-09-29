@@ -709,7 +709,36 @@ int main() {
                == "endTouch:");
     }
 
-    // --- the JetPackUI panel -----------------------------------------------
+    // --- the SleepProgressUI panel -----------------------------------------
+    {
+        const PanelFrame origin{};
+        assert(sleepprogressui_touch_is_in_view_at_all({0, 55}, origin));
+        assert(!sleepprogressui_touch_is_in_view_at_all({120, 55}, origin));
+        assert(!sleepprogressui_touch_is_in_view_at_all({-120, 55}, origin));
+        assert(!sleepprogressui_touch_is_in_view_at_all({0, 0}, origin));
+        assert(!sleepprogressui_touch_is_in_view_at_all({0, 110}, origin));
+        assert(sleepprogressui_touch_is_in_view_at_all({119, 109}, origin));
+        const ChildReply hit{true, false};
+        const ChildReply hit_h{false, true};
+        // no gate: the abort-miss falls through to complete
+        auto t = sleepprogressui_touch_is_in_ui(false, nullptr, &hit);
+        assert(join_trace(t.calls) == "touchIsInUI:,touchIsInUI:");
+        assert(t.handled == 1);
+        // abort answers: complete skipped (short-circuit)
+        t = sleepprogressui_touch_is_in_ui(false, &hit, nullptr);
+        assert(join_trace(t.calls) == "touchIsInUI:" && t.handled == 1);
+        // the gate: complete never reached
+        t = sleepprogressui_touch_is_in_ui(true, nullptr, &hit);
+        assert(join_trace(t.calls) == "touchIsInUI:" && t.handled == 0);
+        t = sleepprogressui_move_touch(true, nullptr, nullptr);
+        assert(join_trace(t.calls) == "moveTouch:");
+        t = sleepprogressui_move_touch(false, nullptr, nullptr);
+        assert(join_trace(t.calls) == "moveTouch:,moveTouch:");
+        t = sleepprogressui_end_touch(true, nullptr, nullptr);
+        assert(join_trace(t.calls) == "endTouch:");
+    }
+
+
     {
         const PanelFrame origin{};
         assert(jetpackui_touch_is_in_view_at_all({0, 54}, origin));
@@ -740,6 +769,6 @@ int main() {
                 " const x17, wpbar x11, camera x10, pet x13, wear x14,"
                 " regen x14, tpbuy x18, sound x7, invfull x12, "
                 "freeoffer x9, addcredit x10, ctrlopts x7, hunger x13,"
-                " jetpack x15)\n");
+                " jetpack x15, sleepprog x19)\n");
     return 0;
 }

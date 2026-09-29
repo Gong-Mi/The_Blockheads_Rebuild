@@ -183,6 +183,12 @@ ENTRIES = [
     ('JetPackUIPress', 159, 0x00B58ED0, 0x00000000, 105),
     ('JetPackUIMove', 160, 0x00B59074, 0x00000000, 87),
     ('JetPackUIEnd', 161, 0x00B591D0, 0x00000000, 87),
+    # the SleepProgressUI panel: a rect + the isMeditation-gated two-button chains
+    ('SleepProgressUIRect', 162, 0x00B36E90, 0x00000000, 95),
+    ('SleepProgressUIInUI', 163, 0x00B36C80, 0x00000000, 132),
+    ('SleepProgressUIPress', 164, 0x00B3700C, 0x00000000, 138),
+    ('SleepProgressUIMove', 165, 0x00B37234, 0x00000000, 100),
+    ('SleepProgressUIEnd', 166, 0x00B373C4, 0x00000000, 100),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -738,7 +744,7 @@ def main():
                                'TPBuyUI', 'SoundOptionsUI',
                                'InventoryFullUI', 'FreeOfferUI',
                                'AddCreditUI', 'ControlOptionsUI',
-                               'HungerUI', 'JetPackUI')):
+                               'HungerUI', 'JetPackUI', 'SleepProgressUI')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -1005,6 +1011,14 @@ def main():
     HGR_EAT = 0x60020600
 
     JPK_AF, JPK_FF = 0x60020600, 0x60020700
+    SLP_AB, SLP_CB = 0x60020600, 0x60020700
+
+    def slp_seeds(wx=0.0, wy=0.0, ox=0.0, oy=0.0, med=0):
+        # SleepProgressUI: windowInfo@96 = self_ptr; translationOffset at
+        # 128/132; abortButton@120; completeButton@124; isMeditation byte @140
+        return (f'96=0x60001000,8={fb(wx)},12={fb(wy)},'
+                f'128={fb(ox)},132={fb(oy)},'
+                f'120=0x{SLP_AB:08x},124=0x{SLP_CB:08x},140={med}')
 
     def jpk_seeds(wx=0.0, wy=0.0, ox=0.0, oy=0.0):
         # JetPackUI: windowInfo@128 = self_ptr; translationOffset at
@@ -1728,6 +1742,53 @@ def main():
         'JetPackUIEnd': {
             0: ('50,54', jpk_seeds(), {
                 'void': True, 'expect_recv': [JPK_AF, JPK_FF]})},
+        'SleepProgressUIRect': {
+            # x in (-120, 120), y in (0, 110), all edges exclusive
+            0: ('0,55', slp_seeds(), {}),        # centre
+            1: ('120,55', slp_seeds(), {}),      # x == 120
+            2: ('-120,55', slp_seeds(), {}),     # x == -120
+            3: ('0,0', slp_seeds(), {}),         # y == 0
+            4: ('0,110', slp_seeds(), {}),       # y == 110
+            5: ('119,109', slp_seeds(), {}),     # inside margins
+            6: ('124,55', slp_seeds(0, 0, 5, 0), {}),  # x=119 (in)
+        },
+        'SleepProgressUIInUI': {
+            0: ('50,55', slp_seeds(), {
+                'expect_recv': [SLP_AB, SLP_CB]}),
+            1: ('50,55', slp_seeds(), {
+                'expect_recv': [SLP_AB],
+                'ret1': {SLP_AB: ['touchIsInUI:']}}),
+            2: ('50,55', slp_seeds(), {
+                'expect_recv': [SLP_AB, SLP_CB],
+                'ret1': {SLP_CB: ['touchIsInUI:']}}),
+            # the gate: complete never reached
+            3: ('50,55', slp_seeds(med=1), {
+                'expect_recv': [SLP_AB]}),
+        },
+        'SleepProgressUIPress': {
+            0: ('50,55', slp_seeds(), {
+                'expect_recv': [SLP_AB, SLP_CB]}),
+            1: ('50,55', slp_seeds(), {
+                'expect_recv': [SLP_AB],
+                'ret1': {SLP_AB: ['startTouch:']}}),
+            2: ('50,55', slp_seeds(), {
+                'expect_recv': [SLP_AB, SLP_CB],
+                'ret1': {SLP_CB: ['startTouch:']}}),
+            3: ('50,55', slp_seeds(med=1), {
+                'expect_recv': [SLP_AB]}),
+        },
+        'SleepProgressUIMove': {
+            0: ('50,55', slp_seeds(), {
+                'void': True, 'expect_recv': [SLP_AB, SLP_CB]}),
+            1: ('50,55', slp_seeds(med=1), {
+                'void': True, 'expect_recv': [SLP_AB]}),
+        },
+        'SleepProgressUIEnd': {
+            0: ('50,55', slp_seeds(), {
+                'void': True, 'expect_recv': [SLP_AB, SLP_CB]}),
+            1: ('50,55', slp_seeds(med=1), {
+                'void': True, 'expect_recv': [SLP_AB]}),
+        },
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.

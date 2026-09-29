@@ -456,4 +456,27 @@ PanelTrace jetpackui_move_touch(const ChildReply* add_fuel,
 PanelTrace jetpackui_end_touch(const ChildReply* add_fuel,
                                const ChildReply* free_flight);
 
+// --- the SleepProgressUI panel --------------------------------------------
+// rect (95w): local = point - windowInfo(+8/+0xc) - translationOffset
+// (@128); x in (-120, 120), y in (0, 110). touchIsInUI: (132w) /
+// startTouch:tapCount: (138w): local = [abortButton@120 ...]; the
+// isMeditation@140 gate sits BEFORE the second child — when set,
+// completeButton@124 is never reached; otherwise the standard
+// short-circuit OR. moveTouch:/endTouch: (100w each): abortButton always,
+// completeButton only when !isMeditation.
+bool sleepprogressui_touch_is_in_view_at_all(Point p,
+                                             const PanelFrame& f);
+PanelTrace sleepprogressui_touch_is_in_ui(bool is_meditation,
+                                          const ChildReply* abort_btn,
+                                          const ChildReply* complete_btn);
+PanelTrace sleepprogressui_start_touch(bool is_meditation,
+                                       const ChildReply* abort_btn,
+                                       const ChildReply* complete_btn);
+PanelTrace sleepprogressui_move_touch(bool is_meditation,
+                                      const ChildReply* abort_btn,
+                                      const ChildReply* complete_btn);
+PanelTrace sleepprogressui_end_touch(bool is_meditation,
+                                     const ChildReply* abort_btn,
+                                     const ChildReply* complete_btn);
+
 }  // namespace blockheads::ui

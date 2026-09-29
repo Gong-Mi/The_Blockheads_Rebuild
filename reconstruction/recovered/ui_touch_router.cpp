@@ -858,4 +858,67 @@ PanelTrace jetpackui_end_touch(const ChildReply* add_fuel,
     return t;
 }
 
+// --- the SleepProgressUI panel --------------------------------------------
+
+bool sleepprogressui_touch_is_in_view_at_all(Point p,
+                                             const PanelFrame& f) {
+    const float x = p.x - f.window_x - f.offset_x;
+    const float y = p.y - f.window_y - f.offset_y;
+    return x > -120.0f && x < 120.0f && y > 0.0f && y < 110.0f;
+}
+
+PanelTrace sleepprogressui_touch_is_in_ui(bool is_meditation,
+                                          const ChildReply* abort_btn,
+                                          const ChildReply* complete_btn) {
+    PanelTrace t;
+    bool local = child_in_ui(abort_btn, t);      // abortButton@120
+    if (is_meditation) {                         // isMeditation@140 gate
+        t.handled = local ? 1 : 0;               // complete never reached
+        return t;
+    }
+    if (!local) local = child_in_ui(complete_btn, t);  // completeButton@124
+    t.handled = local ? 1 : 0;
+    return t;
+}
+
+PanelTrace sleepprogressui_start_touch(bool is_meditation,
+                                       const ChildReply* abort_btn,
+                                       const ChildReply* complete_btn) {
+    PanelTrace t;
+    bool local = child_start(abort_btn, t);
+    if (is_meditation) {
+        t.handled = local ? 1 : 0;
+        return t;
+    }
+    if (!local) local = child_start(complete_btn, t);
+    t.handled = local ? 1 : 0;
+    return t;
+}
+
+PanelTrace sleepprogressui_move_touch(bool is_meditation,
+                                      const ChildReply* abort_btn,
+                                      const ChildReply* complete_btn) {
+    (void)abort_btn;
+    (void)complete_btn;
+    PanelTrace t;
+    t.calls.push_back("moveTouch:");   // abortButton@120 (always)
+    if (!is_meditation) {
+        t.calls.push_back("moveTouch:");  // completeButton@124
+    }
+    return t;
+}
+
+PanelTrace sleepprogressui_end_touch(bool is_meditation,
+                                     const ChildReply* abort_btn,
+                                     const ChildReply* complete_btn) {
+    (void)abort_btn;
+    (void)complete_btn;
+    PanelTrace t;
+    t.calls.push_back("endTouch:");    // abortButton@120 (always)
+    if (!is_meditation) {
+        t.calls.push_back("endTouch:");   // completeButton@124
+    }
+    return t;
+}
+
 }  // namespace blockheads::ui

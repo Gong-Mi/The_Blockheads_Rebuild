@@ -247,6 +247,16 @@ in that order. 10 cases (the const-1 far-point control, both children alone
 + all-miss per chain, the void orders receiver-verified) execute under
 Unicorn.
 
+## The SleepProgressUI panel (types 162..166) — decoded
+
+`disasm_sleepprogressui_touch.txt` (565w): `touchIsInViewAtAll:` (95w) —
+x in (-120, 120), y in (0, 110), all edges exclusive. `touchIsInUI:`
+(132w) / `startTouch:tapCount:` (138w): local = [abortButton@120 ...];
+the **isMeditation@140 gate sits BEFORE the second child** — when set,
+completeButton@124 is never reached; otherwise the standard short-circuit
+OR. `moveTouch:` / `endTouch:` (100w each): abortButton always,
+completeButton only when !isMeditation. 19 cases execute under Unicorn.
+
 ## The JetPackUI panel (types 157..161) — decoded
 
 `disasm_jetpackui_touch.txt` (477w): `touchIsInViewAtAll:` (95w) — local =
