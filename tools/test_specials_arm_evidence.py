@@ -131,6 +131,9 @@ def main() -> int:
         # the WearUI panel
         "('WearUIRect', 112, 0x0088A7EC",
         "def wear_seeds(w=200.0, h=100.0",
+        # the RegenerateUI panel
+        "('RegenerateUIRect', 117, 0x009D2E94",
+        "def regen_seeds():",
     ])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_uimanager_starttouch.txt",
             ["startTouch:tapCount:index:"])
@@ -151,7 +154,8 @@ def main() -> int:
              "kWorkbenchProgressBarInUi", "cameraui_touch_is_in_ui",
              "cameraui_end_touch", "petui_touch_is_in_view_at_all",
              "petui_end_touch", "wearui_touch_is_in_view_at_all",
-             "wearui_end_touch"])
+             "wearui_end_touch", "regenerateui_touch_is_in_view_at_all",
+             "regenerateui_end_touch"])
     require(ROOT / "reconstruction/recovered/ui_touch_router.cpp",
             ["startTouch:tapCount:paused:index:", "import(memset)",
              "touchIsInViewAtAll:", "x > -130.0f && x < 130.0f",
@@ -160,7 +164,7 @@ def main() -> int:
     require(ROOT / "tools/test_ui_touch_router.cpp",
             ["block chain x19", "touchIsInViewAtAll:", "craftui x16",
              "dpad x11", "blockhead x28", "const x17", "wpbar x11",
-             "camera x10", "pet x13", "wear x14"])
+             "camera x10", "pet x13", "wear x14", "regen x14"])
     # the constant-verdict listings
     require(ROOT / "reconstruction/reverse-v3/native/disasm_mapui_touch.txt",
             ["MapUI -[touch family]", "implementation: 0x009cb460"])
@@ -206,7 +210,8 @@ def main() -> int:
              "blockhead_seeds", "blockhead_children_for", "blockhead_sd",
              "constant_panel_seeds", "constant_panel_ret",
              "wpb_seeds_for", "cam_child", "cam_seeds_for",
-             "pet_child", "pet_seeds_for", "wear_child", "wear_seeds_for"])
+             "pet_child", "pet_seeds_for", "wear_child", "wear_seeds_for",
+             "regen_child", "regen_point"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_gameuiview_all.txt",
             ["OBJC_IVAR_$_GameUIView.displayed (slot 0x0105dee0) = 4",
              "OBJC_IVAR_$_GameUIView.resourcesLoaded (slot 0x0105c494) = 16"])
@@ -243,13 +248,13 @@ def main() -> int:
             print(proc.stdout)
             print(proc.stderr)
             return 1
-        # the run's own report pins the case totals: 35 modelled + 146 UI
+        # the run's own report pins the case totals: 35 modelled + 160 UI
         # rows (router 19 + CraftUI 16 + DPad 11 + BlockheadUI 28 +
-        # const 17 + WPBar 11 + Camera 10 + Pet 13 + Wear 14 +
+        # const 17 + WPBar 11 + Camera 10 + Pet 13 + Wear 14 + Regen 14 +
         # MJControl 3 + MJView 4)
         import json
         report = json.loads((out / "specials-arm-result.json").read_text())
-        assert report["cases"] == 181, report["cases"]
+        assert report["cases"] == 195, report["cases"]
         assert report["match"] is True
         ui_rows = [r for r in report["rows"] if r["class"] == "UIManager"]
         assert len(ui_rows) == 19, len(ui_rows)
@@ -286,10 +291,13 @@ def main() -> int:
         wear_rows = [r for r in report["rows"]
                      if r["class"].startswith("WearUI")]
         assert len(wear_rows) == 14, len(wear_rows)
+        regen_rows = [r for r in report["rows"]
+                      if r["class"].startswith("RegenerateUI")]
+        assert len(regen_rows) == 14, len(regen_rows)
         print("specials-arm: PASS (differential executed, modelled cases "
               "match; router 19/19, craftui 16/16, dpad 11/11, "
               "blockhead 28/28, const 17/17, wpbar 11/11, camera 10/10, "
-              "pet 13/13, wear 14/14)")
+              "pet 13/13, wear 14/14, regen 14/14)")
         return 0
 
     print("specials-arm: PASS (constants; run with --elf to execute)")

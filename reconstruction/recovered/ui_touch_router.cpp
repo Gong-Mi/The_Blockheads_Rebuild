@@ -480,4 +480,50 @@ PanelTrace wearui_end_touch(const ChildReply* wear_button) {
     return t;
 }
 
+// --- the RegenerateUI panel -----------------------------------------------
+
+bool regenerateui_touch_is_in_view_at_all(Point p, const PanelFrame& f) {
+    const float x = p.x - f.window_x - f.offset_x;
+    const float y = p.y - f.window_y - f.offset_y;
+    return x > -120.0f && x < 120.0f && y > 0.0f && y < 184.0f;
+}
+
+PanelTrace regenerateui_touch_is_in_ui(const ChildReply* die,
+                                       const ChildReply* complete) {
+    PanelTrace t;
+    bool any = child_in_ui(die, t);
+    if (!any) any = child_in_ui(complete, t);
+    t.handled = any ? 1 : 0;
+    return t;
+}
+
+PanelTrace regenerateui_start_touch(const ChildReply* die,
+                                    const ChildReply* complete) {
+    PanelTrace t;
+    bool any = child_start(die, t);
+    if (!any) any = child_start(complete, t);
+    t.handled = any ? 1 : 0;
+    return t;
+}
+
+PanelTrace regenerateui_move_touch(const ChildReply* die,
+                                   const ChildReply* complete) {
+    (void)die;
+    (void)complete;
+    PanelTrace t;
+    t.calls.push_back("moveTouch:");   // dieButton@120
+    t.calls.push_back("moveTouch:");   // completeButton@124
+    return t;
+}
+
+PanelTrace regenerateui_end_touch(const ChildReply* die,
+                                  const ChildReply* complete) {
+    (void)die;
+    (void)complete;
+    PanelTrace t;
+    t.calls.push_back("endTouch:");    // dieButton@120
+    t.calls.push_back("endTouch:");    // completeButton@124
+    return t;
+}
+
 }  // namespace blockheads::ui

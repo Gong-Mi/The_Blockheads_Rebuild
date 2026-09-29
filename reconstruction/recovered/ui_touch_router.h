@@ -297,4 +297,21 @@ PanelTrace wearui_start_touch(const ChildReply* wear_button);
 PanelTrace wearui_move_touch(const ChildReply* wear_button);
 PanelTrace wearui_end_touch(const ChildReply* wear_button);
 
+// --- the RegenerateUI panel -----------------------------------------------
+// rect (95w): local = point - windowInfo(+8/+0xc) - translationOffset
+// (@128); x in (-120, 120), y in (0, 184), all edges exclusive.
+// touchIsInUI: (122w) / startTouch:tapCount: (127w) are the two-child OR
+// in the order dieButton@120, completeButton@124 (short-circuit, the press
+// uses the one-arg startTouch:); moveTouch:/endTouch: (87w each) message
+// BOTH children.
+bool regenerateui_touch_is_in_view_at_all(Point p, const PanelFrame& f);
+PanelTrace regenerateui_touch_is_in_ui(const ChildReply* die,
+                                       const ChildReply* complete);
+PanelTrace regenerateui_start_touch(const ChildReply* die,
+                                    const ChildReply* complete);
+PanelTrace regenerateui_move_touch(const ChildReply* die,
+                                   const ChildReply* complete);
+PanelTrace regenerateui_end_touch(const ChildReply* die,
+                                  const ChildReply* complete);
+
 }  // namespace blockheads::ui

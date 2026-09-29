@@ -951,6 +951,35 @@ void wear_seeds_for(unsigned char* out, int case_id) {
     ui_put_word(out, 60, 0x60020600u);       // wearButton
 }
 
+// --- the RegenerateUI panel's differential inputs -------------------------
+constexpr unsigned REGEN_DB = 0x60020600u;
+constexpr unsigned REGEN_CB = 0x60020700u;
+
+blockheads::ui::Point regen_point(int case_id) {
+    switch (case_id) {
+        case 1: return {120.0f, 92.0f};
+        case 2: return {-120.0f, 92.0f};
+        case 3: return {0.0f, 0.0f};
+        case 4: return {0.0f, 184.0f};
+        case 5: return {119.0f, 183.0f};
+        default: return {0.0f, 92.0f};
+    }
+}
+
+const blockheads::ui::ChildReply* regen_child(int which, int slot,
+                                              int case_id) {
+    // 118/119: case 1 pins dieButton, case 2 pins completeButton
+    if ((which == 118 || which == 119) && case_id >= 1) {
+        if (slot == 0 && case_id == 1) {
+            return (which == 119) ? &kChildHandles : &kChildInUi;
+        }
+        if (slot == 1 && case_id == 2) {
+            return (which == 119) ? &kChildHandles : &kChildInUi;
+        }
+    }
+    return &kChildMiss;
+}
+
 const blockheads::ui::ChildReply* wear_child(int which, int case_id) {
     // 113/114: case 1 pins the child's reply
     if ((which == 113 || which == 114) && case_id == 1) {
@@ -1052,6 +1081,24 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // the constant-verdict panels: no calls (the literal verdicts)
     } else if (type_id >= 97 && type_id <= 101) {
         // the WorkbenchProgressBarUI panel: no calls (rect + constants)
+    } else if (type_id >= 117 && type_id <= 121) {
+        // the RegenerateUI panel: the two-button chains (117 no calls)
+        const auto* db = regen_child(type_id, 0, case_id);
+        const auto* cb = regen_child(type_id, 1, case_id);
+        blockheads::ui::PanelTrace t;
+        if (type_id == 118) {
+            t = blockheads::ui::regenerateui_touch_is_in_ui(db, cb);
+        } else if (type_id == 119) {
+            t = blockheads::ui::regenerateui_start_touch(db, cb);
+        } else if (type_id == 120) {
+            t = blockheads::ui::regenerateui_move_touch(db, cb);
+        } else if (type_id == 121) {
+            t = blockheads::ui::regenerateui_end_touch(db, cb);
+        }
+        for (const char* c : t.calls) {
+            if (!s.empty()) s += ',';
+            s += c;
+        }
     } else if (type_id >= 112 && type_id <= 116) {
         // the WearUI panel: the single-child chains (112 makes no calls)
         const auto* wb = wear_child(type_id, case_id);
@@ -1169,6 +1216,16 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         wpb_seeds_for(out, case_id);
+        return n;
+    }
+    if (type_id >= 117 && type_id <= 121) {  // RegenerateUI
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0u);             // window floats
+        ui_put_word(out, 12, 0u);            // (offsets 8/12)
+        ui_put_word(out, 96, 0x60001000u);
+        ui_put_word(out, 120, static_cast<unsigned>(REGEN_DB));
+        ui_put_word(out, 124, static_cast<unsigned>(REGEN_CB));
         return n;
     }
     if (type_id >= 112 && type_id <= 116) {  // WearUI
@@ -1312,6 +1369,21 @@ int recovered_ui_ret(int type_id, int case_id) {
             wear_child(114, case_id)).handled;
     }
     if (type_id == 115 || type_id == 116) return 0;  // void (not compared)
+    if (type_id == 117) {
+        return blockheads::ui::regenerateui_touch_is_in_view_at_all(
+            regen_point(case_id), {}) ? 1 : 0;
+    }
+    if (type_id == 118) {
+        return blockheads::ui::regenerateui_touch_is_in_ui(
+            regen_child(118, 0, case_id), regen_child(118, 1, case_id))
+            .handled;
+    }
+    if (type_id == 119) {
+        return blockheads::ui::regenerateui_start_touch(
+            regen_child(119, 0, case_id), regen_child(119, 1, case_id))
+            .handled;
+    }
+    if (type_id == 120 || type_id == 121) return 0;  // void (not compared)
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);

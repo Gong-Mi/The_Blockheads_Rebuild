@@ -129,6 +129,12 @@ ENTRIES = [
     ('WearUIPress', 114, 0x0088AAD8, 0x00000000, 93),
     ('WearUIMove', 115, 0x0088AC4C, 0x00000000, 68),
     ('WearUIEnd', 116, 0x0088AD5C, 0x00000000, 68),
+    # the RegenerateUI panel: a rect + the two-button chains
+    ('RegenerateUIRect', 117, 0x009D2E94, 0x00000000, 95),
+    ('RegenerateUIInUI', 118, 0x009D2CAC, 0x00000000, 122),
+    ('RegenerateUIPress', 119, 0x009D3010, 0x00000000, 127),
+    ('RegenerateUIMove', 120, 0x009D320C, 0x00000000, 87),
+    ('RegenerateUIEnd', 121, 0x009D3368, 0x00000000, 87),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -680,7 +686,7 @@ def main():
                                'CraftUI', 'DPad', 'BlockheadUI',
                                'MapUI', 'OptionsUI', 'ShareUI', 'PauseUI',
                                'MainMenuUI', 'WPBarUI', 'CameraUI',
-                               'PetUI', 'WearUI')):
+                               'PetUI', 'WearUI', 'RegenerateUI')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -932,6 +938,14 @@ def main():
     PET_NE = 0x60020600
 
     WEAR_WB = 0x60020600
+    REGEN_DB, REGEN_CB = 0x60020600, 0x60020700
+
+    def regen_seeds():
+        # RegenerateUI: windowInfo@96 = self_ptr; translationOffset at
+        # 128/132; dieButton@120; completeButton@124
+        return ('96=0x60001000,8=0,12=0,128=0,132=0,'
+                f'120=0x{REGEN_DB:08x},124=0x{REGEN_CB:08x}')
+
 
     def wear_seeds(w=200.0, h=100.0, wx=0.0, wy=0.0, ox=0.0, oy=0.0):
         # WearUI: windowInfo@144 = self_ptr; translationOffset at 152/156;
@@ -1335,6 +1349,41 @@ def main():
         'WearUIEnd': {
             0: ('50,50', wear_seeds(), {
                 'void': True, 'expect_recv': [WEAR_WB]})},
+        'RegenerateUIRect': {
+            # x in (-120, 120), y in (0, 184), all edges exclusive
+            0: ('0,92', regen_seeds(), {}),        # centre
+            1: ('120,92', regen_seeds(), {}),      # x == 120
+            2: ('-120,92', regen_seeds(), {}),     # x == -120
+            3: ('0,0', regen_seeds(), {}),         # y == 0
+            4: ('0,184', regen_seeds(), {}),       # y == 184
+            5: ('119,183', regen_seeds(), {}),     # inside margins
+        },
+        'RegenerateUIInUI': {
+            0: ('50,50', regen_seeds(), {
+                'expect_recv': [REGEN_DB, REGEN_CB]}),
+            1: ('50,50', regen_seeds(), {
+                'expect_recv': [REGEN_DB],
+                'ret1': {REGEN_DB: ['touchIsInUI:']}}),
+            2: ('50,50', regen_seeds(), {
+                'expect_recv': [REGEN_DB, REGEN_CB],
+                'ret1': {REGEN_CB: ['touchIsInUI:']}}),
+        },
+        'RegenerateUIPress': {
+            0: ('50,50', regen_seeds(), {
+                'expect_recv': [REGEN_DB, REGEN_CB]}),
+            1: ('50,50', regen_seeds(), {
+                'expect_recv': [REGEN_DB],
+                'ret1': {REGEN_DB: ['startTouch:']}}),
+            2: ('50,50', regen_seeds(), {
+                'expect_recv': [REGEN_DB, REGEN_CB],
+                'ret1': {REGEN_CB: ['startTouch:']}}),
+        },
+        'RegenerateUIMove': {
+            0: ('50,50', regen_seeds(), {
+                'void': True, 'expect_recv': [REGEN_DB, REGEN_CB]})},
+        'RegenerateUIEnd': {
+            0: ('50,50', regen_seeds(), {
+                'void': True, 'expect_recv': [REGEN_DB, REGEN_CB]})},
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.

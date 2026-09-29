@@ -247,6 +247,17 @@ in that order. 10 cases (the const-1 far-point control, both children alone
 + all-miss per chain, the void orders receiver-verified) execute under
 Unicorn.
 
+## The RegenerateUI panel (types 117..121) — decoded
+
+`disasm_regenerateui_touch.txt` (518w): `touchIsInViewAtAll:` (95w) — local
+= point - windowInfo(+8/+0xc) - translationOffset(@128); x in (-120, 120),
+y in (0, 184), all edges exclusive. `touchIsInUI:` (122w) /
+`startTouch:tapCount:` (127w) are the two-child OR in the order
+`dieButton@120`, `completeButton@124` (short-circuit: a miss on die falls
+through to complete; the press uses the one-arg `startTouch:`);
+`moveTouch:` / `endTouch:` (87w each) message BOTH children. 14 cases
+execute under Unicorn.
+
 ## The WearUI panel (types 112..116) — decoded
 
 `disasm_wearui_touch.txt` (416w): `touchIsInViewAtAll:` (118w) — local =
