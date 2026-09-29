@@ -276,4 +276,29 @@ bool dpad_touch_is_in_view_at_all(Point p, const DPadFrame& f) {
 
 bool dpad_touch_is_in_ui(bool in_view_at_all) { return in_view_at_all; }
 
+// --- the BlockheadUI panel ------------------------------------------------
+
+bool blockheadui_touch_is_in_view_at_all(Point p, const BlockheadFrame& f) {
+    const float x = p.x - f.window_x - f.offset_x;
+    const float y = p.y - f.window_y - f.offset_y;
+    return x > -120.0f && x < 120.0f && y > -144.0f && y < 142.0f;
+}
+
+PanelTrace blockheadui_touch_is_in_ui(const BlockheadChildren& c, Point p) {
+    (void)p;  // the local point feeds the children; their replies stand in
+    PanelTrace t;
+    bool any = child_in_ui(c.workbench, t);
+    if (!any) any = child_in_ui(c.name_edit, t);
+    if (c.stop_displayed) {
+        // the stopButtonDisplayed@76 regime: the chain ends at stopButton
+        if (!any) any = child_in_ui(c.stop, t);
+        t.handled = any ? 1 : 0;
+        return t;
+    }
+    if (!any) any = child_in_ui(c.sleep, t);
+    if (!any) any = child_in_ui(c.meditate, t);
+    t.handled = any ? 1 : 0;
+    return t;
+}
+
 }  // namespace blockheads::ui

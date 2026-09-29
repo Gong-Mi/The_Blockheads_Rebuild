@@ -85,6 +85,10 @@ ENTRIES = [
     # with its 0x0070591C rotation helper inside the span)
     ('DPadInUI', 78, 0x0070561C, 0x00000000, 24),
     ('DPadRect', 79, 0x0070567C, 0x00000000, 232),
+    # the BlockheadUI panel: the own-rect test + the stopButtonDisplayed@76
+    # gated children OR
+    ('BlockheadUIRect', 80, 0x006FD188, 0x00000000, 99),
+    ('BlockheadUIInUI', 81, 0x006FD314, 0x00000000, 226),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -633,7 +637,7 @@ def main():
         # frame, and the CraftUI fixture reads its window floats back from
         # @8/+0xc — real state the differential must compare.
         if not cls.startswith(('MJView', 'MJControl', 'UIManager',
-                               'CraftUI', 'DPad')):
+                               'CraftUI', 'DPad', 'BlockheadUI')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -854,6 +858,22 @@ def main():
         return (f'112=0x60001000,8={fb(wx8)},12={fb(wy)},16={fb(w10)},'
                 f'20={fb(w14)},28={fb(w1c)},160={1 if rs else 0}')
 
+    def blockhead_frame(wx, wy, ox, oy):
+        # the BlockheadUI fixture: windowInfo = self_ptr; translationOffset
+        # is the float pair at 184/188
+        return (f'176=0x60001000,8={fb(wx)},12={fb(wy)},'
+                f'184={fb(ox)},188={fb(oy)}')
+
+    BH_WB, BH_NE = 0x60020600, 0x60020700
+    BH_STOP, BH_SLEEP, BH_MED = 0x60020800, 0x60020900, 0x60020A00
+
+    def bh_seeds(sd):
+        # the BlockheadUI children fixture: stopButtonDisplayed@76 and the
+        # five child pointers at 80/96/92/84/88
+        return (f'176=0x60001000,76={1 if sd else 0},'
+                f'80=0x{BH_WB:08x},96=0x{BH_NE:08x},92=0x{BH_STOP:08x},'
+                f'84=0x{BH_SLEEP:08x},88=0x{BH_MED:08x}')
+
     UI_CASES = {
         'MJControl': {
             0: ('50,50',
@@ -1016,6 +1036,45 @@ def main():
             7: ('-50.0,120.0', dpad_frame(1, 50, 7, 0, 30, 0), {}),  # mirrored
             8: ('-4.038055419921875,194.2462158203125',
                 dpad_frame(1, 50, 7, 0, 30, 0), {}),               # rx=+85
+        },
+        'BlockheadUIRect': {
+            # touchIsInViewAtAll: — x in (-120, 120), y in (-144, 142), all
+            # edges exclusive; 5/6/7 distinguish the offset/window terms
+            0: ('0.0,0.0', blockhead_frame(0, 0, 0, 0), {}),        # centre
+            1: ('120.0,0.0', blockhead_frame(0, 0, 0, 0), {}),      # x == 120
+            2: ('-120.0,0.0', blockhead_frame(0, 0, 0, 0), {}),     # x == -120
+            3: ('0.0,-144.0', blockhead_frame(0, 0, 0, 0), {}),     # y == -144
+            4: ('0.0,142.0', blockhead_frame(0, 0, 0, 0), {}),      # y == 142
+            5: ('122.0,0.0', blockhead_frame(0, 0, 5, 0), {}),      # x=117 (in)
+            6: ('137.0,0.0', blockhead_frame(20, 0, 0, 0), {}),     # x=117 (in)
+            7: ('0.0,159.0', blockhead_frame(0, 20, 0, 0), {}),     # y=139 (in)
+        },
+        'BlockheadUIInUI': {
+            # touchIsInUI: — the children OR + the stopButtonDisplayed@76
+            # regime (a set gate ends the chain at stopButton); expect_recv
+            # pins each case's receiver order
+            0: ('50,50', bh_seeds(0), {
+                'expect_recv': [BH_WB, BH_NE, BH_SLEEP, BH_MED]}),
+            1: ('50,50', bh_seeds(0), {
+                'expect_recv': [BH_WB],
+                'ret1': {BH_WB: ['touchIsInUI:']}}),
+            2: ('50,50', bh_seeds(0), {
+                'expect_recv': [BH_WB, BH_NE],
+                'ret1': {BH_NE: ['touchIsInUI:']}}),
+            3: ('50,50', bh_seeds(1), {
+                'expect_recv': [BH_WB, BH_NE, BH_STOP],
+                'ret1': {BH_STOP: ['touchIsInUI:']}}),
+            4: ('50,50', bh_seeds(1), {
+                'expect_recv': [BH_WB, BH_NE, BH_STOP]}),  # gate: no sleep/med
+            5: ('50,50', bh_seeds(1), {
+                'expect_recv': [BH_WB],
+                'ret1': {BH_WB: ['touchIsInUI:']}}),
+            6: ('50,50', bh_seeds(0), {
+                'expect_recv': [BH_WB, BH_NE, BH_SLEEP],
+                'ret1': {BH_SLEEP: ['touchIsInUI:']}}),
+            7: ('50,50', bh_seeds(0), {
+                'expect_recv': [BH_WB, BH_NE, BH_SLEEP, BH_MED],
+                'ret1': {BH_MED: ['touchIsInUI:']}}),
         },
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view

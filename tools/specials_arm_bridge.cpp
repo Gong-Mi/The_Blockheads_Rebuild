@@ -751,6 +751,61 @@ void dpad_seeds(unsigned char* out, int case_id) {
     ui_put_word(out, 28, float_bits(f.w1c));
     ui_put_word(out, 160, f.right_side ? 1u : 0u);
 }
+
+// --- the BlockheadUI panel's differential inputs --------------------------
+// The seeds mirror the harness's blockhead_frame / bh_seeds fixtures.
+blockheads::ui::BlockheadFrame blockhead_frame_for(int case_id) {
+    switch (case_id) {
+        case 5: return {0.0f, 0.0f, 5.0f, 0.0f};
+        case 6: return {20.0f, 0.0f, 0.0f, 0.0f};
+        case 7: return {0.0f, 20.0f, 0.0f, 0.0f};
+        default: return {};
+    }
+}
+
+blockheads::ui::Point blockhead_point_for(int case_id) {
+    switch (case_id) {
+        case 1: return {120.0f, 0.0f};
+        case 2: return {-120.0f, 0.0f};
+        case 3: return {0.0f, -144.0f};
+        case 4: return {0.0f, 142.0f};
+        case 5: return {122.0f, 0.0f};
+        case 6: return {137.0f, 0.0f};
+        case 7: return {0.0f, 159.0f};
+        default: return {0.0f, 0.0f};
+    }
+}
+
+void blockhead_seeds(unsigned char* out, int which, int case_id) {
+    ui_put_word(out, 176, 0x60001000u);      // windowInfo = self_ptr
+    if (which == 80) {
+        const auto f = blockhead_frame_for(case_id);
+        ui_put_word(out, 8, float_bits(f.window_x));
+        ui_put_word(out, 12, float_bits(f.window_y));
+        ui_put_word(out, 184, float_bits(f.offset_x));
+        ui_put_word(out, 188, float_bits(f.offset_y));
+        return;
+    }
+    // 81: stopButtonDisplayed@76 + the five child pointers
+    const bool sd = (case_id == 3 || case_id == 4 || case_id == 5);
+    ui_put_word(out, 76, sd ? 1u : 0u);
+    ui_put_word(out, 80, 0x60020600u);   // getWorkbenchButton
+    ui_put_word(out, 96, 0x60020700u);   // nameEditButton
+    ui_put_word(out, 92, 0x60020800u);   // stopButton
+    ui_put_word(out, 84, 0x60020900u);   // sleepButton
+    ui_put_word(out, 88, 0x60020A00u);   // meditateButton
+}
+
+blockheads::ui::BlockheadChildren blockhead_children_for(int case_id) {
+    blockheads::ui::BlockheadChildren c;
+    c.stop_displayed = (case_id == 3 || case_id == 4 || case_id == 5);
+    if (case_id == 1 || case_id == 5) c.workbench = &kChildInUi;
+    if (case_id == 2) c.name_edit = &kChildInUi;
+    if (case_id == 3) c.stop = &kChildInUi;
+    if (case_id == 6) c.sleep = &kChildInUi;
+    if (case_id == 7) c.meditate = &kChildInUi;
+    return c;
+}
 }  // namespace
 
 extern "C" {
@@ -795,6 +850,17 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // DPad -touchIsInViewAtAll: — the rotation's two PLT calls (the
         // rest of the body is direct .text helpers, not recorded)
         s = "import(sinf),import(cosf)";
+    } else if (type_id == 80) {
+        // BlockheadUI -touchIsInViewAtAll: — no calls (the rect test)
+    } else if (type_id == 81) {
+        // BlockheadUI -touchIsInUI: — the children OR (the trace's labels)
+        const auto t = blockheads::ui::blockheadui_touch_is_in_ui(
+            blockhead_children_for(case_id),
+            blockheads::ui::Point{50.0f, 50.0f});
+        for (const char* c : t.calls) {
+            if (!s.empty()) s += ',';
+            s += c;
+        }
     } else if (type_id == 71) {  // MJView -touchIsInUI: — the GATE cases
         // The frame test's coordinate space is still being decoded; the
         // gates are verified: hidden@4 short-circuits first, then
@@ -839,6 +905,13 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         if (type_id == 79) dpad_seeds(out, case_id);
+        return n;
+    }
+    if (type_id == 80 || type_id == 81) {  // BlockheadUI: the base slots +
+        std::memset(out, 0, static_cast<std::size_t>(n));  // the fixture
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0x60000200u);
+        blockhead_seeds(out, type_id, case_id);
         return n;
     }
     if (type_id == 71) {  // MJView: the gate cases write nothing
@@ -897,6 +970,16 @@ int recovered_ui_ret(int type_id, int case_id) {
     if (type_id == 79) {
         return blockheads::ui::dpad_touch_is_in_view_at_all(
             dpad_point_for(case_id), dpad_frame_for(case_id)) ? 1 : 0;
+    }
+    if (type_id == 80) {
+        return blockheads::ui::blockheadui_touch_is_in_view_at_all(
+            blockhead_point_for(case_id),
+            blockhead_frame_for(case_id)) ? 1 : 0;
+    }
+    if (type_id == 81) {
+        return blockheads::ui::blockheadui_touch_is_in_ui(
+            blockhead_children_for(case_id),
+            blockheads::ui::Point{50.0f, 50.0f}).handled;
     }
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;

@@ -182,4 +182,34 @@ bool dpad_touch_is_in_view_at_all(Point p, const DPadFrame& f);
 // The forward: the reply of [self touchIsInViewAtAll:point] (sxtb'd).
 bool dpad_touch_is_in_ui(bool in_view_at_all);
 
+// --- the BlockheadUI panel (the third subclass) --------------------------
+// BlockheadUI -touchIsInViewAtAll: (0x006FD188..0x006FD2F8, 99w): the
+// own-rect test — local = point - windowInfo(+8/+0xc) - translationOffset
+// (the float pair at 184/188), x in (-120, 120), y in (-144, 142), every
+// edge exclusive.
+struct BlockheadFrame {
+    float window_x = 0.0f;  // windowInfo[+8]
+    float window_y = 0.0f;  // windowInfo[+0xc]
+    float offset_x = 0.0f;  // translationOffset[0] (@184)
+    float offset_y = 0.0f;  // translationOffset[1] (@188)
+};
+
+bool blockheadui_touch_is_in_view_at_all(Point p, const BlockheadFrame& f);
+
+// BlockheadUI -touchIsInUI: (0x006FD314..0x006FD69C, 226w): the children's
+// OR in the decoded order — getWorkbenchButton@80, nameEditButton@96, then
+// sleepButton@84, meditateButton@88 — EXCEPT that a set
+// stopButtonDisplayed@76 routes to stopButton@92 and RETURNS right after it
+// (sleepButton/meditateButton are never tried in that regime).
+struct BlockheadChildren {
+    const ChildReply* workbench = nullptr;  // getWorkbenchButton @80
+    const ChildReply* name_edit = nullptr;  // nameEditButton @96
+    const ChildReply* stop = nullptr;       // stopButton @92
+    const ChildReply* sleep = nullptr;      // sleepButton @84
+    const ChildReply* meditate = nullptr;   // meditateButton @88
+    bool stop_displayed = false;            // stopButtonDisplayed@76
+};
+
+PanelTrace blockheadui_touch_is_in_ui(const BlockheadChildren& c, Point p);
+
 }  // namespace blockheads::ui

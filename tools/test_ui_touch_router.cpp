@@ -371,7 +371,52 @@ int main() {
         assert(dpad_touch_is_in_ui(true));
     }
 
+    // --- the BlockheadUI panel -------------------------------------------
+    // The differential rows' points/expectations (BlockheadUIRect /
+    // BlockheadUIInUI): the rect is x in (-120,120), y in (-144,142); the
+    // children OR ends at stopButton when stopButtonDisplayed@76 is set.
+    {
+        const BlockheadFrame origin{};
+        assert(blockheadui_touch_is_in_view_at_all({0, 0}, origin));
+        assert(!blockheadui_touch_is_in_view_at_all({120, 0}, origin));
+        assert(!blockheadui_touch_is_in_view_at_all({-120, 0}, origin));
+        assert(!blockheadui_touch_is_in_view_at_all({0, -144}, origin));
+        assert(!blockheadui_touch_is_in_view_at_all({0, 142}, origin));
+        const BlockheadFrame off{0, 0, 5, 0};
+        assert(blockheadui_touch_is_in_view_at_all({122, 0}, off));
+        const BlockheadFrame wx{20, 0, 0, 0};
+        assert(blockheadui_touch_is_in_view_at_all({137, 0}, wx));
+        const BlockheadFrame wy{0, 20, 0, 0};
+        assert(blockheadui_touch_is_in_view_at_all({0, 159}, wy));
+
+        const ChildReply in_ui{true, false};
+        // case 0: all miss, the gate clear -> all four children
+        BlockheadChildren c;
+        auto t = blockheadui_touch_is_in_ui(c, {50, 50});
+        assert(join_trace(t.calls)
+               == "touchIsInUI:,touchIsInUI:,touchIsInUI:,touchIsInUI:");
+        assert(t.handled == 0);
+        // case 4: the gate set, all miss -> the chain ends at stopButton
+        c.stop_displayed = true;
+        t = blockheadui_touch_is_in_ui(c, {50, 50});
+        assert(join_trace(t.calls) == "touchIsInUI:,touchIsInUI:,touchIsInUI:");
+        assert(t.handled == 0);
+        // case 5: the workbench answers, the gate set -> one call
+        BlockheadChildren c5;
+        c5.stop_displayed = true;
+        c5.workbench = &in_ui;
+        t = blockheadui_touch_is_in_ui(c5, {50, 50});
+        assert(join_trace(t.calls) == "touchIsInUI:");
+        assert(t.handled == 1);
+        // case 6: the sleep button answers with the gate clear
+        BlockheadChildren c6;
+        c6.sleep = &in_ui;
+        t = blockheadui_touch_is_in_ui(c6, {50, 50});
+        assert(join_trace(t.calls) == "touchIsInUI:,touchIsInUI:,touchIsInUI:");
+        assert(t.handled == 1);
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
-                " block chain x19, craftui x16, dpad x11)\n");
+                " block chain x19, craftui x16, dpad x11, blockhead x16)\n");
     return 0;
 }

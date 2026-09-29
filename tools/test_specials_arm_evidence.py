@@ -105,25 +105,33 @@ def main() -> int:
         "('DPadRect', 79, 0x0070567C",
         "def dpad_frame(rs, wx8, wy, w10, w14, w1c):",
         "elif name in ('sinf', 'cosf'):",
+        # the BlockheadUI panel: the rect + the gated children OR
+        "('BlockheadUIRect', 80, 0x006FD188",
+        "('BlockheadUIInUI', 81, 0x006FD314",
+        "def blockhead_frame(wx, wy, ox, oy):",
+        "def bh_seeds(sd):",
+        "gate: no sleep/med",
     ])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_uimanager_starttouch.txt",
             ["startTouch:tapCount:index:"])
     require(ROOT / "reconstruction/reverse-v3/native/INPUT_FRONT.md",
             ["tcUI@32", "currentTouchIsInAnyButtons@154", "hidePauseUI@148",
              "run_ui_router", "19 cases", "children's OR ONLY",
-             "CB, CS, SB", "rotated-diamond hit test", "0xBF490FDB"])
+             "CB, CS, SB", "rotated-diamond hit test", "0xBF490FDB",
+             "stopButtonDisplayed@76"])
     require(ROOT / "reconstruction/recovered/ui_touch_router.h",
             ["run_ui_router", "RouterInputs", "RouterTrace",
              "current_touch_is_in_any_buttons", "hide_pause_ui",
              "craftui_touch_is_in_view_at_all", "craftui_move_touch",
-             "dpad_touch_is_in_view_at_all", "DPadFrame"])
+             "dpad_touch_is_in_view_at_all", "DPadFrame",
+             "blockheadui_touch_is_in_view_at_all", "BlockheadChildren"])
     require(ROOT / "reconstruction/recovered/ui_touch_router.cpp",
             ["startTouch:tapCount:paused:index:", "import(memset)",
              "touchIsInViewAtAll:", "x > -130.0f && x < 130.0f",
-             "0xBF490FDBu"])
+             "0xBF490FDBu", "y > -144.0f && y < 142.0f"])
     require(ROOT / "tools/test_ui_touch_router.cpp",
             ["block chain x19", "touchIsInViewAtAll:", "craftui x16",
-             "dpad x11"])
+             "dpad x11", "blockhead x16"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_dpad_touch.txt",
             ["touchIsInViewAtAll:",
              "OBJC_IVAR_$_DPad.rightSide (slot 0x0105d31c) = 160",
@@ -160,7 +168,8 @@ def main() -> int:
              "ui_touch_router.h", "run_ui_router", "ui_router_case",
              "ui_router_seeds", "ui_router_seeds(out, case_id)",
              "craftui_trace", "craftui_seeds", "craftui_child",
-             "dpad_point_for", "dpad_seeds", "dpad_touch_is_in_view_at_all"])
+             "dpad_point_for", "dpad_seeds", "dpad_touch_is_in_view_at_all",
+             "blockhead_seeds", "blockhead_children_for"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_gameuiview_all.txt",
             ["OBJC_IVAR_$_GameUIView.displayed (slot 0x0105dee0) = 4",
              "OBJC_IVAR_$_GameUIView.resourcesLoaded (slot 0x0105c494) = 16"])
@@ -197,11 +206,12 @@ def main() -> int:
             print(proc.stdout)
             print(proc.stderr)
             return 1
-        # the run's own report pins the case totals: 35 modelled + 53 UI
-        # rows (router 19 + CraftUI 16 + DPad 11 + MJControl 3 + MJView 4)
+        # the run's own report pins the case totals: 35 modelled + 69 UI
+        # rows (router 19 + CraftUI 16 + DPad 11 + BlockheadUI 16 +
+        # MJControl 3 + MJView 4)
         import json
         report = json.loads((out / "specials-arm-result.json").read_text())
-        assert report["cases"] == 88, report["cases"]
+        assert report["cases"] == 104, report["cases"]
         assert report["match"] is True
         ui_rows = [r for r in report["rows"] if r["class"] == "UIManager"]
         assert len(ui_rows) == 19, len(ui_rows)
@@ -213,8 +223,12 @@ def main() -> int:
         dpad_rows = [r for r in report["rows"]
                      if r["class"].startswith("DPad")]
         assert len(dpad_rows) == 11, len(dpad_rows)
+        blockhead_rows = [r for r in report["rows"]
+                          if r["class"].startswith("BlockheadUI")]
+        assert len(blockhead_rows) == 16, len(blockhead_rows)
         print("specials-arm: PASS (differential executed, modelled cases "
-              "match; router 19/19, craftui 16/16, dpad 11/11)")
+              "match; router 19/19, craftui 16/16, dpad 11/11, "
+              "blockhead 16/16)")
         return 0
 
     print("specials-arm: PASS (constants; run with --elf to execute)")
