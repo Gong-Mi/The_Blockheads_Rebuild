@@ -74,6 +74,13 @@ ENTRIES = [
     # chain, run_ui_router in ui_touch_router.h; the UI_CASES fixture drives
     # it — dump mode still records it leniently)
     ('UIManager', 72, 0x00AD7748, 0x00000000, 576),
+    # the first subclass overrides: CraftUI's five touch methods (the panel
+    # shape — the own-rect test + the children-delegation orders)
+    ('CraftUIRect', 73, 0x00B80EB4, 0x00000000, 95),
+    ('CraftUIInUI', 74, 0x00B81030, 0x00000000, 134),
+    ('CraftUIPress', 75, 0x00B81248, 0x00000000, 137),
+    ('CraftUIMove', 76, 0x00B8146C, 0x00000000, 103),
+    ('CraftUIEnd', 77, 0x00B81608, 0x00000000, 103),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -603,9 +610,11 @@ def main():
         image = bytearray(uc.mem_read(self_ptr, IMAGE_SIZE))
         # The DynamicObject entries carry the stubbed super's base slots at
         # 4..11 (world@4 / dynamicWorld@8) — stub artifacts, normalized away.
-        # The UI entries keep those offsets: @4 is MJView.hidden and @8 is
-        # the frame, real state the differential must compare.
-        if cls not in ('MJView', 'MJControl', 'UIManager'):
+        # The UI entries keep those offsets: @4 is MJView.hidden, @8 the
+        # frame, and the CraftUI fixture reads its window floats back from
+        # @8/+0xc — real state the differential must compare.
+        if not cls.startswith(('MJView', 'MJControl', 'UIManager',
+                               'CraftUI')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -806,6 +815,20 @@ def main():
     # The seeds mirror the harness's --seed runs the model was built from;
     # the labels are compared with the (recv=0x…) decorations stripped (those
     # are stub artifacts, not semantics).
+    def fb(v):
+        # the float's raw bits (seeds are word writes)
+        return f'0x{struct.unpack("<I", struct.pack("<f", v))[0]:08x}'
+
+    def frame(wx, wy, ox, oy):
+        # the CraftUI fixture: windowInfo = self_ptr (its +8/+0xc words read
+        # back as the window floats); translationOffset = the 212/216 floats
+        return (f'128=0x60001000,8={fb(wx)},12={fb(wy)},'
+                f'212={fb(ox)},216={fb(oy)}')
+
+    CHILD_SB, CHILD_CB, CHILD_CS = 0x60020600, 0x60020700, 0x60020800
+    CHILD_SEEDS = (f'148=0x{CHILD_SB:08x},208=0x{CHILD_CB:08x},'
+                   f'164=0x{CHILD_CS:08x}')
+
     UI_CASES = {
         'MJControl': {
             0: ('50,50',
@@ -890,6 +913,56 @@ def main():
                            0x60020700: ['displayed',
                                         'startTouch:tapCount:']}}),
         },
+        'CraftUIRect': {
+            # touchIsInViewAtAll: — the own-rect test, EVERY edge exclusive
+            0: ('50,50', frame(0, 0, 0, 0), {}),        # inside
+            1: ('200,50', frame(0, 0, 0, 0), {}),       # x >= 130
+            2: ('-130,50', frame(0, 0, 0, 0), {}),      # x == -130
+            3: ('50,0', frame(0, 0, 0, 0), {}),         # y == 0
+            4: ('50,302', frame(0, 0, 0, 0), {}),       # y == 302
+            5: ('150,90', frame(100, 60, 30, 20), {}),  # local (20, 10)
+        },
+        'CraftUIInUI': {
+            # touchIsInUI: — children OR, first nonzero wins (no own rect);
+            # expect_recv pins the SB, CB, CS receiver order
+            0: ('50,50', f'{frame(0, 0, 0, 0)},{CHILD_SEEDS}',
+                {'expect_recv': [CHILD_SB, CHILD_CB, CHILD_CS]}),
+            1: ('50,50', f'{frame(0, 0, 0, 0)},{CHILD_SEEDS}',
+                {'expect_recv': [CHILD_SB],
+                 'ret1': {CHILD_SB: ['touchIsInUI:']}}),
+            2: ('50,50', f'{frame(0, 0, 0, 0)},{CHILD_SEEDS}',
+                {'expect_recv': [CHILD_SB, CHILD_CB],
+                 'ret1': {CHILD_CB: ['touchIsInUI:']}}),
+            3: ('50,50', f'{frame(0, 0, 0, 0)},{CHILD_SEEDS}',
+                {'expect_recv': [CHILD_SB, CHILD_CB, CHILD_CS],
+                 'ret1': {CHILD_CS: ['touchIsInUI:']}}),
+        },
+        'CraftUIPress': {
+            # startTouch:tapCount: — children startTouch:, same order
+            0: ('50,50', f'{frame(0, 0, 0, 0)},{CHILD_SEEDS}',
+                {'expect_recv': [CHILD_SB, CHILD_CB, CHILD_CS]}),
+            1: ('50,50', f'{frame(0, 0, 0, 0)},{CHILD_SEEDS}',
+                {'expect_recv': [CHILD_SB],
+                 'ret1': {CHILD_SB: ['startTouch:']}}),
+            2: ('50,50', f'{frame(0, 0, 0, 0)},{CHILD_SEEDS}',
+                {'expect_recv': [CHILD_SB, CHILD_CB],
+                 'ret1': {CHILD_CB: ['startTouch:']}}),
+            3: ('50,50', f'{frame(0, 0, 0, 0)},{CHILD_SEEDS}',
+                {'expect_recv': [CHILD_SB, CHILD_CB, CHILD_CS],
+                 'ret1': {CHILD_CS: ['startTouch:']}}),
+        },
+        'CraftUIMove': {
+            # moveTouch: — ALL THREE children, CB, CS, SB order; void
+            0: ('50,50', f'{frame(0, 0, 0, 0)},{CHILD_SEEDS}',
+                {'void': True,
+                 'expect_recv': [CHILD_CB, CHILD_CS, CHILD_SB]}),
+        },
+        'CraftUIEnd': {
+            # endTouch: — ALL THREE children, CB, CS, SB order; void
+            0: ('50,50', f'{frame(0, 0, 0, 0)},{CHILD_SEEDS}',
+                {'void': True,
+                 'expect_recv': [CHILD_CB, CHILD_CS, CHILD_SB]}),
+        },
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.
@@ -919,13 +992,25 @@ def main():
             ctx['ui_fixture'] = fixture
             ret, calls, image = arm_run(entry, case_id)
             arm_seq = ','.join(re.sub(r'\(recv=[^)]*\)', '', c) for c in calls)
+            expect_recv = fixture.get('expect_recv')
+            if expect_recv is not None:
+                # the delegation-order proof: the receivers the ARM actually
+                # messaged, in order (the stripped labels cannot distinguish
+                # same-selector calls)
+                got_recv = [int(re.search(r'\(recv=0x([0-9a-f]+)\)', c)
+                                .group(1), 16) for c in calls]
+                assert got_recv == expect_recv, (cls, case_id, calls)
             for opt in (0, 2):
                 ui_seq_fn, ui_img_fn, ui_ret_fn = bridges[opt][4:]
                 expected_seq = ui_seq_fn(type_id, case_id).decode()
                 assert arm_seq == expected_seq, \
                     (cls, case_id, opt, arm_seq, expected_seq)
                 expected_ret = ui_ret_fn(type_id, case_id)
-                assert ret == expected_ret, (cls, case_id, opt, hex(ret))
+                if not fixture.get('void'):
+                    # void methods (moveTouch:/endTouch:) leave r0 at the
+                    # fixture's last stub answer — not semantics, so it is
+                    # recorded but not compared.
+                    assert ret == expected_ret, (cls, case_id, opt, hex(ret))
                 buf = ctypes.create_string_buffer(IMAGE_SIZE)
                 assert ui_img_fn(type_id, case_id, TOKEN_BASE, buf,
                                  IMAGE_SIZE) == IMAGE_SIZE

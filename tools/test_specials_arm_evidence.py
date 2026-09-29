@@ -91,20 +91,30 @@ def main() -> int:
         "startTouch:tapCount:paused:index:']}}",  # case 16's paused answer
         "touchIsInViewAtAll:']}}",                # case 14/18's in-view answer
         "hidePauseUI@148 set: the pauseUI block returns 1, no call",
+        # the CraftUI panel: the five entries + the order proof
+        "('CraftUIRect', 73, 0x00B80EB4",
+        "('CraftUIInUI', 74, 0x00B81030",
+        "('CraftUIPress', 75, 0x00B81248",
+        "('CraftUIMove', 76, 0x00B8146C",
+        "('CraftUIEnd', 77, 0x00B81608",
+        "expect_recv", "CHILD_SB, CHILD_CB, CHILD_CS",
+        "CHILD_CB, CHILD_CS, CHILD_SB",
     ])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_uimanager_starttouch.txt",
             ["startTouch:tapCount:index:"])
     require(ROOT / "reconstruction/reverse-v3/native/INPUT_FRONT.md",
             ["tcUI@32", "currentTouchIsInAnyButtons@154", "hidePauseUI@148",
-             "run_ui_router", "19 cases"])
+             "run_ui_router", "19 cases", "children's OR ONLY",
+             "CB, CS, SB"])
     require(ROOT / "reconstruction/recovered/ui_touch_router.h",
             ["run_ui_router", "RouterInputs", "RouterTrace",
-             "current_touch_is_in_any_buttons", "hide_pause_ui"])
+             "current_touch_is_in_any_buttons", "hide_pause_ui",
+             "craftui_touch_is_in_view_at_all", "craftui_move_touch"])
     require(ROOT / "reconstruction/recovered/ui_touch_router.cpp",
             ["startTouch:tapCount:paused:index:", "import(memset)",
-             "touchIsInViewAtAll:"])
+             "touchIsInViewAtAll:", "x > -130.0f && x < 130.0f"])
     require(ROOT / "tools/test_ui_touch_router.cpp",
-            ["block chain x19", "touchIsInViewAtAll:"])
+            ["block chain x19", "touchIsInViewAtAll:", "craftui x16"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_dpad_touch.txt",
             ["touchIsInViewAtAll:",
              "OBJC_IVAR_$_DPad.rightSide (slot 0x0105d31c) = 160",
@@ -127,7 +137,8 @@ def main() -> int:
     require(ROOT / "tools/specials_arm_bridge.cpp",
             ["recovered_ui_seq", "recovered_ui_ret", "ui_control.h",
              "ui_touch_router.h", "run_ui_router", "ui_router_case",
-             "ui_router_seeds", "ui_router_seeds(out, case_id)"])
+             "ui_router_seeds", "ui_router_seeds(out, case_id)",
+             "craftui_trace", "craftui_seeds", "craftui_child"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_gameuiview_all.txt",
             ["OBJC_IVAR_$_GameUIView.displayed (slot 0x0105dee0) = 4",
              "OBJC_IVAR_$_GameUIView.resourcesLoaded (slot 0x0105c494) = 16"])
@@ -164,18 +175,21 @@ def main() -> int:
             print(proc.stdout)
             print(proc.stderr)
             return 1
-        # the run's own report pins the case totals: 35 modelled + 26 UI
-        # rows, of which the router's full block chain is 19 cases
+        # the run's own report pins the case totals: 35 modelled + 42 UI
+        # rows (router 19 + CraftUI 16 + MJControl 3 + MJView 4)
         import json
         report = json.loads((out / "specials-arm-result.json").read_text())
-        assert report["cases"] == 61, report["cases"]
+        assert report["cases"] == 77, report["cases"]
         assert report["match"] is True
         ui_rows = [r for r in report["rows"] if r["class"] == "UIManager"]
         assert len(ui_rows) == 19, len(ui_rows)
         assert {f'0x{r["arm_return"][-1]}' for r in ui_rows
                 if r["case"] in (7, 8, 10, 11, 13, 16, 17)} == {'0x1'}
+        craftui_rows = [r for r in report["rows"]
+                        if r["class"].startswith("CraftUI")]
+        assert len(craftui_rows) == 16, len(craftui_rows)
         print("specials-arm: PASS (differential executed, modelled cases "
-              "match; router 19/19)")
+              "match; router 19/19, craftui 16/16)")
         return 0
 
     print("specials-arm: PASS (constants; run with --elf to execute)")

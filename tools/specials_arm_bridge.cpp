@@ -642,6 +642,78 @@ void ui_router_seeds(unsigned char* out, int case_id) {
                  ui_put_word(out, 20, 0x60020000u); break;
     }
 }
+
+// --- the CraftUI panel's differential inputs ------------------------------
+// The seeds mirror the harness's frame() fixture: windowInfo = self_ptr
+// (0x60001000) so the words at +8/+0xc read back as the window floats, and
+// translationOffset = the floats at 212/216; the three child pointers sit at
+// 148/208/164 (scrollingButtons / craftButton / countSlider). The children's
+// replies are the fixture's, like every Receiver reply.
+const blockheads::ui::ChildReply kChildMiss{};
+const blockheads::ui::ChildReply kChildInUi{true, false};
+const blockheads::ui::ChildReply kChildHandles{false, true};
+
+std::uint32_t float_bits(float v) {
+    std::uint32_t bits = 0;
+    std::memcpy(&bits, &v, sizeof(bits));
+    return bits;
+}
+
+blockheads::ui::Point craftui_point(int case_id) {
+    switch (case_id) {   // the CraftUIRect cases' points
+        case 1: return {200.0f, 50.0f};
+        case 2: return {-130.0f, 50.0f};
+        case 3: return {50.0f, 0.0f};
+        case 4: return {50.0f, 302.0f};
+        case 5: return {150.0f, 90.0f};
+        default: return {50.0f, 50.0f};
+    }
+}
+
+blockheads::ui::PanelFrame craftui_frame(int case_id) {
+    if (case_id == 5) {   // window (100,60), offset (30,20) -> local (20,10)
+        return {100.0f, 60.0f, 30.0f, 20.0f};
+    }
+    return {};
+}
+
+const blockheads::ui::ChildReply* craftui_child(int which, int slot,
+                                                int case_id) {
+    // slot 0/1/2 = scrollingButtons / craftButton / countSlider; the cases
+    // 1/2/3 pin that child's reply to 1
+    if (which == 74) return (case_id == slot + 1) ? &kChildInUi : &kChildMiss;
+    if (which == 75) {
+        return (case_id == slot + 1) ? &kChildHandles : &kChildMiss;
+    }
+    return &kChildMiss;   // moveTouch:/endTouch: are void
+}
+
+blockheads::ui::PanelTrace craftui_trace(int which, int case_id) {
+    const auto* sb = craftui_child(which, 0, case_id);
+    const auto* cb = craftui_child(which, 1, case_id);
+    const auto* cs = craftui_child(which, 2, case_id);
+    if (which == 74) return blockheads::ui::craftui_touch_is_in_ui(sb, cb, cs);
+    if (which == 75) return blockheads::ui::craftui_start_touch(sb, cb, cs);
+    if (which == 76) return blockheads::ui::craftui_move_touch(sb, cb, cs);
+    return blockheads::ui::craftui_end_touch(sb, cb, cs);
+}
+
+void craftui_seeds(unsigned char* out, int which, int case_id) {
+    // the same seed words the harness writes (part of the compared image)
+    ui_put_word(out, 4, 0x60000100u);
+    ui_put_word(out, 8, 0x60000200u);
+    ui_put_word(out, 128, 0x60001000u);      // windowInfo = self_ptr
+    const auto f = craftui_frame(which == 73 ? case_id : 0);
+    ui_put_word(out, 8, float_bits(f.window_x));
+    ui_put_word(out, 12, float_bits(f.window_y));
+    ui_put_word(out, 212, float_bits(f.offset_x));
+    ui_put_word(out, 216, float_bits(f.offset_y));
+    if (which != 73) {                       // the touch methods read children
+        ui_put_word(out, 148, 0x60020600u);
+        ui_put_word(out, 208, 0x60020700u);
+        ui_put_word(out, 164, 0x60020800u);
+    }
+}
 }  // namespace
 
 extern "C" {
@@ -666,6 +738,18 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         for (const char* c : trace.calls) {
             if (!s.empty()) s += ',';
             s += c;
+        }
+    } else if (type_id >= 73 && type_id <= 77) {  // the CraftUI panel methods
+        // The panel's decoded semantics (ui_touch_router.h): 73 is the
+        // own-rect test (no calls — the return is the artifact), 74/75 the
+        // children OR in the SB, CB, CS order, 76/77 ALL THREE children in
+        // the CB, CS, SB order.
+        if (type_id != 73) {
+            const auto t = craftui_trace(type_id, case_id);
+            for (const char* c : t.calls) {
+                if (!s.empty()) s += ',';
+                s += c;
+            }
         }
     } else if (type_id == 71) {  // MJView -touchIsInUI: — the GATE cases
         // The frame test's coordinate space is still being decoded; the
@@ -699,6 +783,11 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         const auto trace = blockheads::ui::run_ui_router(
             ui_router_case(case_id), blockheads::ui::Point{50.0f, 50.0f});
         if (trace.current_touch_is_in_any_buttons) out[154] = 1;
+        return n;
+    }
+    if (type_id >= 73 && type_id <= 77) {  // CraftUI: the seeds only
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        craftui_seeds(out, type_id, case_id);
         return n;
     }
     if (type_id == 71) {  // MJView: the gate cases write nothing
@@ -743,6 +832,14 @@ int recovered_ui_ret(int type_id, int case_id) {
             ui_router_case(case_id),
             blockheads::ui::Point{50.0f, 50.0f}).handled;
     }
+    if (type_id == 73) {
+        return blockheads::ui::craftui_touch_is_in_view_at_all(
+            craftui_point(case_id), craftui_frame(case_id)) ? 1 : 0;
+    }
+    if (type_id == 74 || type_id == 75) {
+        return craftui_trace(type_id, case_id).handled;
+    }
+    if (type_id == 76 || type_id == 77) return 0;  // void (not compared)
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);

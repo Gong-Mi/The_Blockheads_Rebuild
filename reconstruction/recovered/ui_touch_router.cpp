@@ -159,4 +159,77 @@ RouterTrace run_ui_router(const RouterInputs& in, Point p) {
     return t;
 }
 
+// --- the CraftUI panel ---------------------------------------------------
+
+bool craftui_touch_is_in_view_at_all(Point p, const PanelFrame& f) {
+    // the ARM: x = point.x - windowInfo[+8] - translationOffset.x, y the
+    // same with +0xc/+4; then x > -130 && x < 130 && y > 0 && y < 302
+    // (four fused compares, every edge exclusive)
+    const float x = p.x - f.window_x - f.offset_x;
+    const float y = p.y - f.window_y - f.offset_y;
+    return x > -130.0f && x < 130.0f && y > 0.0f && y < 302.0f;
+}
+
+namespace {
+
+bool child_in_ui(const ChildReply* c, PanelTrace& t) {
+    t.calls.push_back("touchIsInUI:");
+    return c != nullptr && c->in_ui;
+}
+
+bool child_start(const ChildReply* c, PanelTrace& t) {
+    t.calls.push_back("startTouch:");
+    return c != nullptr && c->handles;
+}
+
+void child_move(const ChildReply* c, PanelTrace& t) {
+    (void)c;
+    t.calls.push_back("moveTouch:");
+}
+
+void child_end(const ChildReply* c, PanelTrace& t) {
+    (void)c;
+    t.calls.push_back("endTouch:");
+}
+
+}  // namespace
+
+PanelTrace craftui_touch_is_in_ui(const ChildReply* sb, const ChildReply* cb,
+                                  const ChildReply* cs) {
+    PanelTrace t;
+    bool any = child_in_ui(sb, t);
+    if (!any) any = child_in_ui(cb, t);
+    if (!any) any = child_in_ui(cs, t);
+    t.handled = any ? 1 : 0;
+    return t;
+}
+
+PanelTrace craftui_start_touch(const ChildReply* sb, const ChildReply* cb,
+                               const ChildReply* cs) {
+    PanelTrace t;
+    bool any = child_start(sb, t);
+    if (!any) any = child_start(cb, t);
+    if (!any) any = child_start(cs, t);
+    t.handled = any ? 1 : 0;
+    return t;
+}
+
+PanelTrace craftui_move_touch(const ChildReply* sb, const ChildReply* cb,
+                              const ChildReply* cs) {
+    PanelTrace t;
+    child_move(cb, t);
+    child_move(cs, t);
+    child_move(sb, t);
+    return t;
+}
+
+PanelTrace craftui_end_touch(const ChildReply* sb, const ChildReply* cb,
+                             const ChildReply* cs) {
+    PanelTrace t;
+    child_end(cb, t);
+    child_end(cs, t);
+    child_end(sb, t);
+    return t;
+}
+
 }  // namespace blockheads::ui

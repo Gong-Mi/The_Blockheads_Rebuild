@@ -144,34 +144,69 @@ DPad decoded (`disasm_dpad_touch.txt`):
   returns its argument, so the comparisons read the struct directly) — the
   four direction buttons. `rightSide@160` selects the mirrored layout.
 
-## The composition pattern: CraftUI (0x00B80EB4..0x00B817A4)
+## The composition pattern: CraftUI (0x00B80EB4..0x00B817A4) — decoded
 
-CraftUI's overrides reveal the family's *composition* convention
-(`disasm_craftui_touch.txt`):
+CraftUI's five override bodies are decoded from the instruction stream
+(`disasm_craftui_touch.txt`, `disasm_craftui_starttouch.txt`); the family's
+composition convention, corrected against the code:
 
-- `touchIsInViewAtAll:` (95w) is the panel's own rect test: the point against
-  `translationOffset@212` + `windowInfo@128` bounds and four fused compares (x-min/x-max/y-min/y-max, plus an
-  `x >= 0` edge);
-- `touchIsInUI:` (134w) repeats the rect test and then **ORs the child
-  widgets' own tests**: `[scrollingButtons@148 touchIsInUI:]`,
-  `[craftButton@208 touchIsInUI:]`, `[countSlider@164 touchIsInUI:]`
-  (msgSend at 0x1C281C). So a panel "is in UI" when the point is in its
-  rect *or* in any of its widgets — the recursive composition that makes the
-  UIManager router's flat `uiViews` pass well-defined.
+- every body begins with the same frame math: `local = point -
+  windowInfo(+8/+0xc) - translationOffset(@212/@216)` (translationOffset is
+  the pair of floats at 212/216; the two `bl 0x4BDAAC` calls are the
+  identity thunk that hands back the `self+212` pointer);
+- `touchIsInViewAtAll:` (95w) is the panel's own-rect test: 260 x 302 with
+  **every edge exclusive** — `x > -130 && x < 130 && y > 0 && y < 302`
+  (constants from the literal pool: 0xC3020000 / 0x43020000 / 0x43970000 =
+  -130 / 130 / 302), four fused compares;
+- `touchIsInUI:` (134w) is the children's OR ONLY —
+  `[scrollingButtons@148 touchIsInUI:]`, `[craftButton@208 touchIsInUI:]`,
+  `[countSlider@164 touchIsInUI:]` in that order, first nonzero wins
+  (msgSend at 0x1C281C). **Correction:** an earlier note said this method
+  "repeats the rect test" — the instruction stream has no such compares;
+  the rect lives in `touchIsInViewAtAll:` alone, and a panel's "in UI" is
+  its widgets' aggregate, not `rect OR widgets`;
+- `startTouch:tapCount:` (137w) runs the same frame math, then delegates
+  `[scrollingButtons startTouch:]`, `[craftButton startTouch:]`,
+  `[countSlider startTouch:]` — note the **one-argument** `startTouch:` the
+  widget layer implements — first nonzero wins, no own-rect gate;
+- `moveTouch:` (103w) / `endTouch:` (103w) call **all three** children, in
+  the OTHER order the listing attests — `craftButton`, `countSlider`,
+  `scrollingButtons` (void; the mirrored order of the touch methods).
 
 The same tiny helpers recur across DPad and CraftUI: 0x4D0480 (a 12-word
 Vector2 builder — byte-identical twins live at 0x00765D80 and 0x006F1B84),
 0x4BDAAC (an identity thunk returning its argument) and 0x1C281C (msgSend).
 
+### CraftUI enters the differential (16 cases, types 73..77)
+
+The five bodies execute under Unicorn against `run_ui_router`'s module
+neighbours in `ui_touch_router.*` (`craftui_touch_is_in_view_at_all`,
+`craftui_touch_is_in_ui`, `craftui_start_touch`, `craftui_move_touch`,
+`craftui_end_touch`):
+
+- `CraftUIRect` 0..5: inside / `x >= 130` / `x == -130` / `y == 0` /
+  `y == 302` / the shifted frame (window 100,60 + offset 30,20) — the four
+  exclusive edges and the subtraction order;
+- `CraftUIInUI` / `CraftUIPress` 0..3: all-miss (3 calls, 0) and each
+  child alone (short-circuit) — with `expect_recv` pinning the ARM's
+  actual receiver order (SB, CB, CS);
+- `CraftUIMove` / `CraftUIEnd`: the three calls in the CB, CS, SB order —
+  `expect_recv` proves the order at the receiver level (the stripped
+  selector labels cannot distinguish same-selector calls); the void return
+  registers are recorded, not compared.
+
+The negative control ran: flipping the Move expectation fails the
+assertion and prints the ARM's true order
+(`moveTouch:(recv=0x…700), (recv=0x…800), (recv=0x…600)`).
+
 ## The delegation pattern: CraftUI -startTouch:tapCount: (137w)
 
 `disasm_craftui_starttouch.txt` shows the handling side mirrors the
-visibility side exactly: after the same window/translationOffset rect math
-(the same small geometry kit), the panel **delegates to its widget children in order** —
-`[scrollingButtons@148 startTouch:tapCount:]`,
-`[craftButton@208 startTouch:tapCount:]`,
-`[countSlider@164 startTouch:tapCount:]` — taking the first non-zero
-(handled) result (sxtb after each msgSend at 0x1C281C).
+visibility side: after the same window/translationOffset frame math (the
+same small geometry kit), the panel **delegates to its widget children in
+order** — `[scrollingButtons@148 startTouch:]`,
+`[craftButton@208 startTouch:]`, `[countSlider@164 startTouch:]` — taking
+the first non-zero (handled) result (sxtb after each msgSend at 0x1C281C).
 
 So the family decomposes cleanly:
 - **GameUIView** (base): "not handled / not in view" defaults + the render
@@ -299,6 +334,12 @@ the differential's per-case receiver replies — `recovered_ui_seq`,
 `run_ui_router`, so the ARM differential now judges the model, not
 case-fitted strings.
 
+The panel layer followed: `craftui_touch_is_in_view_at_all` (the 260 x 302
+rect with exclusive edges), `craftui_touch_is_in_ui` / `craftui_start_touch`
+(the children's SB, CB, CS short-circuit) and `craftui_move_touch` /
+`craftui_end_touch` (all three, CB, CS, SB) model CraftUI's five overrides;
+types 73..77 drive them from the same per-case fixtures.
+
 ### The control behaviours, modelled: `ui_control.*` (MJControl)
 
 `disasm_mjcontrol_all.txt` decoded the widget layer's control base
@@ -412,8 +453,9 @@ The router is decoded AND differentially executed: `run_ui_router` walks the
 full block chain, and every row of the router's 19-case differential (cases
 0..18 in the UI_CASES table) matches the Unicorn execution of the original
 body at -O0/-O2 — the call sequence, the `currentTouchIsInAnyButtons@154`
-byte and the return value. The family base is decoded too; what remains is
-the per-subclass overrides (a bounded list: the 23-38 classes above; their
-overrides are short by construction — the base being trivial confirms the
-convention) and the concrete widget behaviours the fixture's replies stand
-in for.
+byte and the return value. The first subclass overrides (CraftUI, five
+methods, 16 cases, types 73..77) are executed the same way. The family base
+is decoded too; what remains is the OTHER subclasses' overrides (a bounded
+list: the 23-38 classes above — DPad's rotated hit test is the next heaviest
+at 232w) and the concrete widget behaviours the fixture's replies stand in
+for.

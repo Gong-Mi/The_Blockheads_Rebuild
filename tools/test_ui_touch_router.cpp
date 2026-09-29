@@ -21,6 +21,15 @@
 
 using namespace blockheads::ui;
 
+static std::string join_trace(const std::vector<const char*>& calls) {
+    std::string got;
+    for (const char* s : calls) {
+        if (!got.empty()) got += ',';
+        got += s;
+    }
+    return got;
+}
+
 int main() {
     // A CraftUI-shaped panel at (10, 10) 200x150 with three widgets.
     Node scrolling_box;   // the widget's outer box
@@ -256,11 +265,7 @@ int main() {
                 default: assert(false);
             }
             const RouterTrace t = run_ui_router(in, {50, 50});
-            std::string got;
-            for (const char* s : t.calls) {
-                if (!got.empty()) got += ',';
-                got += s;
-            }
+            const std::string got = join_trace(t.calls);
             if (got != c.trace) {
                 std::printf("router case %d trace mismatch:\n  got  %s\n"
                             "  want %s\n", c.id, got.c_str(), c.trace);
@@ -271,7 +276,71 @@ int main() {
         }
     }
 
+    // --- the CraftUI panel (the first subclass overrides) ----------------
+    {
+        // the own-rect test: 260 x 302, every edge exclusive
+        const PanelFrame origin{};
+        assert(craftui_touch_is_in_view_at_all({50, 50}, origin));
+        assert(craftui_touch_is_in_view_at_all({-129.5f, 0.5f}, origin));
+        assert(craftui_touch_is_in_view_at_all({129.5f, 301.5f}, origin));
+        assert(!craftui_touch_is_in_view_at_all({200, 50}, origin));
+        assert(!craftui_touch_is_in_view_at_all({130, 50}, origin));
+        assert(!craftui_touch_is_in_view_at_all({-130, 50}, origin));
+        assert(!craftui_touch_is_in_view_at_all({50, 0}, origin));
+        assert(!craftui_touch_is_in_view_at_all({50, 302}, origin));
+        // the frame subtraction: local = point - window - offset
+        const PanelFrame shifted{100, 60, 30, 20};
+        assert(craftui_touch_is_in_view_at_all({150, 90}, shifted));
+        assert(!craftui_touch_is_in_view_at_all({281, 90}, shifted));
+
+        const ChildReply miss{};
+        const ChildReply in_ui{true, false};
+        const ChildReply handles{false, true};
+
+        struct PT { const char* trace; int ret; };
+        const PT in_ui_cases[] = {
+            {"touchIsInUI:,touchIsInUI:,touchIsInUI:", 0},   // all miss
+            {"touchIsInUI:", 1},                             // scrollingButtons
+            {"touchIsInUI:,touchIsInUI:", 1},                // craftButton
+            {"touchIsInUI:,touchIsInUI:,touchIsInUI:", 1},   // countSlider
+        };
+        const ChildReply* in_replies[4][3] = {
+            {&miss, &miss, &miss}, {&in_ui, &miss, &miss},
+            {&miss, &in_ui, &miss}, {&miss, &miss, &in_ui}};
+        for (int i = 0; i < 4; ++i) {
+            const auto t = craftui_touch_is_in_ui(in_replies[i][0],
+                                                  in_replies[i][1],
+                                                  in_replies[i][2]);
+            assert(join_trace(t.calls) == in_ui_cases[i].trace);
+            assert(t.handled == in_ui_cases[i].ret);
+        }
+
+        const PT press_cases[] = {
+            {"startTouch:,startTouch:,startTouch:", 0},
+            {"startTouch:", 1},
+            {"startTouch:,startTouch:", 1},
+            {"startTouch:,startTouch:,startTouch:", 1},
+        };
+        const ChildReply* press_replies[4][3] = {
+            {&miss, &miss, &miss}, {&handles, &miss, &miss},
+            {&miss, &handles, &miss}, {&miss, &miss, &handles}};
+        for (int i = 0; i < 4; ++i) {
+            const auto t = craftui_start_touch(press_replies[i][0],
+                                               press_replies[i][1],
+                                               press_replies[i][2]);
+            assert(join_trace(t.calls) == press_cases[i].trace);
+            assert(t.handled == press_cases[i].ret);
+        }
+
+        // moveTouch: / endTouch: — all three children, in the CB, CS, SB
+        // order the listing attests (the touch methods use SB, CB, CS)
+        const auto mv = craftui_move_touch(&miss, &miss, &miss);
+        assert(join_trace(mv.calls) == "moveTouch:,moveTouch:,moveTouch:");
+        const auto en = craftui_end_touch(&miss, &miss, &miss);
+        assert(join_trace(en.calls) == "endTouch:,endTouch:,endTouch:");
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
-                " block chain x19)\n");
+                " block chain x19, craftui x16)\n");
     return 0;
 }

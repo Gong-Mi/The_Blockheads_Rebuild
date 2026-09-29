@@ -107,4 +107,56 @@ struct RouterTrace {
 // arguments are outside this model, so the receivers' replies stand in.
 RouterTrace run_ui_router(const RouterInputs& in, Point p);
 
+// --- the CraftUI panel (the first subclass overrides) --------------------
+// CraftUI (0x00B80EB4..0x00B817A4, disasm_craftui_touch.txt /
+// disasm_craftui_starttouch.txt). The panel-local frame is
+//   local = point - windowInfo(+8/+0xc) - translationOffset(@212/@216)
+// (translationOffset is the pair of floats at 212/216). The touch methods
+// delegate to three widget children: scrollingButtons@148, craftButton@208,
+// countSlider@164.
+struct PanelFrame {
+    float window_x = 0.0f;  // windowInfo[+8]
+    float window_y = 0.0f;  // windowInfo[+0xc]
+    float offset_x = 0.0f;  // translationOffset.x (@212)
+    float offset_y = 0.0f;  // translationOffset.y (@216)
+};
+
+// What a widget child answers to the one-argument touch forms (the
+// differential fixture pins these, like every Receiver reply).
+struct ChildReply {
+    bool in_ui = false;    // [child touchIsInUI:] -> 1
+    bool handles = false;  // [child startTouch:] -> 1
+};
+
+// CraftUI -touchIsInViewAtAll: (95w) — the panel's own-rect test: 260 x 302
+// with EXCLUSIVE edges, x in (-130, 130), y in (0, 302), in the local frame.
+bool craftui_touch_is_in_view_at_all(Point p, const PanelFrame& f);
+
+// The delegation artifact: the selector sequence the ARM records plus the
+// BOOL the touch methods return (the void ones leave handled at 0).
+struct PanelTrace {
+    std::vector<const char*> calls;
+    int handled = 0;
+};
+
+// CraftUI -touchIsInUI: (134w) — the children's touchIsInUI: in the decoded
+// order (scrollingButtons, craftButton, countSlider), first nonzero wins.
+// The listing has NO own-rect term here: the rect lives in
+// touchIsInViewAtAll: alone. (This corrects the earlier INPUT_FRONT note.)
+PanelTrace craftui_touch_is_in_ui(const ChildReply* sb, const ChildReply* cb,
+                                  const ChildReply* cs);
+
+// CraftUI -startTouch:tapCount: (137w) — the children's startTouch: in the
+// same order, first nonzero wins; no own-rect gate either.
+PanelTrace craftui_start_touch(const ChildReply* sb, const ChildReply* cb,
+                               const ChildReply* cs);
+
+// CraftUI -moveTouch: (103w) / -endTouch: (103w) — ALL THREE children, in
+// the OTHER order the listing attests (craftButton, countSlider,
+// scrollingButtons); void, and the point they receive is the local one.
+PanelTrace craftui_move_touch(const ChildReply* sb, const ChildReply* cb,
+                              const ChildReply* cs);
+PanelTrace craftui_end_touch(const ChildReply* sb, const ChildReply* cb,
+                             const ChildReply* cs);
+
 }  // namespace blockheads::ui
