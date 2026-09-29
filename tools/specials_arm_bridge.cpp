@@ -754,6 +754,12 @@ void dpad_seeds(unsigned char* out, int case_id) {
 
 // --- the BlockheadUI panel's differential inputs --------------------------
 // The seeds mirror the harness's blockhead_frame / bh_seeds fixtures.
+// the sd cases differ per type family: 80-82 use 3/4/5, 83/84 use 1
+bool blockhead_sd(int which, int case_id) {
+    if (which == 83 || which == 84) return case_id == 1;
+    return case_id == 3 || case_id == 4 || case_id == 5;
+}
+
 blockheads::ui::BlockheadFrame blockhead_frame_for(int case_id) {
     switch (case_id) {
         case 5: return {0.0f, 0.0f, 5.0f, 0.0f};
@@ -786,8 +792,8 @@ void blockhead_seeds(unsigned char* out, int which, int case_id) {
         ui_put_word(out, 188, float_bits(f.offset_y));
         return;
     }
-    // 81: stopButtonDisplayed@76 + the five child pointers
-    const bool sd = (case_id == 3 || case_id == 4 || case_id == 5);
+    // 81..84: stopButtonDisplayed@76 + the five child pointers
+    const bool sd = blockhead_sd(which, case_id);
     ui_put_word(out, 76, sd ? 1u : 0u);
     ui_put_word(out, 80, 0x60020600u);   // getWorkbenchButton
     ui_put_word(out, 96, 0x60020700u);   // nameEditButton
@@ -796,14 +802,17 @@ void blockhead_seeds(unsigned char* out, int which, int case_id) {
     ui_put_word(out, 88, 0x60020A00u);   // meditateButton
 }
 
-blockheads::ui::BlockheadChildren blockhead_children_for(int case_id) {
+blockheads::ui::BlockheadChildren blockhead_children_for(int case_id,
+                                                         bool press,
+                                                         bool sd) {
     blockheads::ui::BlockheadChildren c;
-    c.stop_displayed = (case_id == 3 || case_id == 4 || case_id == 5);
-    if (case_id == 1 || case_id == 5) c.workbench = &kChildInUi;
-    if (case_id == 2) c.name_edit = &kChildInUi;
-    if (case_id == 3) c.stop = &kChildInUi;
-    if (case_id == 6) c.sleep = &kChildInUi;
-    if (case_id == 7) c.meditate = &kChildInUi;
+    c.stop_displayed = sd;
+    const auto* yes = press ? &kChildHandles : &kChildInUi;
+    if (case_id == 1 || case_id == 5) c.workbench = yes;
+    if (case_id == 2) c.name_edit = yes;
+    if (case_id == 3) c.stop = yes;
+    if (case_id == 6) c.sleep = yes;
+    if (case_id == 7) c.meditate = yes;
     return c;
 }
 }  // namespace
@@ -852,11 +861,26 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         s = "import(sinf),import(cosf)";
     } else if (type_id == 80) {
         // BlockheadUI -touchIsInViewAtAll: — no calls (the rect test)
-    } else if (type_id == 81) {
-        // BlockheadUI -touchIsInUI: — the children OR (the trace's labels)
-        const auto t = blockheads::ui::blockheadui_touch_is_in_ui(
-            blockhead_children_for(case_id),
-            blockheads::ui::Point{50.0f, 50.0f});
+    } else if (type_id >= 81 && type_id <= 84) {
+        // BlockheadUI's delegation chains (the trace's labels); 81 answers
+        // via touchIsInUI:, 82 via the one-arg startTouch:, 83/84 void
+        const bool press = (type_id == 82);
+        const auto ch = blockhead_children_for(case_id, press,
+                                               blockhead_sd(type_id, case_id));
+        blockheads::ui::PanelTrace t;
+        if (type_id == 81) {
+            t = blockheads::ui::blockheadui_touch_is_in_ui(
+                ch, blockheads::ui::Point{50.0f, 50.0f});
+        } else if (type_id == 82) {
+            t = blockheads::ui::blockheadui_start_touch(
+                ch, blockheads::ui::Point{50.0f, 50.0f});
+        } else if (type_id == 83) {
+            t = blockheads::ui::blockheadui_move_touch(
+                ch, blockheads::ui::Point{50.0f, 50.0f});
+        } else {
+            t = blockheads::ui::blockheadui_end_touch(
+                ch, blockheads::ui::Point{50.0f, 50.0f});
+        }
         for (const char* c : t.calls) {
             if (!s.empty()) s += ',';
             s += c;
@@ -907,7 +931,7 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         if (type_id == 79) dpad_seeds(out, case_id);
         return n;
     }
-    if (type_id == 80 || type_id == 81) {  // BlockheadUI: the base slots +
+    if (type_id >= 80 && type_id <= 84) {  // BlockheadUI: the base slots +
         std::memset(out, 0, static_cast<std::size_t>(n));  // the fixture
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
@@ -978,9 +1002,17 @@ int recovered_ui_ret(int type_id, int case_id) {
     }
     if (type_id == 81) {
         return blockheads::ui::blockheadui_touch_is_in_ui(
-            blockhead_children_for(case_id),
+            blockhead_children_for(case_id, false,
+                                   blockhead_sd(type_id, case_id)),
             blockheads::ui::Point{50.0f, 50.0f}).handled;
     }
+    if (type_id == 82) {
+        return blockheads::ui::blockheadui_start_touch(
+            blockhead_children_for(case_id, true,
+                                   blockhead_sd(type_id, case_id)),
+            blockheads::ui::Point{50.0f, 50.0f}).handled;
+    }
+    if (type_id == 83 || type_id == 84) return 0;  // void (not compared)
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);

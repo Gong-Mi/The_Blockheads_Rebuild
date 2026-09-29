@@ -89,6 +89,9 @@ ENTRIES = [
     # gated children OR
     ('BlockheadUIRect', 80, 0x006FD188, 0x00000000, 99),
     ('BlockheadUIInUI', 81, 0x006FD314, 0x00000000, 226),
+    ('BlockheadUIPress', 82, 0x006FD69C, 0x00000000, 228),
+    ('BlockheadUIMove', 83, 0x006FDA2C, 0x00000000, 159),
+    ('BlockheadUIEnd', 84, 0x006FDCA8, 0x00000000, 159),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -1075,6 +1078,51 @@ def main():
             7: ('50,50', bh_seeds(0), {
                 'expect_recv': [BH_WB, BH_NE, BH_SLEEP, BH_MED],
                 'ret1': {BH_MED: ['touchIsInUI:']}}),
+        },
+        'BlockheadUIPress': {
+            # startTouch:tapCount: — the same chain with the one-arg
+            # startTouch: (the children answer via 'startTouch:' pins)
+            0: ('50,50', bh_seeds(0), {
+                'expect_recv': [BH_WB, BH_NE, BH_SLEEP, BH_MED]}),
+            1: ('50,50', bh_seeds(0), {
+                'expect_recv': [BH_WB],
+                'ret1': {BH_WB: ['startTouch:']}}),
+            2: ('50,50', bh_seeds(0), {
+                'expect_recv': [BH_WB, BH_NE],
+                'ret1': {BH_NE: ['startTouch:']}}),
+            3: ('50,50', bh_seeds(1), {
+                'expect_recv': [BH_WB, BH_NE, BH_STOP],
+                'ret1': {BH_STOP: ['startTouch:']}}),
+            4: ('50,50', bh_seeds(1), {
+                'expect_recv': [BH_WB, BH_NE, BH_STOP]}),  # gate early exit
+            5: ('50,50', bh_seeds(1), {
+                'expect_recv': [BH_WB],
+                'ret1': {BH_WB: ['startTouch:']}}),
+            6: ('50,50', bh_seeds(0), {
+                'expect_recv': [BH_WB, BH_NE, BH_SLEEP],
+                'ret1': {BH_SLEEP: ['startTouch:']}}),
+            7: ('50,50', bh_seeds(0), {
+                'expect_recv': [BH_WB, BH_NE, BH_SLEEP, BH_MED],
+                'ret1': {BH_MED: ['startTouch:']}}),
+        },
+        'BlockheadUIMove': {
+            # moveTouch: — every child, no short-circuit; the gate ends the
+            # chain at stopButton; void
+            0: ('50,50', bh_seeds(0), {
+                'void': True,
+                'expect_recv': [BH_WB, BH_NE, BH_SLEEP, BH_MED]}),
+            1: ('50,50', bh_seeds(1), {
+                'void': True,
+                'expect_recv': [BH_WB, BH_NE, BH_STOP]}),
+        },
+        'BlockheadUIEnd': {
+            # endTouch: — the same shape
+            0: ('50,50', bh_seeds(0), {
+                'void': True,
+                'expect_recv': [BH_WB, BH_NE, BH_SLEEP, BH_MED]}),
+            1: ('50,50', bh_seeds(1), {
+                'void': True,
+                'expect_recv': [BH_WB, BH_NE, BH_STOP]}),
         },
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view

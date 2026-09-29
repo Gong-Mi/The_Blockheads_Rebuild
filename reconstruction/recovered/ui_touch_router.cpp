@@ -301,4 +301,53 @@ PanelTrace blockheadui_touch_is_in_ui(const BlockheadChildren& c, Point p) {
     return t;
 }
 
+PanelTrace blockheadui_start_touch(const BlockheadChildren& c, Point p) {
+    (void)p;
+    PanelTrace t;
+    bool any = child_start(c.workbench, t);
+    if (!any) any = child_start(c.name_edit, t);
+    if (c.stop_displayed) {
+        if (!any) any = child_start(c.stop, t);
+        t.handled = any ? 1 : 0;
+        return t;
+    }
+    if (!any) any = child_start(c.sleep, t);
+    if (!any) any = child_start(c.meditate, t);
+    t.handled = any ? 1 : 0;
+    return t;
+}
+
+namespace {
+
+// the void methods' chains: every child in order (no short-circuit), the
+// gate ending the chain at stopButton
+void blockhead_move_end_chain(const BlockheadChildren& c, PanelTrace& t,
+                              const char* selector) {
+    (void)c;
+    t.calls.push_back(selector);   // getWorkbenchButton@80
+    t.calls.push_back(selector);   // nameEditButton@96
+    if (c.stop_displayed) {
+        t.calls.push_back(selector);   // stopButton@92; the chain ends
+        return;
+    }
+    t.calls.push_back(selector);   // sleepButton@84
+    t.calls.push_back(selector);   // meditateButton@88
+}
+
+}  // namespace
+
+PanelTrace blockheadui_move_touch(const BlockheadChildren& c, Point p) {
+    (void)p;
+    PanelTrace t;
+    blockhead_move_end_chain(c, t, "moveTouch:");
+    return t;
+}
+
+PanelTrace blockheadui_end_touch(const BlockheadChildren& c, Point p) {
+    (void)p;
+    PanelTrace t;
+    blockhead_move_end_chain(c, t, "endTouch:");
+    return t;
+}
+
 }  // namespace blockheads::ui

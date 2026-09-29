@@ -212,4 +212,16 @@ struct BlockheadChildren {
 
 PanelTrace blockheadui_touch_is_in_ui(const BlockheadChildren& c, Point p);
 
+// BlockheadUI -startTouch:tapCount: (0x006FD69C..0x006FDA2C, 228w): the
+// SAME chain as touchIsInUI: but with the one-argument startTouch: — the
+// children's handles replies, first nonzero wins, the stopButtonDisplayed
+// gate ending the chain at stopButton.
+PanelTrace blockheadui_start_touch(const BlockheadChildren& c, Point p);
+
+// BlockheadUI -moveTouch: (159w) / -endTouch: (159w): ALL children in the
+// same order, no short-circuit, and the same gate early-exit (with the gate
+// set the chain ends at stopButton); void.
+PanelTrace blockheadui_move_touch(const BlockheadChildren& c, Point p);
+PanelTrace blockheadui_end_touch(const BlockheadChildren& c, Point p);
+
 }  // namespace blockheads::ui

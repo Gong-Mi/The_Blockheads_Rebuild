@@ -414,9 +414,39 @@ int main() {
         t = blockheadui_touch_is_in_ui(c6, {50, 50});
         assert(join_trace(t.calls) == "touchIsInUI:,touchIsInUI:,touchIsInUI:");
         assert(t.handled == 1);
+
+        // startTouch:tapCount: — the same chain with the one-arg form
+        const ChildReply handles{false, true};
+        BlockheadChildren p1;
+        p1.workbench = &handles;
+        t = blockheadui_start_touch(p1, {50, 50});
+        assert(join_trace(t.calls) == "startTouch:");
+        assert(t.handled == 1);
+        BlockheadChildren p4;
+        p4.stop_displayed = true;
+        t = blockheadui_start_touch(p4, {50, 50});
+        assert(join_trace(t.calls)
+               == "startTouch:,startTouch:,startTouch:");  // gate early exit
+        assert(t.handled == 0);
+
+        // moveTouch: / endTouch: — every child, no short-circuit, the gate
+        // ending the chain at stopButton
+        BlockheadChildren m0;
+        const auto mv = blockheadui_move_touch(m0, {50, 50});
+        assert(join_trace(mv.calls)
+               == "moveTouch:,moveTouch:,moveTouch:,moveTouch:");
+        BlockheadChildren m1;
+        m1.stop_displayed = true;
+        const auto mv1 = blockheadui_move_touch(m1, {50, 50});
+        assert(join_trace(mv1.calls) == "moveTouch:,moveTouch:,moveTouch:");
+        const auto en = blockheadui_end_touch(m0, {50, 50});
+        assert(join_trace(en.calls)
+               == "endTouch:,endTouch:,endTouch:,endTouch:");
+        const auto en1 = blockheadui_end_touch(m1, {50, 50});
+        assert(join_trace(en1.calls) == "endTouch:,endTouch:,endTouch:");
     }
 
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
-                " block chain x19, craftui x16, dpad x11, blockhead x16)\n");
+                " block chain x19, craftui x16, dpad x11, blockhead x28)\n");
     return 0;
 }

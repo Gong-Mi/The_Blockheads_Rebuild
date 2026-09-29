@@ -171,29 +171,33 @@ stand-in) and every case keeps a wide margin to the +-80 edges.
 
 ## The third panel: BlockheadUI (0x006FD188..0x006FDF24) — decoded
 
-`disasm_blockheadui_touch.txt` / `_starttouch.txt` / `_moveend.txt` decode
-the third subclass; the first two methods are modelled and executed:
+All five overrides are decoded and executed (`disasm_blockheadui_touch.txt`
+/ `_starttouch.txt` / `_moveend.txt`):
 
 - `touchIsInViewAtAll:` (99w) — the own-rect test with its own numbers:
   local = point - windowInfo(+8/+0xc) - translationOffset (@184/188);
   `x in (-120, 120)`, `y in (-144, 142)`, every edge exclusive;
-- `touchIsInUI:` (226w) — the children OR with the `stopButtonDisplayed@76`
-  regime: `getWorkbenchButton@80`, `nameEditButton@96`, then EITHER
-  `stopButton@92` and RETURN (gate set) OR `sleepButton@84` +
-  `meditateButton@88` (gate clear) — the first nonzero wins throughout.
+- the four delegation chains share ONE order and ONE gate:
+  `getWorkbenchButton@80`, `nameEditButton@96`, then either
+  `stopButton@92` and RETURN (when `stopButtonDisplayed@76` is set) or
+  `sleepButton@84` + `meditateButton@88`:
+  - `touchIsInUI:` (226w) / `startTouch:tapCount:` (228w) — short-circuit,
+    first nonzero wins (the children answer via `touchIsInUI:` / the
+    one-argument `startTouch:`);
+  - `moveTouch:` (159w) / `endTouch:` (159w) — ALL children, no
+    short-circuit, void.
 
-BlockheadUI enters the differential (16 cases, types 80..81):
+BlockheadUI enters the differential (28 cases, types 80..84):
 
 - `BlockheadUIRect` 0..7: the four exclusive edges + the centre, and three
   cases that would FLIP if the translationOffset / windowInfo terms were
   dropped from the rebase;
-- `BlockheadUIInUI` 0..7: all-miss (four calls) and each child alone, with
-  `expect_recv` proving each case's receiver order — case 4 is the gate
-  proof: with `stopButtonDisplayed` set the ARM's call list ENDS at
-  stopButton (0x60020800); sleepButton/meditateButton are never tried.
-
-`startTouch:tapCount:` (228w) and `moveTouch:` / `endTouch:`
-(159w + 159w) are listed but not yet modelled — the batch's next slice.
+- `BlockheadUIInUI` / `BlockheadUIPress` 0..7: all-miss and each child
+  alone, with `expect_recv` proving each case's receiver order — case 4 is
+  the gate proof: with `stopButtonDisplayed` set the ARM's call list ENDS
+  at stopButton (0x60020800) in BOTH chains;
+- `BlockheadUIMove` / `BlockheadUIEnd` 0/1: the four-call chain and the
+  gate's three-call early exit, receiver-verified per case.
 
 ## The composition pattern: CraftUI (0x00B80EB4..0x00B817A4) — decoded
 
