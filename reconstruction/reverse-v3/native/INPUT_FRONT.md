@@ -247,6 +247,22 @@ in that order. 10 cases (the const-1 far-point control, both children alone
 + all-miss per chain, the void orders receiver-verified) execute under
 Unicorn.
 
+## PauseUI's inUI/press/move/end (types 177..180) — decoded
+
+`disasm_pauseui_touch2.txt` (776w): `touchIsInUI:` (79w): the
+disabled@138 byte gates first — set -> 0 with NO calls; else if
+optionsUI@8 is non-nil -> `[optionsUI touchIsInUI:pt]` (its reply
+returned); else 0 (a dead rect). `startTouch:tapCount:` (261w): the same
+gate; else optionsUI non-nil -> `[optionsUI startTouch:tapCount:pt
+tapCount]` returned; else shareUI@12 non-nil ->
+`[shareUI startTouch:tapCount:...]` returned; else SEVEN buttons
+[resumeButton@132, tcButton@108, achievementsButton@120,
+instructionsButton@128, exitButton@104, optionsButton@116,
+shareButton@112] each `[startTouch:]` and the constant 0 (dead replies).
+`moveTouch:` / `endTouch:` (218w each): the same gates/order with their
+selectors; the else path walks the seven. 16 cases execute under
+Unicorn.
+
 ## The PaintMixUI panel (types 172..176) — decoded
 
 `disasm_paintmixui_touch.txt` (1000w): `touchIsInViewAtAll:` (95w) — x in

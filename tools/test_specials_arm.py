@@ -201,6 +201,11 @@ ENTRIES = [
     ('PaintMixUIPress', 174, 0x00672960, 0x00000000, 260),
     ('PaintMixUIMove', 175, 0x00672D70, 0x00000000, 195),
     ('PaintMixUIEnd', 176, 0x0067307C, 0x00000000, 195),
+    # PauseUI's second batch: inUI/press/move/end (the rect was task 46's)
+    ('PauseUIInUI2', 177, 0x009E8EF0, 0x00000000, 79),
+    ('PauseUIPress2', 178, 0x009E902C, 0x00000000, 261),
+    ('PauseUIMove2', 179, 0x009E9440, 0x00000000, 218),
+    ('PauseUIEnd2', 180, 0x009E97A8, 0x00000000, 218),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -1050,6 +1055,21 @@ def main():
 
     def pmm_lv(level):
         return {'retv': {PMM_WB: {'level': level}}}
+    PAU_OPT = 0x6000d000
+    PAU_SHARE = 0x6000d100
+    PAU_EXIT, PAU_TC = 0x60021400, 0x60021100
+    PAU_SHARE_B, PAU_OPTS = 0x60021600, 0x60021500
+    PAU_ACH, PAU_INSTR, PAU_RESUME = (0x60021200, 0x60021300, 0x60021000)
+
+    def pau_seeds(opt=0, share=0, disabled=0):
+        # PauseUI: windowInfo@96 (scratch); optionsUI@8; shareUI@12;
+        # exit@104, tc@108, shareB@112, opts@116, ach@120, instr@128,
+        # resume@132; disabled byte @138
+        return (f'96=0x60001000,8={opt},12={share},'
+                f'104=0x{PAU_EXIT:08x},108=0x{PAU_TC:08x},'
+                f'112=0x{PAU_SHARE_B:08x},116=0x{PAU_OPTS:08x},'
+                f'120=0x{PAU_ACH:08x},128=0x{PAU_INSTR:08x},'
+                f'132=0x{PAU_RESUME:08x},138={disabled}')
 
     def afu_seeds(wx=0.0, wy=0.0, ox=0.0, oy=0.0):
         # AddFuelUI: windowInfo@128 = self_ptr; translationOffset at
@@ -1914,6 +1934,38 @@ def main():
         'PaintMixUIEnd': {
             0: ('50,131', pmm_seeds(), dict(pmm_lv(0), **{'void': True})),
             1: ('50,131', pmm_seeds(), dict(pmm_lv(2), **{'void': True})),
+        },
+        'PauseUIInUI2': {
+            # 0: the disabled gate -> zero calls
+            0: ('50,50', pau_seeds(disabled=1), {}),
+            # 1: optionsUI non-nil -> its reply
+            1: ('50,50', pau_seeds(opt=PAU_OPT), {}),
+            2: ('50,50', pau_seeds(opt=PAU_OPT),
+                {'ret1': {PAU_OPT: ['touchIsInUI:']}}),
+            # 3: both nil -> the dead rect, 0
+            3: ('50,50', pau_seeds(), {}),
+        },
+        'PauseUIPress2': {
+            0: ('50,50', pau_seeds(disabled=1), {}),
+            # 1: optionsUI answers (startTouch:tapCount:) -> 1
+            1: ('50,50', pau_seeds(opt=PAU_OPT),
+                {'ret1': {PAU_OPT: ['startTouch:tapCount:']}}),
+            # 2: shareUI non-nil, miss -> [shareUI st:tc:], 0
+            2: ('50,50', pau_seeds(share=PAU_SHARE), {}),
+            # 3: both nil -> the seven buttons, 0
+            3: ('50,50', pau_seeds(), {}),
+        },
+        'PauseUIMove2': {
+            0: ('50,50', pau_seeds(disabled=1), {'void': True}),
+            1: ('50,50', pau_seeds(opt=PAU_OPT), {'void': True}),
+            2: ('50,50', pau_seeds(share=PAU_SHARE), {'void': True}),
+            3: ('50,50', pau_seeds(), {'void': True}),
+        },
+        'PauseUIEnd2': {
+            0: ('50,50', pau_seeds(disabled=1), {'void': True}),
+            1: ('50,50', pau_seeds(opt=PAU_OPT), {'void': True}),
+            2: ('50,50', pau_seeds(share=PAU_SHARE), {'void': True}),
+            3: ('50,50', pau_seeds(), {'void': True}),
         },
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view

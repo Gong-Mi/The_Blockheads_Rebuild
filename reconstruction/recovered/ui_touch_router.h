@@ -526,4 +526,26 @@ PanelTrace paintmixui_end_touch(int level, const ChildReply* sb0,
                                 const ChildReply* slider,
                                 const ChildReply* craft);
 
+// --- the PauseUI panel (the inUI/press/move/end batch) --------------------
+// touchIsInUI: (79w): disabled@138 gate -> 0 with NO calls; else if
+// optionsUI@8 non-nil -> [optionsUI touchIsInUI:pt] (its reply returned);
+// else 0 (the dead rect). startTouch:tapCount: (261w): the same gate; else
+// optionsUI non-nil -> [optionsUI startTouch:tapCount:pt tapCount]
+// returned; else shareUI@12 non-nil -> [shareUI startTouch:tapCount:...]
+// returned; else SEVEN buttons [resumeButton@132, tcButton@108,
+// achievementsButton@120, instructionsButton@128, exitButton@104,
+// optionsButton@116, shareButton@112] each [startTouch:] and the constant
+// 0 (dead replies). moveTouch:/endTouch: (218w each): the same
+// gates/order with their selectors; the else path walks the seven.
+PanelTrace pauseui_touch_is_in_ui(bool disabled, const ChildReply* options_ui);
+PanelTrace pauseui_start_touch(bool disabled, const ChildReply* options_ui,
+                               const ChildReply* share_ui,
+                               const ChildReply* const* buttons /* 7 */);
+PanelTrace pauseui_move_touch(bool disabled, const ChildReply* options_ui,
+                              const ChildReply* share_ui,
+                              const ChildReply* const* buttons /* 7 */);
+PanelTrace pauseui_end_touch(bool disabled, const ChildReply* options_ui,
+                             const ChildReply* share_ui,
+                             const ChildReply* const* buttons /* 7 */);
+
 }  // namespace blockheads::ui

@@ -966,6 +966,61 @@ blockheads::ui::Point regen_point(int case_id) {
     }
 }
 
+// --- the PauseUI panel's differential inputs (the second batch) -----------
+constexpr unsigned PAU_OPT = 0x6000d000u;    // the optionsUI child
+constexpr unsigned PAU_SHARE = 0x6000d100u;  // the shareUI child
+constexpr unsigned PAU_RESUME = 0x60021000u;
+constexpr unsigned PAU_TC = 0x60021100u;
+constexpr unsigned PAU_ACH = 0x60021200u;
+constexpr unsigned PAU_INSTR = 0x60021300u;
+constexpr unsigned PAU_EXIT = 0x60021400u;
+constexpr unsigned PAU_OPTS = 0x60021500u;
+constexpr unsigned PAU_SHARE_B = 0x60021600u;
+
+bool pau_disabled(int which, int case_id) { return case_id == 0; }
+
+unsigned pau_options_slot(int which, int case_id) {
+    if (which == 177) return (case_id == 1 || case_id == 2) ? PAU_OPT : 0;
+    return case_id == 1 ? PAU_OPT : 0;
+}
+
+unsigned pau_share_slot(int which, int case_id) {
+    if (which == 177) return 0;
+    return case_id == 2 ? PAU_SHARE : 0;
+}
+
+const blockheads::ui::ChildReply* pau_opt(int which, int case_id) {
+    if (which == 177) {
+        if (case_id == 1) return &kChildMiss;
+        if (case_id == 2) return &kChildInUi;
+        return nullptr;
+    }
+    if (which == 178) return case_id == 1 ? &kChildHandles : nullptr;
+    if (which == 179 || which == 180) {
+        return case_id == 1 ? &kChildMiss : nullptr;
+    }
+    return nullptr;
+}
+
+const blockheads::ui::ChildReply* pau_share_c(int which, int case_id) {
+    if (which == 177) return nullptr;
+    return case_id == 2 ? &kChildMiss : nullptr;
+}
+
+void pau_seeds_for(unsigned char* out, int which, int case_id) {
+    ui_put_word(out, 96, 0x60001000u);       // windowInfo (scratch)
+    ui_put_word(out, 8, pau_options_slot(which, case_id));
+    ui_put_word(out, 12, pau_share_slot(which, case_id));
+    ui_put_word(out, 104, PAU_EXIT);
+    ui_put_word(out, 108, PAU_TC);
+    ui_put_word(out, 112, PAU_SHARE_B);
+    ui_put_word(out, 116, PAU_OPTS);
+    ui_put_word(out, 120, PAU_ACH);
+    ui_put_word(out, 128, PAU_INSTR);
+    ui_put_word(out, 132, PAU_RESUME);
+    if (pau_disabled(which, case_id)) ui_put_word(out, 138, 1u);
+}
+
 // --- the PaintMixUI panel's differential inputs ---------------------------
 constexpr unsigned PMM_WB = 0x6000e000u;   // the workbench (level probe)
 constexpr unsigned PMM_SB0 = 0x60020600u;
@@ -1471,6 +1526,28 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // the constant-verdict panels: no calls (the literal verdicts)
     } else if (type_id >= 97 && type_id <= 101) {
         // the WorkbenchProgressBarUI panel: no calls (rect + constants)
+    } else if (type_id >= 177 && type_id <= 180) {
+        // the PauseUI panel (the second batch): gates + the child walks
+        const bool dis = pau_disabled(type_id, case_id);
+        const auto* opt = pau_opt(type_id, case_id);
+        const auto* shr = pau_share_c(type_id, case_id);
+        const blockheads::ui::ChildReply* btns[7] = {
+            &kChildMiss, &kChildMiss, &kChildMiss, &kChildMiss,
+            &kChildMiss, &kChildMiss, &kChildMiss};
+        blockheads::ui::PanelTrace t;
+        if (type_id == 177) {
+            t = blockheads::ui::pauseui_touch_is_in_ui(dis, opt);
+        } else if (type_id == 178) {
+            t = blockheads::ui::pauseui_start_touch(dis, opt, shr, btns);
+        } else if (type_id == 179) {
+            t = blockheads::ui::pauseui_move_touch(dis, opt, shr, btns);
+        } else if (type_id == 180) {
+            t = blockheads::ui::pauseui_end_touch(dis, opt, shr, btns);
+        }
+        for (const char* c : t.calls) {
+            if (!s.empty()) s += ',';
+            s += c;
+        }
     } else if (type_id >= 172 && type_id <= 176) {
         // the PaintMixUI panel: the level-gated chains
         const int lv = pmm_level(type_id, case_id);
@@ -1799,6 +1876,14 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         wpb_seeds_for(out, case_id);
+        return n;
+    }
+    if (type_id >= 177 && type_id <= 180) {  // PauseUI (the second batch)
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0u);
+        ui_put_word(out, 12, 0u);
+        pau_seeds_for(out, type_id, case_id);
         return n;
     }
     if (type_id >= 172 && type_id <= 176) {  // PaintMixUI
@@ -2181,6 +2266,19 @@ int recovered_ui_ret(int type_id, int case_id) {
             pmm_child(174, 3, case_id), pmm_child(174, 4, case_id)).handled;
     }
     if (type_id == 175 || type_id == 176) return 0;  // void (not compared)
+    if (type_id == 177) {
+        return blockheads::ui::pauseui_touch_is_in_ui(
+            pau_disabled(177, case_id), pau_opt(177, case_id)).handled;
+    }
+    if (type_id == 178) {
+        const blockheads::ui::ChildReply* btns[7] = {
+            &kChildMiss, &kChildMiss, &kChildMiss, &kChildMiss,
+            &kChildMiss, &kChildMiss, &kChildMiss};
+        return blockheads::ui::pauseui_start_touch(
+            pau_disabled(178, case_id), pau_opt(178, case_id),
+            pau_share_c(178, case_id), btns).handled;
+    }
+    if (type_id == 179 || type_id == 180) return 0;  // void (not compared)
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);

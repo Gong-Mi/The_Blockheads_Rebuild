@@ -167,9 +167,15 @@ def main() -> int:
         # the PaintMixUI panel
         "('PaintMixUIRect', 172, 0x006723E8",
         "def pmm_seeds(wx=0.0, wy=0.0, ox=0.0, oy=0.0):",
+        # PauseUI's second batch
+        "('PauseUIInUI2', 177, 0x009E8EF0",
+        "def pau_seeds(opt=0, share=0, disabled=0):",
     ])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_uimanager_starttouch.txt",
             ["startTouch:tapCount:index:"])
+    require(ROOT / "reconstruction/reverse-v3/native/disasm_pauseui_touch2.txt",
+            ["PauseUI -[touch family 2]", "implementation: 0x009e8ef0",
+             "boundary: 0x009e9b10"])
     require(ROOT / "reconstruction/reverse-v3/native/INPUT_FRONT.md",
             ["tcUI@32", "currentTouchIsInAnyButtons@154", "hidePauseUI@148",
              "run_ui_router", "19 cases", "children's OR ONLY",
@@ -202,7 +208,8 @@ def main() -> int:
              "sleepprogressui_touch_is_in_view_at_all",
              "sleepprogressui_end_touch", "addfuelui_touch_is_in_view_at_all",
              "addfuelui_end_touch", "paintmixui_touch_is_in_view_at_all",
-             "paintmixui_end_touch"])
+             "paintmixui_end_touch", "pauseui_touch_is_in_ui",
+             "pauseui_end_touch"])
     require(ROOT / "reconstruction/recovered/ui_touch_router.cpp",
             ["startTouch:tapCount:paused:index:", "import(memset)",
              "touchIsInViewAtAll:", "x > -130.0f && x < 130.0f",
@@ -215,7 +222,7 @@ def main() -> int:
              "tpbuy x18", "sound x7", "invfull x12", "freeoffer x9",
              "addcredit x10", "ctrlopts x7", "hunger x13",
              "jetpack x15", "sleepprog x19", "addfuel x15",
-             "paintmix x19"])
+             "paintmix x19", "pauseui2 x16"])
     # the constant-verdict listings
     require(ROOT / "reconstruction/reverse-v3/native/disasm_mapui_touch.txt",
             ["MapUI -[touch family]", "implementation: 0x009cb460"])
@@ -268,7 +275,8 @@ def main() -> int:
              "ac_in_progress", "co_seeds_for", "hgr_seeds_for",
              "hgr_child", "jpk_seeds_for", "jpk_child", "slp_seeds_for",
              "slp_child", "slp_med", "afu_seeds_for", "afu_hit_index",
-             "pmm_seeds_for", "pmm_child", "pmm_level"])
+             "pmm_seeds_for", "pmm_child", "pmm_level", "pau_seeds_for",
+             "pau_opt", "pau_share_c"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_gameuiview_all.txt",
             ["OBJC_IVAR_$_GameUIView.displayed (slot 0x0105dee0) = 4",
              "OBJC_IVAR_$_GameUIView.resourcesLoaded (slot 0x0105c494) = 16"])
@@ -305,15 +313,15 @@ def main() -> int:
             print(proc.stdout)
             print(proc.stderr)
             return 1
-        # the run's own report pins the case totals: 35 modelled + 304 UI
+        # the run's own report pins the case totals: 35 modelled + 320 UI
         # rows (router 19 + CraftUI 16 + DPad 11 + BlockheadUI 28 +
         # const 17 + WPBar 11 + Camera 10 + Pet 13 + Wear 14 + Regen 14 +
         # TPBuy 18 + Sound 7 + InvFull 12 + FreeOffer 9 + AddCredit 10 +
         # CtrlOpts 7 + Hunger 13 + JetPack 15 + SleepProg 19 + AddFuel 15
-        # + PaintMix 19 + MJControl 3 + MJView 4)
+        # + PaintMix 19 + PauseUI2 16 + MJControl 3 + MJView 4)
         import json
         report = json.loads((out / "specials-arm-result.json").read_text())
-        assert report["cases"] == 339, report["cases"]
+        assert report["cases"] == 355, report["cases"]
         assert report["match"] is True
         ui_rows = [r for r in report["rows"] if r["class"] == "UIManager"]
         assert len(ui_rows) == 19, len(ui_rows)
@@ -331,7 +339,8 @@ def main() -> int:
         const_rows = [r for r in report["rows"]
                       if r["class"].startswith(("MapUI", "OptionsUI",
                                                 "ShareUI", "PauseUI",
-                                                "MainMenuUI"))]
+                                                "MainMenuUI"))
+                      and not r["class"].endswith("2")]
         assert len(const_rows) == 17, len(const_rows)
         # the const-1 panels must answer 1 for the far point too
         # (MapUIRect's far case is the const-0 control)
@@ -386,13 +395,18 @@ def main() -> int:
         pmm_rows = [r for r in report["rows"]
                     if r["class"].startswith("PaintMixUI")]
         assert len(pmm_rows) == 19, len(pmm_rows)
+        pau2_rows = [r for r in report["rows"]
+                     if r["class"] in ("PauseUIInUI2", "PauseUIPress2",
+                                       "PauseUIMove2", "PauseUIEnd2")]
+        assert len(pau2_rows) == 16, len(pau2_rows)
         print("specials-arm: PASS (differential executed, modelled cases "
               "match; router 19/19, craftui 16/16, dpad 11/11, "
               "blockhead 28/28, const 17/17, wpbar 11/11, camera 10/10, "
               "pet 13/13, wear 14/14, regen 14/14, tpbuy 18/18, "
               "sound 7/7, invfull 12/12, freeoffer 9/9, "
               "addcredit 10/10, ctrlopts 7/7, hunger 13/13, "
-              "jetpack 15/15, sleepprog 19/19, addfuel 15/15, paintmix 19/19)")
+              "jetpack 15/15, sleepprog 19/19, addfuel 15/15, paintmix 19/19, "
+              "pauseui2 16/16)")
         return 0
 
     print("specials-arm: PASS (constants; run with --elf to execute)")

@@ -1087,4 +1087,88 @@ PanelTrace paintmixui_end_touch(int level, const ChildReply* sb0,
     return t;
 }
 
+// --- the PauseUI panel (the inUI/press/move/end batch) --------------------
+
+PanelTrace pauseui_touch_is_in_ui(bool disabled,
+                                  const ChildReply* options_ui) {
+    PanelTrace t;
+    if (disabled) {                    // the gate: zero calls, 0
+        t.handled = 0;
+        return t;
+    }
+    if (options_ui != nullptr) {       // optionsUI@8 non-nil: its reply
+        const bool r = child_in_ui(options_ui, t);
+        t.handled = r ? 1 : 0;
+        return t;
+    }
+    t.handled = 0;                     // the dead-rect fallthrough
+    return t;
+}
+
+PanelTrace pauseui_start_touch(bool disabled, const ChildReply* options_ui,
+                               const ChildReply* share_ui,
+                               const ChildReply* const* buttons) {
+    (void)buttons;
+    PanelTrace t;
+    if (disabled) {
+        t.handled = 0;
+        return t;
+    }
+    if (options_ui != nullptr) {
+        t.calls.push_back("startTouch:tapCount:");   // optionsUI@8
+        t.handled = options_ui->handles ? 1 : 0;
+        return t;
+    }
+    if (share_ui != nullptr) {
+        t.calls.push_back("startTouch:tapCount:");   // shareUI@12
+        t.handled = share_ui->handles ? 1 : 0;
+        return t;
+    }
+    for (int i = 0; i < 7; ++i) {
+        t.calls.push_back("startTouch:");   // resume..shareButton
+    }
+    t.handled = 0;                     // the constant local (dead replies)
+    return t;
+}
+
+PanelTrace pauseui_move_touch(bool disabled, const ChildReply* options_ui,
+                              const ChildReply* share_ui,
+                              const ChildReply* const* buttons) {
+    (void)buttons;
+    PanelTrace t;
+    if (disabled) return t;
+    if (options_ui != nullptr) {
+        t.calls.push_back("moveTouch:");   // optionsUI@8
+        return t;
+    }
+    if (share_ui != nullptr) {
+        t.calls.push_back("moveTouch:");   // shareUI@12
+        return t;
+    }
+    for (int i = 0; i < 7; ++i) {
+        t.calls.push_back("moveTouch:");   // resume..shareButton
+    }
+    return t;
+}
+
+PanelTrace pauseui_end_touch(bool disabled, const ChildReply* options_ui,
+                             const ChildReply* share_ui,
+                             const ChildReply* const* buttons) {
+    (void)buttons;
+    PanelTrace t;
+    if (disabled) return t;
+    if (options_ui != nullptr) {
+        t.calls.push_back("endTouch:");    // optionsUI@8
+        return t;
+    }
+    if (share_ui != nullptr) {
+        t.calls.push_back("endTouch:");    // shareUI@12
+        return t;
+    }
+    for (int i = 0; i < 7; ++i) {
+        t.calls.push_back("endTouch:");    // resume..shareButton
+    }
+    return t;
+}
+
 }  // namespace blockheads::ui
