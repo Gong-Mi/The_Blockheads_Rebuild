@@ -247,6 +247,17 @@ in that order. 10 cases (the const-1 far-point control, both children alone
 + all-miss per chain, the void orders receiver-verified) execute under
 Unicorn.
 
+## The AddFuelUI panel (types 167..171) — decoded
+
+`disasm_addfuelui_touch.txt` (800w): `touchIsInViewAtAll:` (95w) — x in
+(-120, 120), y in (0, 108). The four chains NSFastEnumeration over
+`fuelButtons@40`: `touchIsInUI:` (180w) / `startTouch:tapCount:` (183w)
+walk the batch and BREAK on the first true reply (the exhausted batch
+re-requests countByEnumerating once — the trace carries the
+`import(memset)` prologue); `moveTouch:` / `endTouch:` (171w each)
+message EVERY element (same prologue/walk, no break). 15 cases execute
+under Unicorn.
+
 ## The SleepProgressUI panel (types 162..166) — decoded
 
 `disasm_sleepprogressui_touch.txt` (565w): `touchIsInViewAtAll:` (95w) —

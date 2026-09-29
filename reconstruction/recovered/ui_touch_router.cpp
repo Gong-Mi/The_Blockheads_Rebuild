@@ -921,4 +921,70 @@ PanelTrace sleepprogressui_end_touch(bool is_meditation,
     return t;
 }
 
+// --- the AddFuelUI panel --------------------------------------------------
+
+constexpr const char* kEnumSel = "countByEnumeratingWithState:objects:count:";
+
+bool addfuelui_touch_is_in_view_at_all(Point p, const PanelFrame& f) {
+    const float x = p.x - f.window_x - f.offset_x;
+    const float y = p.y - f.window_y - f.offset_y;
+    return x > -120.0f && x < 120.0f && y > 0.0f && y < 108.0f;
+}
+
+PanelTrace addfuelui_touch_is_in_ui(const ChildReply* const* items,
+                                    int count) {
+    PanelTrace t;
+    t.calls.push_back("import(memset)");   // the enumeration state prologue
+    t.calls.push_back(kEnumSel);
+    for (int i = 0; i < count; ++i) {
+        if (child_in_ui(items[i], t)) {   // break on the first true
+            t.handled = 1;
+            return t;
+        }
+    }
+    t.calls.push_back(kEnumSel);          // the exhausted request
+    t.handled = 0;
+    return t;
+}
+
+PanelTrace addfuelui_start_touch(const ChildReply* const* items,
+                                 int count) {
+    PanelTrace t;
+    t.calls.push_back("import(memset)");   // the enumeration state prologue
+    t.calls.push_back(kEnumSel);
+    for (int i = 0; i < count; ++i) {
+        if (child_start(items[i], t)) {   // break on the first true
+            t.handled = 1;
+            return t;
+        }
+    }
+    t.calls.push_back(kEnumSel);
+    t.handled = 0;
+    return t;
+}
+
+PanelTrace addfuelui_move_touch(const ChildReply* const* items, int count) {
+    (void)items;
+    PanelTrace t;
+    t.calls.push_back("import(memset)");   // the enumeration state prologue
+    t.calls.push_back(kEnumSel);
+    for (int i = 0; i < count; ++i) {
+        t.calls.push_back("moveTouch:");  // every element
+    }
+    t.calls.push_back(kEnumSel);
+    return t;
+}
+
+PanelTrace addfuelui_end_touch(const ChildReply* const* items, int count) {
+    (void)items;
+    PanelTrace t;
+    t.calls.push_back("import(memset)");   // the enumeration state prologue
+    t.calls.push_back(kEnumSel);
+    for (int i = 0; i < count; ++i) {
+        t.calls.push_back("endTouch:");   // every element
+    }
+    t.calls.push_back(kEnumSel);
+    return t;
+}
+
 }  // namespace blockheads::ui

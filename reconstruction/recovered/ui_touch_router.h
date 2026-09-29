@@ -479,4 +479,19 @@ PanelTrace sleepprogressui_end_touch(bool is_meditation,
                                      const ChildReply* abort_btn,
                                      const ChildReply* complete_btn);
 
+// --- the AddFuelUI panel --------------------------------------------------
+// rect (95w): local = point - windowInfo(+8/+0xc) - translationOffset
+// (@148); x in (-120, 120), y in (0, 108), all edges exclusive. The four
+// chains NSFastEnumeration over fuelButtons@40: touchIsInUI: (180w) /
+// startTouch:tapCount: (183w) walk the batch and BREAK on the first true
+// reply (the exhausted batch re-requests countByEnumerating once);
+// moveTouch:/endTouch: (171w each) message EVERY element.
+bool addfuelui_touch_is_in_view_at_all(Point p, const PanelFrame& f);
+PanelTrace addfuelui_touch_is_in_ui(const ChildReply* const* items,
+                                    int count);
+PanelTrace addfuelui_start_touch(const ChildReply* const* items,
+                                 int count);
+PanelTrace addfuelui_move_touch(const ChildReply* const* items, int count);
+PanelTrace addfuelui_end_touch(const ChildReply* const* items, int count);
+
 }  // namespace blockheads::ui

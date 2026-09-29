@@ -764,11 +764,44 @@ int main() {
         assert(join_trace(t.calls) == "endTouch:,endTouch:");
     }
 
+    // --- the AddFuelUI panel -----------------------------------------------
+    {
+        const PanelFrame origin{};
+        assert(addfuelui_touch_is_in_view_at_all({0, 54}, origin));
+        assert(!addfuelui_touch_is_in_view_at_all({120, 54}, origin));
+        assert(!addfuelui_touch_is_in_view_at_all({0, 108}, origin));
+        const ChildReply hit{true, false};
+        const ChildReply miss{};
+        const ChildReply* items[3] = {&miss, &miss, &miss};
+        // no hit: the exhausted re-request
+        auto t = addfuelui_touch_is_in_ui(items, 3);
+        assert(join_trace(t.calls)
+               == "import(memset),countByEnumeratingWithState:objects:count:"
+                  ",touchIsInUI:,touchIsInUI:,touchIsInUI:"
+                  ",countByEnumeratingWithState:objects:count:");
+        assert(t.handled == 0);
+        // item 1 hits: break after two calls
+        const ChildReply* items2[3] = {&miss, &hit, &miss};
+        t = addfuelui_touch_is_in_ui(items2, 3);
+        assert(join_trace(t.calls)
+               == "import(memset),countByEnumeratingWithState:objects:count:"
+                  ",touchIsInUI:,touchIsInUI:");
+        assert(t.handled == 1);
+        t = addfuelui_move_touch(items, 3);
+        assert(join_trace(t.calls)
+               == "import(memset),countByEnumeratingWithState:objects:count:"
+                  ",moveTouch:,moveTouch:,moveTouch:"
+                  ",countByEnumeratingWithState:objects:count:");
+        t = addfuelui_end_touch(items, 3);
+        assert(join_trace(t.calls).find("endTouch:,endTouch:,endTouch:")
+               != std::string::npos);
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
                 " block chain x19, craftui x16, dpad x11, blockhead x28,"
                 " const x17, wpbar x11, camera x10, pet x13, wear x14,"
                 " regen x14, tpbuy x18, sound x7, invfull x12, "
                 "freeoffer x9, addcredit x10, ctrlopts x7, hunger x13,"
-                " jetpack x15, sleepprog x19)\n");
+                " jetpack x15, sleepprog x19, addfuel x15)\n");
     return 0;
 }

@@ -189,6 +189,12 @@ ENTRIES = [
     ('SleepProgressUIPress', 164, 0x00B3700C, 0x00000000, 138),
     ('SleepProgressUIMove', 165, 0x00B37234, 0x00000000, 100),
     ('SleepProgressUIEnd', 166, 0x00B373C4, 0x00000000, 100),
+    # the AddFuelUI panel: a rect + the fuelButtons enumeration walks
+    ('AddFuelUIRect', 167, 0x009B784C, 0x00000000, 95),
+    ('AddFuelUIInUI', 168, 0x009B757C, 0x00000000, 180),
+    ('AddFuelUIPress', 169, 0x009B79C8, 0x00000000, 183),
+    ('AddFuelUIMove', 170, 0x009B7CA4, 0x00000000, 171),
+    ('AddFuelUIEnd', 171, 0x009B7F50, 0x00000000, 171),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -744,7 +750,8 @@ def main():
                                'TPBuyUI', 'SoundOptionsUI',
                                'InventoryFullUI', 'FreeOfferUI',
                                'AddCreditUI', 'ControlOptionsUI',
-                               'HungerUI', 'JetPackUI', 'SleepProgressUI')):
+                               'HungerUI', 'JetPackUI', 'SleepProgressUI',
+                               'AddFuelUI')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -1012,6 +1019,18 @@ def main():
 
     JPK_AF, JPK_FF = 0x60020600, 0x60020700
     SLP_AB, SLP_CB = 0x60020600, 0x60020700
+    AFU_LIST = 0x6000f000
+    AFU_B0, AFU_B1, AFU_B2 = 0x60020600, 0x60020700, 0x60020800
+
+    def afu_seeds(wx=0.0, wy=0.0, ox=0.0, oy=0.0):
+        # AddFuelUI: windowInfo@128 = self_ptr; translationOffset at
+        # 148/152; fuelButtons@40 = the NSArray (the enum fixture)
+        return (f'128=0x60001000,8={fb(wx)},12={fb(wy)},'
+                f'148={fb(ox)},152={fb(oy)},40=0x{AFU_LIST:08x}')
+
+    def afu_enum():
+        return {'enum_recv': AFU_LIST,
+                'views': [AFU_B0, AFU_B1, AFU_B2]}
 
     def slp_seeds(wx=0.0, wy=0.0, ox=0.0, oy=0.0, med=0):
         # SleepProgressUI: windowInfo@96 = self_ptr; translationOffset at
@@ -1789,6 +1808,37 @@ def main():
             1: ('50,55', slp_seeds(med=1), {
                 'void': True, 'expect_recv': [SLP_AB]}),
         },
+        'AddFuelUIRect': {
+            # x in (-120, 120), y in (0, 108), all edges exclusive
+            0: ('0,54', afu_seeds(), {}),        # centre
+            1: ('120,54', afu_seeds(), {}),      # x == 120
+            2: ('-120,54', afu_seeds(), {}),     # x == -120
+            3: ('0,0', afu_seeds(), {}),         # y == 0
+            4: ('0,108', afu_seeds(), {}),       # y == 108
+            5: ('119,107', afu_seeds(), {}),     # inside margins
+            6: ('124,54', afu_seeds(0, 0, 5, 0), {}),  # x=119 (in)
+        },
+        'AddFuelUIInUI': {
+            # 0: no element hits -> the exhausted re-request, 0
+            0: ('50,54', afu_seeds(), afu_enum()),
+            # 1: item 0 hits -> break, 1
+            1: ('50,54', afu_seeds(),
+                dict(afu_enum(), ret1={AFU_B0: ['touchIsInUI:']})),
+            # 2: item 1 hits -> [enum, tiu, tiu], 1
+            2: ('50,54', afu_seeds(),
+                dict(afu_enum(), ret1={AFU_B1: ['touchIsInUI:']})),
+        },
+        'AddFuelUIPress': {
+            0: ('50,54', afu_seeds(), afu_enum()),
+            1: ('50,54', afu_seeds(),
+                dict(afu_enum(), ret1={AFU_B0: ['startTouch:']})),
+            2: ('50,54', afu_seeds(),
+                dict(afu_enum(), ret1={AFU_B1: ['startTouch:']})),
+        },
+        'AddFuelUIMove': {
+            0: ('50,54', afu_seeds(), dict(afu_enum(), **{'void': True}))},
+        'AddFuelUIEnd': {
+            0: ('50,54', afu_seeds(), dict(afu_enum(), **{'void': True}))},
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.
