@@ -876,12 +876,29 @@ int main() {
                     .calls.empty());
     }
 
+    // --- the ShareUI panel (the press/move/end batch) ----------------------
+    {
+        auto t = shareui_start_touch(nullptr);
+        assert(join_trace(t.calls)
+               == "startTouch:,startTouch:,startTouch:,startTouch:,"
+                  "startTouch:,startTouch:,startTouch:");
+        assert(t.handled == 0);
+        t = shareui_move_touch(nullptr);
+        assert(join_trace(t.calls)
+               == "moveTouch:,moveTouch:,moveTouch:,moveTouch:,"
+                  "moveTouch:,moveTouch:,moveTouch:");
+        t = shareui_end_touch(nullptr);
+        assert(join_trace(t.calls)
+               == "endTouch:,endTouch:,endTouch:,endTouch:,"
+                  "endTouch:,endTouch:,endTouch:");
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
                 " block chain x19, craftui x16, dpad x11, blockhead x28,"
                 " const x17, wpbar x11, camera x10, pet x13, wear x14,"
                 " regen x14, tpbuy x18, sound x7, invfull x12, "
                 "freeoffer x9, addcredit x10, ctrlopts x7, hunger x13,"
                 " jetpack x15, sleepprog x19, addfuel x15, paintmix x19,"
-                " pauseui2 x16)\n");
+                " pauseui2 x16, shareui2 x3)\n");
     return 0;
 }

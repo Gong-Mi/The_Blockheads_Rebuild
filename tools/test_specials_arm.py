@@ -206,6 +206,10 @@ ENTRIES = [
     ('PauseUIPress2', 178, 0x009E902C, 0x00000000, 261),
     ('PauseUIMove2', 179, 0x009E9440, 0x00000000, 218),
     ('PauseUIEnd2', 180, 0x009E97A8, 0x00000000, 218),
+    # ShareUI's second batch: press/move/end (the rect/inUI were task 46's)
+    ('ShareUIPress2', 181, 0x009C3344, 0x00000000, 171),
+    ('ShareUIMove2', 182, 0x009C35F0, 0x00000000, 146),
+    ('ShareUIEnd2', 183, 0x009C3838, 0x00000000, 146),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -1060,6 +1064,19 @@ def main():
     PAU_EXIT, PAU_TC = 0x60021400, 0x60021100
     PAU_SHARE_B, PAU_OPTS = 0x60021600, 0x60021500
     PAU_ACH, PAU_INSTR, PAU_RESUME = (0x60021200, 0x60021300, 0x60021000)
+
+    SU_OK, SU_APP = 0x60021000, 0x60021100
+    SU_PORTAL, SU_INVITE = 0x60021200, 0x60021300
+    SU_TW, SU_FB, SU_FORUM = 0x60021400, 0x60021500, 0x60021600
+
+    def su_seeds():
+        # ShareUI: windowInfo@96 (scratch); OK@104; shareApp@108;
+        # inviteToWorld@112; portal@116; twitter@120; facebook@124;
+        # forums@128
+        return (f'96=0x60001000,104=0x{SU_OK:08x},108=0x{SU_APP:08x},'
+                f'112=0x{SU_INVITE:08x},116=0x{SU_PORTAL:08x},'
+                f'120=0x{SU_TW:08x},124=0x{SU_FB:08x},'
+                f'128=0x{SU_FORUM:08x}')
 
     def pau_seeds(opt=0, share=0, disabled=0):
         # PauseUI: windowInfo@96 (scratch); optionsUI@8; shareUI@12;
@@ -1967,6 +1984,21 @@ def main():
             2: ('50,50', pau_seeds(share=PAU_SHARE), {'void': True}),
             3: ('50,50', pau_seeds(), {'void': True}),
         },
+        'ShareUIPress2': {
+            0: ('50,50', su_seeds(), {
+                'expect_recv': [SU_OK, SU_APP, SU_PORTAL, SU_INVITE,
+                                SU_TW, SU_FB, SU_FORUM]}),
+        },
+        'ShareUIMove2': {
+            0: ('50,50', su_seeds(), {
+                'void': True,
+                'expect_recv': [SU_OK, SU_APP, SU_PORTAL, SU_INVITE,
+                                SU_TW, SU_FB, SU_FORUM]})},
+        'ShareUIEnd2': {
+            0: ('50,50', su_seeds(), {
+                'void': True,
+                'expect_recv': [SU_OK, SU_APP, SU_PORTAL, SU_INVITE,
+                                SU_TW, SU_FB, SU_FORUM]})},
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.

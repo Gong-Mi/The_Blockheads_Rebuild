@@ -548,4 +548,14 @@ PanelTrace pauseui_end_touch(bool disabled, const ChildReply* options_ui,
                              const ChildReply* share_ui,
                              const ChildReply* const* buttons /* 7 */);
 
+// --- the ShareUI panel (the press/move/end batch) -------------------------
+// startTouch:tapCount: (171w) messages the SEVEN buttons [OKButton@104,
+// shareAppButton@108, portalButton@116, inviteToWorldButton@112,
+// twitterButton@120, facebookButton@124, forumsButton@128] each
+// [startTouch:] (replies dead) and returns the constant local 0.
+// moveTouch:/endTouch: (146w each) walk the same seven.
+PanelTrace shareui_start_touch(const ChildReply* const* buttons /* 7 */);
+PanelTrace shareui_move_touch(const ChildReply* const* buttons /* 7 */);
+PanelTrace shareui_end_touch(const ChildReply* const* buttons /* 7 */);
+
 }  // namespace blockheads::ui

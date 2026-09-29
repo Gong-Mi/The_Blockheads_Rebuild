@@ -247,6 +247,16 @@ in that order. 10 cases (the const-1 far-point control, both children alone
 + all-miss per chain, the void orders receiver-verified) execute under
 Unicorn.
 
+## ShareUI's press/move/end (types 181..183) — decoded
+
+`disasm_shareui_touch2.txt` (463w): `startTouch:tapCount:` (171w)
+messages the SEVEN buttons [OKButton@104, shareAppButton@108,
+portalButton@116, inviteToWorldButton@112, twitterButton@120,
+facebookButton@124, forumsButton@128] each `[startTouch:]` (replies
+dead) and returns the constant local 0; `moveTouch:` / `endTouch:`
+(146w each) walk the same seven. 3 cases execute under Unicorn
+(receiver-order-proofed).
+
 ## PauseUI's inUI/press/move/end (types 177..180) — decoded
 
 `disasm_pauseui_touch2.txt` (776w): `touchIsInUI:` (79w): the

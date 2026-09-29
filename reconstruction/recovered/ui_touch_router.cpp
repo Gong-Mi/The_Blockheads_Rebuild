@@ -1171,4 +1171,34 @@ PanelTrace pauseui_end_touch(bool disabled, const ChildReply* options_ui,
     return t;
 }
 
+// --- the ShareUI panel (the press/move/end batch) -------------------------
+
+PanelTrace shareui_start_touch(const ChildReply* const* buttons) {
+    (void)buttons;
+    PanelTrace t;
+    for (int i = 0; i < 7; ++i) {
+        t.calls.push_back("startTouch:");  // OK..forumsButton
+    }
+    t.handled = 0;                         // the constant local (dead replies)
+    return t;
+}
+
+PanelTrace shareui_move_touch(const ChildReply* const* buttons) {
+    (void)buttons;
+    PanelTrace t;
+    for (int i = 0; i < 7; ++i) {
+        t.calls.push_back("moveTouch:");   // OK..forumsButton
+    }
+    return t;
+}
+
+PanelTrace shareui_end_touch(const ChildReply* const* buttons) {
+    (void)buttons;
+    PanelTrace t;
+    for (int i = 0; i < 7; ++i) {
+        t.calls.push_back("endTouch:");    // OK..forumsButton
+    }
+    return t;
+}
+
 }  // namespace blockheads::ui

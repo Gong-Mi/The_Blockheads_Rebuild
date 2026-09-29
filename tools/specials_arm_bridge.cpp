@@ -966,6 +966,26 @@ blockheads::ui::Point regen_point(int case_id) {
     }
 }
 
+// --- the ShareUI panel's differential inputs (the second batch) -----------
+constexpr unsigned SU_OK = 0x60021000u;
+constexpr unsigned SU_APP = 0x60021100u;
+constexpr unsigned SU_PORTAL = 0x60021200u;
+constexpr unsigned SU_INVITE = 0x60021300u;
+constexpr unsigned SU_TW = 0x60021400u;
+constexpr unsigned SU_FB = 0x60021500u;
+constexpr unsigned SU_FORUM = 0x60021600u;
+
+void su_seeds_for(unsigned char* out) {
+    ui_put_word(out, 96, 0x60001000u);   // windowInfo (scratch)
+    ui_put_word(out, 104, SU_OK);
+    ui_put_word(out, 108, SU_APP);
+    ui_put_word(out, 112, SU_INVITE);
+    ui_put_word(out, 116, SU_PORTAL);
+    ui_put_word(out, 120, SU_TW);
+    ui_put_word(out, 124, SU_FB);
+    ui_put_word(out, 128, SU_FORUM);
+}
+
 // --- the PauseUI panel's differential inputs (the second batch) -----------
 constexpr unsigned PAU_OPT = 0x6000d000u;    // the optionsUI child
 constexpr unsigned PAU_SHARE = 0x6000d100u;  // the shareUI child
@@ -1526,6 +1546,23 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // the constant-verdict panels: no calls (the literal verdicts)
     } else if (type_id >= 97 && type_id <= 101) {
         // the WorkbenchProgressBarUI panel: no calls (rect + constants)
+    } else if (type_id >= 181 && type_id <= 183) {
+        // the ShareUI panel: the seven-button walks (replies dead)
+        const blockheads::ui::ChildReply* btns[7] = {
+            &kChildMiss, &kChildMiss, &kChildMiss, &kChildMiss,
+            &kChildMiss, &kChildMiss, &kChildMiss};
+        blockheads::ui::PanelTrace t;
+        if (type_id == 181) {
+            t = blockheads::ui::shareui_start_touch(btns);
+        } else if (type_id == 182) {
+            t = blockheads::ui::shareui_move_touch(btns);
+        } else if (type_id == 183) {
+            t = blockheads::ui::shareui_end_touch(btns);
+        }
+        for (const char* c : t.calls) {
+            if (!s.empty()) s += ',';
+            s += c;
+        }
     } else if (type_id >= 177 && type_id <= 180) {
         // the PauseUI panel (the second batch): gates + the child walks
         const bool dis = pau_disabled(type_id, case_id);
@@ -1876,6 +1913,14 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         wpb_seeds_for(out, case_id);
+        return n;
+    }
+    if (type_id >= 181 && type_id <= 183) {  // ShareUI (the second batch)
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0x60000200u);    // the harness base (see seeds)
+        ui_put_word(out, 12, 0u);
+        su_seeds_for(out);
         return n;
     }
     if (type_id >= 177 && type_id <= 180) {  // PauseUI (the second batch)
@@ -2279,6 +2324,13 @@ int recovered_ui_ret(int type_id, int case_id) {
             pau_share_c(178, case_id), btns).handled;
     }
     if (type_id == 179 || type_id == 180) return 0;  // void (not compared)
+    if (type_id == 181) {
+        const blockheads::ui::ChildReply* btns[7] = {
+            &kChildMiss, &kChildMiss, &kChildMiss, &kChildMiss,
+            &kChildMiss, &kChildMiss, &kChildMiss};
+        return blockheads::ui::shareui_start_touch(btns).handled;
+    }
+    if (type_id == 182 || type_id == 183) return 0;  // void (not compared)
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);

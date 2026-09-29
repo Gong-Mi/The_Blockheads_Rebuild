@@ -170,6 +170,9 @@ def main() -> int:
         # PauseUI's second batch
         "('PauseUIInUI2', 177, 0x009E8EF0",
         "def pau_seeds(opt=0, share=0, disabled=0):",
+        # ShareUI's second batch
+        "('ShareUIPress2', 181, 0x009C3344",
+        "def su_seeds():",
     ])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_uimanager_starttouch.txt",
             ["startTouch:tapCount:index:"])
@@ -209,7 +212,8 @@ def main() -> int:
              "sleepprogressui_end_touch", "addfuelui_touch_is_in_view_at_all",
              "addfuelui_end_touch", "paintmixui_touch_is_in_view_at_all",
              "paintmixui_end_touch", "pauseui_touch_is_in_ui",
-             "pauseui_end_touch"])
+             "pauseui_end_touch", "shareui_start_touch",
+             "shareui_end_touch"])
     require(ROOT / "reconstruction/recovered/ui_touch_router.cpp",
             ["startTouch:tapCount:paused:index:", "import(memset)",
              "touchIsInViewAtAll:", "x > -130.0f && x < 130.0f",
@@ -222,7 +226,7 @@ def main() -> int:
              "tpbuy x18", "sound x7", "invfull x12", "freeoffer x9",
              "addcredit x10", "ctrlopts x7", "hunger x13",
              "jetpack x15", "sleepprog x19", "addfuel x15",
-             "paintmix x19", "pauseui2 x16"])
+             "paintmix x19", "pauseui2 x16", "shareui2 x3"])
     # the constant-verdict listings
     require(ROOT / "reconstruction/reverse-v3/native/disasm_mapui_touch.txt",
             ["MapUI -[touch family]", "implementation: 0x009cb460"])
@@ -276,7 +280,7 @@ def main() -> int:
              "hgr_child", "jpk_seeds_for", "jpk_child", "slp_seeds_for",
              "slp_child", "slp_med", "afu_seeds_for", "afu_hit_index",
              "pmm_seeds_for", "pmm_child", "pmm_level", "pau_seeds_for",
-             "pau_opt", "pau_share_c"])
+             "pau_opt", "pau_share_c", "su_seeds_for"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_gameuiview_all.txt",
             ["OBJC_IVAR_$_GameUIView.displayed (slot 0x0105dee0) = 4",
              "OBJC_IVAR_$_GameUIView.resourcesLoaded (slot 0x0105c494) = 16"])
@@ -313,15 +317,15 @@ def main() -> int:
             print(proc.stdout)
             print(proc.stderr)
             return 1
-        # the run's own report pins the case totals: 35 modelled + 320 UI
+        # the run's own report pins the case totals: 35 modelled + 323 UI
         # rows (router 19 + CraftUI 16 + DPad 11 + BlockheadUI 28 +
         # const 17 + WPBar 11 + Camera 10 + Pet 13 + Wear 14 + Regen 14 +
         # TPBuy 18 + Sound 7 + InvFull 12 + FreeOffer 9 + AddCredit 10 +
         # CtrlOpts 7 + Hunger 13 + JetPack 15 + SleepProg 19 + AddFuel 15
-        # + PaintMix 19 + PauseUI2 16 + MJControl 3 + MJView 4)
+        # + PaintMix 19 + PauseUI2 16 + ShareUI2 3 + MJControl 3 + MJView 4)
         import json
         report = json.loads((out / "specials-arm-result.json").read_text())
-        assert report["cases"] == 355, report["cases"]
+        assert report["cases"] == 358, report["cases"]
         assert report["match"] is True
         ui_rows = [r for r in report["rows"] if r["class"] == "UIManager"]
         assert len(ui_rows) == 19, len(ui_rows)
@@ -399,6 +403,10 @@ def main() -> int:
                      if r["class"] in ("PauseUIInUI2", "PauseUIPress2",
                                        "PauseUIMove2", "PauseUIEnd2")]
         assert len(pau2_rows) == 16, len(pau2_rows)
+        su2_rows = [r for r in report["rows"]
+                    if r["class"] in ("ShareUIPress2", "ShareUIMove2",
+                                      "ShareUIEnd2")]
+        assert len(su2_rows) == 3, len(su2_rows)
         print("specials-arm: PASS (differential executed, modelled cases "
               "match; router 19/19, craftui 16/16, dpad 11/11, "
               "blockhead 28/28, const 17/17, wpbar 11/11, camera 10/10, "
@@ -406,7 +414,7 @@ def main() -> int:
               "sound 7/7, invfull 12/12, freeoffer 9/9, "
               "addcredit 10/10, ctrlopts 7/7, hunger 13/13, "
               "jetpack 15/15, sleepprog 19/19, addfuel 15/15, paintmix 19/19, "
-              "pauseui2 16/16)")
+              "pauseui2 16/16, shareui2 3/3)")
         return 0
 
     print("specials-arm: PASS (constants; run with --elf to execute)")
