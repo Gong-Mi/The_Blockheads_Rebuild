@@ -247,6 +247,18 @@ in that order. 10 cases (the const-1 far-point control, both children alone
 + all-miss per chain, the void orders receiver-verified) execute under
 Unicorn.
 
+## The WearUI panel (types 112..116) — decoded
+
+`disasm_wearui_touch.txt` (416w): `touchIsInViewAtAll:` (118w) — local =
+point - windowInfo(+8/+0xc) - translationOffset(@152); the x compares run
+in DOUBLE (`vcvt.f64.f32` + `vmul.f64` by 0.5) against `+-w/2` where w/h is
+the EMBEDDED float pair `frameSize@28/@32`, y in `(0, h - 16)` in f32 — all
+edges exclusive. The chains message the SINGLE child `wearButton@60`:
+`touchIsInUI:` (69w) / `startTouch:tapCount:` (93w) return its reply,
+`moveTouch:` / `endTouch:` (68w each) are void. 14 cases execute under
+Unicorn (the five edges, the w=100/h=50 and w=200/h=200 term-flips, the
+single-child chains).
+
 ## The PetUI panel (types 107..111) — decoded
 
 `disasm_petui_touch.txt` (418w): `touchIsInViewAtAll:` (98w) — local =

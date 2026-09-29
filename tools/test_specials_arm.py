@@ -123,6 +123,12 @@ ENTRIES = [
     ('PetUIPress', 109, 0x0080FCD4, 0x00000000, 93),
     ('PetUIMove', 110, 0x0080FE48, 0x00000000, 68),
     ('PetUIEnd', 111, 0x0080FF58, 0x00000000, 68),
+    # the WearUI panel: a frameSize-driven rect + the single wearButton chain
+    ('WearUIRect', 112, 0x0088A7EC, 0x00000000, 118),
+    ('WearUIInUI', 113, 0x0088A9C4, 0x00000000, 69),
+    ('WearUIPress', 114, 0x0088AAD8, 0x00000000, 93),
+    ('WearUIMove', 115, 0x0088AC4C, 0x00000000, 68),
+    ('WearUIEnd', 116, 0x0088AD5C, 0x00000000, 68),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -674,7 +680,7 @@ def main():
                                'CraftUI', 'DPad', 'BlockheadUI',
                                'MapUI', 'OptionsUI', 'ShareUI', 'PauseUI',
                                'MainMenuUI', 'WPBarUI', 'CameraUI',
-                               'PetUI')):
+                               'PetUI', 'WearUI')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -924,6 +930,15 @@ def main():
 
     CAM_CB, CAM_TPB = 0x60020600, 0x60020700
     PET_NE = 0x60020600
+
+    WEAR_WB = 0x60020600
+
+    def wear_seeds(w=200.0, h=100.0, wx=0.0, wy=0.0, ox=0.0, oy=0.0):
+        # WearUI: windowInfo@144 = self_ptr; translationOffset at 152/156;
+        # frameSize (embedded w/h floats) at 28/32; wearButton@60
+        return (f'144=0x60001000,8={fb(wx)},12={fb(wy)},'
+                f'152={fb(ox)},156={fb(oy)},28={fb(w)},32={fb(h)},'
+                f'60=0x{WEAR_WB:08x}')
 
     def pet_seeds(wx, wy, ox, oy):
         # PetUI: windowInfo@128 = self_ptr; translationOffset at 136/140;
@@ -1291,6 +1306,35 @@ def main():
         'PetUIEnd': {
             0: ('50,50', pet_seeds(0, 0, 0, 0), {
                 'void': True, 'expect_recv': [PET_NE]})},
+        'WearUIRect': {
+            # local x in (-w/2, w/2) in double, y in (0, h - 16) in f32
+            0: ('0,49', wear_seeds(), {}),                # centre
+            1: ('100,49', wear_seeds(), {}),              # x == w/2
+            2: ('-100,49', wear_seeds(), {}),             # x == -w/2
+            3: ('0,0', wear_seeds(), {}),                 # y == 0
+            4: ('0,84', wear_seeds(), {}),                # y == h - 16
+            5: ('99,83', wear_seeds(), {}),               # inside margins
+            6: ('50,25', wear_seeds(w=100.0, h=50.0), {}),   # x == w/2 (w=100)
+            7: ('0,183.5', wear_seeds(w=200.0, h=200.0), {}),  # y < h - 16
+        },
+        'WearUIInUI': {
+            0: ('50,50', wear_seeds(), {'expect_recv': [WEAR_WB]}),
+            1: ('50,50', wear_seeds(), {
+                'expect_recv': [WEAR_WB],
+                'ret1': {WEAR_WB: ['touchIsInUI:']}}),
+        },
+        'WearUIPress': {
+            0: ('50,50', wear_seeds(), {'expect_recv': [WEAR_WB]}),
+            1: ('50,50', wear_seeds(), {
+                'expect_recv': [WEAR_WB],
+                'ret1': {WEAR_WB: ['startTouch:']}}),
+        },
+        'WearUIMove': {
+            0: ('50,50', wear_seeds(), {
+                'void': True, 'expect_recv': [WEAR_WB]})},
+        'WearUIEnd': {
+            0: ('50,50', wear_seeds(), {
+                'void': True, 'expect_recv': [WEAR_WB]})},
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.

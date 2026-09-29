@@ -436,4 +436,48 @@ PanelTrace petui_end_touch(const ChildReply* name_edit) {
     return t;
 }
 
+// --- the WearUI panel -----------------------------------------------------
+
+bool wearui_touch_is_in_view_at_all(Point p, const PanelFrame& f,
+                                    float w, float h) {
+    const float x1 = p.x - f.window_x - f.offset_x;
+    const float y1 = p.y - f.window_y - f.offset_y;
+    // the ARM: vcvt.f64.f32 the local x, vmul.f64 by 0.5, compare in double
+    const double xd = static_cast<double>(x1);
+    const double lo = static_cast<double>(-w) * 0.5;
+    const double hi = static_cast<double>(w) * 0.5;
+    if (!(xd > lo)) return false;
+    if (!(xd < hi)) return false;
+    if (y1 <= 0.0f) return false;
+    return y1 < (h - 16.0f);
+}
+
+PanelTrace wearui_touch_is_in_ui(const ChildReply* wear_button) {
+    PanelTrace t;
+    const bool r = child_in_ui(wear_button, t);
+    t.handled = r ? 1 : 0;
+    return t;
+}
+
+PanelTrace wearui_start_touch(const ChildReply* wear_button) {
+    PanelTrace t;
+    const bool r = child_start(wear_button, t);
+    t.handled = r ? 1 : 0;
+    return t;
+}
+
+PanelTrace wearui_move_touch(const ChildReply* wear_button) {
+    (void)wear_button;
+    PanelTrace t;
+    t.calls.push_back("moveTouch:");   // wearButton@60
+    return t;
+}
+
+PanelTrace wearui_end_touch(const ChildReply* wear_button) {
+    (void)wear_button;
+    PanelTrace t;
+    t.calls.push_back("endTouch:");    // wearButton@60
+    return t;
+}
+
 }  // namespace blockheads::ui

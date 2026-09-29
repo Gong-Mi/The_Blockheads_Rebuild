@@ -283,4 +283,18 @@ PanelTrace petui_start_touch(const ChildReply* name_edit);
 PanelTrace petui_move_touch(const ChildReply* name_edit);
 PanelTrace petui_end_touch(const ChildReply* name_edit);
 
+// --- the WearUI panel -----------------------------------------------------
+// rect (118w): local = point - windowInfo(+8/+0xc) - translationOffset
+// (@152); the x compares run in DOUBLE against +-w/2 (frameSize.w, an
+// embedded float pair at @28/@32), y in (0, h - 16) in f32 — all edges
+// exclusive. The chains message the SINGLE child wearButton@60:
+// touchIsInUI: (69w) / the press (93w) return its reply, move/end (68w)
+// each are void.
+bool wearui_touch_is_in_view_at_all(Point p, const PanelFrame& f,
+                                    float w, float h);
+PanelTrace wearui_touch_is_in_ui(const ChildReply* wear_button);
+PanelTrace wearui_start_touch(const ChildReply* wear_button);
+PanelTrace wearui_move_touch(const ChildReply* wear_button);
+PanelTrace wearui_end_touch(const ChildReply* wear_button);
+
 }  // namespace blockheads::ui

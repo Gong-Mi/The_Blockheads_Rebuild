@@ -915,6 +915,50 @@ void pet_seeds_for(unsigned char* out, int case_id) {
     ui_put_word(out, 52, 0x60020600u);       // nameEditButton
 }
 
+// --- the WearUI panel's differential inputs -------------------------------
+struct WearFrame { float w, h; };
+
+WearFrame wear_frame(int case_id) {
+    switch (case_id) {
+        case 6: return {100.0f, 50.0f};
+        case 7: return {200.0f, 200.0f};
+        default: return {200.0f, 100.0f};
+    }
+}
+
+blockheads::ui::Point wear_point(int case_id) {
+    switch (case_id) {
+        case 1: return {100.0f, 49.0f};
+        case 2: return {-100.0f, 49.0f};
+        case 3: return {0.0f, 0.0f};
+        case 4: return {0.0f, 84.0f};
+        case 5: return {99.0f, 83.0f};
+        case 6: return {50.0f, 25.0f};
+        case 7: return {0.0f, 183.5f};
+        default: return {0.0f, 49.0f};
+    }
+}
+
+void wear_seeds_for(unsigned char* out, int case_id) {
+    ui_put_word(out, 144, 0x60001000u);      // windowInfo = self_ptr
+    ui_put_word(out, 8, 0u);
+    ui_put_word(out, 12, 0u);
+    ui_put_word(out, 152, 0u);
+    ui_put_word(out, 156, 0u);
+    const auto f = wear_frame(case_id);
+    ui_put_word(out, 28, float_bits(f.w));   // frameSize (embedded)
+    ui_put_word(out, 32, float_bits(f.h));
+    ui_put_word(out, 60, 0x60020600u);       // wearButton
+}
+
+const blockheads::ui::ChildReply* wear_child(int which, int case_id) {
+    // 113/114: case 1 pins the child's reply
+    if ((which == 113 || which == 114) && case_id == 1) {
+        return (which == 114) ? &kChildHandles : &kChildInUi;
+    }
+    return &kChildMiss;
+}
+
 const blockheads::ui::ChildReply* pet_child(int which, int case_id) {
     // 108/109: case 1 pins the child's reply
     if ((which == 108 || which == 109) && case_id == 1) {
@@ -1008,6 +1052,23 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // the constant-verdict panels: no calls (the literal verdicts)
     } else if (type_id >= 97 && type_id <= 101) {
         // the WorkbenchProgressBarUI panel: no calls (rect + constants)
+    } else if (type_id >= 112 && type_id <= 116) {
+        // the WearUI panel: the single-child chains (112 makes no calls)
+        const auto* wb = wear_child(type_id, case_id);
+        blockheads::ui::PanelTrace t;
+        if (type_id == 113) {
+            t = blockheads::ui::wearui_touch_is_in_ui(wb);
+        } else if (type_id == 114) {
+            t = blockheads::ui::wearui_start_touch(wb);
+        } else if (type_id == 115) {
+            t = blockheads::ui::wearui_move_touch(wb);
+        } else if (type_id == 116) {
+            t = blockheads::ui::wearui_end_touch(wb);
+        }
+        for (const char* c : t.calls) {
+            if (!s.empty()) s += ',';
+            s += c;
+        }
     } else if (type_id >= 107 && type_id <= 111) {
         // the PetUI panel: the single-child chains (107 makes no calls)
         const auto* ne = pet_child(type_id, case_id);
@@ -1108,6 +1169,13 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         wpb_seeds_for(out, case_id);
+        return n;
+    }
+    if (type_id >= 112 && type_id <= 116) {  // WearUI
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0x60000200u);
+        wear_seeds_for(out, case_id);
         return n;
     }
     if (type_id >= 107 && type_id <= 111) {  // PetUI
@@ -1230,6 +1298,20 @@ int recovered_ui_ret(int type_id, int case_id) {
             pet_child(109, case_id)).handled;
     }
     if (type_id == 110 || type_id == 111) return 0;  // void (not compared)
+    if (type_id == 112) {
+        const auto f = wear_frame(case_id);
+        return blockheads::ui::wearui_touch_is_in_view_at_all(
+            wear_point(case_id), {}, f.w, f.h) ? 1 : 0;
+    }
+    if (type_id == 113) {
+        return blockheads::ui::wearui_touch_is_in_ui(
+            wear_child(113, case_id)).handled;
+    }
+    if (type_id == 114) {
+        return blockheads::ui::wearui_start_touch(
+            wear_child(114, case_id)).handled;
+    }
+    if (type_id == 115 || type_id == 116) return 0;  // void (not compared)
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);

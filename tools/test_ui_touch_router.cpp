@@ -526,8 +526,28 @@ int main() {
         assert(join_trace(t.calls) == "endTouch:");
     }
 
+    // --- the WearUI panel ---------------------------------------------------
+    {
+        const PanelFrame origin{};
+        assert(wearui_touch_is_in_view_at_all({0, 49}, origin, 200, 100));
+        assert(!wearui_touch_is_in_view_at_all({100, 49}, origin, 200, 100));
+        assert(!wearui_touch_is_in_view_at_all({-100, 49}, origin, 200, 100));
+        assert(!wearui_touch_is_in_view_at_all({0, 0}, origin, 200, 100));
+        assert(!wearui_touch_is_in_view_at_all({0, 84}, origin, 200, 100));
+        assert(wearui_touch_is_in_view_at_all({99, 83}, origin, 200, 100));
+        assert(!wearui_touch_is_in_view_at_all({50, 25}, origin, 100, 50));
+        assert(wearui_touch_is_in_view_at_all({0, 183.5f}, origin, 200, 200));
+        const ChildReply in_ui{true, false};
+        auto t = wearui_touch_is_in_ui(&in_ui);
+        assert(join_trace(t.calls) == "touchIsInUI:");
+        assert(t.handled == 1);
+        assert(wearui_touch_is_in_ui(nullptr).handled == 0);
+        assert(join_trace(wearui_move_touch(nullptr).calls) == "moveTouch:");
+        assert(join_trace(wearui_end_touch(nullptr).calls) == "endTouch:");
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
                 " block chain x19, craftui x16, dpad x11, blockhead x28,"
-                " const x17, wpbar x11, camera x10, pet x13)\n");
+                " const x17, wpbar x11, camera x10, pet x13, wear x14)\n");
     return 0;
 }
