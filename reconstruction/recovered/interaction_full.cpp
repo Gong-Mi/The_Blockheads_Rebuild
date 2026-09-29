@@ -87,8 +87,7 @@ ClientDynamicObject interaction_full_factory(int type_id,
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         type_id == 64
             ? "mirror full chain: DynamicObject base + InteractionObject "
               "init executed (352w differential; Mirror itself is a "
@@ -99,6 +98,8 @@ ClientDynamicObject interaction_full_factory(int type_id,
               "executed 352w init (8-case differential: six keys, strh "
               "paintColor, -1 blockhead default, three-gate world tail) + "
               "world tail not evaluable offline";
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "InteractionFullState");
     return object;
 }
 

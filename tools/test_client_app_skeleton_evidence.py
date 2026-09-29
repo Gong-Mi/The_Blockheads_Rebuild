@@ -106,26 +106,47 @@ def host_checks():
     # per-object fallback on the type-less-key record (24, 13); one entry
     # without any type stays unidentified, one objectType 65 stays out of
     # range; opaque = the not-dynamic plist + the binary payload.
+    # Re-pinned to the registered families: type 1 (tree) and 13 (npc) run
+    # recovered chains, so the fixture now yields 1 stub (type 24 Blockhead,
+    # out-of-domain by evidence) and 7 recovered. When a family registers,
+    # this count moves with it — that drift is the point of this check.
     assert report['dynamic_objects'] == 8, report
-    assert report['stub_objects'] == 8, report
-    assert report['verified_objects'] == 0 and report['recovered_objects'] == 0
+    assert report['stub_objects'] == 1, report
+    assert report['verified_objects'] == 0 and report['recovered_objects'] == 7
+    # every recovered object must OWN its decoded state with the exact family
+    # of the module that produced it; stubs own none
+    for obj in report['objects']:
+        family = obj.get('state_family')
+        if obj['status'] == 'stub':
+            assert family is None, obj
+            continue
+        assert family in {'TreeFullState', 'NpcFullState'}, obj
+        if obj['type_id'] == 1:
+            assert family == 'TreeFullState', obj
+        if obj['type_id'] == 13:
+            assert family == 'NpcFullState', obj
     assert report['unidentified_objects'] == 1, report
     assert report['out_of_range_objects'] == 1, report
     assert report['opaque_records'] == 2, report
     assert report['malformed_records'] == 0, report
     assert report['shared_object_type_objects'] == 1, report
     assert report['per_type'] == {'1': 6, '13': 1, '24': 1}, report
+    # record keys carry 6 typed rows (4 per-object metadata values disagree
+    # with their record key and LOSE, per the strict rule); the one
+    # metadata-only record resolves 2 objects through the fallback keys and
+    # leaves one unidentified (an out-of-range objectType never counts).
     assert report['type_key_used'] == {'record_key': 6, 'type_disagreement': 4,
-                                       'objectType': 2,
+                                       'objectType': 1,
                                        'dynamicObjectType': 1}, report
     by_id = {obj['unique_id']: obj for obj in report['objects']}
     assert set(by_id) == {42, 77, 78, 5, 6, 7, 10, 11}, sorted(by_id)
     assert all(by_id[uid]['type_id'] == 1 for uid in (42, 77, 78, 5, 6, 7))
     assert by_id[10]['type_id'] == 24 and by_id[11]['type_id'] == 13
     statuses = {obj['status'] for obj in report['objects']}
-    assert statuses == {'stub'}, statuses
+    assert statuses == {'stub', 'recovered'}, statuses
     print(f'b5a evidence: CLI report over the synthetic snapshot PASS '
-          f'({report["dynamic_objects"]} objects, all stubs)')
+          f'({report["dynamic_objects"]} objects, '
+          f'{report["recovered_objects"]} stateful recovered)')
 
 
 def main():

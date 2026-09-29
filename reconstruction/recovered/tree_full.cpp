@@ -148,13 +148,14 @@ ClientDynamicObject tree_full_factory(int type_id, const SaveDict& entry,
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         "tree full chain: DynamicObject base + Tree stage1 (executed b4d) + "
         "gene/growth block (static b3a offsets) + own keys (b3b read-back "
         "static, presence-gated) + fruit entries decoded (b4e stage-2); the "
         "fruit WRITE gate is the world tile identity check (not evaluable "
         "offline)";
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "TreeFullState");
     return object;
 }
 

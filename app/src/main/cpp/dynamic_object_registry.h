@@ -20,7 +20,10 @@
 #include <cstddef>
 #include <cstdint>
 #include <functional>
+#include <memory>
 #include <string>
+#include <string_view>
+#include <utility>
 #include <vector>
 
 #include "original_save_dict.h"
@@ -29,6 +32,28 @@ namespace bh176 {
 
 enum class ObjectLoadStatus { Stub, Recovered, Verified };
 const char* objectLoadStatusName(ObjectLoadStatus status);
+
+// A recovered state is OWNED by the object that ran the recovered chain.
+// The family name is the module struct that decoded it (e.g. "PlantFullState"):
+// a Recovered/Verified status without a state is refused by construct() —
+// that is the structural end of the "factory ran, state dropped" discard bug.
+struct RecoveredState {
+    virtual ~RecoveredState() = default;
+    virtual const char* familyName() const = 0;
+};
+
+template <typename State>
+class ModuleState final : public RecoveredState {
+public:
+    ModuleState(State value, const char* family)
+        : value_(std::move(value)), family_(family) {}
+    const State& value() const { return value_; }
+    const char* familyName() const override { return family_; }
+
+private:
+    State value_;
+    const char* family_;
+};
 
 struct DynamicObjectTypeEntry {
     int type_id;
@@ -56,7 +81,31 @@ struct ClientDynamicObject {
     bool has_float_pos = false;
     ObjectLoadStatus status = ObjectLoadStatus::Stub;
     std::string status_reason;
+    // the decoded per-module state this object ran to produce; present exactly
+    // when status is Recovered/Verified (construct() enforces the pairing)
+    std::shared_ptr<const RecoveredState> state;
+
+    // Typed read-back: exact family match, nullptr otherwise (no reinterpret).
+    template <typename State>
+    const State* stateAs(const char* family) const {
+        if (state == nullptr || std::string_view(state->familyName()) != family) {
+            return nullptr;
+        }
+        return &static_cast<const ModuleState<State>*>(state.get())->value();
+    }
 };
+
+// The recovered chain ran for real; the object now owns its decoded state.
+// `family` must be the module struct name the state came from.
+template <typename State>
+void attachRecoveredState(ClientDynamicObject& object, State value,
+                          ObjectLoadStatus status, std::string reason,
+                          const char* family) {
+    object.state = std::make_shared<const ModuleState<State>>(
+        std::move(value), family);
+    object.status = status;
+    object.status_reason = std::move(reason);
+}
 
 class DynamicObjectRegistry {
 public:

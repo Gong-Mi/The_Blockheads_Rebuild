@@ -39,13 +39,14 @@ ClientDynamicObject kelpvine_full_factory(int type_id, const SaveDict& entry,
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         state.is_kelp
             ? "kelp full chain: DynamicObject base + Plant chain (executed "
               "b4b) + own keys (executed b4n loader, presence-gated)"
             : "vine full chain: DynamicObject base + Plant chain (executed "
               "b4b) + own keys (executed b4o loader, presence-gated)";
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "KelpVineFullState");
     return object;
 }
 

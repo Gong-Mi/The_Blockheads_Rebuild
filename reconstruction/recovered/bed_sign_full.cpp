@@ -95,8 +95,7 @@ ClientDynamicObject bed_sign_full_factory(int type_id, const SaveDict& entry,
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         type_id == 23
             ? "bed full chain: DynamicObject base + InteractionObject super "
               "(executed 352w) + own keys itemType@100/beddingColor@104-strh "
@@ -106,6 +105,8 @@ ClientDynamicObject bed_sign_full_factory(int type_id, const SaveDict& entry,
               "(executed 352w) + own keys text@100-retain/"
               "connectionType@112/offsetType@116 (listing decode); world "
               "tail not evaluable offline";
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "BedSignFullState");
     return object;
 }
 

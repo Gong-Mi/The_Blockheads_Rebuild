@@ -176,8 +176,7 @@ ClientDynamicObject midtier_full_factory(int type_id, const SaveDict& entry,
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         spec->zero_own_keys
             ? "midtier zero-own-key forwarder (forwarder5b, EXECUTED "
               "differential tools/test_forwarder5b_arm.py): DynamicObject "
@@ -187,6 +186,8 @@ ClientDynamicObject midtier_full_factory(int type_id, const SaveDict& entry,
               "table (read ORDER and nesting ARM-attested by "
               "tools/test_midtier_arm.py; sized ivar stores); tail hook "
               "stated (no save state)";
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "MidtierFullState");
     return object;
 }
 

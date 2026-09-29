@@ -45,12 +45,13 @@ ClientDynamicObject trainstation_full_factory(int type_id,
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         "trainstation full chain: DynamicObject base + TrainStation ownkey5 "
         "own key text (executed, presence-gated); InteractionObject super "
         "keys static-only (not loaded); initSubDerivedItems tail hook "
         "carries no save state";
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "TrainStationFullState");
     return object;
 }
 

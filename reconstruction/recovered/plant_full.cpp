@@ -88,16 +88,18 @@ ClientDynamicObject plant_full_factory(int type_id, const SaveDict& entry,
                                        PlantFullState* out_state,
                                        std::string* error) {
     if (error) error->clear();
-    // The recovered chain runs for real on construction; the caller decides
-    // where the per-type state lives (the registry object stays identity-only).
+    // The recovered chain runs for real on construction; the decoded state
+    // rides on the returned object (attachRecoveredState), so no caller can
+    // silently drop it. out_state stays for direct unit-style consumers.
     const PlantFullState state = plant_full_load({entry, world_time});
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         "plant full chain executed: DynamicObject base + Plant "
         "loadSaveDictValues (executed) + TulipPlant own keys (static)";
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "PlantFullState");
     return object;
 }
 

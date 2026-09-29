@@ -66,14 +66,15 @@ ClientDynamicObject ownershipsign_full_factory(int type_id,
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         "ownershipsign full chain: base + the Sign chain (text@100/"
         "connectionType@112/offsetType@116) + own keys landOwnerID@124/"
         "landOwnerName@128/w@132/h@136 (EXECUTED differential "
         "tools/test_specials_arm.py: radii default 15, present values clamp to "
         "[1,30] via the body's own helper, the ID probe gates the object "
         "block); updateText tail hook carries no save state";
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "OwnershipSignFullState");
     return object;
 }
 

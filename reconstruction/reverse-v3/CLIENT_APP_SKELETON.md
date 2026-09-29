@@ -94,11 +94,25 @@ python3 tools/test_client_app_skeleton_evidence.py             # 门禁（静态
 
 ## 边界
 
-本批交付的是**骨架 + 桩 + 报告**：没有声称任何具体类型已反序列化，
-`Recovered`/`Verified` 计数在 CI 与宿主复现中都是 0（b5b 起按类型的工厂逐例
-推进），「7 项基类字段之外」的一切仍是桩。b5b 设备片已把该骨架接进启动路径并
-完成真机装载验收（见下节）；APK 玩法（渲染/交互消费原版世界）尚未接入。
+本批交付的是**骨架 + 桩 + 报告**：b5a 时没有声称任何具体类型已反序列化，
+`Recovered`/`Verified` 计数当时在 CI 与宿主复现中都是 0；b5b 起按类型的工厂
+逐例推进，当前工厂类型（1..64 中已注册者）产出 Recovered，其余仍是桩。
+「7 项基类字段之外」的一切按各工厂 reason 声明证据级别。b5b 设备片已把该骨架
+接进启动路径并完成真机装载验收（见下节）；APK 玩法（渲染/交互消费原版世界）
+尚未接入。
 CTest 侧新增 `original_client_app`（保存/重载、桩计数、插槽晋级、路径与索引安全）。
+
+## 恢复状态所有权（state ownership，2026-09-30）
+
+工厂运行恢复链后算出的每类型状态**归对象所有**：`ClientDynamicObject` 持有
+`shared_ptr<const RecoveredState>`（family 名 = 解码它的模块结构，如
+`PlantFullState`），`stateAs<State>(family)` 做族精确匹配的类型读回。注册表在
+`construct()` 结构性拒绝「Recovered/Verified 但无状态」的对象——「工厂跑了、
+状态以 nullptr 丢弃」的旧缺陷不可能再静默回归。20 个模块工厂全部经
+`attachRecoveredState` 携带状态；CLI/`--json` 报告新增 `state_family` 字段；
+b5a 守卫与快照 run 测试逐类型钉状态族。边界不变：状态是已保存字段面的
+捕获，item-payload/world-gate 仍按各 reason 声明未执行；本节不声称玩法消费或
+设备验收。
 
 ## 真机验收（2026-09-27，0.2-b5b + JNI 片）
 

@@ -850,6 +850,10 @@ std::string OriginalClientApp::toJson() const {
                 << ", \"float_pos_y\": " << object.float_pos_y;
         }
         out << ", \"status\": \"" << objectLoadStatusName(object.status) << "\""
+            << ", \"state_family\": "
+            << (object.state
+                    ? "\"" + std::string(object.state->familyName()) + "\""
+                    : "null")
             << ", \"reason\": \"" << jsonEscape(object.status_reason) << "\"}";
     }
     out << (objects_.empty() ? "]\n" : "\n  ]\n");

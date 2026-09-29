@@ -85,13 +85,14 @@ ClientDynamicObject chest_full_factory(int type_id, const SaveDict& entry,
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         "chest full chain: DynamicObject base + Chest b4m executed surface "
         "(chestType/safeClientID/saveItemSlots slot+item counts/shelf_0..3); "
         "item payload decode not performed (InventoryItem domain); "
         "customRules world gate not run offline; InteractionObject super "
         "keys static-only (not loaded)";
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "ChestFullState");
     return object;
 }
 

@@ -65,13 +65,14 @@ ClientDynamicObject tradeportal_full_factory(int type_id,
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         "tradeportal full chain: DynamicObject base + own keys level/"
         "lightDict-static (UPPERMID15; ArtificialLight body not recovered) + "
         "localPriceOffsets clamped by the executed b4i contract (call-site "
         "binding static-level) + InteractionObject super keys static-only "
         "(not loaded)";
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "TradePortalFullState");
     return object;
 }
 

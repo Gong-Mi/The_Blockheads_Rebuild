@@ -100,14 +100,15 @@ ClientDynamicObject freeblock_full_factory(int type_id, const SaveDict& entry,
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         "freeblock full chain: DynamicObject base + FreeBlock b4p executed "
         "save surface (bounceTimer/fallSpeed/creationTime/floatPos[VX,VY]/"
         "hovers/itemType/dataA,dataB/subItems counts/dynamicObjectSaveDict/"
         "priorityBlockheadUinqueID); item payload decode not performed "
         "(InventoryItem domain); world tail (hovers re-anchor, blockhead "
         "lookup, ground fall) not run offline";
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "FreeBlockFullState");
     return object;
 }
 

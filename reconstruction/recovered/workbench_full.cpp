@@ -156,12 +156,13 @@ ClientDynamicObject workbench_full_factory(int type_id, const SaveDict& entry,
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         "workbench full chain: DynamicObject base + Workbench b4q executed "
         "(16 scalars + lightDict decoded via the ArtificialLight key table, "
         "tile registration not run); InteractionObject super keys "
         "static-only (not loaded); saveTime write-only";
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "WorkbenchFullState");
     return object;
 }
 

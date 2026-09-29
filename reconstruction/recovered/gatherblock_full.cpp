@@ -44,10 +44,11 @@ ClientDynamicObject gatherblock_full_factory(int type_id, const SaveDict& entry,
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         "gatherblock full chain: DynamicObject base + GatherBlock ownkey5 "
         "own keys timer/lastKnownGatherValue (executed, presence-gated)";
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "GatherBlockFullState");
     return object;
 }
 

@@ -74,8 +74,7 @@ ClientDynamicObject fire_torch_full_factory(int type_id, const SaveDict& entry,
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         type_id == 16
             ? "fireobject full chain: DynamicObject base + own keys "
               "burnTimer@56/spreadTimer_0..3@60..72 (listing decode); the "
@@ -85,6 +84,8 @@ ClientDynamicObject fire_torch_full_factory(int type_id, const SaveDict& entry,
               "connectionType@60/dataA@80-strh/dataB@82-strh/ownerID@36 "
               "(listing decode); the ArtificialLight child is not run "
               "offline";
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "FireTorchFullState");
     return object;
 }
 

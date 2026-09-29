@@ -79,8 +79,7 @@ ClientDynamicObject artificial_light_full_factory(
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         "artificial light body (EXECUTED differential "
         "tools/test_specials_arm.py: call order + the memory-write trace): "
         "[self isClient] first (true -> [self release] + nil); super; the "
@@ -91,6 +90,8 @@ ClientDynamicObject artificial_light_full_factory(
         "contributionGrid@56/addedGrid@60 from two __wrap_calloc calls; "
         "parentObject@100 is the 5th argument; [self addToTiles] tile "
         "registration is world state - not run offline";
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "ArtificialLightFullState");
     return object;
 }
 

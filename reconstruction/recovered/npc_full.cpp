@@ -232,17 +232,16 @@ ClientDynamicObject npc_full_factory(int type_id, const SaveDict& entry,
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         "npc full chain executed: DynamicObject base + NPC "
         "initWithWorld/loadValuesFromSaveDict (executed b3g/b4f)";
     if (type_id == 63) {
-        object.status_reason +=
+        reason +=
             "; Yak own keys milk/hair (ownkey5 executed, presence-gated); "
             "the updateTextures tail hook carries no save state";
     }
     if (type_id == 25) {
-        object.status_reason +=
+        reason +=
             "; DropBear own body (EXECUTED differential "
             "tools/test_specials_arm.py: read order + the age step + the "
             "death branch): provokeMeter float@300/courageMeter float@304/"
@@ -254,7 +253,7 @@ ClientDynamicObject npc_full_factory(int type_id, const SaveDict& entry,
             "loadDerivedStuff — the world inputs are not evaluable offline";
     }
     if (type_id == 39) {
-        object.status_reason +=
+        reason +=
             "; CaveTroll own body (EXECUTED differential "
             "tools/test_specials_arm.py: call order incl. the state-presence "
             "gate around the movement-state re-init): dead STRB@56, "
@@ -263,6 +262,8 @@ ClientDynamicObject npc_full_factory(int type_id, const SaveDict& entry,
             "[world worldWidthMacro] queries and the world-derived "
             "travelSpeed@312/travelFraction@400 are not evaluable offline";
     }
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "NpcFullState");
     return object;
 }
 

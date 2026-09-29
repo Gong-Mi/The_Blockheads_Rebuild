@@ -128,6 +128,18 @@ bool DynamicObjectRegistry::construct(int type_id, const SaveDict& entry,
     if (out->status_reason.empty()) {
         out->status_reason = slot.label;
     }
+    // A Recovered/Verified object must OWN a decoded state: the discard bug
+    // (chain ran, state dropped) cannot silently reappear through a factory.
+    if (out->status != ObjectLoadStatus::Stub && out->state == nullptr) {
+        if (error) {
+            *error = "type " + std::to_string(type_id) +
+                     " factory returned status " +
+                     objectLoadStatusName(out->status) +
+                     " with no recovered state";
+        }
+        out->type_id = 0;
+        return false;
+    }
     return true;
 }
 

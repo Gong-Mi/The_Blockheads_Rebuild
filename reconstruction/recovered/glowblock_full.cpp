@@ -48,11 +48,12 @@ ClientDynamicObject glowblock_full_factory(int type_id,
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         "glowblock full chain: DynamicObject base + own keys tileType@60 "
         "(listing decode) + lightDict presence; the ArtificialLight child "
         "construction is not run offline";
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "GlowBlockFullState");
     return object;
 }
 

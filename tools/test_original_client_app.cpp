@@ -6,6 +6,7 @@
 #include "original_client_app.h"
 #include "original_save_dict.h"
 #include "original_save_format.h"
+#include "../../reconstruction/recovered/plant_full.h"
 
 #include <cassert>
 #include <cstdint>
@@ -75,6 +76,13 @@ const char* kPlistNotDynamic = R"(<?xml version="1.0"?>
 </dict>
 </plist>
 )";
+
+// A test-local recovered state, so a plug-in factory can satisfy the
+// "Recovered/Verified must own a state" invariant with a typed payload.
+struct TestRecoveredProbe {
+    int type_id = 0;
+    unsigned long long unique_id = 0;
+};
 
 void writeRaw(const std::filesystem::path& path, std::uint8_t type) {
     std::vector<std::uint8_t> bytes(bh176::kPhysicalBlockPayloadSize, 0);
@@ -209,8 +217,10 @@ int main() {
                 custom.type_id = 1;
                 custom.class_name = "AppleTree";
                 custom.unique_id = bh176::SaveDict::unsignedLongValue(in.objectForKey("uniqueID"));
-                custom.status = bh176::ObjectLoadStatus::Recovered;
-                custom.status_reason = "test factory (b5a plug-in path)";
+                bh176::attachRecoveredState(
+                    custom, TestRecoveredProbe{1, custom.unique_id},
+                    bh176::ObjectLoadStatus::Recovered,
+                    "test factory (b5a plug-in path)", "TestRecoveredProbe");
                 return custom;
             },
             "test factory", bh176::ObjectLoadStatus::Recovered);
@@ -219,6 +229,31 @@ int main() {
         assert(registry.construct(1, bh176::SaveDict(*entry), &object, &error));
         assert(object.status == bh176::ObjectLoadStatus::Recovered);
         assert(object.status_reason == "test factory (b5a plug-in path)");
+        assert(object.state != nullptr);
+        assert(std::string(object.state->familyName()) == "TestRecoveredProbe");
+        const auto* probe = object.stateAs<TestRecoveredProbe>("TestRecoveredProbe");
+        assert(probe != nullptr && probe->type_id == 1 && probe->unique_id == 42);
+        // a wrong family is a miss, never a reinterpret
+        assert(object.stateAs<TestRecoveredProbe>("Other") == nullptr);
+
+        // structural rule: a factory claiming Recovered with NO state is
+        // refused (this is what ends the state-discard bug for good)
+        registry.registerFactory(
+            2,
+            [](const bh176::SaveDict& in, std::string* err) {
+                if (err) err->clear();
+                auto bad = bh176::DynamicObjectRegistry::baseStub(2, in);
+                bad.status = bh176::ObjectLoadStatus::Recovered;
+                bad.status_reason = "stateless factory (must be refused)";
+                return bad;
+            },
+            "stateless factory", bh176::ObjectLoadStatus::Recovered);
+        assert(!registry.construct(2, bh176::SaveDict(*entry), &object, &error));
+        assert(error.find("with no recovered state") != std::string::npos);
+        // the refusal path is safe with a null error pointer too
+        assert(!registry.construct(2, bh176::SaveDict(*entry), &object, nullptr));
+        // the stateful factory still succeeds with a null error pointer
+        assert(registry.construct(1, bh176::SaveDict(*entry), &object, nullptr));
     }
 
     // ---- app pipeline over a synthetic snapshot ----------------------------------
@@ -356,8 +391,11 @@ int main() {
                 if (err) err->clear();
                 auto object = bh176::DynamicObjectRegistry::baseStub(
                     meta_type, in);
-                object.status = bh176::ObjectLoadStatus::Verified;
-                object.status_reason = "test verified factory";
+                bh176::attachRecoveredState(
+                    object,
+                    TestRecoveredProbe{meta_type, object.unique_id},
+                    bh176::ObjectLoadStatus::Verified,
+                    "test verified factory", "TestRecoveredProbe");
                 return object;
             },
             "verified test factory", bh176::ObjectLoadStatus::Verified);
@@ -366,6 +404,14 @@ int main() {
         assert(app.report().verified_objects == 3);
         assert(app.report().stub_objects == 0);
         assert(app.report().recovered_objects == 0);
+        for (const auto& object : app.objects()) {
+            assert(object.state != nullptr);
+            assert(std::string(object.state->familyName()) ==
+                   "TestRecoveredProbe");
+            const auto* probe =
+                object.stateAs<TestRecoveredProbe>("TestRecoveredProbe");
+            assert(probe != nullptr && probe->type_id == meta_type);
+        }
 
         const std::string json = app.toJson();
         assert(json.find("\"verified_objects\": 3") != std::string::npos);
@@ -413,6 +459,17 @@ int main() {
                     assert(object.unique_id == 91);
                     assert(object.status_reason.find("plant full chain") !=
                            std::string::npos);
+                    // the production registration must OWN the decoded state
+                    assert(object.state != nullptr);
+                    assert(std::string(object.state->familyName()) ==
+                           "PlantFullState");
+                    const auto* plant =
+                        object.stateAs<bh176::PlantFullState>("PlantFullState");
+                    assert(plant != nullptr);
+                    assert(plant->season_offset == 3);
+                    assert(plant->max_age_gene == 200);
+                    assert(plant->tulip.present);
+                    assert(plant->tulip.color_genes == 13364);
                 }
             }
             assert(saw_tulip);

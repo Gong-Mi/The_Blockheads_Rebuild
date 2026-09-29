@@ -62,13 +62,14 @@ ClientDynamicObject tradingpost_full_factory(int type_id,
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         "tradingpost full chain: DynamicObject base + own keys coinCount/"
         "priceTier/sellerClientID/sellerClientName-static (UPPERMID15) + "
         "sellSlot counts (executed hook; item decode not performed, "
         "itemType!=11 filter not applied) + InteractionObject super keys "
         "static-only (not loaded)";
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "TradingPostFullState");
     return object;
 }
 

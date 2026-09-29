@@ -491,6 +491,43 @@ EXPECT_REASON = {
 }
 
 
+# Every registered type must OWN its recovered state through the production
+# path: the registry object carries a state whose family is the module struct
+# that actually decoded it. A bare "recovered" status without state is the
+# discard bug this pins against (factories ran and dropped out_state=nullptr).
+EXPECT_STATE_FAMILY = {
+    59: "PlantFullState", 11: "PlantFullState", 12: "PlantFullState",
+    62: "PlantFullState", 10: "PlantFullState", 27: "PlantFullState",
+    33: "PlantFullState", 61: "PlantFullState",
+    13: "NpcFullState", 28: "NpcFullState", 35: "NpcFullState",
+    36: "NpcFullState", 51: "NpcFullState", 63: "NpcFullState",
+    25: "NpcFullState", 39: "NpcFullState",
+    34: "KelpVineFullState", 58: "KelpVineFullState",
+    14: "FreeBlockFullState", 21: "ArtificialLightFullState",
+    41: "TrainCarFullState", 42: "TrainCarFullState",
+    44: "TrainCarFullState", 43: "TrainCarFullState",
+    52: "PaintingFullState", 60: "OwnershipSignFullState",
+    19: "MidtierFullState", 20: "MidtierFullState",
+    22: "MidtierFullState", 29: "MidtierFullState",
+    30: "MidtierFullState", 31: "MidtierFullState",
+    32: "MidtierFullState", 38: "MidtierFullState",
+    40: "MidtierFullState", 53: "MidtierFullState",
+    54: "MidtierFullState", 55: "MidtierFullState",
+    56: "MidtierFullState",
+    16: "FireTorchFullState", 17: "FireTorchFullState",
+    18: "GlowBlockFullState",
+    23: "BedSignFullState", 47: "BedSignFullState",
+    15: "InteractionFullState", 64: "InteractionFullState",
+    50: "TradePortalFullState", 48: "TradingPostFullState",
+    46: "ChestFullState", 49: "TrainStationFullState",
+    26: "GatherBlockFullState", 45: "WorkbenchFullState",
+    1: "TreeFullState", 2: "TreeFullState", 3: "TreeFullState",
+    4: "TreeFullState", 5: "TreeFullState", 6: "TreeFullState",
+    7: "TreeFullState", 8: "TreeFullState", 9: "TreeFullState",
+    37: "TreeFullState", 57: "TreeFullState",
+}
+
+
 def registered_type_ids() -> set:
     """Every registerFactory id in the app registry source — the fixture
     must cover them, so a new registration cannot land without run cover."""
@@ -571,10 +608,25 @@ def main() -> int:
             errors.append(f"stub={report['stub_objects']}")
         if report["per_type"] != {str(t): 1 for t in TYPED_RECORDS}:
             errors.append(f"per_type={report['per_type']}")
+        # every fixture record is recovered; the state map must cover exactly
+        # those types (mid-tier registers through a loop, so compare to the
+        # fixture set, which the registry-coverage guard already pins)
+        if set(EXPECT_STATE_FAMILY) != set(TYPED_RECORDS):
+            errors.append(
+                "state map/fixture drift: missing " +
+                str(sorted(set(TYPED_RECORDS) - set(EXPECT_STATE_FAMILY))) +
+                ", extra " +
+                str(sorted(set(EXPECT_STATE_FAMILY) - set(TYPED_RECORDS))))
         for obj in report["objects"]:
             t = obj["type_id"]
             if obj["status"] != "recovered":
                 errors.append(f"type {t}: status {obj['status']}")
+            # the production path must OWN the decoded state, not just say it
+            family = EXPECT_STATE_FAMILY.get(t)
+            if obj.get("state_family") != family:
+                errors.append(
+                    f"type {t}: state_family={obj.get('state_family')!r} "
+                    f"(expected {family!r})")
             if obj["class_name"] != expected_names[t]:
                 errors.append(f"type {t}: class {obj['class_name']}")
             if obj["unique_id"] != expected_ids[t]:

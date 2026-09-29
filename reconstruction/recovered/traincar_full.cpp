@@ -99,8 +99,7 @@ ClientDynamicObject traincar_full_factory(int type_id, const SaveDict& entry,
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         type_id == 42
             ? "steamtrain full chain: DynamicObject base + the TrainCar "
               "chain (listing decode: formatted currentBlockheadIndex_%d "
@@ -118,6 +117,8 @@ ClientDynamicObject traincar_full_factory(int type_id, const SaveDict& entry,
                     "EXECUTED differential tools/test_forwarder5b_arm.py): "
                     "DynamicObject base + the TrainCar chain (listing "
                     "decode) only";
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "TrainCarFullState");
     return object;
 }
 

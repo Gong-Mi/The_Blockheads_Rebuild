@@ -56,14 +56,15 @@ ClientDynamicObject painting_full_factory(int type_id, const SaveDict& entry,
     if (out_state != nullptr) *out_state = state;
     ClientDynamicObject object =
         DynamicObjectRegistry::baseStub(type_id, entry);
-    object.status = ObjectLoadStatus::Recovered;
-    object.status_reason =
+    std::string reason =
         "painting full chain: DynamicObject base + own keys itemType@56/"
         "ownerID@36/ownerName@64/hasVerifiedImageData@79-strb/"
         "outputImageData@60 (EXECUTED differential tools/test_specials_arm.py: "
         "read order + both [dynamicWorld isServer] gates + the resolve "
         "condition ownerID!=nil && ownerName==nil); the world-gated steps "
         "themselves are not run offline";
+    attachRecoveredState(object, state, ObjectLoadStatus::Recovered,
+                             std::move(reason), "PaintingFullState");
     return object;
 }
 
