@@ -400,4 +400,40 @@ PanelTrace cameraui_end_touch(const ChildReply* cancel,
     return t;
 }
 
+// --- the PetUI panel ------------------------------------------------------
+
+bool petui_touch_is_in_view_at_all(Point p, const PanelFrame& f) {
+    const float x = p.x - f.window_x - f.offset_x;
+    const float y = p.y - f.window_y - f.offset_y;
+    return x > -120.0f && x < 120.0f && y > -16.0f && y < 114.0f;
+}
+
+PanelTrace petui_touch_is_in_ui(const ChildReply* name_edit) {
+    PanelTrace t;
+    const bool r = child_in_ui(name_edit, t);
+    t.handled = r ? 1 : 0;
+    return t;
+}
+
+PanelTrace petui_start_touch(const ChildReply* name_edit) {
+    PanelTrace t;
+    const bool r = child_start(name_edit, t);
+    t.handled = r ? 1 : 0;
+    return t;
+}
+
+PanelTrace petui_move_touch(const ChildReply* name_edit) {
+    (void)name_edit;
+    PanelTrace t;
+    t.calls.push_back("moveTouch:");   // nameEditButton@52
+    return t;
+}
+
+PanelTrace petui_end_touch(const ChildReply* name_edit) {
+    (void)name_edit;
+    PanelTrace t;
+    t.calls.push_back("endTouch:");    // nameEditButton@52
+    return t;
+}
+
 }  // namespace blockheads::ui

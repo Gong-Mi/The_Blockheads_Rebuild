@@ -272,4 +272,15 @@ PanelTrace cameraui_move_touch(const ChildReply* cancel,
 PanelTrace cameraui_end_touch(const ChildReply* cancel,
                               const ChildReply* photo);
 
+// --- the PetUI panel ------------------------------------------------------
+// rect (98w): local = point - windowInfo(+8/+0xc) - translationOffset(@136);
+// x in (-120, 120), y in (-16, 114), all edges exclusive. The four chains
+// message the SINGLE child nameEditButton@52: touchIsInUI: (91w) and the
+// press (93w) return its reply, moveTouch:/endTouch: (68w each) are void.
+bool petui_touch_is_in_view_at_all(Point p, const PanelFrame& f);
+PanelTrace petui_touch_is_in_ui(const ChildReply* name_edit);
+PanelTrace petui_start_touch(const ChildReply* name_edit);
+PanelTrace petui_move_touch(const ChildReply* name_edit);
+PanelTrace petui_end_touch(const ChildReply* name_edit);
+
 }  // namespace blockheads::ui

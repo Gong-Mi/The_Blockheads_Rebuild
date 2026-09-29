@@ -125,6 +125,9 @@ def main() -> int:
         # the CameraUI panel
         "('CameraUIRect', 102, 0x009D6054",
         "def cam_seeds():",
+        # the PetUI panel
+        "('PetUIRect', 107, 0x0080F9E0",
+        "def pet_seeds(wx, wy, ox, oy):",
     ])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_uimanager_starttouch.txt",
             ["startTouch:tapCount:index:"])
@@ -143,7 +146,8 @@ def main() -> int:
              "blockheadui_end_touch", "kMapUiRect", "kMainMenuUiInUi",
              "wbpbarui_touch_is_in_view_at_all",
              "kWorkbenchProgressBarInUi", "cameraui_touch_is_in_ui",
-             "cameraui_end_touch"])
+             "cameraui_end_touch", "petui_touch_is_in_view_at_all",
+             "petui_end_touch"])
     require(ROOT / "reconstruction/recovered/ui_touch_router.cpp",
             ["startTouch:tapCount:paused:index:", "import(memset)",
              "touchIsInViewAtAll:", "x > -130.0f && x < 130.0f",
@@ -152,7 +156,7 @@ def main() -> int:
     require(ROOT / "tools/test_ui_touch_router.cpp",
             ["block chain x19", "touchIsInViewAtAll:", "craftui x16",
              "dpad x11", "blockhead x28", "const x17", "wpbar x11",
-             "camera x10"])
+             "camera x10", "pet x13"])
     # the constant-verdict listings
     require(ROOT / "reconstruction/reverse-v3/native/disasm_mapui_touch.txt",
             ["MapUI -[touch family]", "implementation: 0x009cb460"])
@@ -197,7 +201,8 @@ def main() -> int:
              "dpad_point_for", "dpad_seeds", "dpad_touch_is_in_view_at_all",
              "blockhead_seeds", "blockhead_children_for", "blockhead_sd",
              "constant_panel_seeds", "constant_panel_ret",
-             "wpb_seeds_for", "cam_child", "cam_seeds_for"])
+             "wpb_seeds_for", "cam_child", "cam_seeds_for",
+             "pet_child", "pet_seeds_for"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_gameuiview_all.txt",
             ["OBJC_IVAR_$_GameUIView.displayed (slot 0x0105dee0) = 4",
              "OBJC_IVAR_$_GameUIView.resourcesLoaded (slot 0x0105c494) = 16"])
@@ -234,12 +239,12 @@ def main() -> int:
             print(proc.stdout)
             print(proc.stderr)
             return 1
-        # the run's own report pins the case totals: 35 modelled + 119 UI
+        # the run's own report pins the case totals: 35 modelled + 132 UI
         # rows (router 19 + CraftUI 16 + DPad 11 + BlockheadUI 28 +
-        # const 17 + WPBar 11 + Camera 10 + MJControl 3 + MJView 4)
+        # const 17 + WPBar 11 + Camera 10 + Pet 13 + MJControl 3 + MJView 4)
         import json
         report = json.loads((out / "specials-arm-result.json").read_text())
-        assert report["cases"] == 154, report["cases"]
+        assert report["cases"] == 167, report["cases"]
         assert report["match"] is True
         ui_rows = [r for r in report["rows"] if r["class"] == "UIManager"]
         assert len(ui_rows) == 19, len(ui_rows)
@@ -270,9 +275,13 @@ def main() -> int:
         cam_rows = [r for r in report["rows"]
                     if r["class"].startswith("CameraUI")]
         assert len(cam_rows) == 10, len(cam_rows)
+        pet_rows = [r for r in report["rows"]
+                    if r["class"].startswith("PetUI")]
+        assert len(pet_rows) == 13, len(pet_rows)
         print("specials-arm: PASS (differential executed, modelled cases "
               "match; router 19/19, craftui 16/16, dpad 11/11, "
-              "blockhead 28/28, const 17/17, wpbar 11/11, camera 10/10)")
+              "blockhead 28/28, const 17/17, wpbar 11/11, camera 10/10, "
+              "pet 13/13)")
         return 0
 
     print("specials-arm: PASS (constants; run with --elf to execute)")

@@ -117,6 +117,12 @@ ENTRIES = [
     ('CameraUIPress', 104, 0x009D620C, 0x00000000, 99),
     ('CameraUIMove', 105, 0x009D6398, 0x00000000, 66),
     ('CameraUIEnd', 106, 0x009D64A0, 0x00000000, 66),
+    # the PetUI panel: a rect + the single nameEditButton chain
+    ('PetUIRect', 107, 0x0080F9E0, 0x00000000, 98),
+    ('PetUIInUI', 108, 0x0080FB68, 0x00000000, 91),
+    ('PetUIPress', 109, 0x0080FCD4, 0x00000000, 93),
+    ('PetUIMove', 110, 0x0080FE48, 0x00000000, 68),
+    ('PetUIEnd', 111, 0x0080FF58, 0x00000000, 68),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -667,7 +673,8 @@ def main():
         if not cls.startswith(('MJView', 'MJControl', 'UIManager',
                                'CraftUI', 'DPad', 'BlockheadUI',
                                'MapUI', 'OptionsUI', 'ShareUI', 'PauseUI',
-                               'MainMenuUI', 'WPBarUI', 'CameraUI')):
+                               'MainMenuUI', 'WPBarUI', 'CameraUI',
+                               'PetUI')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -916,6 +923,13 @@ def main():
                 f'120={fb(ox)},124={fb(oy)}')
 
     CAM_CB, CAM_TPB = 0x60020600, 0x60020700
+    PET_NE = 0x60020600
+
+    def pet_seeds(wx, wy, ox, oy):
+        # PetUI: windowInfo@128 = self_ptr; translationOffset at 136/140;
+        # nameEditButton@52
+        return (f'128=0x60001000,8={fb(wx)},12={fb(wy)},'
+                f'136={fb(ox)},140={fb(oy)},52=0x{PET_NE:08x}')
 
     def cam_seeds():
         # CameraUI: windowInfo@96 = self_ptr; the two buttons at 104/108
@@ -1247,6 +1261,36 @@ def main():
         'CameraUIEnd': {
             0: ('50,50', cam_seeds(), {
                 'void': True, 'expect_recv': [CAM_CB, CAM_TPB]})},
+        'PetUIRect': {
+            # x in (-120, 120), y in (-16, 114), all edges exclusive
+            0: ('0,49', pet_seeds(0, 0, 0, 0), {}),       # centre
+            1: ('120,49', pet_seeds(0, 0, 0, 0), {}),     # x == 120
+            2: ('-120,49', pet_seeds(0, 0, 0, 0), {}),    # x == -120
+            3: ('0,-16', pet_seeds(0, 0, 0, 0), {}),      # y == -16
+            4: ('0,114', pet_seeds(0, 0, 0, 0), {}),      # y == 114
+            5: ('122,49', pet_seeds(0, 0, 5, 0), {}),     # x=117 (in)
+            6: ('137,49', pet_seeds(20, 0, 0, 0), {}),    # x=117 (in)
+        },
+        'PetUIInUI': {
+            0: ('50,50', pet_seeds(0, 0, 0, 0), {
+                'expect_recv': [PET_NE]}),
+            1: ('50,50', pet_seeds(0, 0, 0, 0), {
+                'expect_recv': [PET_NE],
+                'ret1': {PET_NE: ['touchIsInUI:']}}),
+        },
+        'PetUIPress': {
+            0: ('50,50', pet_seeds(0, 0, 0, 0), {
+                'expect_recv': [PET_NE]}),
+            1: ('50,50', pet_seeds(0, 0, 0, 0), {
+                'expect_recv': [PET_NE],
+                'ret1': {PET_NE: ['startTouch:']}}),
+        },
+        'PetUIMove': {
+            0: ('50,50', pet_seeds(0, 0, 0, 0), {
+                'void': True, 'expect_recv': [PET_NE]})},
+        'PetUIEnd': {
+            0: ('50,50', pet_seeds(0, 0, 0, 0), {
+                'void': True, 'expect_recv': [PET_NE]})},
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.

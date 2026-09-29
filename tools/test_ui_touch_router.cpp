@@ -502,8 +502,32 @@ int main() {
         assert(join_trace(t.calls) == "endTouch:,endTouch:");
     }
 
+    // --- the PetUI panel --------------------------------------------------
+    {
+        const PanelFrame origin{};
+        assert(petui_touch_is_in_view_at_all({0, 49}, origin));
+        assert(!petui_touch_is_in_view_at_all({120, 49}, origin));
+        assert(!petui_touch_is_in_view_at_all({-120, 49}, origin));
+        assert(!petui_touch_is_in_view_at_all({0, -16}, origin));
+        assert(!petui_touch_is_in_view_at_all({0, 114}, origin));
+        const PanelFrame off{0, 0, 5, 0};
+        assert(petui_touch_is_in_view_at_all({122, 49}, off));
+        const PanelFrame wx{20, 0, 0, 0};
+        assert(petui_touch_is_in_view_at_all({137, 49}, wx));
+        const ChildReply in_ui{true, false};
+        auto t = petui_touch_is_in_ui(&in_ui);
+        assert(join_trace(t.calls) == "touchIsInUI:");
+        assert(t.handled == 1);
+        t = petui_touch_is_in_ui(nullptr);
+        assert(t.handled == 0);
+        t = petui_move_touch(nullptr);
+        assert(join_trace(t.calls) == "moveTouch:");
+        t = petui_end_touch(nullptr);
+        assert(join_trace(t.calls) == "endTouch:");
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
                 " block chain x19, craftui x16, dpad x11, blockhead x28,"
-                " const x17, wpbar x11, camera x10)\n");
+                " const x17, wpbar x11, camera x10, pet x13)\n");
     return 0;
 }

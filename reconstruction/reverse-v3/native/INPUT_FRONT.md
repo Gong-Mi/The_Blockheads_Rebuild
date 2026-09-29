@@ -247,6 +247,16 @@ in that order. 10 cases (the const-1 far-point control, both children alone
 + all-miss per chain, the void orders receiver-verified) execute under
 Unicorn.
 
+## The PetUI panel (types 107..111) — decoded
+
+`disasm_petui_touch.txt` (418w): `touchIsInViewAtAll:` (98w) — local =
+point - windowInfo(+8/+0xc) - translationOffset(@136), `x in (-120, 120)`,
+`y in (-16, 114)`, all edges exclusive; the four chains message the SINGLE
+child `nameEditButton@52`: `touchIsInUI:` (91w) / `startTouch:tapCount:`
+(93w) return its reply, `moveTouch:` / `endTouch:` (68w each) are void.
+13 cases execute under Unicorn (the five edges + two term-flips + the
+single-child chains).
+
 ## The composition pattern: CraftUI (0x00B80EB4..0x00B817A4) — decoded
 
 CraftUI's five override bodies are decoded from the instruction stream

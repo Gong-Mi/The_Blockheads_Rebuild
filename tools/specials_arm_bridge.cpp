@@ -884,6 +884,45 @@ void cam_seeds_for(unsigned char* out) {
     ui_put_word(out, 108, 0x60020700u);      // takePhotoButton
 }
 
+// --- the PetUI panel's differential inputs --------------------------------
+blockheads::ui::PanelFrame pet_frame(int case_id) {
+    switch (case_id) {
+        case 5: return {0.0f, 0.0f, 5.0f, 0.0f};
+        case 6: return {20.0f, 0.0f, 0.0f, 0.0f};
+        default: return {};
+    }
+}
+
+blockheads::ui::Point pet_point(int case_id) {
+    switch (case_id) {
+        case 1: return {120.0f, 49.0f};
+        case 2: return {-120.0f, 49.0f};
+        case 3: return {0.0f, -16.0f};
+        case 4: return {0.0f, 114.0f};
+        case 5: return {122.0f, 49.0f};
+        case 6: return {137.0f, 49.0f};
+        default: return {0.0f, 49.0f};
+    }
+}
+
+void pet_seeds_for(unsigned char* out, int case_id) {
+    ui_put_word(out, 128, 0x60001000u);      // windowInfo = self_ptr
+    const auto f = pet_frame(case_id);
+    ui_put_word(out, 8, float_bits(f.window_x));
+    ui_put_word(out, 12, float_bits(f.window_y));
+    ui_put_word(out, 136, float_bits(f.offset_x));
+    ui_put_word(out, 140, float_bits(f.offset_y));
+    ui_put_word(out, 52, 0x60020600u);       // nameEditButton
+}
+
+const blockheads::ui::ChildReply* pet_child(int which, int case_id) {
+    // 108/109: case 1 pins the child's reply
+    if ((which == 108 || which == 109) && case_id == 1) {
+        return (which == 109) ? &kChildHandles : &kChildInUi;
+    }
+    return &kChildMiss;
+}
+
 const blockheads::ui::ChildReply* cam_child(int which, int slot,
                                             int case_id) {
     // 103/104: case 1 pins the cancelButton, case 2 the takePhotoButton;
@@ -969,6 +1008,23 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // the constant-verdict panels: no calls (the literal verdicts)
     } else if (type_id >= 97 && type_id <= 101) {
         // the WorkbenchProgressBarUI panel: no calls (rect + constants)
+    } else if (type_id >= 107 && type_id <= 111) {
+        // the PetUI panel: the single-child chains (107 makes no calls)
+        const auto* ne = pet_child(type_id, case_id);
+        blockheads::ui::PanelTrace t;
+        if (type_id == 108) {
+            t = blockheads::ui::petui_touch_is_in_ui(ne);
+        } else if (type_id == 109) {
+            t = blockheads::ui::petui_start_touch(ne);
+        } else if (type_id == 110) {
+            t = blockheads::ui::petui_move_touch(ne);
+        } else if (type_id == 111) {
+            t = blockheads::ui::petui_end_touch(ne);
+        }
+        for (const char* c : t.calls) {
+            if (!s.empty()) s += ',';
+            s += c;
+        }
     } else if (type_id >= 102 && type_id <= 106) {
         // the CameraUI panel: the two-button chains (102 makes no calls)
         const auto* cb = cam_child(type_id, 0, case_id);
@@ -1052,6 +1108,13 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         wpb_seeds_for(out, case_id);
+        return n;
+    }
+    if (type_id >= 107 && type_id <= 111) {  // PetUI
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0x60000200u);
+        pet_seeds_for(out, case_id);
         return n;
     }
     if (type_id >= 102 && type_id <= 106) {  // CameraUI
@@ -1154,6 +1217,19 @@ int recovered_ui_ret(int type_id, int case_id) {
             cam_child(104, 0, case_id), cam_child(104, 1, case_id)).handled;
     }
     if (type_id == 105 || type_id == 106) return 0;  // void (not compared)
+    if (type_id == 107) {
+        return blockheads::ui::petui_touch_is_in_view_at_all(
+            pet_point(case_id), pet_frame(case_id)) ? 1 : 0;
+    }
+    if (type_id == 108) {
+        return blockheads::ui::petui_touch_is_in_ui(
+            pet_child(108, case_id)).handled;
+    }
+    if (type_id == 109) {
+        return blockheads::ui::petui_start_touch(
+            pet_child(109, case_id)).handled;
+    }
+    if (type_id == 110 || type_id == 111) return 0;  // void (not compared)
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);
