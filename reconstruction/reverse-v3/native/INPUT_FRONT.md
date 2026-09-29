@@ -247,6 +247,16 @@ in that order. 10 cases (the const-1 far-point control, both children alone
 + all-miss per chain, the void orders receiver-verified) execute under
 Unicorn.
 
+## The ControlOptionsUI panel (types 147..151) — decoded
+
+`disasm_controloptionsui_touch.txt` (374w): `touchIsInViewAtAll:` (32w)
+is the constant 1 (dead rebase); `touchIsInUI:` (32w) the constant 0.
+`startTouch:tapCount:` (114w) messages ALL FOUR [OKButton@104,
+tiltControlButton@112, directControlButton@120, dpadSideButton@128] with
+the one-arg `startTouch:` and returns the constant local 0;
+`moveTouch:` / `endTouch:` (98w each) message the same four. 7 cases
+execute under Unicorn.
+
 ## The AddCreditUI panel (types 142..146) — decoded
 
 `disasm_addcredit_ui_touch.txt` (365w): `touchIsInViewAtAll:` (32w) is

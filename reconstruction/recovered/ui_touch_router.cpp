@@ -725,4 +725,55 @@ PanelTrace addcredit_ui_end_touch(bool in_progress,
     return t;
 }
 
+// --- the ControlOptionsUI panel -------------------------------------------
+
+PanelTrace controloptionsui_start_touch(const ChildReply* ok,
+                                        const ChildReply* tilt,
+                                        const ChildReply* direct,
+                                        const ChildReply* dpad_side) {
+    (void)ok;
+    (void)tilt;
+    (void)direct;
+    (void)dpad_side;
+    PanelTrace t;
+    t.calls.push_back("startTouch:");  // OKButton@104
+    t.calls.push_back("startTouch:");  // tiltControlButton@112
+    t.calls.push_back("startTouch:");  // directControlButton@120
+    t.calls.push_back("startTouch:");  // dpadSideButton@128
+    t.handled = 0;                     // the constant local (quirk)
+    return t;
+}
+
+PanelTrace controloptionsui_move_touch(const ChildReply* ok,
+                                       const ChildReply* tilt,
+                                       const ChildReply* direct,
+                                       const ChildReply* dpad_side) {
+    (void)ok;
+    (void)tilt;
+    (void)direct;
+    (void)dpad_side;
+    PanelTrace t;
+    t.calls.push_back("moveTouch:");   // OKButton@104
+    t.calls.push_back("moveTouch:");   // tiltControlButton@112
+    t.calls.push_back("moveTouch:");   // directControlButton@120
+    t.calls.push_back("moveTouch:");   // dpadSideButton@128
+    return t;
+}
+
+PanelTrace controloptionsui_end_touch(const ChildReply* ok,
+                                      const ChildReply* tilt,
+                                      const ChildReply* direct,
+                                      const ChildReply* dpad_side) {
+    (void)ok;
+    (void)tilt;
+    (void)direct;
+    (void)dpad_side;
+    PanelTrace t;
+    t.calls.push_back("endTouch:");    // OKButton@104
+    t.calls.push_back("endTouch:");    // tiltControlButton@112
+    t.calls.push_back("endTouch:");    // directControlButton@120
+    t.calls.push_back("endTouch:");    // dpadSideButton@128
+    return t;
+}
+
 }  // namespace blockheads::ui

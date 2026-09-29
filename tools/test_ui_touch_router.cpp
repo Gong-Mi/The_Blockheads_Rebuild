@@ -671,10 +671,27 @@ int main() {
         assert(join_trace(t.calls) == "endTouch:,endTouch:,endTouch:");
     }
 
+    // --- the ControlOptionsUI panel ----------------------------------------
+    {
+        static_assert(kControlOptionsUiRect && kControlOptionsUiInUi == 0,
+                      "ControlOptionsUI's decoded constants");
+        auto t = controloptionsui_start_touch(nullptr, nullptr,
+                                              nullptr, nullptr);
+        assert(join_trace(t.calls)
+               == "startTouch:,startTouch:,startTouch:,startTouch:");
+        assert(t.handled == 0);
+        t = controloptionsui_move_touch(nullptr, nullptr, nullptr, nullptr);
+        assert(join_trace(t.calls)
+               == "moveTouch:,moveTouch:,moveTouch:,moveTouch:");
+        t = controloptionsui_end_touch(nullptr, nullptr, nullptr, nullptr);
+        assert(join_trace(t.calls)
+               == "endTouch:,endTouch:,endTouch:,endTouch:");
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
                 " block chain x19, craftui x16, dpad x11, blockhead x28,"
                 " const x17, wpbar x11, camera x10, pet x13, wear x14,"
                 " regen x14, tpbuy x18, sound x7, invfull x12, "
-                "freeoffer x9, addcredit x10)\n");
+                "freeoffer x9, addcredit x10, ctrlopts x7)\n");
     return 0;
 }

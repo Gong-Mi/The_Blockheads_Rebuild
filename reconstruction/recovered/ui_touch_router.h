@@ -406,4 +406,26 @@ PanelTrace addcredit_ui_end_touch(bool in_progress,
                                   const ChildReply* week,
                                   const ChildReply* month);
 
+// --- the ControlOptionsUI panel -------------------------------------------
+// rect (32w) is the constant 1 (dead rebase); touchIsInUI: (32w) the
+// constant 0. startTouch:tapCount: (114w) messages ALL FOUR
+// [OKButton@104, tiltControlButton@112, directControlButton@120,
+// dpadSideButton@128] with the one-arg startTouch: and returns the
+// constant local 0; moveTouch:/endTouch: (98w each) message the same
+// four.
+constexpr bool kControlOptionsUiRect = true;
+constexpr int kControlOptionsUiInUi = 0;
+PanelTrace controloptionsui_start_touch(const ChildReply* ok,
+                                        const ChildReply* tilt,
+                                        const ChildReply* direct,
+                                        const ChildReply* dpad_side);
+PanelTrace controloptionsui_move_touch(const ChildReply* ok,
+                                       const ChildReply* tilt,
+                                       const ChildReply* direct,
+                                       const ChildReply* dpad_side);
+PanelTrace controloptionsui_end_touch(const ChildReply* ok,
+                                      const ChildReply* tilt,
+                                      const ChildReply* direct,
+                                      const ChildReply* dpad_side);
+
 }  // namespace blockheads::ui

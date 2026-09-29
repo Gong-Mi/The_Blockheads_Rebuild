@@ -966,6 +966,22 @@ blockheads::ui::Point regen_point(int case_id) {
     }
 }
 
+// --- the ControlOptionsUI panel's differential inputs ---------------------
+constexpr unsigned CO_OK = 0x60020600u;
+constexpr unsigned CO_TI = 0x60020700u;
+constexpr unsigned CO_DI = 0x60020800u;
+constexpr unsigned CO_DP = 0x60020900u;
+
+void co_seeds_for(unsigned char* out) {
+    ui_put_word(out, 96, 0x60001000u);
+    ui_put_word(out, 8, 0u);
+    ui_put_word(out, 12, 0u);
+    ui_put_word(out, 104, CO_OK);
+    ui_put_word(out, 112, CO_TI);
+    ui_put_word(out, 120, CO_DI);
+    ui_put_word(out, 128, CO_DP);
+}
+
 // --- the AddCreditUI panel's differential inputs --------------------------
 constexpr unsigned AC_CAN = 0x60020600u;
 constexpr unsigned AC_WK = 0x60020700u;
@@ -1214,6 +1230,23 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // the constant-verdict panels: no calls (the literal verdicts)
     } else if (type_id >= 97 && type_id <= 101) {
         // the WorkbenchProgressBarUI panel: no calls (rect + constants)
+    } else if (type_id >= 147 && type_id <= 151) {
+        // the ControlOptionsUI panel: const rect/inUI + four-child chains
+        blockheads::ui::PanelTrace t;
+        if (type_id == 149) {
+            t = blockheads::ui::controloptionsui_start_touch(
+                &kChildMiss, &kChildMiss, &kChildMiss, &kChildMiss);
+        } else if (type_id == 150) {
+            t = blockheads::ui::controloptionsui_move_touch(
+                &kChildMiss, &kChildMiss, &kChildMiss, &kChildMiss);
+        } else if (type_id == 151) {
+            t = blockheads::ui::controloptionsui_end_touch(
+                &kChildMiss, &kChildMiss, &kChildMiss, &kChildMiss);
+        }
+        for (const char* c : t.calls) {
+            if (!s.empty()) s += ',';
+            s += c;
+        }
     } else if (type_id >= 142 && type_id <= 146) {
         // the AddCreditUI panel: const rect/inUI + the gated triples
         const bool ip = ac_in_progress(type_id, case_id);
@@ -1423,6 +1456,14 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         wpb_seeds_for(out, case_id);
+        return n;
+    }
+    if (type_id >= 147 && type_id <= 151) {  // ControlOptionsUI
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0u);
+        ui_put_word(out, 12, 0u);
+        co_seeds_for(out);
         return n;
     }
     if (type_id >= 142 && type_id <= 146) {  // AddCreditUI
@@ -1682,6 +1723,13 @@ int recovered_ui_ret(int type_id, int case_id) {
             &kChildMiss).handled;
     }
     if (type_id == 145 || type_id == 146) return 0;  // void (not compared)
+    if (type_id == 147) return blockheads::ui::kControlOptionsUiRect ? 1 : 0;
+    if (type_id == 148) return blockheads::ui::kControlOptionsUiInUi;
+    if (type_id == 149) {
+        return blockheads::ui::controloptionsui_start_touch(
+            &kChildMiss, &kChildMiss, &kChildMiss, &kChildMiss).handled;
+    }
+    if (type_id == 150 || type_id == 151) return 0;  // void (not compared)
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);

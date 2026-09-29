@@ -165,6 +165,12 @@ ENTRIES = [
     ('AddCreditUIPress', 144, 0x00D3543C, 0x00000000, 111),
     ('AddCreditUIMove', 145, 0x00D355F8, 0x00000000, 95),
     ('AddCreditUIEnd', 146, 0x00D35774, 0x00000000, 95),
+    # the ControlOptionsUI panel: const rect/inUI + the four-child chains
+    ('ControlOptionsUIRect', 147, 0x006DA870, 0x00000000, 32),
+    ('ControlOptionsUIInUI', 148, 0x006DA8F0, 0x00000000, 32),
+    ('ControlOptionsUIPress', 149, 0x006DA970, 0x00000000, 114),
+    ('ControlOptionsUIMove', 150, 0x006DAB38, 0x00000000, 98),
+    ('ControlOptionsUIEnd', 151, 0x006DACC0, 0x00000000, 98),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -719,7 +725,7 @@ def main():
                                'PetUI', 'WearUI', 'RegenerateUI',
                                'TPBuyUI', 'SoundOptionsUI',
                                'InventoryFullUI', 'FreeOfferUI',
-                               'AddCreditUI')):
+                               'AddCreditUI', 'ControlOptionsUI')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -979,6 +985,16 @@ def main():
     FOF_B0, FOF_B1, FOF_B2 = 0x60020700, 0x60020800, 0x60020900
 
     AC_CAN, AC_WK, AC_MO = 0x60020600, 0x60020700, 0x60020800
+
+    CO_OK, CO_TI, CO_DI, CO_DP = (0x60020600, 0x60020700, 0x60020800,
+                                  0x60020900)
+
+    def co_seeds():
+        # ControlOptionsUI: windowInfo@96 = self_ptr; OKButton@104;
+        # tiltControlButton@112; directControlButton@120; dpadSideButton@128
+        return ('96=0x60001000,8=0,12=0,'
+                f'104=0x{CO_OK:08x},112=0x{CO_TI:08x},'
+                f'120=0x{CO_DI:08x},128=0x{CO_DP:08x}')
 
     def ac_seeds(in_progress=0):
         # AddCreditUI: windowInfo@112 = self_ptr; cancelButton@128;
@@ -1598,6 +1614,28 @@ def main():
                 'void': True, 'expect_recv': [AC_CAN, AC_WK, AC_MO]}),
             1: ('50,50', ac_seeds(in_progress=1), {'void': True}),
         },
+        'ControlOptionsUIRect': {
+            # constant 1 (dead rebase)
+            0: ('50,50', co_seeds(), {}),
+            1: ('9999,9999', co_seeds(), {}),
+        },
+        'ControlOptionsUIInUI': {
+            # constant 0
+            0: ('50,50', co_seeds(), {}),
+            1: ('9999,9999', co_seeds(), {}),
+        },
+        'ControlOptionsUIPress': {
+            0: ('50,50', co_seeds(), {
+                'expect_recv': [CO_OK, CO_TI, CO_DI, CO_DP]}),
+        },
+        'ControlOptionsUIMove': {
+            0: ('50,50', co_seeds(), {
+                'void': True,
+                'expect_recv': [CO_OK, CO_TI, CO_DI, CO_DP]})},
+        'ControlOptionsUIEnd': {
+            0: ('50,50', co_seeds(), {
+                'void': True,
+                'expect_recv': [CO_OK, CO_TI, CO_DI, CO_DP]})},
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.
