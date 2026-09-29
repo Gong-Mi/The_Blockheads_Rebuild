@@ -247,6 +247,16 @@ in that order. 10 cases (the const-1 far-point control, both children alone
 + all-miss per chain, the void orders receiver-verified) execute under
 Unicorn.
 
+## The JetPackUI panel (types 157..161) — decoded
+
+`disasm_jetpackui_touch.txt` (477w): `touchIsInViewAtAll:` (95w) — local =
+point - windowInfo(+8/+0xc) - translationOffset(@144); x in (-120, 120),
+y in (0, 108), all edges exclusive. `touchIsInUI:` (103w) /
+`startTouch:tapCount:` (105w) are the two-child OR in the order
+addFuelButton@44, freeFlightButton@48 (short-circuit);
+`moveTouch:` / `endTouch:` (87w each) message BOTH children. 15 cases
+execute under Unicorn.
+
 ## The HungerUI panel (types 152..156) — decoded
 
 `disasm_hungerui_touch.txt` (393w): `touchIsInViewAtAll:` (95w) — local =

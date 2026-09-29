@@ -709,10 +709,37 @@ int main() {
                == "endTouch:");
     }
 
+    // --- the JetPackUI panel -----------------------------------------------
+    {
+        const PanelFrame origin{};
+        assert(jetpackui_touch_is_in_view_at_all({0, 54}, origin));
+        assert(!jetpackui_touch_is_in_view_at_all({120, 54}, origin));
+        assert(!jetpackui_touch_is_in_view_at_all({-120, 54}, origin));
+        assert(!jetpackui_touch_is_in_view_at_all({0, 0}, origin));
+        assert(!jetpackui_touch_is_in_view_at_all({0, 108}, origin));
+        assert(jetpackui_touch_is_in_view_at_all({119, 107}, origin));
+        const PanelFrame off{0, 0, 5, 0};
+        assert(jetpackui_touch_is_in_view_at_all({124, 54}, off));
+        const ChildReply hit{true, false};
+        const ChildReply hit_h{false, true};
+        auto t = jetpackui_touch_is_in_ui(&hit, nullptr);
+        assert(join_trace(t.calls) == "touchIsInUI:" && t.handled == 1);
+        t = jetpackui_touch_is_in_ui(nullptr, &hit);
+        assert(join_trace(t.calls) == "touchIsInUI:,touchIsInUI:");
+        assert(t.handled == 1);
+        t = jetpackui_start_touch(&hit_h, nullptr);
+        assert(join_trace(t.calls) == "startTouch:" && t.handled == 1);
+        t = jetpackui_move_touch(nullptr, nullptr);
+        assert(join_trace(t.calls) == "moveTouch:,moveTouch:");
+        t = jetpackui_end_touch(nullptr, nullptr);
+        assert(join_trace(t.calls) == "endTouch:,endTouch:");
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
                 " block chain x19, craftui x16, dpad x11, blockhead x28,"
                 " const x17, wpbar x11, camera x10, pet x13, wear x14,"
                 " regen x14, tpbuy x18, sound x7, invfull x12, "
-                "freeoffer x9, addcredit x10, ctrlopts x7, hunger x13)\n");
+                "freeoffer x9, addcredit x10, ctrlopts x7, hunger x13,"
+                " jetpack x15)\n");
     return 0;
 }

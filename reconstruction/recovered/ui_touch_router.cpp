@@ -812,4 +812,50 @@ PanelTrace hungerui_end_touch(const ChildReply* eat) {
     return t;
 }
 
+// --- the JetPackUI panel --------------------------------------------------
+
+bool jetpackui_touch_is_in_view_at_all(Point p, const PanelFrame& f) {
+    const float x = p.x - f.window_x - f.offset_x;
+    const float y = p.y - f.window_y - f.offset_y;
+    return x > -120.0f && x < 120.0f && y > 0.0f && y < 108.0f;
+}
+
+PanelTrace jetpackui_touch_is_in_ui(const ChildReply* add_fuel,
+                                    const ChildReply* free_flight) {
+    PanelTrace t;
+    bool any = child_in_ui(add_fuel, t);
+    if (!any) any = child_in_ui(free_flight, t);
+    t.handled = any ? 1 : 0;
+    return t;
+}
+
+PanelTrace jetpackui_start_touch(const ChildReply* add_fuel,
+                                 const ChildReply* free_flight) {
+    PanelTrace t;
+    bool any = child_start(add_fuel, t);
+    if (!any) any = child_start(free_flight, t);
+    t.handled = any ? 1 : 0;
+    return t;
+}
+
+PanelTrace jetpackui_move_touch(const ChildReply* add_fuel,
+                                const ChildReply* free_flight) {
+    (void)add_fuel;
+    (void)free_flight;
+    PanelTrace t;
+    t.calls.push_back("moveTouch:");   // addFuelButton@44
+    t.calls.push_back("moveTouch:");   // freeFlightButton@48
+    return t;
+}
+
+PanelTrace jetpackui_end_touch(const ChildReply* add_fuel,
+                               const ChildReply* free_flight) {
+    (void)add_fuel;
+    (void)free_flight;
+    PanelTrace t;
+    t.calls.push_back("endTouch:");    // addFuelButton@44
+    t.calls.push_back("endTouch:");    // freeFlightButton@48
+    return t;
+}
+
 }  // namespace blockheads::ui

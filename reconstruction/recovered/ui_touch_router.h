@@ -440,4 +440,20 @@ PanelTrace hungerui_start_touch(const ChildReply* eat);
 PanelTrace hungerui_move_touch(const ChildReply* eat);
 PanelTrace hungerui_end_touch(const ChildReply* eat);
 
+// --- the JetPackUI panel --------------------------------------------------
+// rect (95w): local = point - windowInfo(+8/+0xc) - translationOffset
+// (@144); x in (-120, 120), y in (0, 108), all edges exclusive.
+// touchIsInUI: (103w) / startTouch:tapCount: (105w) are the two-child OR
+// in the order addFuelButton@44, freeFlightButton@48 (short-circuit);
+// moveTouch:/endTouch: (87w each) message BOTH children.
+bool jetpackui_touch_is_in_view_at_all(Point p, const PanelFrame& f);
+PanelTrace jetpackui_touch_is_in_ui(const ChildReply* add_fuel,
+                                    const ChildReply* free_flight);
+PanelTrace jetpackui_start_touch(const ChildReply* add_fuel,
+                                 const ChildReply* free_flight);
+PanelTrace jetpackui_move_touch(const ChildReply* add_fuel,
+                                const ChildReply* free_flight);
+PanelTrace jetpackui_end_touch(const ChildReply* add_fuel,
+                               const ChildReply* free_flight);
+
 }  // namespace blockheads::ui

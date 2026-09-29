@@ -177,6 +177,12 @@ ENTRIES = [
     ('HungerUIPress', 154, 0x0063D7B4, 0x00000000, 93),
     ('HungerUIMove', 155, 0x0063D928, 0x00000000, 68),
     ('HungerUIEnd', 156, 0x0063DA38, 0x00000000, 68),
+    # the JetPackUI panel: a rect + the two-button chains
+    ('JetPackUIRect', 157, 0x00B58D54, 0x00000000, 95),
+    ('JetPackUIInUI', 158, 0x00B58BB8, 0x00000000, 103),
+    ('JetPackUIPress', 159, 0x00B58ED0, 0x00000000, 105),
+    ('JetPackUIMove', 160, 0x00B59074, 0x00000000, 87),
+    ('JetPackUIEnd', 161, 0x00B591D0, 0x00000000, 87),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -732,7 +738,7 @@ def main():
                                'TPBuyUI', 'SoundOptionsUI',
                                'InventoryFullUI', 'FreeOfferUI',
                                'AddCreditUI', 'ControlOptionsUI',
-                               'HungerUI')):
+                               'HungerUI', 'JetPackUI')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -997,6 +1003,15 @@ def main():
                                   0x60020900)
 
     HGR_EAT = 0x60020600
+
+    JPK_AF, JPK_FF = 0x60020600, 0x60020700
+
+    def jpk_seeds(wx=0.0, wy=0.0, ox=0.0, oy=0.0):
+        # JetPackUI: windowInfo@128 = self_ptr; translationOffset at
+        # 144/148; addFuelButton@44; freeFlightButton@48
+        return (f'128=0x60001000,8={fb(wx)},12={fb(wy)},'
+                f'144={fb(ox)},148={fb(oy)},'
+                f'44=0x{JPK_AF:08x},48=0x{JPK_FF:08x}')
 
     def hgr_seeds(wx=0.0, wy=0.0, ox=0.0, oy=0.0):
         # HungerUI: windowInfo@144 = self_ptr; translationOffset at
@@ -1679,6 +1694,40 @@ def main():
         'HungerUIEnd': {
             0: ('50,46', hgr_seeds(), {
                 'void': True, 'expect_recv': [HGR_EAT]})},
+        'JetPackUIRect': {
+            # x in (-120, 120), y in (0, 108), all edges exclusive
+            0: ('0,54', jpk_seeds(), {}),        # centre
+            1: ('120,54', jpk_seeds(), {}),      # x == 120
+            2: ('-120,54', jpk_seeds(), {}),     # x == -120
+            3: ('0,0', jpk_seeds(), {}),         # y == 0
+            4: ('0,108', jpk_seeds(), {}),       # y == 108
+            5: ('119,107', jpk_seeds(), {}),     # inside margins
+            6: ('124,54', jpk_seeds(0, 0, 5, 0), {}),  # x=119 (in)
+        },
+        'JetPackUIInUI': {
+            0: ('50,54', jpk_seeds(), {'expect_recv': [JPK_AF, JPK_FF]}),
+            1: ('50,54', jpk_seeds(), {
+                'expect_recv': [JPK_AF],
+                'ret1': {JPK_AF: ['touchIsInUI:']}}),
+            2: ('50,54', jpk_seeds(), {
+                'expect_recv': [JPK_AF, JPK_FF],
+                'ret1': {JPK_FF: ['touchIsInUI:']}}),
+        },
+        'JetPackUIPress': {
+            0: ('50,54', jpk_seeds(), {'expect_recv': [JPK_AF, JPK_FF]}),
+            1: ('50,54', jpk_seeds(), {
+                'expect_recv': [JPK_AF],
+                'ret1': {JPK_AF: ['startTouch:']}}),
+            2: ('50,54', jpk_seeds(), {
+                'expect_recv': [JPK_AF, JPK_FF],
+                'ret1': {JPK_FF: ['startTouch:']}}),
+        },
+        'JetPackUIMove': {
+            0: ('50,54', jpk_seeds(), {
+                'void': True, 'expect_recv': [JPK_AF, JPK_FF]})},
+        'JetPackUIEnd': {
+            0: ('50,54', jpk_seeds(), {
+                'void': True, 'expect_recv': [JPK_AF, JPK_FF]})},
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.

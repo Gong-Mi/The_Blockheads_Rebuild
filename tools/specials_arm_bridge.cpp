@@ -966,6 +966,52 @@ blockheads::ui::Point regen_point(int case_id) {
     }
 }
 
+// --- the JetPackUI panel's differential inputs ----------------------------
+blockheads::ui::PanelFrame jpk_frame(int case_id) {
+    switch (case_id) {
+        case 6: return {0.0f, 0.0f, 5.0f, 0.0f};
+        default: return {};
+    }
+}
+
+blockheads::ui::Point jpk_point(int case_id) {
+    switch (case_id) {
+        case 1: return {120.0f, 54.0f};
+        case 2: return {-120.0f, 54.0f};
+        case 3: return {0.0f, 0.0f};
+        case 4: return {0.0f, 108.0f};
+        case 5: return {119.0f, 107.0f};
+        case 6: return {124.0f, 54.0f};
+        default: return {0.0f, 54.0f};
+    }
+}
+
+void jpk_seeds_for(unsigned char* out, int case_id) {
+    ui_put_word(out, 128, 0x60001000u);
+    const auto f = jpk_frame(case_id);
+    ui_put_word(out, 8, float_bits(f.window_x));
+    ui_put_word(out, 12, float_bits(f.window_y));
+    ui_put_word(out, 144, float_bits(f.offset_x));
+    ui_put_word(out, 148, float_bits(f.offset_y));
+    ui_put_word(out, 44, 0x60020600u);       // addFuelButton
+    ui_put_word(out, 48, 0x60020700u);       // freeFlightButton
+}
+
+const blockheads::ui::ChildReply* jpk_child(int which, int slot,
+                                            int case_id) {
+    // 158/159: case 1 pins addFuelButton, case 2 pins freeFlightButton
+    if ((which == 158 || which == 159) && case_id >= 1 && case_id <= 2) {
+        if (slot == 0 && case_id == 1) {
+            return (which == 159) ? &kChildHandles : &kChildInUi;
+        }
+        if (slot == 0 && case_id == 2) return &kChildMiss;
+        if (slot == 1 && case_id == 2) {
+            return (which == 159) ? &kChildHandles : &kChildInUi;
+        }
+    }
+    return &kChildMiss;
+}
+
 // --- the HungerUI panel's differential inputs -----------------------------
 blockheads::ui::PanelFrame hgr_frame(int case_id) {
     switch (case_id) {
@@ -1268,6 +1314,24 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // the constant-verdict panels: no calls (the literal verdicts)
     } else if (type_id >= 97 && type_id <= 101) {
         // the WorkbenchProgressBarUI panel: no calls (rect + constants)
+    } else if (type_id >= 157 && type_id <= 161) {
+        // the JetPackUI panel: the two-button chains (157 makes no calls)
+        const auto* af = jpk_child(type_id, 0, case_id);
+        const auto* ff = jpk_child(type_id, 1, case_id);
+        blockheads::ui::PanelTrace t;
+        if (type_id == 158) {
+            t = blockheads::ui::jetpackui_touch_is_in_ui(af, ff);
+        } else if (type_id == 159) {
+            t = blockheads::ui::jetpackui_start_touch(af, ff);
+        } else if (type_id == 160) {
+            t = blockheads::ui::jetpackui_move_touch(af, ff);
+        } else if (type_id == 161) {
+            t = blockheads::ui::jetpackui_end_touch(af, ff);
+        }
+        for (const char* c : t.calls) {
+            if (!s.empty()) s += ',';
+            s += c;
+        }
     } else if (type_id >= 152 && type_id <= 156) {
         // the HungerUI panel: the single-child chains (152 makes no calls)
         const auto* eat = hgr_child(type_id, case_id);
@@ -1511,6 +1575,14 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         wpb_seeds_for(out, case_id);
+        return n;
+    }
+    if (type_id >= 157 && type_id <= 161) {  // JetPackUI
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0u);
+        ui_put_word(out, 12, 0u);
+        jpk_seeds_for(out, case_id);
         return n;
     }
     if (type_id >= 152 && type_id <= 156) {  // HungerUI
@@ -1806,6 +1878,21 @@ int recovered_ui_ret(int type_id, int case_id) {
             hgr_child(154, case_id)).handled;
     }
     if (type_id == 155 || type_id == 156) return 0;  // void (not compared)
+    if (type_id == 157) {
+        return blockheads::ui::jetpackui_touch_is_in_view_at_all(
+            jpk_point(case_id), jpk_frame(case_id)) ? 1 : 0;
+    }
+    if (type_id == 158) {
+        return blockheads::ui::jetpackui_touch_is_in_ui(
+            jpk_child(158, 0, case_id), jpk_child(158, 1, case_id))
+            .handled;
+    }
+    if (type_id == 159) {
+        return blockheads::ui::jetpackui_start_touch(
+            jpk_child(159, 0, case_id), jpk_child(159, 1, case_id))
+            .handled;
+    }
+    if (type_id == 160 || type_id == 161) return 0;  // void (not compared)
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);
