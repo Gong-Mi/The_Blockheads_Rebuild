@@ -634,4 +634,44 @@ bool inventoryfullui_touch_is_in_view_at_all(Point p,
     return x > -120.0f && x < 120.0f && y > 0.0f && y < 126.0f;
 }
 
+// --- the FreeOfferUI panel ------------------------------------------------
+
+PanelTrace freeofferui_start_touch(const ChildReply* exit_btn,
+                                   const ChildReply* const* buy_arr,
+                                   int offer_count) {
+    PanelTrace t;
+    bool local = child_start(exit_btn, t);      // exitButton@152
+    for (int i = 0; i < offer_count; ++i) {
+        if (!local) local = child_start(buy_arr[i], t);  // buyButton[i]
+    }
+    t.handled = local ? 1 : 0;
+    return t;
+}
+
+PanelTrace freeofferui_move_touch(const ChildReply* exit_btn,
+                                  const ChildReply* const* buy_arr,
+                                  int offer_count) {
+    (void)exit_btn;
+    (void)buy_arr;
+    PanelTrace t;
+    t.calls.push_back("moveTouch:");            // exitButton@152
+    for (int i = 0; i < offer_count; ++i) {
+        t.calls.push_back("moveTouch:");        // buyButton[i]
+    }
+    return t;
+}
+
+PanelTrace freeofferui_end_touch(const ChildReply* exit_btn,
+                                 const ChildReply* const* buy_arr,
+                                 int offer_count) {
+    (void)exit_btn;
+    (void)buy_arr;
+    PanelTrace t;
+    t.calls.push_back("endTouch:");             // exitButton@152
+    for (int i = 0; i < offer_count; ++i) {
+        t.calls.push_back("endTouch:");         // buyButton[i]
+    }
+    return t;
+}
+
 }  // namespace blockheads::ui

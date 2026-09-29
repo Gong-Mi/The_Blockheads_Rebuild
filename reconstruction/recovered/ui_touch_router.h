@@ -362,4 +362,25 @@ bool inventoryfullui_touch_is_in_view_at_all(Point p,
 constexpr int kInventoryFullUiInUi = 0;
 constexpr int kInventoryFullUiPress = 0;
 
+// --- the FreeOfferUI panel ------------------------------------------------
+// rect (32w) is the constant 1 (dead rebase); touchIsInUI: (32w) the
+// constant 0. startTouch:tapCount: (108w): local = [exitButton@152
+// startTouch:pt], then for i in 0..offerCount@156-1: if (local == 0)
+// local = norm([buyButton[i] startTouch:pt]) — buyButton@36 is an ARRAY
+// of button pointers, so the walk calls one entry per index until the
+// first true, then iterates the rest with no calls; returns the OR.
+// moveTouch:/endTouch: (89w each) message exitButton then EVERY
+// buyButton[i] (the same loop without short-circuit).
+constexpr bool kFreeOfferUiRect = true;
+constexpr int kFreeOfferUiInUi = 0;
+PanelTrace freeofferui_start_touch(const ChildReply* exit_btn,
+                                   const ChildReply* const* buy_arr,
+                                   int offer_count);
+PanelTrace freeofferui_move_touch(const ChildReply* exit_btn,
+                                  const ChildReply* const* buy_arr,
+                                  int offer_count);
+PanelTrace freeofferui_end_touch(const ChildReply* exit_btn,
+                                 const ChildReply* const* buy_arr,
+                                 int offer_count);
+
 }  // namespace blockheads::ui

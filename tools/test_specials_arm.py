@@ -153,6 +153,12 @@ ENTRIES = [
     ('InventoryFullUIPress', 134, 0x00CAC728, 0x00000000, 63),
     ('InventoryFullUIMove', 135, 0x00CAC824, 0x00000000, 56),
     ('InventoryFullUIEnd', 136, 0x00CAC904, 0x00000000, 56),
+    # the FreeOfferUI panel: const rect/inUI + the exitButton/buyButton[i] walks
+    ('FreeOfferUIRect', 137, 0x00DAFF70, 0x00000000, 32),
+    ('FreeOfferUIInUI', 138, 0x00DAFFF0, 0x00000000, 32),
+    ('FreeOfferUIPress', 139, 0x00DB0070, 0x00000000, 108),
+    ('FreeOfferUIMove', 140, 0x00DB0220, 0x00000000, 89),
+    ('FreeOfferUIEnd', 141, 0x00DB0384, 0x00000000, 89),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -706,7 +712,7 @@ def main():
                                'MainMenuUI', 'WPBarUI', 'CameraUI',
                                'PetUI', 'WearUI', 'RegenerateUI',
                                'TPBuyUI', 'SoundOptionsUI',
-                               'InventoryFullUI')):
+                               'InventoryFullUI', 'FreeOfferUI')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -961,6 +967,16 @@ def main():
     REGEN_DB, REGEN_CB = 0x60020600, 0x60020700
     TPB_SL, TPB_BUY = 0x60020600, 0x60020700
     SND_OK, SND_MU, SND_SO = 0x60020600, 0x60020700, 0x60020800
+
+    FOF_EX = 0x60020600
+    FOF_B0, FOF_B1, FOF_B2 = 0x60020700, 0x60020800, 0x60020900
+
+    def fof_seeds():
+        # FreeOfferUI: windowInfo@144 = self_ptr; exitButton@152;
+        # buyButton = an array of 3 pointers at 36/40/44; offerCount@156
+        return ('144=0x60001000,8=0,12=0,'
+                f'152=0x{FOF_EX:08x},36=0x{FOF_B0:08x},'
+                f'40=0x{FOF_B1:08x},44=0x{FOF_B2:08x},156=3')
 
     def inv_seeds():
         # InventoryFullUI: windowInfo@112 = self_ptr; translationOffset@120
@@ -1508,6 +1524,37 @@ def main():
             0: ('0,63', inv_seeds(), {'void': True})},
         'InventoryFullUIEnd': {
             0: ('0,63', inv_seeds(), {'void': True})},
+        'FreeOfferUIRect': {
+            # constant 1 (dead rebase)
+            0: ('50,50', fof_seeds(), {}),
+            1: ('9999,9999', fof_seeds(), {}),
+        },
+        'FreeOfferUIInUI': {
+            # constant 0
+            0: ('50,50', fof_seeds(), {}),
+            1: ('9999,9999', fof_seeds(), {}),
+        },
+        'FreeOfferUIPress': {
+            # 0: exit miss + all buys miss -> [exit, b0, b1, b2], 0
+            0: ('50,50', fof_seeds(), {
+                'expect_recv': [FOF_EX, FOF_B0, FOF_B1, FOF_B2]}),
+            # 1: exit answers -> [exit] only (loop iterations skip)
+            1: ('50,50', fof_seeds(), {
+                'expect_recv': [FOF_EX],
+                'ret1': {FOF_EX: ['startTouch:']}}),
+            # 2: exit miss, b0 miss, b1 answers -> [exit, b0, b1]
+            2: ('50,50', fof_seeds(), {
+                'expect_recv': [FOF_EX, FOF_B0, FOF_B1],
+                'ret1': {FOF_B1: ['startTouch:']}}),
+        },
+        'FreeOfferUIMove': {
+            0: ('50,50', fof_seeds(), {
+                'void': True,
+                'expect_recv': [FOF_EX, FOF_B0, FOF_B1, FOF_B2]})},
+        'FreeOfferUIEnd': {
+            0: ('50,50', fof_seeds(), {
+                'void': True,
+                'expect_recv': [FOF_EX, FOF_B0, FOF_B1, FOF_B2]})},
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.

@@ -247,6 +247,19 @@ in that order. 10 cases (the const-1 far-point control, both children alone
 + all-miss per chain, the void orders receiver-verified) execute under
 Unicorn.
 
+## The FreeOfferUI panel (types 137..141) — decoded
+
+`disasm_freeofferui_touch.txt` (350w): `touchIsInViewAtAll:` (32w) is the
+constant 1 (dead rebase); `touchIsInUI:` (32w) the constant 0.
+`startTouch:tapCount:` (108w): local = [exitButton@152 startTouch:pt],
+then for i in 0..offerCount@156-1: if (local == 0) local =
+norm([buyButton[i] startTouch:pt]) — buyButton@36 is an ARRAY of button
+pointers, so the walk calls one entry per index until the first true and
+iterates the rest with no calls; returns the OR.
+`moveTouch:` / `endTouch:` (89w each) message exitButton then EVERY
+buyButton[i] (the same loop, no short-circuit). 9 cases execute under
+Unicorn (the constant verdicts, the three press walks, both void loops).
+
 ## The InventoryFullUI panel (types 132..136) — decoded
 
 `disasm_inventoryfullui_touch.txt` (328w): `touchIsInViewAtAll:` (95w) —

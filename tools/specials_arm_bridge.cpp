@@ -966,6 +966,34 @@ blockheads::ui::Point regen_point(int case_id) {
     }
 }
 
+// --- the FreeOfferUI panel's differential inputs --------------------------
+constexpr unsigned FOF_EX = 0x60020600u;
+constexpr unsigned FOF_B0 = 0x60020700u;
+constexpr unsigned FOF_B1 = 0x60020800u;
+constexpr unsigned FOF_B2 = 0x60020900u;
+
+void fof_seeds_for(unsigned char* out) {
+    ui_put_word(out, 144, 0x60001000u);
+    ui_put_word(out, 8, 0u);
+    ui_put_word(out, 12, 0u);
+    ui_put_word(out, 152, FOF_EX);
+    ui_put_word(out, 36, FOF_B0);   // buyButton[0]
+    ui_put_word(out, 40, FOF_B1);   // buyButton[1]
+    ui_put_word(out, 44, FOF_B2);   // buyButton[2]
+    ui_put_word(out, 156, 3u);      // offerCount
+}
+
+bool fof_exit_answers(int case_id) { return case_id == 1; }
+int fof_buy_answers(int case_id) { return case_id == 2 ? 1 : -1; }
+
+void fof_buys(int case_id, const blockheads::ui::ChildReply** out) {
+    out[0] = &kChildMiss;
+    out[1] = &kChildMiss;
+    out[2] = &kChildMiss;
+    const int hit = fof_buy_answers(case_id);
+    if (hit >= 0) out[hit] = &kChildHandles;
+}
+
 // --- the InventoryFullUI panel's differential inputs ----------------------
 blockheads::ui::Point inv_point(int case_id) {
     switch (case_id) {
@@ -1166,6 +1194,24 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // the constant-verdict panels: no calls (the literal verdicts)
     } else if (type_id >= 97 && type_id <= 101) {
         // the WorkbenchProgressBarUI panel: no calls (rect + constants)
+    } else if (type_id >= 137 && type_id <= 141) {
+        // the FreeOfferUI panel: const rect/inUI + the button walks
+        const blockheads::ui::ChildReply* buys[3];
+        fof_buys(case_id, buys);
+        const auto* ex = fof_exit_answers(case_id) ? &kChildHandles
+                                                   : &kChildMiss;
+        blockheads::ui::PanelTrace t;
+        if (type_id == 139) {
+            t = blockheads::ui::freeofferui_start_touch(ex, buys, 3);
+        } else if (type_id == 140) {
+            t = blockheads::ui::freeofferui_move_touch(ex, buys, 3);
+        } else if (type_id == 141) {
+            t = blockheads::ui::freeofferui_end_touch(ex, buys, 3);
+        }
+        for (const char* c : t.calls) {
+            if (!s.empty()) s += ',';
+            s += c;
+        }
     } else if (type_id >= 132 && type_id <= 136) {
         // the InventoryFullUI panel: no calls at all
     } else if (type_id >= 127 && type_id <= 131) {
@@ -1339,6 +1385,14 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         wpb_seeds_for(out, case_id);
+        return n;
+    }
+    if (type_id >= 137 && type_id <= 141) {  // FreeOfferUI
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0u);
+        ui_put_word(out, 12, 0u);
+        fof_seeds_for(out);
         return n;
     }
     if (type_id >= 132 && type_id <= 136) {  // InventoryFullUI
@@ -1564,6 +1618,16 @@ int recovered_ui_ret(int type_id, int case_id) {
     if (type_id == 133) return blockheads::ui::kInventoryFullUiInUi;
     if (type_id == 134) return blockheads::ui::kInventoryFullUiPress;
     if (type_id == 135 || type_id == 136) return 0;  // void (not compared)
+    if (type_id == 137) return blockheads::ui::kFreeOfferUiRect ? 1 : 0;
+    if (type_id == 138) return blockheads::ui::kFreeOfferUiInUi;
+    if (type_id == 139) {
+        const blockheads::ui::ChildReply* buys[3];
+        fof_buys(case_id, buys);
+        const auto* ex = fof_exit_answers(case_id) ? &kChildHandles
+                                                   : &kChildMiss;
+        return blockheads::ui::freeofferui_start_touch(ex, buys, 3).handled;
+    }
+    if (type_id == 140 || type_id == 141) return 0;  // void (not compared)
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);

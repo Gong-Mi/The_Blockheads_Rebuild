@@ -625,9 +625,38 @@ int main() {
         assert(inventoryfullui_touch_is_in_view_at_all({119, 125}, origin));
     }
 
+    // --- the FreeOfferUI panel ---------------------------------------------
+    {
+        static_assert(kFreeOfferUiRect && kFreeOfferUiInUi == 0,
+                      "FreeOfferUI's decoded constants");
+        const ChildReply hit{false, true};
+        const ChildReply* buys[3] = {nullptr, &hit, nullptr};
+        // exit answers: [startTouch:] only, 1
+        auto t = freeofferui_start_touch(&hit, buys, 3);
+        assert(join_trace(t.calls) == "startTouch:" && t.handled == 1);
+        // exit miss, b0 miss, b1 answers: [exit, b0, b1], 1
+        const ChildReply* buys2[3] = {nullptr, &hit, nullptr};
+        t = freeofferui_start_touch(nullptr, buys2, 3);
+        assert(join_trace(t.calls) == "startTouch:,startTouch:,startTouch:");
+        assert(t.handled == 1);
+        // all miss: all four, 0
+        const ChildReply* buys3[3] = {nullptr, nullptr, nullptr};
+        t = freeofferui_start_touch(nullptr, buys3, 3);
+        assert(join_trace(t.calls)
+               == "startTouch:,startTouch:,startTouch:,startTouch:");
+        assert(t.handled == 0);
+        t = freeofferui_move_touch(nullptr, buys3, 3);
+        assert(join_trace(t.calls)
+               == "moveTouch:,moveTouch:,moveTouch:,moveTouch:");
+        t = freeofferui_end_touch(nullptr, buys3, 3);
+        assert(join_trace(t.calls)
+               == "endTouch:,endTouch:,endTouch:,endTouch:");
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
                 " block chain x19, craftui x16, dpad x11, blockhead x28,"
                 " const x17, wpbar x11, camera x10, pet x13, wear x14,"
-                " regen x14, tpbuy x18, sound x7, invfull x12)\n");
+                " regen x14, tpbuy x18, sound x7, invfull x12, "
+                "freeoffer x9)\n");
     return 0;
 }
