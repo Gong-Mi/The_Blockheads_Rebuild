@@ -256,4 +256,20 @@ bool wbpbarui_touch_is_in_view_at_all(Point p, const PanelFrame& f);
 constexpr bool kWorkbenchProgressBarInUi = false;
 constexpr int kWorkbenchProgressBarPress = 0;
 
+// --- the CameraUI panel ---------------------------------------------------
+// rect (32w): constant 1 (dead rebase, windowInfo@96). touchIsInUI: (78w)
+// and startTouch:tapCount: (99w) are the two-child OR in the order
+// cancelButton@104, takePhotoButton@108 (short-circuit; the press uses the
+// one-argument startTouch:); moveTouch:/endTouch: (66w each) message BOTH
+// children.
+constexpr bool kCameraUiRect = true;
+PanelTrace cameraui_touch_is_in_ui(const ChildReply* cancel,
+                                   const ChildReply* photo);
+PanelTrace cameraui_start_touch(const ChildReply* cancel,
+                                const ChildReply* photo);
+PanelTrace cameraui_move_touch(const ChildReply* cancel,
+                               const ChildReply* photo);
+PanelTrace cameraui_end_touch(const ChildReply* cancel,
+                              const ChildReply* photo);
+
 }  // namespace blockheads::ui

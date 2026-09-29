@@ -360,4 +360,44 @@ bool wbpbarui_touch_is_in_view_at_all(Point p, const PanelFrame& f) {
     return x > -120.0f && x < 120.0f && y > 0.0f && y < 102.0f;
 }
 
+// --- the CameraUI panel ---------------------------------------------------
+
+PanelTrace cameraui_touch_is_in_ui(const ChildReply* cancel,
+                                   const ChildReply* photo) {
+    PanelTrace t;
+    bool any = child_in_ui(cancel, t);
+    if (!any) any = child_in_ui(photo, t);
+    t.handled = any ? 1 : 0;
+    return t;
+}
+
+PanelTrace cameraui_start_touch(const ChildReply* cancel,
+                                const ChildReply* photo) {
+    PanelTrace t;
+    bool any = child_start(cancel, t);
+    if (!any) any = child_start(photo, t);
+    t.handled = any ? 1 : 0;
+    return t;
+}
+
+PanelTrace cameraui_move_touch(const ChildReply* cancel,
+                               const ChildReply* photo) {
+    (void)cancel;
+    (void)photo;
+    PanelTrace t;
+    t.calls.push_back("moveTouch:");   // cancelButton@104
+    t.calls.push_back("moveTouch:");   // takePhotoButton@108
+    return t;
+}
+
+PanelTrace cameraui_end_touch(const ChildReply* cancel,
+                              const ChildReply* photo) {
+    (void)cancel;
+    (void)photo;
+    PanelTrace t;
+    t.calls.push_back("endTouch:");    // cancelButton@104
+    t.calls.push_back("endTouch:");    // takePhotoButton@108
+    return t;
+}
+
 }  // namespace blockheads::ui

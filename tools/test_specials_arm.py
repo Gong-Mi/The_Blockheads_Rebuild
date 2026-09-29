@@ -111,6 +111,12 @@ ENTRIES = [
     ('WPBarUIPress', 99, 0x007349CC, 0x00000000, 61),
     ('WPBarUIMove', 100, 0x00734AC0, 0x00000000, 56),
     ('WPBarUIEnd', 101, 0x00734BA0, 0x00000000, 56),
+    # the CameraUI panel: a constant rect + the two-button chains
+    ('CameraUIRect', 102, 0x009D6054, 0x00000000, 32),
+    ('CameraUIInUI', 103, 0x009D60D4, 0x00000000, 78),
+    ('CameraUIPress', 104, 0x009D620C, 0x00000000, 99),
+    ('CameraUIMove', 105, 0x009D6398, 0x00000000, 66),
+    ('CameraUIEnd', 106, 0x009D64A0, 0x00000000, 66),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -661,7 +667,7 @@ def main():
         if not cls.startswith(('MJView', 'MJControl', 'UIManager',
                                'CraftUI', 'DPad', 'BlockheadUI',
                                'MapUI', 'OptionsUI', 'ShareUI', 'PauseUI',
-                               'MainMenuUI', 'WPBarUI')):
+                               'MainMenuUI', 'WPBarUI', 'CameraUI')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -908,6 +914,13 @@ def main():
         # translationOffset = the floats at 120/124
         return (f'96=0x60001000,8={fb(wx)},12={fb(wy)},'
                 f'120={fb(ox)},124={fb(oy)}')
+
+    CAM_CB, CAM_TPB = 0x60020600, 0x60020700
+
+    def cam_seeds():
+        # CameraUI: windowInfo@96 = self_ptr; the two buttons at 104/108
+        return (f'96=0x60001000,8={fb(0)},12={fb(0)},'
+                f'104=0x{CAM_CB:08x},108=0x{CAM_TPB:08x}')
 
     UI_CASES = {
         'MJControl': {
@@ -1202,6 +1215,38 @@ def main():
             0: ('50,50', wpb_seeds(0, 0, 0, 0), {'void': True})},
         'WPBarUIEnd': {
             0: ('50,50', wpb_seeds(0, 0, 0, 0), {'void': True})},
+        'CameraUIRect': {
+            # constant 1: the far point stays 1
+            0: ('50,50', cam_seeds(), {}),
+            1: ('999,999', cam_seeds(), {}),
+        },
+        'CameraUIInUI': {
+            # cancelButton -> takePhotoButton, short-circuit
+            0: ('50,50', cam_seeds(), {
+                'expect_recv': [CAM_CB, CAM_TPB]}),
+            1: ('50,50', cam_seeds(), {
+                'expect_recv': [CAM_CB],
+                'ret1': {CAM_CB: ['touchIsInUI:']}}),
+            2: ('50,50', cam_seeds(), {
+                'expect_recv': [CAM_CB, CAM_TPB],
+                'ret1': {CAM_TPB: ['touchIsInUI:']}}),
+        },
+        'CameraUIPress': {
+            0: ('50,50', cam_seeds(), {
+                'expect_recv': [CAM_CB, CAM_TPB]}),
+            1: ('50,50', cam_seeds(), {
+                'expect_recv': [CAM_CB],
+                'ret1': {CAM_CB: ['startTouch:']}}),
+            2: ('50,50', cam_seeds(), {
+                'expect_recv': [CAM_CB, CAM_TPB],
+                'ret1': {CAM_TPB: ['startTouch:']}}),
+        },
+        'CameraUIMove': {
+            0: ('50,50', cam_seeds(), {
+                'void': True, 'expect_recv': [CAM_CB, CAM_TPB]})},
+        'CameraUIEnd': {
+            0: ('50,50', cam_seeds(), {
+                'void': True, 'expect_recv': [CAM_CB, CAM_TPB]})},
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.

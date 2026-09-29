@@ -476,8 +476,34 @@ int main() {
                       "WorkbenchProgressBarUI's decoded constants");
     }
 
+    // --- the CameraUI panel ----------------------------------------------
+    {
+        static_assert(kCameraUiRect, "CameraUI's decoded rect constant");
+        const ChildReply in_ui{true, false};
+        const ChildReply handles{false, true};
+        // touchIsInUI: — cancelButton then takePhotoButton, short-circuit
+        auto t = cameraui_touch_is_in_ui(&in_ui, &in_ui);
+        assert(join_trace(t.calls) == "touchIsInUI:");
+        assert(t.handled == 1);
+        t = cameraui_touch_is_in_ui(nullptr, &in_ui);
+        assert(join_trace(t.calls) == "touchIsInUI:,touchIsInUI:");
+        assert(t.handled == 1);
+        t = cameraui_touch_is_in_ui(nullptr, nullptr);
+        assert(join_trace(t.calls) == "touchIsInUI:,touchIsInUI:");
+        assert(t.handled == 0);
+        // startTouch: — the same order/edges
+        t = cameraui_start_touch(&handles, nullptr);
+        assert(join_trace(t.calls) == "startTouch:");
+        assert(t.handled == 1);
+        // moveTouch: / endTouch: — both children
+        t = cameraui_move_touch(nullptr, nullptr);
+        assert(join_trace(t.calls) == "moveTouch:,moveTouch:");
+        t = cameraui_end_touch(nullptr, nullptr);
+        assert(join_trace(t.calls) == "endTouch:,endTouch:");
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
                 " block chain x19, craftui x16, dpad x11, blockhead x28,"
-                " const x17, wpbar x11)\n");
+                " const x17, wpbar x11, camera x10)\n");
     return 0;
 }

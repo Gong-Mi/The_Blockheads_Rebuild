@@ -236,6 +236,17 @@ the fixture.
 under Unicorn; `wbpbarui_touch_is_in_view_at_all` + the two decoded
 constants are the model.
 
+## The CameraUI panel (types 102..106) — decoded
+
+`disasm_cameraui_touch.txt` (341w): `touchIsInViewAtAll:` (32w) is the
+constant **1** (dead rebase, windowInfo@96); `touchIsInUI:` (78w) and
+`startTouch:tapCount:` (99w) are the two-child OR — `cancelButton@104`
+then `takePhotoButton@108`, short-circuit, the press using the one-argument
+`startTouch:`; `moveTouch:` / `endTouch:` (66w each) message BOTH children
+in that order. 10 cases (the const-1 far-point control, both children alone
++ all-miss per chain, the void orders receiver-verified) execute under
+Unicorn.
+
 ## The composition pattern: CraftUI (0x00B80EB4..0x00B817A4) — decoded
 
 CraftUI's five override bodies are decoded from the instruction stream

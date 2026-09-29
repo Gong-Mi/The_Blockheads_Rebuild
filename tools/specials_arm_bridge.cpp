@@ -874,6 +874,27 @@ void wpb_seeds_for(unsigned char* out, int case_id) {
     ui_put_word(out, 120, float_bits(f.offset_x));
     ui_put_word(out, 124, float_bits(f.offset_y));
 }
+
+// --- the CameraUI panel's differential inputs -----------------------------
+void cam_seeds_for(unsigned char* out) {
+    ui_put_word(out, 96, 0x60001000u);       // windowInfo = self_ptr
+    ui_put_word(out, 8, 0u);
+    ui_put_word(out, 12, 0u);
+    ui_put_word(out, 104, 0x60020600u);      // cancelButton
+    ui_put_word(out, 108, 0x60020700u);      // takePhotoButton
+}
+
+const blockheads::ui::ChildReply* cam_child(int which, int slot,
+                                            int case_id) {
+    // 103/104: case 1 pins the cancelButton, case 2 the takePhotoButton;
+    // 105/106 are void (the replies are unused)
+    if (which == 103 || which == 104) {
+        const auto* yes = (which == 104) ? &kChildHandles : &kChildInUi;
+        if (case_id == 1 && slot == 0) return yes;
+        if (case_id == 2 && slot == 1) return yes;
+    }
+    return &kChildMiss;
+}
 }  // namespace
 
 extern "C" {
@@ -948,6 +969,24 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // the constant-verdict panels: no calls (the literal verdicts)
     } else if (type_id >= 97 && type_id <= 101) {
         // the WorkbenchProgressBarUI panel: no calls (rect + constants)
+    } else if (type_id >= 102 && type_id <= 106) {
+        // the CameraUI panel: the two-button chains (102 makes no calls)
+        const auto* cb = cam_child(type_id, 0, case_id);
+        const auto* tpb = cam_child(type_id, 1, case_id);
+        blockheads::ui::PanelTrace t;
+        if (type_id == 103) {
+            t = blockheads::ui::cameraui_touch_is_in_ui(cb, tpb);
+        } else if (type_id == 104) {
+            t = blockheads::ui::cameraui_start_touch(cb, tpb);
+        } else if (type_id == 105) {
+            t = blockheads::ui::cameraui_move_touch(cb, tpb);
+        } else if (type_id == 106) {
+            t = blockheads::ui::cameraui_end_touch(cb, tpb);
+        }
+        for (const char* c : t.calls) {
+            if (!s.empty()) s += ',';
+            s += c;
+        }
     } else if (type_id == 71) {  // MJView -touchIsInUI: — the GATE cases
         // The frame test's coordinate space is still being decoded; the
         // gates are verified: hidden@4 short-circuits first, then
@@ -1013,6 +1052,13 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         wpb_seeds_for(out, case_id);
+        return n;
+    }
+    if (type_id >= 102 && type_id <= 106) {  // CameraUI
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0x60000200u);
+        cam_seeds_for(out);
         return n;
     }
     if (type_id == 71) {  // MJView: the gate cases write nothing
@@ -1098,6 +1144,16 @@ int recovered_ui_ret(int type_id, int case_id) {
     if (type_id == 98) return blockheads::ui::kWorkbenchProgressBarInUi ? 1 : 0;
     if (type_id == 99) return blockheads::ui::kWorkbenchProgressBarPress;
     if (type_id == 100 || type_id == 101) return 0;  // void (not compared)
+    if (type_id == 102) return blockheads::ui::kCameraUiRect ? 1 : 0;
+    if (type_id == 103) {
+        return blockheads::ui::cameraui_touch_is_in_ui(
+            cam_child(103, 0, case_id), cam_child(103, 1, case_id)).handled;
+    }
+    if (type_id == 104) {
+        return blockheads::ui::cameraui_start_touch(
+            cam_child(104, 0, case_id), cam_child(104, 1, case_id)).handled;
+    }
+    if (type_id == 105 || type_id == 106) return 0;  // void (not compared)
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);
