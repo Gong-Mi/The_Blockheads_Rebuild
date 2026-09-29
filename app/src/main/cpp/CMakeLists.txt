@@ -17,7 +17,7 @@ set(GEN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/generated)
 add_custom_command(
     OUTPUT ${GEN_DIR}/game_item_ids.h ${GEN_DIR}/game_item_data.cpp ${GEN_DIR}/game_recipe_data.h ${GEN_DIR}/game_recipe_data.cpp
     COMMAND ${Python3_EXECUTABLE} ${TOOL_DIR}/process_items.py ${ASSET_DIR}/items.json ${ASSET_DIR}/recipes.json ${GEN_DIR}/game_item_ids.h ${GEN_DIR}/game_item_data.cpp ${GEN_DIR}/game_recipe_data.h ${GEN_DIR}/game_recipe_data.cpp
-    DEPENDS ${TOOL_DIR}/process_items.py ${ASSET_DIR}/items.json ${ASSET_DIR}/recipes.json
+    DEPENDS ${TOOL_DIR}/process_items.py ${TOOL_DIR}/align_rebuild_items.py ${ASSET_DIR}/items.json ${ASSET_DIR}/recipes.json
     COMMENT "Generating Item and Recipe Data from JSON"
 )
 

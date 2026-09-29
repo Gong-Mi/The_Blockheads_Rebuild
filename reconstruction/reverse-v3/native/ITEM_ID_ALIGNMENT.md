@@ -1,116 +1,81 @@
-# ItemType namespace alignment (rebuild <-> original)
+# Item ID domains and the explicit compatibility bridge
 
-This document records how the rebuild's item table is aligned with the
-original 1.7.6 ItemType namespace, and where each fact comes from.  Original
-ELF: `733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7`.
+Client input: Android 1.7.6 ARM ELF SHA-256
+`733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7`.
 
-## The three numbering systems
+## Evidence identity
 
-| System | Range | Role |
-|---|---|---|
-| Original ItemType | sparse 0..343 and 1024..1105 (426 values) | what saves, wire data and the native helpers speak |
-| Rebuild `items.json` ids | dense 0..272 (87 items) | the app's compatibility layer; **not** original |
-| Rust server item ids | dense 0..63 | a separate placeholder line (out of scope here) |
+`original_item_types.tsv` keeps these fields separate:
 
-## Evidence sources
+- `reference_name`: independent TheBlockheadsTools labels (MIT), commit
+  `c9bc7eea11ecdefa7de47000bfe70b14be374f3c`; NOT original developer identifiers.
+- `server171_symbol`: verbatim Linux server 1.7.1 DWARF enum symbols, extracted
+  on the `methods/dwarf` line at `a4508b92b2db2fd9862b8b52a5af872c4e98403e`.
+  `server171_itemtype_enum.txt` pins the source JSON and ELF hashes. Its 428
+  entries include sentinels `ITEM_SPRITE_ITEM_COUNT=344` and `ITEM_MAX=1106`.
+  The remaining numeric set matches the 426 reference entries. This does NOT
+  establish Android 1.7.6 semantics or ABI equivalence for every entry.
+- Client numeric evidence: 85 switch entries from `imageTypeForItemType`, direct
+  TileType-to-ItemType assignments, and 266 `defaultPrices` id/price records.
+  Prices contain no names. Agreement with a table used as input is a generation
+  check, not an independent semantic oracle.
 
-A-grade (in-repo ELF extractions of the original binary):
+Examples of distinct labels: 1024 is reference `Stone` / server `ITEM_COBBLESTONE`;
+73 is `GoldNugget` / `ITEM_GOLD_ORE`; 1057 is `ReinforcedPlatform` /
+`ITEM_WOODEN_PLATFORM`. Neither column silently replaces the other.
 
-* `tools/extract_original_item_image_map.py` -> `original_item_image_map.tsv`:
-  every case of `imageTypeForItemType` @0x4D71DC, including the full
-  [0x400, 0x451] block, the low cases 58/168/174, and the documented default
-  image 32 (atlas 0,1) for unmapped types.
-* `tools/extract_original_tile_item_map.py` -> `original_tile_item_map.tsv`:
-  the direct `itemTypeFromTileIsForegorund` @0x00A18044 tile -> item
-  assignments.
+## Atlas and terrain domains
 
-Original APK asset:
+`texCoordsForItemType` at 0x004d6040 is the Items sprite-coordinate path.
+`tileTexCoordsForItemType` at 0x005f0450 calls `imageTypeForItemType` at
+0x004d71dc: the latter's images belong to **TileMap, 32x32**, not Items, 32x16.
+The assembled columns are therefore explicitly `tile_image/col/row_a0/a1`,
+with `atlas_domain=TileMap:32x32`. Image32 is this tile helper's fallback; it
+is NOT the inventory icon for all low-range items. Elevator images at row18
+are valid TileMap cells and must not be sampled from Items.
 
-* `assets/defaultPrices` (binary plist): 266 priced ItemType ids with
-  `price`/`old_price` as originally shipped.
+`reference_voxeltype_enum.txt` is a third-party GUI/GPU enum. It combines
+terrain and content variants; it is no longer used to label original TileType
+values. In particular its Cactus115/116 are not client Tile byte3's 43/44.
 
-C+ correlation names (independent project, MIT):
+## Runtime boundary
 
-* `reference_itemtype_enum.txt` and `reference_voxeltype_enum.txt` are
-  snapshots of `medioqrity/TheBlockheadsTools` @
-  `c9bc7eea11ecdefa7de47000bfe70b14be374f3c` (source sha256s in the file
-  headers).  These provide the human-readable names; the NUMBERS are
-  corroborated by the A-grade extractions wherever the ranges overlap
-  (e.g. Stone=1024 with image 33 (1,1) and tile 10 -> 1024; Ice=1060 with
-  tile 4 -> 1060; Shop=168 with the arg2 image pair 304/305; Window=58 with
-  109 (13,3); BlackWindow=174 with 118).  They are not an original header.
+Legacy `ItemID` and `world.bin` numbers are unchanged. All 87 decisions are in
+`align_rebuild_items.py`, with frozen compatibility IDs. There are 68 positive
+mappings, empty0, and 18 unmapped entries. `tile_only` / `no_original` mean
+conservative unmapped decisions, NOT proof that a reference omission proves
+absence in the client. Entity markers are not inventory items.
 
-## Assembled table
+`process_items.py` validates the complete list before writing, then generates
+`ItemDef.originalType` and `ORIGINAL_*` constants. Unknown/unmapped is -1;
+empty is0. `ItemManager::{toOriginalType,fromOriginalType,getDefFromOriginalType}`
+never falls back to identity conversion. Thus original31 resolves to legacy7
+(Copper Ore), while legacy31 remains Dodo Meat; original1048 resolves to Dirt.
 
-`tools/extract_original_item_types.py` joins the four sources into
-`original_item_types.tsv` (426 rows): item type, hex, name, both image
-variants and atlas cells, price, and a `sources` column listing which
-evidence covers the row (`enum`, `tileN(Name)`, `price`, `imagetype@VA`).
-The tool refuses to write on cross-source contradiction; the shipped file is
-additionally pinned by `tools/test_item_id_alignment_evidence.py`
-(reference snapshot shas, 426 rows, spot rows, 266 priced, 85 imagetype rows,
-per-row agreement with the image map, default-image rule, negative controls).
+`Player::addOriginalItem` consumes this conversion before using the existing
+inventory implementation; `originalItemType(slot)` exports the ID. Default
+new-world supplies call the original-ID entry. Their legacy slots/counts are
+asserted unchanged. The bridge handles ID/count only, not dataA/dataB, nested
+containers, clothing, or the original InventoryItem codec. Recovered snapshot
+objects are still not the active gameplay world. TexRow/texCol rendering,
+world.bin format and the separate Rust prototype are not migrated here.
 
-The image index is `row * 32 + col` on the original atlas (`Items.png`,
-32 columns x 16 rows; HD variant 64 px cells).  `image_a0` is the arg2==0
-variant, `image_a1` the arg2!=0 variant of the five conditional pairs plus
-Shop.
+## Reproduction and acceptance
 
-## Rebuild alignment
+    python3 tools/extract_original_item_types.py
+    python3 tools/align_rebuild_items.py
+    python3 tools/extract_original_item_types.py --check
+    python3 tools/align_rebuild_items.py --check
+    python3 tools/test_item_id_alignment_evidence.py
+    python3 tools/test_item_alignment.py
 
-`tools/align_rebuild_items.py` resolves every rebuild entry against the
-assembled table (normalised-name match plus the curated decisions in the
-tool) and writes:
-
-* `original_type` into every `assets/gamedata/items.json` entry (null when
-  there is no original counterpart);
-* `item_id_alignment.tsv`: the per-item decision record with status, original
-  name, atlas cell, the original row's sources, and a note.
-
-Result for the current 87 rebuild entries: 69 map onto original types
-(62 normalised-equal names, 6 genuinely different original names, 1 engine
-placeholder), and 18 have no original counterpart:
-
-* 5 terrain-only materials (`BLOCK_LEAVES`, `BLOCK_GRASS`, `BLOCK_SNOW`,
-  `BLOCK_CACTUS`, `BLOCK_TC_ORE`) - the original has these only as VoxelType
-  terrain; `BLOCK_TC_ORE` additionally mines into item TimeCrystal 11;
-* 9 rebuild-only items (`ITEM_COAL_GENERATOR`, `ITEM_ELECTRIC_LAMP`,
-  `ITEM_SUNFLOWER`, `BLOCK_STONE_WALL`, `ITEM_BRONZE_AXE`,
-  `ITEM_BRONZE_SPADE`, `ITEM_IRON_SPADE`, `ITEM_GOLD_AXE`,
-  `ITEM_GOLD_SWORD`) - no such item exists in the original table;
-* 4 entity markers (`ENTITY_DODO`, `ENTITY_DROP_ITEM`, `ENTITY_YAK`,
-  `ENTITY_DROPBEAR`) - not item ids at all.
-
-Mapped values are unique (no two rebuild items claim one original type) and
-every mapped value resolves in the 426-row table; both facts are asserted by
-the evidence test and the render contract now requires `original_type` on
-every item definition.
-
-## What this changes and what it does not
-
-Changed:
-
-* every item definition carries its aligned `original_type`;
-* the relation is reproducible (`extract_original_item_types.py`,
-  `align_rebuild_items.py`), documented and guarded in both CI workflows.
-
-Not changed (explicit boundaries):
-
-* the rebuild's own numeric ids are NOT renumbered: they remain the app
-  compatibility layer noted in `STATIC_RENDER_CONTRACT.md`;
-* renderer draw cells (`texRow`/`texCol`) stay as they are; the alignment
-  provides the evidence to revisit them, it does not re-derive the three
-  original draw-pass slots;
-* save assembly / `OriginalClientWorld` consumers do not yet resolve original
-  item types through this table at runtime - that wiring is follow-up work;
-* the reference names remain C+ except where corroborated; the 169..1023
-  range without explicit cases uses the documented default image and is
-  marked `imagetype(default)`.
-
-Regenerate:
-
-```sh
-python3 tools/extract_original_item_types.py
-python3 tools/align_rebuild_items.py
-python3 tools/test_item_id_alignment_evidence.py
-```
+Generation rejects duplicate keys, replaces rather than prefixes existing
+original_type, accepts JSON independently of formatting, and is idempotent.
+The guard compares ALL JSON decisions and ALL TSV rows, pins all reviewed
+numeric mappings, and mutates each entry independently as a negative control.
+CMake's gameplay tests compile the actual ItemManager/Player and generated data:
+`gameplay_item_namespace` covers all87 decisions and all65536 uint16 inputs;
+`gameplay_original_ids` imports original31/1088, edits real inventory/terrain,
+saves the development world.bin, reloads it and exports the same original IDs.
+These are host production-source tests with the worker stopped, not JNI/GPU,
+original-save compatibility or device acceptance.

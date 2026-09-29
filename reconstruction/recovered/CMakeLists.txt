@@ -460,6 +460,12 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             add_test(NAME specials_arm_evidence
                      COMMAND ${BH_PYTHON3}
                              ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_specials_arm_evidence.py)
+            add_test(NAME item_id_alignment_evidence
+                     COMMAND ${BH_PYTHON3}
+                             ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_item_id_alignment_evidence.py)
+            add_test(NAME item_id_alignment_regressions
+                     COMMAND ${BH_PYTHON3}
+                             ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_item_alignment.py)
             add_test(NAME coverage_audit
                      COMMAND ${BH_PYTHON3}
                              ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_coverage_audit.py)

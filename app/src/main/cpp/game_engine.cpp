@@ -188,10 +188,11 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
         g_entities->player.x = 0.0f;
         g_entities->player.y = 100.0f;
         
-        // Initial supplies for logic verification
-        g_entities->player.addItem(ITEM_STICK, 10);
-        g_entities->player.addItem(ITEM_FLINT, 10);
-        g_entities->player.addItem(BLOCK_WOOD, 10);
+        // Explicit original ItemType -> compatibility id boundary. These produce
+        // the identical legacy slots/counts; world.bin ids are not renumbered.
+        g_entities->player.addOriginalItem(ORIGINAL_ITEM_STICK, 10);
+        g_entities->player.addOriginalItem(ORIGINAL_ITEM_FLINT, 10);
+        g_entities->player.addOriginalItem(ORIGINAL_BLOCK_WOOD, 10);
         g_entities->inventoryDirty = true;
     } else {
         logToFile("World loaded successfully");
