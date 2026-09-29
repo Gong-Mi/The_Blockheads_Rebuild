@@ -247,6 +247,15 @@ in that order. 10 cases (the const-1 far-point control, both children alone
 + all-miss per chain, the void orders receiver-verified) execute under
 Unicorn.
 
+## The InventoryFullUI panel (types 132..136) — decoded
+
+`disasm_inventoryfullui_touch.txt` (328w): `touchIsInViewAtAll:` (95w) —
+x in (-120, 120), y in (0, 126), all edges exclusive;
+`touchIsInUI:` (58w) and `startTouch:tapCount:` (63w) both return the
+constant 0 after full (dead) rebases; `moveTouch:` / `endTouch:` (56w
+each) are the rebases alone. No child calls anywhere. 12 cases execute
+under Unicorn.
+
 ## The SoundOptionsUI panel (types 127..131) — decoded
 
 `disasm_soundoptionsui_touch.txt` (323w): `touchIsInViewAtAll:` (32w) is

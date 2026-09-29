@@ -351,4 +351,15 @@ PanelTrace soundoptionsui_end_touch(const ChildReply* ok,
                                     const ChildReply* music,
                                     const ChildReply* sound);
 
+// --- the InventoryFullUI panel --------------------------------------------
+// rect (95w): local = point - windowInfo(+8/+0xc) - translationOffset
+// (@120); x in (-120, 120), y in (0, 126), all edges exclusive.
+// touchIsInUI: (58w) and startTouch:tapCount: (63w) both return the
+// constant 0 after full (dead) rebases; moveTouch:/endTouch: (56w each)
+// are the rebases alone — no child calls anywhere.
+bool inventoryfullui_touch_is_in_view_at_all(Point p,
+                                             const PanelFrame& f);
+constexpr int kInventoryFullUiInUi = 0;
+constexpr int kInventoryFullUiPress = 0;
+
 }  // namespace blockheads::ui

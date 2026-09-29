@@ -966,6 +966,26 @@ blockheads::ui::Point regen_point(int case_id) {
     }
 }
 
+// --- the InventoryFullUI panel's differential inputs ----------------------
+blockheads::ui::Point inv_point(int case_id) {
+    switch (case_id) {
+        case 1: return {120.0f, 63.0f};
+        case 2: return {-120.0f, 63.0f};
+        case 3: return {0.0f, 0.0f};
+        case 4: return {0.0f, 126.0f};
+        case 5: return {119.0f, 125.0f};
+        default: return {0.0f, 63.0f};
+    }
+}
+
+void inv_seeds_for(unsigned char* out) {
+    ui_put_word(out, 112, 0x60001000u);
+    ui_put_word(out, 8, 0u);
+    ui_put_word(out, 12, 0u);
+    ui_put_word(out, 120, 0u);
+    ui_put_word(out, 124, 0u);
+}
+
 // --- the SoundOptionsUI panel's differential inputs -----------------------
 constexpr unsigned SND_OK = 0x60020600u;
 constexpr unsigned SND_MU = 0x60020700u;
@@ -1146,6 +1166,8 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // the constant-verdict panels: no calls (the literal verdicts)
     } else if (type_id >= 97 && type_id <= 101) {
         // the WorkbenchProgressBarUI panel: no calls (rect + constants)
+    } else if (type_id >= 132 && type_id <= 136) {
+        // the InventoryFullUI panel: no calls at all
     } else if (type_id >= 127 && type_id <= 131) {
         // the SoundOptionsUI panel: const rect/inUI + three-child chains
         blockheads::ui::PanelTrace t;
@@ -1317,6 +1339,14 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         wpb_seeds_for(out, case_id);
+        return n;
+    }
+    if (type_id >= 132 && type_id <= 136) {  // InventoryFullUI
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0u);
+        ui_put_word(out, 12, 0u);
+        inv_seeds_for(out);
         return n;
     }
     if (type_id >= 127 && type_id <= 131) {  // SoundOptionsUI
@@ -1527,6 +1557,13 @@ int recovered_ui_ret(int type_id, int case_id) {
             &kChildMiss, &kChildMiss, &kChildMiss).handled;
     }
     if (type_id == 130 || type_id == 131) return 0;  // void (not compared)
+    if (type_id == 132) {
+        return blockheads::ui::inventoryfullui_touch_is_in_view_at_all(
+            inv_point(case_id), {}) ? 1 : 0;
+    }
+    if (type_id == 133) return blockheads::ui::kInventoryFullUiInUi;
+    if (type_id == 134) return blockheads::ui::kInventoryFullUiPress;
+    if (type_id == 135 || type_id == 136) return 0;  // void (not compared)
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);

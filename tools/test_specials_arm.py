@@ -147,6 +147,12 @@ ENTRIES = [
     ('SoundOptionsUIPress', 129, 0x00AE132C, 0x00000000, 95),
     ('SoundOptionsUIMove', 130, 0x00AE14A8, 0x00000000, 82),
     ('SoundOptionsUIEnd', 131, 0x00AE15F0, 0x00000000, 82),
+    # the InventoryFullUI panel: a rect + constant no-ops (no children)
+    ('InventoryFullUIRect', 132, 0x00CAC4C4, 0x00000000, 95),
+    ('InventoryFullUIInUI', 133, 0x00CAC640, 0x00000000, 58),
+    ('InventoryFullUIPress', 134, 0x00CAC728, 0x00000000, 63),
+    ('InventoryFullUIMove', 135, 0x00CAC824, 0x00000000, 56),
+    ('InventoryFullUIEnd', 136, 0x00CAC904, 0x00000000, 56),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -699,7 +705,8 @@ def main():
                                'MapUI', 'OptionsUI', 'ShareUI', 'PauseUI',
                                'MainMenuUI', 'WPBarUI', 'CameraUI',
                                'PetUI', 'WearUI', 'RegenerateUI',
-                               'TPBuyUI', 'SoundOptionsUI')):
+                               'TPBuyUI', 'SoundOptionsUI',
+                               'InventoryFullUI')):
             image[4:12] = b'\x00' * 8
         return ret, list(ctx['calls']), bytes(image)
 
@@ -954,6 +961,11 @@ def main():
     REGEN_DB, REGEN_CB = 0x60020600, 0x60020700
     TPB_SL, TPB_BUY = 0x60020600, 0x60020700
     SND_OK, SND_MU, SND_SO = 0x60020600, 0x60020700, 0x60020800
+
+    def inv_seeds():
+        # InventoryFullUI: windowInfo@112 = self_ptr; translationOffset@120
+        return '112=0x60001000,8=0,12=0,120=0,124=0'
+
 
     def snd_seeds():
         # SoundOptionsUI: windowInfo@96 = self_ptr; OKButton@104;
@@ -1475,6 +1487,27 @@ def main():
         'SoundOptionsUIEnd': {
             0: ('50,50', snd_seeds(), {
                 'void': True, 'expect_recv': [SND_OK, SND_MU, SND_SO]})},
+        'InventoryFullUIRect': {
+            # x in (-120, 120), y in (0, 126), all edges exclusive
+            0: ('0,63', inv_seeds(), {}),        # centre
+            1: ('120,63', inv_seeds(), {}),      # x == 120
+            2: ('-120,63', inv_seeds(), {}),     # x == -120
+            3: ('0,0', inv_seeds(), {}),         # y == 0
+            4: ('0,126', inv_seeds(), {}),       # y == 126
+            5: ('119,125', inv_seeds(), {}),     # inside margins
+        },
+        'InventoryFullUIInUI': {
+            0: ('0,63', inv_seeds(), {}),
+            1: ('9999,9999', inv_seeds(), {}),
+        },
+        'InventoryFullUIPress': {
+            0: ('0,63', inv_seeds(), {}),
+            1: ('9999,9999', inv_seeds(), {}),
+        },
+        'InventoryFullUIMove': {
+            0: ('0,63', inv_seeds(), {'void': True})},
+        'InventoryFullUIEnd': {
+            0: ('0,63', inv_seeds(), {'void': True})},
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.
