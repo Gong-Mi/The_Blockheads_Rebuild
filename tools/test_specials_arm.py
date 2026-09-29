@@ -210,6 +210,10 @@ ENTRIES = [
     ('ShareUIPress2', 181, 0x009C3344, 0x00000000, 171),
     ('ShareUIMove2', 182, 0x009C35F0, 0x00000000, 146),
     ('ShareUIEnd2', 183, 0x009C3838, 0x00000000, 146),
+    # OptionsUI's second batch: press/move/end (the rect/inUI were task 46's)
+    ('OptionsUIPress2', 184, 0x008478C8, 0x00000000, 265),
+    ('OptionsUIMove2', 185, 0x00847CEC, 0x00000000, 220),
+    ('OptionsUIEnd2', 186, 0x0084805C, 0x00000000, 220),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -1068,6 +1072,24 @@ def main():
     SU_OK, SU_APP = 0x60021000, 0x60021100
     SU_PORTAL, SU_INVITE = 0x60021200, 0x60021300
     SU_TW, SU_FB, SU_FORUM = 0x60021400, 0x60021500, 0x60021600
+
+    OPT_MPW = 0x6000d200
+    OPT_SND = 0x6000d300
+    OPT_CTL = 0x6000d400
+    OPT_OK, OPT_HD = 0x60021000, 0x60021100
+    OPT_SNDB, OPT_CTLB = 0x60021200, 0x60021300
+    OPT_RESTORE, OPT_MPB = 0x60021400, 0x60021500
+
+    def opt_seeds(case):
+        # OptionsUI: windowInfo@96 (scratch); mpw@136; sound@140; control@144;
+        # OK@104, HD@112, soundB@116, ctlB@120, restore@124, mpB@128
+        mpw = f'0x{OPT_MPW:08x}' if case == 0 else '0'
+        snd = f'0x{OPT_SND:08x}' if case == 1 else '0'
+        ctl = f'0x{OPT_CTL:08x}' if case == 2 else '0'
+        return (f'96=0x60001000,136={mpw},140={snd},144={ctl},'
+                f'104=0x{OPT_OK:08x},112=0x{OPT_HD:08x},'
+                f'116=0x{OPT_SNDB:08x},120=0x{OPT_CTLB:08x},'
+                f'124=0x{OPT_RESTORE:08x},128=0x{OPT_MPB:08x}')
 
     def su_seeds():
         # ShareUI: windowInfo@96 (scratch); OK@104; shareApp@108;
@@ -1999,6 +2021,29 @@ def main():
                 'void': True,
                 'expect_recv': [SU_OK, SU_APP, SU_PORTAL, SU_INVITE,
                                 SU_TW, SU_FB, SU_FORUM]})},
+        'OptionsUIPress2': {
+            # 0: mpw non-nil -> [mpw startTouch:tapCount:], 0
+            0: ('50,50', opt_seeds(0), {}),
+            # 1: mpw nil, sound answers -> [sound st:tc:], 1
+            1: ('50,50', opt_seeds(1),
+                {'ret1': {OPT_SND: ['startTouch:tapCount:']}}),
+            # 2: mpw/sound nil, control non-nil -> [control st:tc:], 0
+            2: ('50,50', opt_seeds(2), {}),
+            # 3: all nil -> the six buttons, 0
+            3: ('50,50', opt_seeds(3), {}),
+        },
+        'OptionsUIMove2': {
+            0: ('50,50', opt_seeds(0), {'void': True}),
+            1: ('50,50', opt_seeds(1), {'void': True}),
+            2: ('50,50', opt_seeds(2), {'void': True}),
+            3: ('50,50', opt_seeds(3), {'void': True}),
+        },
+        'OptionsUIEnd2': {
+            0: ('50,50', opt_seeds(0), {'void': True}),
+            1: ('50,50', opt_seeds(1), {'void': True}),
+            2: ('50,50', opt_seeds(2), {'void': True}),
+            3: ('50,50', opt_seeds(3), {'void': True}),
+        },
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.

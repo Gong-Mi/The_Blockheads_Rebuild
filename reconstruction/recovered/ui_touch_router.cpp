@@ -1201,4 +1201,82 @@ PanelTrace shareui_end_touch(const ChildReply* const* buttons) {
     return t;
 }
 
+// --- the OptionsUI panel (the press/move/end batch) -----------------------
+
+PanelTrace optionsui_start_touch(const ChildReply* mpw,
+                                 const ChildReply* snd,
+                                 const ChildReply* ctl,
+                                 const ChildReply* const* buttons) {
+    (void)buttons;
+    PanelTrace t;
+    if (mpw != nullptr) {
+        t.calls.push_back("startTouch:tapCount:");   // mpw@136
+        t.handled = mpw->handles ? 1 : 0;
+        return t;
+    }
+    if (snd != nullptr) {
+        t.calls.push_back("startTouch:tapCount:");   // soundOptionsUI@140
+        t.handled = snd->handles ? 1 : 0;
+        return t;
+    }
+    if (ctl != nullptr) {
+        t.calls.push_back("startTouch:tapCount:");   // controlOptionsUI@144
+        t.handled = ctl->handles ? 1 : 0;
+        return t;
+    }
+    for (int i = 0; i < 6; ++i) {
+        t.calls.push_back("startTouch:");   // OK..controlOptionsButton
+    }
+    t.handled = 0;                          // the constant local (dead replies)
+    return t;
+}
+
+PanelTrace optionsui_move_touch(const ChildReply* mpw,
+                                const ChildReply* snd,
+                                const ChildReply* ctl,
+                                const ChildReply* const* buttons) {
+    (void)buttons;
+    PanelTrace t;
+    if (mpw != nullptr) {
+        t.calls.push_back("moveTouch:");    // mpw@136
+        return t;
+    }
+    if (snd != nullptr) {
+        t.calls.push_back("moveTouch:");    // soundOptionsUI@140
+        return t;
+    }
+    if (ctl != nullptr) {
+        t.calls.push_back("moveTouch:");    // controlOptionsUI@144
+        return t;
+    }
+    for (int i = 0; i < 6; ++i) {
+        t.calls.push_back("moveTouch:");    // OK..controlOptionsButton
+    }
+    return t;
+}
+
+PanelTrace optionsui_end_touch(const ChildReply* mpw,
+                               const ChildReply* snd,
+                               const ChildReply* ctl,
+                               const ChildReply* const* buttons) {
+    (void)buttons;
+    PanelTrace t;
+    if (mpw != nullptr) {
+        t.calls.push_back("endTouch:");     // mpw@136
+        return t;
+    }
+    if (snd != nullptr) {
+        t.calls.push_back("endTouch:");     // soundOptionsUI@140
+        return t;
+    }
+    if (ctl != nullptr) {
+        t.calls.push_back("endTouch:");     // controlOptionsUI@144
+        return t;
+    }
+    for (int i = 0; i < 6; ++i) {
+        t.calls.push_back("endTouch:");     // OK..controlOptionsButton
+    }
+    return t;
+}
+
 }  // namespace blockheads::ui

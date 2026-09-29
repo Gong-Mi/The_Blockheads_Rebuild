@@ -893,12 +893,37 @@ int main() {
                   "endTouch:,endTouch:,endTouch:");
     }
 
+    // --- the OptionsUI panel (the press/move/end batch) --------------------
+    {
+        const ChildReply hit_h{false, true};
+        // the cascade: mpw first
+        auto t = optionsui_start_touch(&hit_h, nullptr, nullptr, nullptr);
+        assert(join_trace(t.calls) == "startTouch:tapCount:");
+        assert(t.handled == 1);
+        // sound next
+        t = optionsui_start_touch(nullptr, &hit_h, nullptr, nullptr);
+        assert(join_trace(t.calls) == "startTouch:tapCount:");
+        // control last
+        t = optionsui_move_touch(nullptr, nullptr, &hit_h, nullptr);
+        assert(join_trace(t.calls) == "moveTouch:");
+        // all nil: the six-button walk, the constant 0
+        t = optionsui_start_touch(nullptr, nullptr, nullptr, nullptr);
+        assert(join_trace(t.calls)
+               == "startTouch:,startTouch:,startTouch:,"
+                  "startTouch:,startTouch:,startTouch:");
+        assert(t.handled == 0);
+        t = optionsui_end_touch(nullptr, nullptr, nullptr, nullptr);
+        assert(join_trace(t.calls)
+               == "endTouch:,endTouch:,endTouch:,"
+                  "endTouch:,endTouch:,endTouch:");
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
                 " block chain x19, craftui x16, dpad x11, blockhead x28,"
                 " const x17, wpbar x11, camera x10, pet x13, wear x14,"
                 " regen x14, tpbuy x18, sound x7, invfull x12, "
                 "freeoffer x9, addcredit x10, ctrlopts x7, hunger x13,"
                 " jetpack x15, sleepprog x19, addfuel x15, paintmix x19,"
-                " pauseui2 x16, shareui2 x3)\n");
+                " pauseui2 x16, shareui2 x3, optionsui2 x12)\n");
     return 0;
 }

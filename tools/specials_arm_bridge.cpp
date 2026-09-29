@@ -966,6 +966,48 @@ blockheads::ui::Point regen_point(int case_id) {
     }
 }
 
+// --- the OptionsUI panel's differential inputs (the second batch) ---------
+constexpr unsigned OPT_MPW = 0x6000d200u;
+constexpr unsigned OPT_SND = 0x6000d300u;
+constexpr unsigned OPT_CTL = 0x6000d400u;
+constexpr unsigned OPT_OK = 0x60021000u;
+constexpr unsigned OPT_HD = 0x60021100u;
+constexpr unsigned OPT_SNDB = 0x60021200u;
+constexpr unsigned OPT_CTLB = 0x60021300u;
+constexpr unsigned OPT_RESTORE = 0x60021400u;
+constexpr unsigned OPT_MPB = 0x60021500u;
+
+void opt_seeds_for(unsigned char* out, int case_id) {
+    ui_put_word(out, 96, 0x60001000u);       // windowInfo (scratch)
+    ui_put_word(out, 136, case_id == 0 ? OPT_MPW : 0u);
+    ui_put_word(out, 140, case_id == 1 ? OPT_SND : 0u);
+    ui_put_word(out, 144, case_id == 2 ? OPT_CTL : 0u);
+    ui_put_word(out, 104, OPT_OK);
+    ui_put_word(out, 112, OPT_HD);
+    ui_put_word(out, 116, OPT_SNDB);
+    ui_put_word(out, 120, OPT_CTLB);
+    ui_put_word(out, 124, OPT_RESTORE);
+    ui_put_word(out, 128, OPT_MPB);
+}
+
+const blockheads::ui::ChildReply* opt_child(int which, int case_id,
+                                            int slot) {
+    // slot: 0 = mpw@136, 1 = sound@140, 2 = control@144
+    if (which == 184) {
+        if (slot == 0 && case_id == 0) return &kChildMiss;
+        if (slot == 1 && case_id == 1) return &kChildHandles;
+        if (slot == 2 && case_id == 2) return &kChildMiss;
+        return nullptr;
+    }
+    if (which == 185 || which == 186) {
+        if (slot == 0 && case_id == 0) return &kChildMiss;
+        if (slot == 1 && case_id == 1) return &kChildMiss;
+        if (slot == 2 && case_id == 2) return &kChildMiss;
+        return nullptr;
+    }
+    return nullptr;
+}
+
 // --- the ShareUI panel's differential inputs (the second batch) -----------
 constexpr unsigned SU_OK = 0x60021000u;
 constexpr unsigned SU_APP = 0x60021100u;
@@ -1546,6 +1588,26 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // the constant-verdict panels: no calls (the literal verdicts)
     } else if (type_id >= 97 && type_id <= 101) {
         // the WorkbenchProgressBarUI panel: no calls (rect + constants)
+    } else if (type_id >= 184 && type_id <= 186) {
+        // the OptionsUI panel: the sub-UI cascade + the six buttons
+        const auto* mpw = opt_child(type_id, case_id, 0);
+        const auto* snd = opt_child(type_id, case_id, 1);
+        const auto* ctl = opt_child(type_id, case_id, 2);
+        const blockheads::ui::ChildReply* btns[6] = {
+            &kChildMiss, &kChildMiss, &kChildMiss,
+            &kChildMiss, &kChildMiss, &kChildMiss};
+        blockheads::ui::PanelTrace t;
+        if (type_id == 184) {
+            t = blockheads::ui::optionsui_start_touch(mpw, snd, ctl, btns);
+        } else if (type_id == 185) {
+            t = blockheads::ui::optionsui_move_touch(mpw, snd, ctl, btns);
+        } else if (type_id == 186) {
+            t = blockheads::ui::optionsui_end_touch(mpw, snd, ctl, btns);
+        }
+        for (const char* c : t.calls) {
+            if (!s.empty()) s += ',';
+            s += c;
+        }
     } else if (type_id >= 181 && type_id <= 183) {
         // the ShareUI panel: the seven-button walks (replies dead)
         const blockheads::ui::ChildReply* btns[7] = {
@@ -1913,6 +1975,14 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         wpb_seeds_for(out, case_id);
+        return n;
+    }
+    if (type_id >= 184 && type_id <= 186) {  // OptionsUI (the second batch)
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0x60000200u);    // the harness base (see seeds)
+        ui_put_word(out, 12, 0u);
+        opt_seeds_for(out, case_id);
         return n;
     }
     if (type_id >= 181 && type_id <= 183) {  // ShareUI (the second batch)
@@ -2331,6 +2401,15 @@ int recovered_ui_ret(int type_id, int case_id) {
         return blockheads::ui::shareui_start_touch(btns).handled;
     }
     if (type_id == 182 || type_id == 183) return 0;  // void (not compared)
+    if (type_id == 184) {
+        const blockheads::ui::ChildReply* btns[6] = {
+            &kChildMiss, &kChildMiss, &kChildMiss,
+            &kChildMiss, &kChildMiss, &kChildMiss};
+        return blockheads::ui::optionsui_start_touch(
+            opt_child(184, case_id, 0), opt_child(184, case_id, 1),
+            opt_child(184, case_id, 2), btns).handled;
+    }
+    if (type_id == 185 || type_id == 186) return 0;  // void (not compared)
     if (type_id == 71) return 0;             // the gate cases return 0
     if (type_id != 70) return -1;
     Control c = ui_case_control(case_id);

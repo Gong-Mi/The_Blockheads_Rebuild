@@ -558,4 +558,26 @@ PanelTrace shareui_start_touch(const ChildReply* const* buttons /* 7 */);
 PanelTrace shareui_move_touch(const ChildReply* const* buttons /* 7 */);
 PanelTrace shareui_end_touch(const ChildReply* const* buttons /* 7 */);
 
+// --- the OptionsUI panel (the press/move/end batch) -----------------------
+// startTouch:tapCount: (265w): the three sub-UIs gate in order —
+// multiplayerWorldOptionsUI@136 -> soundOptionsUI@140 -> controlOptionsUI
+// @144 (each nil-checked: the first non-nil one takes the call
+// [sub startTouch:tapCount:pt tapCount] and its reply is returned); when
+// all three are nil, SIX buttons [OKButton@104, restoreButton@124,
+// hdTexturesButton@112, soundOptionsButton@116, multiplayerOptionsButton
+// @128, controlOptionsButton@120] each [startTouch:] and the constant 0.
+// move/end (220w each): the same cascade with their selectors.
+PanelTrace optionsui_start_touch(const ChildReply* mpw,
+                                 const ChildReply* snd,
+                                 const ChildReply* ctl,
+                                 const ChildReply* const* buttons /* 6 */);
+PanelTrace optionsui_move_touch(const ChildReply* mpw,
+                                const ChildReply* snd,
+                                const ChildReply* ctl,
+                                const ChildReply* const* buttons /* 6 */);
+PanelTrace optionsui_end_touch(const ChildReply* mpw,
+                               const ChildReply* snd,
+                               const ChildReply* ctl,
+                               const ChildReply* const* buttons /* 6 */);
+
 }  // namespace blockheads::ui

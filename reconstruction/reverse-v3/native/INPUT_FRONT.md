@@ -247,6 +247,19 @@ in that order. 10 cases (the const-1 far-point control, both children alone
 + all-miss per chain, the void orders receiver-verified) execute under
 Unicorn.
 
+## OptionsUI's press/move/end (types 184..186) — decoded
+
+`disasm_optionsui_touch2.txt` (705w): `startTouch:tapCount:` (265w) runs
+the three sub-UIs as a nil-checked cascade —
+multiplayerWorldOptionsUI@136 -> soundOptionsUI@140 -> controlOptionsUI@144
+(the first non-nil one takes the call `[sub startTouch:tapCount:pt
+tapCount]` and its reply is returned); when all three are nil, SIX
+buttons [OKButton@104, restoreButton@124, hdTexturesButton@112,
+soundOptionsButton@116, multiplayerOptionsButton@128,
+controlOptionsButton@120] each `[startTouch:]` and the constant 0.
+`moveTouch:` / `endTouch:` (220w each): the same cascade with their
+selectors. 12 cases execute under Unicorn.
+
 ## ShareUI's press/move/end (types 181..183) — decoded
 
 `disasm_shareui_touch2.txt` (463w): `startTouch:tapCount:` (171w)
