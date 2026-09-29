@@ -1020,6 +1020,57 @@ void mm_seeds_for(unsigned char* out, int case_id) {
     if (case_id == 0) ui_put_word(out, 468, 1u);
 }
 
+// --- the MainMenuUI panel's move inputs -----------------------------------
+constexpr unsigned MM_WI2 = 0x60001E00u;   // the windowInfo scratch object
+constexpr unsigned MM_GS = 0x6000da00u;    // the [delegate gameSaves] result
+
+bool mm_move_sat(int case_id) { return case_id >= 9; }
+bool mm_move_sip(int case_id) { return case_id == 12; }
+
+float mm_move_xlocal(int case_id) {
+    switch (case_id) {
+        case 10: case 12: case 14: return 50.0f;    // point (100, 0)
+        case 11: case 15: return -50.0f;            // point (0, 0)
+        default: return 0.0f;                       // point (50, 0)
+    }
+}
+
+float mm_move_cur0(int case_id) {
+    if (case_id == 14) return 1300.0f;
+    if (case_id == 15) return -150.0f;
+    return 0.0f;
+}
+
+bool mm_move_kinetic(int case_id) {
+    if (!mm_move_sat(case_id)) return false;
+    const float dx = mm_move_xlocal(case_id) - 0.0f;   // lastX seeds as 0
+    return mm_move_sip(case_id) || dx > 2.0f || dx < -2.0f;
+}
+
+void mm_move_seeds_for(unsigned char* out, int case_id) {
+    ui_put_word(out, 128, MM_WI2);           // the windowInfo scratch
+    ui_put_word(out, 3592, 0x42480000u);     // windowInfo+8 = 50.0
+    ui_put_word(out, 3596, 0u);              // windowInfo+0xc = 0.0
+    ui_put_word(out, 444, case_id == 1 ? MM_TC : 0u);
+    ui_put_word(out, 476, case_id == 2 ? MM_AC : 0u);
+    ui_put_word(out, 48, case_id == 3 ? MM_MO : 0u);
+    ui_put_word(out, 408, case_id == 4 ? 1u : 0u);
+    ui_put_word(out, 452, static_cast<unsigned>(mm_selection(case_id)));
+    ui_put_word(out, 456, MM_LW);
+    ui_put_word(out, 460, MM_CW);
+    ui_put_word(out, 464, MM_JOIN);
+    ui_put_word(out, 420, MM_TCB);
+    ui_put_word(out, 432, MM_MGB);
+    ui_put_word(out, 440, MM_SB);
+    if (case_id == 0) ui_put_word(out, 468, 1u);
+    // one word at 360: byte 360 = scrollInProgress, byte 361 = sTWIV
+    ui_put_word(out, 360,
+                static_cast<unsigned>((mm_move_sip(case_id) ? 1u : 0u) |
+                                      (mm_move_sat(case_id) ? 0x100u : 0u)));
+    if (case_id == 14) ui_put_word(out, 348, 0x44A28000u); // cur = 1300.0
+    if (case_id == 15) ui_put_word(out, 348, 0xC3160000u); // cur = -150.0
+}
+
 // --- the OptionsUI panel's differential inputs (the second batch) ---------
 constexpr unsigned OPT_MPW = 0x6000d200u;
 constexpr unsigned OPT_SND = 0x6000d300u;
@@ -1642,6 +1693,19 @@ const char* recovered_ui_seq(int type_id, int case_id) {
         // the constant-verdict panels: no calls (the literal verdicts)
     } else if (type_id >= 97 && type_id <= 101) {
         // the WorkbenchProgressBarUI panel: no calls (rect + constants)
+    } else if (type_id == 188) {
+        // the MainMenuUI move: the gates + the scroll block
+        const float xl = mm_move_xlocal(case_id);
+        blockheads::ui::PanelTrace t =
+            blockheads::ui::mainmenuui_move_touch(
+                mm_connecting(case_id), mm_tc(case_id), mm_ac(case_id),
+                mm_mo(case_id), mm_loading(case_id), mm_selection(case_id),
+                mm_lw(case_id), mm_cw(case_id), mm_jw(case_id),
+                mm_move_sat(case_id), mm_move_sip(case_id), xl, 0.0f, 10);
+        for (const char* c : t.calls) {
+            if (!s.empty()) s += ',';
+            s += c;
+        }
     } else if (type_id == 187) {
         // the MainMenuUI press: gates + dispatch + the three buttons
         blockheads::ui::PanelTrace t =
@@ -2041,6 +2105,29 @@ extern "C" int recovered_ui_img(int type_id, int case_id,
         ui_put_word(out, 4, 0x60000100u);
         ui_put_word(out, 8, 0x60000200u);
         wpb_seeds_for(out, case_id);
+        return n;
+    }
+    if (type_id == 188) {  // MainMenuUI move
+        std::memset(out, 0, static_cast<std::size_t>(n));
+        ui_put_word(out, 4, 0x60000100u);
+        ui_put_word(out, 8, 0x60000200u);    // the harness base (see seeds)
+        ui_put_word(out, 12, 0u);
+        mm_move_seeds_for(out, case_id);
+        if (mm_move_kinetic(case_id)) {
+            const float xl = mm_move_xlocal(case_id);
+            float dx = xl - 0.0f;                  // lastX = 0
+            const float cur0 = mm_move_cur0(case_id);
+            const float v = cur0 + dx;
+            // the extents: A = -160*0.75, B = count(10)*160*0.75 (pinned)
+            if (v < -120.0f || v > 1200.0f) dx *= 0.5f;
+            ui_put_word(out, 348, float_bits(cur0 + dx));  // currentScroll
+            ui_put_word(out, 352, float_bits(dx * 2.0f));  // scrollVelocity
+            ui_put_word(out, 356, float_bits(xl));         // lastX
+            // scrollInProgress = 1 (byte 360), keeping the sTWIV byte 361
+            ui_put_word(out, 360,
+                        static_cast<unsigned>(
+                            0x1u | (mm_move_sat(case_id) ? 0x100u : 0u)));
+        }
         return n;
     }
     if (type_id == 187) {  // MainMenuUI press
@@ -2497,6 +2584,7 @@ int recovered_ui_ret(int type_id, int case_id) {
             opt_child(184, case_id, 2), btns).handled;
     }
     if (type_id == 185 || type_id == 186) return 0;  // void (not compared)
+    if (type_id == 188) return 0;  // void (not compared)
     if (type_id == 187) {
         return blockheads::ui::mainmenuui_start_touch(
             mm_connecting(case_id), mm_tc(case_id), mm_ac(case_id),

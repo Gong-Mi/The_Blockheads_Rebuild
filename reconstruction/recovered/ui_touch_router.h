@@ -604,4 +604,30 @@ PanelTrace mainmenuui_start_touch(bool connecting,
                                   const ChildReply* more_games,
                                   const ChildReply* settings);
 
+// --- the MainMenuUI panel (the move batch) --------------------------------
+// moveTouch: (607w): the same gate cascade and selection dispatch with
+// [moveTouch:]; then the startTouchWasInView@361 gate. Not-in-view -> the
+// three buttons [timeCrystalButton@420, settingsButton@440,
+// moreGamesButton@432]. In-view: dx = x_local - lastX@356; |dx| > 2 (or
+// scrollInProgress@360 already set) latches scrollInProgress = 1 and runs
+// the kinetic block: [self delegate] gameSaves -> count (two stubbed
+// sends), the +-160 x 0.75 extents, the out-of-bounds dx halving, and the
+// state writes lastX = currentScroll@348 + dx, scrollVelocity@352 =
+// dx x 2, currentScroll += dx; otherwise (a small drag) the three
+// buttons run. Void.
+PanelTrace mainmenuui_move_touch(bool connecting,
+                                 const ChildReply* tc_ui,
+                                 const ChildReply* add_credit,
+                                 const ChildReply* mm_options,
+                                 bool loading,
+                                 int selection,
+                                 const ChildReply* load_world,
+                                 const ChildReply* create_world,
+                                 const ChildReply* join_world,
+                                 bool start_touch_was_in_view,
+                                 bool scroll_in_progress,
+                                 float x_local,
+                                 float last_x,
+                                 int gs_count);
+
 }  // namespace blockheads::ui

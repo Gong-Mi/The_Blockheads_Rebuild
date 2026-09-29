@@ -247,6 +247,22 @@ in that order. 10 cases (the const-1 far-point control, both children alone
 + all-miss per chain, the void orders receiver-verified) execute under
 Unicorn.
 
+## MainMenuUI's move (type 188) — decoded
+
+`moveTouch:` (607w): the same gate cascade and selection dispatch with
+`[moveTouch:]`; then the startTouchWasInView@361 gate. Not-in-view -> the
+three buttons [timeCrystalButton@420, settingsButton@440,
+moreGamesButton@432]. In-view: dx = x_local - lastX@356; |dx| > 2 (or
+scrollInProgress@360 already set) latches scrollInProgress = 1 and runs
+the kinetic block: `[self delegate] gameSaves` -> `count` (two stubbed
+sends, fetched TWICE when count > 0), the ±160 x 0.75 extents, the
+out-of-bounds dx halving, and the state writes lastX = x_local,
+scrollVelocity@352 = dx x 2, currentScroll@348 += dx; otherwise (a small
+drag) the three buttons run. 15 cases execute under Unicorn (the gates,
+the dispatch, the small drag, the latch, the pre-latched drag, the
+halving at both bounds; fixture bring-up fixed a seeds self-clobber:
+byte 360/361 must ride one word).
+
 ## MainMenuUI's press (type 187) — decoded
 
 `disasm_mainmenuui_touch2.txt` (2185w; the move/end batches follow):

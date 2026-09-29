@@ -950,12 +950,43 @@ int main() {
         assert(join_trace(t.calls) == "startTouch:" && t.handled == 1);
     }
 
+    // --- the MainMenuUI move ------------------------------------------------
+    {
+        // the connecting gate: zero calls
+        auto t = mainmenuui_move_touch(true, nullptr, nullptr, nullptr,
+                                       false, 0, nullptr, nullptr, nullptr,
+                                       true, false, 50.0f, 0.0f, 10);
+        assert(t.calls.empty());
+        // a small drag in view (|dx| <= 2): the three buttons
+        t = mainmenuui_move_touch(false, nullptr, nullptr, nullptr, false, 0,
+                                  nullptr, nullptr, nullptr, true, false,
+                                  1.5f, 0.0f, 10);
+        assert(join_trace(t.calls) == "moveTouch:,moveTouch:,moveTouch:");
+        // the kinetic latch (dx > 2): the delegate fetch, twice
+        t = mainmenuui_move_touch(false, nullptr, nullptr, nullptr, false, 0,
+                                  nullptr, nullptr, nullptr, true, false,
+                                  50.0f, 0.0f, 10);
+        assert(join_trace(t.calls) == "gameSaves,count,gameSaves,count");
+        // not in view: the buttons even for a big drag
+        t = mainmenuui_move_touch(false, nullptr, nullptr, nullptr, false, 0,
+                                  nullptr, nullptr, nullptr, false, false,
+                                  50.0f, 0.0f, 10);
+        assert(join_trace(t.calls) == "moveTouch:,moveTouch:,moveTouch:");
+        // the selection dispatch + the buttons tail
+        t = mainmenuui_move_touch(false, nullptr, nullptr, nullptr, false, 3,
+                                  nullptr, nullptr, nullptr, false, false,
+                                  50.0f, 0.0f, 10);
+        assert(join_trace(t.calls)
+               == "moveTouch:,moveTouch:,moveTouch:,moveTouch:");
+    }
+
     std::printf("ui_touch_router: PASS (gates, order, panel OR, router pass,"
                 " block chain x19, craftui x16, dpad x11, blockhead x28,"
                 " const x17, wpbar x11, camera x10, pet x13, wear x14,"
                 " regen x14, tpbuy x18, sound x7, invfull x12, "
                 "freeoffer x9, addcredit x10, ctrlopts x7, hunger x13,"
                 " jetpack x15, sleepprog x19, addfuel x15, paintmix x19,"
-                " pauseui2 x16, shareui2 x3, optionsui2 x12, mainmenu x10)\n");
+                " pauseui2 x16, shareui2 x3, optionsui2 x12, mainmenu x10,"
+                " mainmenu-move x15)\n");
     return 0;
 }

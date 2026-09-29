@@ -216,6 +216,7 @@ ENTRIES = [
     ('OptionsUIEnd2', 186, 0x0084805C, 0x00000000, 220),
     # MainMenuUI's press batch (the rect/inUI were task 46's; move/end next)
     ('MainMenuUIPress2', 187, 0x00A09DF0, 0x00000000, 437),
+    ('MainMenuUIMove2', 188, 0x00A0A4C4, 0x00000000, 607),
     # the UI front: MJControl's press lifecycle + MJView's touch contract
     ('MJControl', 70, 0x009F6894, 0x00E8BE18, 240),
     ('MJView', 71, 0x006614A8, 0x00E8BC90, 176),
@@ -1102,6 +1103,30 @@ def main():
                 f'452={sel},456=0x{MM_LW:08x},460=0x{MM_CW:08x},'
                 f'464=0x{MM_JOIN:08x},420=0x{MM_TCB:08x},'
                 f'432=0x{MM_MGB:08x},440=0x{MM_SB:08x},468={con}')
+
+    def mm_move_seeds(case):
+        # the move variant: the windowInfo scratch @0x60001E00 (its +8
+        # seeded 50.0 via self+3592), the sTWIV@361 / scrollInProgress@360
+        # / currentScroll@348 state
+        tcu = f'0x{MM_TC:08x}' if case == 1 else '0'
+        ac = f'0x{MM_AC:08x}' if case == 2 else '0'
+        mo = f'0x{MM_MO:08x}' if case == 3 else '0'
+        lod = 1 if case == 4 else 0
+        sel = 3 if case == 5 else (1 if case == 6 else
+                                   (2 if case == 7 else 0))
+        con = 1 if case == 0 else 0
+        sat = 1 if case >= 9 else 0
+        sip = 1 if case == 12 else 0
+        cur = ('0x44A28000' if case == 14 else
+               ('0xC3160000' if case == 15 else '0'))
+        # one word at 360: byte 360 = scrollInProgress, byte 361 = sTWIV
+        st = sip | (sat << 8)
+        return (f'128=0x60001E00,3592=0x42480000,3596=0,'
+                f'444={tcu},476={ac},48={mo},408={lod},452={sel},'
+                f'456=0x{MM_LW:08x},460=0x{MM_CW:08x},'
+                f'464=0x{MM_JOIN:08x},420=0x{MM_TCB:08x},'
+                f'432=0x{MM_MGB:08x},440=0x{MM_SB:08x},468={con},'
+                f'360={st},348={cur}')
 
     def opt_seeds(case):
         # OptionsUI: windowInfo@96 (scratch); mpw@136; sound@140; control@144;
@@ -2093,6 +2118,54 @@ def main():
                 'expect_recv': [MM_TCB],
                 'ret1': {MM_TCB: ['startTouch:']}}),
         },
+        'MainMenuUIMove2': {
+            # 0-4: the gates (connecting / tcUI / addCredit / mmOptions /
+            # loading) with moveTouch:
+            0: ('50,0', mm_move_seeds(0), {'void': True}),
+            1: ('50,0', mm_move_seeds(1), {'void': True}),
+            2: ('50,0', mm_move_seeds(2), {'void': True}),
+            3: ('50,0', mm_move_seeds(3), {'void': True}),
+            4: ('50,0', mm_move_seeds(4), {'void': True}),
+            # 5-7: the selection dispatch + the three-button tail (sTWIV=0)
+            5: ('50,0', mm_move_seeds(5), {
+                'void': True,
+                'expect_recv': [MM_LW, MM_TCB, MM_SB, MM_MGB]}),
+            6: ('50,0', mm_move_seeds(6), {'void': True}),
+            7: ('50,0', mm_move_seeds(7), {'void': True}),
+            # 8/9: sTWIV 0/1 with a small drag -> the buttons
+            8: ('50,0', mm_move_seeds(8), {
+                'void': True, 'expect_recv': [MM_TCB, MM_SB, MM_MGB]}),
+            9: ('50,0', mm_move_seeds(9), {
+                'void': True, 'expect_recv': [MM_TCB, MM_SB, MM_MGB]}),
+            # 10-12, 14-15: the kinetic block (latch / pre-latched /
+            # the halving at both bounds); the delegate stubs pinned
+            # (the kinetic fetches gameSaves/count TWICE)
+            10: ('100,0', mm_move_seeds(10), {
+                'void': True,
+                'retv': {0x60000100: {'gameSaves': 0x6000da00},
+                         0x6000da00: {'count': 10}},
+                'expect_recv': [0x60000100, 0x6000da00] * 2}),
+            11: ('0,0', mm_move_seeds(11), {
+                'void': True,
+                'retv': {0x60000100: {'gameSaves': 0x6000da00},
+                         0x6000da00: {'count': 10}},
+                'expect_recv': [0x60000100, 0x6000da00] * 2}),
+            12: ('100,0', mm_move_seeds(12), {
+                'void': True,
+                'retv': {0x60000100: {'gameSaves': 0x6000da00},
+                         0x6000da00: {'count': 10}},
+                'expect_recv': [0x60000100, 0x6000da00] * 2}),
+            14: ('100,0', mm_move_seeds(14), {
+                'void': True,
+                'retv': {0x60000100: {'gameSaves': 0x6000da00},
+                         0x6000da00: {'count': 10}},
+                'expect_recv': [0x60000100, 0x6000da00] * 2}),
+            15: ('0,0', mm_move_seeds(15), {
+                'void': True,
+                'retv': {0x60000100: {'gameSaves': 0x6000da00},
+                         0x6000da00: {'count': 10}},
+                'expect_recv': [0x60000100, 0x6000da00] * 2}),
+        },
         'MJView': {
             # 0/1: the empty-subviews cases (inside/outside — the base view
             # has no self test, so both are 0); 2/3: the gate cases.
@@ -2120,6 +2193,7 @@ def main():
             a.seed = seed
             a.r2r3_floats = pt
             ctx['ui_fixture'] = fixture
+            writes.clear()
             ret, calls, image = arm_run(entry, case_id)
             arm_seq = ','.join(re.sub(r'\(recv=[^)]*\)', '', c) for c in calls)
             expect_recv = fixture.get('expect_recv')

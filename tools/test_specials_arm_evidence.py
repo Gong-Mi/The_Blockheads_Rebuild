@@ -179,6 +179,9 @@ def main() -> int:
         # MainMenuUI's press batch
         "('MainMenuUIPress2', 187, 0x00A09DF0",
         "def mm_seeds(case):",
+        # MainMenuUI's move batch
+        "('MainMenuUIMove2', 188, 0x00A0A4C4",
+        "def mm_move_seeds(case):",
     ])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_uimanager_starttouch.txt",
             ["startTouch:tapCount:index:"])
@@ -220,7 +223,8 @@ def main() -> int:
              "paintmixui_end_touch", "pauseui_touch_is_in_ui",
              "pauseui_end_touch", "shareui_start_touch",
              "shareui_end_touch", "optionsui_start_touch",
-             "optionsui_end_touch", "mainmenuui_start_touch"])
+             "optionsui_end_touch", "mainmenuui_start_touch",
+             "mainmenuui_move_touch"])
     require(ROOT / "reconstruction/recovered/ui_touch_router.cpp",
             ["startTouch:tapCount:paused:index:", "import(memset)",
              "touchIsInViewAtAll:", "x > -130.0f && x < 130.0f",
@@ -234,7 +238,7 @@ def main() -> int:
              "addcredit x10", "ctrlopts x7", "hunger x13",
              "jetpack x15", "sleepprog x19", "addfuel x15",
              "paintmix x19", "pauseui2 x16", "shareui2 x3",
-             "optionsui2 x12", "mainmenu x10"])
+             "optionsui2 x12", "mainmenu x10", "mainmenu-move x15"])
     # the constant-verdict listings
     require(ROOT / "reconstruction/reverse-v3/native/disasm_mapui_touch.txt",
             ["MapUI -[touch family]", "implementation: 0x009cb460"])
@@ -289,7 +293,8 @@ def main() -> int:
              "slp_child", "slp_med", "afu_seeds_for", "afu_hit_index",
              "pmm_seeds_for", "pmm_child", "pmm_level", "pau_seeds_for",
              "pau_opt", "pau_share_c", "su_seeds_for", "opt_seeds_for",
-             "opt_child", "mm_seeds_for", "mm_selection"])
+             "opt_child", "mm_seeds_for", "mm_selection", "mm_move_seeds_for",
+             "mm_move_kinetic"])
     require(ROOT / "reconstruction/reverse-v3/native/disasm_gameuiview_all.txt",
             ["OBJC_IVAR_$_GameUIView.displayed (slot 0x0105dee0) = 4",
              "OBJC_IVAR_$_GameUIView.resourcesLoaded (slot 0x0105c494) = 16"])
@@ -326,16 +331,16 @@ def main() -> int:
             print(proc.stdout)
             print(proc.stderr)
             return 1
-        # the run's own report pins the case totals: 35 modelled + 335 UI
+        # the run's own report pins the case totals: 35 modelled + 350 UI
         # rows (router 19 + CraftUI 16 + DPad 11 + BlockheadUI 28 +
         # const 17 + WPBar 11 + Camera 10 + Pet 13 + Wear 14 + Regen 14 +
         # TPBuy 18 + Sound 7 + InvFull 12 + FreeOffer 9 + AddCredit 10 +
         # CtrlOpts 7 + Hunger 13 + JetPack 15 + SleepProg 19 + AddFuel 15
         # + PaintMix 19 + PauseUI2 16 + ShareUI2 3 + OptionsUI2 12
-        # + MainMenu 10 + MJControl 3 + MJView 4)
+        # + MainMenu 10 + MainMenuMove 15 + MJControl 3 + MJView 4)
         import json
         report = json.loads((out / "specials-arm-result.json").read_text())
-        assert report["cases"] == 380, report["cases"]
+        assert report["cases"] == 395, report["cases"]
         assert report["match"] is True
         ui_rows = [r for r in report["rows"] if r["class"] == "UIManager"]
         assert len(ui_rows) == 19, len(ui_rows)
@@ -424,6 +429,9 @@ def main() -> int:
         mm_rows = [r for r in report["rows"]
                    if r["class"] == "MainMenuUIPress2"]
         assert len(mm_rows) == 10, len(mm_rows)
+        mm_mv_rows = [r for r in report["rows"]
+                      if r["class"] == "MainMenuUIMove2"]
+        assert len(mm_mv_rows) == 15, len(mm_mv_rows)
         print("specials-arm: PASS (differential executed, modelled cases "
               "match; router 19/19, craftui 16/16, dpad 11/11, "
               "blockhead 28/28, const 17/17, wpbar 11/11, camera 10/10, "
@@ -431,7 +439,8 @@ def main() -> int:
               "sound 7/7, invfull 12/12, freeoffer 9/9, "
               "addcredit 10/10, ctrlopts 7/7, hunger 13/13, "
               "jetpack 15/15, sleepprog 19/19, addfuel 15/15, paintmix 19/19, "
-              "pauseui2 16/16, shareui2 3/3, optionsui2 12/12, mainmenu 10/10)")
+              "pauseui2 16/16, shareui2 3/3, optionsui2 12/12, mainmenu 10/10, "
+              "mainmenu-move 15/15)")
         return 0
 
     print("specials-arm: PASS (constants; run with --elf to execute)")

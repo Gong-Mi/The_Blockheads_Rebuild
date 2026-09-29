@@ -1332,4 +1332,62 @@ PanelTrace mainmenuui_start_touch(bool connecting,
     return t;
 }
 
+PanelTrace mainmenuui_move_touch(bool connecting,
+                                 const ChildReply* tc_ui,
+                                 const ChildReply* add_credit,
+                                 const ChildReply* mm_options,
+                                 bool loading,
+                                 int selection,
+                                 const ChildReply* load_world,
+                                 const ChildReply* create_world,
+                                 const ChildReply* join_world,
+                                 bool start_touch_was_in_view,
+                                 bool scroll_in_progress,
+                                 float x_local,
+                                 float last_x,
+                                 int gs_count) {
+    PanelTrace out;
+    if (connecting) return out;
+    if (tc_ui != nullptr) {
+        out.calls.push_back("moveTouch:");           // tcUI@444
+        return out;
+    }
+    if (add_credit != nullptr) {
+        out.calls.push_back("moveTouch:");           // addCreditUI@476
+        return out;
+    }
+    if (mm_options != nullptr) {
+        out.calls.push_back("moveTouch:");           // mainMenuOptionsUI@48
+        return out;
+    }
+    if (loading) return out;                         // loading@408
+    if (selection == 3) {
+        out.calls.push_back("moveTouch:");           // loadWorldUI@456
+    } else if (selection == 1) {
+        out.calls.push_back("moveTouch:");           // createWorldUI@460
+    } else if (selection == 2) {
+        out.calls.push_back("moveTouch:");           // joinWorldUI@464
+    }
+    const float dx = x_local - last_x;
+    const bool latch = (dx > 2.0f) || (dx < -2.0f);
+    bool kinetic = false;
+    if (start_touch_was_in_view) {                   // the sTWIV@361 gate
+        kinetic = scroll_in_progress || latch;
+    }
+    if (kinetic) {                                   // the kinetic block
+        out.calls.push_back("gameSaves");            // [self delegate]
+        out.calls.push_back("count");                // [gameSaves count]
+        if (gs_count > 0) {
+            // the second fetch for the B-extent computation
+            out.calls.push_back("gameSaves");
+            out.calls.push_back("count");
+        }
+        return out;
+    }
+    out.calls.push_back("moveTouch:");               // timeCrystalButton@420
+    out.calls.push_back("moveTouch:");               // settingsButton@440
+    out.calls.push_back("moveTouch:");               // moreGamesButton@432
+    return out;
+}
+
 }  // namespace blockheads::ui
