@@ -311,7 +311,10 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         # 1..64 dynamic object registry whose entries start as stubs. The
         # sources live in app/src/main/cpp so the production APK builds the same
         # files; this host target is what CI compiles and tests.
+        # original_world_import includes game_item_ids.h (generated); reuse the
+        # gameplay subdirectory's generation step via a dependency on its stamp
         add_library(original_client_app STATIC
+            ../../app/src/main/cpp/original_world_import.cpp
             ../../app/src/main/cpp/original_save_dict.cpp
             ../../app/src/main/cpp/dynamic_object_registry.cpp
             ../../app/src/main/cpp/original_client_app.cpp
@@ -346,7 +349,9 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             original_client_world.cpp)
         target_include_directories(original_client_app PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}
-            ../../app/src/main/cpp)
+            ../../app/src/main/cpp
+            ${CMAKE_CURRENT_BINARY_DIR}/gameplay/generated)
+        add_dependencies(original_client_app blockheads_gameplay_host)
         target_compile_features(original_client_app PUBLIC cxx_std_17)
         add_executable(test_original_client_app ../../tools/test_original_client_app.cpp)
         target_link_libraries(test_original_client_app PRIVATE original_client_app)
@@ -436,7 +441,15 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         # is the "the reverse pipeline actually runs" gate.
         find_program(BH_PYTHON3 python3)
         if(BH_PYTHON3)
-            add_test(NAME client_snapshot_run
+            add_executable(test_world_import ../../tools/test_world_import.cpp)
+        target_link_libraries(test_world_import PRIVATE original_client_app blockheads_gameplay_host)
+        target_compile_options(test_world_import PRIVATE -UNDEBUG)
+        add_test(NAME world_import COMMAND test_world_import)
+        add_executable(test_data_source ../../tools/test_data_source.cpp)
+        target_link_libraries(test_data_source PRIVATE original_client_app blockheads_gameplay_host)
+        target_compile_options(test_data_source PRIVATE -UNDEBUG)
+        add_test(NAME data_source COMMAND test_data_source)
+        add_test(NAME client_snapshot_run
                      COMMAND ${BH_PYTHON3}
                              ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_client_snapshot_run.py
                              $<TARGET_FILE:client_app_skeleton_cli>)

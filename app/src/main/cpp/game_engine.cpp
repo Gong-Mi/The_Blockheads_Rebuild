@@ -18,6 +18,7 @@
 
 // Original client assembly (batch b5a/b5b): the recovered original-save path.
 #include "original_client_app.h"
+#include "original_world_import.h"
 
 #undef LOG_TAG
 #define LOG_TAG "BlockheadsNative"
@@ -178,7 +179,48 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
         }
     }
 
-    if (!PersistenceManager::loadWorld(g_storagePath.c_str(), g_world, g_entities)) {
+    // World data source, layer 2: when an assembled original snapshot is
+    // present AND no replacement world.bin exists yet, its decoded block
+    // domain becomes the seed terrain (one-time import). After the first
+    // save the world.bin becomes authoritative — later launches load it and
+    // the player's edits survive; the snapshot stays as the evidence copy.
+    // Import is all-or-nothing; on any failure the log names the error and
+    // the old generation path runs. Dynamic objects / player state are NOT
+    // imported yet (their consumers are separate gaps).
+    bool originalTerrainActive = false;
+    const bool hasWorldBin =
+        std::filesystem::exists(std::filesystem::path(g_storagePath) /
+                                "world.bin");
+    if (g_originalClientApp.report().blocks > 0 && !hasWorldBin) {
+        bh176::WorldImportReport importReport;
+        if (bh176::importOriginalWorld(g_originalClientApp.world(), *g_world,
+                                       importReport)) {
+            originalTerrainActive = true;
+            logToFile("Original terrain imported: blocks=%zu tiles=%zu mapped=%zu unmapped=%zu item0/air=%zu",
+                      importReport.blocks_imported, importReport.tiles_total,
+                      importReport.tiles_mapped, importReport.tiles_unmapped,
+                      importReport.tiles_empty);
+            for (const auto& [tileType, count] : importReport.unmapped_by_tile_type) {
+                logToFile("  original TileType %d: %zu tile(s) without a direct item mapping",
+                          tileType, count);
+            }
+            // Seed save: the imported terrain becomes the authoritative
+            // world.bin so a later launch (with or without the snapshot)
+            // loads the same world instead of re-importing over edits.
+            PersistenceManager::saveWorld(g_storagePath.c_str(), g_world, g_entities);
+            logToFile("Imported terrain saved as world.bin (seed)");
+        } else {
+            logToFile("Original terrain import FAILED: %s",
+                      importReport.error.c_str());
+        }
+    }
+
+    if (originalTerrainActive) {
+        logToFile("Original terrain active; skipping world generation");
+        g_entities->player.x = 16.0f;
+        g_entities->player.y = 90.0f;
+        g_entities->inventoryDirty = true;
+    } else if (!PersistenceManager::loadWorld(g_storagePath.c_str(), g_world, g_entities)) {
         logToFile("No save found or load failed, generating new world...");
         for (int cx = -2; cx <= 2; cx++) {
             for (int cy = 0; cy <= 4; cy++) {

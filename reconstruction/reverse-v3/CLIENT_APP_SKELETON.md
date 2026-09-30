@@ -126,3 +126,20 @@ b5a 守卫与快照 run 测试逐类型钉状态族。边界不变：状态是�
 - 同轮替代世界 `world.bin` 照常加载，无崩溃；宿主 CLI 对同一快照的输出与设备
   逐项一致（见 `REVERSE_COVERAGE_LEDGER` 之外的 `DW_RECORD_KEY_TYPE_EVIDENCE.md`
   post-fix 段）。
+
+## 世界数据源（world data source，2026-09-30，层1+2）
+
+`original_world_import.cpp` 把解码后的原版块域导入替代 `GameWorld`：
+Tile[0]（原版 TileType）只经 `original_tile_item_map.tsv` 的 **68 行 direct**
+映射（44 项产出 ItemType → 经 `ItemManager::fromOriginalType` 落兼容 id；
+24 行原体存字面 0 → 保持空），条件行（含 tile 6 泥土等 9 个世界相关分支）
+**不猜、计数**（`unmapped_by_tile_type`）。Tile[1]/Tile[3] 暂不映射（替代
+Tile 语义不同且无 A 级逐值映射），报告可见。导入全成全败；失败回退旧生成
+路径并记日志。
+
+启动序（`game_engine.cpp`）：快照存在 **且无 world.bin** → 一次性种子导入 +
+立即存 world.bin；此后 world.bin 权威（玩家改动在重启后存活），快照保持证据
+副本不被反复导入。Host 测试：`world_import`（双块、映射/未映射/item-0 三计
+数、网格与网格重建、44+24 表核对）、`data_source`（种子一次 → world.bin 接
+管 → 快照不重导）。边界：动态对象与玩家状态仍未导入；条件 TileType 的运行时
+解析是下一批；本层不声称设备/原版运行验收。
