@@ -34,7 +34,67 @@ constexpr TileItemEntry kDirectTileItems[] = {
     {76, 1103}, {77, 1105},
 };
 
+#include "original_tile_conditional_table.inc"
+
+// A conditional case may only be reached after every earlier step in its chain,
+// so the walk is strictly sequential: the first helper-gated or unresolved step
+// stops it. Applying a later contentsType() comparison would claim a branch the
+// original only takes when an unmodelled helper returned 0.
+int conditionalItemTypeFor(int tile_type, int contents_type, TileMappingKind* kind) {
+    for (const ConditionalTileStep& step : kConditionalTileSteps) {
+        if (step.tile_type != tile_type) continue;
+        if (step.kind == 0) {
+            if (step.contents_type == contents_type) return step.item_type;
+            continue;
+        }
+        if (step.kind == 1) {
+            *kind = TileMappingKind::ConditionalHelper;
+            return -1;
+        }
+        // kind 2: `movw r0, #V` followed by further setup this map cannot
+        // follow. Equal contents stop the walk; other values keep going.
+        if (step.contents_type == contents_type) {
+            *kind = TileMappingKind::ConditionalUnresolved;
+            return -1;
+        }
+    }
+    for (const ConditionalTileFallback& fallback : kConditionalTileFallbacks) {
+        if (fallback.tile_type == tile_type && fallback.item_type >= 0) {
+            *kind = TileMappingKind::ConditionalContents;
+            return fallback.item_type;
+        }
+    }
+    *kind = TileMappingKind::NoMapping;
+    return -1;
+}
+
+const char* mappingReason(TileMappingKind kind) {
+    switch (kind) {
+        case TileMappingKind::ConditionalHelper: return "conditional_helper_gated";
+        case TileMappingKind::ConditionalUnresolved: return "conditional_tail_unresolved";
+        default: return "no_mapping";
+    }
+}
+
 }  // namespace
+
+TileMappingResult mapOriginalTile(const OriginalTile& tile) {
+    TileMappingResult result;
+    const int tile_type = tile.type();
+    if (tile_type == 0) return result;  // air: caller counts it as empty
+    const int direct = originalItemTypeForTileType(tile_type);
+    if (direct >= 0) {
+        result.item_type = direct;
+        result.kind = TileMappingKind::Direct;
+        return result;
+    }
+    TileMappingKind kind = TileMappingKind::NoMapping;
+    const int conditional =
+        conditionalItemTypeFor(tile_type, tile.contentsType(), &kind);
+    result.item_type = conditional;
+    result.kind = conditional >= 0 ? TileMappingKind::ConditionalContents : kind;
+    return result;
+}
 
 int originalItemTypeForTileType(int tile_type) {
     for (const auto& entry : kDirectTileItems) {
@@ -80,11 +140,14 @@ bool importOriginalWorld(const OriginalClientWorld& original,
                 ++report.tiles_empty;
                 continue;
             }
-            const int item_type = originalItemTypeForTileType(tile_type);
+            const TileMappingResult mapping = mapOriginalTile(src);
+            const int item_type = mapping.item_type;
+            const TileMappingKind mapping_kind = mapping.kind;
             if (item_type < 0) {
                 ++report.tiles_unmapped;
                 ++report.unmapped_by_tile_type[tile_type];
                 ++report.unmapped_by_block[(cx << 16) | cy];
+                ++report.unmapped_by_reason[mappingReason(mapping_kind)];
                 continue;
             }
             if (item_type == 0) {
@@ -95,16 +158,20 @@ bool importOriginalWorld(const OriginalClientWorld& original,
             }
             const int legacy = ItemManager::getInstance().fromOriginalType(item_type);
             if (legacy <= 0) {
-                // direct assignment exists but the rebuild table has no
-                // counterpart: counted, not coerced
+                // a mapping exists but the rebuild table has no counterpart:
+                // counted, not coerced
                 ++report.tiles_unmapped;
                 ++report.unmapped_by_tile_type[tile_type];
                 ++report.unmapped_by_block[(cx << 16) | cy];
+                ++report.unmapped_by_reason["no_compat_id"];
                 continue;
             }
             dst.foreground = static_cast<std::uint16_t>(legacy);
             ++report.tiles_mapped;
             ++report.mapped_by_legacy_id[legacy];
+            if (mapping_kind == TileMappingKind::ConditionalContents) {
+                ++report.tiles_conditional_mapped;
+            }
         }
         fresh.push_back(std::move(block));
     }

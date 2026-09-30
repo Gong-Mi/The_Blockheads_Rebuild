@@ -54,6 +54,12 @@ jobs:
       run: python3 tools/test_item_id_alignment_evidence.py
       working-directory: .
 
+    - name: Test conditional TileType evidence contract
+      run: |
+        python3 tools/test_tile_conditional_evidence.py
+        python3 tools/gen_tile_conditional_table.py --check
+      working-directory: .
+
     - name: Test ClientTileLoader semantic evidence contract
       run: python3 tools/test_clienttileloader_semantics.py
       working-directory: .

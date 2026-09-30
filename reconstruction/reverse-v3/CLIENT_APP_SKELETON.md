@@ -141,5 +141,23 @@ Tile 语义不同且无 A 级逐值映射），报告可见。导入全成全败
 立即存 world.bin；此后 world.bin 权威（玩家改动在重启后存活），快照保持证据
 副本不被反复导入。Host 测试：`world_import`（双块、映射/未映射/item-0 三计
 数、网格与网格重建、44+24 表核对）、`data_source`（种子一次 → world.bin 接
-管 → 快照不重导）。边界：动态对象与玩家状态仍未导入；条件 TileType 的运行时
-解析是下一批；本层不声称设备/原版运行验收。
+管 → 快照不重导）。边界：动态对象与玩家状态仍未导入；本层不声称设备/原版
+运行验收。
+
+### 条件 TileType（conditional TileType，2026-10-01，contentsType 链）
+
+`original_tile_item_map.tsv` 里九个 `conditional` 行已解析：它们比较
+`OriginalTile.contentsType()`（64 字节原版 Tile 的 offset 3）。四个 case 体覆盖
+TileType 1/2/3/5/6/12/13/27/28；其中 2/3/5 的链在后续比较之前有两次 helper 调用
+（`0x00a11390` / `0x00a138fc`），链序因此是语义的一部分——闸门之后的比较只在
+helper 返回 0 时可达，不得直接套用。
+
+- 工具：`tools/extract_original_tile_conditional.py`（走链，形状不识别即报错）、
+  `tools/gen_tile_conditional_table.py`（`--check` 生成 APK 侧 `.inc`）。
+- 证据：`native/ORIGINAL_TILE_CONDITIONAL.md` + `original_tile_conditional.{tsv,json}`。
+- 接入：`mapOriginalTile()` 按链序解析，首个 helper/未解步骤即停；
+  `WorldImportReport` 新增 `tiles_conditional_mapped` 与
+  `unmapped_by_reason`（`conditional_helper_gated` / `conditional_tail_unresolved`
+  / `no_compat_id` / `no_mapping`）。
+- 边界：两个 helper 未建模；`Tile[1]` 后墙仍未映射；解析结果是客户端 ItemType
+  域，仍需 `ItemManager::fromOriginalType` 有对应项，无对应项照旧计数。
