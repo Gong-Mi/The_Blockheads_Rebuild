@@ -623,6 +623,51 @@ def main() -> None:
             "direct_item_type",
         ],
     )
+    require(
+        ROOT / "tools/recover_gameview_touch_callbacks.py",
+        [
+            "METHODS = [",
+            "\"arm_exidx_end\": hex(end)",
+            "selector_references",
+            "--check",
+        ],
+    )
+    touch_callbacks = NATIVE / "gameview_touch_callbacks.json"
+    require(
+        touch_callbacks,
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "static ARM/ObjC evidence; not runtime behavior verification",
+            '"selector": "startTouch:withTouch:withEvent:"',
+            '"selector": "endSecondaryTouch:"',
+            '"implementation": "0x92cdd8"',
+        ],
+    )
+    require(
+        NATIVE / "GAMEVIEW_TOUCH_CALLBACKS.md",
+        [
+            "| endTouch: | 0x0092c3f4..0x0092c638 | 145 | 4 |",
+            "| endSecondaryTouch: | 0x0092cdd8..0x0092cfa0 | 113 | 4 |",
+            "| cancelSecondaryTouch: | 0x0092cfa0..0x0092d188 | 122 | 3 |",
+        ],
+    )
+    require(
+        ROOT / "tools/recover_pickup_dataflow.py",
+        [
+            "inventory_pickup_dataflow.json",
+            "callsite_dataflow",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "inventory_pickup_dataflow.json",
+        [
+            '"schema": 2',
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"reachable_instructions": 578',
+            '"0xc61dd0"',
+        ],
+    )
     tile_item_map = NATIVE / "original_tile_item_map.tsv"
     tile_item_lines = tile_item_map.read_text(encoding="utf-8").splitlines()
     if len(tile_item_lines) != 78:
