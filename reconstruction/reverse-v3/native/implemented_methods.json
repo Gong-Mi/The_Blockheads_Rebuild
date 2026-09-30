@@ -171,6 +171,19 @@
    "scope": "Single-threaded typed method and direct numerical dependencies; executed differential vs the original ARM body under Unicorn (O0/O2 bit-exact, 15 cases). Not the original ObjC ABI, not Foundation, not the original-app runtime, no APK/device acceptance."
   },
   {
+   "implementation": "0x0092cfa0",
+   "class": "GameView",
+   "kind": "instance",
+   "selector": "cancelSecondaryTouch:",
+   "types": "v16@0:4{CGPoint=ff}8",
+   "entry_point": "blockheads::recovered::cancelSecondaryTouch",
+   "source": "reconstruction/recovered/gameview_secondary_touch.cpp",
+   "test": "tools/test_gameview_secondarytouch.cpp",
+   "evidence": "reconstruction/reverse-v3/native/GAMEVIEW_SECONDARYTOUCH.md",
+   "integration": "recovered-method-module",
+   "scope": "Static complete bounded body (111 code words, 11 literal-pool words), all three calls/five branches, world-path-only secondaryStartTouchHasntMoved join clear (@497 newly resolved) plus universal secondaryTouchIsActiveInUI tail clear and World cancelTouch:index: forward with literal index 1, mirroring the primary cancel join semantics. Synthetic callback tests O0/O2 only; producers, callees, APK wiring and original-runtime equivalence remain unverified."
+  },
+  {
    "implementation": "0x0092c638",
    "class": "GameView",
    "kind": "instance",
@@ -182,6 +195,19 @@
    "evidence": "reconstruction/reverse-v3/native/GAMEVIEW_CANCELTOUCH_BATCH.md",
    "integration": "recovered-method-module",
    "scope": "Static complete bounded body (140 code words, 13 literal-pool words), all four calls/eight branches, end-not-cancel menu send, world-path-only startTouchHasntMoved join clear and universal primary clear in a typed host module. Selector/ivar cells re-resolved through the pinned GOT/selref walk. Synthetic callback tests O0/O2 only; doEndTouch/mainMenuUI bodies, Android adapter and original-runtime equivalence remain unverified."
+  },
+  {
+   "implementation": "0x0092cdd8",
+   "class": "GameView",
+   "kind": "instance",
+   "selector": "endSecondaryTouch:",
+   "types": "v16@0:4{CGPoint=ff}8",
+   "entry_point": "blockheads::recovered::endSecondaryTouch",
+   "source": "reconstruction/recovered/gameview_secondary_touch.cpp",
+   "test": "tools/test_gameview_secondarytouch.cpp",
+   "evidence": "reconstruction/reverse-v3/native/GAMEVIEW_SECONDARYTOUCH.md",
+   "integration": "recovered-method-module",
+   "scope": "Static complete bounded body (104 code words, 10 literal-pool words), all three calls/six branches, secondaryTouchStarted gate, secondary-OR-primary-idle send condition, World endTouch:index: forward with literal index 1 and universal secondaryTouchIsActiveInUI tail clear in a typed host module. Ivar @498 newly resolved through the pinned GOT/ivar-symbol walk. Synthetic callback tests O0/O2 only; start/moveSecondaryTouch producers, World callee bodies, Android adapter and original-runtime equivalence remain unverified."
   },
   {
    "implementation": "0x0092c3f4",

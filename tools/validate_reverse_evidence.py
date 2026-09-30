@@ -47,6 +47,8 @@ def main() -> None:
             "0x0092c3f4\tGameView\tinstance\tendTouch:\tv16@0:4{CGPoint=ff}8",
             "0x005b3430\tWorld\tinstance\tendTouch:index:\tv20@0:4{CGPoint=ff}8i16",
             "0x005b3308\tWorld\tinstance\tdoEndTouch:wasCancelled:index:\tv24@0:4{CGPoint=ff}8c16i20",
+            "0x0092cdd8\tGameView\tinstance\tendSecondaryTouch:\tv16@0:4{CGPoint=ff}8",
+            "0x0092cfa0\tGameView\tinstance\tcancelSecondaryTouch:\tv16@0:4{CGPoint=ff}8",
         ],
     )
     require(
@@ -89,6 +91,29 @@ def main() -> None:
     require(
         NATIVE / "GAMEVIEW_CANCELTOUCH_BATCH.md",
         ["0x005b33ac", "wasCancelled", "Tail-merge", "0x92c6e8"],
+    )
+    require(
+        NATIVE / "gameview_secondarytouch.json",
+        [
+            '"batch": "GameView secondary end/cancel pair (mirror of the primary pair: secondaryTouchStarted gate, index literal 1, secondary tail clear)"',
+            '"verified_interval_words": 114',
+            '"verified_interval_words": 122',
+            '"index: primary forwards literal 0, secondary forwards literal 1"',
+            '"apk_integration": false',
+            '"original_runtime_differential": false',
+        ],
+    )
+    require(
+        NATIVE / "disasm_gameview_endsecondarytouch.txt",
+        ["# GameView -[endSecondaryTouch:]", "# implementation: 0x0092cdd8", "# ARM.exidx end: 0x0092cfa0"],
+    )
+    require(
+        NATIVE / "disasm_gameview_cancelsecondarytouch.txt",
+        ["# GameView -[cancelSecondaryTouch:]", "# implementation: 0x0092cfa0", "# ARM.exidx end: 0x0092d188"],
+    )
+    require(
+        NATIVE / "GAMEVIEW_SECONDARYTOUCH.md",
+        ["secondaryTouchStarted", "0x0092cdd8", "0x0092cfa0", "secondary forwards 1"],
     )
     require(
         NATIVE / "gameview_movetouch.json",

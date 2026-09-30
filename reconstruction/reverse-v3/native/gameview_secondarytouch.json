@@ -1,0 +1,279 @@
+{
+  "batch": "GameView secondary end/cancel pair (mirror of the primary pair: secondaryTouchStarted gate, index literal 1, secondary tail clear)",
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "methods": [
+    {
+      "arm_exidx_end": "0x0092cfa0",
+      "bounded_end": "0x0092cfa0",
+      "branches": [
+        {
+          "condition": "beq: secondaryTouchStarted == 0 -> tail clear, no send",
+          "site": "0x0092ce1c",
+          "target": "0x0092cf50"
+        },
+        {
+          "condition": "beq: loadComplete byte == 0 -> tail clear, no send",
+          "site": "0x0092ce68",
+          "target": "0x0092cf50"
+        },
+        {
+          "condition": "bne: isSimulating byte != 0 -> tail clear, no send",
+          "site": "0x0092ceb4",
+          "target": "0x0092cf50"
+        },
+        {
+          "condition": "bne: secondaryTouchIsActiveInUI != 0 -> indexed send",
+          "site": "0x0092ced8",
+          "target": "0x0092cf00"
+        },
+        {
+          "condition": "bne: primaryTouchIsActiveInUI != 0 -> skip send",
+          "site": "0x0092cefc",
+          "target": "0x0092cf4c"
+        },
+        {
+          "condition": "b: join -> shared tail clear",
+          "site": "0x0092cf4c",
+          "target": "0x0092cf50"
+        }
+      ],
+      "calls": [
+        {
+          "route": "blx r2 via GOT reload 0x0105b7a0",
+          "selector_route": "World -[loadComplete] via GOT objc_msgSend reload",
+          "site": "0x0092ce5c"
+        },
+        {
+          "route": "blx r2 via GOT reload 0x0105b7a0",
+          "selector_route": "World -[isSimulating] via GOT objc_msgSend reload",
+          "site": "0x0092cea8"
+        },
+        {
+          "route": "bl objc_msgSend@plt",
+          "selector_route": "World -[endTouch:index:] (index literal 1)",
+          "site": "0x0092cf48",
+          "target": "0x001c281c"
+        }
+      ],
+      "claim": "bounded static method map + pinned GOT/selref/ivar-cell resolution + typed host snapshot; dynamic ObjC callees and original runtime are not verified",
+      "class": "GameView",
+      "code_end_exclusive": "0x0092cf78",
+      "code_words": 104,
+      "implementation": "0x0092cdd8",
+      "ivar_cells": {
+        "primaryTouchIsActiveInUI": {
+          "cell": "0x0092cf90",
+          "offset": 496,
+          "slot": "0x0105e208",
+          "symbol": "OBJC_IVAR_$_GameView.primaryTouchIsActiveInUI"
+        },
+        "secondaryTouchIsActiveInUI": {
+          "cell": "0x0092cf8c",
+          "offset": 508,
+          "slot": "0x0105e214",
+          "symbol": "OBJC_IVAR_$_GameView.secondaryTouchIsActiveInUI"
+        },
+        "secondaryTouchStarted": {
+          "cell": "0x0092cf78",
+          "offset": 498,
+          "slot": "0x0105e218",
+          "symbol": "OBJC_IVAR_$_GameView.secondaryTouchStarted"
+        },
+        "world": {
+          "cell": "0x0092cf84",
+          "offset": 24,
+          "slot": "0x0105e110",
+          "symbol": "OBJC_IVAR_$_GameView.world"
+        }
+      },
+      "ivars": [
+        {
+          "evidence": "OBJC_IVAR_$_GameView.secondaryTouchStarted via GOT slot 0x0105e218",
+          "name": "secondaryTouchStarted",
+          "offset": 498
+        },
+        {
+          "evidence": "OBJC_IVAR_$_GameView.world via GOT slot 0x0105e110",
+          "name": "world",
+          "offset": 24
+        },
+        {
+          "evidence": "OBJC_IVAR_$_GameView.secondaryTouchIsActiveInUI via GOT slot 0x0105e214",
+          "name": "secondaryTouchIsActiveInUI",
+          "offset": 508
+        },
+        {
+          "evidence": "OBJC_IVAR_$_GameView.primaryTouchIsActiveInUI via GOT slot 0x0105e208",
+          "name": "primaryTouchIsActiveInUI",
+          "offset": 496
+        }
+      ],
+      "literal_pool_words": 10,
+      "pic_base": "0x0105faf4",
+      "selector": "endSecondaryTouch:",
+      "selector_cells": {
+        "endTouch:index:": {
+          "cell": "0x0092cf98",
+          "slot": "0x00e836bc"
+        },
+        "isSimulating": {
+          "cell": "0x0092cf88",
+          "slot": "0x00e835c8"
+        },
+        "loadComplete": {
+          "cell": "0x0092cf80",
+          "slot": "0x00e835d0"
+        }
+      },
+      "types": "v16@0:4{CGPoint=ff}8",
+      "verified_interval_words": 114
+    },
+    {
+      "arm_exidx_end": "0x0092d188",
+      "bounded_end": "0x0092d188",
+      "branches": [
+        {
+          "condition": "beq: secondaryTouchStarted == 0 -> tail clear, no send/latch",
+          "site": "0x0092cfe4",
+          "target": "0x0092d134"
+        },
+        {
+          "condition": "beq: loadComplete byte == 0 -> tail clear",
+          "site": "0x0092d030",
+          "target": "0x0092d134"
+        },
+        {
+          "condition": "bne: isSimulating byte != 0 -> tail clear",
+          "site": "0x0092d07c",
+          "target": "0x0092d134"
+        },
+        {
+          "condition": "bne: secondaryTouchIsActiveInUI != 0 -> indexed send",
+          "site": "0x0092d0a0",
+          "target": "0x0092d0c8"
+        },
+        {
+          "condition": "bne: primaryTouchIsActiveInUI != 0 -> skip send, still clear latch",
+          "site": "0x0092d0c4",
+          "target": "0x0092d114"
+        }
+      ],
+      "calls": [
+        {
+          "route": "blx r2 via GOT reload 0x0105b7a0",
+          "selector_route": "World -[loadComplete] via GOT objc_msgSend reload",
+          "site": "0x0092d024"
+        },
+        {
+          "route": "blx r2 via GOT reload 0x0105b7a0",
+          "selector_route": "World -[isSimulating] via GOT objc_msgSend reload",
+          "site": "0x0092d070"
+        },
+        {
+          "route": "bl objc_msgSend@plt",
+          "selector_route": "World -[cancelTouch:index:] (index literal 1)",
+          "site": "0x0092d110",
+          "target": "0x001c281c"
+        }
+      ],
+      "claim": "bounded static method map + pinned GOT/selref/ivar-cell resolution + typed host snapshot; dynamic ObjC callees and original runtime are not verified",
+      "class": "GameView",
+      "code_end_exclusive": "0x0092d15c",
+      "code_words": 111,
+      "implementation": "0x0092cfa0",
+      "ivar_cells": {
+        "primaryTouchIsActiveInUI": {
+          "cell": "0x0092d174",
+          "offset": 496,
+          "slot": "0x0105e208",
+          "symbol": "OBJC_IVAR_$_GameView.primaryTouchIsActiveInUI"
+        },
+        "secondaryStartTouchHasntMoved": {
+          "cell": "0x0092d180",
+          "offset": 497,
+          "slot": "0x0105e21c",
+          "symbol": "OBJC_IVAR_$_GameView.secondaryStartTouchHasntMoved"
+        },
+        "secondaryTouchIsActiveInUI": {
+          "cell": "0x0092d170",
+          "offset": 508,
+          "slot": "0x0105e214",
+          "symbol": "OBJC_IVAR_$_GameView.secondaryTouchIsActiveInUI"
+        },
+        "secondaryTouchStarted": {
+          "cell": "0x0092d15c",
+          "offset": 498,
+          "slot": "0x0105e218",
+          "symbol": "OBJC_IVAR_$_GameView.secondaryTouchStarted"
+        },
+        "world": {
+          "cell": "0x0092d168",
+          "offset": 24,
+          "slot": "0x0105e110",
+          "symbol": "OBJC_IVAR_$_GameView.world"
+        }
+      },
+      "ivars": [
+        {
+          "evidence": "OBJC_IVAR_$_GameView.secondaryTouchStarted via GOT slot 0x0105e218",
+          "name": "secondaryTouchStarted",
+          "offset": 498
+        },
+        {
+          "evidence": "OBJC_IVAR_$_GameView.world via GOT slot 0x0105e110",
+          "name": "world",
+          "offset": 24
+        },
+        {
+          "evidence": "OBJC_IVAR_$_GameView.secondaryTouchIsActiveInUI via GOT slot 0x0105e214",
+          "name": "secondaryTouchIsActiveInUI",
+          "offset": 508
+        },
+        {
+          "evidence": "OBJC_IVAR_$_GameView.primaryTouchIsActiveInUI via GOT slot 0x0105e208",
+          "name": "primaryTouchIsActiveInUI",
+          "offset": 496
+        },
+        {
+          "evidence": "OBJC_IVAR_$_GameView.secondaryStartTouchHasntMoved via GOT slot 0x0105e21c",
+          "name": "secondaryStartTouchHasntMoved",
+          "offset": 497
+        }
+      ],
+      "literal_pool_words": 11,
+      "pic_base": "0x0105faf4",
+      "selector": "cancelSecondaryTouch:",
+      "selector_cells": {
+        "cancelTouch:index:": {
+          "cell": "0x0092d17c",
+          "slot": "0x00e836c0"
+        },
+        "isSimulating": {
+          "cell": "0x0092d16c",
+          "slot": "0x00e835c8"
+        },
+        "loadComplete": {
+          "cell": "0x0092d164",
+          "slot": "0x00e835d0"
+        }
+      },
+      "types": "v16@0:4{CGPoint=ff}8",
+      "verified_interval_words": 122
+    }
+  ],
+  "primary_pair_ivar_role_swap": [
+    "primary bodies: gate = mainMenuUI/world nil fork, latch = startTouchHasntMoved(486), tail clear = primaryTouchIsActiveInUI(496)",
+    "secondary bodies: gate = secondaryTouchStarted(498), latch = secondaryStartTouchHasntMoved(497, cancel only), tail clear = secondaryTouchIsActiveInUI(508)",
+    "shared: World loadComplete/isSimulating gates, send iff own-active != 0 OR other-active == 0",
+    "index: primary forwards literal 0, secondary forwards literal 1"
+  ],
+  "replacement_boundary": {
+    "android_apk_input_path": "GameActivity raw touch handling remains separate and does not invoke these recovered methods",
+    "apk_integration": false,
+    "host_module": "blockheads_recovered_view",
+    "host_test": "tools/test_gameview_secondarytouch.cpp",
+    "original_runtime_differential": false
+  },
+  "schema": 1,
+  "symbol_mapping_basis": "manual cross-reference to the pinned primary touch ivar/selector cell maps plus the newly resolved OBJC_IVAR_$_GameView.secondaryTouchStarted (offset 498) and secondaryStartTouchHasntMoved (offset 497), each re-verified by this tool's GOT/selref/ivar-symbol walk"
+}
