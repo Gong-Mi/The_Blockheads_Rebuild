@@ -140,6 +140,52 @@ class MethodMapTest(unittest.TestCase):
         cmake=(ROOT/'reconstruction/recovered/CMakeLists.txt').read_text()
         self.assertIn('test_gameview_canceltouch',cmake)
 
+    def test_secondary_end_cancel_mirror_pair(self):
+        report=json.loads((NATIVE/'gameview_secondarytouch.json').read_text())
+        self.assertEqual(report['elf_sha256'],'733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7')
+        methods={(m['class'],m['selector']):m for m in report['methods']}
+        self.assertEqual(set(methods),{('GameView','endSecondaryTouch:'),('GameView','cancelSecondaryTouch:')})
+        end=methods[('GameView','endSecondaryTouch:')]
+        self.assertEqual((end['implementation'],end['verified_interval_words'],end['code_words'],end['literal_pool_words']),
+                         ('0x0092cdd8',114,104,10))
+        self.assertEqual({call['site'] for call in end['calls']},
+                         {'0x0092ce5c','0x0092cea8','0x0092cf48'})
+        fwd=next(call for call in end['calls'] if call['site']=='0x0092cf48')
+        self.assertIn('endTouch:index:',fwd['selector_route'])
+        self.assertIn('index literal 1',fwd['selector_route'])
+        self.assertEqual({branch['site'] for branch in end['branches']},
+                         {'0x0092ce1c','0x0092ce68','0x0092ceb4','0x0092ced8','0x0092cefc','0x0092cf4c'})
+        self.assertEqual(end['ivar_cells']['secondaryTouchStarted']['offset'],498)
+        cancel=methods[('GameView','cancelSecondaryTouch:')]
+        self.assertEqual((cancel['implementation'],cancel['verified_interval_words'],cancel['code_words'],cancel['literal_pool_words']),
+                         ('0x0092cfa0',122,111,11))
+        fwdc=next(call for call in cancel['calls'] if call['route']=='bl objc_msgSend@plt')
+        self.assertIn('cancelTouch:index:',fwdc['selector_route'])
+        self.assertIn('index literal 1',fwdc['selector_route'])
+        self.assertEqual(cancel['ivar_cells']['secondaryStartTouchHasntMoved']['offset'],497)
+        # Mirror claim: both bodies share the SAME World selref SLOT as the
+        # primary pair's indexed forwards (endTouch:index: slot 0xe836bc,
+        # cancelTouch:index: slot 0xe836c0).
+        #
+        # The slot is the claim; the load CELL legitimately differs, because
+        # the two bodies are different methods. Verified against the pinned
+        # ELF: endTouch:index:'s cell 0x0092c630 sits in GameView -endTouch:
+        # (IMP 0x0092c3f4) and 0x0092cf98 sits in GameView -endSecondaryTouch:
+        # (IMP 0x0092cdd8), while both cells hold the same literal addend
+        # 0xffe23bc8 for the shared slot. Comparing whole dicts asserted the
+        # wrong invariant and failed on the two candidates.
+        primary=json.loads((NATIVE/'gameview_endtouch.json').read_text())
+        pend=next(m for m in primary['methods'] if m['selector']=='endTouch:')
+        self.assertEqual(pend['selector_cells']['endTouch:index:']['slot'],
+                         end['selector_cells']['endTouch:index:']['slot'])
+        pcancel=json.loads((NATIVE/'gameview_canceltouch_batch.json').read_text())
+        pcan=next(m for m in pcancel['methods'] if m['selector']=='cancelTouch:')
+        self.assertEqual(pcan['selector_cells']['cancelTouch:index:']['slot'],
+                         cancel['selector_cells']['cancelTouch:index:']['slot'])
+        self.assertFalse(report['replacement_boundary']['apk_integration'])
+        self.assertTrue((ROOT/'reconstruction/recovered/gameview_secondary_touch.cpp').is_file())
+        self.assertTrue((ROOT/'tools/test_gameview_secondarytouch.cpp').is_file())
+
 
 if __name__=='__main__':
     unittest.main()
