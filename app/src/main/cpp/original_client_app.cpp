@@ -1,5 +1,7 @@
 #include "original_client_app.h"
 
+#include "original_dynamic_import.h"
+
 #include "bed_sign_full.h"
 #include "chest_full.h"
 #include "fire_torch_full.h"
@@ -800,6 +802,14 @@ bool OriginalClientApp::loadDynamicObjects(std::string* error) {
 
     report_.dynamic_objects = objects_.size();
     save_dict_stub_hits_ = 0;
+        // Layer 3: materialize what the registry built. Markers are data for a
+    // later consumer; nothing in gameplay reads them yet.
+    materialized_.clear();
+    materialization_ = DynamicImportReport{};
+    if (!materializeOriginalDynamicObjects(*this, materialized_, materialization_)) {
+        return fail(error, materialization_.error);
+    }
+
     return true;
 }
 
@@ -820,6 +830,13 @@ std::string OriginalClientApp::toJson() const {
     out << "  \"unknown_type_objects\": " << r.unknown_type_objects << ",\n";
     out << "  \"out_of_range_objects\": " << r.out_of_range_objects << ",\n";
     out << "  \"save_dict_stub_hits\": " << save_dict_stub_hits_ << ",\n";
+    out << "  \"materialized_objects\": " << materialization_.materialized << ",\n";
+    out << "  \"materialized_from_float_pos\": " << materialization_.from_float_pos << ",\n";
+    out << "  \"materialized_from_integer_pos\": " << materialization_.from_integer_pos << ",\n";
+    out << "  \"materialized_recovered\": " << materialization_.recovered_objects << ",\n";
+    out << "  \"materialized_stub\": " << materialization_.stub_objects << ",\n";
+    out << "  \"materialized_without_position\": " << materialization_.without_position << ",\n";
+    out << "  \"materialized_out_of_world\": " << materialization_.out_of_world << ",\n";
     out << "  \"type_key_used\": {";
     bool first = true;
     for (const auto& entry : r.type_key_used) {

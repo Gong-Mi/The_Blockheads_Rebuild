@@ -90,6 +90,7 @@ add_library(native-lib SHARED
             original_save_dict.cpp
             dynamic_object_registry.cpp
             original_client_app.cpp
+            original_dynamic_import.cpp
             command_processor.cpp
             item_manager.cpp
             generated/game_item_data.cpp

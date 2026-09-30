@@ -324,6 +324,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             ../../app/src/main/cpp/original_save_dict.cpp
             ../../app/src/main/cpp/dynamic_object_registry.cpp
             ../../app/src/main/cpp/original_client_app.cpp
+            ../../app/src/main/cpp/original_dynamic_import.cpp
             plant_full.cpp
             tree_full.cpp
             tree_growth.cpp

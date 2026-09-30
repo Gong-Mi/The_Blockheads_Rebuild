@@ -7,6 +7,7 @@
 // 0 loaded, 1 index/load failure, 2 usage. The CLI never claims more than the
 // report does: objects built by stubs are printed as stubs.
 #include "original_client_app.h"
+#include "original_dynamic_import.h"
 
 #include <cstdio>
 #include <iostream>
@@ -40,6 +41,7 @@ int main(int argc, char** argv) {
     }
 
     const auto& report = app.report();
+    const auto& materialization = app.materializationReport();
     std::cout << "client assembly app skeleton (stub framework)\n";
     std::cout << "  blocks:                " << report.blocks << "\n";
     std::cout << "  worldTime (main/worldv2): " << app.worldTime() << "\n";
@@ -53,6 +55,15 @@ int main(int argc, char** argv) {
     std::cout << "  out-of-range types:    " << report.out_of_range_objects << "\n";
     std::cout << "  opaque records:        " << report.opaque_records << "\n";
     std::cout << "  malformed records:     " << report.malformed_records << "\n";
+    // Layer 3: markers materialized from the dynamic domain. These are data
+    // with identity and position; no gameplay system consumes them yet.
+    std::cout << "  materialized objects:  " << materialization.materialized << "\n";
+    std::cout << "    from floatPos:       " << materialization.from_float_pos << "\n";
+    std::cout << "    from integer pos:    " << materialization.from_integer_pos << "\n";
+    std::cout << "    recovered markers:   " << materialization.recovered_objects << "\n";
+    std::cout << "    stub markers:        " << materialization.stub_objects << "\n";
+    std::cout << "    without position:    " << materialization.without_position << "\n";
+    std::cout << "    outside imported:    " << materialization.out_of_world << "\n";
     for (const auto& entry : report.per_type) {
         std::cout << "  type " << entry.first << ": " << entry.second << " object(s)\n";
     }

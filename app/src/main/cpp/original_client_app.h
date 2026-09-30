@@ -25,6 +25,7 @@
 #include <vector>
 
 #include "dynamic_object_registry.h"
+#include "original_dynamic_import.h"
 #include "original_client_world.h"
 #include "original_save_dict.h"
 #include "sha256_util.h"
@@ -78,6 +79,14 @@ public:
     const std::vector<ClientDynamicObject>& objects() const { return objects_; }
     const ClientAppReport& report() const { return report_; }
     std::size_t saveDictStubHits() const { return save_dict_stub_hits_; }
+    // Layer 3: the markers the dynamic domain materialized into, and the
+    // per-object outcome. Markers are data, not gameplay consumers.
+    const std::vector<MaterializedOriginalObject>& materializedObjects() const {
+        return materialized_;
+    }
+    const DynamicImportReport& materializationReport() const {
+        return materialization_;
+    }
 
     // [world worldTime] at load time — the saveTime gate's other input
     // (Plant loadSaveDictValues). Set from the assembled snapshot's main-db
@@ -105,6 +114,8 @@ private:
     DynamicObjectRegistry registry_;
     std::vector<DynamicRecordRow> rows_;
     std::vector<ClientDynamicObject> objects_;
+    std::vector<MaterializedOriginalObject> materialized_;
+    DynamicImportReport materialization_;
     ClientAppReport report_;
     std::size_t save_dict_stub_hits_ = 0;
     double world_time_ = 0.0;

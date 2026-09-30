@@ -12,6 +12,7 @@ snapshot and asserts the report counters.
 """
 import glob
 import json
+import os
 import plistlib
 import subprocess
 import sys
@@ -44,13 +45,14 @@ def static_checks():
         assert f'{{{entry["type_id"]}, "{entry["class_name"]}"' in line, line
 
     # 2. Sources in the production app directory, compiled by both targets.
-    for name in ('original_save_dict', 'dynamic_object_registry', 'original_client_app'):
+    for name in ('original_save_dict', 'dynamic_object_registry', 'original_client_app',
+                 'original_dynamic_import'):
         assert (APP / f'{name}.h').exists(), name
         assert (APP / f'{name}.cpp').exists(), name
     host_cmake = (ROOT / 'reconstruction/recovered/CMakeLists.txt').read_text()
     android_cmake = (APP / 'CMakeLists.txt').read_text()
     for name in ('original_save_dict.cpp', 'dynamic_object_registry.cpp',
-                 'original_client_app.cpp'):
+                 'original_client_app.cpp', 'original_dynamic_import.cpp'):
         assert name in host_cmake, f'{name} missing from the host CMake target'
         assert name in android_cmake, f'{name} missing from the Android native-lib'
 
@@ -85,7 +87,10 @@ def static_checks():
 
 
 def host_checks():
-    binaries = sorted(glob.glob(str(ROOT / 'build-*/client_app_skeleton_cli')))
+    # Newest binary wins: several build-* trees can coexist on a dev host, and
+    # taking the alphabetically last one silently tested a stale CLI.
+    binaries = sorted(glob.glob(str(ROOT / 'build-*/client_app_skeleton_cli')),
+                      key=lambda p: os.path.getmtime(p))
     if not binaries:
         print('b5a evidence: CLI not built on this host; static checks only')
         return
@@ -113,6 +118,17 @@ def host_checks():
     assert report['dynamic_objects'] == 8, report
     assert report['stub_objects'] == 1, report
     assert report['verified_objects'] == 0 and report['recovered_objects'] == 7
+    # layer 3 (materialization): the dynamic domain becomes markers with the
+    # decoded identity and position. Three fixture objects carry no position
+    # at all and are counted, never clamped; every marker that does exist
+    # lands inside an imported block (so out-of-world is 0 here).
+    assert report['materialized_objects'] == 5, report
+    assert report['materialized_from_float_pos'] == 1, report
+    assert report['materialized_from_integer_pos'] == 4, report
+    assert report['materialized_recovered'] == 4, report
+    assert report['materialized_stub'] == 1, report
+    assert report['materialized_without_position'] == 3, report
+    assert report['materialized_out_of_world'] == 0, report
     # every recovered object must OWN its decoded state with the exact family
     # of the module that produced it; stubs own none
     for obj in report['objects']:

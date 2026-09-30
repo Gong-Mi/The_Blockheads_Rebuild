@@ -18,6 +18,7 @@
 
 // Original client assembly (batch b5a/b5b): the recovered original-save path.
 #include "original_client_app.h"
+#include "original_dynamic_import.h"
 #include "original_world_import.h"
 
 #undef LOG_TAG
@@ -156,6 +157,15 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
                     logToFile("  original type %d: %zu object(s)", entry.first,
                               entry.second);
                 }
+                // Layer 3: the dynamic domain materialized into markers. This
+                // line reports data availability, not gameplay consumption.
+                const bh176::DynamicImportReport& mat =
+                    g_originalClientApp.materializationReport();
+                logToFile("Original dynamic markers: materialized=%zu (floatPos=%zu integer=%zu recovered=%zu stub=%zu) without_position=%zu out_of_world=%zu",
+                          mat.materialized, mat.from_float_pos,
+                          mat.from_integer_pos, mat.recovered_objects,
+                          mat.stub_objects, mat.without_position,
+                          mat.out_of_world);
                 const std::string reportPath =
                     g_storagePath + "/original_snapshot_report.json";
                 FILE* reportFile = fopen(reportPath.c_str(), "w");

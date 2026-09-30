@@ -141,7 +141,7 @@ Tile 语义不同且无 A 级逐值映射），报告可见。导入全成全败
 立即存 world.bin；此后 world.bin 权威（玩家改动在重启后存活），快照保持证据
 副本不被反复导入。Host 测试：`world_import`（双块、映射/未映射/item-0 三计
 数、网格与网格重建、44+24 表核对）、`data_source`（种子一次 → world.bin 接
-管 → 快照不重导）。边界：动态对象与玩家状态仍未导入；本层不声称设备/原版
+- 边界：玩家状态仍未导入；本层不声称设备/原版
 运行验收。
 
 ### 条件 TileType（conditional TileType，2026-10-01，contentsType 链）
@@ -161,3 +161,20 @@ helper 返回 0 时可达，不得直接套用。
   / `no_compat_id` / `no_mapping`）。
 - 边界：两个 helper 未建模；`Tile[1]` 后墙仍未映射；解析结果是客户端 ItemType
   域，仍需 `ItemManager::fromOriginalType` 有对应项，无对应项照旧计数。
+
+## 动态对象物化（dynamic object materialization，层 3）
+
+`original_dynamic_import.cpp` 把装配出来的动态对象**物化**为带身份与坐标的标记：
+原始 type id、uniqueID、解出的位置（`floatPos` 优先，否则整数 `pos_x/pos_y`）、以及
+注册表给出的装载状态。坐标不做钳制：落在**已导入块域之外**的对象计入
+`out_of_world`，没有位置的对象计入 `without_position`，两者都显式计数。
+
+- 入口：`OriginalClientApp::loadDynamicObjects()` 末尾调用
+  `materializeOriginalDynamicObjects()`，结果挂在 app 上
+  （`materializedObjects()` / `materializationReport()`），并进入 `toJson()`。
+- 计数：`materialized` / `from_float_pos` / `from_integer_pos` /
+  `recovered_objects` / `stub_objects` / `without_position` / `out_of_world`。
+- **物化 ≠ 消费**：目前没有任何玩法系统读取这些标记——不是实体、AI、生长、渲染
+  或存档回写。这一层只把"对象在哪、是什么、解到什么程度"变成可被下游读取的数据。
+- 合成夹具实测：8 个对象 → 5 个标记（1 个来自 floatPos，4 个来自整数坐标；
+  4 个 recovered + 1 个 stub），3 个无位置，0 个越界。
