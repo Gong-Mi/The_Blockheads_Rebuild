@@ -210,6 +210,20 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
                                 "world.bin");
     if (g_originalClientApp.report().blocks > 0 && !hasWorldBin) {
         bh176::WorldImportReport importReport;
+        // Layer 4 consumer: the original save's randomSeed becomes the
+        // replacement generation seed. It only affects chunks the snapshot
+        // does NOT cover; with no seed the generator is unchanged.
+        {
+            const bh176::OriginalWorldState& ws =
+                g_originalClientApp.worldState();
+            if (ws.worldv2_present && g_world) {
+                g_world->setGenerationSeed(ws.random_seed);
+                logToFile("Original world seed applied: randomSeed=%lld "
+                          "(offset %.1f,%.1f)",
+                          ws.random_seed, g_world->generationSeedOffsetX(),
+                          g_world->generationSeedOffsetY());
+            }
+        }
         if (bh176::importOriginalWorld(g_originalClientApp.world(), *g_world,
                                        importReport)) {
             originalTerrainActive = true;

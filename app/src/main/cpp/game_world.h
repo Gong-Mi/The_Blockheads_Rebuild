@@ -61,6 +61,22 @@ public:
     void refreshTileMesh(int x, int y);
     void buildMeshCache(PhysicalBlock* block);
     void generateChunkSync(int cx, int cy);
+
+public:
+    // Original-save world seed (worldv2 randomSeed). The replacement noise
+    // functions take no seed of their own, so an imported seed shifts the
+    // sample coordinates by a deterministic offset. With no seed imported the
+    // offsets stay 0 and generation is unchanged.
+    static std::pair<float, float> generationSeedOffset(long long seed);
+    void setGenerationSeed(long long seed);
+    bool hasGenerationSeed() const { return has_generation_seed_; }
+    float generationSeedOffsetX() const { return seed_offset_x_; }
+    float generationSeedOffsetY() const { return seed_offset_y_; }
+
+private:
+    bool has_generation_seed_ = false;
+    float seed_offset_x_ = 0.0f;
+    float seed_offset_y_ = 0.0f;
     void updateChunks(float camX, float camY);
     void updateFluids();
     void updateElectricity();

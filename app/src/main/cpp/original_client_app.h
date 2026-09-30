@@ -72,9 +72,9 @@ struct OriginalWorldState {
     std::size_t player_records = 0;
     std::size_t opaque_data_blobs = 0;
     std::map<std::string, std::size_t> unread_keys;
-    // The replacement world generator takes no seed input today, so random_seed
-    // is decoded data with no consumer: reported, explicitly not applied.
-    bool seed_has_consumer = false;
+    // The replacement generator accepts a seed (GameWorld::setGenerationSeed),
+    // so random_seed has a consumer; game_engine applies it on the first seed.
+    bool seed_has_consumer = true;
 };
 
 struct ClientAppReport {

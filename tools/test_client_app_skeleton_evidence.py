@@ -137,7 +137,7 @@ def host_checks():
     assert ws['worldv2_present'] and ws['dynamic_worldv2_present'], ws
     assert ws['blockheads_present'], ws
     assert ws['random_seed'] == 1788626619, ws
-    assert ws['seed_has_consumer'] is False, ws
+    assert ws['seed_has_consumer'] is True, ws
     assert ws['portal_level'] == 0 and ws['expert_mode'] is False, ws
     assert ws['max_players'] == '1' and ws['host_port'] == '15159', ws
     assert ws['remote_game'] is False and ws['run_at_launch'] is True, ws

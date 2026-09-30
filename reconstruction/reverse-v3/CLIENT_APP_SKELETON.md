@@ -195,9 +195,12 @@ helper 返回 0 时可达，不得直接套用。
 `foundItems` / `circumNavigateBooleansData` / `distanceOrderedFoodTypes` /
 `savedGlowIndices`）、`unread_keys`（其余未知键，按名字计数）、`player_records`。
 
-**边界**：`randomSeed` 目前**没有消费者**——replacement 的世界生成不接受种子输入
-（`game_world` 无 seed 参数），所以它是"已解码、未应用"，报告里以
-`seed_has_consumer: false` 明示，不假装已生效。**本存档没有玩家记录**
+**边界（2026-10-01 更新）**：`randomSeed` 现在**有消费者**——`GameWorld` 接受生成种子
+（`setGenerationSeed`），`game_engine` 在首次播种时把原版种子接进生成：噪声函数本身不吃
+种子，因此用 SplitMix 派生的确定性坐标偏移实现；**未导入种子时偏移为 0，生成路径不变**。
+它只影响快照**未覆盖**的 chunk（已被块域导入的 chunk 不走生成）。报告里
+`seed_has_consumer: true` 表示"生成器已接受种子输入"，不等于已做地形等价性验证。
+**本存档没有玩家记录**
 （`blockheadDatasv2` 与 `blockheads.dynamicObjects` 都是空数组）：`player_records = 0`
 是对存档内容的陈述，不是"代码没写完"的含糊账。
 
