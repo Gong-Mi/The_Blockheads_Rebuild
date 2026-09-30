@@ -29,7 +29,10 @@ ASSETS = {
     "frida-server-android-arm": {
         "url": f"https://github.com/frida/frida/releases/download/{VERSION}/frida-server-{VERSION}-android-arm.xz",
         "xz_sha256": "a102c7f83fce8089394c3cc9a05812c841e8f254a80bcf7162280d7c1cbea208",
-        "sha256": None,
+        # extracted digest pinned after the first verified fetch: compressed
+        # hash checked against release metadata, file confirmed 32-bit ARM
+        # (file: "ELF shared object, 32-bit LSB") before pinning.
+        "sha256": "ae099158c275b2235a0278e6a6ea881beabb64f0155de36d4b2df0bc5cd7e21e",
         "decompress": "xz",
         "chmod": 0o755,
     },
