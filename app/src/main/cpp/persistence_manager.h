@@ -34,7 +34,9 @@ public:
         }
 
         // 1. Header
-        uint32_t version = 3; // Upgraded version (Tile size changed)
+        // v4 appends the original-domain world clock (seconds) after the
+        // chunk list; v3 stays loadable (clock absent -> starts at 0).
+        uint32_t version = 4;
         fwrite(&version, sizeof(uint32_t), 1, f);
 
         // 2. Player
@@ -79,6 +81,10 @@ public:
             fwrite(chunk->tiles, sizeof(Tile), CHUNK_SIZE * CHUNK_SIZE, f);
         }
 
+        // 4. World clock (v4): the original-domain seconds clock
+        fwrite(&world->worldSeconds, sizeof(double), 1, f);
+        fwrite(&world->hasWorldSeconds, sizeof(bool), 1, f);
+
         fclose(f);
         LOGS("World saved successfully!");
     }
@@ -93,7 +99,7 @@ public:
         uint32_t version = 0;
         if (fread(&version, sizeof(uint32_t), 1, f) != 1) { fclose(f); return false; }
         
-        if (version < 1 || version > 3) {
+        if (version < 1 || version > 4) {
             LOGS("Unsupported save version: %u", version);
             fclose(f);
             return false;
@@ -175,6 +181,16 @@ public:
             // before the renderer consumes the saved world.
             chunk->dirty = true;
             world->processChunkAsync(chunk);
+        }
+
+        // 4. World clock (v4)
+        if (version >= 4) {
+            if (fread(&world->worldSeconds, sizeof(double), 1, f) == 1 &&
+                fread(&world->hasWorldSeconds, sizeof(bool), 1, f) == 1) {
+                LOGS("World clock loaded: %.1fs", world->worldSeconds);
+            } else {
+                world->hasWorldSeconds = false;
+            }
         }
 
         fclose(f);

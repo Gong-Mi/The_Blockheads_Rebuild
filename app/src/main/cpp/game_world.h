@@ -7,7 +7,9 @@
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
+#include <chrono>
 #include <map>
+#include <cmath>
 #include <cstdint>
 #include "game_constants.h"
 #include "noise_utils.h"
@@ -75,6 +77,7 @@ public:
 
 private:
     bool has_generation_seed_ = false;
+    std::chrono::steady_clock::time_point clockLast{};
     float seed_offset_x_ = 0.0f;
     float seed_offset_y_ = 0.0f;
 
@@ -88,6 +91,22 @@ public:
     void updateVegetation();
     void updateTemperature();
     
+    // Original-domain world clock (WORLD_TIME_DOMAIN.md, A-grade: the
+    // getDayNightFraction pool divisor is 900.0 and Plant's season gate
+    // compares seconds). worldTime below stays the DERIVED day fraction for
+    // existing consumers; worldSeconds is the source of truth.
+    static constexpr double kOriginalSecondsPerDay = 900.0;
+    double worldSeconds = 0.0;
+    // set only when a value was imported from the original save or loaded
+    // from a v4 world.bin; distinguishes 'clock at zero' from 'no clock yet'
+    bool hasWorldSeconds = false;
+    // sleep acceleration multiplies the world clock, not the frame count
+    float clockTimeScale = 1.0f;
+    double dayFraction() const {
+        double f = worldSeconds / kOriginalSecondsPerDay;
+        f -= std::floor(f);
+        return f;
+    }
     float worldTime = 0.0f;
 };
 

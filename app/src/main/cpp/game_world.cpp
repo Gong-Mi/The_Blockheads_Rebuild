@@ -310,6 +310,21 @@ void GameWorld::workerLoop() {
         }
 
         tick++;
+        // World clock (WORLD_TIME_DOMAIN.md): elapsed REAL time scaled by
+        // clockTimeScale. The wait wakes early on chunk tasks, so ticks are
+        // not a clock; steady_clock deltas are. worldTime stays the derived
+        // day fraction for existing consumers (temperature/renderer/loop).
+        {
+            const auto now = std::chrono::steady_clock::now();
+            if (clockLast != std::chrono::steady_clock::time_point{}) {
+                const double elapsed =
+                    std::chrono::duration<double>(now - clockLast).count();
+                worldSeconds += elapsed * static_cast<double>(clockTimeScale);
+                hasWorldSeconds = true;
+            }
+            clockLast = now;
+            worldTime = static_cast<float>(dayFraction());
+        }
         if (tick % 10 == 0) updateFluids();
         if (tick % 30 == 0) updateElectricity();
         if (tick % 60 == 0) updateTemperature();

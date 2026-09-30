@@ -218,6 +218,11 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
                 g_originalClientApp.worldState();
             if (ws.worldv2_present && g_world) {
                 g_world->setGenerationSeed(ws.random_seed);
+                // Layer 4 clock: the save's own worldTime (seconds) seeds the
+                // world clock so season gates and day/night continue where the
+                // original left off (this save: 900.0 = exactly one day).
+                g_world->worldSeconds = g_originalClientApp.worldTime();
+                g_world->hasWorldSeconds = true;
                 logToFile("Original world seed applied: randomSeed=%lld "
                           "(offset %.1f,%.1f)",
                           ws.random_seed, g_world->generationSeedOffsetX(),
@@ -471,6 +476,10 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
             }
         }
         if (g_renderer) g_renderer->timeScale = timeSpeed;
+        // World clock (WORLD_TIME_DOMAIN.md): the engine's own seconds clock
+        // is advanced by the worker's 50ms cadence times the acceleration;
+        // the renderer's fraction is derived from it, not the other way round.
+        g_world->clockTimeScale = timeSpeed;
 
         if (g_ai->update(g_entities->player.x, g_entities->player.y, g_world, g_entities)) g_world->updateLighting();
         
@@ -550,8 +559,11 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
             if (g_renderer->followingPlayer) { g_renderer->targetX = g_entities->player.x; g_renderer->targetY = g_entities->player.y; }
             g_world->updateChunks(g_renderer->camX, g_renderer->camY);
             
-            // Sync Time to World for Simulation (Temperature, etc)
-            g_world->worldTime = g_renderer->worldTime;
+            // Time flows world -> renderer (WORLD_TIME_DOMAIN.md): the world
+            // clock is authoritative and the renderer mirrors the derived
+            // day fraction; copying the renderer fraction into the world made
+            // the seconds-domain gates unfireable.
+            g_renderer->worldTime = g_world->worldTime;
             
             // Sync Clothing for Rendering
             g_renderer->clothingHead = g_entities->player.clothingHead;
