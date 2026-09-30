@@ -30,6 +30,14 @@ int main() {
     assert(world.generationSeedOffsetX() == seeded.first);
     assert(world.generationSeedOffsetY() == seeded.second);
 
+    // Access-level guard: game_engine's frame loop drives GameWorld through
+    // these members. Taking their address proves access at compile time
+    // without running the frame loop, and the host build compiles this test
+    // on every push - which is what the APK-only failure taught us to pin.
+    auto update_chunks = &GameWorld::updateChunks;
+    assert(update_chunks != nullptr);
+    (void)world.worldTime;
+
     // the world owns a worker thread; stop it like the other host tests do
     world.stopThread = true;
     world.queueCV.notify_all();

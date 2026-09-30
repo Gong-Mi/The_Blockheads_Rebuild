@@ -77,6 +77,11 @@ private:
     bool has_generation_seed_ = false;
     float seed_offset_x_ = 0.0f;
     float seed_offset_y_ = 0.0f;
+
+public:
+    // Access level restored: updateChunks/worldTime below were public before
+    // the seed block and are used by game_engine's frame loop (an accidental
+    // access change here broke the APK build: Android CI 36741931331).
     void updateChunks(float camX, float camY);
     void updateFluids();
     void updateElectricity();
