@@ -64,6 +64,26 @@ int main(int argc, char** argv) {
     std::cout << "    stub markers:        " << materialization.stub_objects << "\n";
     std::cout << "    without position:    " << materialization.without_position << "\n";
     std::cout << "    outside imported:    " << materialization.out_of_world << "\n";
+    const auto& world_state = app.worldState();
+    std::cout << "  world records:         worldv2="
+              << (world_state.worldv2_present ? "yes" : "no")
+              << " dynamicWorldv2="
+              << (world_state.dynamic_worldv2_present ? "yes" : "no")
+              << " blockheads="
+              << (world_state.blockheads_present ? "yes" : "no") << "\n";
+    std::cout << "  world randomSeed:      " << world_state.random_seed
+              << " (consumer: "
+              << (world_state.seed_has_consumer ? "yes" : "none") << ")\n";
+    std::cout << "  world config:          portal=" << world_state.portal_level
+              << " expert=" << (world_state.expert_mode ? 1 : 0)
+              << " maxPlayers=" << world_state.max_players
+              << " hostPort=" << world_state.host_port << "\n";
+    std::cout << "  dynamic object ids:    next="
+              << world_state.dynamic_object_id_count
+              << " activeBlockhead=" << world_state.active_blockhead_index
+              << " saveVersion=" << world_state.save_version << "\n";
+    std::cout << "  player records:        " << world_state.player_records << "\n";
+    std::cout << "  opaque world blobs:    " << world_state.opaque_data_blobs << "\n";
     for (const auto& entry : report.per_type) {
         std::cout << "  type " << entry.first << ": " << entry.second << " object(s)\n";
     }

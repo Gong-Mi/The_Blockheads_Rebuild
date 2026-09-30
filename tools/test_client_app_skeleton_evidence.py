@@ -129,6 +129,26 @@ def host_checks():
     assert report['materialized_stub'] == 1, report
     assert report['materialized_without_position'] == 3, report
     assert report['materialized_out_of_world'] == 0, report
+    # layer 4 (world-level state): worldv2 / dynamicWorldv2 / blockheads are
+    # decoded by name. randomSeed has NO consumer in the replacement
+    # generator today, and that is reported rather than papered over; the
+    # save carries no player records, which is a fact about this save.
+    ws = report['world_state']
+    assert ws['worldv2_present'] and ws['dynamic_worldv2_present'], ws
+    assert ws['blockheads_present'], ws
+    assert ws['random_seed'] == 1788626619, ws
+    assert ws['seed_has_consumer'] is False, ws
+    assert ws['portal_level'] == 0 and ws['expert_mode'] is False, ws
+    assert ws['max_players'] == '1' and ws['host_port'] == '15159', ws
+    assert ws['remote_game'] is False and ws['run_at_launch'] is True, ws
+    assert ws['no_rain_timer'] == 0.0 and ws['migration_complete'] is True, ws
+    assert ws['active_blockhead_index'] == 0, ws
+    assert ws['dynamic_object_id_count'] == 155, ws
+    assert ws['save_version'] == 8, ws
+    assert ws['workbench_has_been_crafted'] is False, ws
+    assert ws['player_records'] == 0, ws
+    assert ws['opaque_data_blobs'] == 4, ws
+    assert ws['unread_keys'] == {'fixtureUnknownKey': 1}, ws
     # every recovered object must OWN its decoded state with the exact family
     # of the module that produced it; stubs own none
     for obj in report['objects']:

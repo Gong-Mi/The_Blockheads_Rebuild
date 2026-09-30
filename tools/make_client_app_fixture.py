@@ -99,6 +99,34 @@ def main() -> int:
     add_record('3_0/1', 3, 0, 'record3.bin', b'\x00\x01\x02not-a-plist')
 
     (root / 'dynamic' / 'index.tsv').write_text('\n'.join(dynamic_rows) + '\n')
+    # main domain (world-level state): worldv2 + dynamicWorldv2 + blockheads.
+    # The unknown key and the Data blobs exist so unread_keys / opaque_data_blobs
+    # are exercised instead of assumed empty.
+    (root / 'main').mkdir()
+    main_rows = ['key_hex\tfile\traw_sha256\tbytes']
+
+    def add_main(key: str, name: str, payload: dict) -> None:
+        data = plistlib.dumps(payload)
+        (root / 'main' / name).write_bytes(data)
+        main_rows.append('\t'.join([key.encode().hex(), f'main/{name}',
+                                    hashlib.sha256(data).hexdigest(), str(len(data))]))
+
+    add_main('worldv2', 'worldv2.plist', {
+        'worldTime': 0.25, 'randomSeed': 1788626619, 'portalLevel': 0,
+        'expertMode': False, 'maxPlayers': '1', 'hostPort': '15159',
+        'remoteGame': False, 'runAtLaunch': True, 'noRainTimer': 0.0,
+        'migrationComplete_1.7': True, 'blockheadDatasv2': [],
+        'foundItems': b'\x01\x02', 'circumNavigateBooleansData': b'\x03\x04',
+        'distanceOrderedFoodTypes': b'\x05', 'fixtureUnknownKey': 1,
+    })
+    add_main('dynamicWorldv2', 'dynamicWorldv2.plist', {
+        'activeBlockheadIndex': 0, 'dynamicObjectIDCount': 155,
+        'saveVersion': 8, 'workbenchHasBeenCrafted': False,
+        'savedGlowIndices': b'\x07\x08',
+    })
+    add_main('blockheads', 'blockheads.plist', {'dynamicObjects': []})
+    (root / 'main' / 'index.tsv').write_text('\n'.join(main_rows) + '\n')
+
     print(f'wrote fixture snapshot: {root}')
     return 0
 

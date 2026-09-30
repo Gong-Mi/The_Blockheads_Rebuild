@@ -45,6 +45,38 @@ struct DynamicRecordRow {
     long long key_type_id = -1;
 };
 
+// World-level (main domain) state decoded from the original save: worldv2,
+// dynamicWorldv2 and the blockheads record. Recognised fields are read by name;
+// recognised-but-undecoded Data blobs and every unrecognised key are COUNTED,
+// never guessed at.
+struct OriginalWorldState {
+    bool worldv2_present = false;
+    bool dynamic_worldv2_present = false;
+    bool blockheads_present = false;
+    long long random_seed = 0;
+    long long portal_level = 0;
+    bool expert_mode = false;
+    std::string max_players;
+    std::string host_port;
+    bool remote_game = false;
+    bool run_at_launch = false;
+    double no_rain_timer = 0.0;
+    bool migration_complete = false;
+    long long active_blockhead_index = 0;
+    long long dynamic_object_id_count = 0;
+    long long save_version = 0;
+    bool workbench_has_been_crafted = false;
+    // Player records found in this save (blockheadDatasv2 + blockheads
+    // dynamicObjects). The assembled server save carries none, and that fact is
+    // reported instead of being left as an open "not imported yet".
+    std::size_t player_records = 0;
+    std::size_t opaque_data_blobs = 0;
+    std::map<std::string, std::size_t> unread_keys;
+    // The replacement world generator takes no seed input today, so random_seed
+    // is decoded data with no consumer: reported, explicitly not applied.
+    bool seed_has_consumer = false;
+};
+
 struct ClientAppReport {
     std::size_t blocks = 0;
     std::size_t dynamic_records = 0;
@@ -87,6 +119,7 @@ public:
     const DynamicImportReport& materializationReport() const {
         return materialization_;
     }
+    const OriginalWorldState& worldState() const { return world_state_; }
 
     // [world worldTime] at load time — the saveTime gate's other input
     // (Plant loadSaveDictValues). Set from the assembled snapshot's main-db
@@ -116,6 +149,7 @@ private:
     std::vector<ClientDynamicObject> objects_;
     std::vector<MaterializedOriginalObject> materialized_;
     DynamicImportReport materialization_;
+    OriginalWorldState world_state_;
     ClientAppReport report_;
     std::size_t save_dict_stub_hits_ = 0;
     double world_time_ = 0.0;

@@ -178,3 +178,39 @@ helper 返回 0 时可达，不得直接套用。
   或存档回写。这一层只把"对象在哪、是什么、解到什么程度"变成可被下游读取的数据。
 - 合成夹具实测：8 个对象 → 5 个标记（1 个来自 floatPos，4 个来自整数坐标；
   4 个 recovered + 1 个 stub），3 个无位置，0 个越界。
+
+## 世界级状态（main 域，层 4）
+
+装配快照的 `main/` 域有三个记录：`worldv2`、`dynamicWorldv2`、`blockheads`。此前 app 只从
+`worldv2` 取 `worldTime`，其余字段虽已解码但无人读。本层把它们按名字读出来：
+
+- `worldv2`：`randomSeed` / `portalLevel` / `expertMode` / `maxPlayers` / `hostPort` /
+  `remoteGame` / `runAtLaunch` / `noRainTimer` / `migrationComplete_1.7` /
+  `blockheadDatasv2`（玩家记录数）
+- `dynamicWorldv2`：`activeBlockheadIndex` / `dynamicObjectIDCount` / `saveVersion` /
+  `workbenchHasBeenCrafted`
+- `blockheads`：`dynamicObjects`（玩家记录数）
+
+三个计数器保证缺口可见：`opaque_data_blobs`（已识别但未解码的 Data：
+`foundItems` / `circumNavigateBooleansData` / `distanceOrderedFoodTypes` /
+`savedGlowIndices`）、`unread_keys`（其余未知键，按名字计数）、`player_records`。
+
+**边界**：`randomSeed` 目前**没有消费者**——replacement 的世界生成不接受种子输入
+（`game_world` 无 seed 参数），所以它是"已解码、未应用"，报告里以
+`seed_has_consumer: false` 明示，不假装已生效。**本存档没有玩家记录**
+（`blockheadDatasv2` 与 `blockheads.dynamicObjects` 都是空数组）：`player_records = 0`
+是对存档内容的陈述，不是"代码没写完"的含糊账。
+
+### 顺带修掉的解析器缺陷（自闭合空容器）
+
+最小 plist 读取器只认 `<array>…</array>`，不认 `<array/>`；而 plistlib 与部分
+Foundation 写入器对空值正是输出自闭合形式。后果是**整条记录被当作 malformed 丢弃，
+调用方静默保持零值**——一个真实存在的 `worldv2` 记录会被读成"不存在"。
+现在 `<array/>` / `<dict/>` / `<data/>` / `<string/>` 都按空值接受。
+真实存档的 `worldv2` / `blockheads` 不含自闭合标签（已核对设备上的同一文件），
+所以这是防御性修复；合成夹具正是用它来回归这条路径。
+
+合成夹具实测（已钉进 `test_client_app_skeleton_evidence.py`）：三个记录全部 present，
+`random_seed=1788626619`，`max_players='1'` / `host_port='15159'`，
+`dynamic_object_id_count=155` / `save_version=8` / `active_blockhead_index=0`，
+`player_records=0`，`opaque_data_blobs=4`，`unread_keys={'fixtureUnknownKey': 1}`。

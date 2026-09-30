@@ -210,6 +210,22 @@ bool Parser::parseValue(SaveValue& out, const std::string& tag) {
         out.boolean = tag == "true/";
         return true;
     }
+    // Self-closing empty containers: plistlib (and Foundation in some
+    // writers) emits <array/> / <dict/> / <data/> / <string/> for empty
+    // values. Without this the WHOLE record is rejected as malformed and the
+    // caller silently keeps zeroed state - which is how a present worldv2
+    // record can still read as absent.
+    if (tag == "array/" || tag == "dict/") {
+        out = SaveValue{};
+        out.kind = tag == "array/" ? SaveValue::Kind::Array : SaveValue::Kind::Dict;
+        return true;
+    }
+    if (tag == "data/" || tag == "string/") {
+        out = SaveValue{};
+        out.kind = tag == "data/" ? SaveValue::Kind::Data : SaveValue::Kind::String;
+        out.text.clear();
+        return true;
+    }
     if (tag == "data") {
         const std::string raw = textUntilTag();
         if (!expectClose("data")) return false;

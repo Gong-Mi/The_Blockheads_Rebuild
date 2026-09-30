@@ -166,6 +166,13 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
                           mat.from_integer_pos, mat.recovered_objects,
                           mat.stub_objects, mat.without_position,
                           mat.out_of_world);
+                const bh176::OriginalWorldState& ws =
+                    g_originalClientApp.worldState();
+                logToFile("Original world state: worldv2=%d randomSeed=%lld portal=%lld expert=%d maxPlayers=%s player_records=%zu opaque_blobs=%zu",
+                          ws.worldv2_present ? 1 : 0, ws.random_seed,
+                          ws.portal_level, ws.expert_mode ? 1 : 0,
+                          ws.max_players.c_str(), ws.player_records,
+                          ws.opaque_data_blobs);
                 const std::string reportPath =
                     g_storagePath + "/original_snapshot_report.json";
                 FILE* reportFile = fopen(reportPath.c_str(), "w");

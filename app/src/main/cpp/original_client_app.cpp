@@ -154,6 +154,63 @@ ParsedRecordKey parseRecordKeyText(const std::string& text) {
 
 }  // namespace
 
+namespace {
+
+bool isOpaqueWorldDataKey(const std::string& key) {
+    return key == "foundItems" || key == "circumNavigateBooleansData" ||
+           key == "distanceOrderedFoodTypes" || key == "savedGlowIndices";
+}
+
+// Reads a main-domain record (worldv2 / dynamicWorldv2 / blockheads): fields
+// whose meaning is established are decoded, undecoded Data blobs are counted,
+// and every other key is recorded by name so the gap is visible in the report.
+void readWorldStateRecord(const SaveValue& root, OriginalWorldState& state,
+                          double* world_time) {
+    for (const auto& entry : root.dict) {
+        const std::string& key = entry.first;
+        const SaveValue& value = entry.second;
+        if (key == "worldTime") {
+            if (world_time != nullptr) {
+                *world_time = SaveDict::doubleValue(&value);
+            }
+        } else if (key == "randomSeed") {
+            state.random_seed = SaveDict::intValue(&value);
+        } else if (key == "portalLevel") {
+            state.portal_level = SaveDict::intValue(&value);
+        } else if (key == "expertMode") {
+            state.expert_mode = SaveDict::boolValue(&value);
+        } else if (key == "maxPlayers") {
+            state.max_players = value.text;
+        } else if (key == "hostPort") {
+            state.host_port = value.text;
+        } else if (key == "remoteGame") {
+            state.remote_game = SaveDict::boolValue(&value);
+        } else if (key == "runAtLaunch") {
+            state.run_at_launch = SaveDict::boolValue(&value);
+        } else if (key == "noRainTimer") {
+            state.no_rain_timer = SaveDict::doubleValue(&value);
+        } else if (key == "migrationComplete_1.7") {
+            state.migration_complete = SaveDict::boolValue(&value);
+        } else if (key == "blockheadDatasv2" || key == "dynamicObjects") {
+            state.player_records += value.array.size();
+        } else if (key == "activeBlockheadIndex") {
+            state.active_blockhead_index = SaveDict::intValue(&value);
+        } else if (key == "dynamicObjectIDCount") {
+            state.dynamic_object_id_count = SaveDict::intValue(&value);
+        } else if (key == "saveVersion") {
+            state.save_version = SaveDict::intValue(&value);
+        } else if (key == "workbenchHasBeenCrafted") {
+            state.workbench_has_been_crafted = SaveDict::boolValue(&value);
+        } else if (isOpaqueWorldDataKey(key)) {
+            ++state.opaque_data_blobs;
+        } else {
+            ++state.unread_keys[key];
+        }
+    }
+}
+
+}  // namespace
+
 bool OriginalClientApp::open(const std::filesystem::path& snapshot_root,
                              std::string* error) {
     // Transactional: everything is parsed and verified into local state; the
@@ -275,6 +332,7 @@ bool OriginalClientApp::open(const std::filesystem::path& snapshot_root,
     rows_ = std::move(next_rows);
     objects_.clear();
     report_ = ClientAppReport{};
+    world_state_ = OriginalWorldState{};
     report_.blocks = world_.blockCount();
     report_.dynamic_records = rows_.size();
     // main-domain (worldv2) worldTime: the saveTime gate's other input. The
@@ -301,25 +359,26 @@ bool OriginalClientApp::open(const std::filesystem::path& snapshot_root,
                         main_fields[fi++] = field;
                     }
                 }
-                if (main_fields[0] != "776f726c647632") continue;  // "worldv2"
-                const std::filesystem::path worldv2_path =
+                const std::filesystem::path record_path =
                     snapshot_root / main_fields[1];
-                std::ifstream worldv2_file(worldv2_path, std::ios::binary);
-                if (!worldv2_file) break;
-                std::string worldv2_raw((std::istreambuf_iterator<char>(worldv2_file)),
-                                        std::istreambuf_iterator<char>());
-                SaveValue worldv2_plist;
-                std::string worldv2_error;
-                if (parseXmlPlist(worldv2_raw, worldv2_plist, &worldv2_error)) {
-                    const SaveDict worldv2_dict(worldv2_plist);
-                    const SaveValue* world_time_value =
-                        worldv2_dict.objectForKey("worldTime");
-                    if (world_time_value != nullptr) {
-                        world_time_ =
-                            SaveDict::doubleValue(world_time_value);
-                    }
+                std::ifstream record_file(record_path, std::ios::binary);
+                if (!record_file) continue;
+                std::string record_raw((std::istreambuf_iterator<char>(record_file)),
+                                       std::istreambuf_iterator<char>());
+                SaveValue record_plist;
+                std::string record_error;
+                if (!parseXmlPlist(record_raw, record_plist, &record_error)) continue;
+                if (main_fields[0] == "776f726c647632") {  // "worldv2"
+                    world_state_.worldv2_present = true;
+                    readWorldStateRecord(record_plist, world_state_, &world_time_);
+                } else if (main_fields[0] == "64796e616d6963576f726c647632") {
+                    // "dynamicWorldv2"
+                    world_state_.dynamic_worldv2_present = true;
+                    readWorldStateRecord(record_plist, world_state_, nullptr);
+                } else if (main_fields[0] == "626c6f636b6865616473") {  // "blockheads"
+                    world_state_.blockheads_present = true;
+                    readWorldStateRecord(record_plist, world_state_, nullptr);
                 }
-                break;
             }
         }
     }
@@ -837,6 +896,40 @@ std::string OriginalClientApp::toJson() const {
     out << "  \"materialized_stub\": " << materialization_.stub_objects << ",\n";
     out << "  \"materialized_without_position\": " << materialization_.without_position << ",\n";
     out << "  \"materialized_out_of_world\": " << materialization_.out_of_world << ",\n";
+    out << "  \"world_state\": {";
+    out << "\"worldv2_present\": " << (world_state_.worldv2_present ? "true" : "false");
+    out << ", \"dynamic_worldv2_present\": "
+        << (world_state_.dynamic_worldv2_present ? "true" : "false");
+    out << ", \"blockheads_present\": "
+        << (world_state_.blockheads_present ? "true" : "false");
+    out << ", \"random_seed\": " << world_state_.random_seed;
+    out << ", \"seed_has_consumer\": "
+        << (world_state_.seed_has_consumer ? "true" : "false");
+    out << ", \"portal_level\": " << world_state_.portal_level;
+    out << ", \"expert_mode\": " << (world_state_.expert_mode ? "true" : "false");
+    out << ", \"max_players\": \"" << jsonEscape(world_state_.max_players) << "\"";
+    out << ", \"host_port\": \"" << jsonEscape(world_state_.host_port) << "\"";
+    out << ", \"remote_game\": " << (world_state_.remote_game ? "true" : "false");
+    out << ", \"run_at_launch\": " << (world_state_.run_at_launch ? "true" : "false");
+    out << ", \"no_rain_timer\": " << world_state_.no_rain_timer;
+    out << ", \"migration_complete\": "
+        << (world_state_.migration_complete ? "true" : "false");
+    out << ", \"active_blockhead_index\": " << world_state_.active_blockhead_index;
+    out << ", \"dynamic_object_id_count\": "
+        << world_state_.dynamic_object_id_count;
+    out << ", \"save_version\": " << world_state_.save_version;
+    out << ", \"workbench_has_been_crafted\": "
+        << (world_state_.workbench_has_been_crafted ? "true" : "false");
+    out << ", \"player_records\": " << world_state_.player_records;
+    out << ", \"opaque_data_blobs\": " << world_state_.opaque_data_blobs;
+    out << ", \"unread_keys\": {";
+    bool unread_first = true;
+    for (const auto& entry : world_state_.unread_keys) {
+        out << (unread_first ? "" : ", ") << "\"" << jsonEscape(entry.first)
+            << "\": " << entry.second;
+        unread_first = false;
+    }
+    out << "}},\n";
     out << "  \"type_key_used\": {";
     bool first = true;
     for (const auto& entry : r.type_key_used) {
