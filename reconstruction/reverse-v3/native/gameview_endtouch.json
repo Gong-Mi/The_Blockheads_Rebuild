@@ -1,0 +1,195 @@
+{
+  "batch": "GameView endTouch: -> World endTouch:index: -> doEndTouch:wasCancelled:index: forwarding",
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "methods": [
+    {
+      "arm_exidx_end": "0x0092c638",
+      "branches": [
+        {
+          "condition": "beq: mainMenuUI == nil -> World path",
+          "site": "0x0092c43c",
+          "target": "0x0092c4ac"
+        },
+        {
+          "condition": "bne: world != nil -> World path",
+          "site": "0x0092c464",
+          "target": "0x0092c4ac"
+        },
+        {
+          "condition": "b: menu callback done -> shared tail clear",
+          "site": "0x0092c4a8",
+          "target": "0x0092c5e0"
+        },
+        {
+          "condition": "beq: loadComplete byte == 0 -> tail clear, no send",
+          "site": "0x0092c4f4",
+          "target": "0x0092c5dc"
+        },
+        {
+          "condition": "bne: isSimulating byte != 0 -> tail clear, no send",
+          "site": "0x0092c540",
+          "target": "0x0092c5dc"
+        },
+        {
+          "condition": "bne: primaryTouchIsActiveInUI != 0 -> indexed send",
+          "site": "0x0092c564",
+          "target": "0x0092c58c"
+        },
+        {
+          "condition": "bne: secondaryTouchIsActiveInUI != 0 -> skip send",
+          "site": "0x0092c588",
+          "target": "0x0092c5d8"
+        },
+        {
+          "condition": "b: join",
+          "site": "0x0092c5d8",
+          "target": "0x0092c5dc"
+        },
+        {
+          "condition": "b: join -> shared tail clear",
+          "site": "0x0092c5dc",
+          "target": "0x0092c5e0"
+        }
+      ],
+      "calls": [
+        {
+          "route": "bl objc_msgSend@plt",
+          "selector_route": "mainMenuUI -[endTouch:]",
+          "site": "0x0092c4a4",
+          "target": "0x001c281c"
+        },
+        {
+          "route": "blx r2 via GOT reload 0x0105b7a0",
+          "selector_route": "World -[loadComplete] via GOT objc_msgSend reload",
+          "site": "0x0092c4e8"
+        },
+        {
+          "route": "blx r2 via GOT reload 0x0105b7a0",
+          "selector_route": "World -[isSimulating] via GOT objc_msgSend reload",
+          "site": "0x0092c534"
+        },
+        {
+          "route": "bl objc_msgSend@plt",
+          "selector_route": "World -[endTouch:index:] (index literal 0)",
+          "site": "0x0092c5d4",
+          "target": "0x001c281c"
+        }
+      ],
+      "claim": "bounded static method map + pinned GOT/selref/ivar-cell resolution + typed host snapshot; dynamic ObjC callees and original runtime are not verified",
+      "class": "GameView",
+      "code_end_exclusive": "0x0092c608",
+      "code_words": 133,
+      "implementation": "0x0092c3f4",
+      "ivar_cells": {
+        "mainMenuUI": {
+          "cell": "0x0092c608",
+          "offset": 20,
+          "slot": "0x0105e168",
+          "symbol": "OBJC_IVAR_$_GameView.mainMenuUI"
+        },
+        "primaryTouchIsActiveInUI": {
+          "cell": "0x0092c624",
+          "offset": 496,
+          "slot": "0x0105e208",
+          "symbol": "OBJC_IVAR_$_GameView.primaryTouchIsActiveInUI"
+        },
+        "secondaryTouchIsActiveInUI": {
+          "cell": "0x0092c628",
+          "offset": 508,
+          "slot": "0x0105e214",
+          "symbol": "OBJC_IVAR_$_GameView.secondaryTouchIsActiveInUI"
+        },
+        "world": {
+          "cell": "0x0092c60c",
+          "offset": 24,
+          "slot": "0x0105e110",
+          "symbol": "OBJC_IVAR_$_GameView.world"
+        }
+      },
+      "ivars": [
+        {
+          "evidence": "OBJC_IVAR_$_GameView.mainMenuUI via GOT slot 0x0105e168",
+          "name": "mainMenuUI",
+          "offset": 20
+        },
+        {
+          "evidence": "OBJC_IVAR_$_GameView.world via GOT slot 0x0105e110",
+          "name": "world",
+          "offset": 24
+        },
+        {
+          "evidence": "OBJC_IVAR_$_GameView.primaryTouchIsActiveInUI via GOT slot 0x0105e208",
+          "name": "primaryTouchIsActiveInUI",
+          "offset": 496
+        },
+        {
+          "evidence": "OBJC_IVAR_$_GameView.secondaryTouchIsActiveInUI via GOT slot 0x0105e214",
+          "name": "secondaryTouchIsActiveInUI",
+          "offset": 508
+        }
+      ],
+      "literal_pool_words": 12,
+      "pic_base": "0x0105faf4",
+      "selector": "endTouch:",
+      "selector_cells": {
+        "endTouch:": {
+          "cell": "0x0092c614",
+          "slot": "0x00e836b8"
+        },
+        "endTouch:index:": {
+          "cell": "0x0092c630",
+          "slot": "0x00e836bc"
+        },
+        "isSimulating": {
+          "cell": "0x0092c620",
+          "slot": "0x00e835c8"
+        },
+        "loadComplete": {
+          "cell": "0x0092c61c",
+          "slot": "0x00e835d0"
+        }
+      },
+      "types": "v16@0:4{CGPoint=ff}8",
+      "verified_interval_words": 145
+    },
+    {
+      "arm_exidx_end": "0x005b34b4",
+      "branches": [],
+      "calls": [
+        {
+          "route": "bl objc_msgSend@plt",
+          "selector_route": "self -[doEndTouch:wasCancelled:index:] (wasCancelled literal 0, index preserved from stack)",
+          "site": "0x005b34a0",
+          "target": "0x001c281c"
+        }
+      ],
+      "claim": "bounded static method map + pinned GOT/selref/ivar-cell resolution + typed host snapshot; dynamic ObjC callees and original runtime are not verified",
+      "class": "World",
+      "code_end_exclusive": "0x005b34ac",
+      "code_words": 31,
+      "implementation": "0x005b3430",
+      "ivar_cells": {},
+      "ivars": [],
+      "literal_pool_words": 2,
+      "pic_base": "0x0105faf4",
+      "selector": "endTouch:index:",
+      "selector_cells": {
+        "doEndTouch:wasCancelled:index:": {
+          "cell": "0x005b34ac",
+          "slot": "0x00e7e528"
+        }
+      },
+      "types": "v20@0:4{CGPoint=ff}8i16",
+      "verified_interval_words": 33
+    }
+  ],
+  "replacement_boundary": {
+    "android_apk_input_path": "GameActivity.onScroll -> handlePanNative remains separate and does not invoke these recovered methods",
+    "apk_integration": false,
+    "host_module": "blockheads_recovered_view",
+    "host_test": "tools/test_gameview_endtouch.cpp",
+    "original_runtime_differential": false
+  },
+  "schema": 1,
+  "symbol_mapping_basis": "manual cross-reference to the existing pinned startTouch/moveTouch/cancelTouch ivar maps, the checked-in ObjC method table, and a per-cell GOT/selref/ivar-symbol resolution re-verified against this ELF by recover(); the resolution walk proves cell-to-name binding, not dynamic receiver identity"
+}

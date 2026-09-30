@@ -1,0 +1,168 @@
+{
+  "arm_exidx_end": "0x00857188",
+  "branches": [
+    {
+      "address": "0x00856e48",
+      "condition": "bge: worldWidthMacro >= 512 -> yq recompute (y/64)/512.0f with stack consts 512/2/32",
+      "destination": "0x00856e8c"
+    },
+    {
+      "address": "0x00857004",
+      "condition": "ble: |fault| <= 0.0 -> shaped stays 0 (falls into final scale)",
+      "destination": "0x00857108"
+    },
+    {
+      "address": "0x00857018",
+      "condition": "bpl: |fault| >= 0.2 -> ridge block (t = max(2(a-0.2), 0), +5*band)",
+      "destination": "0x00857054"
+    },
+    {
+      "address": "0x00857050",
+      "condition": "b: join after powf(2a,2) block",
+      "destination": "0x00857104"
+    },
+    {
+      "address": "0x0085709c",
+      "condition": "bpl: 2(a-0.2) >= 0 -> t = 2(a-0.2) else t = 0",
+      "destination": "0x008570ac"
+    },
+    {
+      "address": "0x008570a8",
+      "condition": "b: join into t^2",
+      "destination": "0x008570b4"
+    },
+    {
+      "address": "0x00857104",
+      "condition": "b: join into final scale",
+      "destination": "0x00857108"
+    }
+  ],
+  "calls": [
+    {
+      "receiver_route": "world (self+ivar 4): loaded 0x00856d78..0x00856d84; x/32.0f in s0; result int -> float, xq = (x/32)/w stored fp-0x2c",
+      "route": "blx lr",
+      "selector": "worldWidthMacro",
+      "site": "0x00856db0"
+    },
+    {
+      "receiver_route": "world reloaded 0x00856de4..0x00856df4; (y/64.0f) in s0; yq = (y/64)/w stored fp-0x30",
+      "route": "blx r3",
+      "selector": "worldWidthMacro",
+      "site": "0x00856e08"
+    },
+    {
+      "receiver_route": "world reloaded 0x00856e20..0x00856e30, s0 still yq (unused arg slot); result compared >= 0x200 (bge 0x00856e48): if w >= 512, yq recomputed as (y/64)/512.0f in the 0x00856e4c..0x00856e88 block",
+      "route": "blx r3",
+      "selector": "worldWidthMacro",
+      "site": "0x00856e40"
+    },
+    {
+      "receiver_route": "heightNoiseFunctionB (self+ivar 0x14): loaded 0x00856ec8..0x00856edc; args: X=(double)(xq+0.05f) in r2:r3, Y=7.0 at [sp], octaves=1 at [sp+8]; result double; band source = 0.8*n + 0.2 (d3=0.8, d2=0.2)",
+      "route": "blx r4",
+      "selector": "getX:Y:octaves:",
+      "site": "0x00856f30"
+    },
+    {
+      "receiver_route": "faultNoiseFunction (self+ivar 0x18): loaded 0x00856f88..0x00856fa0; args: X=(double)xq in r2:r3, Y=(double)yq at [sp], octaves=1 at [sp+8]; result double -> fabsf",
+      "route": "blx lr",
+      "selector": "getX:Y:octaves:",
+      "site": "0x00856fdc"
+    },
+    {
+      "note": "clamp(value, 0.0f, 1.0f): r0 = 0.8*n+0.2 (s0), r1 = 0.0f ([sp+0x48]), r2 = 1.0f ([sp+0x3c]); result stored fp-0x34",
+      "route": "bl",
+      "site": "0x00856f68",
+      "symbol": "_Z5clampfff",
+      "target": "0x004be068"
+    },
+    {
+      "note": "powf(2a, 2.0f): taken when 0 < a < 0.2 (bpl 0x00857018 not taken); args r0 = 2a (s2), r1 = 2.0f (s0); result becomes shaped",
+      "route": "bl",
+      "site": "0x00857044",
+      "symbol": "__wrap_powf",
+      "target": "0x001c3f98"
+    },
+    {
+      "note": "powf(max(2(a-0.2), 0), 2.0f): taken when a >= 0.2; r0 = t ([fp-0x48] via fp-0x3c), r1 = 2.0f (s2); shaped = result + 5.0f*band",
+      "route": "bl",
+      "site": "0x008570e0",
+      "symbol": "__wrap_powf",
+      "target": "0x001c3f98"
+    }
+  ],
+  "claim": "static bounded-body map with per-instruction anchors; NoiseFunction internals, worldWidthMacro units and runtime values are outside this body",
+  "constants": {
+    "0x00857144": {
+      "kind": "float",
+      "value": 32.0
+    },
+    "0x00857148": {
+      "kind": "double",
+      "value": 0.20000000298023224
+    },
+    "0x00857150": {
+      "kind": "double",
+      "value": 0.800000011920929
+    },
+    "0x00857164": {
+      "kind": "float",
+      "value": 32.0
+    },
+    "0x00857168": {
+      "kind": "float",
+      "value": 512.0
+    },
+    "0x00857174": {
+      "kind": "float",
+      "value": 0.0
+    },
+    "0x00857178": {
+      "kind": "float",
+      "value": 0.05000000074505806
+    },
+    "0x00857180": {
+      "kind": "float",
+      "value": 0.20000000298023224
+    }
+  },
+  "decision": "w = [self->world worldWidthMacro] (3 separate queries); xq = (x/32.0f)/(float)w; yq = (y/64.0f)/(float)w; if w >= 512: yq = (y/64.0f)/512.0f. band = clamp(0.8*[heightNoiseFunctionB getX:(double)(xq+0.05f) Y:7.0 octaves:1] + 0.2, 0.0f, 1.0f). a = fabsf((float)[faultNoiseFunction getX:(double)xq Y:(double)yq octaves:1]); shaped = 0 if a<=0; powf(2a,2) if a<0.2; else powf(max(2(a-0.2),0),2) + 5*band. return (int)(512.0f*shaped*band), vcvt.s32.f32 truncation toward zero.",
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "imp": "0x00856d18",
+  "ivars": {
+    "faultNoiseFunction": {
+      "cell": "0x00857170",
+      "offset": 24,
+      "slot": "0x0105dd7c",
+      "symbol": "OBJC_IVAR_$_WorldTileLoader.faultNoiseFunction"
+    },
+    "heightNoiseFunctionB": {
+      "cell": "0x0085717c",
+      "offset": 20,
+      "slot": "0x0105dd84",
+      "symbol": "OBJC_IVAR_$_WorldTileLoader.heightNoiseFunctionB"
+    },
+    "world": {
+      "cell": "0x00857160",
+      "offset": 4,
+      "slot": "0x0105dd4c",
+      "symbol": "OBJC_IVAR_$_WorldTileLoader.world"
+    }
+  },
+  "method": "WorldTileLoader -[faultOffsetForX:y:]",
+  "msgsend_got_slot": "0x0105b7a0",
+  "pic_base": "0x0105faf4",
+  "powf_jump_slot": "0x010602ec",
+  "powf_plt": "0x001c3f98",
+  "selectors": {
+    "getX:Y:octaves:": {
+      "cell": "0x0085716c",
+      "slot": "0x00e82420"
+    },
+    "worldWidthMacro": {
+      "cell": "0x0085715c",
+      "slot": "0x00e823a8"
+    }
+  },
+  "types": "i16@0:4i8i12",
+  "verified_words": 284
+}

@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "function": "getDayNightFractionForX:atWorldTime:",
+  "function_address": "0x00582ad8",
+  "constants": [
+    {
+      "role": "seconds_per_day_divisor",
+      "read_from_instruction": "0x582b10",
+      "literal_pool": "0x582de0",
+      "f64": 900.0
+    },
+    {
+      "role": "two_pi_phase_multiplier",
+      "read_from_instruction": "0x582b3c",
+      "literal_pool": "0x582de8",
+      "f64": 6.283185307179586
+    },
+    {
+      "role": "day_length_scale",
+      "read_from_instruction": "0x582b54",
+      "literal_pool": "0x582df0",
+      "f64": 0.40927970959267024
+    }
+  ],
+  "claim": "worldTime is a seconds clock; an in-game day is 900 seconds; the day phase is derived by fmod(worldTime / seconds_per_day) then (0.5 - fraction) * 2*pi",
+  "season_gate": {
+    "evidence": "reconstruction/reverse-v3/native/PLANT_LOADSAVE_ARM.md",
+    "threshold_seconds": 1800.0,
+    "domain": "same seconds clock; 1800.0 == 2 in-game days at this save"
+  }
+}

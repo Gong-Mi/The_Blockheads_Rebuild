@@ -1,0 +1,131 @@
+{
+  "arm_exidx_end": "0x0092c89c",
+  "branches": [
+    {
+      "address": "0x0092c680",
+      "condition": "beq: self->mainMenuUI == nil -> world path",
+      "destination": "0x0092c6f0"
+    },
+    {
+      "address": "0x0092c6a8",
+      "condition": "bne: self->world != nil -> world path",
+      "destination": "0x0092c6f0"
+    },
+    {
+      "address": "0x0092c6ec",
+      "condition": "b: menu endTouch: send done -> shared tail",
+      "destination": "0x0092c840"
+    },
+    {
+      "address": "0x0092c738",
+      "condition": "beq: loadComplete (sxtb) == 0 -> tail, world send skipped",
+      "destination": "0x0092c83c"
+    },
+    {
+      "address": "0x0092c784",
+      "condition": "bne: isSimulating (sxtb) != 0 -> tail, world send skipped",
+      "destination": "0x0092c83c"
+    },
+    {
+      "address": "0x0092c7a8",
+      "condition": "bne: primaryTouchIsActiveInUI != 0 -> world cancelTouch send",
+      "destination": "0x0092c7d0"
+    },
+    {
+      "address": "0x0092c7cc",
+      "condition": "bne: secondaryTouchIsActiveInUI != 0 -> skip send, clear startTouchHasntMoved",
+      "destination": "0x0092c81c"
+    },
+    {
+      "address": "0x0092c83c",
+      "condition": "b: join -> shared tail",
+      "destination": "0x0092c840"
+    }
+  ],
+  "calls": [
+    {
+      "receiver_route": "mainMenuUI (self+ivar): loaded 0x0092c6ac..0x0092c6c4 through cells 0x0092c868/0x0092c870 ([r1,r2] arithmetic lands on GOT slot 0x0105e168); path taken iff mainMenuUI != nil AND world == nil (0x0092c680 beq / 0x0092c6a8 bne both jump to the world path otherwise)",
+      "route": "bl stub",
+      "selector": "endTouch:",
+      "site": "0x0092c6e8"
+    },
+    {
+      "receiver_route": "world (self+ivar): loaded 0x0092c704..0x0092c718 via GOT slot 0x0105e110; reached from 0x0092c680 (mainMenuUI==nil) or 0x0092c6a8 (world!=nil)",
+      "route": "blx r2 (GOT objc_msgSend)",
+      "selector": "loadComplete",
+      "site": "0x0092c72c"
+    },
+    {
+      "receiver_route": "world reloaded 0x0092c750..0x0092c764 via GOT slot 0x0105e110; reached when loadComplete (sxtb) != 0 (0x0092c738 beq falls through)",
+      "route": "blx r2 (GOT objc_msgSend)",
+      "selector": "isSimulating",
+      "site": "0x0092c778"
+    },
+    {
+      "receiver_route": "world reloaded 0x0092c7d4..0x0092c7e8 ([r1,r2] lands on GOT slot 0x0105e110); reached when primaryTouchIsActiveInUI != 0 (bne 0x0092c7a8) OR both UI-active bytes == 0; third argument index=0 is materialised by movw lr,0 + str lr,[ip] at 0x0092c810..0x0092c814",
+      "route": "bl stub",
+      "selector": "cancelTouch:index:",
+      "site": "0x0092c818"
+    }
+  ],
+  "claim": "static bounded-body map with per-instruction anchors; no runtime receiver identity, nil-dispatch outcome or touch-state side-effect proof",
+  "decision": "menu-path (mainMenuUI!=nil AND world==nil): [mainMenuUI endTouch:point], then shared tail. world-path: unless [world loadComplete] (sxtb) != 0 AND [world isSimulating] (sxtb) == 0, skip to tail (0x0092c738 beq / 0x0092c784 bne). Gated block: if primaryTouchIsActiveInUI != 0 OR (primary==0 AND secondary==0): [world cancelTouch:point index:0] with index argument 0; if primary==0 AND secondary!=0: send skipped. Either way startTouchHasntMoved = 0 (strb at 0x0092c838, reached by fall-through from the send AND by bne 0x0092c7cc). Shared tail always stores 0 to primaryTouchIsActiveInUI (strb at 0x0092c85c). Returns void.",
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "imp": "0x0092c638",
+  "ivars": {
+    "mainMenuUI": {
+      "cell": "0x0092c868",
+      "offset": 20,
+      "slot": "0x0105e168",
+      "symbol": "OBJC_IVAR_$_GameView.mainMenuUI"
+    },
+    "primaryTouchIsActiveInUI": {
+      "cell": "0x0092c884",
+      "offset": 496,
+      "slot": "0x0105e208",
+      "symbol": "OBJC_IVAR_$_GameView.primaryTouchIsActiveInUI"
+    },
+    "secondaryTouchIsActiveInUI": {
+      "cell": "0x0092c888",
+      "offset": 508,
+      "slot": "0x0105e214",
+      "symbol": "OBJC_IVAR_$_GameView.secondaryTouchIsActiveInUI"
+    },
+    "startTouchHasntMoved": {
+      "cell": "0x0092c894",
+      "offset": 486,
+      "slot": "0x0105e20c",
+      "symbol": "OBJC_IVAR_$_GameView.startTouchHasntMoved"
+    },
+    "world": {
+      "cell": "0x0092c86c",
+      "offset": 24,
+      "slot": "0x0105e110",
+      "symbol": "OBJC_IVAR_$_GameView.world"
+    }
+  },
+  "method": "GameView -[cancelTouch:]",
+  "msgsend_got_slot": "0x0105b7a0",
+  "msgsend_stub": "0x001c281c",
+  "pic_base": "0x0105faf4",
+  "selectors": {
+    "cancelTouch:index:": {
+      "cell": "0x0092c890",
+      "slot": "0x00e836c0"
+    },
+    "endTouch:": {
+      "cell": "0x0092c874",
+      "slot": "0x00e836b8"
+    },
+    "isSimulating": {
+      "cell": "0x0092c880",
+      "slot": "0x00e835c8"
+    },
+    "loadComplete": {
+      "cell": "0x0092c87c",
+      "slot": "0x00e835d0"
+    }
+  },
+  "types": "v16@0:4{CGPoint=ff}8",
+  "verified_words": 153
+}

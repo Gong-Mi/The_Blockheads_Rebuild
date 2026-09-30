@@ -1,0 +1,39 @@
+{
+  "arm_exidx_end": "0x005b3278",
+  "branch_count": 0,
+  "claim": "static branch-free body map; nil-receiver dispatch outcome and uiManager internals are NOT proven here",
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "forward_selector": {
+    "cell": "0x005b3274",
+    "name": "startTouch:tapCount:index:",
+    "slot": "0x00e7e51c"
+  },
+  "forward_site": "0x005b3258",
+  "imp": "0x005b31b8",
+  "ivars": {
+    "pauseIdleTimer": {
+      "cell": "0x005b3268",
+      "offset": 3264,
+      "symbol": "OBJC_IVAR_$_World.pauseIdleTimer"
+    },
+    "uiManager": {
+      "cell": "0x005b3270",
+      "offset": 240,
+      "symbol": "OBJC_IVAR_$_World.uiManager"
+    }
+  },
+  "method": "World -[startTouch:tapCount:index:]",
+  "msgsend_stub": "0x001c281c",
+  "pic_base": "0x0105faf4",
+  "sequence": [
+    "0x5b31c4/8 load index@fp+12 into ip, tapCount@fp+8 into lr",
+    "0x5b31cc..0x5b31e0 spill point.x(r2)/y(r3)/self(r0)/_cmd(r1) and the two ints to frame/stack",
+    "0x5b31e4..0x5b3200 self->pauseIdleTimer (ivar offset 3264) = 0 (r3 = movw #0): touch start resets the server idle timer",
+    "0x5b3204..0x5b3214 receiver = self->uiManager (ivar offset 240)",
+    "0x5b3220..0x5b324c point x/y, tapCount, index staged per AAPCS (ints into [r4]/[r4,#4] via mov r4,sp; r0=uiManager, r1=sel)",
+    "0x5b3258 bl objc_msgSend stub; 0x5b325c sxtb r0 passthrough; signed-char return is the CALLEE result unchanged"
+  ],
+  "store_site": "0x005b3200",
+  "types": "c24@0:4{CGPoint=ff}8i16i20",
+  "verified_words": 48
+}

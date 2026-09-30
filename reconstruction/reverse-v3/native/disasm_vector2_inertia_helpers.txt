@@ -1,0 +1,72 @@
+            ;-- method.Vector2.operator_float__:
+            ;-- Vector2::operator float*():
+            0x004bdaac      04d04de2       sub sp, sp, 4               ; Vector2::operator float*()
+            0x004bdab0      00008de5       str r0, [sp]
+            0x004bdab4      00009de5       ldr r0, [sp]
+            0x004bdab8      04d08de2       add sp, sp, 4
+            0x004bdabc      1eff2fe1       bx lr
+            ;-- method.Vector2.operator_float_:
+            ;-- Vector2::operator*(float):
+            0x004d0368      00482de9       push {fp, lr}               ; Vector2::operator*(float)
+            0x004d036c      0db0a0e1       mov fp, sp
+            0x004d0370      10d04de2       sub sp, sp, 0x10
+            0x004d0374      102a00ee       vmov s0, r2
+            0x004d0378      04100be5       str r1, [fp, -4]
+            0x004d037c      020a8ded       vstr s0, [sp, 8]
+            0x004d0380      04101be5       ldr r1, [fp, -4]
+            0x004d0384      04108de5       str r1, [sp, 4]
+            0x004d0388      04109de5       ldr r1, [sp, 4]
+            0x004d038c      000a91ed       vldr s0, [r1]
+            0x004d0390      021a9ded       vldr s2, [sp, 8]
+            0x004d0394      010a20ee       vmul.f32 s0, s0, s2
+            0x004d0398      04109de5       ldr r1, [sp, 4]
+            0x004d039c      011a91ed       vldr s2, [r1, 4]
+            0x004d03a0      022a9ded       vldr s4, [sp, 8]
+            0x004d03a4      021a21ee       vmul.f32 s2, s2, s4
+            0x004d03a8      101a10ee       vmov r1, s0
+            0x004d03ac      102a11ee       vmov r2, s2
+            0x004d03b0      320000eb       bl method.Vector2.Vector2_float__float_ ; Vector2::Vector2(float, float)
+            0x004d03b4      00008de5       str r0, [sp]
+            0x004d03b8      0bd0a0e1       mov sp, fp
+            0x004d03bc      0088bde8       pop {fp, pc}
+            ;-- method.Vector2.lengthSquared___const:
+            ;-- Vector2::lengthSquared() const:
+            0x005dfa7c      08d04de2       sub sp, sp, 8               ; Vector2::lengthSquared() const
+            0x005dfa80      04008de5       str r0, [sp, 4]
+            0x005dfa84      00008de5       str r0, [sp]
+            0x005dfa88      000a90ed       vldr s0, [r0]
+            0x005dfa8c      011a90ed       vldr s2, [r0, 4]
+            0x005dfa90      000a20ee       vmul.f32 s0, s0, s0
+            0x005dfa94      011a21ee       vmul.f32 s2, s2, s2
+            0x005dfa98      010a30ee       vadd.f32 s0, s0, s2
+            0x005dfa9c      100a10ee       vmov r0, s0
+            0x005dfaa0      08d08de2       add sp, sp, 8
+            0x005dfaa4      1eff2fe1       bx lr
+            ;-- method.Vector2.operator__Vector2_:
+            ;-- Vector2::operator-(Vector2):
+            0x004d04b4      00482de9       push {fp, lr}               ; Vector2::operator-(Vector2)
+            0x004d04b8      0db0a0e1       mov fp, sp
+            0x004d04bc      18d04de2       sub sp, sp, 0x18
+            0x004d04c0      08c04be2       sub ip, fp, 8
+            0x004d04c4      08200be5       str r2, [fp, -8]
+            0x004d04c8      04300be5       str r3, [fp, -4]
+            0x004d04cc      0c108de5       str r1, [sp, 0xc]
+            0x004d04d0      0c109de5       ldr r1, [sp, 0xc]
+            0x004d04d4      08108de5       str r1, [sp, 8]
+            0x004d04d8      04c08de5       str ip, [sp, 4]
+            0x004d04dc      08109de5       ldr r1, [sp, 8]
+            0x004d04e0      000a91ed       vldr s0, [r1]
+            0x004d04e4      04109de5       ldr r1, [sp, 4]
+            0x004d04e8      001a91ed       vldr s2, [r1]
+            0x004d04ec      410a30ee       vsub.f32 s0, s0, s2
+            0x004d04f0      08109de5       ldr r1, [sp, 8]
+            0x004d04f4      011a91ed       vldr s2, [r1, 4]
+            0x004d04f8      04109de5       ldr r1, [sp, 4]
+            0x004d04fc      012a91ed       vldr s4, [r1, 4]
+            0x004d0500      421a31ee       vsub.f32 s2, s2, s4
+            0x004d0504      101a10ee       vmov r1, s0
+            0x004d0508      102a11ee       vmov r2, s2
+            0x004d050c      dbffffeb       bl method.Vector2.Vector2_float__float_ ; Vector2::Vector2(float, float)
+            0x004d0510      00008de5       str r0, [sp]
+            0x004d0514      0bd0a0e1       mov sp, fp
+            0x004d0518      0088bde8       pop {fp, pc}

@@ -185,7 +185,7 @@ public class GameActivity extends Activity {
         } else {
             if (mItemsAtlas == null) {
                 try {
-                    mItemsAtlas = android.graphics.BitmapFactory.decodeStream(getAssets().open("Items.png"));
+                    mItemsAtlas = android.graphics.BitmapFactory.decodeStream(getAssets().open("HDTex/Items.png"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -201,8 +201,8 @@ public class GameActivity extends Activity {
                     android.graphics.Bitmap icon = android.graphics.Bitmap.createBitmap(mItemsAtlas, col * size, row * size, size, size);
                     slot.setImageBitmap(icon);
                 } catch (Exception e) {
-                    // Fallback to color if crop fails
-                    slot.setColorFilter(0xFF888888);
+                    slot.setImageDrawable(null);
+                    android.util.Log.e("BlockheadsUI", "Invalid original item-atlas crop for type " + type, e);
                 }
             }
         }
@@ -218,8 +218,6 @@ public class GameActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         
-        initNative(getExternalFilesDir(null).getAbsolutePath());
-
         android.widget.FrameLayout layout = new android.widget.FrameLayout(this);
         mGameView = new GameView(this);
         layout.addView(mGameView);
@@ -262,7 +260,7 @@ public class GameActivity extends Activity {
         
         try {
             android.graphics.Bitmap bgBtn = android.graphics.BitmapFactory.decodeStream(getAssets().open("InventoryButtonBackground.png"));
-            android.graphics.Bitmap selBox = android.graphics.BitmapFactory.decodeStream(getAssets().open("SelectionBox40.png"));
+            android.graphics.Bitmap selBox = android.graphics.BitmapFactory.decodeStream(getAssets().open("selectionBox40.png"));
             
             android.graphics.drawable.BitmapDrawable bgDrawable = new android.graphics.drawable.BitmapDrawable(getResources(), bgBtn);
             final android.graphics.drawable.BitmapDrawable selDrawable = new android.graphics.drawable.BitmapDrawable(getResources(), selBox);
@@ -312,13 +310,15 @@ public class GameActivity extends Activity {
         
         layout.addView(hotbar, hotbarParams);
 
-        // --- Basket Button (Open Inventory) ---
+        // --- Basket Button (Open Inventory): original APK inventory glyph ---
         android.widget.ImageButton basketBtn = new android.widget.ImageButton(this);
         try {
-            android.graphics.Bitmap basketImg = android.graphics.BitmapFactory.decodeStream(getAssets().open("chestBackground.png")); // Placeholder
-            basketBtn.setImageBitmap(basketImg); 
-        } catch(Exception e) { basketBtn.setBackgroundColor(0xFF8B4513); }
-        
+            android.graphics.Bitmap basketImg = android.graphics.BitmapFactory.decodeStream(getAssets().open("inventoryButton26.png"));
+            basketBtn.setImageBitmap(basketImg);
+        } catch(Exception e) {
+            android.util.Log.e("BlockheadsUI", "Missing original inventoryButton26.png", e);
+        }
+
         basketBtn.setOnClickListener(v -> {
             if (mInventoryOverlay != null) {
                 mInventoryOverlay.setVisibility(mInventoryOverlay.getVisibility() == android.view.View.VISIBLE ? android.view.View.GONE : android.view.View.VISIBLE);
@@ -411,6 +411,52 @@ public class GameActivity extends Activity {
         android.widget.FrameLayout.LayoutParams statusParams = new android.widget.FrameLayout.LayoutParams(600, 200);
         statusParams.leftMargin = 30; statusParams.topMargin = 30;
         layout.addView(statusArea, statusParams);
+
+        // --- Sustained movement controls (left/right hold + jump tap) ---
+        android.widget.LinearLayout moveRow = new android.widget.LinearLayout(this);
+        moveRow.setOrientation(android.widget.LinearLayout.HORIZONTAL);
+        android.widget.Button leftBtn = new android.widget.Button(this);
+        leftBtn.setText("\u25C0");
+        leftBtn.setTextSize(28);
+        android.widget.Button rightBtn = new android.widget.Button(this);
+        rightBtn.setText("\u25B6");
+        rightBtn.setTextSize(28);
+        android.widget.Button jumpBtn = new android.widget.Button(this);
+        jumpBtn.setText("\u25B2");
+        jumpBtn.setTextSize(28);
+        android.view.View.OnTouchListener holdListener = (v, event) -> {
+            switch (event.getActionMasked()) {
+                case android.view.MotionEvent.ACTION_DOWN:
+                    if (v == leftBtn) handleMoveNative(-1.0f, false);
+                    else if (v == rightBtn) handleMoveNative(1.0f, false);
+                    else handleMoveNative(0.0f, true);
+                    return true;
+                case android.view.MotionEvent.ACTION_UP:
+                case android.view.MotionEvent.ACTION_CANCEL:
+                    if (v == jumpBtn) return true;
+                    clearMoveNative();
+                    return true;
+                default:
+                    return false;
+            }
+        };
+        leftBtn.setOnTouchListener(holdListener);
+        rightBtn.setOnTouchListener(holdListener);
+        jumpBtn.setOnTouchListener(holdListener);
+        android.widget.LinearLayout.LayoutParams moveBtnParams =
+                new android.widget.LinearLayout.LayoutParams(170, 170);
+        moveBtnParams.setMargins(10, 0, 10, 0);
+        moveRow.addView(leftBtn, moveBtnParams);
+        moveRow.addView(rightBtn, moveBtnParams);
+        moveRow.addView(jumpBtn, moveBtnParams);
+        android.widget.FrameLayout.LayoutParams moveParams =
+                new android.widget.FrameLayout.LayoutParams(
+                        android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
+                        android.widget.FrameLayout.LayoutParams.WRAP_CONTENT);
+        moveParams.gravity = android.view.Gravity.BOTTOM | android.view.Gravity.LEFT;
+        moveParams.leftMargin = 30;
+        moveParams.bottomMargin = 40;
+        layout.addView(moveRow, moveParams);
 
         // --- Debug Info Overlay ---
         mDebugText = new android.widget.TextView(this);
@@ -695,7 +741,7 @@ public class GameActivity extends Activity {
 
     private void updateSlotImageDirect(android.widget.ImageView view, int type) {
         if (mItemsAtlas == null) {
-            try { mItemsAtlas = android.graphics.BitmapFactory.decodeStream(getAssets().open("Items.png")); } catch (Exception e) {}
+            try { mItemsAtlas = android.graphics.BitmapFactory.decodeStream(getAssets().open("HDTex/Items.png")); } catch (Exception e) {}
         }
         if (mItemsAtlas != null && type > 0) {
             int idx = type - 1;
@@ -731,4 +777,6 @@ public class GameActivity extends Activity {
     public native void handleSwapInventoryItemNative(int fromSlot, int toSlot);
     public native void handleSleepNative();
     public native String getRecipesNative(int benchId);
+    public native void handleMoveNative(float axis, boolean jump);
+    public native void clearMoveNative();
 }

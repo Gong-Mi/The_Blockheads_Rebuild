@@ -1,0 +1,174 @@
+{
+  "arm_exidx_end": "0x00858320",
+  "branches": [
+    {
+      "address": "0x00857fbc",
+      "condition": "beq: self->world == nil -> memset struct path",
+      "destination": "0x00857fd4"
+    },
+    {
+      "address": "0x00857fd0",
+      "condition": "b: stret done -> join",
+      "destination": "0x00857ff4"
+    },
+    {
+      "address": "0x00857ffc",
+      "condition": "bne: r1.byte[0xc] != 0 -> cave computation",
+      "destination": "0x0085800c"
+    },
+    {
+      "address": "0x00858008",
+      "condition": "b: gate byte == 0 -> return 0",
+      "destination": "0x0085829c"
+    },
+    {
+      "address": "0x00858224",
+      "condition": "beq: self->world == nil -> memset struct 2",
+      "destination": "0x0085823c"
+    },
+    {
+      "address": "0x00858238",
+      "condition": "b: stret 2 done -> join",
+      "destination": "0x0085825c"
+    },
+    {
+      "address": "0x00858264",
+      "condition": "bne: r2.byte[0xc] != 2 -> keep threshold 0.04",
+      "destination": "0x00858270"
+    },
+    {
+      "address": "0x00858284",
+      "condition": "bpl: cave >= threshold -> return 0",
+      "destination": "0x00858294"
+    },
+    {
+      "address": "0x00858290",
+      "condition": "b: return 1 join",
+      "destination": "0x0085829c"
+    },
+    {
+      "address": "0x008582bc",
+      "condition": "bne: canary mismatch -> __stack_chk_fail",
+      "destination": "0x008582d0"
+    }
+  ],
+  "calls": [
+    {
+      "receiver_route": "world (self+ivar 4): loaded 0x0085808c..0x0085809c; float arg s0 = x/32.0f ([sp+0x50]); result int -> float, xq = (x/32)/w -> [sp+0x94]",
+      "route": "blx lr",
+      "selector": "worldWidthMacro",
+      "site": "0x008580dc"
+    },
+    {
+      "receiver_route": "caveNoiseFunctionA (self+ivar 4 via slot 0x0105dd78): loaded 0x0085812c..0x0085813c; X=(double)xq r2:r3, Y=(double)yq at [sp], octaves=2 at [sp+8] (movw r7,2 0x0085804c); result double -> [sp+0x8c]",
+      "route": "blx lr",
+      "selector": "getX:Y:octaves:",
+      "site": "0x0085816c"
+    },
+    {
+      "receiver_route": "caveNoiseFunctionB (self+ivar 8 via slot 0x0105dd74): loaded 0x0085817c..0x0085818c; X=(double)xq, Y=(double)yq at [sp], octaves=1 at [sp+8] (movw ip,1 0x0085802c); result double * 0.05 -> [sp+0x88]",
+      "route": "blx lr",
+      "selector": "getX:Y:octaves:",
+      "site": "0x008581bc"
+    },
+    {
+      "callee": "objc_msgSend_stret",
+      "note": "sret dst &fp-0x60 (sub r0,fp,0x60 0x00857fc0), receiver self->world (loaded 0x00857f98..0x00857fa4 via slot 0x0105dd4c), nil-guarded (beq 0x00857fbc -> memset 0x00857fd4..0x00857ff0); 64-byte struct (movw r2,0x40); gate byte read ldrsb [fp,-0x54] = struct offset 0xc",
+      "route": "bl PLT",
+      "selector": "customRules",
+      "site": "0x00857fcc"
+    },
+    {
+      "callee": "objc_msgSend_stret",
+      "note": "SECOND identical query: sret dst &fp-0xa0, receiver self->world (reloaded 0x00858200..0x00858208), nil-guarded (beq 0x00858224 -> memset); selector byte read ldrsb [fp,-0x94] = struct offset 0xc; value 2 selects threshold 0.2 over 0.04 (bne 0x00858264)",
+      "route": "bl PLT",
+      "selector": "customRules",
+      "site": "0x00858234"
+    },
+    {
+      "callee": "memset",
+      "note": "nil path: memset(&fp-0x60, 0, 0x40)",
+      "route": "bl PLT",
+      "site": "0x00857ff0"
+    },
+    {
+      "callee": "memset",
+      "note": "nil path 2: memset(&fp-0xa0, 0, 0x40)",
+      "route": "bl PLT",
+      "site": "0x00858258"
+    },
+    {
+      "callee": "__stack_chk_fail",
+      "note": "canary mismatch path: guard slot 0x0105b7e0 loaded at 0x00857f74, compared at 0x008582ac..0x008582bc",
+      "route": "bl PLT",
+      "site": "0x008582d0"
+    }
+  ],
+  "claim": "static bounded-body map with per-instruction anchors; customRules struct layout beyond byte 0xc, NoiseFunction internals and runtime values are outside this body",
+  "constants": {
+    "0x008582d8": {
+      "kind": "double",
+      "value": 0.04
+    },
+    "0x008582e0": {
+      "kind": "double",
+      "value": 0.05
+    },
+    "0x008582e8": {
+      "kind": "double",
+      "value": 0.2
+    },
+    "0x00858310": {
+      "kind": "float",
+      "value": 32.0
+    }
+  },
+  "decision": "Rules r1 = [self->world customRules] (stret, 64 bytes, memset-0 nil path); if r1.byte[0xc] == 0 return 0. xq = (x/32.0f)/(float)[world worldWidthMacro]; yq = (float)(y-faultOffset)/32.0f/self->yHeightDivider (float ivar). cave = fabsf((float)([caveNoiseFunctionA getX:xq Y:yq octaves:2] + 0.05*[caveNoiseFunctionB getX:xq Y:yq octaves:1])). Rules r2 = SECOND identical [world customRules] query; threshold = (r2.byte[0xc]==2) ? 0.2 : 0.04. return cave < threshold (sxtb).",
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "imp": "0x00857f48",
+  "ivars": {
+    "caveNoiseFunctionA": {
+      "cell": "0x00858308",
+      "offset": 52,
+      "slot": "0x0105dd78",
+      "symbol": "OBJC_IVAR_$_WorldTileLoader.caveNoiseFunctionA"
+    },
+    "caveNoiseFunctionB": {
+      "cell": "0x00858304",
+      "offset": 56,
+      "slot": "0x0105dd74",
+      "symbol": "OBJC_IVAR_$_WorldTileLoader.caveNoiseFunctionB"
+    },
+    "world": {
+      "cell": "0x008582f4",
+      "offset": 4,
+      "slot": "0x0105dd4c",
+      "symbol": "OBJC_IVAR_$_WorldTileLoader.world"
+    },
+    "yHeightDivider": {
+      "cell": "0x0085830c",
+      "offset": 244,
+      "slot": "0x0105dd48",
+      "symbol": "OBJC_IVAR_$_WorldTileLoader.yHeightDivider"
+    }
+  },
+  "method": "WorldTileLoader -[isCaveForX:y:faultOffset:]",
+  "msgsend_got_slot": "0x0105b7a0",
+  "pic_base": "0x0105faf4",
+  "selectors": {
+    "customRules": {
+      "cell": "0x008582f0",
+      "slot": "0x00e823f4"
+    },
+    "getX:Y:octaves:": {
+      "cell": "0x00858300",
+      "slot": "0x00e82420"
+    },
+    "worldWidthMacro": {
+      "cell": "0x00858314",
+      "slot": "0x00e823a8"
+    }
+  },
+  "types": "c20@0:4i8i12i16",
+  "verified_words": 246
+}
