@@ -72,6 +72,25 @@ def main() -> None:
         ["0x0092c4a4", "0x0092c5d4", "0x005b34a0", "does not call these recovered methods"],
     )
     require(
+        NATIVE / "gameview_canceltouch_batch.json",
+        [
+            '"batch": "GameView cancelTouch: -> World cancelTouch:index: -> doEndTouch:wasCancelled:1 (tail-merge of the World forwarding pair)"',
+            '"verified_interval_words": 153',
+            '"verified_interval_words": 33',
+            '"world_forwarding_pair_tail_merge": true',
+            '"apk_integration": false',
+            '"original_runtime_differential": false',
+        ],
+    )
+    require(
+        NATIVE / "disasm_world_canceltouch_index.txt",
+        ["# World -[cancelTouch:index:]", "# implementation: 0x005b33ac", "# ARM.exidx end: 0x005b3430"],
+    )
+    require(
+        NATIVE / "GAMEVIEW_CANCELTOUCH_BATCH.md",
+        ["0x005b33ac", "wasCancelled", "Tail-merge", "0x92c6e8"],
+    )
+    require(
         NATIVE / "gameview_movetouch.json",
         [
             '"batch": "GameView moveTouch: -> World moveTouch:index: forwarding tail"',

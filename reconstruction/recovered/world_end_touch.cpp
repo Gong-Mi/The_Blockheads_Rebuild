@@ -8,4 +8,12 @@ void worldEndTouch(WorldEndTouchSink* self, FrameVector2 point,
     // wasCancelled stack word is the pinned constant 0 at 0x005b348c/0x005b3490.
     if (self != nullptr) self->doEndTouch(point, 0, index);
 }
+void worldCancelTouch(WorldEndTouchSink* self, FrameVector2 point,
+                      std::int32_t index) {
+    // World -[cancelTouch:index:] (0x005b33ac) is the same forwarding body:
+    // [self doEndTouch:point wasCancelled:1 index:index]. The pinning tool
+    // proves the two 30-word intervals differ only at the wasCancelled mov
+    // (+0x5c) and the site-relative bl displacement (+0x70, same stub).
+    if (self != nullptr) self->doEndTouch(point, 1, index);
+}
 }

@@ -13,4 +13,8 @@ public:
 // doEndTouch:wasCancelled:index: with wasCancelled pinned to 0.
 void worldEndTouch(WorldEndTouchSink* self, FrameVector2 point,
                    std::int32_t index);
+// World -[cancelTouch:index:] (0x005b33ac): the tail-merge twin of
+// worldEndTouch with wasCancelled pinned to 1 (byte-diff at code +0x5c only).
+void worldCancelTouch(WorldEndTouchSink* self, FrameVector2 point,
+                      std::int32_t index);
 }

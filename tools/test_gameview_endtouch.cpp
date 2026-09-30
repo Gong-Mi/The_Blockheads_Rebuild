@@ -37,6 +37,7 @@ struct World final : FrameWorld {
         events.push_back("world-end"); lastPoint=p; lastIndex=i;
         if (onEnd) onEnd();
     }
+    void cancelTouch(FrameVector2, std::int32_t) override {}
 };
 struct Menu final : GameViewEndTouchMenuUI {
     int calls{}; FrameVector2 point{};

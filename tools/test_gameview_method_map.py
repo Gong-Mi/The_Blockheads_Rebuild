@@ -110,6 +110,36 @@ class MethodMapTest(unittest.TestCase):
         self.assertIn('gameview_end_touch.cpp',cmake)
         self.assertIn('world_end_touch.cpp',cmake)
 
+    def test_primary_cancel_touch_static_manifest_and_tail_merge(self):
+        report=json.loads((NATIVE/'gameview_canceltouch_batch.json').read_text())
+        self.assertEqual(report['elf_sha256'],'733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7')
+        self.assertTrue(report['world_forwarding_pair_tail_merge'])
+        methods={(m['class'],m['selector']):m for m in report['methods']}
+        self.assertEqual(set(methods),{('GameView','cancelTouch:'),('World','cancelTouch:index:')})
+        view=methods[('GameView','cancelTouch:')]
+        self.assertEqual((view['implementation'],view['verified_interval_words'],view['code_words'],view['literal_pool_words']),
+                         ('0x0092c638',153,140,13))
+        self.assertEqual({call['site'] for call in view['calls']},
+                         {'0x0092c6e8','0x0092c72c','0x0092c778','0x0092c818'})
+        menu=next(call for call in view['calls'] if call['site']=='0x0092c6e8')
+        self.assertIn('endTouch:',menu['selector_route'])  # menu receives END, not cancel
+        self.assertEqual({branch['site'] for branch in view['branches']},
+                         {'0x0092c680','0x0092c6a8','0x0092c6ec','0x0092c738','0x0092c784',
+                          '0x0092c7a8','0x0092c7cc','0x0092c83c'})
+        self.assertEqual(view['ivar_cells']['startTouchHasntMoved']['offset'],486)
+        world=methods[('World','cancelTouch:index:')]
+        self.assertEqual((world['implementation'],world['verified_interval_words'],world['code_words'],world['literal_pool_words']),
+                         ('0x005b33ac',33,31,2))
+        self.assertEqual([call['site'] for call in world['calls']],['0x005b341c'])
+        self.assertIn('wasCancelled literal 1',world['calls'][0]['selector_route'])
+        self.assertFalse(report['replacement_boundary']['apk_integration'])
+        table=(NATIVE/'libApplication_objc_methods.tsv').read_text()
+        self.assertIn(chr(9).join(['0x005b33ac','World','instance','cancelTouch:index:']),table)
+        self.assertTrue((ROOT/'reconstruction/recovered/gameview_cancel_touch.cpp').is_file())
+        self.assertTrue((ROOT/'tools/test_gameview_canceltouch.cpp').is_file())
+        cmake=(ROOT/'reconstruction/recovered/CMakeLists.txt').read_text()
+        self.assertIn('test_gameview_canceltouch',cmake)
+
 
 if __name__=='__main__':
     unittest.main()

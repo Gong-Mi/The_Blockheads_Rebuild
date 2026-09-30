@@ -25,6 +25,7 @@ struct World final: FrameWorld {
  std::int8_t touchIsInUI(FrameVector2) override{return 0;}
  void moveTouch(FrameVector2, std::int32_t) override {}
  void endTouch(FrameVector2, std::int32_t) override {}
+ void cancelTouch(FrameVector2, std::int32_t) override {}
 };
 struct Runtime final: GameViewInputRuntime,InputUI {
  std::vector<std::string> events; bool buttons=false,pan=true; FrameVector2 delivered{};
