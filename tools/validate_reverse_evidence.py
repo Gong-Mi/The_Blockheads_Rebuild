@@ -644,6 +644,25 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "WORLD_TIME_DOMAIN.md",
+        [
+            "getDayNightFractionForX:atWorldTime:",
+            "0x00582ad8",
+            "900.0",
+            "6.283185307179586",
+            "worldTime - saveTime > 1800.0",
+        ],
+    )
+    require(
+        NATIVE / "world_time_domain.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "getDayNightFractionForX:atWorldTime:",
+            '"seconds_per_day_divisor"',
+            "900.0",
+        ],
+    )
+    require(
         NATIVE / "GAMEVIEW_TOUCH_CALLBACKS.md",
         [
             "| endTouch: | 0x0092c3f4..0x0092c638 | 145 | 4 |",
