@@ -1,0 +1,37 @@
+name: Frida tools
+
+on:
+  push:
+    branches: [ main, master, rebuild-v2, reverse-v3 ]
+    paths: [ 'tools/fetch_frida_tools.py', '.github/workflows/frida-tools.yml' ]
+  workflow_dispatch:
+
+jobs:
+  fetch-and-verify:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Fetch pinned Frida assets
+      run: python3 tools/fetch_frida_tools.py --out-dir /tmp/frida-tools
+
+    - name: Sanity check frida-server binaries
+      run: |
+        for f in /tmp/frida-tools/frida-server-android-arm64 \
+                 /tmp/frida-tools/frida-server-android-arm; do
+          echo "== $f"
+          file "$f"
+          readelf -h "$f" | grep -E 'Machine|Class'
+        done
+        # The tracing target is the original 1.7.6 app (dumpsys:
+        # primaryCpuAbi=armeabi-v7a), i.e. a 32-bit ARM process: the arm
+        # server is the one that can attach; arm64 is kept for the device's
+        # own 64-bit tooling.
+
+    - name: Upload verified assets
+      uses: actions/upload-artifact@v4
+      with:
+        name: frida-tools
+        path: /tmp/frida-tools/
+        retention-days: 7
