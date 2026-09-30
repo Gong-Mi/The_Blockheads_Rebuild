@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 project(BlockheadsRecoveredView LANGUAGES CXX)
 
 add_library(blockheads_recovered_view STATIC
-    gameview_update.cpp projection_update.cpp world_view_contracts.cpp world_translation.cpp sound_manager.cpp gameview_input.cpp gameview_starttouch.cpp gameview_move_touch.cpp world_move_touch.cpp
+    gameview_update.cpp projection_update.cpp world_view_contracts.cpp world_translation.cpp sound_manager.cpp gameview_input.cpp gameview_starttouch.cpp gameview_move_touch.cpp world_move_touch.cpp gameview_end_touch.cpp world_end_touch.cpp gameview_cancel_touch.cpp
     pinch_return.cpp translation_return.cpp zoom_settle.cpp)
 target_include_directories(blockheads_recovered_view PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(blockheads_recovered_view PUBLIC cxx_std_17)
@@ -276,6 +276,12 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         add_executable(test_gameview_movetouch ../../tools/test_gameview_movetouch.cpp)
         target_link_libraries(test_gameview_movetouch PRIVATE blockheads_recovered_view)
         add_test(NAME gameview_movetouch COMMAND test_gameview_movetouch)
+        add_executable(test_gameview_endtouch ../../tools/test_gameview_endtouch.cpp)
+        target_link_libraries(test_gameview_endtouch PRIVATE blockheads_recovered_view)
+        add_test(NAME gameview_endtouch COMMAND test_gameview_endtouch)
+        add_executable(test_gameview_canceltouch ../../tools/test_gameview_canceltouch.cpp)
+        target_link_libraries(test_gameview_canceltouch PRIVATE blockheads_recovered_view)
+        add_test(NAME gameview_canceltouch COMMAND test_gameview_canceltouch)
         # Standalone numerical recoveries also remain independently executable.
         foreach(slice scroll_inertia pinch_return pinch_inertia translation_return zoom_settle zoom_initial_cap)
             add_executable(test_${slice} ../../tools/test_${slice}.cpp ${slice}.cpp)
@@ -525,7 +531,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
                              ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_arm_goldens.py)
         endif()
         # Tests using assert must still exercise their contracts in Release.
-        foreach(test_target test_gameview_update test_projection_update test_world_view_contracts test_world_translation test_sound_manager test_original_save_format test_gameview_starttouch test_original_client_world test_gameview_movetouch)
+        foreach(test_target test_gameview_update test_projection_update test_world_view_contracts test_world_translation test_sound_manager test_original_save_format test_gameview_starttouch test_original_client_world test_gameview_movetouch test_gameview_endtouch test_gameview_canceltouch)
             target_compile_options(${test_target} PRIVATE -UNDEBUG)
         endforeach()
     endif()

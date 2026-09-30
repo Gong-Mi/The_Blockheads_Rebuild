@@ -6,6 +6,7 @@ namespace blockheads::recovered {
 struct GameViewStartTouchState {
     std::int8_t startTouchHasntMoved{};
     std::int8_t primaryTouchIsActiveInUI{};
+    std::int8_t secondaryTouchIsActiveInUI{};
     FrameVector2 startTouchPos{};
 };
 class StartTouchMenuUI {

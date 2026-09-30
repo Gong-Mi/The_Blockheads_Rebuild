@@ -10,10 +10,10 @@ have recovered semantics, replacement code, or behavioral verification.
 | stage | count | meaning |
 |---|---:|---|
 | indexed | 10478 | present in the method map |
-| refs | 170 | explicit implementation owner in refs/disassembly evidence |
-| cfg | 169 | explicit IMP owner in CFG statistics or bounded disassembly; not a completeness claim |
-| semantics | 58 | explicit reviewed method records and their stated limits |
-| implemented | 58 | explicit source/test/evidence records; not gameplay integration |
+| refs | 249 | explicit implementation owner in refs/disassembly evidence |
+| cfg | 248 | explicit IMP owner in CFG statistics or bounded disassembly; not a completeness claim |
+| semantics | 63 | explicit reviewed method records and their stated limits |
+| implemented | 63 | explicit source/test/evidence records; not gameplay integration |
 | behavior-verified | 0 | controlled original-runtime evidence, not local fixtures |
 
 Unknown/conditional/indirect cases remain unknown. This file is an index,

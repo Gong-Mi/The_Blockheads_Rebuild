@@ -21,6 +21,12 @@ public:
     virtual std::int8_t touchIsInUI(FrameVector2 point) = 0;
     // World -[moveTouch:index:] is a distinct indexed UI-forwarding selector.
     virtual void moveTouch(FrameVector2 point, std::int32_t index) = 0;
+    // World -[endTouch:index:] (0x005b3430) forwards to doEndTouch: with
+    // wasCancelled pinned to 0; GameView -[endTouch:] sends index literal 0.
+    virtual void endTouch(FrameVector2 point, std::int32_t index) = 0;
+    // World -[cancelTouch:index:] (0x005b33ac) is the tail-merge twin: same
+    // forwarding body with wasCancelled pinned to 1.
+    virtual void cancelTouch(FrameVector2 point, std::int32_t index) = 0;
 };
 class FrameDefaults {
 public:

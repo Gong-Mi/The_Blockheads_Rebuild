@@ -19,8 +19,12 @@ The gesture has 30 branch/join entries (20 conditional plus 10 unconditional); t
 | `GameView startTouch:withTouch:withEvent:` | `0x0092be2c..0x0092c148` | 199 (includes pool) | 7 / 8 |
 | `GameView moveTouch:` | `0x0092c148..0x0092c3f4` | 171 (includes pool) | 4 / 10 |
 | `World moveTouch:index:` | `0x005b3278..0x005b3308` | 36 (includes pool) | 1 / 0 |
+| `GameView endTouch:` | `0x0092c3f4..0x0092c638` | 145 (includes pool) | 4 / 9 |
+| `World endTouch:index:` | `0x005b3430..0x005b34b4` | 33 (includes pool) | 1 / 0 |
+| `GameView cancelTouch:` | `0x0092c638..0x0092c89c` | 153 (includes pool) | 4 / 8 |
+| `World cancelTouch:index:` | `0x005b33ac..0x005b3430` | 33 (includes pool) | 1 / 0 |
 
-Primary move plus its World forwarding tail are documented in `GAMEVIEW_MOVETOUCH.md`; the dynamic `UIManager`/menu callees are still external boundaries.
+Primary move plus its World forwarding tail are documented in `GAMEVIEW_MOVETOUCH.md`; primary end plus its World `doEndTouch:wasCancelled:index:` forwarding tail in `GAMEVIEW_ENDTOUCH.md`; primary cancel plus the World forwarding pair (byte-pinned tail-merge, wasCancelled 1/0) in `GAMEVIEW_CANCELTOUCH_BATCH.md`; the dynamic `UIManager`/menu callees are still external boundaries.
 
 ## Recovered behavior
 
@@ -39,7 +43,7 @@ Primary move plus its World forwarding tail are documented in `GAMEVIEW_MOVETOUC
 
 Mandatory external calls remain interfaces: uiManager/currentTouchIsInAnyButtons, allowsPanning, setTranslatingToGoal, startPinchOrPan and GameView.updateTranslation. These callee bodies are NOT declared recovered. Existing FrameWorld methods and platform float classification also define acceptance boundaries. `std::isnan/isfinite` models classification, not imported implementation/FPSCR exception identity.
 
-This is single-owner synchronous callback execution, not an ObjC memory overlay. Primary start/move bodies now have typed recovered-method modules; primary end/cancel, secondary callbacks, init/window sizing, World.update and Android gesture-to-frame plumbing remain unfinished. No original/runtime differential, Android foreground or device gameplay test was run. Current input/update/sound manifest: 18 methods (GameView 7, World 8, MJSoundManager 3) implemented as recovered-method modules; zero original-runtime behavior-verified.
+This is single-owner synchronous callback execution, not an ObjC memory overlay. All four primary bodies (start/move/end/cancel) now have typed recovered-method modules; secondary callbacks, init/window sizing, World.update and Android gesture-to-frame plumbing remain unfinished. No original/runtime differential, Android foreground or device gameplay test was run. Current input/update/sound manifest: 22 methods (GameView 9, World 10, MJSoundManager 3) implemented as recovered-method modules; zero original-runtime behavior-verified.
 
 ## Verification and reproduction
 
