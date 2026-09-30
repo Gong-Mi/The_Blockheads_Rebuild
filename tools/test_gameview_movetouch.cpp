@@ -55,6 +55,7 @@ struct World final : FrameWorld {
         if (onMove) onMove();
         worldMoveTouch(ui, p, i);
     }
+    void endTouch(FrameVector2, std::int32_t) override {}
 };
 struct Fixture {
     std::vector<std::string> events;

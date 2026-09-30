@@ -47,6 +47,7 @@ struct World final : FrameWorld {
         return inUIResult;
     }
     void moveTouch(FrameVector2, std::int32_t) override {}
+    void endTouch(FrameVector2, std::int32_t) override {}
 };
 struct Menu final : StartTouchMenuUI {
     FrameVector2 point{};

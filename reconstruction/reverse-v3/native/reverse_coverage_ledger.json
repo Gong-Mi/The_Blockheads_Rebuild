@@ -4,10 +4,10 @@
   "unique_implementation_count": 10478,
   "stage_counts": {
     "indexed": 10478,
-    "refs": 74,
-    "cfg": 73,
-    "semantics": 39,
-    "implemented": 39,
+    "refs": 76,
+    "cfg": 75,
+    "semantics": 41,
+    "implemented": 41,
     "behavior-verified": 0
   },
   "entries": [
@@ -90213,15 +90213,28 @@
       "types": "v20@0:4{CGPoint=ff}8i16",
       "stages": {
         "indexed": true,
-        "refs": false,
-        "cfg": false,
-        "semantics": false,
-        "implemented": false,
+        "refs": true,
+        "cfg": true,
+        "semantics": true,
+        "implemented": true,
         "behavior-verified": false
       },
-      "semantic_status": "unknown",
-      "implementation_status": "not-audited",
-      "behavior_status": "not-tested"
+      "semantic_status": "reviewed-with-recorded-boundaries",
+      "implementation_status": "explicit-record",
+      "behavior_status": "not-tested",
+      "implementation_record": {
+        "implementation": "0x005b3430",
+        "class": "World",
+        "kind": "instance",
+        "selector": "endTouch:index:",
+        "types": "v20@0:4{CGPoint=ff}8i16",
+        "entry_point": "blockheads::recovered::worldEndTouch",
+        "source": "reconstruction/recovered/world_end_touch.cpp",
+        "test": "tools/test_gameview_endtouch.cpp",
+        "evidence": "reconstruction/reverse-v3/native/GAMEVIEW_ENDTOUCH.md",
+        "integration": "recovered-method-module",
+        "scope": "Complete 31-code-word forwarding body: nil-safe single self-dispatch of doEndTouch:wasCancelled:index: preserving CGPoint and index with signed-char wasCancelled pinned to 0, no local state writes. Typed host fixture only; doEndTouch body, UI consumers, APK wiring and original-runtime equivalence remain unverified."
+      }
     },
     {
       "implementation": "0x005b34b4",
@@ -136326,15 +136339,28 @@
       "types": "v16@0:4{CGPoint=ff}8",
       "stages": {
         "indexed": true,
-        "refs": false,
-        "cfg": false,
-        "semantics": false,
-        "implemented": false,
+        "refs": true,
+        "cfg": true,
+        "semantics": true,
+        "implemented": true,
         "behavior-verified": false
       },
-      "semantic_status": "unknown",
-      "implementation_status": "not-audited",
-      "behavior_status": "not-tested"
+      "semantic_status": "reviewed-with-recorded-boundaries",
+      "implementation_status": "explicit-record",
+      "behavior_status": "not-tested",
+      "implementation_record": {
+        "implementation": "0x0092c3f4",
+        "class": "GameView",
+        "kind": "instance",
+        "selector": "endTouch:",
+        "types": "v16@0:4{CGPoint=ff}8",
+        "entry_point": "blockheads::recovered::endTouch",
+        "source": "reconstruction/recovered/gameview_end_touch.cpp",
+        "test": "tools/test_gameview_endtouch.cpp",
+        "evidence": "reconstruction/reverse-v3/native/GAMEVIEW_ENDTOUCH.md",
+        "integration": "recovered-method-module",
+        "scope": "Static complete bounded body (133 code words, 12 literal-pool words), all four calls/nine branches, receiver reloads, primary-or-idle-UI send condition and universal primaryTouchIsActiveInUI clear represented in a typed host module. Selector/ivar cells re-resolved through the pinned GOT/selref walk. Synthetic callback tests O0/O2 only; doEndTouch/mainMenuUI bodies, Android adapter and original-runtime equivalence remain unverified."
+      }
     },
     {
       "implementation": "0x0092c638",

@@ -63,8 +63,8 @@ jobs:
           --json /tmp/reverse-coverage-ledger.json \
           --markdown /tmp/reverse-coverage-ledger.md
         grep -F "Methods: 10478" /tmp/reverse-coverage-ledger.md
-        grep -F "semantics | 39" /tmp/reverse-coverage-ledger.md
-        grep -F "implemented | 39" /tmp/reverse-coverage-ledger.md
+        grep -F "semantics | 41" /tmp/reverse-coverage-ledger.md
+        grep -F "implemented | 41" /tmp/reverse-coverage-ledger.md
         grep -F "behavior-verified | 0" /tmp/reverse-coverage-ledger.md
       working-directory: .
 
@@ -134,8 +134,8 @@ jobs:
           build="/tmp/blockheads-starttouch-O${opt}"
           cmake -S reconstruction/recovered -B "$build" \
             -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE="-O${opt} -DNDEBUG"
-          cmake --build "$build" --parallel 2 --target test_gameview_starttouch test_gameview_movetouch
-          ctest --test-dir "$build" -R '^(gameview_starttouch|gameview_movetouch)$' --output-on-failure
+          cmake --build "$build" --parallel 2 --target test_gameview_starttouch test_gameview_movetouch test_gameview_endtouch
+          ctest --test-dir "$build" -R '^(gameview_starttouch|gameview_movetouch|gameview_endtouch)$' --output-on-failure
         done
 
     - name: Test recovered zoom settling paths
@@ -245,6 +245,7 @@ jobs:
         path: |
           /tmp/blockheads-methods-O2/test_gameview_starttouch
           /tmp/blockheads-methods-O2/test_gameview_movetouch
+          /tmp/blockheads-methods-O2/test_gameview_endtouch
         if-no-files-found: error
 
     - name: Upload APK

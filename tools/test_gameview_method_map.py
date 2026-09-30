@@ -73,6 +73,43 @@ class MethodMapTest(unittest.TestCase):
         self.assertIn('gameview_move_touch.cpp',cmake)
         self.assertIn('world_move_touch.cpp',cmake)
 
+    def test_primary_end_touch_static_manifest_and_adapter_boundary(self):
+        report=json.loads((NATIVE/'gameview_endtouch.json').read_text())
+        self.assertEqual(report['elf_sha256'],'733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7')
+        methods={(m['class'],m['selector']):m for m in report['methods']}
+        self.assertEqual(set(methods),{('GameView','endTouch:'),('World','endTouch:index:')})
+        view=methods[('GameView','endTouch:')]
+        self.assertEqual((view['implementation'],view['verified_interval_words'],view['code_words'],view['literal_pool_words']),
+                         ('0x0092c3f4',145,133,12))
+        self.assertEqual({call['site'] for call in view['calls']},
+                         {'0x0092c4a4','0x0092c4e8','0x0092c534','0x0092c5d4'})
+        indexed=next(call for call in view['calls'] if call['site']=='0x0092c5d4')
+        self.assertIn('index literal 0',indexed['selector_route'])
+        self.assertEqual({branch['site'] for branch in view['branches']},
+                         {'0x0092c43c','0x0092c464','0x0092c4a8','0x0092c4f4','0x0092c540',
+                          '0x0092c564','0x0092c588','0x0092c5d8','0x0092c5dc'})
+        # Pinned cell resolution: ivar offsets and selector names re-resolved by the tool.
+        self.assertEqual(view['ivar_cells']['secondaryTouchIsActiveInUI']['offset'],508)
+        self.assertEqual(view['ivar_cells']['primaryTouchIsActiveInUI']['offset'],496)
+        self.assertEqual(set(view['selector_cells']),{'endTouch:','loadComplete','isSimulating','endTouch:index:'})
+        world=methods[('World','endTouch:index:')]
+        self.assertEqual((world['implementation'],world['verified_interval_words'],world['code_words'],world['literal_pool_words']),
+                         ('0x005b3430',33,31,2))
+        self.assertEqual([call['site'] for call in world['calls']],['0x005b34a0'])
+        self.assertIn('wasCancelled',world['calls'][0]['selector_route'])
+        self.assertEqual(list(world['selector_cells']),['doEndTouch:wasCancelled:index:'])
+        self.assertFalse(report['replacement_boundary']['apk_integration'])
+        self.assertFalse(report['replacement_boundary']['original_runtime_differential'])
+        table=(NATIVE/'libApplication_objc_methods.tsv').read_text()
+        self.assertIn(chr(9).join(['0x005b3308','World','instance','doEndTouch:wasCancelled:index:']),table)
+        self.assertTrue((ROOT/'reconstruction/recovered/gameview_end_touch.cpp').is_file())
+        self.assertTrue((ROOT/'reconstruction/recovered/world_end_touch.cpp').is_file())
+        self.assertTrue((ROOT/'tools/test_gameview_endtouch.cpp').is_file())
+        cmake=(ROOT/'reconstruction/recovered/CMakeLists.txt').read_text()
+        self.assertIn('test_gameview_endtouch',cmake)
+        self.assertIn('gameview_end_touch.cpp',cmake)
+        self.assertIn('world_end_touch.cpp',cmake)
+
 
 if __name__=='__main__':
     unittest.main()

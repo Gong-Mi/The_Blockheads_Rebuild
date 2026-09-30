@@ -44,7 +44,32 @@ def main() -> None:
             "0x0092c148\tGameView\tinstance\tmoveTouch:\tv16@0:4{CGPoint=ff}8",
             "0x005b3278\tWorld\tinstance\tmoveTouch:index:\tv20@0:4{CGPoint=ff}8i16",
             "0x00ad8048\tUIManager\tinstance\tmoveTouch:index:\tv20@0:4{CGPoint=ff}8i16",
+            "0x0092c3f4\tGameView\tinstance\tendTouch:\tv16@0:4{CGPoint=ff}8",
+            "0x005b3430\tWorld\tinstance\tendTouch:index:\tv20@0:4{CGPoint=ff}8i16",
+            "0x005b3308\tWorld\tinstance\tdoEndTouch:wasCancelled:index:\tv24@0:4{CGPoint=ff}8c16i20",
         ],
+    )
+    require(
+        NATIVE / "gameview_endtouch.json",
+        [
+            '"batch": "GameView endTouch: -> World endTouch:index: -> doEndTouch:wasCancelled:index: forwarding"',
+            '"verified_interval_words": 145',
+            '"verified_interval_words": 33',
+            '"apk_integration": false',
+            '"original_runtime_differential": false',
+        ],
+    )
+    require(
+        NATIVE / "disasm_gameview_endtouch.txt",
+        ["# GameView -[endTouch:]", "# implementation: 0x0092c3f4", "# ARM.exidx end: 0x0092c638"],
+    )
+    require(
+        NATIVE / "disasm_world_endtouch_index.txt",
+        ["# World -[endTouch:index:]", "# implementation: 0x005b3430", "# ARM.exidx end: 0x005b34b4"],
+    )
+    require(
+        NATIVE / "GAMEVIEW_ENDTOUCH.md",
+        ["0x0092c4a4", "0x0092c5d4", "0x005b34a0", "does not call these recovered methods"],
     )
     require(
         NATIVE / "gameview_movetouch.json",
