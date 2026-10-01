@@ -336,6 +336,34 @@ jobs:
         /tmp/test_inventory
       working-directory: .
 
+    - name: Upload recovered inventory host contracts
+      uses: actions/upload-artifact@v4
+      with:
+        name: recovered-inventory-linux-x86_64
+        path: |
+          /tmp/blockheads-methods-O2/libblockheads_recovered_inventory.a
+          /tmp/blockheads-methods-O2/test_inventory_item
+          /tmp/blockheads-methods-O2/test_inventory_capacity
+          /tmp/blockheads-methods-O2/test_inventory_rules
+          /tmp/blockheads-methods-O2/test_inventory_add
+          /tmp/blockheads-methods-O2/test_inventory_chain
+          /tmp/blockheads-methods-O2/test_inventory_pickup
+          /tmp/blockheads-methods-O2/test_inventory_ownership
+          /tmp/blockheads-methods-O2/test_inventory_pickup_currency
+        if-no-files-found: error
+
+    - name: Upload recovered GameView touch host contracts
+      uses: actions/upload-artifact@v4
+      with:
+        name: recovered-gameview-touch-linux-x86_64
+        path: |
+          /tmp/blockheads-methods-O2/test_gameview_starttouch
+          /tmp/blockheads-methods-O2/test_gameview_movetouch
+          /tmp/blockheads-methods-O2/test_gameview_endtouch
+          /tmp/blockheads-methods-O2/test_gameview_canceltouch
+          /tmp/blockheads-methods-O2/test_gameview_secondarytouch
+        if-no-files-found: error
+
   # Packaging lane: the real Gradle build and the APK contract. Cached so a
   # tools-only change does not pay a cold Gradle build.
   build:
@@ -379,34 +407,6 @@ jobs:
     - name: Validate packaged APK contract
       run: python3 tools/validate_apk.py app/build/outputs/apk/debug/app-debug.apk
       working-directory: .
-
-    - name: Upload recovered inventory host contracts
-      uses: actions/upload-artifact@v4
-      with:
-        name: recovered-inventory-linux-x86_64
-        path: |
-          /tmp/blockheads-methods-O2/libblockheads_recovered_inventory.a
-          /tmp/blockheads-methods-O2/test_inventory_item
-          /tmp/blockheads-methods-O2/test_inventory_capacity
-          /tmp/blockheads-methods-O2/test_inventory_rules
-          /tmp/blockheads-methods-O2/test_inventory_add
-          /tmp/blockheads-methods-O2/test_inventory_chain
-          /tmp/blockheads-methods-O2/test_inventory_pickup
-          /tmp/blockheads-methods-O2/test_inventory_ownership
-          /tmp/blockheads-methods-O2/test_inventory_pickup_currency
-        if-no-files-found: error
-
-    - name: Upload recovered GameView touch host contracts
-      uses: actions/upload-artifact@v4
-      with:
-        name: recovered-gameview-touch-linux-x86_64
-        path: |
-          /tmp/blockheads-methods-O2/test_gameview_starttouch
-          /tmp/blockheads-methods-O2/test_gameview_movetouch
-          /tmp/blockheads-methods-O2/test_gameview_endtouch
-          /tmp/blockheads-methods-O2/test_gameview_canceltouch
-          /tmp/blockheads-methods-O2/test_gameview_secondarytouch
-        if-no-files-found: error
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
