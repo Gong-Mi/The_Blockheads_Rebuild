@@ -52,7 +52,13 @@ def changed_test_names() -> set[str]:
         if name.startswith("test_"):
             names.add(name)
             continue
-        stem = name.removesuffix(".py")
+        # artifacts map to the test named after the tool/artifact stem: strip any
+        # .py/.json/.tsv/.md suffix so a changed artifact does not skip its own test
+        stem = name
+        for suffix in (".py", ".json", ".tsv", ".md", ".txt"):
+            if stem.endswith(suffix):
+                stem = stem[: -len(suffix)]
+                break
         names.add(f"test_{stem}.py")
         # artifacts are covered by the test named after the tool that produces them
         for candidate in dirty:
