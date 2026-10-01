@@ -1001,6 +1001,31 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/probe_live_ivar_offsets.py",
+        [
+            "OBJC_IVAR_$_",
+            "cells_rewritten",
+            "live_offsets",
+        ],
+    )
+    require(
+        NATIVE / "IVAR_OFFSET_READING.md",
+        [
+            "the file and the process disagree",
+            "instance discovery",
+            "candidate, not verified",
+        ],
+    )
+    require(
+        NATIVE / "live_ivar_offset_divergence.json",
+        [
+            '"cells_compared": 3793',
+            '"cells_rewritten": 3735',
+            'not a verified runtime offset',
+            'CANDIDATE table',
+        ],
+    )
+    require(
         ROOT / "tools/find_selector_senders.py",
         [
             "pool_word + PIC_BASE == target address",

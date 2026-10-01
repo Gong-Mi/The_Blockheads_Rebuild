@@ -10,13 +10,20 @@ The method checks the current equipped item type for each wearable slot against 
 
 ## Clothing Slots and Geometric Components
 
+**Provenance warning**: the numbers in parentheses below are the values the annotated listing
+prints for each `OBJC_IVAR_$_Blockhead.*` storage cell. Those are **file-content** readings,
+and 98.5% of ivar cells differ between the file and the running process
+(`IVAR_OFFSET_READING.md`), so these numbers identify *which* ivar a method touches but must
+not be used as runtime field offsets. The measurement that would promote them is an
+object-graph walk, which has not been run yet.
+
 | Slot | ItemType Ivar | Texture Ivar | Primary Mesh Ivar | Auxiliary Meshes |
 |---|---|---|---|---|
-| **Headwear** | `hatItemType` (312) | `hatTexture` (248) | `hatCube` (252) | `hatRimCube` (256), `hatPomPomCubes` (260) |
-| **Shirt** | `shirtItemType` (314) | `shirtBodyTexture` (296)<br>`shirtArmTexture` (304) | `shirtBodyCube` (300) | `shirtArmCube` (308) |
-| **Pants** | `pantsItemType` (316) | `pantsTexture` (288) | `pantsCube` (292) | - |
-| **Shoes** | `shoesItemType` (318) | `shoesTexture` (276) | `shoesCube` (280) | `shoesToeCube` (284) |
-| **Jetpack** | (mode-dependent) | `jetTextures` (408) | `jetpackCubes` (392) | Animation frames `jet1.png`, `jet2.png`, `jet3.png` |
+| **Headwear** | `hatItemType` | `hatTexture` | `hatCube` | `hatRimCube`, `hatPomPomCubes` |
+| **Shirt** | `shirtItemType` | `shirtBodyTexture`, `shirtArmTexture` | `shirtBodyCube` | `shirtArmCube` |
+| **Pants** | `pantsItemType` | `pantsTexture` | `pantsCube` | - |
+| **Shoes** | `shoesItemType` | `shoesTexture` | `shoesCube` | `shoesToeCube` |
+| **Jetpack** | (mode-dependent) | `jetTextures` | `jetpackCubes` | Animation frames `jet1.png`, `jet2.png`, `jet3.png` |
 
 ## Construction Flow
 

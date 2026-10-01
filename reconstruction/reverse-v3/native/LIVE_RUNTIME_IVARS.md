@@ -9,7 +9,17 @@ Objective-C ivar offsets for classes with complex inheritance (e.g., `Blockhead 
 In this build:
 - Static ELF symbols define the relative offsets in `.data`.
 - At process start, the dynamic linker relocates the global data segment (`rw-p` mapping of `libApplication.so`).
-- By reading `/proc/<pid>/mem` at the live relocated address `base_rw + (sym_addr - 0xe32000)`, we extract the exact integer offsets used by the running game without guessing or disassembly heuristics.
+- By reading `/proc/<pid>/mem` at the live relocated address `base_rw + (sym_addr - 0xe32000)`, we read the 4-byte storage cell the runtime leaves there.
+
+**Status of these numbers (corrected): candidate, not verified.** A later measurement
+(`IVAR_OFFSET_READING.md`) compared the same 3793 cells read from the ELF file against the
+running process and found **3735 of them differ** (98.5%). The numbers in this file are the
+process-content reading, which is *one of two* mutually exclusive candidate readings, and no
+test has yet separated them: the value-based probes attempted so far were either
+state-dependent (a net-controlled blockhead skips the write) or relied on instance discovery
+by 4-byte class-pointer search, which returns metadata references rather than object headers.
+Do not present these offsets as the verified runtime layout; use them as candidates until the
+object-graph walk in `IVAR_OFFSET_READING.md` validates a chain end to end.
 
 ## Scope of Extracted Ivars
 
