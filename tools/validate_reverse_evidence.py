@@ -891,6 +891,29 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/extract_audio_api.py",
+        [
+            "MJSoundManager",
+            "OBJC_IVAR_$_",
+            "classes_with_methods",
+        ],
+    )
+    require(
+        NATIVE / "AUDIO_API_SURFACE.md",
+        [
+            "the owner. Loading and lookup",
+            "Which game action",
+            "reached indirectly",
+        ],
+    )
+    require(
+        NATIVE / "audio_api_surface.json",
+        [
+            '"methods_total": 128',
+            '"ivars_total": 85',
+        ],
+    )
+    require(
         ROOT / "tools/extract_item_mapping_functions.py",
         [
             "FUNCTIONS",
