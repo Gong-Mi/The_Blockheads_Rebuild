@@ -645,6 +645,29 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/verify_font_glyph_content.py",
+        [
+            "scale_probe",
+            "glyphs_with_ink",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "FONT_GLYPH_CONTENT.md",
+        [
+            "confirmed by pixels",
+            "99 / 100",
+            "the space character",
+        ],
+    )
+    require(
+        NATIVE / "font_glyph_content.json",
+        [
+            '"glyphs_empty": 51',
+            '"glyphs_with_ink_at_scale": 99',
+        ],
+    )
+    require(
         ROOT / "tools/parse_original_fonts.py",
         [
             "BMFont",
