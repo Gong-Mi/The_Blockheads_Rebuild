@@ -644,6 +644,41 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/extract_original_item_sprite_map.py",
+        [
+            "FUNCTION_VA = 0x004D6040",
+            "POOL_F64",
+            "POOL_F32",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "ITEM_SPRITE_COORDS.md",
+        [
+            "texCoordsForItemType",
+            "0x004d6040",
+            "col = type % 32",
+            "126/2048",
+            "62/2048",
+        ],
+    )
+    require(
+        NATIVE / "item_sprite_map.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"formula": 344',
+            '"jump_table": 82',
+            '"unresolved": 0',
+        ],
+    )
+    require(
+        NATIVE / "original_item_sprite_map.tsv",
+        [
+            "item_type\tatlas\timage\tcol\trow\tu\tv\tu_span\tv_span\tsource",
+            "1105\t746\t746\t10\t23",
+        ],
+    )
+    require(
         NATIVE / "WORLD_TIME_DOMAIN.md",
         [
             "getDayNightFractionForX:atWorldTime:",
