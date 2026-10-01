@@ -54,6 +54,19 @@ def main() -> int:
         if row["original_class"] == "format-string":
             assert row["original_evidence"] == "bird%d.wav", row
             assert row["name"].startswith("bird"), row
+    # Whole-APK sweep: every other native library and every data file was
+    # searched, so "unattributed" means "absent from the APK", not "absent from
+    # one file". The nine names are pinned as that exact set.
+    sweep = record["sweep"]
+    assert sweep["native_libraries"] == 24, sweep
+    assert sweep["data_files"] == 20, sweep
+    assert sweep["found_in_native"] == {}, sweep["found_in_native"]
+    assert sweep["found_in_data"] == {"punch.wav": ["index.html"]}, sweep["found_in_data"]
+    unattributed = sorted(r["name"] for r in rows if r["original_class"] == "unattributed")
+    assert unattributed == ["badPath.wav", "logs.wav", "lowbuzz.wav", "pathGood.wav",
+                            "pathOK.wav", "snowDig.wav", "squeakDown.wav",
+                            "squeakUp.wav", "womanDie.wav"], unattributed
+
     bird = [r for r in rows if r["name"].startswith("bird")]
     assert len(bird) == 14, len(bird)
     assert all(r["original_class"] == "format-string" for r in bird), bird

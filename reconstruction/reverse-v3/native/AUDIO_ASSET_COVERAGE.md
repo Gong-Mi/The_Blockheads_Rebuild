@@ -40,13 +40,21 @@ recorded as `format-string` with the pattern as evidence - stronger than the
 earlier stem heuristic, which would also have credited any unrelated identifier
 that merely contained the letters `bird`.
 
-## The nine with no evidence
+## The nine with no evidence (whole-APK sweep)
 
 `badPath.wav logs.wav lowbuzz.wav pathGood.wav pathOK.wav snowDig.wav
-squeakDown.wav squeakUp.wav womanDie.wav` appear neither verbatim, as a pattern,
-nor as a stem in any NUL string. They ship and nothing in the pinned binary names
-them: either the name is assembled from data this scan cannot see, or they are
-leftovers. Recorded as an observation.
+squeakDown.wav squeakUp.wav womanDie.wav` are absent from the pinned ELF under
+every class. To make "unattributed" mean more than "not in one file", the tool now
+sweeps the whole APK: **24 native libraries** under `lib/` (all `.so` except the
+pinned one) and **20 data files** (json, plist, txt, strings, nib, xml, html, css,
+dex), matching with `string_evidence.contains_token` so a boundary-less hit like
+`.waveTimer` cannot count.
+
+Result: none of the nine appears in any of them. The only extra hit for any
+shipped sound is `punch.wav` inside `index.html`, an unrelated help page. So the
+nine are shipped, loadable assets that nothing in the APK names - either the name
+is assembled from data outside the APK, or they are leftovers. Recorded as an
+observation, not as dead weight.
 
 ## Boundaries
 

@@ -102,3 +102,31 @@ def classify(name: str, strings: list[str], string_set: set[str] | None = None) 
             if stem in candidate:
                 return "substring", candidate
     return "unattributed", ""
+
+_NAME_CHAR = set(
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.-"
+)
+
+
+def contains_token(blob: bytes, token: str) -> bool:
+    """Boundary-aware search for `token` in raw bytes.
+
+    For inputs that are not NUL-terminated string tables (JSON, plist, nib,
+    dex), the token must be delimited on both sides: neither the byte before nor
+    the byte after may be a name character. That is what rejects
+    `_KelpPlant.wav` inside `OBJC_IVAR_$_KelpPlant.waveTimer` - there the `_`
+    before and the `e` after are both name characters, so the match is not a
+    filename reference.
+    """
+    needle = token.encode()
+    start = 0
+    while True:
+        index = blob.find(needle, start)
+        if index < 0:
+            return False
+        before = blob[index - 1:index]
+        after = blob[index + len(needle):index + len(needle) + 1]
+        if (not before or chr(before[0]) not in _NAME_CHAR) and (
+                not after or chr(after[0]) not in _NAME_CHAR):
+            return True
+        start = index + 1

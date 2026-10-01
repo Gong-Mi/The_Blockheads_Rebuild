@@ -761,7 +761,8 @@ def main() -> None:
         ROOT / "tools/audit_audio_assets.py",
         [
             "AUDIO_SUFFIXES",
-            "from string_evidence import classify, nul_strings",
+            "from string_evidence import classify, contains_token, nul_strings",
+            "def sweep_sources",
         ],
     )
     require(
@@ -770,6 +771,7 @@ def main() -> None:
             "original_named_not_in_replacement",
             "OBJC_IVAR_$_KelpPlant.waveTimer",
             "bird%d.wav",
+            "whole-APK sweep",
             "136",
         ],
     )
