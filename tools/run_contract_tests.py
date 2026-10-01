@@ -18,6 +18,7 @@ import argparse
 import concurrent.futures
 import subprocess
 import sys
+import os
 import time
 from pathlib import Path
 
@@ -69,7 +70,8 @@ def main() -> int:
     ap.add_argument("--filter", action="append",
                     help="only tests whose filename contains this (repeatable)")
     ap.add_argument("--timeout", type=float, default=180.0)
-    ap.add_argument("--jobs", type=int, default=4)
+    ap.add_argument("--jobs", type=int, default=min(os.cpu_count() or 4, 8),
+                    help="parallel tests (default: all cores, capped at 8)")
     ap.add_argument("--list", action="store_true")
     ap.add_argument("--strict", action="store_true",
                     help="treat a missing module or input as a failure")

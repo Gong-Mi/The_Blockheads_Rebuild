@@ -10,34 +10,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  # Fast evidence lane: every contract/validator test that reads artifacts only.
+  # Runs in seconds and is the one that matters while reverse-engineering.
+  contracts:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
       with:
         submodules: true
         fetch-depth: 0
-
-    - name: set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-      with:
-        # Google removed the legacy `tools` package from the SDK repository;
-        # the action's default (`tools platform-tools`) now hard-fails the
-        # install. The image already ships cmdline-tools/platform-tools, and
-        # setup-java+AGP resolve the rest via licenses below.
-        packages: ""
-
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-      working-directory: .
-
     - name: Validate render contract
       run: python3 tools/validate_render_contract.py
       working-directory: .
@@ -224,6 +205,15 @@ jobs:
         python3 tools/test_drawframe_slices.py
       working-directory: .
 
+  # Recovered-code lane: compiles the recovered C++ slices and runs them. Separate
+  # from `contracts` so its compile+run cost does not sit on the fast lane.
+  recovered:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+        fetch-depth: 0
     - name: Test recovered scroll inertia numerical slice
       run: |
         for opt in 0 2; do
@@ -346,8 +336,44 @@ jobs:
         /tmp/test_inventory
       working-directory: .
 
+  # Packaging lane: the real Gradle build and the APK contract. Cached so a
+  # tools-only change does not pay a cold Gradle build.
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+        fetch-depth: 0
+    - name: set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      with:
+        # Google removed the legacy `tools` package from the SDK repository;
+        # the action's default (`tools platform-tools`) now hard-fails the
+        # install. The image already ships cmdline-tools/platform-tools, and
+        # setup-java+AGP resolve the rest via licenses below.
+        packages: ""
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Cache Gradle caches and wrapper
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', 'gradle/wrapper/gradle-wrapper.properties') }}
+        restore-keys: |
+          gradle-${{ runner.os }}-
+
     - name: Build with Gradle
-      run: ./gradlew assembleDebug
+      run: ./gradlew assembleDebug --build-cache
       working-directory: .
 
     - name: Validate packaged APK contract

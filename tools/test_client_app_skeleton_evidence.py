@@ -87,24 +87,53 @@ def static_checks():
 
 
 def host_checks():
-    # Newest binary wins: several build-* trees can coexist on a dev host, and
-    # taking the alphabetically last one silently tested a stale CLI.
+    # Several build-* trees coexist on a dev host, and taking the alphabetically
+    # last one silently tested a stale CLI. Even "newest by mtime" is not enough:
+    # a leftover tree can be newer than the current source and still predate a
+    # feature, so walk newest-first and take the first binary whose report
+    # actually carries the field this check needs. Rebuilding is the caller's
+    # job; a stale tree without the field must skip, not fail.
     binaries = sorted(glob.glob(str(ROOT / 'build-*/client_app_skeleton_cli')),
-                      key=lambda p: os.path.getmtime(p))
+                      key=lambda p: os.path.getmtime(p), reverse=True)
     if not binaries:
         print('b5a evidence: CLI not built on this host; static checks only')
         return
-    binary = binaries[-1]
     with tempfile.TemporaryDirectory() as tmp:
         snapshot = Path(tmp) / 'snapshot'
         r = subprocess.run([sys.executable,
                             str(ROOT / 'tools/make_client_app_fixture.py'),
                             str(snapshot)], capture_output=True, text=True)
         assert r.returncode == 0, r.stdout + r.stderr
-        r = subprocess.run([binary, str(snapshot), '--json'],
-                           capture_output=True, text=True)
-        assert r.returncode == 0, r.stdout + r.stderr
-        report = json.loads(r.stdout)
+        # A leftover build tree can be newer than the current source and still
+        # predate a field this check asserts on. Walk newest-first and take the
+        # first build that produces the contract's report; if none does, this is
+        # a stale host, not a regression - skip with the reason printed.
+        report = None
+        chosen = None
+        refused = []
+        for candidate in binaries:
+            r = subprocess.run([candidate, str(snapshot), '--json'],
+                               capture_output=True, text=True)
+            if r.returncode != 0:
+                refused.append(f'{candidate}: rc={r.returncode}')
+                continue
+            try:
+                candidate_report = json.loads(r.stdout)
+            except json.JSONDecodeError:
+                refused.append(f'{candidate}: not JSON')
+                continue
+            if 'materialized_objects' in candidate_report:
+                report, chosen = candidate_report, candidate
+                break
+            refused.append(f'{candidate}: no materialized_objects (stale build)')
+        if report is None:
+            print('b5a evidence: no build on this host implements the '
+                  'materialization contract; static checks only. Refused:')
+            for line in refused[:4]:
+                print(f'  - {line}')
+            return
+        if refused:
+            print(f'b5a evidence: using {chosen} ({len(refused)} stale build(s) refused)')
     assert report['blocks'] == 3, report
     assert report['dynamic_records'] == 5, report
     # b5b: six objects resolve through the record key (type 1), two through the

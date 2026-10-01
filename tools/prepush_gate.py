@@ -11,7 +11,10 @@ stops at the first failure:
   4. tools/run_contract_tests.py          - every contract test, bounded timeout
 
 `--changed-only` narrows step 4 to the tests whose tool or artifact was modified in the
-working tree (fast path while iterating); the default runs everything.
+working tree (fast path while iterating, ~1s); the default runs everything (~6 min on a
+phone, because the Unicorn harness tests dominate). CI runs the same suite on runners with
+`--timeout 300 --jobs 4`, so the full-local run is a convenience, not the authority - use
+`--changed-only` while working and let CI own the whole-suite verdict.
 
 Usage:
   python3 tools/prepush_gate.py [--changed-only] [--timeout 300]
@@ -19,6 +22,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import subprocess
 import sys
@@ -70,7 +74,10 @@ def changed_test_names() -> set[str]:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--changed-only", action="store_true")
-    ap.add_argument("--timeout", type=float, default=300.0)
+    # On-device the heavy harness tests are far slower than on a CI runner
+    # (one of them needs >240s here against 300s in CI), so the local
+    # default is generous: a timeout is an environment fact, not a verdict.
+    ap.add_argument("--timeout", type=float, default=600.0)
     args = ap.parse_args()
 
     steps: list[tuple[str, list[str]]] = [
@@ -85,7 +92,8 @@ def main() -> int:
             return 1
 
     argv = [sys.executable, str(TOOLS / "run_contract_tests.py"),
-            "--timeout", str(args.timeout), "--jobs", "4"]
+            "--timeout", str(args.timeout), "--jobs",
+            str(min(os.cpu_count() or 4, 8))]
     if args.changed_only:
         names = sorted(changed_test_names())
         if not names:
