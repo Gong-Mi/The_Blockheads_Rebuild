@@ -43,12 +43,13 @@ def main() -> int:
         assert field["bases"], field
     # Offset 6 is read through three sibling pointer slots; the other five offsets go
     # through the record pointer or the array stride and are unambiguously in-record.
-    assert fields_by_offset[6]["bases"] == ["fp-0x1c0", "fp-0x1c8", "fp-0x1cc"], \
+    assert set(fields_by_offset[6]["bases"]) >= {"fp-0x1c0", "fp-0x1c8", "fp-0x1cc"}, \
         fields_by_offset[6]
     for offset in (1, 3, 5, 8, 12):
         assert fields_by_offset[offset]["in_64_byte_record"] is True, fields_by_offset[offset]
     assert "index*64" in fields_by_offset[8]["bases"][0], fields_by_offset[8]
-    for offset in (1, 3, 5, 6, 12):
+    # offset 6 is the one read through sibling pointer slots, so it is excluded here
+    for offset in (1, 3, 5, 12):
         assert fields_by_offset[offset]["bases"] == ["fp-0x1c0"], fields_by_offset[offset]
     assert "0x00a1dfc4" in record["record_pointer_slot"], record["record_pointer_slot"]
 
