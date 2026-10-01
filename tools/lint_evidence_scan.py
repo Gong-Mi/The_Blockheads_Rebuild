@@ -68,6 +68,37 @@ def vacuous_check_violations(path: Path, text: str) -> list[str]:
     return out
 
 
+RENDER_DEF_RE = re.compile(r"^def render\w*\(", re.M)
+RECORD_DEF_RE = re.compile(r"^def build_record\w*\(", re.M)
+FUNC_SPLIT_RE = re.compile(r"^def (\w+)\(", re.M)
+EXTRACT_CALL_RE = re.compile(r"extract_rows\(")
+
+
+def split_view_violations(path: Path, text: str) -> list[str]:
+    """Two views of one artifact must be built from one source of rows.
+
+    `extract_original_tile_content_render_map.py` rendered its TSV from
+    `extract_rows` while the JSON applied a later classification step, so the two
+    shipped artifacts disagreed about the same value (content 46). Anything that
+    produces both a TSV and a JSON must not have a render path that bypasses the
+    record builder.
+    """
+    if not (RENDER_DEF_RE.search(text) and RECORD_DEF_RE.search(text)):
+        return []
+    # Only a call *inside a render function* is the hazard: build_record() calling
+    # extract_rows() is the single-source pattern we want.
+    matches = list(FUNC_SPLIT_RE.finditer(text))
+    for index, match in enumerate(matches):
+        name = match.group(1)
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
+        body = text[match.end():end]
+        if name.startswith("render") and EXTRACT_CALL_RE.search(body):
+            return [f"{path.name}: render function {name}() calls extract_rows() "
+                    f"directly while build_record() exists - the TSV and JSON can "
+                    f"diverge"]
+    return []
+
+
 def scan(path: Path) -> list[str]:
     text = path.read_text(encoding="utf-8", errors="replace")
     violations: list[str] = []
@@ -105,6 +136,7 @@ def scan(path: Path) -> list[str]:
                 f"extraction: {line.strip()[:90]}"
             )
     violations.extend(vacuous_check_violations(path, text))
+    violations.extend(split_view_violations(path, text))
     return violations
 
 

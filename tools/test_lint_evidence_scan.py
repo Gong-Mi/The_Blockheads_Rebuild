@@ -97,7 +97,44 @@ def main():
         clean = lint.scan(sample)
     assert not any("skips a missing/None output path" in item for item in clean), clean
 
-    print(f"evidence-scan lint: PASS (clean tree + synthetic offender flagged)")
+    # Third control: two views fed from different sources must be flagged.
+    split_view_sample = '''def extract_rows(elf):
+    return [{"a": 1}]
+
+
+def render(elf):
+    return "\\n".join(str(r) for r in extract_rows(elf))
+
+
+def build_record(elf, sha):
+    return {"rows": extract_rows(elf)}
+'''
+    with tempfile.TemporaryDirectory() as tmp:
+        sample = Path(tmp) / "split_view_tool.py"
+        sample.write_text(split_view_sample, encoding="utf-8")
+        split = lint.scan(sample)
+    assert any("can diverge" in item for item in split), split
+
+    # ... and the single-source pattern must not be flagged.
+    single_source_sample = '''def extract_rows(elf):
+    return [{"a": 1}]
+
+
+def build_record(elf, sha):
+    rows = extract_rows(elf)
+    return {"rows": rows}
+
+
+def render(elf):
+    return "\\n".join(str(r) for r in build_record(elf, "")["rows"])
+'''
+    with tempfile.TemporaryDirectory() as tmp:
+        sample = Path(tmp) / "single_source_tool.py"
+        sample.write_text(single_source_sample, encoding="utf-8")
+        clean2 = lint.scan(sample)
+    assert not any("can diverge" in item for item in clean2), clean2
+
+    print("evidence-scan lint: PASS (clean tree + synthetic offenders flagged)")
     return 0
 
 
