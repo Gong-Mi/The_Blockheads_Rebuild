@@ -56,7 +56,8 @@ def main() -> int:
                            "max_ink_fraction"], tsv_rows[0]
     sample_rows = [r for r in tsv_rows[1:] if r[0] == "empty"]
     assert len(sample_rows) >= 5, tsv_rows[1:8]
-    assert tsv_rows[5][0] == "empty", tsv_rows[5]
+    # header + 5 font rows, then the empty samples.
+    assert tsv_rows[6][0] == "empty", tsv_rows[6]
     # The single empty glyph of the four sound fonts is the space character.
     for font in record["fonts"]:
         if font["glyphs_empty"] == 1:
