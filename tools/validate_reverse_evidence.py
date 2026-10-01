@@ -891,6 +891,29 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/probe_objc_send_channel.py",
+        [
+            "msgrefs_unit_matches",
+            "relocation_sections",
+            "send_idiom",
+        ],
+    )
+    require(
+        NATIVE / "OBJC_SEND_CHANNEL.md",
+        [
+            "recorded negative result",
+            ".rel.dyn",
+            "does not transfer here as-is",
+        ],
+    )
+    require(
+        NATIVE / "objc_send_channel.json",
+        [
+            '"string_va": "0xecf8e2"',
+            '"msgrefs_unit_matches": []',
+        ],
+    )
+    require(
         ROOT / "tools/extract_audio_api.py",
         [
             "MJSoundManager",
