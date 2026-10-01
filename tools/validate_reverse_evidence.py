@@ -937,6 +937,30 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/test_live_frame_stack.py",
+        [
+            "REQUIRED_ROLES",
+            "world_master_render",
+            "entity_animal_draw",
+        ],
+    )
+    require(
+        NATIVE / "LIVE_FRAME_STACK.md",
+        [
+            "Live frame stack and dispatch hierarchy",
+            "UIKitMain",
+            "World render:cameraZ:projectionMatrix:pinchScale:",
+        ],
+    )
+    require(
+        NATIVE / "live_frame_stack.json",
+        [
+            '"thread_name": "UIKitMain"',
+            '"root_driver": "World render:cameraZ:projectionMatrix:pinchScale:"',
+            '"DonkeyLike"',
+        ],
+    )
+    require(
         ROOT / "tools/find_selector_senders.py",
         [
             "pool_word + PIC_BASE == target address",
