@@ -693,6 +693,30 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/verify_atlas_geometry.py",
+        [
+            "jump_table_domain",
+            "inherited",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "ATLAS_GEOMETRY_CONTRACT.md",
+        [
+            "11 jump-table cells cannot be placed",
+            "448, 1152, 64, 64",
+            "not in scope of a geometry check",
+        ],
+    )
+    require(
+        NATIVE / "atlas_geometry_contract.json",
+        [
+            '"item_jump_violations": 11',
+            '"item_formula_violations": 0',
+            '"tile_violations": 0',
+        ],
+    )
+    require(
         ROOT / "tools/crosscheck_shader_declarations.py",
         [
             "declared-attribute",
