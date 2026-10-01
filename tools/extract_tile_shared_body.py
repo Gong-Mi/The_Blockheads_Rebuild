@@ -142,28 +142,85 @@ def bl_targets(blob: bytes) -> dict:
 BRANCH_SCAN_WORDS = 16
 
 
-def decode_branch(blob: bytes, target: int) -> dict:
-    """First instructions of a jump-table branch: does it assign an image id?
+STR_IMM_RE_OFFSET = 0x0FFF
 
-    The `direct` cases assign with `movw r0, #imm`; if the shared body's 51 branch
-    targets do the same, then the 59 shared-body tile values resolve to a small set
-    of candidate draw images instead of staying opaque.
+
+def decode_store(word: int) -> tuple[int, int, int] | None:
+    """`str Rt, [fp, #-imm]` -> (reg, slot, size) for the frame stores used here."""
+    if (word >> 28) != 0xE or ((word >> 26) & 0x3) != 0x1:
+        return None
+    if (word >> 20) & 0x1:                      # L = 1 -> load, not a store
+        return None
+    if ((word >> 16) & 0xF) != 11:              # base must be fp
+        return None
+    reg = (word >> 12) & 0xF
+    offset = word & STR_IMM_RE_OFFSET
+    # Bit 24 is P (pre-indexed), bit 23 is U (add/subtract). Testing bit 24 as if
+    # it were U rejected every pre-indexed store - i.e. all of them - and the slot
+    # decode came back empty.
+    if word & (1 << 23):                        # U=1 -> positive offset
+        return None                             # only the negative slots matter
+    if not word & (1 << 24):                    # P=1 -> pre-indexed
+        return None
+    return reg, offset, (word >> 22) & 0x3
+
+
+def decode_branch(blob: bytes, target: int) -> dict:
+    """Decode a jump-table branch into the frame slots it writes.
+
+    Reading the branch as a bag of `movw` immediates conflates two different
+    things: the small values (`0`, `2`, `3`) go to slot `[fp,-0x558]`, while the
+    draw values go to the pair `[fp,-0x548]` / `[fp,-0x54c]`. Decoding per slot
+    separates a mode selector from a draw value - which is exactly the question the
+    R23 artefact left open.
     """
+    registers: dict[int, tuple[int, str]] = {}
+    slots: dict[str, int] = {}
     values = []
     calls = []
     for addr, word in words(blob, target, BRANCH_SCAN_WORDS):
         value = decode_movw_imm(word)
         if value is not None:
-            values.append({"at": f"0x{addr:08x}", "immediate": value})
+            registers[0] = (value, f"0x{addr:08x}")
+            values.append({"at": f"0x{addr:08x}", "immediate": value, "reg": 0})
+            continue
+        loaded = decode_reg_load_movw(word)
+        if loaded is not None:
+            reg, value = loaded
+            registers[reg] = (value, f"0x{addr:08x}")
+            values.append({"at": f"0x{addr:08x}", "immediate": value, "reg": reg})
+            continue
+        store = decode_store(word)
+        if store is not None:
+            reg, offset, _size = store
+            if reg in registers:
+                slots[f"fp-0x{offset:x}"] = registers[reg][0]
         call = branch_target(word, addr)
         if call is not None and (word >> 24) & 0xF == 0xB:
             calls.append({"at": f"0x{addr:08x}", "target": f"0x{call:08x}"})
+    draws = sorted({slots[s] for s in ("fp-0x548", "fp-0x54c") if s in slots})
+    mode = slots.get("fp-0x558")
     return {
         "target": f"0x{target:08x}",
+        "slots": slots,
+        "draw_values": draws,
+        "mode": mode,
+        "pair_equal": (slots.get("fp-0x548") == slots.get("fp-0x54c")
+                       if "fp-0x548" in slots and "fp-0x54c" in slots else None),
         "movw_assignments": values,
         "distinct_assignment_values": sorted({v["immediate"] for v in values}),
         "calls": calls,
     }
+
+
+def decode_reg_load_movw(word: int) -> tuple[int, int] | None:
+    """`movw rN, #imm` for any destination register (r0..r12)."""
+    if (word >> 28) != 0xE or ((word >> 20) & 0xFF) != 0x30:
+        return None
+    reg = (word >> 12) & 0xF
+    if reg > 12:
+        return None
+    return reg, ((word >> 4) & 0xF000) | (word & 0x0FFF)
 
 
 def build(elf: Path) -> dict:
@@ -196,6 +253,8 @@ def build(elf: Path) -> dict:
     for entry in branches_decoded:
         unique_branches.setdefault(entry["target"], entry)
     with_assignments = [e for e in unique_branches.values() if e["movw_assignments"]]
+    draw_values = sorted({v for e in unique_branches.values() for v in e["draw_values"]})
+    modes = sorted({e["mode"] for e in unique_branches.values() if e["mode"] is not None})
     immediates = [row["immediate"] for row in comparisons]
     fields = []
     for addr, word in words(blob, SHARED_BODY_VA, (SCAN_END - SHARED_BODY_VA) // 4):
@@ -226,8 +285,14 @@ def build(elf: Path) -> dict:
             "frame_slots_touched": len(frame_slots),
             "branches_decoded": len(unique_branches),
             "branches_with_movw_assignment": len(with_assignments),
-            "branch_assignment_values": len({v for e in with_assignments
-                                             for v in e["distinct_assignment_values"]}),
+            "branches_writing_draw_slots": sum(
+                1 for e in unique_branches.values() if e["draw_values"]),
+            "distinct_draw_values": len(draw_values),
+            "distinct_mode_values": len(modes),
+            "branches_with_equal_pair": sum(
+                1 for e in unique_branches.values() if e["pair_equal"] is True),
+            "branches_setting_a_mode": sum(
+                1 for e in unique_branches.values() if e["mode"] is not None),
         },
         "immediates": sorted(set(immediates)),
         "comparisons": comparisons,
@@ -237,7 +302,12 @@ def build(elf: Path) -> dict:
                        "last": JUMP_LAST, "distinct_targets": len(distinct),
                        "sample": table[:8]},
         "helper_calls": bl_targets(blob),
-        "branches": {name: entry["distinct_assignment_values"]
+        "draw_values": draw_values,
+        "mode_values": modes,
+        "branches": {name: {"draw_values": entry["draw_values"],
+                            "mode": entry["mode"],
+                            "slots": entry["slots"],
+                            "pair_equal": entry["pair_equal"]}
                      for name, entry in sorted(unique_branches.items())},
         "frame_slots_touched": [f"fp-0x{slot:x}" for slot in frame_slots],
     }
@@ -250,8 +320,9 @@ def render_tsv(record: dict) -> str:
     for row in record["register_comparisons"]:
         lines.append(f"compare-reg\t{row['at']}\timm={row['immediate']} "
                      f"(0x{row['immediate']:x})")
-    for name, values in record["branches"].items():
-        lines.append(f"branch\t{name}\tassigns={','.join(str(v) for v in values) or '(none)'}")
+    for name, entry in record["branches"].items():
+        lines.append(f"branch\t{name}\tdraw={','.join(str(v) for v in entry['draw_values']) or '(none)'}"
+                     f" mode={entry['mode']} pair_equal={entry['pair_equal']}")
     for row in record["helper_calls"]:
         lines.append(f"call\t{row['at']}\t-> {row['target']}")
     lines.append(f"jump-table\t{record['jump_table']['base']}\t"

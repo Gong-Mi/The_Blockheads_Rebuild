@@ -18,8 +18,10 @@ values that assign immediately.
 The shared body is a dispatch, not a default: six constants compared against
 `[fp,-0x540]` (`0xe0`, `0x100`, `0x109`, `0x112` - twice - `0x1e0`, `0x200`), an
 inline 77-entry jump table at `0x00a22ed0` (51 distinct targets), and an arithmetic
-path whose result is added to two frame slots. All 51 branch bodies assign from a
-five-value set (`0`, `2`, `3`, `109`, `129`). See `TILE_SHARED_BODY_STRUCTURE.md`.
+path whose result is added to two frame slots. Decoded per slot, every branch writes
+a draw pair (49 distinct values in the same range the `direct` cases use) plus a mode
+of `0` / `2` / `3`; `109` and `129` are draw values, not modes. See
+`TILE_SHARED_BODY_STRUCTURE.md`.
 
 ## Content 46
 

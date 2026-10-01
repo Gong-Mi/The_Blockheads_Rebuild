@@ -31,9 +31,13 @@ EXPECTED = {
     "frame_slots_touched": 5,
     "branches_decoded": 51,
     "branches_with_movw_assignment": 51,
-    "branch_assignment_values": 5,
+    "branches_writing_draw_slots": 51,
+    "distinct_draw_values": 49,
+    "distinct_mode_values": 3,
+    "branches_with_equal_pair": 39,
+    "branches_setting_a_mode": 50,
 }
-BRANCH_VALUES = [0, 2, 3, 109, 129]
+MODE_VALUES = [0, 2, 3]
 CONSTANTS = [0xE0, 0x100, 0x109, 0x112, 0x1E0, 0x200]
 
 
@@ -55,14 +59,22 @@ def main() -> int:
         assert call["target"].startswith("0x00"), call
     assert "fp-0x540" in record["frame_slots_touched"], record["frame_slots_touched"]
 
-    # Branch bodies: every one assigns, from a five-value set. Pinned because the
-    # value set is what makes "mode vs image id" an open question instead of a guess.
+    # Branch bodies decoded PER SLOT. The earlier reading (a bag of immediates)
+    # conflated the draw pair with the mode and produced a "five values" set; the
+    # separation is the finding, so both halves are pinned.
     branches = record["branches"]
     assert len(branches) == EXPECTED["branches_decoded"], len(branches)
-    values = sorted({v for vs in branches.values() for v in vs})
-    assert values == BRANCH_VALUES, values
-    assert sum(1 for vs in branches.values() if vs == [0]) == 33, branches
-    assert sum(1 for vs in branches.values() if not vs) == 0, branches
+    modes = sorted({b["mode"] for b in branches.values() if b["mode"] is not None})
+    assert modes == MODE_VALUES, branches
+    assert sum(1 for b in branches.values() if b["mode"] is None) == 1, branches
+    for name, entry in branches.items():
+        assert entry["slots"], (name, entry)
+        assert entry["draw_values"], (name, entry)
+        assert "fp-0x548" in entry["slots"] or "fp-0x54c" in entry["slots"], (name, entry)
+        assert entry["pair_equal"] in (True, False), (name, entry)
+    assert 109 in record["draw_values"] and 129 in record["draw_values"], record["draw_values"]
+    assert record["mode_values"] == MODE_VALUES, record["mode_values"]
+    assert sum(1 for b in branches.values() if b["pair_equal"]) == 39, branches
 
     tsv_rows = list(csv.reader(io.StringIO(TSV.read_text(encoding="utf-8")), delimiter="\t"))
     assert tsv_rows[0] == ["kind", "address", "detail"], tsv_rows[0]

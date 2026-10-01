@@ -31,25 +31,37 @@ of a record, minus one), dispatched by `add r2, pc, #4` / `ldr r1, [r1, r2]` /
 `add pc, r1, r2`. Every entry is a byte offset from `0x00a22ed0`, and all 77 resolve
 into the same code region (51 distinct targets).
 
-## What the 51 branch bodies assign
+## What the 51 branch bodies assign (decoded per slot)
 
-Each distinct jump-table target was decoded for its first 16 instructions:
+Reading a branch as a bag of `movw` immediates conflates two different things, and
+an earlier revision of this table did exactly that: it reported "five values
+(0, 2, 3, 109, 129)" as if they were one set. Decoding the stores instead shows the
+branches write **three frame slots**:
+
+| slot | meaning | distinct values |
+|---|---|---:|
+| `[fp,-0x548]` / `[fp,-0x54c]` | a draw pair | **49 distinct** (`0x20`-`0x2ea`) |
+| `[fp,-0x558]` | a mode | 3 (`0`, `2`, `3`) |
 
 | element | count |
 |---|---:|
-| branch bodies decoded | 51 |
-| ... containing a `movw` assignment | 51 |
-| distinct assignment values across all of them | 5 |
+| branch bodies writing draw slots | 51 / 51 |
+| distinct draw values | 49 |
+| branches whose pair is equal | 39 |
+| branches whose pair differs | 12 |
+| branches setting a mode | 50 (mode `0`: 39, `2`: 8, `3`: 3, unset: 1) |
 
-The five values are `0`, `2`, `3`, `109`, `129`, and they group as
-`(0): 33, (0,2): 7, (2): 4, (0,129): 3, (0,3): 1, (0,3,109): 1, (3,109): 1, (2,109): 1`.
+So the values in the draw slots sit in **the same numeric range the `direct` cases
+assign** (`110`, `65`, `196`, ...), which is what resolves the open question from
+R23: `109` / `129` are draw values, not modes. `0` / `2` / `3` are the mode.
 
-Reading them is deliberately left open: the small values (`0`/`2`/`3`) behave like a
-mode or shade selector - they are the same register (`r0`) as the `direct` cases,
-which assign image ids in the hundreds (`110`, `65`, `196`, ...) - while `109` and
-`129` sit in the same numeric range those image ids use. Deciding which is which
-needs the store that consumes each assignment, which this decode does not follow;
-recording the value set and its distribution is what the evidence supports.
+## The common tail is a third dispatch
+
+Every branch ends with `b 0xa234e0`, and that tail dispatches again on a record byte:
+`ldrb r0, [r0,#0xc]; cmp r0, #0x45; bne 0xa23540`. When the byte equals `0x45`, it
+**overwrites** the draw pair with `0x6d` and, if `[record+3]` is zero, also writes
+`0x6d` into the pair at `[fp,-0x540]`/`[fp,-0x544]` (the animated-offset slots), then
+forces mode `2`. Recorded as structure: the tail can override a branch's own choice.
 
 ## The arithmetic on the taken path
 
