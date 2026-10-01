@@ -1,5 +1,7 @@
 offset	size	base	in_64_byte_record	windows	read_sites	purpose
-1	byte	fp-0x1c0	False	shared body	0x00a22ea8	jump-table index (compared <= 0x4c after subtracting one, 77 entries)
-3	byte	fp-0x1c0	False	tail	0x00a23500	tested against zero (a boolean-ish field)
+1	byte	fp-0x1c0	True	record setup,shared body	0x00a1e004,0x00a1e018,0x00a22ea8	backWallType: indexes the 77-entry table (<= 0x4c after subtracting one) and is compared against 2 and 3
+3	byte	fp-0x1c0	True	tail	0x00a23500	contentsType: tested against zero
+5	byte	fp-0x1c0	True	direct cases	0x00a22408,0x00a22454,0x00a2248c,0x00a224d8,0x00a22510,0x00a2255c,0x00a22594,0x00a225e0,0x00a22618	read by every direct case body (9 sites); purpose not characterised
+6	byte	fp-0x1c0 | fp-0x1c8 | fp-0x1cc	False	record setup	0x00a1dfcc,0x00a1e080,0x00a1e0c8	tested against zero in the record-setup window
 8	byte	([fp-0x198]+0x8 + index*64)	True	shared body	0x00a22e00	fed into the arithmetic (byte - 127) * constant + [fp,-0x19c]
-12	byte	fp-0x1c0	False	tail	0x00a234e4	compared against 0x45 in the tail
+12	byte	fp-0x1c0	True	tail	0x00a234e4	compared against 0x45 in the tail

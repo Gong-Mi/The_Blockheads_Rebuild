@@ -32,10 +32,18 @@ except ImportError:  # pragma: no cover - environment guard
     print("skip: capstone is not installed")
     raise SystemExit(0)
 
-WINDOWS = (("shared body", 0x00A22D70, 0x00A22F40),
-           ("tail", 0x00A234E0, 0x00A23590))
+# Windows that decode cleanly. A single sweep over the whole function loses sync the
+# moment it crosses an inline jump table (that is data), so the scan stays on windows
+# whose instruction boundaries were verified against capstone first.
+WINDOWS = (("record setup", 0x00A1DF40, 0x00A1E100),
+           ("direct cases", 0x00A22400, 0x00A22640),
+           ("shared body", 0x00A22D70, 0x00A22F40),
+           ("tail", 0x00A233C0, 0x00A235A0))
 FIELD_PATTERN = re.compile(r"\[r\d+, #(0x[0-9a-f]+|\d+)\]")
 STRIDE_SHIFT = 6                       # add r3, ip, r3, lsl #6 -> 64-byte records
+# 0x00a1dfc4 stores `[[fp,-0x198]+8] + index*64` into this slot, so anything read
+# through it is a field of the same 64-byte record.
+RECORD_POINTER_SLOTS = ("fp-0x1c0",)
 TAIL_CONSTANT = 0x45
 
 
@@ -117,11 +125,20 @@ def build(elf: Path) -> dict:
 
     bases = sorted({r["base"] for r in reads})
     purposes = {
-        1: "jump-table index (compared <= 0x4c after subtracting one, 77 entries)",
-        3: "tested against zero (a boolean-ish field)",
+        1: ("backWallType: indexes the 77-entry table (<= 0x4c after subtracting one) "
+            "and is compared against 2 and 3"),
+        3: "contentsType: tested against zero",
+        5: "read by every direct case body (9 sites); purpose not characterised",
+        6: "tested against zero in the record-setup window",
         8: "fed into the arithmetic (byte - 127) * constant + [fp,-0x19c]",
         12: f"compared against 0x{TAIL_CONSTANT:02x} in the tail",
     }
+    # Every one of these reads goes through the tile record: `[fp,-0x1c0]` is loaded at
+    # 0x00a1dfc4 with `[[fp,-0x198]+8] + index*64`, and the lighting read reaches the
+    # same array directly. R34 read the two access paths as two objects; this scan
+    # tracks the pointer slot, which shows one record reached two ways.
+    record_slot_note = ("[fp,-0x1c0] is set at 0x00a1dfc4 to [[fp,-0x198]+8] + index*64, "
+                        "so field reads through it are fields of the 64-byte tile record")
     fields = []
     for offset, reads_for_offset in sorted(by_offset.items()):
         fields.append({
@@ -129,7 +146,11 @@ def build(elf: Path) -> dict:
             "size": "byte",
             "read_sites": [r["at"] for r in reads_for_offset],
             "bases": sorted({r["base"] for r in reads_for_offset}),
-            "in_64_byte_record": all("index*64" in r["base"] for r in reads_for_offset),
+            # A read is a record field when it goes through the record pointer slot
+            # (set at 0x00a1dfc4) or reaches the array base with the 64-byte stride.
+            "in_64_byte_record": all(
+                r["base"] in RECORD_POINTER_SLOTS or "index*64" in r["base"]
+                for r in reads_for_offset),
             "windows": sorted({r["window"] for r in reads_for_offset}),
             "purpose": purposes.get(offset, "(not characterised)"),
         })
@@ -138,7 +159,9 @@ def build(elf: Path) -> dict:
         "schema": 1,
         "elf_sha256": hashlib.sha256(blob).hexdigest(),
         "claim": ("byte fields of the 64-byte tile record that the drawing path reads, "
-                  "extracted from the code windows with each read site recorded"),
+                  "extracted from verified code windows with each read site and the base "
+                  "chain recorded; the pointer slot [fp,-0x1c0] is itself a record pointer"),
+        "record_pointer_slot": record_slot_note,
         "record_stride": 1 << STRIDE_SHIFT,
         "stride_evidence": "add r3, ip, r3, lsl #6 at 0x00a22dfc",
         "fields": fields,
