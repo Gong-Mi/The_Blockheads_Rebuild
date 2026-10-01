@@ -27,6 +27,9 @@ import re
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from string_evidence import classify, nul_strings  # noqa: E402
+
 SHADER_SUFFIXES = (".vsh", ".fsh")
 NAME_RE = re.compile(rb"[A-Za-z0-9_]{3,40}\.(?:vsh|fsh)")
 SOURCE_SUFFIXES = (".cpp", ".h", ".java", ".kt")
@@ -81,35 +84,39 @@ def mapping_usage(path: Path) -> dict[str, list[str]]:
 def build(assets: Path, elf: Path, repo: Path, mapping: Path) -> dict:
     ship = shipped(assets)
     blob = elf.read_bytes()
-    verbatim = {m.decode() for m in NAME_RE.findall(blob)}
+    strings = nul_strings(blob)
+    string_set = set(strings)
     replacement = replacement_mentions(repo)
     usage = mapping_usage(mapping)
 
     rows = []
     for name in sorted(ship):
-        stem = name.rsplit(".", 1)[0]
-        if name in verbatim:
-            klass = "verbatim"
-        elif len(stem) >= 3 and stem.encode() in blob:
-            klass = "stem-only"
-        else:
-            klass = "unattributed"
+        klass, detail = classify(name, strings, string_set)
         rows.append({
             "name": name,
             "stage": "vertex" if name.endswith(".vsh") else "fragment",
             "bytes": ship[name]["bytes"],
             "sha256": ship[name]["sha256"],
             "original_class": klass,
+            "original_evidence": detail,
             "replacement_referenced": name in replacement,
             "mapped_uses": len(usage.get(name, [])),
         })
+    def count(klass: str) -> int:
+        return sum(1 for r in rows if r["original_class"] == klass)
+
+    named = ("verbatim", "format-string")
     counts = {
         "ships": len(rows),
         "vertex": sum(1 for r in rows if r["stage"] == "vertex"),
         "fragment": sum(1 for r in rows if r["stage"] == "fragment"),
-        "original_verbatim": sum(1 for r in rows if r["original_class"] == "verbatim"),
-        "original_stem_only": sum(1 for r in rows if r["original_class"] == "stem-only"),
-        "original_unattributed": sum(1 for r in rows if r["original_class"] == "unattributed"),
+        "original_verbatim": count("verbatim"),
+        "original_suffix_composition": count("suffix-composition"),
+        "original_stem_exact": count("stem-exact"),
+        "original_stem_prefix": count("stem-prefix"),
+        "original_substring_only": count("substring"),
+        "original_unattributed": count("unattributed"),
+        "original_named": sum(1 for r in rows if r["original_class"] in named),
         "replacement_referenced": sum(1 for r in rows if r["replacement_referenced"]),
         "mapped_in_class_table": sum(1 for r in rows if r["mapped_uses"]),
         "not_named_by_replacement": sum(1 for r in rows if not r["replacement_referenced"]),
@@ -120,15 +127,21 @@ def build(assets: Path, elf: Path, repo: Path, mapping: Path) -> dict:
         "elf_sha256": hashlib.sha256(blob).hexdigest(),
         "counts": counts,
         "claim": ("shader coverage join: shipped programs vs how the pinned ELF "
-                  "names them (verbatim / stem-only / unattributed) vs the "
-                  "replacement sources vs the class-method mapping table"),
+                  "names them (verbatim / format-string / stem-exact / "
+                  "stem-prefix / substring / unattributed) vs the replacement "
+                  "sources vs the class-method mapping table"),
         "rows": rows,
         "unattributed": [r["name"] for r in rows if r["original_class"] == "unattributed"],
+        "substring_only": [r["name"] for r in rows if r["original_class"] == "substring"],
+        "suffix_composition_names": [r["name"] for r in rows
+                                     if r["original_class"] == "suffix-composition"],
+        "string_extraction": ("NUL-delimited printable runs (see "
+                              "tools/string_evidence.py for the evidence ladder)"),
     }
 
 
 def render_tsv(rows: list[dict]) -> str:
-    header = ["name", "stage", "bytes", "sha256", "original_class",
+    header = ["name", "stage", "bytes", "sha256", "original_class", "original_evidence",
               "replacement_referenced", "mapped_uses"]
     lines = ["\t".join(header)]
     for row in rows:

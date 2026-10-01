@@ -10,34 +10,35 @@ mapping table. Membership only - no draw, uniform-binding or rendering claim.
 |---|---:|
 | shader programs shipped | 92 |
 | - vertex (.vsh) / fragment (.fsh) | 46 / 46 |
-| full filename present in the ELF (verbatim) | 22 |
-| only the stem present (extension composed at runtime) | 66 |
-| neither filename nor stem present (unattributed) | 4 |
+| exact filename is a NUL string in the ELF (`verbatim`) | 22 |
+| extension-only composition (`suffix-composition`) | 70 |
+| stem match (`stem-exact` / `stem-prefix` / `substring`) | 0 / 0 / 0 |
+| no evidence in the ELF (`unattributed`) | **0** |
 | named by the replacement sources | 8 |
 | attributed to a class/method in `shader_mapping.tsv` | 16 |
 | not named by the replacement | 84 |
 
-## Why verbatim-only counting is wrong here
+## How the 92 are accounted for
 
-The original keeps the effect name and appends the extension at load time
-(`stringByAppendingString`): the ELF carries `.vsh` and `.fsh` twelve times each
-as bare literals. Testing only for `BlockheadBody.vsh` would report 66 of 92
-shipped programs as unreferenced when the binary only ever stores `BlockheadBody`.
-The table therefore records a three-way `original_class`: `verbatim`,
-`stem-only`, `unattributed`.
+22 shaders appear verbatim (`BlackCube.vsh`, `Block.vsh`, ...). The other 70 have
+no verbatim string because the loader composes the filename: the ELF carries
+`%@.vsh` and `%@.fsh` as NUL strings (next to `Error loading shader` messages),
+i.e. an extension is appended to a runtime value. That is recorded as
+`suffix-composition`.
 
-## The four unattributed programs
+An earlier version of this table tested the stem as a raw substring and reported
+four programs (`ActionSquare`, `WorldObjectGather`) as unattributed. With
+NUL-delimited extraction and the evidence ladder the count of unresolved programs
+is **0** - the four are covered by the same composition idiom as the rest.
 
-`ActionSquare.vsh/.fsh` and `WorldObjectGather.vsh/.fsh` have neither the
-filename nor the stem in the ELF. They ship in the assets and nothing in the
-pinned binary names them, so either a dynamic path builds them from pieces this
-scan cannot see, or they are leftovers from the desktop build. Recorded as an
-observation, not filed as dead weight.
+`suffix-composition` is graded below a specific pattern on purpose: `%@.vsh`
+proves filenames are built at runtime, not which stem loads when, so it is not
+counted as "named by the original".
 
 ## Boundaries
 
 - "Stem" = filename minus `.vsh`/`.fsh`; a stem hit is not proof that the
-  original loads that exact program (it may build a different suffix chain).
+  original loads that exact program.
 - `mapped_in_class_table` counts shaders the class/method mapping names; that
   table is a separate extraction (34 rows) and not a call-graph.
 - The replacement names 8 of 92; `not_named_by_replacement` (84) is a work list,

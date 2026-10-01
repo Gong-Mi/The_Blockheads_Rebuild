@@ -26,6 +26,9 @@ import re
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from string_evidence import classify, nul_strings  # noqa: E402
+
 AUDIO_SUFFIXES = (".wav", ".mp4", ".m4a", ".ogg")
 NAME_RE = re.compile(rb"[A-Za-z0-9_+\-]{2,48}\.(?:wav|mp4|m4a|ogg)")
 SOURCE_SUFFIXES = (".cpp", ".h", ".java", ".kt", ".gradle", ".txt", ".json")
@@ -47,6 +50,11 @@ def shipped_audio(root: Path) -> dict[str, dict]:
 
 
 def original_names(elf: Path) -> set[str]:
+    """Deprecated: raw-byte regex, kept only so older callers keep importing.
+
+    It matched inside unrelated strings (`.waveTimer` -> a bogus
+    `_KelpPlant.wav`); use `string_evidence.nul_strings` + `classify` instead.
+    """
     data = elf.read_bytes()
     return {m.decode() for m in NAME_RE.findall(data)}
 
@@ -68,52 +76,62 @@ def replacement_names(repo: Path) -> set[str]:
 
 def build(assets: Path, elf: Path, repo: Path) -> dict:
     ships = shipped_audio(assets)
-    original = original_names(elf)
+    blob = elf.read_bytes()
+    strings = nul_strings(blob)
+    string_set = set(strings)
     replacement = replacement_names(repo)
-    # Some original names are composed at runtime (the ELF carries the stem and
-    # appends an index - e.g. "bird" + n + ".wav"). A stem hit is recorded as its
-    # own evidence class: it explains why the exact filename has no string,
-    # without claiming which index maps to which file.
-    original_blob = elf.read_bytes()
     rows = []
     for name in sorted(ships):
-        stem = name.rsplit(".", 1)[0].rstrip("0123456789")
-        stem_hit = len(stem) >= 3 and stem.encode() in original_blob
+        klass, detail = classify(name, strings, string_set)
         rows.append({
             "name": name,
             "bytes": ships[name]["bytes"],
             "sha256": ships[name]["sha256"],
-            "original_referenced": name in original,
-            "original_stem_only": (name not in original) and stem_hit,
+            "original_class": klass,
+            "original_evidence": detail,
             "replacement_referenced": name in replacement,
         })
+    def count(klass: str) -> int:
+        return sum(1 for r in rows if r["original_class"] == klass)
+
+    named = ("verbatim", "format-string")
     counts = {
         "ships": len(rows),
-        "original_referenced": sum(1 for r in rows if r["original_referenced"]),
-        "original_stem_only": sum(1 for r in rows if r["original_stem_only"]),
+        "original_verbatim": count("verbatim"),
+        "original_format_string": count("format-string"),
+        "original_suffix_composition": count("suffix-composition"),
+        "original_stem_exact": count("stem-exact"),
+        "original_stem_prefix": count("stem-prefix"),
+        "original_substring_only": count("substring"),
+        "original_unattributed": count("unattributed"),
+        "original_named": sum(1 for r in rows if r["original_class"] in named),
         "replacement_referenced": sum(1 for r in rows if r["replacement_referenced"]),
-        "shipped_unreferenced_by_original": sum(
-            1 for r in rows if not r["original_referenced"] and not r["original_stem_only"]),
-        "original_not_in_replacement": sum(
-            1 for r in rows if (r["original_referenced"] or r["original_stem_only"])
-            and not r["replacement_referenced"]),
-        "original_names_absent_from_assets": len(original - set(ships)),
+        "original_named_not_in_replacement": sum(
+            1 for r in rows if r["original_class"] in named and not r["replacement_referenced"]),
+        "no_original_evidence": sum(
+            1 for r in rows if r["original_class"] not in named),
+        "original_names_absent_from_assets": len(
+            {s for s in strings if s.endswith((".wav", ".mp4", ".m4a", ".ogg"))} - set(ships)),
     }
     return {
         "schema": 1,
         "assets_root": str(assets),
         "elf_sha256": hashlib.sha256(elf.read_bytes()).hexdigest(),
         "counts": counts,
-        "claim": ("audio coverage join: shipped files vs names referenced by the "
-                  "pinned original ELF vs names the replacement sources mention; "
-                  "membership only, no playback claim"),
+        "claim": ("audio coverage join: shipped files vs how the pinned original "
+                  "ELF names them (verbatim / format-string / stem-exact / "
+                  "stem-prefix / substring / unattributed) vs names the "
+                  "replacement sources mention; membership only, no playback claim"),
         "rows": rows,
-        "original_only_names": sorted(original - set(ships))[:200],
+        "original_only_names": sorted(
+            {s for s in strings if s.endswith((".wav", ".mp4", ".m4a", ".ogg"))} - set(ships))[:200],
+        "string_extraction": ("NUL-delimited printable runs; a raw byte regex "
+                              "false-positived on OBJC_IVAR_$_KelpPlant.waveTimer"),
     }
 
 
 def render_tsv(rows: list[dict]) -> str:
-    header = ["name", "bytes", "sha256", "original_referenced", "original_stem_only",
+    header = ["name", "bytes", "sha256", "original_class", "original_evidence",
               "replacement_referenced"]
     lines = ["\t".join(header)]
     for row in rows:

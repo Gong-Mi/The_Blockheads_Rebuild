@@ -671,15 +671,15 @@ def main() -> None:
         ROOT / "tools/audit_shader_assets.py",
         [
             "SHADER_SUFFIXES",
-            "stem-only",
-            "unattributed",
+            "from string_evidence import classify, nul_strings",
+            "suffix-composition",
         ],
     )
     require(
         NATIVE / "SHADER_ASSET_COVERAGE.md",
         [
-            "stringByAppendingString",
-            "ActionSquare.vsh/.fsh",
+            "%@.vsh",
+            "count of unresolved programs",
             "84",
         ],
     )
@@ -688,23 +688,32 @@ def main() -> None:
         [
             "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
             '"ships": 92',
-            '"original_stem_only": 66',
+            '"original_suffix_composition": 70',
+            '"original_unattributed": 0',
+        ],
+    )
+    require(
+        ROOT / "tools/string_evidence.py",
+        [
+            "def nul_strings",
+            "format-string",
+            "suffix-composition",
+            "def classify",
         ],
     )
     require(
         ROOT / "tools/audit_audio_assets.py",
         [
             "AUDIO_SUFFIXES",
-            "original_stem_only",
-            "--check",
+            "from string_evidence import classify, nul_strings",
         ],
     )
     require(
         NATIVE / "AUDIO_ASSET_COVERAGE.md",
         [
-            "original_not_in_replacement",
-            "bird1..bird14.wav",
-            "_KelpPlant.wav",
+            "original_named_not_in_replacement",
+            "OBJC_IVAR_$_KelpPlant.waveTimer",
+            "bird%d.wav",
             "136",
         ],
     )
@@ -713,7 +722,8 @@ def main() -> None:
         [
             "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
             '"ships": 161',
-            '"original_stem_only": 14',
+            '"original_format_string": 14',
+            '"original_unattributed": 9',
         ],
     )
     require(

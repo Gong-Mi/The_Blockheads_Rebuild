@@ -17,38 +17,45 @@ EXPECTED = {
     "vertex": 46,
     "fragment": 46,
     "original_verbatim": 22,
-    "original_stem_only": 66,
-    "original_unattributed": 4,
+    "original_suffix_composition": 70,
+    "original_stem_exact": 0,
+    "original_stem_prefix": 0,
+    "original_substring_only": 0,
+    "original_unattributed": 0,
+    "original_named": 22,
     "replacement_referenced": 8,
     "mapped_in_class_table": 16,
     "not_named_by_replacement": 84,
 }
-UNATTRIBUTED = ["ActionSquare.fsh", "ActionSquare.vsh", "WorldObjectGather.fsh",
-                "WorldObjectGather.vsh"]
+CLASSES = ("verbatim", "format-string", "suffix-composition", "stem-exact",
+           "stem-prefix", "substring", "unattributed")
 
 
 def main() -> int:
     record = json.loads(JSON_PATH.read_text(encoding="utf-8"))
     assert record["elf_sha256"] == PINNED_ELF, "coverage is not from the pinned ELF"
     assert record["counts"] == EXPECTED, record["counts"]
-    assert record["unattributed"] == UNATTRIBUTED, record["unattributed"]
+    assert record["unattributed"] == [], record["unattributed"]
+    assert len(record["suffix_composition_names"]) == 70, record["suffix_composition_names"]
+    assert "string_evidence" in record["string_extraction"], record["string_extraction"]
 
     rows = record["rows"]
     assert len(rows) == EXPECTED["ships"], len(rows)
     for row in rows:
         assert len(row["sha256"]) == 64, row
         assert row["bytes"] > 0, row
-        assert row["original_class"] in ("verbatim", "stem-only", "unattributed"), row
+        assert row["original_class"] in CLASSES, row
         assert row["stage"] == ("vertex" if row["name"].endswith(".vsh") else "fragment"), row
-        if row["original_class"] == "unattributed":
-            assert row["name"] in UNATTRIBUTED, row
+        if row["original_class"] == "suffix-composition":
+            assert row["original_evidence"] in ("%@.vsh", "%s.vsh", "%@.fsh", "%s.fsh"), row
     pairs = {r["name"].rsplit(".", 1)[0] for r in rows if r["stage"] == "vertex"}
     frags = {r["name"].rsplit(".", 1)[0] for r in rows if r["stage"] == "fragment"}
     assert pairs == frags, sorted(pairs ^ frags)
 
     tsv_rows = list(csv.reader(io.StringIO(TSV.read_text(encoding="utf-8")), delimiter="\t"))
     assert tsv_rows[0] == ["name", "stage", "bytes", "sha256", "original_class",
-                           "replacement_referenced", "mapped_uses"], tsv_rows[0]
+                           "original_evidence", "replacement_referenced",
+                           "mapped_uses"], tsv_rows[0]
     assert len(tsv_rows) == len(rows) + 1, (len(tsv_rows), len(rows))
     for tsv_row, row in zip(tsv_rows[1:], rows):
         assert tsv_row[0] == row["name"] and tsv_row[3] == row["sha256"], (tsv_row, row)
