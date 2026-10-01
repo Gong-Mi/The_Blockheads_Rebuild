@@ -694,6 +694,29 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/audit_text_assets.py",
+        [
+            "sentence_like",
+            "PROBE_SYMBOLS",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "TEXT_ASSET_INVENTORY.md",
+        [
+            "no localization pipeline to consume",
+            "InfoPlist.strings",
+            "Item display names are not solved here",
+        ],
+    )
+    require(
+        NATIVE / "text_asset_inventory.json",
+        [
+            '"localization_key_value_pairs": 0',
+            '"sentence_like_strings": 413',
+        ],
+    )
+    require(
         ROOT / "tools/verify_atlas_geometry.py",
         [
             "image_id_domain",
