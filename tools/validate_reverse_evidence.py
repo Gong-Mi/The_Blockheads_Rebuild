@@ -693,6 +693,14 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/lint_evidence_scan.py",
+        [
+            "no tool may recover a filename by regexing raw binary bytes",
+            "BASENAME_RE",
+            "violations",
+        ],
+    )
+    require(
         ROOT / "tools/string_evidence.py",
         [
             "def nul_strings",
