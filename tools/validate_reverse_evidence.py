@@ -913,6 +913,30 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/test_live_runtime_ivars.py",
+        [
+            "EXPECTED_COUNTS",
+            "PINNED_OFFSETS",
+            "527",
+        ],
+    )
+    require(
+        NATIVE / "LIVE_RUNTIME_IVARS.md",
+        [
+            "Live runtime ivar offsets",
+            "527 live ivar offsets",
+            "Blockhead.headCube",
+        ],
+    )
+    require(
+        NATIVE / "live_runtime_ivar_offsets.json",
+        [
+            '"ivar_count": 527',
+            '"Blockhead.headCube": 712',
+            '"DynamicWorld.world": 9496',
+        ],
+    )
+    require(
         ROOT / "tools/find_selector_senders.py",
         [
             "pool_word + PIC_BASE == target address",
