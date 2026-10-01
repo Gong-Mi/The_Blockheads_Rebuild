@@ -37,6 +37,17 @@ and the stub's selector field is written at load time. That matches the `.rel.dy
 above: the file does not contain the value the send needs, so a static search for "who
 loads the stub for `soundNamed:`" has nothing to match against.
 
+## Correction: the link does exist, just not here
+
+An earlier revision of this file concluded "the selector send channel in this build is not
+statically linkable". That conclusion was wrong in scope and is retracted here. The send is
+`objc_msgSend(receiver, <selref slot address>, args...)` - the slot address *is* the SEL
+value - and code reaches that slot through **base-relative pool words** in `.text`
+(`pool_word + PIC base 0x105faf4 == slot`), which are plain literals and therefore
+matchable. What is empty is only the route this probe walks (the slot value and the
+coalesced units). The working route is `tools/find_selector_senders.py`, written up in
+`SELECTOR_SENDERS.md`.
+
 ## What this rules in and out
 
 - **Ruled out** for this build: resolving a selector's call sites by scanning for the

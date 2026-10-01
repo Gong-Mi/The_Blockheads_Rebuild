@@ -32,7 +32,8 @@ def main() -> int:
     assert len(holders) == 1 and holders[0]["section"] == ".rel.dyn", holders
     relocs = {r["name"]: r["entries"] for r in record["relocation_sections"]}
     assert relocs == {".rel.dyn": 148676, ".rel.plt": 611}, relocs
-    assert "not statically" in record["claim"], record["claim"]
+    assert "msgrefs/selref-value route is empty" in record["claim"], record["claim"]
+    assert "find_selector_senders" in record["claim"], record["claim"]
     assert record["send_idiom"]["function"] == "0x00b88aac", record["send_idiom"]
 
     tsv_rows = list(csv.reader(io.StringIO(TSV.read_text(encoding="utf-8")), delimiter="\t"))

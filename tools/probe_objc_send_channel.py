@@ -119,11 +119,13 @@ def probe(elf: bytes, selector: str) -> dict:
         body.append({"at": f"0x{addr:08x}", "word": f"0x{word:08x}"})
     record["send_idiom"] = {"function": f"0x{SEND_IDIOM_FUNCTION:08x}",
                             "words": body[:16]}
-    record["claim"] = ("the selector send channel in this build is not statically "
-                       "linkable: the selector string has exactly one holder (its selref "
-                       "slot), the slot value appears only inside a relocation section, and "
-                       "no msgrefs unit carries either value - so a send resolves through a "
-                       "table that is filled at load time")
+    record["claim"] = (
+        "the msgrefs/selref-value route is empty for this build, which is NOT the same as "
+        "the send being statically unresolvable: a send is objc_msgSend(receiver, <selref "
+        "slot address>, ...) and code reaches that slot through base-relative pool words, so "
+        "the link lives in tools/find_selector_senders.py (see SELECTOR_SENDERS.md). What is "
+        "empty here is only this route."
+    )
     return record
 
 

@@ -891,6 +891,29 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/find_selector_senders.py",
+        [
+            "pool_word + PIC_BASE == target address",
+            "0x0105FAF4",
+        ],
+    )
+    require(
+        NATIVE / "SELECTOR_SENDERS.md",
+        [
+            "reference sites",
+            "0x105faf4",
+            "not settled here",
+        ],
+    )
+    require(
+        NATIVE / "selector_senders.json",
+        [
+            '"pic_base": "0x105faf4"',
+            '"selector": "soundNamed:"',
+            '"slots": [\n        "0xe7de14"',
+        ],
+    )
+    require(
         ROOT / "tools/probe_objc_send_channel.py",
         [
             "msgrefs_unit_matches",
