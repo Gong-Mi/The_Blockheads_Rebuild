@@ -822,6 +822,29 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/crosscheck_draw_value_domains.py",
+        [
+            "shared_body_vs_sprites",
+            "constants_vs_direct_cases",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "DRAW_VALUE_DOMAINS.md",
+        [
+            "same kind of number",
+            "6 / 6",
+            "different sub-domain",
+        ],
+    )
+    require(
+        NATIVE / "draw_value_domains.json",
+        [
+            '"shared": 37',
+            '"shared": 6',
+        ],
+    )
+    require(
         ROOT / "tools/extract_tile_shared_body.py",
         [
             "decode_movw_imm",
