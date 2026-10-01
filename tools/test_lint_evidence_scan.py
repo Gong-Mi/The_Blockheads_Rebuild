@@ -68,6 +68,35 @@ def main() -> int:
     assert any("skips a missing/None output path" in item for item in vacuous), vacuous
     assert any("output argument without a default" in item for item in vacuous), vacuous
 
+    # Negative control: the same None-guard inside a decoder (not the check block)
+    # must not be reported, or every tool with a decoder trips the rule.
+    decoder_sample = '''import argparse
+from pathlib import Path
+
+
+def decode(word):
+    value = None if word == 0 else word
+    if value is None:
+        continue
+    return value
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--tsv", type=Path, default=Path("out.tsv"))
+    ap.add_argument("--check", action="store_true")
+    args = ap.parse_args()
+    if args.check:
+        if not args.tsv.exists():
+            return 1
+    return 0
+'''
+    with tempfile.TemporaryDirectory() as tmp:
+        sample = Path(tmp) / "decoder_with_guard.py"
+        sample.write_text(decoder_sample, encoding="utf-8")
+        clean = lint.scan(sample)
+    assert not any("skips a missing/None output path" in item for item in clean), clean
+
     print(f"evidence-scan lint: PASS (clean tree + synthetic offender flagged)")
     return 0
 

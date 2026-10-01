@@ -52,7 +52,13 @@ def vacuous_check_violations(path: Path, text: str) -> list[str]:
     out: list[str] = []
     if "args.check" not in text and '"--check"' not in text:
         return out
-    if CHECK_SKIP_RE.search(text):
+    # Only the check block counts: `if value is None: continue` is a perfectly
+    # normal guard inside a decoder and must not be mistaken for a vacuous check
+    # (an earlier revision of this rule flagged exactly that in
+    # extract_tile_shared_body.py).
+    marker = "args.check:"
+    check_block = text[text.rfind(marker):] if marker in text else ""
+    if CHECK_SKIP_RE.search(check_block):
         out.append(f"{path.name}: --check skips a missing/None output path "
                    f"(a stale artifact would report 'check ok')")
     for call in ADD_ARG_CALL_RE.findall(text):
