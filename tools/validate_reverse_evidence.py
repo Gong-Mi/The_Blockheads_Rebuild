@@ -909,7 +909,7 @@ def main() -> None:
     require(
         NATIVE / "item_mapping_functions.json",
         [
-            '"pairs_decoded": 15',
+            '"pairs_decoded": 26',
             '"mapped_entries": 14',
         ],
     )

@@ -22,7 +22,7 @@ cut of this tool only read the table and silently lost that entry.
 |---|---:|
 | functions decoded | 4 |
 | ... with an inline table | 2 |
-| compare pairs decoded / with an output | 15 / 15 |
+| compare pairs decoded / with an output | 26 / 26 |
 | table entries resolved | 14 |
 
 ## The mappings
@@ -52,9 +52,20 @@ plus a 7-entry table (indices 0-6 -> 1, 2, 3, 5, 0, 0, 4).
 | 303 | 1 |
 | 324-330 (table) | 3, 8, 2, 7, 0, 0, 3 |
 
-`genericDyedItemTypeForItemType` - **not decoded**: 0 pairs. The predicate pass saw many
-literals in it, so its shape is neither of the two above; it is left as the next target
-rather than approximated.
+`genericDyedItemTypeForItemType` - dyeable item -> its dyed variant (11 pairs)
+
+| 85 | 84 | 117 | 115 | 122 | 130 | 124 | 126 | 127 | 169 | 170 |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 114 | 113 | 118 | 116 | 123 | 131 | 125 | 128 | 129 | 172 | 173 |
+
+This function is why the extractor had to learn a second branch form. Its whole chain is
+written as `cmp #IN ; bne SKIP ; movw r0, #OUT`, i.e. the equal path **falls through**
+instead of branching - an earlier cut only followed `beq` and decoded this function to
+zero pairs, which was reported as "not decoded" rather than as what it was: a form the
+tool could not read yet.
+
+`randomBonusItemTypeForTile` remains undecoded: it takes a tile and a world, not an item
+type, so it is a different kind of function and is not claimed here.
 
 ## Boundaries
 
@@ -64,4 +75,5 @@ rather than approximated.
   recorded in the JSON rather than asserted here.
 - Outputs are the constants the case bodies return; nothing here proves the caller uses
   them as item types (they are, by type, but that is a reading).
-- 15 pairs is not completeness: only the four functions named above were decoded.
+- 26 pairs is not completeness: only the four functions named above were decoded, and
+  `randomBonusItemTypeForTile` (tile+world in, item out) is a different shape entirely.

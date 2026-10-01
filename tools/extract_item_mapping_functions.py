@@ -109,9 +109,20 @@ def decode(blob: bytes, entry: dict) -> dict:
             value, _at = pending[-1]
             target = int(ins.op_str.lstrip("#"), 16)
             if ins.mnemonic == "beq":
+                # `cmp X ; beq BODY` -> the branch target is the equal-path body
                 pairs.append({"input": value, "branch": f"0x{ins.address:08x}",
                               "target": f"0x{target:08x}",
                               "output": return_constant(blob, target)})
+            else:
+                # `cmp X ; bne SKIP ; <body>` -> the equal path FALLS THROUGH, so the
+                # constant has to be read from the instructions right after the branch.
+                # Missing this form is why genericDyedItemTypeForItemType decoded to zero
+                # pairs in the first cut: its whole chain is written this way.
+                fallthrough = ins.address + 4
+                output = return_constant(blob, fallthrough, words=6)
+                pairs.append({"input": value, "branch": f"0x{ins.address:08x}",
+                              "target": f"0x{fallthrough:08x}", "output": output,
+                              "form": "fallthrough"})
         if (ins.mnemonic == "add" and ins.op_str.startswith("r2, pc, #")
                 and i + 2 < len(body) and "ldr" in body[i + 1].mnemonic
                 and "pc, r1, r2" in body[i + 2].op_str):
