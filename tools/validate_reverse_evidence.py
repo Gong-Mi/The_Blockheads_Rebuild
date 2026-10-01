@@ -672,7 +672,8 @@ def main() -> None:
         ROOT / "tools/audit_shader_assets.py",
         [
             "SHADER_SUFFIXES",
-            "from string_evidence import classify, nul_strings",
+            "from string_evidence import classify, contains_token, nul_strings",
+            "def sweep_sources",
             "suffix-composition",
         ],
     )
