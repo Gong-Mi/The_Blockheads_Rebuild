@@ -693,6 +693,30 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/audit_texture_sets.py",
+        [
+            "ratio_uniform",
+            "identical-duplicate",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "TEXTURE_RESOLUTION_SETS.md",
+        [
+            "yakNeck.png",
+            "32x",
+            "HDTex/` membership does not imply a different resolution",
+        ],
+    )
+    require(
+        NATIVE / "texture_resolution_sets.json",
+        [
+            '"sd_hd_pair": 122',
+            '"non_uniform_ratio": 1',
+            '"8x": 23',
+        ],
+    )
+    require(
         ROOT / "tools/resolve_tile_sprite_domain.py",
         [
             "itemTypeFromTileIsForegorund",
