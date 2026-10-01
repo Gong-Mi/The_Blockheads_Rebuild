@@ -104,9 +104,24 @@ def main() -> int:
     ]
     header, body = tsv_rows[0], tsv_rows[1:]
     assert header == (
-        "tile_type", "resolution", "depends_on", "contents_type", "item_type",
+        "tile_type", "resolution", "contents_type", "item_type",
         "helper", "case_target", "step_index", "status",
     ), f"TSV header changed: {header}"
+    # Column-shift guard: the header used to declare one name more than the data
+    # carried, so every field after `resolution` was mislabelled while a
+    # header+row-multiset check stayed green. Assert the *positional* semantics
+    # of each row instead of just the header text.
+    for row in body:
+        assert len(row) == len(header), f"row/column count mismatch: {row}"
+        tile_type, resolution, contents_type, item_type, helper, case_target, step, status = row
+        assert tile_type.isdigit(), row
+        assert resolution in ("contents", "helper"), row
+        assert contents_type == "" or contents_type.isdigit(), row
+        assert item_type == "" or item_type.isdigit(), row
+        assert helper == "" or helper.startswith("0x"), row
+        assert case_target.startswith("0x"), row
+        assert step.isdigit(), row
+        assert status != "", row
     expected = rows_from_json(record)
     assert sorted(body) == sorted(expected), (
         f"TSV is stale relative to the JSON: {len(body)} rows vs {len(expected)}"

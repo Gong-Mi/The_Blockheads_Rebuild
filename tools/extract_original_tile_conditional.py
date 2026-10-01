@@ -346,8 +346,14 @@ def extract(elf: Elf32Arm, sha256: str):
 
 
 def render_tsv(rows) -> str:
+    # The row tuples carry eight values: tile, resolution, contents_type,
+    # item_type, helper, case_target, step_index, status. An earlier header
+    # declared nine names and included a `depends_on` column that was never
+    # emitted, which shifted every field after `resolution` one name to the left
+    # while the contract test - comparing header text plus row multisets against
+    # the same tuples - stayed green. Keep the names exactly aligned to the data.
     header = (
-        "tile_type\tresolution\tdepends_on\tcontents_type\titem_type\thelper\t"
+        "tile_type\tresolution\tcontents_type\titem_type\thelper\t"
         "case_target\tstep_index\tstatus"
     )
     lines = [header]
@@ -359,8 +365,16 @@ def render_tsv(rows) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("libapplication", type=Path)
-    parser.add_argument("--tsv", type=Path)
-    parser.add_argument("--json", type=Path)
+    # Canonical outputs by default: with `--tsv`/`--json` optional and None,
+    # `--check` skipped both comparisons and printed "check ok" without reading
+    # anything, so a stale artifact could look verified. Default to the
+    # committed paths and let an explicit path override them.
+    parser.add_argument("--tsv", type=Path,
+                        default=Path("reconstruction/reverse-v3/native/"
+                                     "original_tile_conditional.tsv"))
+    parser.add_argument("--json", type=Path,
+                        default=Path("reconstruction/reverse-v3/native/"
+                                     "original_tile_conditional.json"))
     parser.add_argument(
         "--check",
         action="store_true",
@@ -395,8 +409,6 @@ def main() -> int:
     status = 0
     if args.check:
         for path, expected in ((args.tsv, tsv), (args.json, payload)):
-            if path is None:
-                continue
             if not path.exists():
                 print(f"CHECK FAILED: {path} is missing", file=sys.stderr)
                 status = 1
@@ -414,8 +426,6 @@ def main() -> int:
     if args.json:
         args.json.parent.mkdir(parents=True, exist_ok=True)
         args.json.write_text(payload, encoding="utf-8")
-    if not args.tsv and not args.json:
-        print(tsv, end="")
     return 0
 
 

@@ -693,6 +693,30 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/resolve_tile_sprite_domain.py",
+        [
+            "itemTypeFromTileIsForegorund",
+            "cross_check_mismatches",
+            "contents-conditional",
+        ],
+    )
+    require(
+        NATIVE / "TILE_SPRITE_DOMAIN.md",
+        [
+            "tile-map-inline",
+            "item-sprite-domain",
+            "0** |",
+        ],
+    )
+    require(
+        NATIVE / "tile_sprite_domain.json",
+        [
+            '"tile_types": 77',
+            '"cross_check_mismatches": 0',
+            '"unresolved": 0',
+        ],
+    )
+    require(
         ROOT / "tools/lint_evidence_scan.py",
         [
             "no tool may recover a filename by regexing raw binary bytes",
@@ -874,7 +898,9 @@ def main() -> None:
     require(
         conditional_tsv,
         [
-            "tile_type\tresolution\tdepends_on\tcontents_type\titem_type\thelper",
+            # header must stay aligned with the 8-value rows (the old header
+            # declared a `depends_on` column that was never emitted)
+            "tile_type\tresolution\tcontents_type\titem_type\thelper\tcase_target\tstep_index\tstatus",
             "1\tcontents\t61\t31\t\t0x00a18b04\t0\tresolved",
             "2\thelper\t\t1049\t0x00a11390\t0x00a187c0\t7\tresolved",
             "6\tcontents\t\t1048\t\t0x00a18a98\t2\tfallback-value",
