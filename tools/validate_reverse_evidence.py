@@ -891,6 +891,29 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/histogram_save_tile_fields.py",
+        [
+            "blocks_records",
+            "nonzero_offset8_states",
+            "int16_windows",
+        ],
+    )
+    require(
+        NATIVE / "TILE_RECORD_SAVE_DATA.md",
+        [
+            "zero in every one of the 40,960 tiles",
+            "cold-region tiles carrying",
+            "One world",
+        ],
+    )
+    require(
+        NATIVE / "tile_record_save_data.json",
+        [
+            '"tiles": 40960',
+            '"tiles_per_record": 1024',
+        ],
+    )
+    require(
         ROOT / "tools/extract_tile_record_layout.py",
         [
             "WINDOWS",
