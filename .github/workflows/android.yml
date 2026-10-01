@@ -54,6 +54,12 @@ jobs:
       run: python3 tools/test_item_id_alignment_evidence.py
       working-directory: .
 
+    - name: Check artifact consumers (no stale column reads)
+      run: |
+        python3 tools/check_artifact_consumers.py
+        python3 tools/test_check_artifact_consumers.py
+      working-directory: .
+
     - name: Test text asset inventory contract
       run: python3 tools/test_text_asset_inventory.py
       working-directory: .

@@ -815,6 +815,14 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/check_artifact_consumers.py",
+        [
+            "stale references",
+            "LOOKALIKE",
+            "artifact_columns",
+        ],
+    )
+    require(
         ROOT / "tools/lint_evidence_scan.py",
         [
             "no tool may recover a filename by regexing raw binary bytes",
