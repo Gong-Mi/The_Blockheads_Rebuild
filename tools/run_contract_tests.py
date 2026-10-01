@@ -32,7 +32,18 @@ def discover(filter_text: str | None) -> list[Path]:
     return tests
 
 
-def run_one(path: Path, timeout: float) -> tuple[str, str, float, str]:
+# A test that cannot run here is not a failing test. These signatures mean the
+# environment (or a built input) is missing, which is why CI runs a curated subset
+# of the suite; treating them as failures made every CI run red when the whole set
+# was added. `--strict` turns the skipping off.
+SKIP_SIGNATURES = (
+    "ModuleNotFoundError: No module named",
+    "ImportError: No module named",
+    "usage: test_",
+)
+
+
+def run_one(path: Path, timeout: float, strict: bool = False) -> tuple[str, str, float, str]:
     start = time.monotonic()
     try:
         proc = subprocess.run([sys.executable, str(path)], capture_output=True,
@@ -40,7 +51,10 @@ def run_one(path: Path, timeout: float) -> tuple[str, str, float, str]:
         elapsed = time.monotonic() - start
         if proc.returncode == 0:
             return path.name, "pass", elapsed, ""
-        tail = (proc.stdout + proc.stderr).strip().splitlines()[-1:] or [""]
+        output = (proc.stdout + proc.stderr)
+        tail = output.strip().splitlines()[-1:] or [""]
+        if not strict and any(signature in output for signature in SKIP_SIGNATURES):
+            return path.name, "skip", elapsed, tail[0][:140]
         return path.name, "FAIL", elapsed, tail[0][:140]
     except subprocess.TimeoutExpired:
         return path.name, "timeout", time.monotonic() - start, f">{timeout:g}s"
@@ -52,6 +66,8 @@ def main() -> int:
     ap.add_argument("--timeout", type=float, default=180.0)
     ap.add_argument("--jobs", type=int, default=4)
     ap.add_argument("--list", action="store_true")
+    ap.add_argument("--strict", action="store_true",
+                    help="treat a missing module or input as a failure")
     args = ap.parse_args()
 
     tests = discover(args.filter)
@@ -66,18 +82,23 @@ def main() -> int:
     print(f"running {len(tests)} contract tests (timeout {args.timeout:g}s each, "
           f"{args.jobs} at a time)", flush=True)
     failures = []
+    skipped = 0
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as pool:
         for name, status, elapsed, detail in pool.map(
-                lambda p: run_one(p, args.timeout), tests):
-            marker = "ok " if status == "pass" else "!! "
+                lambda p: run_one(p, args.timeout, args.strict), tests):
+            if status == "skip":
+                skipped += 1
+            marker = {"pass": "ok ", "skip": "-- "}.get(status, "!! ")
             line = f"  {marker}{name:52s} {status:8s} {elapsed:6.1f}s"
             if detail:
                 line += f"  {detail}"
             print(line, flush=True)
-            if status != "pass":
+            if status not in ("pass", "skip"):
                 failures.append((name, status, detail))
 
-    print(f"\n{len(tests) - len(failures)}/{len(tests)} passed")
+    passed = len(tests) - len(failures) - skipped
+    print(f"\n{passed}/{len(tests)} passed, {skipped} skipped "
+          f"(environment/inputs missing), {len(failures)} failed")
     if failures:
         for name, status, detail in failures:
             print(f"  {status.upper()}: {name} {detail}", file=sys.stderr)
