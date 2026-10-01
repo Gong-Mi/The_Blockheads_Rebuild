@@ -70,6 +70,10 @@ jobs:
       run: python3 tools/test_item_display_name_sources.py
       working-directory: .
 
+    - name: Run every contract test with a bounded timeout
+      run: python3 tools/run_contract_tests.py --timeout 300 --jobs 4
+      working-directory: .
+
     - name: Check artifact consumers (no stale column reads)
       run: |
         python3 tools/check_artifact_consumers.py

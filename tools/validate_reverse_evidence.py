@@ -947,6 +947,14 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/run_contract_tests.py",
+        [
+            "per-test timeout",
+            "bounded timeout per test",
+            "ThreadPoolExecutor",
+        ],
+    )
+    require(
         ROOT / "tools/lint_evidence_scan.py",
         [
             "no tool may recover a filename by regexing raw binary bytes",
