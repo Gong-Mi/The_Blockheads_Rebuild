@@ -111,7 +111,9 @@ def build(assets: Path, elf: Path, repo: Path) -> dict:
         "counts": counts,
         "localization_files": localization_files,
         "author_authored_data_files": repo_data,
-        "sentences": sentences[:400],
+        # The full catalogue: an earlier revision stored only the first 400 of 413
+        # while the count field said 413, so the artifact disagreed with itself.
+        "sentences": sentences,
     }
 
 
