@@ -868,6 +868,29 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/crosscheck_tile_record_header.py",
+        [
+            "ACCESSOR_RE",
+            "documented_but_unread",
+            "size_agrees",
+        ],
+    )
+    require(
+        NATIVE / "TILE_RECORD_HEADER_CROSSCHECK.md",
+        [
+            "backWallType - 1",
+            "new",
+            "not original source",
+        ],
+    )
+    require(
+        NATIVE / "tile_record_header_crosscheck.json",
+        [
+            '"size_agrees": true',
+            '"agreeing_offsets": 2',
+        ],
+    )
+    require(
         ROOT / "tools/extract_tile_record_layout.py",
         [
             "WINDOWS",
