@@ -205,7 +205,8 @@ jobs:
       working-directory: .
 
 
-  # Recovered-code lane: compiles and runs the recovered C++ numerical slices; independent of the GameView chain.
+
+  # Recovered-code lane: the recovered C++ numerical slices that are independent of the GameView chain.
   recovered:
     runs-on: ubuntu-latest
     steps:
@@ -289,15 +290,16 @@ jobs:
       working-directory: .
 
 
-  # GameView lane: the slowest chain (~90s). The cmake build dir under /tmp is produced AND consumed inside this lane (the inventory binaries come from it), so the chain travels together.
-  gameview:
+
+  # GameView lane A: the python contracts and the two NDEBUG negative controls.
+  gameview-contracts:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
       with:
         submodules: true
         fetch-depth: 0
-    - name: Test complete recovered GameView method batch
+    - name: Test recovered GameView python contracts and negative controls
       run: |
         export PYTHONDONTWRITEBYTECODE=1
         python3 tools/test_gameview_method_map.py
@@ -312,14 +314,41 @@ jobs:
           -Ireconstruction/recovered tools/test_world_translation.cpp \
           -o /tmp/world-translation-negative
         python3 -c 'import subprocess; p=subprocess.run(["/tmp/world-translation-negative"],capture_output=True,text=True); print("setter negative control:",p.returncode,p.stderr); assert p.returncode != 0 and "s.accurateTranslation.x==expected" in p.stderr'
-        for opt in 0 2; do
-          build="/tmp/blockheads-methods-O${opt}"
-          cmake -S reconstruction/recovered -B "$build" \
-            -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE="-O${opt} -DNDEBUG"
-          cmake --build "$build" --parallel 2
-          ctest --test-dir "$build" --output-on-failure --verbose
-        done
+      working-directory: .
 
+  # GameView lane B: the -O0 cmake build + ctest, split from -O2 so the two optimisation rounds stop queueing behind each other.
+  gameview-o0:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+        fetch-depth: 0
+    - name: Recovered GameView batch -O0 build and ctest
+      run: |
+        build="/tmp/blockheads-methods-O0"
+        cmake -S reconstruction/recovered -B "$build" \
+          -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE="-O0 -DNDEBUG"
+        cmake --build "$build" --parallel 2
+        ctest --test-dir "$build" --output-on-failure --verbose
+      working-directory: .
+
+  # GameView lane C: the -O2 round plus the inventory chain. /tmp/blockheads-methods-O2 is produced by the -O2 cmake step and consumed by the inventory steps and both uploads, so they travel together.
+  gameview-o2:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+        fetch-depth: 0
+    - name: Recovered GameView batch -O2 build and ctest
+      run: |
+        build="/tmp/blockheads-methods-O2"
+        cmake -S reconstruction/recovered -B "$build" \
+          -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE="-O2 -DNDEBUG"
+        cmake --build "$build" --parallel 2
+        ctest --test-dir "$build" --output-on-failure --verbose
+      working-directory: .
     - name: Generate native item data for unit tests
       run: |
         mkdir -p /tmp/blockheads-generated
@@ -374,7 +403,8 @@ jobs:
 
 
 
-  # Packaging lane: JDK + SDK + Gradle + APK contract, NDK and Gradle caches restored before the build.
+
+  # Packaging lane: JDK + SDK + Gradle + APK contract. NDK, Gradle and ccache caches are restored before the build; ccache is opt-in via -PccacheLauncher.
   build:
     runs-on: ubuntu-latest
     steps:
@@ -382,6 +412,16 @@ jobs:
       with:
         submodules: true
         fetch-depth: 0
+    - name: Install ccache
+      run: sudo apt-get install -y ccache
+      working-directory: .
+    - name: Cache ccache
+      uses: actions/cache@v4
+      with:
+        path: ~/.ccache
+        key: ccache-${{ runner.os }}-${{ github.sha }}
+        restore-keys: |
+          ccache-${{ runner.os }}-
     - name: set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -415,7 +455,7 @@ jobs:
           gradle-${{ runner.os }}-
 
     - name: Build with Gradle
-      run: ./gradlew assembleDebug --build-cache
+      run: ./gradlew assembleDebug --build-cache -PccacheLauncher=/usr/bin/ccache
       working-directory: .
 
     - name: Validate packaged APK contract
@@ -427,3 +467,4 @@ jobs:
       with:
         name: app-debug
         path: app/build/outputs/apk/debug/app-debug.apk
+

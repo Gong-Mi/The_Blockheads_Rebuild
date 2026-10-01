@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 
+// Read once at the top level: inside the cmake {} closure the delegate is the
+// AGP options object, so relying on findProperty there would depend on Groovy's
+// owner fallback. A top-level read is unambiguous.
+def ccacheLauncher = findProperty("ccacheLauncher")
+
 android {
     ndkVersion "26.1.10909125"
     namespace "com.noodlecake.blockheads.rebuild"
@@ -28,6 +33,14 @@ android {
                 // requirement of the committed sources, verified by direct
                 // compilation (C++11: "no member named 'filesystem'").
                 cppFlags "-std=c++17 -frtti -fexceptions"
+                // Opt-in ccache: CI passes -PccacheLauncher=<path> so the four
+                // per-ABI CMake rounds reuse compiled objects across runs. Without
+                // the property the build is byte-for-byte what it was, so a host
+                // that has no ccache (a phone, a fresh clone) is unaffected.
+                if (ccacheLauncher) {
+                    arguments "-DCMAKE_C_COMPILER_LAUNCHER=" + ccacheLauncher,
+                              "-DCMAKE_CXX_COMPILER_LAUNCHER=" + ccacheLauncher
+                }
             }
         }
     }
