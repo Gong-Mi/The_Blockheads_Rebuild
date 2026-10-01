@@ -50,6 +50,10 @@ def run_one(path: Path, timeout: float, strict: bool = False) -> tuple[str, str,
                               text=True, timeout=timeout, cwd=TOOLS.parent)
         elapsed = time.monotonic() - start
         if proc.returncode == 0:
+            # A test may report its own environment skip and exit 0; surface that as
+            # a skip so the summary does not claim it ran.
+            if "skip:" in (proc.stdout + proc.stderr):
+                return path.name, "skip", elapsed, "self-reported skip"
             return path.name, "pass", elapsed, ""
         output = (proc.stdout + proc.stderr)
         tail = output.strip().splitlines()[-1:] or [""]
