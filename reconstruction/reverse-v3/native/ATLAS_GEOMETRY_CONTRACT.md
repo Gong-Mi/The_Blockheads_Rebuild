@@ -20,32 +20,35 @@ Shipped atlases: `Items.png` 512x256 (SD) / 2048x1024 (HD), `TileMap.png` 512x51
 tiles the HD items atlas exactly (32*64 = 2048, 16*64 = 1024) and the SD one at
 16 px - and all 344 formula rows land inside it.
 
-## The finding: 11 jump-table cells cannot be placed
+## The correction: the grid was mis-attributed, not the data
 
-Eleven rows from the `imageTypeForItemType` domain need `row >= 16`, so at 64 px
-their rectangle starts past the atlas height:
+An earlier revision of this tool checked the `imageTypeForItemType` domain against
+`Items.png` (32x16) and reported 11 violations - cells whose rectangle started past
+the 1024 px height (e.g. item 1087, col 7 row 18 -> `y = 1152`; item 1089, col 0
+row 21 -> `y = 1344`).
 
-| item | col | row | rect (x, y, w, h) |
-|---|---:|---:|---|
-| 1087 | 7 | 18 | 448, 1152, 64, 64 |
-| 1088 | 8 | 18 | 512, 1152, 64, 64 |
-| 1089 | 0 | 21 | 0, 1344, 64, 64 |
-| 1098 | 25 | 21 | 1600, 1344, 64, 64 |
-| 1099 | 26 | 21 | 1664, 1344, 64, 64 |
-| ... | | | (11 total, JSON has all) |
+That was **a wrong attribution in the check, not a contradiction in the data**.
+Two facts in this repository already say where those cells belong:
 
-`y + 64` reaches up to 1536 against a 1024 px atlas, so these cells are **not**
-placeable in `Items.png` under the grid the formula domain uses. Two readings are
-consistent with the numbers and neither is proven here:
+- `original_item_image_map.tsv` column names now state it explicitly: the cell is
+  `image % 32`, `image // 32` - **derived** from the image id the switch returns,
+  not a descriptor field read out of the binary (the old names `col_dataA0` /
+  `row_dataA0` read like extracted fields, which they never were);
+- `original_item_types.tsv` records `atlas_domain=TileMap:32x32` for the whole item
+  domain, and `extract_original_item_types.py` enforces `0 <= image < 1024`, so
+  `image // 32 <= 31` - a 32-row page, not a 16-row one.
 
-- the `col`/`row` of that domain index a different page (image ids from 1024 up may
-  name separate textures rather than cells of `Items.png`);
-- that domain uses a different cell size. 64 columns x 32 rows at 32 px also tiles
-  2048x1024 exactly, which would fit every one of the 11.
+Checked against its own atlas, every cell fits:
 
-Recorded as a work item for the renderer: those 11 items must not be placed with
-the item formula. Deciding between the readings needs a call-site trace of
-`imageTypeForItemType` @`0x004d71dc`, which is not in scope of a geometry check.
+| domain | atlas | grid | rows | violations |
+|---|---|---|---:|---:|
+| item sprite map, `formula` | Items.png 2048x1024 | 32 x 16 x 64 | 344 | 0 |
+| item sprite map, `imageTypeForItemType` | TileMap.png 2048x2048 | 32 x 32 x 64 | 82 | 0 |
+
+Row 31 lands at `y + 64 = 2048`, exactly the TileMap height, so the domain's
+largest possible cell is still inside. The lesson is recorded in the artifact
+(`checks.items.note`): a geometry violation means nothing until the grid it is
+measured against is itself evidenced.
 
 ## Why the tile row is a weaker claim
 

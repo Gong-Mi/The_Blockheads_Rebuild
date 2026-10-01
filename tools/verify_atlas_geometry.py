@@ -119,10 +119,26 @@ def build(root: Path, native: Path) -> dict:
         "items": {
             "files": items_files,
             "formula_domain": check_cells(formula, 64, 2048, 1024, "formula"),
-            "jump_table_domain": check_cells(jumped, 64, 2048, 1024, "jump-table"),
-            "note": ("the formula domain tiles 2048x1024 exactly at 32x16x64; the "
-                     "jump-table domain is checked against the same grid because "
-                     "that is the only grid this repository evidences for Items.png"),
+            "image_id_domain": check_cells(jumped, 64, 2048, 2048, "image-id"),
+            "atlas_attribution": {
+                "formula": {
+                    "atlas": "Items.png",
+                    "grid": "32 cols x 16 rows x 64 px",
+                    "evidence": "texCoordsForItemType pool constants (u step 1/32, v step 1/16)",
+                },
+                "image-id": {
+                    "atlas": "TileMap.png",
+                    "grid": "32 cols x 32 rows x 64 px",
+                    "evidence": ("original_item_types.tsv atlas_domain=TileMap:32x32 "
+                                 "and image ids < 1024 enforced there, so id//32 <= 31"),
+                },
+            },
+            "note": ("each item domain is checked against its own atlas. An earlier "
+                     "revision of this tool checked the image-id domain against "
+                     "Items.png (32x16) and reported 11 violations - that was a wrong "
+                     "attribution in the check, not a contradiction in the data: the "
+                     "image-id cells are derived from the image id and belong to the "
+                     "32x32 domain, where all of them fit (row 31 -> y+64 = 2048)"),
         },
         "tiles": {
             "files": tile_files,
@@ -135,8 +151,8 @@ def build(root: Path, native: Path) -> dict:
     counts = {
         "item_formula_rows": checks["items"]["formula_domain"]["rows"],
         "item_formula_violations": checks["items"]["formula_domain"]["violations"],
-        "item_jump_rows": checks["items"]["jump_table_domain"]["rows"],
-        "item_jump_violations": checks["items"]["jump_table_domain"]["violations"],
+        "item_image_id_rows": checks["items"]["image_id_domain"]["rows"],
+        "item_image_id_violations": checks["items"]["image_id_domain"]["violations"],
         "tile_rows": checks["tiles"]["cells"]["rows"],
         "tile_violations": checks["tiles"]["cells"]["violations"],
         "fonts": len(font_checks),
@@ -158,7 +174,7 @@ def build(root: Path, native: Path) -> dict:
 
 def render_tsv(record: dict) -> str:
     lines = ["scope\tlabel\tcol\trow\tcell_px\tatlas\tviolation"]
-    for scope, key in (("items-formula", "formula_domain"), ("items-jump", "jump_table_domain")):
+    for scope, key in (("items-formula", "formula_domain"), ("items-image-id", "image_id_domain")):
         check = record["checks"]["items"][key]
         for example in check["examples"]:
             lines.append("\t".join([scope, example["label"], str(example["col"]),

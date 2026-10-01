@@ -5,8 +5,8 @@
   "counts": {
     "item_formula_rows": 344,
     "item_formula_violations": 0,
-    "item_jump_rows": 82,
-    "item_jump_violations": 11,
+    "item_image_id_rows": 82,
+    "item_image_id_violations": 0,
     "tile_rows": 68,
     "tile_violations": 0,
     "fonts": 5,
@@ -59,150 +59,29 @@
         "violations": 0,
         "examples": []
       },
-      "jump_table_domain": {
+      "image_id_domain": {
         "rows": 82,
         "cell_px": 64,
         "atlas": [
           2048,
-          1024
+          2048
         ],
-        "violations": 11,
-        "examples": [
-          {
-            "label": "item 1087 (imageTypeForItemType@0x004d71dc)",
-            "col": 7,
-            "row": 18,
-            "rect": [
-              448,
-              1152,
-              64,
-              64
-            ],
-            "exceeds": "+height"
-          },
-          {
-            "label": "item 1088 (imageTypeForItemType@0x004d71dc)",
-            "col": 8,
-            "row": 18,
-            "rect": [
-              512,
-              1152,
-              64,
-              64
-            ],
-            "exceeds": "+height"
-          },
-          {
-            "label": "item 1089 (imageTypeForItemType@0x004d71dc)",
-            "col": 0,
-            "row": 21,
-            "rect": [
-              0,
-              1344,
-              64,
-              64
-            ],
-            "exceeds": "+height"
-          },
-          {
-            "label": "item 1098 (imageTypeForItemType@0x004d71dc)",
-            "col": 25,
-            "row": 21,
-            "rect": [
-              1600,
-              1344,
-              64,
-              64
-            ],
-            "exceeds": "+height"
-          },
-          {
-            "label": "item 1099 (imageTypeForItemType@0x004d71dc)",
-            "col": 26,
-            "row": 21,
-            "rect": [
-              1664,
-              1344,
-              64,
-              64
-            ],
-            "exceeds": "+height"
-          },
-          {
-            "label": "item 1100 (imageTypeForItemType@0x004d71dc)",
-            "col": 27,
-            "row": 21,
-            "rect": [
-              1728,
-              1344,
-              64,
-              64
-            ],
-            "exceeds": "+height"
-          },
-          {
-            "label": "item 1101 (imageTypeForItemType@0x004d71dc)",
-            "col": 28,
-            "row": 21,
-            "rect": [
-              1792,
-              1344,
-              64,
-              64
-            ],
-            "exceeds": "+height"
-          },
-          {
-            "label": "item 1102 (imageTypeForItemType@0x004d71dc)",
-            "col": 29,
-            "row": 21,
-            "rect": [
-              1856,
-              1344,
-              64,
-              64
-            ],
-            "exceeds": "+height"
-          },
-          {
-            "label": "item 1103 (imageTypeForItemType@0x004d71dc)",
-            "col": 5,
-            "row": 23,
-            "rect": [
-              320,
-              1472,
-              64,
-              64
-            ],
-            "exceeds": "+height"
-          },
-          {
-            "label": "item 1104 (imageTypeForItemType@0x004d71dc)",
-            "col": 6,
-            "row": 23,
-            "rect": [
-              384,
-              1472,
-              64,
-              64
-            ],
-            "exceeds": "+height"
-          },
-          {
-            "label": "item 1105 (imageTypeForItemType@0x004d71dc)",
-            "col": 10,
-            "row": 23,
-            "rect": [
-              640,
-              1472,
-              64,
-              64
-            ],
-            "exceeds": "+height"
-          }
-        ]
+        "violations": 0,
+        "examples": []
       },
-      "note": "the formula domain tiles 2048x1024 exactly at 32x16x64; the jump-table domain is checked against the same grid because that is the only grid this repository evidences for Items.png"
+      "atlas_attribution": {
+        "formula": {
+          "atlas": "Items.png",
+          "grid": "32 cols x 16 rows x 64 px",
+          "evidence": "texCoordsForItemType pool constants (u step 1/32, v step 1/16)"
+        },
+        "image-id": {
+          "atlas": "TileMap.png",
+          "grid": "32 cols x 32 rows x 64 px",
+          "evidence": "original_item_types.tsv atlas_domain=TileMap:32x32 and image ids < 1024 enforced there, so id//32 <= 31"
+        }
+      },
+      "note": "each item domain is checked against its own atlas. An earlier revision of this tool checked the image-id domain against Items.png (32x16) and reported 11 violations - that was a wrong attribution in the check, not a contradiction in the data: the image-id cells are derived from the image id and belong to the 32x32 domain, where all of them fit (row 31 -> y+64 = 2048)"
     },
     "tiles": {
       "files": [

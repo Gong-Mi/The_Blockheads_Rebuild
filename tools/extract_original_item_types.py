@@ -20,7 +20,7 @@ OUTPUT = NATIVE / 'original_item_types.tsv'
 SOURCES = {
     NATIVE / 'reference_itemtype_enum.txt': '77bf858c6a91cd5af8a62357e036654b066304728af8c7add8c9ae97db933436',
     NATIVE / 'server171_itemtype_enum.txt': '2d0d9cc89b76b84692429f88ddf59bf4b6abfbff51cd9dfd9555bdd00f308b11',
-    NATIVE / 'original_item_image_map.tsv': 'd41d3959b1ccf7784c532b7fdb81bd55b0a543156973dcbfd1ac0710e3adf6fe',
+    NATIVE / 'original_item_image_map.tsv': 'b263e7713a736d94072db56df5623ea230fd34ffee1792a0a7dcc109a75f3cd0',
     NATIVE / 'original_tile_item_map.tsv': '078076f6c69681869288b8e0952b4787eb696afcb029b6ace2a1ce801e477b42',
     ROOT / 'assets/defaultPrices': 'e7df00e94537f8c51559a8d2a8c1f1b3dd566b09bc38a7240f2acd67f0a344c5',
 }
@@ -85,9 +85,17 @@ def build_table():
         # Keep the original numeric TileType; never a GUI project's VoxelType.
         sources[item_type].append('client-tile-type:' + row['tile_type'])
         if row['image_dataA0'] and item_type in images:
-            for field in ('image_dataA0', 'col_dataA0', 'row_dataA0'):
-                if row[field] != images[item_type][field]:
-                    raise ValueError(f'tile/image numeric contradiction: {item_type}/{field}')
+            # The tile table still names its columns *_dataA0 while the image
+            # map now says what they are (derived from the image id), so the
+            # comparison pairs the names instead of assuming they match.
+            for image_field, tile_field in (
+                ('image_dataA0', 'image_dataA0'),
+                ('col_from_image_a0', 'col_dataA0'),
+                ('row_from_image_a0', 'row_dataA0'),
+            ):
+                if row[tile_field] != images[item_type][image_field]:
+                    raise ValueError(
+                        f'tile/image numeric contradiction: {item_type}/{image_field}')
     rows = []
     for i, name in sorted(names.items()):
         row = dict(item_type=str(i), item_type_hex=f'0x{i:03X}', reference_name=name,
@@ -98,7 +106,7 @@ def build_table():
             col, line = image % 32, image // 32
             if not 0 <= image < 1024:
                 raise ValueError('TileMap image outside atlas')
-            if i in images and (int(images[i][f'col_dataA{variant}']), int(images[i][f'row_dataA{variant}'])) != (col, line):
+            if i in images and (int(images[i][f'col_from_image_a{variant}']), int(images[i][f'row_from_image_a{variant}'])) != (col, line):
                 raise ValueError('image/cell contradiction')
             row.update({f'tile_image_a{variant}': str(image), f'tile_col_a{variant}': str(col), f'tile_row_a{variant}': str(line)})
         sources[i].append('client-tile-image@' + images[i]['case_target'] if i in images

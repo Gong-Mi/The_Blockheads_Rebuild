@@ -68,8 +68,8 @@ def main() -> int:
             assert row["source"] == "imageTypeForItemType@0x004d71dc", row
             ref = explicit[item]
             assert row["image"] == ref["image_dataA0"], row
-            assert str(row["col"]) == ref["col_dataA0"], row
-            assert str(row["row"]) == ref["row_dataA0"], row
+            assert str(row["col"]) == ref["col_from_image_a0"], row
+            assert str(row["row"]) == ref["row_from_image_a0"], row
 
     # TSV <-> JSON lockstep
     tsv_rows = list(csv.reader(io.StringIO(TSV.read_text(encoding="utf-8")),

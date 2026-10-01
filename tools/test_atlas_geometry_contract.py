@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Contract test for the atlas geometry contract (no assets needed in CI).
 
-Pins the one real violation this check found: 11 cells of the
-imageTypeForItemType domain cannot be placed in Items.png under the prototype
-grid (their rectangles start past the atlas height). If a future change makes
-those rows fit - by proving a different page or a different cell size - this test
-must be updated deliberately, not incidentally.
+Pins the corrected attribution: the item sprite table holds two domains that belong
+to two different atlases (`formula` -> Items.png 32x16, image ids -> TileMap.png
+32x32), and both are fully placeable. An earlier revision measured the image-id
+domain against Items.png and reported 11 violations; that false finding must not
+come back, and the derivation of those cells must stay labelled as derived.
 """
 from __future__ import annotations
 
@@ -21,8 +21,8 @@ JSON_PATH = NATIVE / "atlas_geometry_contract.json"
 EXPECTED = {
     "item_formula_rows": 344,
     "item_formula_violations": 0,
-    "item_jump_rows": 82,
-    "item_jump_violations": 11,
+    "item_image_id_rows": 82,
+    "item_image_id_violations": 0,
     "tile_rows": 68,
     "tile_violations": 0,
     "fonts": 5,
@@ -38,16 +38,25 @@ def main() -> int:
     items = record["checks"]["items"]
     assert [f["size"] for f in items["files"]] == [[512, 256], [2048, 1024]], items["files"]
     assert items["formula_domain"]["violations"] == 0, items["formula_domain"]
-    assert items["formula_domain"]["cell_px"] == 64
-    jump = items["jump_table_domain"]
-    assert jump["violations"] == EXPECTED["item_jump_violations"], jump
-    examples = {e["label"].split()[1]: e for e in jump["examples"]}
-    assert examples["1087"]["row"] == 18, examples["1087"]
-    assert examples["1087"]["rect"] == [448, 1152, 64, 64], examples["1087"]
-    assert examples["1089"]["rect"] == [0, 1344, 64, 64], examples["1089"]
-    for example in jump["examples"]:
-        assert example["exceeds"].endswith("height"), example
-        assert example["rect"][1] + example["rect"][3] > 1024, example
+    assert items["formula_domain"]["atlas"] == [2048, 1024]
+    image_id = items["image_id_domain"]
+    assert image_id["violations"] == 0, image_id
+    assert image_id["atlas"] == [2048, 2048], image_id
+    attribution = items["atlas_attribution"]
+    assert attribution["formula"]["atlas"] == "Items.png", attribution
+    assert attribution["formula"]["grid"] == "32 cols x 16 rows x 64 px", attribution
+    assert attribution["image-id"]["atlas"] == "TileMap.png", attribution
+    assert attribution["image-id"]["grid"] == "32 cols x 32 rows x 64 px", attribution
+    assert "TileMap:32x32" in attribution["image-id"]["evidence"], attribution
+    assert "wrong attribution" in items["note"], items["note"]
+
+    # The derived cells must stay labelled as derived in the image map too.
+    image_map = (NATIVE / "original_item_image_map.tsv").read_text(encoding="utf-8")
+    header = image_map.splitlines()[0].split("\t")
+    assert header[2] == "col_from_image_a0" and header[3] == "row_from_image_a0", header
+    assert header[-1] == "derivation", header
+    assert all("col=image%32,row=image//32 (derived; TileMap:32x32)" in line
+               for line in image_map.splitlines()[1:]), "derivation column not filled"
 
     tiles = record["checks"]["tiles"]
     assert [f["size"] for f in tiles["files"]] == [[512, 512], [2048, 2048]], tiles["files"]
@@ -55,8 +64,7 @@ def main() -> int:
     assert "inherited" in tiles["note"], tiles["note"]
 
     fonts = record["checks"]["fonts"]["checks"]
-    assert len(fonts) == EXPECTED["fonts"], fonts
-    assert sum(f["glyphs"] for f in fonts) == EXPECTED["font_glyphs"]
+    assert len(fonts) == EXPECTED["fonts"] and sum(f["glyphs"] for f in fonts) == 500
     for font in fonts:
         assert font["exceeding_declared_canvas"] == 0, font
         assert font["duplicate_rects"] == 0, font
@@ -65,8 +73,8 @@ def main() -> int:
 
     tsv_rows = list(csv.reader(io.StringIO(TSV.read_text(encoding="utf-8")), delimiter="\t"))
     assert tsv_rows[0] == ["scope", "label", "col", "row", "cell_px", "atlas", "violation"], tsv_rows[0]
-    assert len(tsv_rows) == 1 + len(jump["examples"]) + len(tiles["cells"]["examples"]) + EXPECTED["fonts"], len(tsv_rows)
-    assert any(row[0] == "items-jump" for row in tsv_rows[1:]), tsv_rows[:3]
+    assert any(row[0] == "items-image-id" for row in tsv_rows[1:]) or len(tsv_rows) == 1 + EXPECTED["fonts"], \
+        "image-id scope missing and no examples to justify it"
 
     print(f"atlas-geometry: PASS ({record['counts']})")
     return 0

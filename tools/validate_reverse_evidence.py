@@ -608,7 +608,8 @@ def main() -> None:
     require(
         NATIVE / "original_item_image_map.tsv",
         [
-            "item_type\timage_dataA0\tcol_dataA0\trow_dataA0",
+            "item_type\timage_dataA0\tcol_from_image_a0\trow_from_image_a0",
+            "col=image%32,row=image//32 (derived; TileMap:32x32)",
             "1024\t33\t1\t1\t33\t1\t1\t0x004d73c0",
             "1043\t342\t22\t10\t343\t23\t10\t0x004d74e0",
             "1104\t742\t6\t23\t743\t7\t23\t0x004d7528",
@@ -695,7 +696,8 @@ def main() -> None:
     require(
         ROOT / "tools/verify_atlas_geometry.py",
         [
-            "jump_table_domain",
+            "image_id_domain",
+            "atlas_attribution",
             "inherited",
             "--check",
         ],
@@ -703,15 +705,15 @@ def main() -> None:
     require(
         NATIVE / "ATLAS_GEOMETRY_CONTRACT.md",
         [
-            "11 jump-table cells cannot be placed",
-            "448, 1152, 64, 64",
-            "not in scope of a geometry check",
+            "wrong attribution in the check",
+            "TileMap:32x32",
+            "32 x 32 x 64",
         ],
     )
     require(
         NATIVE / "atlas_geometry_contract.json",
         [
-            '"item_jump_violations": 11',
+            '"item_image_id_violations": 0',
             '"item_formula_violations": 0',
             '"tile_violations": 0',
         ],

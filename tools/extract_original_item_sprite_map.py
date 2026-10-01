@@ -108,8 +108,8 @@ def load_explicit(path: Path) -> dict[int, dict]:
                 continue
             out[item] = {
                 "image": row.get("image_dataA0", ""),
-                "col": row.get("col_dataA0", ""),
-                "row": row.get("row_dataA0", ""),
+                "col": row.get("col_from_image_a0", ""),
+                "row": row.get("row_from_image_a0", ""),
             }
     return out
 
