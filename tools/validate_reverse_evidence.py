@@ -891,6 +891,29 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/parse_craftable_item_struct.py",
+        [
+            "CraftableItem",
+            "blob_length_from_savedict",
+            "sizes_agree",
+        ],
+    )
+    require(
+        NATIVE / "CRAFTABLE_ITEM_STRUCT.md",
+        [
+            "layout from the type encoding",
+            "measured twice in",
+            "Field meanings",
+        ],
+    )
+    require(
+        NATIVE / "craftable_item_struct.json",
+        [
+            '"packed_size": 124',
+            '"int_arrays": 3',
+        ],
+    )
+    require(
         ROOT / "tools/histogram_save_tile_fields.py",
         [
             "blocks_records",
