@@ -891,14 +891,14 @@ def main() -> None:
         ],
     )
     require(
-        ROOT / "tools/extract_sound_group_keys.py",
+        ROOT / "tools/extract_grp_identifiers.py",
         [
             "GROUP_PREFIX = \"grp.\"",
             "boundary",
         ],
     )
     require(
-        NATIVE / "SOUND_GROUP_KEYS.md",
+        NATIVE / "GRP_IDENTIFIERS.md",
         [
             "Adjacency is not membership",
             "17,209",
@@ -906,7 +906,7 @@ def main() -> None:
         ],
     )
     require(
-        NATIVE / "sound_group_keys.json",
+        NATIVE / "grp_identifiers.json",
         [
             '"group_key_count": 117',
             '"audio_names_not_shipped": [\n    "bird%d.wav"\n  ]',

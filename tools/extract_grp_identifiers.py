@@ -1,27 +1,27 @@
 #!/usr/bin/env python3
-"""Extract the sound registry: the `grp.*` multi-sound keys and the audio file names.
+"""Extract the `grp.*` identifiers from the binary, and cross-check them against the shipped
+achievement list.
 
-Where this comes from. The string literals of this build are merged into one cstring blob;
-`{u32 length, u32 pointer}` descriptors point into it (the same descriptor shape the audio
-coverage work already recorded). Reading the blob in order gives, interleaved:
+CORRECTION to how this started. This tool was written as "the sound registry", on the
+assumption that `grp.*` names MJMultiSound groups. The shipped asset
+`assets/GKAchievements.plist` disproves that assumption: every one of its 91 top-level keys
+is a `grp.*` identifier whose value is `{googleIdentifier: <Play Games achievement id>}`, and
+the binary carries the matching machinery (`GKAchievements`, `reportAchievement` x16,
+`achievement*` x24, `googleIdentifier` x4). So these are the game's achievement identifiers.
+Whether any of them *also* names a multi-sound group is not established, and this artifact
+does not claim it.
 
-    dig.wav  grp.lime  grp.mine  grp.basalt  place.wav  grp.decorator  razor.wav
-    grp.baby_shark  grp.campfire  ...  craftWorkbench.wav  sword.wav  punch.wav  ...
+What is extracted here, with that correction applied:
+  * the `grp.*` literals in the merged cstring blob, with the descriptor that bounds them;
+  * the audio file-name literals sharing that blob (facts about the string layout);
+  * the achievement cross-check: which identifiers the shipped plist defines, their
+    `googleIdentifier` values, and the set difference in both directions.
 
-Two token classes come out of that: `grp.<name>` keys (the MJMultiSound group registry, the
-keys `externalMultiSoundWithKey:` / `multiSoundWithSounds:` take) and audio file names.
-
-What this proves and what it does not:
-  * PROVES: these tokens exist as literals in the binary, they are bounded by a descriptor
-    (length/pointer), and they are laid out in that order.
-  * DOES NOT PROVE: which files a `grp.*` group contains. Blob adjacency is emission order
-    (the compiler's concatenation of the string literals), which is a strong hint about
-    source order and nothing more. Group membership needs the code that passes the key to
-    the sound API, and the literal-to-code channel is still unresolved for this build
-    (cstring literals are not referenced by absolute address - see AUDIO_CALL_SITES).
+Boundary: blob adjacency is emission order, not semantics. Group membership (which files a
+sound group contains) is NOT established by anything in this file.
 
 Usage:
-  python3 tools/extract_sound_group_keys.py [--elf PATH] [--check]
+  python3 tools/extract_grp_identifiers.py [--elf PATH] [--plist PATH] [--check]
 """
 from __future__ import annotations
 
@@ -29,6 +29,7 @@ import argparse
 import csv
 import hashlib
 import json
+import plistlib
 import re
 import struct
 import sys
@@ -36,6 +37,7 @@ from pathlib import Path
 
 DEFAULT_ELF = Path.home() / "blockheads-work/extracted/lib/armeabi-v7a/libApplication.so"
 NATIVE = Path("reconstruction/reverse-v3/native")
+DEFAULT_PLIST = Path.home() / "blockheads-work/extracted/assets/GKAchievements.plist"
 AUDIO_ASSETS_TSV = NATIVE / "audio_asset_coverage.tsv"
 AUDIO_EXT = (".wav", ".mp3", ".caf", ".aif", ".aiff")
 GROUP_PREFIX = "grp."
@@ -121,8 +123,10 @@ def classify(descs: list[dict], shipped: set[str]) -> dict:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--elf", type=Path, default=DEFAULT_ELF)
-    ap.add_argument("--json", type=Path, default=NATIVE / "sound_group_keys.json")
-    ap.add_argument("--tsv", type=Path, default=NATIVE / "sound_group_keys.tsv")
+    ap.add_argument("--json", type=Path, default=NATIVE / "grp_identifiers.json")
+    ap.add_argument("--tsv", type=Path, default=NATIVE / "grp_identifiers.tsv")
+    ap.add_argument("--plist", type=Path, default=DEFAULT_PLIST,
+                    help="shipped achievement list used for the cross-check")
     ap.add_argument("--check", action="store_true")
     args = ap.parse_args()
     if not args.elf.exists():
@@ -131,31 +135,64 @@ def main() -> int:
     elf = args.elf.read_bytes()
     secs = sections(elf)
     shipped = shipped_names()
+    plist_keys = {}
+    if args.plist.exists():
+        plist_keys = plistlib.loads(args.plist.read_bytes())
     descs = find_descriptors(elf, secs)
     cls = classify(descs, shipped)
     keys, audio = cls["group_keys"], cls["audio_names"]
-    # A short key that is a strict prefix of another key is a fragment, not a registry
-    # entry: this build's string blob holds literal pieces used in key construction
-    # (grp.magn / grp.magnet, grp.baby_ / grp.baby_shark). Classify mechanically rather
-    # than eyeballing, so the count moves if the data moves.
+    # Classification is evidence-based, not heuristic. The shipped plist is the authority
+    # for what these identifiers are; a literal that is not in it is either a fragment used
+    # in key construction or a near-miss spelling. Near-misses are flagged by edit distance
+    # so a typo like grp.amethyst_pickax (the plist has ..._pickaxe) cannot hide.
     key_names = list(keys)
-    fragments = {k: sorted(n for n in key_names if n != k and n.startswith(k))
-                 for k in key_names}
-    fragments = {k: v for k, v in fragments.items() if v}
-    complete = [k for k in key_names if k not in fragments]
+    plist_names = set(plist_keys) if plist_keys else set()
+    identifiers = sorted(plist_names & set(key_names))
+    binary_only = sorted(set(key_names) - plist_names)
+
+    def near(n: str) -> list[str]:
+        """plist identifiers within edit distance 2 of n (cheap Levenshtein)."""
+        import difflib
+        return difflib.get_close_matches(n, identifiers, n=2, cutoff=0.9)
+
+    near_misses = {n: near(n) for n in binary_only if near(n)}
+
+    crosscheck: dict = {"plist_path": str(args.plist), "available": False}
+    if plist_keys:
+        raw = args.plist.read_bytes()
+        crosscheck = {
+            "plist_path": str(args.plist),
+            "available": True,
+            "plist_sha256": hashlib.sha256(raw).hexdigest(),
+            "entry_count": len(plist_keys),
+            "kind": "play-games achievement identifiers" if all(
+                isinstance(v, dict) and "googleIdentifier" in v for v in plist_keys.values())
+                else "unrecognised shape",
+            "google_identifiers": {k: v.get("googleIdentifier")
+                                   for k, v in plist_keys.items()},
+            "in_plist_not_in_binary": sorted(set(plist_keys) - set(key_names)),
+            "in_binary_not_in_plist": binary_only,
+            "binary_only_near_misses": near_misses,
+        }
+
     payload = {
         "elf_sha256": hashlib.sha256(elf).hexdigest(),
-        "group_key_complete_count": len(complete),
-        "group_key_fragment_count": len(fragments),
-        "group_key_fragments": fragments,
+        "what_these_are": ("achievement identifiers per the shipped GKAchievements.plist; "
+                           "NOT established as sound-group keys (see the header note)"),
+        "achievement_crosscheck": crosscheck,
+        "achievement_identifier_count": len(identifiers),
+        "achievement_identifiers": identifiers,
+        "binary_only_literal_count": len(binary_only),
+        "binary_only_literals": binary_only,
+        "binary_only_near_misses": near_misses,
         "format_string_audio_names": sorted(k for k in audio if "%" in k),
         "descriptor_count": len(descs),
         "group_key_count": len(keys),
-        "group_key_prefix_caveat": ("being a strict prefix of another key is a mechanical "
-                                    "fact, not proof of being a fragment: grp.ruby is a "
-                                    "prefix of grp.ruby_chandelier and still looks like a "
-                                    "real tier key. Only grp.magn / grp.baby_ style entries "
-                                    "that cannot stand alone are fragments."),
+        "classification_basis": ("identifiers = literals that the shipped achievement plist "
+                                 "also defines; binary_only = literals it does not, which are "
+                                 "fragments of other keys or near-miss spellings. This replaces "
+                                 "an earlier prefix-count heuristic, which the cross-check shows "
+                                 "was too eager (grp.ruby is a real identifier)."),
         "audio_name_count": len(audio),
         "audio_name_shipped_count": sum(1 for v in audio.values() if v["shipped"]),
         "audio_names_not_shipped": sorted(k for k, v in audio.items() if not v["shipped"]),
@@ -179,7 +216,7 @@ def main() -> int:
                 print(f"CHECK FAILED: {path} missing or stale", file=sys.stderr)
                 status = 1
         if status == 0:
-            print("check ok: sound group keys")
+            print("check ok: grp identifiers")
         return status
     args.json.write_text(text, encoding="utf-8")
     args.tsv.write_text(tsv, encoding="utf-8")
