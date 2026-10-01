@@ -644,6 +644,30 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/parse_original_fonts.py",
+        [
+            "BMFont",
+            "atlas_size_matches",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "FONT_ASSET_TABLES.md",
+        [
+            "2048x1024",
+            "ASCII 126",
+            "Blockheads_64.png",
+        ],
+    )
+    require(
+        NATIVE / "font_glyph_tables.json",
+        [
+            '"fonts": 5',
+            '"glyphs": 500',
+            '"atlas_size_mismatches": 1',
+        ],
+    )
+    require(
         ROOT / "tools/audit_shader_assets.py",
         [
             "SHADER_SUFFIXES",
