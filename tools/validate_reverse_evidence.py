@@ -644,6 +644,30 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/audit_shader_assets.py",
+        [
+            "SHADER_SUFFIXES",
+            "stem-only",
+            "unattributed",
+        ],
+    )
+    require(
+        NATIVE / "SHADER_ASSET_COVERAGE.md",
+        [
+            "stringByAppendingString",
+            "ActionSquare.vsh/.fsh",
+            "84",
+        ],
+    )
+    require(
+        NATIVE / "shader_asset_coverage.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"ships": 92',
+            '"original_stem_only": 66',
+        ],
+    )
+    require(
         ROOT / "tools/audit_audio_assets.py",
         [
             "AUDIO_SUFFIXES",
