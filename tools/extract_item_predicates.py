@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import struct
 import sys
 from pathlib import Path
@@ -75,6 +76,15 @@ def decode_movw(word: int) -> int | None:
     return ((word >> 4) & 0xF000) | (word & 0x0FFF)
 
 
+def return_constant(blob: bytes, target: int, words: int = 24) -> int | None:
+    """The constant the body at `target` returns (first movw r0, #V in its head)."""
+    for offset in range(0, words * 4, 4):
+        value = decode_movw(struct.unpack_from("<I", blob, target + offset)[0])
+        if value is not None:
+            return value
+    return None
+
+
 def classify(blob: bytes, entry: dict) -> dict:
     md = capstone.Cs(capstone.CS_ARCH_ARM, capstone.CS_MODE_ARM)
     start, size = entry["address"], entry["size"]
@@ -110,11 +120,51 @@ def classify(blob: bytes, entry: dict) -> dict:
     # counting it as an "item type named" is the small-value ambiguity the doc warns
     # about, so it is excluded here.
     operands = [] if kind == "always-constant" else literals
+    # Polarity: a literal branch (`cmp`/`movw` + `beq|bne`) leads to a body that returns
+    # 0 or 1, and which one it is separates an ACCEPT set from a REJECT set. Several
+    # predicates here are exclusion lists (`itemTypeIsValidInventoryItem` returns false on
+    # its literals), so a bare literal bag would invert their meaning.
+    accepts, rejects = set(), set()
+    calls: list[str] = []
+    pending_value: int | None = None
+    for ins in body:
+        word = struct.unpack_from("<I", blob, ins.address)[0]
+        if ins.mnemonic == "movw":
+            value = decode_movw(word)
+            if value is not None:
+                pending_value = value
+        elif ins.mnemonic == "cmp":
+            operand = ins.op_str.split(",")[-1].strip()
+            if operand.startswith("#"):
+                pending_value = int(operand[1:], 0)
+        elif ins.mnemonic in ("beq", "bne") and pending_value is not None:
+            target = int(ins.op_str.lstrip("#"), 16)
+            returned = return_constant(blob, target)
+            literal = pending_value
+            if ins.mnemonic == "beq":
+                leads_true = returned == 1
+            else:
+                leads_true = returned == 0
+            if literal in ITEM_DOMAIN and literal not in RETURN_CONSTANTS:
+                (accepts if leads_true else rejects).add(literal)
+            pending_value = None
+        elif "bl" == ins.mnemonic:
+            calls.append(ins.op_str.lstrip("#"))
+
     in_domain = sorted({v for v in operands if v in ITEM_DOMAIN and v not in RETURN_CONSTANTS})
     out_domain = sorted({v for v in operands if v not in ITEM_DOMAIN})
+    # A positive-named predicate whose literals all sit on the reject side is an
+    # EXCLUSION LIST: it accepts the whole domain except those ids (subject to any
+    # helper it calls). That is a stronger statement than "a bag of literals", so it is
+    # recorded as its own class rather than left as an oddity.
+    positive_name = re.search(r"(Is|Can|Has|Carries|Occupies)[A-Z]", entry["name"]) is not None
+    polarity_review = bool(positive_name and rejects and not accepts)
     result = {"name": entry["name"], "address": f"0x{start:08x}", "size": size,
+              "polarity_review": polarity_review,
               "kind": kind, "literals": literals[:24], "literal_count": len(literals),
               "item_types": in_domain, "item_type_count": len(in_domain),
+              "accepts": sorted(accepts), "rejects": sorted(rejects),
+              "composes_calls": calls,
               "other_literals": out_domain[:12], "instructions": len(body)}
     if kind == "always-constant":
         result["returned"] = literals[0] if literals else None
@@ -142,17 +192,33 @@ def build(elf_path: Path) -> dict:
             "predicates_naming_item_types": sum(1 for r in results if r["item_types"]),
             "distinct_item_types_named": len({v for r in results for v in r["item_types"]}),
             "item_types_in_domain": len(ITEM_DOMAIN),
+            "predicates_with_accept_set": sum(1 for r in results if r["accepts"]),
+            "predicates_with_reject_set": sum(1 for r in results if r["rejects"]),
+            "composed_predicates": sum(1 for r in results if r["composes_calls"]),
+            "distinct_accepted_item_types": len({v for r in results for v in r["accepts"]}),
+            "distinct_rejected_item_types": len({v for r in results for v in r["rejects"]}),
+            "polarity_review_flags": sum(1 for r in results if r.get("polarity_review")),
         },
+        "polarity_rule": ("a literal is ACCEPTED when the branch that tests it reaches a "
+                          "body returning 1, REJECTED when that body returns 0; the rule "
+                          "is mechanical, so predicates whose name reads as a positive "
+                          "test but whose literals land on the reject side are flagged "
+                          "for review instead of being reported as inverted facts"),
+        "review_flags": [r["name"] for r in results if r.get("polarity_review")],
+        "exclusion_list_note": ("flagged predicates accept the whole item domain except "
+                                "the ids in their reject set, e.g. IsStackable / "
+                                "CanBeColored / IsValidInventoryItem"),
         "predicates": results,
     }
 
 
 def render_tsv(record: dict) -> str:
-    lines = ["name\taddress\tsize\tkind\titem_types\tother_literals"]
+    lines = ["name\taddress\tsize\tkind\taccepts\trejects\tcalls"]
     for p in record["predicates"]:
-        items = ",".join(str(v) for v in p["item_types"][:16])
-        others = ",".join(hex(v) for v in p["other_literals"][:8])
-        lines.append(f"{p['name']}\t{p['address']}\t{p['size']}\t{p['kind']}\t{items}\t{others}")
+        a = ",".join(str(v) for v in p["accepts"][:16])
+        r = ",".join(str(v) for v in p["rejects"][:16])
+        lines.append(f"{p['name']}\t{p['address']}\t{p['size']}\t{p['kind']}\t{a}\t{r}\t"
+                     f"{','.join(p['composes_calls'][:6])}")
     return "\n".join(lines) + "\n"
 
 

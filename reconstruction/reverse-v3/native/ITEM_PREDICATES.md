@@ -40,6 +40,39 @@ each body and separates the literals that fall inside the item domain (0-343,
 | `genericDyedItemTypeForItemType` | dyed variants | item-to-item mapping |
 | `xOffsetForItemType` | 74, 156 | the two items drawn at -0.1875 x offset |
 
+## Polarity: accept sets, reject sets, and the exclusion lists
+
+Reading a predicate as "the literals it contains" loses the point, because the branch
+after each literal decides whether it is accepted or rejected. The extractor now follows
+the branch to the body it reaches and reads that body's returned constant:
+
+```
+literal -> branch (beq/bne) -> body -> returns 1 ?  accept : reject
+```
+
+| element | count |
+|---|---:|
+| predicates with an accept set | 37 |
+| predicates with a reject set | 33 |
+| composed predicates (they call other item predicates) | 32 |
+| distinct item types accepted somewhere | 261 |
+| distinct item types rejected somewhere | 195 |
+
+**Eleven predicates are exclusion lists**: their name reads positive, yet every literal
+lands on the reject side. That means they accept the *whole item domain* except the
+listed ids (subject to the helpers they call) - a far stronger statement than a literal
+bag, and a different one:
+
+`itemTypeIsValidInventoryItem` (all but 1058, 1059, 1064), `itemTypeIsStackable`,
+`itemTypeCanBeColored`, `itemTypeIsMetal` (all but 6,7,8,16,25,33,34,40,43,49,50,64, ...),
+`itemTypeIsPigment`, `itemTypeIsMoney`, `itemTypeIsGem`, `itemTypeIsPlacableOnBackWall`,
+`itemTypeIsValidFillItem`, `itemTypeCanBePlacedOnBackgroundRock`,
+`itemTypeSubItemsCanBeModifiedWhileCarried`.
+
+The list is in the JSON (`review_flags`) so a reader can check each one rather than trust
+the classification: an earlier reading of this same table had `itemTypeIsMoney`'s two ids
+as *its* set, when the branch makes them exceptions to a domain-wide acceptance.
+
 ## Boundary that matters
 
 Item types 0-3 are also plausible control constants, and several predicates use 0/1 for
