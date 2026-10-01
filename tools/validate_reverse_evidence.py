@@ -880,7 +880,10 @@ def main() -> None:
     )
     content_render_map = NATIVE / "original_tile_content_render_map.tsv"
     content_render_lines = content_render_map.read_text(encoding="utf-8").splitlines()
-    if len(content_render_lines) != 62:
+    # The domain is closed to every value in [3, 123]: 121 rows + the header.
+    # The count moved from 62 (direct assignments only) when the map gained
+    # explicit shared-body/unresolved rows; a silent change is still an error.
+    if len(content_render_lines) != 122:
         raise SystemExit(
             f"original Tile content render map count changed: {len(content_render_lines) - 1}"
         )
