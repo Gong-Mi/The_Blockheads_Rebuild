@@ -1,5 +1,5 @@
-offset	size	windows	read_sites	purpose
-1	byte	shared body	0x00a22ea8	jump-table index (compared <= 0x4c after subtracting one, 77 entries)
-3	byte	tail	0x00a23500	tested against zero (a boolean-ish field)
-8	byte	shared body	0x00a22e00	fed into the arithmetic (byte - 127) * constant + [fp,-0x19c]
-12	byte	tail	0x00a234e4	compared against 0x45 in the tail
+offset	size	base	in_64_byte_record	windows	read_sites	purpose
+1	byte	fp-0x1c0	False	shared body	0x00a22ea8	jump-table index (compared <= 0x4c after subtracting one, 77 entries)
+3	byte	fp-0x1c0	False	tail	0x00a23500	tested against zero (a boolean-ish field)
+8	byte	([fp-0x198]+0x8 + index*64)	True	shared body	0x00a22e00	fed into the arithmetic (byte - 127) * constant + [fp,-0x19c]
+12	byte	fp-0x1c0	False	tail	0x00a234e4	compared against 0x45 in the tail

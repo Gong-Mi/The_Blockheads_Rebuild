@@ -39,21 +39,72 @@ STRIDE_SHIFT = 6                       # add r3, ip, r3, lsl #6 -> 64-byte recor
 TAIL_CONSTANT = 0x45
 
 
+LDR_FP_RE = re.compile(r"^([a-z0-9]+), \[fp, #(-?0x[0-9a-f]+|\d+)\]$")
+LDR_REG_OFF_RE = re.compile(r"^([a-z0-9]+), \[([a-z0-9]+), #(0x[0-9a-f]+|\d+)\]$")
+ADD_SHIFT_RE = re.compile(r"^([a-z0-9]+), ([a-z0-9]+), [a-z0-9]+, lsl #6$")
+ALIASES = {"fp": "fp", "sp": "sp", "ip": "r12", "lr": "r14"}
+
+
+def _value(raw: str) -> int:
+    sign = -1 if raw.startswith("-") else 1
+    digits = raw.lstrip("+-")
+    # capstone writes negative frame offsets as "-0x1c0", which startswith("0x") is
+    # false for - so the hex branch has to look past the sign.
+    return sign * (int(digits, 16) if digits.startswith("0x") else int(digits))
+
+
+def _reg(token: str) -> str:
+    return ALIASES.get(token, token)
+
+
+def _fp_label(value: int) -> str:
+    return f"fp-0x{-value:x}" if value < 0 else f"fp+0x{value:x}"
+
+
 def scan(blob: bytes) -> list[dict]:
+    """Field reads with the base pointer each one belongs to.
+
+    Tracking the base matters: the four offsets do NOT all live in the 64-byte record.
+    The lighting byte at offset 8 is read through `[[fp,-0x198]+8] + index*64`, while
+    offsets 1, 3 and 12 are read through the object at `[fp,-0x1c0]`. An earlier version
+    of this table called them all "tile record fields", which conflates two bases.
+    """
     md = capstone.Cs(capstone.CS_ARCH_ARM, capstone.CS_MODE_ARM)
     reads = []
     for label, low, high in WINDOWS:
+        base: dict[str, str] = {}
         for ins in md.disasm(blob[low:high], low):
-            if not ins.mnemonic.startswith("ldr"):
+            op = ins.op_str
+            # A word load builds a base pointer; a byte/halfword load is a field read.
+            # Treating both as base updates made every field read update its own base
+            # and then skip itself, which is how this scan silently found zero fields.
+            if ins.mnemonic == "ldr":
+                match = LDR_FP_RE.match(op)
+                if match:
+                    base[_reg(match.group(1))] = _fp_label(_value(match.group(2)))
+                    continue
+                match = LDR_REG_OFF_RE.match(op)
+                if match:
+                    dest, src, off = (_reg(match.group(1)), _reg(match.group(2)),
+                                      _value(match.group(3)))
+                    base[dest] = f"[{base.get(src, src)}]+0x{off:x}"
+                    continue
+            if ins.mnemonic == "add":
+                match = ADD_SHIFT_RE.match(op)
+                if match:
+                    dest, src = _reg(match.group(1)), _reg(match.group(2))
+                    base[dest] = f"({base.get(src, src)} + index*64)"
+                    continue
+            if ins.mnemonic not in ("ldrb", "ldrh", "ldrsb", "ldrsh"):
                 continue
-            match = FIELD_PATTERN.search(ins.op_str)
-            if not match or "fp" in ins.op_str or "sp" in ins.op_str:
+            match = FIELD_PATTERN.search(op)
+            if not match or "fp" in op or "sp" in op:
                 continue
-            raw = match.group(1)
-            offset = int(raw, 16) if raw.startswith("0x") else int(raw)
+            dest = _reg(op.split(",")[0].strip())
             reads.append({"window": label, "at": f"0x{ins.address:08x}",
-                          "mnemonic": ins.mnemonic, "offset": offset,
-                          "text": f"{ins.mnemonic} {ins.op_str}"})
+                          "mnemonic": ins.mnemonic, "offset": _value(match.group(1)),
+                          "base": base.get(dest, f"{dest} (untracked)"),
+                          "text": f"{ins.mnemonic} {op}"})
     return reads
 
 
@@ -64,6 +115,7 @@ def build(elf: Path) -> dict:
     for read in reads:
         by_offset.setdefault(read["offset"], []).append(read)
 
+    bases = sorted({r["base"] for r in reads})
     purposes = {
         1: "jump-table index (compared <= 0x4c after subtracting one, 77 entries)",
         3: "tested against zero (a boolean-ish field)",
@@ -76,6 +128,8 @@ def build(elf: Path) -> dict:
             "offset": offset,
             "size": "byte",
             "read_sites": [r["at"] for r in reads_for_offset],
+            "bases": sorted({r["base"] for r in reads_for_offset}),
+            "in_64_byte_record": all("index*64" in r["base"] for r in reads_for_offset),
             "windows": sorted({r["window"] for r in reads_for_offset}),
             "purpose": purposes.get(offset, "(not characterised)"),
         })
@@ -93,15 +147,19 @@ def build(elf: Path) -> dict:
             "record_field_reads": len(reads),
             "distinct_offsets": len(by_offset),
             "tail_constant": TAIL_CONSTANT,
+            "distinct_bases": len(bases),
+            "fields_in_64_byte_record": sum(1 for f in fields if f["in_64_byte_record"]),
+            "fields_in_other_object": sum(1 for f in fields if not f["in_64_byte_record"]),
         },
         "raw_reads": reads,
     }
 
 
 def render_tsv(record: dict) -> str:
-    lines = ["offset\tsize\twindows\tread_sites\tpurpose"]
+    lines = ["offset\tsize\tbase\tin_64_byte_record\twindows\tread_sites\tpurpose"]
     for field in record["fields"]:
-        lines.append(f"{field['offset']}\t{field['size']}\t{','.join(field['windows'])}\t"
+        lines.append(f"{field['offset']}\t{field['size']}\t{' | '.join(field['bases'])}\t"
+                     f"{field['in_64_byte_record']}\t{','.join(field['windows'])}\t"
                      f"{','.join(field['read_sites'])}\t{field['purpose']}")
     return "\n".join(lines) + "\n"
 

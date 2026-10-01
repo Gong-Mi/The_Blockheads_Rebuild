@@ -13,7 +13,8 @@ TSV = NATIVE / "tile_record_layout.tsv"
 JSON_PATH = NATIVE / "tile_record_layout.json"
 PINNED_ELF = "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7"
 EXPECTED = {"windows_scanned": 2, "record_field_reads": 4, "distinct_offsets": 4,
-            "tail_constant": 69}
+            "tail_constant": 69, "distinct_bases": 2, "fields_in_64_byte_record": 1,
+            "fields_in_other_object": 3}
 FIELDS = {1: ("0x00a22ea8", "shared body"), 3: ("0x00a23500", "tail"),
           8: ("0x00a22e00", "shared body"), 12: ("0x00a234e4", "tail")}
 
@@ -33,8 +34,18 @@ def main() -> int:
     assert "0x45" in fields[12]["purpose"], fields[12]
     assert "candidate" not in fields[12]["purpose"], "field 12 must not be over-claimed"
 
+    # Base tracking: one field belongs to the 64-byte record, three to another object.
+    # Conflating them was the defect this pin exists to prevent.
+    fields_by_offset = {f["offset"]: f for f in record["fields"]}
+    assert fields_by_offset[8]["in_64_byte_record"] is True, fields_by_offset[8]
+    assert "index*64" in fields_by_offset[8]["bases"][0], fields_by_offset[8]
+    for offset in (1, 3, 12):
+        assert fields_by_offset[offset]["in_64_byte_record"] is False, fields_by_offset[offset]
+        assert fields_by_offset[offset]["bases"] == ["fp-0x1c0"], fields_by_offset[offset]
+
     tsv_rows = list(csv.reader(io.StringIO(TSV.read_text(encoding="utf-8")), delimiter="\t"))
-    assert tsv_rows[0] == ["offset", "size", "windows", "read_sites", "purpose"], tsv_rows[0]
+    assert tsv_rows[0] == ["offset", "size", "base", "in_64_byte_record", "windows",
+                           "read_sites", "purpose"], tsv_rows[0]
     assert len(tsv_rows) == EXPECTED["distinct_offsets"] + 1, len(tsv_rows)
 
     print(f"tile-record-layout: PASS ({record['counts']})")
