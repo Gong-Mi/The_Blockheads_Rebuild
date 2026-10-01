@@ -891,6 +891,29 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/extract_item_predicates.py",
+        [
+            "ITEM_DOMAIN",
+            "item_type_count",
+            "predicates_naming_item_types",
+        ],
+    )
+    require(
+        NATIVE / "ITEM_PREDICATES.md",
+        [
+            "item attribute matrix",
+            "no liquid item",
+            "Boundary that matters",
+        ],
+    )
+    require(
+        NATIVE / "item_predicates.json",
+        [
+            '"distinct_item_types_named": 191',
+            '"always-constant": 2',
+        ],
+    )
+    require(
         ROOT / "tools/parse_craftable_item_struct.py",
         [
             "CraftableItem",
