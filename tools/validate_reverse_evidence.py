@@ -891,6 +891,29 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/extract_item_mapping_functions.py",
+        [
+            "FUNCTIONS",
+            "return_constant",
+            "pairs_with_output",
+        ],
+    )
+    require(
+        NATIVE / "ITEM_MAPPINGS.md",
+        [
+            "seed item -> tree type",
+            "324-330",
+            "not decoded",
+        ],
+    )
+    require(
+        NATIVE / "item_mapping_functions.json",
+        [
+            '"pairs_decoded": 15',
+            '"mapped_entries": 14',
+        ],
+    )
+    require(
         ROOT / "tools/extract_item_predicates.py",
         [
             "ITEM_DOMAIN",
