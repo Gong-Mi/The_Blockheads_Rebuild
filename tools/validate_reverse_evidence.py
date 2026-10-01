@@ -891,6 +891,28 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/extract_sound_group_keys.py",
+        [
+            "GROUP_PREFIX = \"grp.\"",
+            "boundary",
+        ],
+    )
+    require(
+        NATIVE / "SOUND_GROUP_KEYS.md",
+        [
+            "Adjacency is not membership",
+            "17,209",
+            "bird%d.wav",
+        ],
+    )
+    require(
+        NATIVE / "sound_group_keys.json",
+        [
+            '"group_key_count": 117',
+            '"audio_names_not_shipped": [\n    "bird%d.wav"\n  ]',
+        ],
+    )
+    require(
         ROOT / "tools/find_selector_senders.py",
         [
             "pool_word + PIC_BASE == target address",
