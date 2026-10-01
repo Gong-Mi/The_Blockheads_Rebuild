@@ -37,6 +37,31 @@ SKIP = {"lint_evidence_scan.py", "string_evidence.py", "test_lint_evidence_scan.
 TEXT_INPUT_HINT = re.compile(r"read_text|decode\(|splitlines\(\)")
 
 
+ADD_ARG_CALL_RE = re.compile(r"add_argument\((.*?)\)\n", re.S)
+CHECK_SKIP_RE = re.compile(r"if\s+\w+\s+is\s+None\s*:\s*\n\s*continue")
+OUTPUT_ARG_RE = re.compile(r'\s*"--(?:tsv|json|out|output)[\w-]*"')
+
+
+def vacuous_check_violations(path: Path, text: str) -> list[str]:
+    """`--check` that cannot fail is worse than no check.
+
+    Two shapes shipped here: output paths with no default (so the comparison loop
+    skipped them) and an explicit `if path is None: continue` inside the check
+    block. Both let a stale artifact print "check ok" without being read.
+    """
+    out: list[str] = []
+    if "args.check" not in text and '"--check"' not in text:
+        return out
+    if CHECK_SKIP_RE.search(text):
+        out.append(f"{path.name}: --check skips a missing/None output path "
+                   f"(a stale artifact would report 'check ok')")
+    for call in ADD_ARG_CALL_RE.findall(text):
+        if OUTPUT_ARG_RE.match(call) and "default=" not in call and "required=True" not in call:
+            out.append(f"{path.name}: output argument without a default: "
+                       f"{' '.join(call.split())[:70]}")
+    return out
+
+
 def scan(path: Path) -> list[str]:
     text = path.read_text(encoding="utf-8", errors="replace")
     violations: list[str] = []
@@ -73,6 +98,7 @@ def scan(path: Path) -> list[str]:
                 f"{path.name}:{number}: regex in a raw-byte reader with no NUL-string "
                 f"extraction: {line.strip()[:90]}"
             )
+    violations.extend(vacuous_check_violations(path, text))
     return violations
 
 

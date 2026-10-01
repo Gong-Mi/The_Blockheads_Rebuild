@@ -177,8 +177,15 @@ def main() -> int:
 
     parser = argparse.ArgumentParser()
     parser.add_argument("elf", type=Path)
-    parser.add_argument("--output", type=Path)
-    parser.add_argument("--json", type=Path)
+    # Canonical outputs by default: with optional paths, `--check` skipped the
+    # comparison whenever they were omitted and printed "check ok" without
+    # reading anything (the same defect fixed in the conditional extractor).
+    parser.add_argument(
+        "--output", type=Path,
+        default=Path("reconstruction/reverse-v3/native/original_tile_content_render_map.tsv"))
+    parser.add_argument(
+        "--json", type=Path,
+        default=Path("reconstruction/reverse-v3/native/tile_content_render_map.json"))
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
 
@@ -191,9 +198,10 @@ def main() -> int:
     if args.check:
         bad = 0
         for path, expected in ((args.output, text), (args.json, payload)):
-            if path is None:
-                continue
-            if not path.exists() or path.read_text(encoding="utf-8") != expected:
+            if not path.exists():
+                print(f"CHECK FAILED: {path} is missing", file=sys.stderr)
+                bad = 1
+            elif path.read_text(encoding="utf-8") != expected:
                 print(f"CHECK FAILED: {path} is stale", file=sys.stderr)
                 bad = 1
         if not bad:
