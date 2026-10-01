@@ -644,6 +644,31 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/audit_audio_assets.py",
+        [
+            "AUDIO_SUFFIXES",
+            "original_stem_only",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "AUDIO_ASSET_COVERAGE.md",
+        [
+            "original_not_in_replacement",
+            "bird1..bird14.wav",
+            "_KelpPlant.wav",
+            "136",
+        ],
+    )
+    require(
+        NATIVE / "audio_asset_coverage.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"ships": 161',
+            '"original_stem_only": 14',
+        ],
+    )
+    require(
         ROOT / "tools/extract_original_tile_content_render_map.py",
         [
             "TABLE_VA = 0x00A221F4",
