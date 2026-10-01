@@ -14,26 +14,19 @@
     "predicates_naming_item_types": 51,
     "distinct_item_types_named": 191,
     "item_types_in_domain": 426,
-    "predicates_with_accept_set": 37,
-    "predicates_with_reject_set": 33,
+    "predicates_with_accept_set": 48,
+    "predicates_with_reject_set": 29,
     "composed_predicates": 32,
-    "distinct_accepted_item_types": 261,
-    "distinct_rejected_item_types": 195,
-    "polarity_review_flags": 11
+    "distinct_accepted_item_types": 297,
+    "distinct_rejected_item_types": 163,
+    "polarity_review_flags": 4
   },
   "polarity_rule": "a literal is ACCEPTED when the branch that tests it reaches a body returning 1, REJECTED when that body returns 0; the rule is mechanical, so predicates whose name reads as a positive test but whose literals land on the reject side are flagged for review instead of being reported as inverted facts",
   "review_flags": [
     "_Z28itemTypeIsValidInventoryItem8ItemType",
-    "_Z17itemTypeIsPigment8ItemType",
-    "_Z15itemTypeIsMoney8ItemType",
-    "_Z15itemTypeIsMetal8ItemType",
     "_Z35itemTypeCanBePlacedOnBackgroundRock8ItemType",
-    "_Z13itemTypeIsGem8ItemType",
-    "_Z28itemTypeIsPlacableOnBackWall8ItemType",
     "_Z23itemTypeIsValidFillItem8ItemType",
-    "_Z41itemTypeSubItemsCanBeModifiedWhileCarried8ItemType",
-    "_Z19itemTypeIsStackable8ItemTypett",
-    "_Z20itemTypeCanBeColored8ItemType"
+    "_Z19itemTypeIsStackable8ItemTypett"
   ],
   "exclusion_list_note": "flagged predicates accept the whole item domain except the ids in their reject set, e.g. IsStackable / CanBeColored / IsValidInventoryItem",
   "predicates": [
@@ -64,11 +57,12 @@
         15,
         221,
         270,
-        300
+        300,
+        1072,
+        1104
       ],
       "rejects": [
         1043,
-        1072,
         1074
       ],
       "composes_calls": [
@@ -329,11 +323,13 @@
       "accepts": [
         303,
         324,
+        327
+      ],
+      "rejects": [
         325,
         326,
         330
       ],
-      "rejects": [],
       "composes_calls": [],
       "other_literals": [],
       "instructions": 42
@@ -342,7 +338,7 @@
       "name": "_Z17itemTypeIsPigment8ItemType",
       "address": "0x00c64428",
       "size": 188,
-      "polarity_review": true,
+      "polarity_review": false,
       "kind": "equals-set",
       "literals": [
         1,
@@ -357,16 +353,17 @@
       "literal_count": 8,
       "item_types": [],
       "item_type_count": 0,
-      "accepts": [],
-      "rejects": [
+      "accepts": [
         56,
         57,
         99,
         100,
         101,
         109,
-        110
+        110,
+        119
       ],
+      "rejects": [],
       "composes_calls": [],
       "other_literals": [],
       "instructions": 47
@@ -394,7 +391,7 @@
       "name": "_Z15itemTypeIsMoney8ItemType",
       "address": "0x00c5ea38",
       "size": 88,
-      "polarity_review": true,
+      "polarity_review": false,
       "kind": "equals-set",
       "literals": [
         1,
@@ -404,11 +401,12 @@
       "literal_count": 3,
       "item_types": [],
       "item_type_count": 0,
-      "accepts": [],
-      "rejects": [
+      "accepts": [
         166,
-        167
+        167,
+        260
       ],
+      "rejects": [],
       "composes_calls": [],
       "other_literals": [],
       "instructions": 22
@@ -417,7 +415,7 @@
       "name": "_Z15itemTypeIsMetal8ItemType",
       "address": "0x00bae370",
       "size": 600,
-      "polarity_review": true,
+      "polarity_review": false,
       "kind": "equals-set",
       "literals": [
         1,
@@ -452,8 +450,7 @@
         322
       ],
       "item_type_count": 3,
-      "accepts": [],
-      "rejects": [
+      "accepts": [
         6,
         7,
         8,
@@ -477,7 +474,10 @@
         95,
         96,
         97,
-        209,
+        98,
+        209
+      ],
+      "rejects": [
         285,
         286,
         322
@@ -648,9 +648,10 @@
         1038
       ],
       "item_type_count": 15,
-      "accepts": [],
+      "accepts": [
+        4
+      ],
       "rejects": [
-        4,
         29,
         51,
         58,
@@ -689,7 +690,9 @@
         1105
       ],
       "item_type_count": 1,
-      "accepts": [],
+      "accepts": [
+        1105
+      ],
       "rejects": [],
       "composes_calls": [],
       "other_literals": [],
@@ -711,8 +714,7 @@
       ],
       "item_type_count": 1,
       "accepts": [
-        196,
-        292
+        196
       ],
       "rejects": [
         85,
@@ -721,7 +723,8 @@
         188,
         192,
         278,
-        288
+        288,
+        292
       ],
       "composes_calls": [],
       "other_literals": [],
@@ -1404,6 +1407,7 @@
         46,
         48,
         49,
+        50,
         54,
         58,
         60,
@@ -1517,7 +1521,9 @@
         278
       ],
       "item_type_count": 1,
-      "accepts": [],
+      "accepts": [
+        278
+      ],
       "rejects": [],
       "composes_calls": [],
       "other_literals": [],
@@ -1627,8 +1633,7 @@
         1087
       ],
       "item_type_count": 6,
-      "accepts": [],
-      "rejects": [
+      "accepts": [
         52,
         53,
         58,
@@ -1642,6 +1647,7 @@
         169,
         170,
         174,
+        178,
         200,
         204,
         205,
@@ -1649,16 +1655,18 @@
         207,
         208,
         210,
-        301,
         304,
-        331,
-        1043,
         1065,
         1072,
-        1074,
-        1087,
         1088,
         1104
+      ],
+      "rejects": [
+        301,
+        331,
+        1043,
+        1074,
+        1087
       ],
       "composes_calls": [
         "0x5b2aa0",
@@ -1674,7 +1682,7 @@
       "name": "_Z13itemTypeIsGem8ItemType",
       "address": "0x0062f7e4",
       "size": 128,
-      "polarity_review": true,
+      "polarity_review": false,
       "kind": "equals-set",
       "literals": [
         1,
@@ -1686,13 +1694,14 @@
       "literal_count": 5,
       "item_types": [],
       "item_type_count": 0,
-      "accepts": [],
-      "rejects": [
+      "accepts": [
         75,
         76,
         86,
-        87
+        87,
+        88
       ],
+      "rejects": [],
       "composes_calls": [],
       "other_literals": [],
       "instructions": 32
@@ -1938,7 +1947,7 @@
       "name": "_Z28itemTypeIsPlacableOnBackWall8ItemType",
       "address": "0x005b2ca0",
       "size": 1064,
-      "polarity_review": true,
+      "polarity_review": false,
       "kind": "unclassified",
       "literals": [
         1,
@@ -1996,8 +2005,7 @@
         1097
       ],
       "item_type_count": 26,
-      "accepts": [],
-      "rejects": [
+      "accepts": [
         58,
         134,
         135,
@@ -2011,6 +2019,11 @@
         174,
         207,
         210,
+        1056,
+        1072,
+        1104
+      ],
+      "rejects": [
         1025,
         1031,
         1032,
@@ -2020,11 +2033,9 @@
         1050,
         1052,
         1055,
-        1056,
         1061,
         1065,
         1071,
-        1072,
         1074,
         1077,
         1078,
@@ -2038,8 +2049,7 @@
         1093,
         1095,
         1096,
-        1097,
-        1104
+        1097
       ],
       "composes_calls": [
         "0x5deb84",
@@ -2826,7 +2836,7 @@
       "name": "_Z41itemTypeSubItemsCanBeModifiedWhileCarried8ItemType",
       "address": "0x004eb960",
       "size": 68,
-      "polarity_review": true,
+      "polarity_review": false,
       "kind": "equals-set",
       "literals": [
         1,
@@ -2835,10 +2845,10 @@
       "literal_count": 2,
       "item_types": [],
       "item_type_count": 0,
-      "accepts": [],
-      "rejects": [
+      "accepts": [
         12
       ],
+      "rejects": [],
       "composes_calls": [],
       "other_literals": [],
       "instructions": 17
@@ -3186,7 +3196,7 @@
       "name": "_Z20itemTypeCanBeColored8ItemType",
       "address": "0x004d6128",
       "size": 248,
-      "polarity_review": true,
+      "polarity_review": false,
       "kind": "equals-set",
       "literals": [
         1,
@@ -3204,8 +3214,7 @@
       "literal_count": 11,
       "item_types": [],
       "item_type_count": 0,
-      "accepts": [],
-      "rejects": [
+      "accepts": [
         84,
         85,
         115,
@@ -3215,8 +3224,10 @@
         126,
         127,
         130,
-        169
+        169,
+        170
       ],
+      "rejects": [],
       "composes_calls": [],
       "other_literals": [],
       "instructions": 62
@@ -3606,19 +3617,23 @@
       ],
       "item_type_count": 3,
       "accepts": [
+        75,
+        76,
+        86,
+        87,
+        88,
         100,
         145,
         146,
         147,
-        148,
+        149,
         157
       ],
       "rejects": [
         2,
-        75,
-        76,
-        86,
-        87
+        100,
+        148,
+        157
       ],
       "composes_calls": [
         "0xa12f24",

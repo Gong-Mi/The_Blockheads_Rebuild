@@ -18,9 +18,9 @@ TSV = NATIVE / "item_predicates.tsv"
 JSON_PATH = NATIVE / "item_predicates.json"
 PINNED_ELF = "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7"
 EXCLUSION = {"_Z28itemTypeIsValidInventoryItem8ItemType",
-             "_Z19itemTypeIsStackable8ItemTypett", "_Z20itemTypeCanBeColored8ItemType",
-             "_Z15itemTypeIsMoney8ItemType", "_Z17itemTypeIsPigment8ItemType",
-             "_Z15itemTypeIsMetal8ItemType", "_Z13itemTypeIsGem8ItemType"}
+             "_Z35itemTypeCanBePlacedOnBackgroundRock8ItemType",
+             "_Z23itemTypeIsValidFillItem8ItemType",
+             "_Z19itemTypeIsStackable8ItemTypett"}
 EXPECTED = {
     "symbols_with_itemtype": 95,
     "decoded": 95,
@@ -29,12 +29,12 @@ EXPECTED = {
     "predicates_naming_item_types": 51,
     "distinct_item_types_named": 191,
     "item_types_in_domain": 426,
-    "predicates_with_accept_set": 37,
-    "predicates_with_reject_set": 33,
+    "predicates_with_accept_set": 48,
+    "predicates_with_reject_set": 29,
     "composed_predicates": 32,
-    "distinct_accepted_item_types": 261,
-    "distinct_rejected_item_types": 195,
-    "polarity_review_flags": 11,
+    "distinct_accepted_item_types": 297,
+    "distinct_rejected_item_types": 163,
+    "polarity_review_flags": 4,
 }
 CASES = {
     "_Z16itemTypeIsLiquid8ItemType": ("always-constant", []),
@@ -69,7 +69,9 @@ def main() -> int:
         assert by_name[name]["accepts"] == [], by_name[name]
         assert by_name[name]["rejects"], by_name[name]
     money = by_name["_Z15itemTypeIsMoney8ItemType"]
-    assert money["rejects"] == [166, 167], money
+    assert money["accepts"] == [166, 167, 260], money
+    gem = by_name["_Z13itemTypeIsGem8ItemType"]
+    assert gem["accepts"] == [75, 76, 86, 87, 88], gem
 
     tsv_rows = list(csv.reader(io.StringIO(TSV.read_text(encoding="utf-8")), delimiter="\t"))
     assert tsv_rows[0] == ["name", "address", "size", "kind", "accepts", "rejects",

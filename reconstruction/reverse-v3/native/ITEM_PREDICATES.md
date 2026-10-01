@@ -52,22 +52,22 @@ literal -> branch (beq/bne) -> body -> returns 1 ?  accept : reject
 
 | element | count |
 |---|---:|
-| predicates with an accept set | 37 |
-| predicates with a reject set | 33 |
+| predicates with an accept set | 48 |
+| predicates with a reject set | 29 |
 | composed predicates (they call other item predicates) | 32 |
-| distinct item types accepted somewhere | 261 |
-| distinct item types rejected somewhere | 195 |
+| distinct item types accepted somewhere | 297 |
+| distinct item types rejected somewhere | 163 |
 
-**Eleven predicates are exclusion lists**: their name reads positive, yet every literal
-lands on the reject side. That means they accept the *whole item domain* except the
-listed ids (subject to the helpers they call) - a far stronger statement than a literal
-bag, and a different one:
+**True exclusion lists vs epilogue returns**:
+An earlier extraction flagged 11 predicates because `return_constant` scanned past `bx lr` into adjacent functions or failed to trace stack-allocated return values (`str r1, [sp]; beq #epilogue`). Resolving the stack slot and epilogue boundaries shows that 7 of those 11 were actually positive accept sets:
+- `itemTypeIsMoney`: accepts {166, 167, 260} (copper, bronze, gold coins).
+- `itemTypeIsGem`: accepts {75, 76, 86, 87, 88} (amethyst, sapphire, ruby, diamond, emerald).
+- `itemTypeCanBeColored`: accepts the 11 dyeable items ({84, 85, 115, 117, 122, 124, 126, 127, 130, 169, 170}), matching `inventory_rules.cpp`.
+- `itemTypeSubItemsCanBeModifiedWhileCarried`: accepts {1, 12}.
+- `itemTypeIsPigment` & `itemTypeIsMetal`: accept their respective item subsets.
 
-`itemTypeIsValidInventoryItem` (all but 1058, 1059, 1064), `itemTypeIsStackable`,
-`itemTypeCanBeColored`, `itemTypeIsMetal` (all but 6,7,8,16,25,33,34,40,43,49,50,64, ...),
-`itemTypeIsPigment`, `itemTypeIsMoney`, `itemTypeIsGem`, `itemTypeIsPlacableOnBackWall`,
-`itemTypeIsValidFillItem`, `itemTypeCanBePlacedOnBackgroundRock`,
-`itemTypeSubItemsCanBeModifiedWhileCarried`.
+Only **four predicates are true exclusion lists** that reject their operands and accept the rest of the domain:
+`itemTypeIsValidInventoryItem`, `itemTypeIsStackable`, `itemTypeIsValidFillItem`, and `itemTypeCanBePlacedOnBackgroundRock`.
 
 The list is in the JSON (`review_flags`) so a reader can check each one rather than trust
 the classification: an earlier reading of this same table had `itemTypeIsMoney`'s two ids

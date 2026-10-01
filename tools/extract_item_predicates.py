@@ -76,12 +76,25 @@ def decode_movw(word: int) -> int | None:
     return ((word >> 4) & 0xF000) | (word & 0x0FFF)
 
 
-def return_constant(blob: bytes, target: int, words: int = 24) -> int | None:
-    """The constant the body at `target` returns (first movw r0, #V in its head)."""
-    for offset in range(0, words * 4, 4):
-        value = decode_movw(struct.unpack_from("<I", blob, target + offset)[0])
-        if value is not None:
-            return value
+def return_constant(blob: bytes, target: int, stack_val: int | None = None, max_words: int = 24) -> int | None:
+    """The constant the body at `target` returns. Stops at bx lr / pop pc, and handles stack returns."""
+    md = capstone.Cs(capstone.CS_ARCH_ARM, capstone.CS_MODE_ARM)
+    for offset in range(0, max_words * 4, 4):
+        a = target + offset
+        if a + 4 > len(blob):
+            break
+        ins = list(md.disasm(blob[a:a + 4], a))
+        if not ins:
+            break
+        i = ins[0]
+        if i.mnemonic == "ldr" and "r0" in i.op_str and "sp" in i.op_str:
+            return stack_val
+        w = struct.unpack_from("<I", blob, a)[0]
+        v = decode_movw(w)
+        if v is not None and "r0" in i.op_str:
+            return v
+        if (i.mnemonic == "bx" and "lr" in i.op_str) or (i.mnemonic == "pop" and "pc" in i.op_str):
+            break
     return None
 
 
@@ -127,19 +140,29 @@ def classify(blob: bytes, entry: dict) -> dict:
     accepts, rejects = set(), set()
     calls: list[str] = []
     pending_value: int | None = None
-    for ins in body:
+    stack_val: int | None = None
+    for idx, ins in enumerate(body):
         word = struct.unpack_from("<I", blob, ins.address)[0]
         if ins.mnemonic == "movw":
             value = decode_movw(word)
             if value is not None:
                 pending_value = value
+                reg = ins.op_str.split(",")[0].strip()
+                if reg in ("r0", "r1"):
+                    stack_val = value
         elif ins.mnemonic == "cmp":
             operand = ins.op_str.split(",")[-1].strip()
             if operand.startswith("#"):
                 pending_value = int(operand[1:], 0)
+            for j in range(idx + 1, min(idx + 4, len(body))):
+                if body[j].mnemonic == "moveq" and "r0" in body[j].op_str and "#1" in body[j].op_str:
+                    if pending_value in ITEM_DOMAIN and pending_value not in RETURN_CONSTANTS:
+                        accepts.add(pending_value)
+                    pending_value = None
+                    break
         elif ins.mnemonic in ("beq", "bne") and pending_value is not None:
             target = int(ins.op_str.lstrip("#"), 16)
-            returned = return_constant(blob, target)
+            returned = return_constant(blob, target, stack_val)
             literal = pending_value
             if ins.mnemonic == "beq":
                 leads_true = returned == 1
