@@ -25,10 +25,10 @@ TOOLS = Path(__file__).resolve().parent
 SELF = "run_contract_tests.py"
 
 
-def discover(filter_text: str | None) -> list[Path]:
+def discover(filters: list[str] | None) -> list[Path]:
     tests = sorted(p for p in TOOLS.glob("test_*.py") if p.name != SELF)
-    if filter_text:
-        tests = [p for p in tests if filter_text in p.name]
+    if filters:
+        tests = [p for p in tests if any(f in p.name for f in filters)]
     return tests
 
 
@@ -66,7 +66,8 @@ def run_one(path: Path, timeout: float, strict: bool = False) -> tuple[str, str,
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--filter", help="only tests whose filename contains this")
+    ap.add_argument("--filter", action="append",
+                    help="only tests whose filename contains this (repeatable)")
     ap.add_argument("--timeout", type=float, default=180.0)
     ap.add_argument("--jobs", type=int, default=4)
     ap.add_argument("--list", action="store_true")

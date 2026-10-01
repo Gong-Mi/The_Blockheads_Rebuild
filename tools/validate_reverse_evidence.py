@@ -1016,6 +1016,14 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/prepush_gate.py",
+        [
+            "the four checks that have to pass before a commit goes out",
+            "changed_test_names",
+            "--changed-only",
+        ],
+    )
+    require(
         ROOT / "tools/run_contract_tests.py",
         [
             "per-test timeout",
