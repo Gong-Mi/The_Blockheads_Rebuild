@@ -696,6 +696,29 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/audit_item_display_names.py",
+        [
+            "classify_context",
+            "name-list",
+            "name_table_found",
+        ],
+    )
+    require(
+        NATIVE / "ITEM_DISPLAY_NAME_SOURCES.md",
+        [
+            "Why the token search alone is wrong",
+            "not extractable from this APK",
+            "Clay` only appears inside `Clayton",
+        ],
+    )
+    require(
+        NATIVE / "item_display_name_sources.json",
+        [
+            '"name_table_found": 0',
+            '"exact_objc_class_matches": 18',
+        ],
+    )
+    require(
         ROOT / "tools/audit_text_assets.py",
         [
             "sentence_like",
