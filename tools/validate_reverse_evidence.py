@@ -765,6 +765,29 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/verify_sprite_cell_content.py",
+        [
+            "image_domain_in_tilemap",
+            "image_domain_in_items",
+            "out_of_bounds",
+        ],
+    )
+    require(
+        NATIVE / "SPRITE_CELL_CONTENT.md",
+        [
+            "The pixels decide",
+            "image-id domain lives in",
+            "the numbers were never wrong, the atlas was",
+        ],
+    )
+    require(
+        NATIVE / "sprite_cell_content.json",
+        [
+            '"image_with_ink_in_tilemap": 82',
+            '"image_out_of_bounds_in_items": 11',
+        ],
+    )
+    require(
         ROOT / "tools/verify_atlas_geometry.py",
         [
             "image_id_domain",
