@@ -4,6 +4,12 @@ from pathlib import Path
 import lmdb
 from export_server_world import export_world
 from assemble_server_snapshot import assemble
+# Environment guard: this test drives the compiled client decoder, so it needs that
+# binary passed in. Without it (the whole-suite runner passes no arguments) it used to
+# die with IndexError from the argv pop - a missing input reported as a defect.
+if len(sys.argv) < 2:
+    print("skip: needs the compiled client decoder path as an argument")
+    raise SystemExit(0)
 DECODER=Path(sys.argv.pop(1)).resolve()
 LOADER = Path(sys.argv.pop(1)).resolve() if len(sys.argv) > 1 and Path(sys.argv[1]).is_file() else None
 class AssemblyTest(unittest.TestCase):
