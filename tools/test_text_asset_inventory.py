@@ -42,7 +42,7 @@ def main() -> int:
     assert len(sentences) == EXPECTED["sentence_like_strings"], len(sentences)
     for sentence in sentences:
         assert len(sentence) >= 12 and sentence[0].isupper(), sentence
-        assert scene := sentence.rstrip().endswith((".", "!", "?", ":")), sentence
+        assert sentence.rstrip().endswith((".", "!", "?", ":")), sentence
         assert not any(ch in sentence for ch in "/\\{}[]<>@|"), sentence
     assert "A BETTER FASTER KILN." in sentences, sentences[:3]
     assert sentences == sorted(sentences), "catalogue is not deterministic"
