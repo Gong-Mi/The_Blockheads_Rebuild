@@ -41,6 +41,28 @@ why it is the one offset classified as read outside the single-pointer chain.
 Offset +5 is the busiest field in the drawing path after the type byte and had never
 been catalogued; it is recorded as read at nine sites with no characterised purpose.
 
+## What offset +5 does
+
+All nine read sites share one idiom, and the branch that follows it is decisive:
+
+```
+ldrb r1, [r1, #5]        ; byte 5 of the record
+cmp  r1, #0
+movw r1, #0
+movgt r1, #1             ; bool = (byte5 > 0)
+cmp  r1, #0
+moveq r0, #0             ; if the byte is zero, the mode becomes 0
+str  r0, [fp, #-0x554]   ; the mode slot
+b    0x00a22d74          ; straight into the shared body
+```
+
+So `+5` is a **boolean variant selector**: non-zero keeps mode 2, zero demotes it to 0.
+The same case bodies write their draw image into `[fp,-0x540]`/`[fp,-0x544]` and then
+fall into the shared body, whose first compare cluster sits at `0x00a22d78` - which is
+exactly why the six constants it compares are the leaf images those cases just wrote.
+The mode slot here (`[fp,-0x554]`) belongs to the same family as `[fp,-0x558]` seen in
+the shared body (values 0/2/3, with 2 forced by the tail when `record+0xc == 0x45`).
+
 Offset +12's compared value `0x45` (69) is a valid tile content value, so "this field
 holds a content value" stays a **candidate reading**, not a claim.
 

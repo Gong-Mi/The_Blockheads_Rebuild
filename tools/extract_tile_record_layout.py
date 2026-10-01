@@ -128,7 +128,9 @@ def build(elf: Path) -> dict:
         1: ("backWallType: indexes the 77-entry table (<= 0x4c after subtracting one) "
             "and is compared against 2 and 3"),
         3: "contentsType: tested against zero",
-        5: "read by every direct case body (9 sites); purpose not characterised",
+        5: ("variant selector: every direct case body computes bool = (byte > 0) with "
+            "cmp/movgt, and when it is zero the mode drops from 2 to 0 before falling "
+            "into the shared body"),
         6: "tested against zero in the record-setup window",
         8: "fed into the arithmetic (byte - 127) * constant + [fp,-0x19c]",
         12: f"compared against 0x{TAIL_CONSTANT:02x} in the tail",
@@ -162,6 +164,11 @@ def build(elf: Path) -> dict:
                   "extracted from verified code windows with each read site and the base "
                   "chain recorded; the pointer slot [fp,-0x1c0] is itself a record pointer"),
         "record_pointer_slot": record_slot_note,
+        "mode_slot_note": ("the direct case bodies write the draw image into "
+                           "[fp,-0x540]/[fp,-0x544] and a mode (2) into [fp,-0x554], then "
+                           "branch into the shared body at 0x00a22d74, whose first compare "
+                           "cluster is at 0x00a22d78 - the images the body compares against "
+                           "are the six leaf images those cases just wrote"),
         "record_stride": 1 << STRIDE_SHIFT,
         "stride_evidence": "add r3, ip, r3, lsl #6 at 0x00a22dfc",
         "fields": fields,

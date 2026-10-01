@@ -3,6 +3,7 @@
   "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
   "claim": "byte fields of the 64-byte tile record that the drawing path reads, extracted from verified code windows with each read site and the base chain recorded; the pointer slot [fp,-0x1c0] is itself a record pointer",
   "record_pointer_slot": "[fp,-0x1c0] is set at 0x00a1dfc4 to [[fp,-0x198]+8] + index*64, so field reads through it are fields of the 64-byte tile record",
+  "mode_slot_note": "the direct case bodies write the draw image into [fp,-0x540]/[fp,-0x544] and a mode (2) into [fp,-0x554], then branch into the shared body at 0x00a22d74, whose first compare cluster is at 0x00a22d78 - the images the body compares against are the six leaf images those cases just wrote",
   "record_stride": 64,
   "stride_evidence": "add r3, ip, r3, lsl #6 at 0x00a22dfc",
   "fields": [
@@ -60,7 +61,7 @@
       "windows": [
         "direct cases"
       ],
-      "purpose": "read by every direct case body (9 sites); purpose not characterised"
+      "purpose": "variant selector: every direct case body computes bool = (byte > 0) with cmp/movgt, and when it is zero the mode drops from 2 to 0 before falling into the shared body"
     },
     {
       "offset": 6,
