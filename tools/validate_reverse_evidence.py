@@ -680,6 +680,7 @@ def main() -> None:
         NATIVE / "SHADER_ASSET_COVERAGE.md",
         [
             "%@.vsh",
+            "whole APK",
             "count of unresolved programs",
             "84",
         ],

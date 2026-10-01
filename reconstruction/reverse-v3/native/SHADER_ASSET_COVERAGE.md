@@ -35,6 +35,17 @@ is **0** - the four are covered by the same composition idiom as the rest.
 proves filenames are built at runtime, not which stem loads when, so it is not
 counted as "named by the original".
 
+## Sweep scope (whole APK)
+
+The classes come from the pinned `libApplication.so`; to make "not named" mean
+"not named anywhere", the tool also sweeps **24 native libraries** (every other
+`.so` under `lib/`) and **20 data files** (json, plist, txt, strings, nib, xml,
+html, css, dex) with `string_evidence.contains_token`.
+
+Result: no shader name appears outside the pinned ELF in either set. Every
+reference these 92 programs have lives in `libApplication.so`, so the classes above
+are not an artifact of looking at one file.
+
 ## Boundaries
 
 - "Stem" = filename minus `.vsh`/`.fsh`; a stem hit is not proof that the

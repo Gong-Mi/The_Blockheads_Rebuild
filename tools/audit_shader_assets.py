@@ -28,7 +28,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from string_evidence import classify, nul_strings  # noqa: E402
+from string_evidence import classify, contains_token, nul_strings  # noqa: E402
 
 SHADER_SUFFIXES = (".vsh", ".fsh")
 NAME_RE = re.compile(rb"[A-Za-z0-9_]{3,40}\.(?:vsh|fsh)")
@@ -81,7 +81,44 @@ def mapping_usage(path: Path) -> dict[str, list[str]]:
     return out
 
 
-def build(assets: Path, elf: Path, repo: Path, mapping: Path) -> dict:
+DATA_SUFFIXES = (".json", ".plist", ".txt", ".strings", ".nib", ".xml", ".html", ".css", ".dex")
+
+
+def sweep_sources(lib_dir: Path | None, data_dir: Path | None, names: list[str],
+                  pinned: Path | None = None) -> dict:
+    """Search every other native library and data file for the shipped names.
+
+    The classes come from the pinned ELF; leaving it there would make
+    `unattributed` mean "not in one file". Same scope as the audio sweep.
+    """
+    pinned_name = pinned.name if pinned is not None else None
+    scan = {"native_libraries": 0, "data_files": 0, "found_in_native": {},
+            "found_in_data": {},
+            "claim": ("every .so under lib/ except the pinned one and every data file "
+                      "swept for the shipped shader names")}
+    if lib_dir is not None and lib_dir.exists():
+        for so in sorted(lib_dir.rglob("*.so")):
+            if so.name == pinned_name:
+                continue
+            scan["native_libraries"] += 1
+            blob = so.read_bytes()
+            for name in names:
+                if contains_token(blob, name):
+                    scan["found_in_native"].setdefault(name, []).append(so.name)
+    if data_dir is not None and data_dir.exists():
+        for path in sorted(data_dir.rglob("*")):
+            if not path.is_file() or path.suffix.lower() not in DATA_SUFFIXES:
+                continue
+            scan["data_files"] += 1
+            blob = path.read_bytes()
+            for name in names:
+                if contains_token(blob, name):
+                    scan["found_in_data"].setdefault(name, []).append(path.name)
+    return scan
+
+
+def build(assets: Path, elf: Path, repo: Path, mapping: Path,
+          lib_dir: Path | None = None, data_dir: Path | None = None) -> dict:
     ship = shipped(assets)
     blob = elf.read_bytes()
     strings = nul_strings(blob)
@@ -121,6 +158,7 @@ def build(assets: Path, elf: Path, repo: Path, mapping: Path) -> dict:
         "mapped_in_class_table": sum(1 for r in rows if r["mapped_uses"]),
         "not_named_by_replacement": sum(1 for r in rows if not r["replacement_referenced"]),
     }
+    sweep = sweep_sources(lib_dir, data_dir, sorted(ship), pinned=elf)
     return {
         "schema": 1,
         "assets_root": str(assets),
@@ -137,6 +175,7 @@ def build(assets: Path, elf: Path, repo: Path, mapping: Path) -> dict:
                                      if r["original_class"] == "suffix-composition"],
         "string_extraction": ("NUL-delimited printable runs (see "
                               "tools/string_evidence.py for the evidence ladder)"),
+        "sweep": sweep,
     }
 
 
@@ -154,6 +193,10 @@ def main() -> int:
     ap.add_argument("assets", type=Path)
     ap.add_argument("elf", type=Path)
     ap.add_argument("--repo", type=Path, default=Path("."))
+    ap.add_argument("--lib-dir", type=Path,
+                    help="directory holding every original .so (whole-APK sweep)")
+    ap.add_argument("--data-dir", type=Path,
+                    help="asset tree scanned for the shipped names as data")
     ap.add_argument("--mapping", type=Path,
                     default=Path("reconstruction/reverse-v3/native/shader_mapping.tsv"))
     ap.add_argument("--tsv", type=Path,
@@ -163,7 +206,8 @@ def main() -> int:
     ap.add_argument("--check", action="store_true")
     args = ap.parse_args()
 
-    record = build(args.assets, args.elf, args.repo, args.mapping)
+    record = build(args.assets, args.elf, args.repo, args.mapping,
+                   args.lib_dir, args.data_dir)
     tsv = render_tsv(record["rows"])
     payload = json.dumps(record, indent=2, ensure_ascii=False) + "\n"
     if args.check:

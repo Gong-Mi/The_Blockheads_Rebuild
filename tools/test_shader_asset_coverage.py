@@ -48,6 +48,13 @@ def main() -> int:
         assert row["stage"] == ("vertex" if row["name"].endswith(".vsh") else "fragment"), row
         if row["original_class"] == "suffix-composition":
             assert row["original_evidence"] in ("%@.vsh", "%s.vsh", "%@.fsh", "%s.fsh"), row
+    # Whole-APK sweep: nothing outside the pinned ELF names a shipped shader.
+    sweep = record["sweep"]
+    assert sweep["native_libraries"] == 24, sweep
+    assert sweep["data_files"] == 20, sweep
+    assert sweep["found_in_native"] == {}, sweep["found_in_native"]
+    assert sweep["found_in_data"] == {}, sweep["found_in_data"]
+
     pairs = {r["name"].rsplit(".", 1)[0] for r in rows if r["stage"] == "vertex"}
     frags = {r["name"].rsplit(".", 1)[0] for r in rows if r["stage"] == "fragment"}
     assert pairs == frags, sorted(pairs ^ frags)
