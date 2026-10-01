@@ -977,6 +977,30 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/test_blockhead_clothing_pipeline.py",
+        [
+            "REQUIRED_SLOTS",
+            "JET_TEXTURES",
+            "hatPomPomCubes",
+        ],
+    )
+    require(
+        NATIVE / "BLOCKHEAD_CLOTHING_PIPELINE.md",
+        [
+            "Blockhead clothing and accessory mesh pipeline",
+            "updateClothingCubes",
+            "hatPomPomCubes",
+        ],
+    )
+    require(
+        NATIVE / "disasm_blockhead_updateclothingcubes.txt",
+        [
+            "Blockhead -[updateClothingCubes]",
+            "hatPomPomCubes",
+            "jet1.png",
+        ],
+    )
+    require(
         ROOT / "tools/find_selector_senders.py",
         [
             "pool_word + PIC_BASE == target address",
