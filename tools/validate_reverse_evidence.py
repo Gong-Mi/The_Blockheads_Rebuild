@@ -814,6 +814,29 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/extract_tile_shared_body.py",
+        [
+            "decode_movw_imm",
+            "register_comparisons",
+            "0x00A22ED0",
+        ],
+    )
+    require(
+        NATIVE / "TILE_SHARED_BODY_STRUCTURE.md",
+        [
+            "is a real dispatch",
+            "0x112",
+            "64-byte stride",
+        ],
+    )
+    require(
+        NATIVE / "tile_shared_body_structure.json",
+        [
+            '"jump_table_entries": 77',
+            '"constants_compared": 6',
+        ],
+    )
+    require(
         ROOT / "tools/resolve_tile_sprite_domain.py",
         [
             "itemTypeFromTileIsForegorund",
