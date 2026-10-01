@@ -31,6 +31,26 @@ of a record, minus one), dispatched by `add r2, pc, #4` / `ldr r1, [r1, r2]` /
 `add pc, r1, r2`. Every entry is a byte offset from `0x00a22ed0`, and all 77 resolve
 into the same code region (51 distinct targets).
 
+## What the 51 branch bodies assign
+
+Each distinct jump-table target was decoded for its first 16 instructions:
+
+| element | count |
+|---|---:|
+| branch bodies decoded | 51 |
+| ... containing a `movw` assignment | 51 |
+| distinct assignment values across all of them | 5 |
+
+The five values are `0`, `2`, `3`, `109`, `129`, and they group as
+`(0): 33, (0,2): 7, (2): 4, (0,129): 3, (0,3): 1, (0,3,109): 1, (3,109): 1, (2,109): 1`.
+
+Reading them is deliberately left open: the small values (`0`/`2`/`3`) behave like a
+mode or shade selector - they are the same register (`r0`) as the `direct` cases,
+which assign image ids in the hundreds (`110`, `65`, `196`, ...) - while `109` and
+`129` sit in the same numeric range those image ids use. Deciding which is which
+needs the store that consumes each assignment, which this decode does not follow;
+recording the value set and its distribution is what the evidence supports.
+
 ## The arithmetic on the taken path
 
 Read from the instructions rather than guessed: a record address is built with a

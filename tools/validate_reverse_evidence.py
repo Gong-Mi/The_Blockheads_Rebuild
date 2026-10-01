@@ -827,6 +827,7 @@ def main() -> None:
             "is a real dispatch",
             "0x112",
             "64-byte stride",
+            "branch bodies",
         ],
     )
     require(

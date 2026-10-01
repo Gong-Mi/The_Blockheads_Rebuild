@@ -139,6 +139,33 @@ def bl_targets(blob: bytes) -> dict:
     return calls
 
 
+BRANCH_SCAN_WORDS = 16
+
+
+def decode_branch(blob: bytes, target: int) -> dict:
+    """First instructions of a jump-table branch: does it assign an image id?
+
+    The `direct` cases assign with `movw r0, #imm`; if the shared body's 51 branch
+    targets do the same, then the 59 shared-body tile values resolve to a small set
+    of candidate draw images instead of staying opaque.
+    """
+    values = []
+    calls = []
+    for addr, word in words(blob, target, BRANCH_SCAN_WORDS):
+        value = decode_movw_imm(word)
+        if value is not None:
+            values.append({"at": f"0x{addr:08x}", "immediate": value})
+        call = branch_target(word, addr)
+        if call is not None and (word >> 24) & 0xF == 0xB:
+            calls.append({"at": f"0x{addr:08x}", "target": f"0x{call:08x}"})
+    return {
+        "target": f"0x{target:08x}",
+        "movw_assignments": values,
+        "distinct_assignment_values": sorted({v["immediate"] for v in values}),
+        "calls": calls,
+    }
+
+
 def build(elf: Path) -> dict:
     blob = elf.read_bytes()
     comparisons = []
@@ -164,6 +191,11 @@ def build(elf: Path) -> dict:
                       "distinct_target": f"0x{target:08x}"})
 
     distinct = sorted({row["target"] for row in table})
+    branches_decoded = [decode_branch(blob, int(row["target"], 16)) for row in table]
+    unique_branches: dict[str, dict] = {}
+    for entry in branches_decoded:
+        unique_branches.setdefault(entry["target"], entry)
+    with_assignments = [e for e in unique_branches.values() if e["movw_assignments"]]
     immediates = [row["immediate"] for row in comparisons]
     fields = []
     for addr, word in words(blob, SHARED_BODY_VA, (SCAN_END - SHARED_BODY_VA) // 4):
@@ -192,6 +224,10 @@ def build(elf: Path) -> dict:
             "jump_table_distinct_targets": len(distinct),
             "helper_calls": len(bl_targets(blob)),
             "frame_slots_touched": len(frame_slots),
+            "branches_decoded": len(unique_branches),
+            "branches_with_movw_assignment": len(with_assignments),
+            "branch_assignment_values": len({v for e in with_assignments
+                                             for v in e["distinct_assignment_values"]}),
         },
         "immediates": sorted(set(immediates)),
         "comparisons": comparisons,
@@ -201,6 +237,8 @@ def build(elf: Path) -> dict:
                        "last": JUMP_LAST, "distinct_targets": len(distinct),
                        "sample": table[:8]},
         "helper_calls": bl_targets(blob),
+        "branches": {name: entry["distinct_assignment_values"]
+                     for name, entry in sorted(unique_branches.items())},
         "frame_slots_touched": [f"fp-0x{slot:x}" for slot in frame_slots],
     }
 
@@ -212,6 +250,8 @@ def render_tsv(record: dict) -> str:
     for row in record["register_comparisons"]:
         lines.append(f"compare-reg\t{row['at']}\timm={row['immediate']} "
                      f"(0x{row['immediate']:x})")
+    for name, values in record["branches"].items():
+        lines.append(f"branch\t{name}\tassigns={','.join(str(v) for v in values) or '(none)'}")
     for row in record["helper_calls"]:
         lines.append(f"call\t{row['at']}\t-> {row['target']}")
     lines.append(f"jump-table\t{record['jump_table']['base']}\t"

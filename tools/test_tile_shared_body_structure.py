@@ -29,7 +29,11 @@ EXPECTED = {
     "jump_table_distinct_targets": 51,
     "helper_calls": 3,
     "frame_slots_touched": 5,
+    "branches_decoded": 51,
+    "branches_with_movw_assignment": 51,
+    "branch_assignment_values": 5,
 }
+BRANCH_VALUES = [0, 2, 3, 109, 129]
 CONSTANTS = [0xE0, 0x100, 0x109, 0x112, 0x1E0, 0x200]
 
 
@@ -50,6 +54,15 @@ def main() -> int:
     for call in record["helper_calls"]:
         assert call["target"].startswith("0x00"), call
     assert "fp-0x540" in record["frame_slots_touched"], record["frame_slots_touched"]
+
+    # Branch bodies: every one assigns, from a five-value set. Pinned because the
+    # value set is what makes "mode vs image id" an open question instead of a guess.
+    branches = record["branches"]
+    assert len(branches) == EXPECTED["branches_decoded"], len(branches)
+    values = sorted({v for vs in branches.values() for v in vs})
+    assert values == BRANCH_VALUES, values
+    assert sum(1 for vs in branches.values() if vs == [0]) == 33, branches
+    assert sum(1 for vs in branches.values() if not vs) == 0, branches
 
     tsv_rows = list(csv.reader(io.StringIO(TSV.read_text(encoding="utf-8")), delimiter="\t"))
     assert tsv_rows[0] == ["kind", "address", "detail"], tsv_rows[0]
