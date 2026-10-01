@@ -140,17 +140,78 @@ def extract_rows(elf: Elf32Arm) -> list[dict]:
 
 
 def render(elf: Elf32Arm) -> str:
+    """Render the TSV from the same rows the JSON carries.
+
+    An earlier revision rendered from `extract_rows` while the JSON applied the
+    delegated-dispatch classification afterwards, so the two artifacts disagreed
+    about content 46. One source of rows, one classification.
+    """
+    return render_rows(build_record(elf, "")["rows"])
+
+
+def render_rows(rows_in: list[dict]) -> str:
     rows = ["content_value\tcandidate_name\tdraw_image\tdraw_col\tdraw_row\t"
             "paired_image\tpaired_col\tpaired_row\tresolution\tcase_target"]
-    for row in extract_rows(elf):
+    for row in rows_in:
         rows.append("\t".join(str(row[h]) for h in (
             "content_value", "candidate_name", "draw_image", "draw_col", "draw_row",
             "paired_image", "paired_col", "paired_row", "resolution", "case_target")))
     return "\n".join(rows) + "\n"
 
 
+DELEGATE_SCAN_WORDS = 64
+
+
+def _movw_r0(word: int) -> int | None:
+    """ARM MOVW with Rd = r0 (cond 1110, 0011 0000)."""
+    if (word >> 28) != 0xE or ((word >> 20) & 0xFF) != 0x30:
+        return None
+    if ((word >> 12) & 0xF) != 0:
+        return None
+    return ((word >> 4) & 0xF000) | (word & 0x0FFF)
+
+
+def classify_case_target(blob: bytes, target: int) -> dict:
+    """What kind of case body is this? Used only for values that resolve to nothing.
+
+    A body that assigns a draw image does it with `movw r0, #imm`. The one value
+    left unresolved in this table (content 46) has no such assignment in its first
+    48 instructions; instead it loads pools, then issues indirect calls
+    (`blx reg`), i.e. it delegates to a method rather than computing a cell here.
+    Recording that is a classification with evidence, not a resolution of what the
+    method draws.
+    """
+    assignments = []
+    direct_calls = 0
+    indirect_calls = 0
+    for index in range(DELEGATE_SCAN_WORDS):
+        addr = target + index * 4
+        word = int.from_bytes(blob[addr:addr + 4], "little")
+        if _movw_r0(word) is not None:
+            assignments.append(_movw_r0(word))
+        if (word >> 28) != 0xE:
+            continue
+        bits_27_20 = (word >> 20) & 0xFF
+        if bits_27_20 == 0xB and (word >> 24) & 0x1:        # BL (cond 1011)
+            direct_calls += 1
+        elif bits_27_20 == 0x12 and ((word >> 4) & 0xF) == 0x3:   # BLX reg
+            indirect_calls += 1
+    return {"movw_assignments": assignments, "direct_calls": direct_calls,
+            "indirect_calls": indirect_calls}
+
+
 def build_record(elf: Elf32Arm, sha: str) -> dict:
     rows = extract_rows(elf)
+    # A value whose case body the table cannot resolve is not automatically
+    # "unresolved": look at what the body does. Content 46 delegates.
+    for row in rows:
+        if row["resolution"] != "unresolved":
+            continue
+        target = int(row["case_target"], 16)
+        detail = classify_case_target(elf.data, target)
+        row["designated_body"] = detail
+        if not detail["movw_assignments"] and detail["indirect_calls"]:
+            row["resolution"] = "delegated-dispatch"
     counts: dict[str, int] = {}
     for row in rows:
         counts[row["resolution"]] = counts.get(row["resolution"], 0) + 1

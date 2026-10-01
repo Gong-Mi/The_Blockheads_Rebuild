@@ -27,7 +27,16 @@ def main() -> int:
     assert record["table_address"] == "0x00a221f4"
     assert record["content_domain"] == [3, 123]
     assert record["shared_body_address"] == SHARED_BODY
-    assert record["counts"] == {"direct": 61, "shared-body": 59, "unresolved": 1}, record["counts"]
+    # The last value left "unresolved" is now classified with evidence: content 46's
+    # case body issues an indirect call (blx reg) and assigns no draw image, so it
+    # delegates rather than computing a cell in this table.
+    assert record["counts"] == {"direct": 61, "shared-body": 59,
+                                "delegated-dispatch": 1}, record["counts"]
+    delegated = [r for r in record["rows"] if r["resolution"] == "delegated-dispatch"]
+    assert len(delegated) == 1 and delegated[0]["content_value"] == 46, delegated
+    body = delegated[0]["designated_body"]
+    assert body["movw_assignments"] == [], body
+    assert body["indirect_calls"] >= 1, body
 
     rows = record["rows"]
     values = [row["content_value"] for row in rows]
@@ -43,10 +52,14 @@ def main() -> int:
         elif res == "shared-body":
             assert row["case_target"] == SHARED_BODY, row
             assert row["draw_image"] == "" and row["paired_image"] == "", row
-        else:
-            assert res == "unresolved", row
-            # pinned follow-up marker: value 46 dispatches on its own body
+        elif res == "delegated-dispatch":
+            # Value 46's body delegates: no inline draw assignment, indirect calls.
             assert row["content_value"] == 46 and row["case_target"] == "0x00a22b90", row
+            body = row["designated_body"]
+            assert body["movw_assignments"] == [], body
+            assert body["indirect_calls"] >= 1, body
+        else:
+            raise AssertionError(f"unknown resolution class: {row}")
 
     tsv_rows = list(csv.reader(io.StringIO(TSV.read_text(encoding="utf-8")), delimiter="\t"))
     assert len(tsv_rows) == len(rows) + 1, (len(tsv_rows), len(rows))

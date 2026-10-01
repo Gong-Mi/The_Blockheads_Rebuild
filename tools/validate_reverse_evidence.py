@@ -814,6 +814,14 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "TILE_CONTENT_RENDER_MAP.md",
+        [
+            "delegated-dispatch",
+            "0x00a22c38",
+            "never guesses one",
+        ],
+    )
+    require(
         ROOT / "tools/extract_tile_shared_body.py",
         [
             "decode_movw_imm",
@@ -928,6 +936,7 @@ def main() -> None:
             "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
             '"direct": 61',
             '"shared-body": 59',
+            '"delegated-dispatch": 1',
         ],
     )
     require(
@@ -935,7 +944,7 @@ def main() -> None:
         [
             "content_value\tcandidate_name\tdraw_image\tdraw_col\tdraw_row",
             "17\t\t\t\t\t\t\t\tshared-body\t0x00a22d70",
-            "46\t\t\t\t\t\t\t\tunresolved\t0x00a22b90",
+            "46\t\t\t\t\t\t\t\tdelegated-dispatch\t0x00a22b90",
         ],
     )
     require(
