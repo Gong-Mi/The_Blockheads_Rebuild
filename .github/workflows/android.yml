@@ -404,7 +404,9 @@ jobs:
 
 
 
-  # Packaging lane: JDK + SDK + Gradle + APK contract. NDK, Gradle and ccache caches are restored before the build; ccache is opt-in via -PccacheLauncher.
+  # Packaging lane: JDK + SDK + Gradle + APK contract. The NDK, the Gradle caches and
+  # the AGP CMake tree (app/.cxx) are restored before the build, because the four
+  # per-ABI CMake *configure* rounds - not compilation - are what costs the time.
   build:
     runs-on: ubuntu-latest
     steps:
@@ -412,16 +414,6 @@ jobs:
       with:
         submodules: true
         fetch-depth: 0
-    - name: Install ccache
-      run: sudo apt-get install -y ccache
-      working-directory: .
-    - name: Cache ccache
-      uses: actions/cache@v4
-      with:
-        path: ~/.ccache
-        key: ccache-${{ runner.os }}-${{ github.sha }}
-        restore-keys: |
-          ccache-${{ runner.os }}-
     - name: set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -439,6 +431,13 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+    - name: Cache CMake configure and build tree (app/.cxx)
+      uses: actions/cache@v4
+      with:
+        path: app/.cxx
+        key: cxx-${{ runner.os }}-${{ hashFiles('app/src/main/cpp/**', 'app/build.gradle') }}
+        restore-keys: |
+          cxx-${{ runner.os }}-
     - name: Cache NDK
       uses: actions/cache@v4
       with:
@@ -455,7 +454,7 @@ jobs:
           gradle-${{ runner.os }}-
 
     - name: Build with Gradle
-      run: ./gradlew assembleDebug --build-cache -PccacheLauncher=/usr/bin/ccache
+      run: ./gradlew assembleDebug --build-cache
       working-directory: .
 
     - name: Validate packaged APK contract
