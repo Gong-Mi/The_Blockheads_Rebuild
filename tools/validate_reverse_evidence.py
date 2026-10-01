@@ -961,6 +961,22 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "disasm_donkeylike_setupmatrices.txt",
+        [
+            "DonkeyLike -[setupMatrices:dt:]",
+            "bodyMatrix",
+            "galloping",
+        ],
+    )
+    require(
+        NATIVE / "disasm_blockhead_updateanimation.txt",
+        [
+            "Blockhead -[updateAnimation]",
+            "traverseToKeyFrame",
+            "isInJetPackFreeFlightMode",
+        ],
+    )
+    require(
         ROOT / "tools/find_selector_senders.py",
         [
             "pool_word + PIC_BASE == target address",
