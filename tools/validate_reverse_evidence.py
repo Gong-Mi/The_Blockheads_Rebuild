@@ -644,6 +644,31 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/extract_original_tile_content_render_map.py",
+        [
+            "TABLE_VA = 0x00A221F4",
+            "SHARED_BODY_VA = 0x00A22D70",
+            "shared-body",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "tile_content_render_map.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"direct": 61',
+            '"shared-body": 59',
+        ],
+    )
+    require(
+        NATIVE / "original_tile_content_render_map.tsv",
+        [
+            "content_value\tcandidate_name\tdraw_image\tdraw_col\tdraw_row",
+            "17\t\t\t\t\t\t\t\tshared-body\t0x00a22d70",
+            "46\t\t\t\t\t\t\t\tunresolved\t0x00a22b90",
+        ],
+    )
+    require(
         ROOT / "tools/extract_original_item_sprite_map.py",
         [
             "FUNCTION_VA = 0x004D6040",
