@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "claim": "byte fields of the 64-byte tile record that the drawing path reads, extracted from the code windows with each read site recorded",
+  "record_stride": 64,
+  "stride_evidence": "add r3, ip, r3, lsl #6 at 0x00a22dfc",
+  "fields": [
+    {
+      "offset": 1,
+      "size": "byte",
+      "read_sites": [
+        "0x00a22ea8"
+      ],
+      "windows": [
+        "shared body"
+      ],
+      "purpose": "jump-table index (compared <= 0x4c after subtracting one, 77 entries)"
+    },
+    {
+      "offset": 3,
+      "size": "byte",
+      "read_sites": [
+        "0x00a23500"
+      ],
+      "windows": [
+        "tail"
+      ],
+      "purpose": "tested against zero (a boolean-ish field)"
+    },
+    {
+      "offset": 8,
+      "size": "byte",
+      "read_sites": [
+        "0x00a22e00"
+      ],
+      "windows": [
+        "shared body"
+      ],
+      "purpose": "fed into the arithmetic (byte - 127) * constant + [fp,-0x19c]"
+    },
+    {
+      "offset": 12,
+      "size": "byte",
+      "read_sites": [
+        "0x00a234e4"
+      ],
+      "windows": [
+        "tail"
+      ],
+      "purpose": "compared against 0x45 in the tail"
+    }
+  ],
+  "counts": {
+    "windows_scanned": 2,
+    "record_field_reads": 4,
+    "distinct_offsets": 4,
+    "tail_constant": 69
+  },
+  "raw_reads": [
+    {
+      "window": "shared body",
+      "at": "0x00a22e00",
+      "mnemonic": "ldrb",
+      "offset": 8,
+      "text": "ldrb r3, [r3, #8]"
+    },
+    {
+      "window": "shared body",
+      "at": "0x00a22ea8",
+      "mnemonic": "ldrb",
+      "offset": 1,
+      "text": "ldrb r0, [r0, #1]"
+    },
+    {
+      "window": "tail",
+      "at": "0x00a234e4",
+      "mnemonic": "ldrb",
+      "offset": 12,
+      "text": "ldrb r0, [r0, #0xc]"
+    },
+    {
+      "window": "tail",
+      "at": "0x00a23500",
+      "mnemonic": "ldrb",
+      "offset": 3,
+      "text": "ldrb r0, [r0, #3]"
+    }
+  ]
+}

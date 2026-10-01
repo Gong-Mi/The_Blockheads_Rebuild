@@ -868,6 +868,52 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/extract_tile_record_layout.py",
+        [
+            "WINDOWS",
+            "FIELD_PATTERN",
+            "STRIDE_SHIFT",
+        ],
+    )
+    require(
+        NATIVE / "TILE_RECORD_LAYOUT.md",
+        [
+            "candidate reading",
+            "loses sync",
+            "without a hex prefix",
+        ],
+    )
+    require(
+        NATIVE / "tile_record_layout.json",
+        [
+            '"record_stride": 64',
+            '"tail_constant": 69',
+        ],
+    )
+    require(
+        ROOT / "tools/join_shared_body_constants.py",
+        [
+            "writes_to_case_slots",
+            "direct_cases_writing_the_compared_slot",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "SHARED_BODY_CONSTANTS.md",
+        [
+            "Apple, Cherry, Maple",
+            "61 / 61",
+            "not \"all leaves\"",
+        ],
+    )
+    require(
+        NATIVE / "shared_body_constants.json",
+        [
+            '"constants_with_exactly_one_producer": 6',
+            '"direct_cases_writing_the_compared_slot": 61',
+        ],
+    )
+    require(
         ROOT / "tools/crosscheck_draw_value_domains.py",
         [
             "shared_body_vs_sprites",
