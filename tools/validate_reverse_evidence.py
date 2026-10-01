@@ -693,6 +693,29 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/crosscheck_shader_declarations.py",
+        [
+            "declared-attribute",
+            "undeclared",
+            "binding markers",
+        ],
+    )
+    require(
+        NATIVE / "SHADER_DECLARATION_CROSSCHECK.md",
+        [
+            "not a declaration list",
+            "ColoredNoTexture",
+            "never-claimed attributes",
+        ],
+    )
+    require(
+        NATIVE / "shader_declaration_crosscheck.json",
+        [
+            '"undeclared_binding_markers": 63',
+            '"shaders_missing_source": 0',
+        ],
+    )
+    require(
         ROOT / "tools/audit_texture_sets.py",
         [
             "ratio_uniform",
