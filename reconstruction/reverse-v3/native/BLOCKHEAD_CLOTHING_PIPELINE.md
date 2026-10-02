@@ -10,12 +10,11 @@ The method checks the current equipped item type for each wearable slot against 
 
 ## Clothing Slots and Geometric Components
 
-**Provenance warning**: the numbers in parentheses below are the values the annotated listing
-prints for each `OBJC_IVAR_$_Blockhead.*` storage cell. Those are **file-content** readings,
-and 98.5% of ivar cells differ between the file and the running process
-(`IVAR_OFFSET_READING.md`), so these numbers identify *which* ivar a method touches but must
-not be used as runtime field offsets. The measurement that would promote them is an
-object-graph walk, which has not been run yet.
+**Provenance**: the numbers in parentheses below are the file-content values of each
+`OBJC_IVAR_$_Blockhead.*` storage cell. A same-build audit shows these **are** the runtime
+field offsets for the game classes (no `Blockhead` cell is in the rewritten set), and the
+live object-graph verification confirms the Blockhead cube/texture offsets directly — see
+`IVAR_OFFSET_READING.md` and `live_verified_fields.json`.
 
 | Slot | ItemType Ivar | Texture Ivar | Primary Mesh Ivar | Auxiliary Meshes |
 |---|---|---|---|---|

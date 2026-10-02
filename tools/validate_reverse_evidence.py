@@ -916,7 +916,7 @@ def main() -> None:
         ROOT / "tools/test_live_runtime_ivars.py",
         [
             "EXPECTED_COUNTS",
-            "PINNED_OFFSETS",
+            "VERIFIED_OFFSETS",
             "527",
         ],
     )
@@ -924,7 +924,7 @@ def main() -> None:
         NATIVE / "LIVE_RUNTIME_IVARS.md",
         [
             "Live runtime ivar offsets",
-            "527 live ivar offsets",
+            "corrected",
             "Blockhead.headCube",
         ],
     )
@@ -932,8 +932,8 @@ def main() -> None:
         NATIVE / "live_runtime_ivar_offsets.json",
         [
             '"ivar_count": 527',
-            '"Blockhead.headCube": 712',
-            '"DynamicWorld.world": 9496',
+            '"Blockhead.headCube": 212',
+            '"DynamicWorld.world": 4',
         ],
     )
     require(
@@ -1005,24 +1005,24 @@ def main() -> None:
         [
             "OBJC_IVAR_$_",
             "cells_rewritten",
-            "live_offsets",
+            "BUILD MISMATCH",
         ],
     )
     require(
         NATIVE / "IVAR_OFFSET_READING.md",
         [
-            "the file and the process disagree",
+            "cross-build misread",
             "instance discovery",
-            "candidate, not verified",
+            "live_verified_fields.json",
         ],
     )
     require(
         NATIVE / "live_ivar_offset_divergence.json",
         [
             '"cells_compared": 3793',
+            '"cells_identical": 3714',
+            '"cells_rewritten": 79',
             '"cells_rewritten": 3735',
-            'not a verified runtime offset',
-            'CANDIDATE table',
         ],
     )
     require(

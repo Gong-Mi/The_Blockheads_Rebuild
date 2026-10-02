@@ -1,70 +1,55 @@
-# Live runtime ivar offsets extracted from official Android process
+# Live runtime ivar offsets (corrected)
 
-Extracted directly from live process memory (`/proc/<pid>/mem`) of `com.noodlecake.blockheads` (1.7.6 armeabi-v7a running on HyperOS translator).
+**(Corrected 2026-10-02.)** The first revision of this file carried 527 "live" values that
+were a cross-build misread: they were the cell contents of neighboring symbols (the same
+uniform +0x50 shift documented in `IVAR_OFFSET_READING.md`), not the runtime layout. Its
+pinned examples were wrong — it claimed `Blockhead.headCube = 712` (actual 212),
+`Blockhead.state = 728` (actual 56), `World.saveID = 3460` (actual 436),
+`DynamicWorld.world = 9496` (actual 4).
 
-## Background and Methodology
+## Corrected data
 
-Objective-C ivar offsets for classes with complex inheritance (e.g., `Blockhead -> DynamicObject -> NSObject`) are resolved dynamically at load/runtime by the Objective-C runtime and stored in the global `.data` section under symbols named `OBJC_IVAR_$_<Class>.<ivar>`.
+`live_runtime_ivar_offsets.json` (schema 2) now carries the pinned-ELF cell values for the
+same 527 ivars of the four core classes:
 
-In this build:
-- Static ELF symbols define the relative offsets in `.data`.
-- At process start, the dynamic linker relocates the global data segment (`rw-p` mapping of `libApplication.so`).
-- By reading `/proc/<pid>/mem` at the live relocated address `base_rw + (sym_addr - 0xe32000)`, we read the 4-byte storage cell the runtime leaves there.
+- a same-build audit shows these file values equal the runtime offsets, and **no cell of
+  these four classes is in the 79-cell rewritten set** (`IVAR_OFFSET_READING.md`);
+- all 527 values are **identical between the pinned 1.7.6 ELF and the audited live 1.7.5
+  build**;
+- **90 of the 527** are additionally verified hop-by-hop through a live object graph
+  (`live_verified_fields.json`).
 
-**Status of these numbers (corrected): candidate, not verified.** A later measurement
-(`IVAR_OFFSET_READING.md`) compared the same 3793 cells read from the ELF file against the
-running process and found **3735 of them differ** (98.5%). The numbers in this file are the
-process-content reading, which is *one of two* mutually exclusive candidate readings, and no
-test has yet separated them: the value-based probes attempted so far were either
-state-dependent (a net-controlled blockhead skips the write) or relied on instance discovery
-by 4-byte class-pointer search, which returns metadata references rather than object headers.
-Do not present these offsets as the verified runtime layout; use them as candidates until the
-object-graph walk in `IVAR_OFFSET_READING.md` validates a chain end to end.
+Verified examples (live object graph, 2026-10-02):
 
-## Scope of Extracted Ivars
+### Blockhead (bones & rendering)
+- `Blockhead.headCube` = 212, `bodyCube` = 228, `armCube` = 236, `legCube` = 244
 
-A total of **527 live ivar offsets** were extracted across four core classes:
+### DynamicObject (base)
+- `DynamicObject.world` = 4, `DynamicObject.dynamicWorld` = 8
 
-| Class | Live Ivar Count | Key Structural Roles |
-|---|---:|---|
-| `Blockhead` | 221 | Bones, shaders, matrices, animation states, tools, inventory |
-| `DynamicObject` | 13 | Position, float position, cache, net flag, dynamic unique ID |
-| `World` | 227 | Database environments, random seed, time of day, camera bounds |
-| `DynamicWorld` | 66 | Blockhead array, dynamic object index, world pointer, save path |
+### DynamicWorld (container & bridge)
+- `DynamicWorld.world` = 4, `DynamicWorld.blockheads` = 44,
+  `DynamicWorld.worldDatabase` = 32, `DynamicWorld.worldSaveDirectory` = 40
 
-## Critical Field Offsets (Pinned)
+### World (persistence & UI)
+- `World.saveID` = 436, `World.worldName` = 440, `World.dynamicWorld` = 416,
+  `World.uiManager` = 240
 
-### Blockhead (Character Bones & Animation)
-- `Blockhead.skinOptions` = 200
-- `Blockhead.headCube` = 712, `headTexture` = 452, `headHairTexture` = 440
-- `Blockhead.hairCubeA` = 1968, `hairCubeB` = 1964
-- `Blockhead.bodyCube` = 516, `bodyTexture` = 524
-- `Blockhead.armCube` = 540, `armTexture` = 532
-- `Blockhead.legCube` = 496, `legTexture` = 644
-- `Blockhead.state` = 728
-- `Blockhead.toSquare` = 2012
-- `Blockhead.traverseToKeyFrame` = 2384
-- `Blockhead.walkTimer` = 2365
-- `Blockhead.isInJetPackFreeFlightMode` = 2156
+## Scope of the corrected table
 
-### DynamicWorld (Entity Container & World Bridge)
-- `DynamicWorld.world` = 9496
-- `DynamicWorld.blockheads` = 7370
-- `DynamicWorld.dynamicObjects` = 2432
-- `DynamicWorld.worldDatabase` = 7892
-- `DynamicWorld.worldSaveDirectory` = 6084
+A total of **527 ivar offsets** across four core classes:
 
-### World (World Clock & Persistence)
-- `World.worldWidthMacro` = 240
-- `World.databaseEnvironment` = 572
-- `World.mainDatabase` = 552
-- `World.blockDatabase` = 576
-- `World.dynamicObjectDatabase` = 604
-- `World.timeOfDayFraction` = 3036
-- `World.randomSeed` = 3380
-- `World.saveID` = 3460
+| Class | Count |
+|---|---:|
+| `Blockhead` | 221 |
+| `DynamicObject` | 13 |
+| `World` | 227 |
+| `DynamicWorld` | 66 |
 
-## Artifacts and Verification
+## Artifacts and verification
 
-- JSON data: `reconstruction/reverse-v3/native/live_runtime_ivar_offsets.json`
-- Contract test: `tools/test_live_runtime_ivars.py` (verifies all 527 counts and pinned offsets without requiring live process access).
+- `live_runtime_ivar_offsets.json` — all 527 values; `verified_live` lists the 90
+  object-graph-verified names.
+- `live_verified_fields.json` — the full 153-field object-graph verification (six objects).
+- `IVAR_OFFSET_READING.md` — correction, method, chain, boundaries.
+- Contract test: `tools/test_live_runtime_ivars.py` (no device needed).
