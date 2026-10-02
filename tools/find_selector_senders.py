@@ -11,8 +11,12 @@ Why this works (mechanism established in OBJC_SEND_CHANNEL.md, revised here):
   * the loading instruction is an `ldr rX, [pc, #k]` whose target is that pool word.
 
 So for a selector X: string VA -> selref slot(s) -> pool word (slot - PIC_BASE) -> loader
-instruction -> enclosing method (nearest IMP at or below the loader, from the ObjC method
-map) -> whether a send follows.
+instruction -> enclosing method -> whether a send follows.
+
+Loader attribution is **prologue-verified**: walk back to the nearest push-with-lr
+prologue (same instrument as tools/probe_live_frame_stack.py), and require an exact
+method-table imp match for credit; nearest-IMP is only the recorded fallback when no
+prologue is found at all.
 
 The earlier probe in this repo searched the *slot* value and the *msgrefs* section and found
 nothing; both are recorded in OBJC_SEND_CHANNEL.md. This tool takes the pool-word route,
@@ -36,6 +40,12 @@ DEFAULT_ELF = Path.home() / "blockheads-work/extracted/lib/armeabi-v7a/libApplic
 PIC_BASE = 0x0105FAF4
 METHODS_TSV = Path("reconstruction/reverse-v3/native/libApplication_objc_methods.tsv")
 ARM_BLX_MASK = 0xFF000000 | (0x3 << 22) | (0xF << 8)  # rough: top byte + blx bit
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+try:
+    import probe_live_frame_stack as _frame_probe
+except ImportError:  # pragma: no cover - the module ships next to this tool
+    _frame_probe = None
 
 
 def sections(elf: bytes) -> list[dict]:
@@ -121,8 +131,32 @@ def enclosing(methods: list[tuple[int, str, str]], site: int) -> str:
     return f"{best[1]} {best[2]}" if best else "?"
 
 
+def attribute_site(elf: bytes, site: int, methods: list[tuple[int, str, str]],
+                   imps: list[int], imp_set: set) -> dict:
+    """Prologue-verified attribution (same walk-back instrument as the frame-stack probe).
+
+    An exact method-table imp match of the enclosing function start is required for
+    credit; a non-imp start is recorded as unnamed; nearest-IMP is only the recorded
+    fallback when no prologue is found at all."""
+    start = _frame_probe.fn_start_a32(elf, site) if _frame_probe else None
+    mode = "A32"
+    if start is None and _frame_probe is not None:
+        start = _frame_probe.fn_start_t16(elf, site)
+        mode = "T16"
+    if start is not None and start in imp_set:
+        imp, cls, sel = methods[imps.index(start)]
+        return {"method": f"{cls} {sel}", "fn_start": f"0x{start:08x}",
+                "fn_start_mode": mode, "offset": site - start,
+                "attribution": "prologue-verified"}
+    if start is not None:
+        return {"method": f"unnamed @0x{start:08x}", "fn_start": f"0x{start:08x}",
+                "fn_start_mode": mode, "offset": site - start, "attribution": "unnamed"}
+    return {"method": enclosing(methods, site), "fn_start": None, "fn_start_mode": None,
+            "offset": None, "attribution": "nearest-imp-fallback"}
+
+
 def scan(elf: bytes, sed: list[dict], selector: str,
-         methods: list[tuple[int, str, str]]) -> dict:
+         methods: list[tuple[int, str, str]], imps: list[int], imp_set: set) -> dict:
     out: dict = {"selector": selector, "slots": [], "loaders": [], "sends": []}
     needle = selector.encode() + b"\0"
     at = elf.find(needle)
@@ -158,7 +192,7 @@ def scan(elf: bytes, sed: list[dict], selector: str,
                      "pool_word": f"0x{struct.unpack_from('<I', elf, hit)[0]:08x}",
                      "loader": f"0x{loader:x}" if loader else None}
             if loader is not None:
-                entry["method"] = enclosing(methods, loader)
+                entry.update(attribute_site(elf, loader, methods, imps, imp_set))
                 # a send re-materialises *slot into the selector argument register
                 # (ldr rN,[rN]) and then blx's the send target; require both, in order,
                 # so an unrelated message in the same window is not counted.
@@ -201,14 +235,19 @@ def main() -> int:
     if not args.elf.exists():
         print(f"skip: no ELF at {args.elf}")
         return 0
+    if _frame_probe is None or not _frame_probe._HAVE_CAPSTONE:
+        print("skip: capstone required for prologue-verified attribution")
+        return 0
 
     elf = args.elf.read_bytes()
     sed = sections(elf)
     methods = load_methods(METHODS_TSV)
+    imps = [m[0] for m in methods]
+    imp_set = set(imps)
     payload = {
         "elf_sha256": hashlib.sha256(elf).hexdigest(),
         "pic_base": f"0x{PIC_BASE:x}",
-        "selectors": [scan(elf, sed, s, methods) for s in selectors],
+        "selectors": [scan(elf, sed, s, methods, imps, imp_set) for s in selectors],
     }
     text = json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
     if args.check:

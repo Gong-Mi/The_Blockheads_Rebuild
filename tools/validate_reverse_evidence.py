@@ -1045,6 +1045,7 @@ def main() -> None:
         [
             "pool_word + PIC_BASE == target address",
             "0x0105FAF4",
+            "prologue-verified",
         ],
     )
     require(
@@ -1052,7 +1053,7 @@ def main() -> None:
         [
             "reference sites",
             "0x105faf4",
-            "not settled here",
+            "settled by the prologue walk-back",
         ],
     )
     require(

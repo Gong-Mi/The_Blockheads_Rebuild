@@ -42,16 +42,29 @@ def main() -> int:
     assert int(loader["pool_word"], 16) == (slot - 0x105FAF4) & 0xFFFFFFFF, loader
     assert loader["loader"] == "0x555278", loader
     assert "World" in loader["method"], loader
+    # prologue-verified attribution fields (settles the old "nearest IMP only" caveat)
+    assert loader["attribution"] == "prologue-verified", loader
+    assert loader["fn_start"] == "0x00554f04", loader
+    assert loader["offset"] == 0x374, loader
+    assert loader["fn_start_mode"] == "A32", loader
 
     # the multi-sound trigger sites must keep landing in World tap:
     taps = [l for l in by_sel["multiSoundNamed:"]["loaders"] if l.get("method") == "World tap:"]
     assert len(taps) == 3, taps
 
+    # all loader sites in the current table are prologue-verified (19/19 agreement with
+    # nearest-IMP on 2026-10-02); a fallback appearing here is a drift alarm, not noise
+    all_loaders = [l for s in data["selectors"] for l in s.get("loaders", [])
+                   if l.get("loader")]
+    assert len(all_loaders) == 19, len(all_loaders)
+    bad = [l for l in all_loaders if l.get("attribution") != "prologue-verified"]
+    assert not bad, bad
+
     # send detection is conservative on purpose: it must not silently become permissive
     total_sends = sum(s.get("n_sends", 0) for s in data["selectors"])
     assert total_sends <= 2, f"send rule got permissive: {total_sends}"
 
-    print("selector-senders: PASS (mechanism + counts pinned)")
+    print("selector-senders: PASS (mechanism + counts pinned; 19/19 prologue-verified)")
     return 0
 
 

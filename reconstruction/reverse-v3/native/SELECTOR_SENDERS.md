@@ -50,10 +50,15 @@ tick), and `doCameraScreenshot`; volume lives in the options screen
 `MJMultiSound initWithFile:` / `initWithFileNames:`.
 
 `World heartbeatDataRecieved:fromPeer:` showing up as the enclosing method for the
-`soundNamed:` site is a fact about addresses, not a claim about intent: the loader at
-0x555278 has `-[World heartbeatDataRecieved:fromPeer:]` (IMP 0x00554f04) as its nearest
-preceding documented IMP. Whether that method really is the sender, or the method map has a
-hole above it, is **not settled here**.
+`soundNamed:` site was originally only a nearest-IMP fact. It is now
+**settled by the prologue walk-back**: for all 19 loader sites in this table, the nearest
+`push {…, lr}`
+going back from the loader lands exactly on the method-table imp already named (loader
+0x555278 sits at `+0x374` inside `-[World heartbeatDataRecieved:fromPeer:]`, IMP
+0x00554f04), so the method map has no hole above these sites. Loader entries in
+`selector_senders.json` carry the verification inline (`fn_start`, `fn_start_mode`,
+`offset`, `attribution: prologue-verified`); the walk-back is the same instrument as
+`tools/probe_live_frame_stack.py`.
 
 ## Precision: reference sites vs proven sends
 
