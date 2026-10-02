@@ -1065,6 +1065,27 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/extract_sound_call_sites.py",
+        [
+            "LITERAL_WINDOW",
+            "prologue-verified",
+        ],
+    )
+    require(
+        NATIVE / "audio_call_site_literals.json",
+        [
+            '"selector": "soundNamed:"',
+            '"attribution": "prologue-verified"',
+        ],
+    )
+    require(
+        ROOT / "tools/test_audio_call_site_literals.py",
+        [
+            "EXPECTED_FUNCTIONS",
+            "prologue-verified",
+        ],
+    )
+    require(
         ROOT / "tools/probe_objc_send_channel.py",
         [
             "msgrefs_unit_matches",

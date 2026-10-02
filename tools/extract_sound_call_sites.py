@@ -15,6 +15,12 @@ Mechanism (same PIC route as find_selector_senders.py, verified there):
   uses. Selector slots (`__objc_selrefs`) are resolved the same way but reported as
   selectors, not strings, since that is what they are.
 
+  Function attribution is **prologue-verified** (same walk-back instrument as
+  probe_live_frame_stack.py / find_selector_senders.py): the nearest push-with-lr start
+  must exactly equal a method-table imp for credit; unnamed starts and a nearest-IMP
+  fallback are recorded explicitly. String literals are collected from a LITERAL_WINDOW
+  (0x2000-byte) window starting at that function start.
+
 Usage:
   python3 tools/extract_sound_call_sites.py [--elf PATH] [--check]
 """
@@ -30,7 +36,14 @@ from pathlib import Path
 
 DEFAULT_ELF = Path.home() / "blockheads-work/extracted/lib/armeabi-v7a/libApplication.so"
 PIC_BASE = 0x0105FAF4
+LITERAL_WINDOW = 0x2000
 NATIVE = Path("reconstruction/reverse-v3/native")
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+try:
+    import probe_live_frame_stack as _frame_probe
+except ImportError:  # pragma: no cover - the module ships next to this tool
+    _frame_probe = None
 METHODS_TSV = NATIVE / "libApplication_objc_methods.tsv"
 AUDIO_ASSETS_TSV = NATIVE / "audio_asset_coverage.tsv"
 AUDIO_SELECTORS = [
@@ -88,6 +101,31 @@ def enclosing(methods: list[tuple[int, str, str]], site: int) -> tuple[int, str]
     return best[0], f"{best[1]} {best[2]}"
 
 
+def attribute_site(elf: bytes, site: int, methods: list[tuple[int, str, str]],
+                   imps: list[int], imp_set: set) -> dict:
+    """Prologue-verified attribution (same walk-back instrument as the frame-stack probe).
+
+    An exact method-table imp match of the enclosing function start is required for
+    credit; a non-imp start is recorded as unnamed; nearest-IMP is only the recorded
+    fallback when no prologue is found at all."""
+    start = _frame_probe.fn_start_a32(elf, site) if _frame_probe else None
+    mode = "A32"
+    if start is None and _frame_probe is not None:
+        start = _frame_probe.fn_start_t16(elf, site)
+        mode = "T16"
+    if start is not None and start in imp_set:
+        imp, cls, sel = methods[imps.index(start)]
+        return {"key": start, "method": f"{cls} {sel}", "fn_start": f"0x{start:08x}",
+                "fn_start_mode": mode, "attribution": "prologue-verified"}
+    if start is not None:
+        return {"key": start, "method": f"unnamed @0x{start:08x}",
+                "fn_start": f"0x{start:08x}", "fn_start_mode": mode,
+                "attribution": "unnamed"}
+    imp, name = enclosing(methods, site)
+    return {"key": imp, "method": name, "fn_start": None, "fn_start_mode": None,
+            "attribution": "nearest-imp-fallback"}
+
+
 def section_of(secs: list[dict], va: int) -> dict | None:
     return next((s for s in secs if s["off"] <= va < s["off"] + s["size"]), None)
 
@@ -136,7 +174,8 @@ def shipped_names() -> set[str]:
     return names
 
 
-def scan(elf: bytes, secs: list[dict], methods, selector: str, shipped: set[str]) -> dict:
+def scan(elf: bytes, secs: list[dict], methods, selector: str, shipped: set[str],
+         imps: list[int], imp_set: set) -> dict:
     rec: dict = {"selector": selector, "functions": []}
     needle = selector.encode() + b"\0"
     at = elf.find(needle)
@@ -166,13 +205,17 @@ def scan(elf: bytes, secs: list[dict], methods, selector: str, shipped: set[str]
             loader = find_loader(elf, hit)
             if loader is None:
                 continue
-            imp, name = enclosing(methods, loader)
-            funcs.setdefault(imp, {"imp": f"0x{imp:x}", "method": name,
+            info = attribute_site(elf, loader, methods, imps, imp_set)
+            key = info["key"]
+            funcs.setdefault(key, {"imp": f"0x{key:x}", "method": info["method"],
+                                   "fn_start": info["fn_start"],
+                                   "fn_start_mode": info["fn_start_mode"],
+                                   "attribution": info["attribution"],
                                    "sites": []})["sites"].append(f"0x{loader:x}")
     # 每个函数里所有能解成字符串/选择器的池字
     for imp, info in funcs.items():
         literals, selectors = [], []
-        for at_va in range(imp, min(imp + 0x2000, len(elf) - 4), 4):
+        for at_va in range(imp, min(imp + LITERAL_WINDOW, len(elf) - 4), 4):
             w = struct.unpack_from("<I", elf, at_va)[0]
             if (w >> 28) == 0xF or ((w >> 26) & 3) != 1 or ((w >> 24) & 1) != 1:
                 continue
@@ -216,15 +259,21 @@ def main() -> int:
     if not args.elf.exists():
         print(f"skip: no ELF at {args.elf}")
         return 0
+    if _frame_probe is None or not _frame_probe._HAVE_CAPSTONE:
+        print("skip: capstone required for prologue-verified attribution")
+        return 0
     elf = args.elf.read_bytes()
     secs = sections(elf)
     methods = load_methods(elf, secs)
+    imps = [m[0] for m in methods]
+    imp_set = set(imps)
     shipped = shipped_names()
     payload = {
         "elf_sha256": hashlib.sha256(elf).hexdigest(),
         "pic_base": f"0x{PIC_BASE:x}",
         "shipped_audio_names": len(shipped),
-        "selectors": [scan(elf, secs, methods, s, shipped) for s in AUDIO_SELECTORS],
+        "selectors": [scan(elf, secs, methods, s, shipped, imps, imp_set)
+                      for s in AUDIO_SELECTORS],
     }
     rows = ["selector\tfunction\tliteral_count\tselectors_in_function\tshipped_audio_literals"]
     for rec in payload["selectors"]:
