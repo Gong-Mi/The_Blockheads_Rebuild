@@ -49,6 +49,14 @@ tick), and `doCameraScreenshot`; volume lives in the options screen
 (`MainMenuOptionsUI soundSlider:` / `musicSlider:`); sound objects are constructed in
 `MJMultiSound initWithFile:` / `initWithFileNames:`.
 
+**Decoded trigger arguments (2026-10-02).** The static string argument at each
+`multiSoundNamed:` send is now read out statically - pool word -> `__DATA,__cfstring` cell
+-> cstring at cell+8 - and recorded per send as `static_args`: the three `World tap:`
+sites pass **`noPath.wav`**, and the `placeWorkbenchOfType:` site passes **`fire.wav`**
+(both are shipped assets). The `playAtPosition:` sends carry stack-resolved coordinates
+(no static string), and the Weather cricket-sound key is stack-loaded too - those
+arguments need a register/stack read at the recorded `bl` sites.
+
 `World heartbeatDataRecieved:fromPeer:` showing up as the enclosing method for the
 `soundNamed:` site was originally only a nearest-IMP fact. It is now
 **settled by the prologue walk-back**: for all 19 loader sites in this table, the nearest

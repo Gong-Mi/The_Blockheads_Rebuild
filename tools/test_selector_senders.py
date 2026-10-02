@@ -70,8 +70,18 @@ def main() -> int:
     assert sum(via.values()) == 15, via
     assert via.get("objc_msgSend") == 14 and via.get("blx-window") == 1, via
 
+    # decoded static string args (__DATA,__cfstring cells, cstring at cell+8)
+    multi = by_sel["multiSoundNamed:"]["sends"]
+    tap_args = sorted(entry["static_args"][0] for entry in multi
+                      if "World tap:" in entry["method"] and entry.get("static_args"))
+    assert tap_args == ["noPath.wav"] * 3, tap_args
+    fire = [entry for entry in multi
+            if "placeWorkbench" in entry["method"] and entry.get("static_args")]
+    assert len(fire) == 1 and fire[0]["static_args"] == ["fire.wav"], fire
+    assert all("static_args" in entry for entry in multi), multi
+
     print("selector-senders: PASS (mechanism + counts pinned; 19/19 prologue-verified; "
-          "15 send sites)")
+          "15 send sites; trigger args decoded)")
     return 0
 
 

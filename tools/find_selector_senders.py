@@ -25,7 +25,9 @@ which is where the link actually lives.
 A second, common send form is a direct `bl objc_msgSend` through the PLT (the stub is
 derived from `.rel.plt`, never hardcoded); loader windows are searched for it and the
 hits are recorded per loader as `msg_sends`. Both forms are combined into `sends` with a
-`via` field.
+`via` field. Each `objc_msgSend` send also carries `static_args`: pool words near the
+call that resolve into `__DATA,__cfstring` are followed to their cstring (cell+8), which
+is how the sound names behind the audio triggers are read out statically.
 
 Usage:
   python3 tools/find_selector_senders.py --selector soundNamed: [--selector X ...]
@@ -145,6 +147,35 @@ def msg_send_stub(elf: bytes, secs: list[dict]) -> int | None:
     return None
 
 
+def static_string_args(elf: bytes, secs: list[dict], site: int) -> list[str]:
+    """Static NSString args near a msg-send site.
+
+    Pool loads in the preceding window are resolved through the PIC base; targets landing
+    in `__DATA,__cfstring` are cells whose cstring pointer sits at cell+8 (layout verified
+    across the section - the "fire.wav"/"noPath.wav" trigger args read out this way)."""
+    cf = next((s for s in secs if "cfstring" in s["name"]), None)
+    if cf is None or _frame_probe is None:
+        return []
+    _, md_a = _frame_probe._mds()
+    out = []
+    start = max(0, site - 0x20)
+    for ins in md_a.disasm(elf[start:site], start):
+        if ins.mnemonic != "ldr" or "pc" not in ins.op_str:
+            continue
+        m = re.search(r"#(0x[0-9a-fA-F]+|\d+)", ins.op_str)
+        if not m:
+            continue
+        pool = ins.address + 8 + int(m.group(1), 0)
+        if not (0 < pool < len(elf) - 4):
+            continue
+        tgt = (struct.unpack_from("<I", elf, pool)[0] + PIC_BASE) & 0xFFFFFFFF
+        if cf["addr"] <= tgt < cf["addr"] + cf["size"]:
+            s = cstr(elf, struct.unpack_from("<I", elf, tgt + 8)[0])
+            if s:
+                out.append(s)
+    return out
+
+
 def blx_at(elf: bytes, va: int) -> bool:
     word = struct.unpack_from("<I", elf, va)[0]
     return (word >> 25) & 0x7F == 0x12 or ((word >> 28) != 0xF and ((word >> 4) & 0xF) == 3 and ((word >> 20) & 0xFF) == 0x12)
@@ -262,7 +293,8 @@ def scan(elf: bytes, sed: list[dict], selector: str,
                 entry["msg_sends"] = msg_sends
                 for at in msg_sends:
                     out["sends"].append({"at": at, "method": entry["method"],
-                                         "via": "objc_msgSend"})
+                                         "via": "objc_msgSend",
+                                         "static_args": static_string_args(elf, sed, int(at, 16))})
                 # the other form: re-materialise *slot into the selector argument register
                 # (ldr rN,[rN]) and then blx the send target; require both, in order,
                 # so an unrelated message in the same window is not counted.

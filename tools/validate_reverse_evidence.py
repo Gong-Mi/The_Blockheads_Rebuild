@@ -1047,6 +1047,7 @@ def main() -> None:
             "0x0105FAF4",
             "prologue-verified",
             "objc_msgSend",
+            "static_string_args",
         ],
     )
     require(
@@ -1055,6 +1056,7 @@ def main() -> None:
             "reference sites",
             "0x105faf4",
             "settled by the prologue walk-back",
+            "noPath.wav",
         ],
     )
     require(
@@ -1064,6 +1066,7 @@ def main() -> None:
             '"selector": "soundNamed:"',
             '"slots": [\n        "0xe7de14"',
             '"objc_msgSend_stub": "0x1c281c"',
+            '"static_args"',
         ],
     )
     require(
