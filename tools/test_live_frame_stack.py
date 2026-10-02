@@ -30,12 +30,21 @@ def main() -> int:
     assert data["thread_name"] == "UIKitMain", data["thread_name"]
     assert data["root_driver"] == "World render:cameraZ:projectionMatrix:pinchScale:"
 
+    # the declared count must match the recorded data, and the capture must carry its
+    # provenance explicitly (build-unbound is recorded, not silently glossed)
+    assert data["frame_count"] == len(data["frames"]), (
+        f"frame_count {data['frame_count']} != len(frames) {len(data['frames'])}"
+    )
+    prov = data["provenance"]
+    assert prov["build"] == "unrecorded", prov
+    assert "build-unbound" in prov["note"], prov
+
     frames_by_role = {f["role"]: (f["class"], f["selector"]) for f in data["frames"]}
     for role, (cls, sel) in REQUIRED_ROLES.items():
         assert role in frames_by_role, f"missing role {role}"
         assert frames_by_role[role] == (cls, sel), f"role {role}: got {frames_by_role[role]}, expected {(cls, sel)}"
 
-    print(f"live-frame-stack: PASS ({len(data['frames'])} frames verified)")
+    print(f"live-frame-stack: PASS ({len(data['frames'])} frames; count consistent; build unbound)")
     return 0
 
 

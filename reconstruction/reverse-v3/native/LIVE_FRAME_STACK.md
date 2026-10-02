@@ -1,6 +1,6 @@
 # Live frame stack and dispatch hierarchy from running Android process
 
-Captured directly from the `UIKitMain` thread (TID 11438) of live running process `com.noodlecake.blockheads` (1.7.6 armeabi-v7a) on Android 16/HyperOS translator.
+Captured directly from the `UIKitMain` thread (TID 11438) of live running process `com.noodlecake.blockheads` (armeabi-v7a) on Android 16/HyperOS translator. **Build not recorded at capture — see Provenance and corrections.**
 
 ## Background and Methodology
 
@@ -8,7 +8,7 @@ Static disassembly of `World -render:` (8640w) and `DynamicWorld -draw:` (7203w)
 
 By reading `/proc/<pid>/mem` at the top of the `UIKitMain` thread stack (`[anon:stack_and_tls:11438]`), we extracted all active return addresses pointing into `libApplication.so` (`.text` range `0x001c4480..0x00db8950`). Correlating these return addresses with the 10,478 indexed methods in `libApplication_objc_methods.tsv` reconstructs the active frame hierarchy of a live running world frame.
 
-## Reconstructed Call Stack (21 Verified Unique Frames)
+## Reconstructed Call Stack (17 recorded frames; names build-unbound)
 
 ```text
 UIApplication run (+0x2f0)
@@ -47,6 +47,21 @@ UIApplication run (+0x2f0)
 
 3. **HUD and UI Delegation**:
    - HUD elements (`DPad`, `SleepProgressUI`, `Tutorial`) are direct child renders of `WorldUI`, which delegates text and glyph draws to `BitmapString` and `MJTextView`.
+
+## Provenance and corrections (2026-10-02)
+
+- **Count corrected**: an earlier revision declared 21 frames while the `frames` array holds
+  **17**; `frame_count` now equals the recorded data and the contract test enforces that
+  equality (a declared count without matching data must fail).
+- **Build binding missing**: this capture did not record the running `libApplication.so`
+  sha256, and the frame names were aligned against the pinned **1.7.6** method table (10478).
+  A same-night live measurement on this device proved a **1.7.5** process, so these names are
+  **build-unbound** — treat the hierarchy as a clue, not as a verified runtime dispatch tree,
+  until re-captured with the build hash recorded (same discipline as the ivar-offset line;
+  see `IVAR_OFFSET_READING.md`).
+- **No raw evidence retained**: the artifact stores names/roles only — no return addresses or
+  stack offsets — so independent re-verification requires a fresh capture that keeps the raw
+  return-address words alongside the aligned names.
 
 ## Pinned Artifacts
 
