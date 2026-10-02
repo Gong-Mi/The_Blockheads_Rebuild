@@ -71,3 +71,19 @@ selref/msgrefs path.
   would be missed; nothing here claims the value is unreferenced in principle, only that
   no plain word holds it.
 - The stub table itself is not identified by address here - only the mechanism is.
+
+## The common send form, found (2026-10-02)
+
+The `blx`-through-descriptor idiom recorded above is not the common form. The common one is
+a direct PLT call: **`bl objc_msgSend`**, where the stub at `0x1c281c` dispatches through
+the GOT slot `0x105fb18` (the `objc_msgSend` symbol of `.rel.plt`). `.text` contains
+**14,031** such call sites. The stub is derived, never hardcoded: `find_selector_senders.py`
+resolves `objc_msgSend`'s rel.plt slot, finds the PLT stub whose immediates load that slot,
+and records a send whenever a loader's window contains a `bl` to it (`"via":
+"objc_msgSend"` in `selector_senders.json`; the earlier `blx` rule stays as `"via":
+"blx-window"`). At the `World tap:` trigger sites the pattern is exactly the documented
+one - materialise the slot, `ldr r1,[r1,base]` (SEL), `bl objc_msgSend` - and the extended
+rule lifts the watchlist's send count from 1 to 15.
+
+Nothing above is superseded: the four empty scans, the `.rel.dyn` finding and the msgrefs
+note all stand. This adds the missing second form and the detection for it.

@@ -63,14 +63,22 @@ going back from the loader lands exactly on the method-table imp already named (
 ## Precision: reference sites vs proven sends
 
 A reference site is a function that materialises the selector; it is reliable and cheap. A
-*send* additionally needs the send target to be the dispatcher and the selector argument to
-be this slot. This tool's send rule is deliberately conservative - an indirect load
-(`ldr rN,[rN]`, the SEL materialisation) followed by a `blx` inside the same linear window -
-and it catches only 1 site across this watchlist (`playAtPosition:`). The reason is visible
-in the disassembly: apportable spills registers to the stack and re-loads them for the send
-(`ldr r1,[sp,#0x30]; ldr r1,[r1] ... ldr r3,[sp,#0x34]; blx r3` at 0x005552bc), so a linear
-window is the wrong shape for proving sends in general. Treat the site list as **references**,
-and do not read "send" from it.
+*send* additionally needs the send target to be the dispatcher. Two send forms exist in this
+build and both are now recorded (`sends` entries carry a `via` field):
+
+- **`objc_msgSend` via PLT** (the common form): the stub at `0x1c281c` dispatches through
+  the GOT slot `0x105fb18`; `.text` contains **14,031** `bl` sites to it. The tool derives
+  the stub from `.rel.plt` (never hardcoded) and records a send when a loader's window
+  contains a `bl` to it (`"via": "objc_msgSend"`). This is the form the `World tap:`
+  trigger sites use: materialise the slot, `ldr r1,[r1,base]` (SEL), `bl objc_msgSend`.
+- **`blx` through a stack-spilled descriptor** (`"via": "blx-window"`): the original
+  conservative rule, kept as-is.
+
+A `bl` is counted under every loader whose window contains it, so adjacent loaders (the tap
+pair does exactly this) share send sites; `sends` is therefore "send sites near a
+reference" - one step stronger than a reference, one step weaker than a per-selector
+proof. What neither rule proves is the **arguments** (which is where sound names live);
+read those from the recorded `bl` sites, not from this table.
 
 ## Next step, concrete
 
@@ -78,7 +86,8 @@ The multi-sound group files are named by the *caller* of `MJMultiSound initWithF
 `initWithFileNames:` (no cstring sits in those two methods' own pools). So: run this same
 tool on `initWithFile:` to get its callers, then read the string argument at each call -
 that is where the sound-group tables come from. Same shape for `soundNamed:`'s callers,
-which is what the in-game trigger wiring needs.
+which is what the in-game trigger wiring needs. The `msg_sends` sites recorded above are
+the exact `bl objc_msgSend` locations to read those arguments from.
 
 ## Boundaries
 

@@ -22,6 +22,11 @@ The earlier probe in this repo searched the *slot* value and the *msgrefs* secti
 nothing; both are recorded in OBJC_SEND_CHANNEL.md. This tool takes the pool-word route,
 which is where the link actually lives.
 
+A second, common send form is a direct `bl objc_msgSend` through the PLT (the stub is
+derived from `.rel.plt`, never hardcoded); loader windows are searched for it and the
+hits are recorded per loader as `msg_sends`. Both forms are combined into `sends` with a
+`via` field.
+
 Usage:
   python3 tools/find_selector_senders.py --selector soundNamed: [--selector X ...]
   python3 tools/find_selector_senders.py --list tools/selector_watchlist.txt
@@ -32,6 +37,7 @@ import argparse
 import csv
 import hashlib
 import json
+import re
 import struct
 import sys
 from pathlib import Path
@@ -55,7 +61,7 @@ def sections(elf: bytes) -> list[dict]:
     for i in range(shnum):
         f = struct.unpack_from("<10I", elf, shoff + i * shentsize)
         out.append({"index": i, "nameoff": f[0], "type": f[1], "addr": f[3],
-                    "off": f[4], "size": f[5]})
+                    "off": f[4], "size": f[5], "link": f[6], "entsize": f[9]})
     shstr = next(s["off"] for s in out if s["index"] == shstrndx)
     for sec in out:
         end = elf.index(b"\0", shstr + sec["nameoff"])
@@ -91,6 +97,51 @@ def find_loader(elf: bytes, pool_va: int, max_back: int = 4152) -> int | None:
         word = struct.unpack_from("<I", elf, at)[0]
         if is_ldr_pc(word) and ldr_target(word, at) == pool_va:
             return at
+    return None
+
+
+def msg_send_stub(elf: bytes, secs: list[dict]) -> int | None:
+    """VA of the PLT stub that dispatches objc_msgSend (derived from rel.plt, not hardcoded).
+
+    ARM PLT stubs are `add ip,pc,#i ; add ip,ip,#i ; ldr pc,[ip,#i]!`; the immediates sum
+    to the GOT slot, so the stub for a symbol is the one whose slot equals the symbol's
+    rel.plt r_offset."""
+    if _frame_probe is None:
+        return None
+    rel = next((s for s in secs if s["name"] == ".rel.plt"), None)
+    dynsym = next((s for s in secs if s["name"] == ".dynsym"), None)
+    dynstr = next((s for s in secs if s["name"] == ".dynstr"), None)
+    plt = next((s for s in secs if s["name"] == ".plt"), None)
+    if not (rel and dynsym and dynstr and plt):
+        return None
+    slot = None
+    entsize = rel.get("entsize") or 8
+    for k in range(rel["size"] // entsize):
+        off, info, _ = struct.unpack_from("<III", elf, rel["off"] + k * entsize)
+        nameoff = struct.unpack_from("<I", elf, dynsym["off"] + (info >> 8) * 16)[0]
+        end = elf.index(b"\0", dynstr["off"] + nameoff)
+        if elf[dynstr["off"] + nameoff:end] == b"objc_msgSend":
+            slot = off
+            break
+    if slot is None:
+        return None
+    _, md_a = _frame_probe._mds()
+    va = plt["addr"]
+    while va + 12 <= plt["addr"] + plt["size"]:
+        insns = list(md_a.disasm(elf[va:va + 12], va))
+        if (len(insns) == 3 and insns[0].mnemonic == "add" and "ip" in insns[0].op_str
+                and "pc" in insns[0].op_str and insns[1].mnemonic == "add"
+                and insns[1].op_str.startswith("ip") and insns[2].mnemonic == "ldr"
+                and insns[2].op_str.startswith("pc")):
+            imms = []
+            for ins in insns:
+                m = re.search(r"#(0x[0-9a-fA-F]+|\d+)", ins.op_str)
+                imms.append(int(m.group(1), 0) if m else 0)
+            if va + 8 + sum(imms) == slot:
+                return va
+            va += 12
+        else:
+            va += 4
     return None
 
 
@@ -156,7 +207,8 @@ def attribute_site(elf: bytes, site: int, methods: list[tuple[int, str, str]],
 
 
 def scan(elf: bytes, sed: list[dict], selector: str,
-         methods: list[tuple[int, str, str]], imps: list[int], imp_set: set) -> dict:
+         methods: list[tuple[int, str, str]], imps: list[int], imp_set: set,
+         send_stub: int | None) -> dict:
     out: dict = {"selector": selector, "slots": [], "loaders": [], "sends": []}
     needle = selector.encode() + b"\0"
     at = elf.find(needle)
@@ -193,10 +245,27 @@ def scan(elf: bytes, sed: list[dict], selector: str,
                      "loader": f"0x{loader:x}" if loader else None}
             if loader is not None:
                 entry.update(attribute_site(elf, loader, methods, imps, imp_set))
-                # a send re-materialises *slot into the selector argument register
-                # (ldr rN,[rN]) and then blx's the send target; require both, in order,
-                # so an unrelated message in the same window is not counted.
                 window = elf[loader:loader + 0x100]
+                # the common send form: a direct `bl objc_msgSend` (PLT stub derived from
+                # rel.plt) inside the loader's window
+                msg_sends = []
+                if send_stub is not None:
+                    for off in range(0, min(0x80, len(window) - 4), 4):
+                        w = struct.unpack_from("<I", window, off)[0]
+                        if (w & 0xFF000000) != 0xEB000000:
+                            continue
+                        imm = w & 0xFFFFFF
+                        if imm & 0x800000:
+                            imm -= 0x1000000
+                        if loader + off + 8 + (imm << 2) == send_stub:
+                            msg_sends.append(f"0x{loader + off:x}")
+                entry["msg_sends"] = msg_sends
+                for at in msg_sends:
+                    out["sends"].append({"at": at, "method": entry["method"],
+                                         "via": "objc_msgSend"})
+                # the other form: re-materialise *slot into the selector argument register
+                # (ldr rN,[rN]) and then blx the send target; require both, in order,
+                # so an unrelated message in the same window is not counted.
                 sends = []
                 indirect = None
                 for off in range(0, len(window) - 8, 4):
@@ -209,7 +278,8 @@ def scan(elf: bytes, sed: list[dict], selector: str,
                         indirect = None
                 entry["send_targets_in_window"] = sends
                 if sends:
-                    out["sends"].append({"at": sends[0], "method": entry["method"]})
+                    out["sends"].append({"at": sends[0], "method": entry["method"],
+                                         "via": "blx-window"})
             out["loaders"].append(entry)
     out["n_sends"] = len(out["sends"])
     return out
@@ -244,10 +314,13 @@ def main() -> int:
     methods = load_methods(METHODS_TSV)
     imps = [m[0] for m in methods]
     imp_set = set(imps)
+    send_stub = msg_send_stub(elf, sed)
     payload = {
         "elf_sha256": hashlib.sha256(elf).hexdigest(),
         "pic_base": f"0x{PIC_BASE:x}",
-        "selectors": [scan(elf, sed, s, methods, imps, imp_set) for s in selectors],
+        "objc_msgSend_stub": f"0x{send_stub:x}" if send_stub is not None else None,
+        "selectors": [scan(elf, sed, s, methods, imps, imp_set, send_stub)
+                      for s in selectors],
     }
     text = json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
     if args.check:

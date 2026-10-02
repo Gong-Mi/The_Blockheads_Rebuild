@@ -60,11 +60,18 @@ def main() -> int:
     bad = [l for l in all_loaders if l.get("attribution") != "prologue-verified"]
     assert not bad, bad
 
-    # send detection is conservative on purpose: it must not silently become permissive
-    total_sends = sum(s.get("n_sends", 0) for s in data["selectors"])
-    assert total_sends <= 2, f"send rule got permissive: {total_sends}"
+    # the common send form is `bl objc_msgSend` (PLT stub derived from rel.plt); the
+    # stub identity and the exact send counts are pinned so the rule cannot drift
+    assert data["objc_msgSend_stub"] == "0x1c281c", data.get("objc_msgSend_stub")
+    via = {}
+    for s in data["selectors"]:
+        for entry in s.get("sends", []):
+            via[entry["via"]] = via.get(entry["via"], 0) + 1
+    assert sum(via.values()) == 15, via
+    assert via.get("objc_msgSend") == 14 and via.get("blx-window") == 1, via
 
-    print("selector-senders: PASS (mechanism + counts pinned; 19/19 prologue-verified)")
+    print("selector-senders: PASS (mechanism + counts pinned; 19/19 prologue-verified; "
+          "15 send sites)")
     return 0
 
 

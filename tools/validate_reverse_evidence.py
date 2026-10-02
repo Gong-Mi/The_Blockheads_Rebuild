@@ -1046,6 +1046,7 @@ def main() -> None:
             "pool_word + PIC_BASE == target address",
             "0x0105FAF4",
             "prologue-verified",
+            "objc_msgSend",
         ],
     )
     require(
@@ -1062,6 +1063,7 @@ def main() -> None:
             '"pic_base": "0x105faf4"',
             '"selector": "soundNamed:"',
             '"slots": [\n        "0xe7de14"',
+            '"objc_msgSend_stub": "0x1c281c"',
         ],
     )
     require(
@@ -1099,6 +1101,7 @@ def main() -> None:
             "recorded negative result",
             ".rel.dyn",
             "does not transfer here as-is",
+            "bl objc_msgSend",
         ],
     )
     require(
