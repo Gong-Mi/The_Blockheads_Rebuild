@@ -86,3 +86,5 @@ raw stack-word table are in `live_frame_stack.json`.
 - Document: `native/LIVE_FRAME_STACK.md`
 - JSON frame map: `native/live_frame_stack.json`
 - Contract test: `tools/test_live_frame_stack.py`
+- Probe tool (host-side recapture, root): `tools/probe_live_frame_stack.py` — build check against the process mapping, inlined calibration on the audited build, `BUILD MISMATCH` refusal
+- Probe logic test: `tools/test_probe_live_frame_stack.py` (bookkeeping everywhere; synthetic decode cases self-skip without capstone)

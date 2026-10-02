@@ -961,6 +961,21 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/probe_live_frame_stack.py",
+        [
+            "callsite_ok",
+            "fn_start_a32",
+            "BUILD MISMATCH",
+        ],
+    )
+    require(
+        ROOT / "tools/test_probe_live_frame_stack.py",
+        [
+            "attribute_word",
+            "words_from_blob",
+        ],
+    )
+    require(
         NATIVE / "disasm_donkeylike_setupmatrices.txt",
         [
             "DonkeyLike -[setupMatrices:dt:]",
