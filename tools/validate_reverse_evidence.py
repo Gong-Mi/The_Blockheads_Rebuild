@@ -939,9 +939,9 @@ def main() -> None:
     require(
         ROOT / "tools/test_live_frame_stack.py",
         [
-            "REQUIRED_ROLES",
-            "world_master_render",
-            "entity_animal_draw",
+            "REQUIRED_FRAMES",
+            "render:cameraZ:projectionMatrix:pinchScale:",
+            "drawForButtonProjectionMatrix:modelViewMatrix:",
         ],
     )
     require(
@@ -957,7 +957,7 @@ def main() -> None:
         [
             '"thread_name": "UIKitMain"',
             '"root_driver": "World render:cameraZ:projectionMatrix:pinchScale:"',
-            '"DonkeyLike"',
+            '"build_libApplication_sha256"',
         ],
     )
     require(

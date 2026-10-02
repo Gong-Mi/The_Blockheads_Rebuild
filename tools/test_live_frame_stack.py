@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 """Contract test for the live frame stack captured from the official process.
 
-Verifies the live frame hierarchy and structural roles pinned from UIKitMain
-execution on Android without requiring process access in CI.
+The artifact is a build-bound recapture (libApplication sha256 recorded) whose
+frames are verified twice before inclusion: a bl/blx instruction must end
+exactly at the address (ARM and Thumb modes both tried), and the enclosing
+function start — nearest A32 push-with-lr prologue — must exactly match a
+method-table imp for Objective-C credit (otherwise the frame is recorded as an
+unnamed function by its raw start). No process access is required in CI.
 """
 from __future__ import annotations
 
@@ -13,14 +17,22 @@ ROOT = Path(__file__).resolve().parent.parent
 NATIVE = ROOT / "reconstruction/reverse-v3/native"
 JSON_PATH = NATIVE / "live_frame_stack.json"
 
-REQUIRED_ROLES = {
-    "world_master_render": ("World", "render:cameraZ:projectionMatrix:pinchScale:"),
-    "ui_master_render": ("UIManager", "render:projectionMatrix:cameraZ:cameraMinXWorld:cameraMaxXWorld:cameraMinYWorld:cameraMaxYWorld:hideUIType:pinchScale:mapAlpha:"),
-    "world_hud_render": ("WorldUI", "render:translation:pinchScale:paused:"),
-    "entity_animal_draw": ("DonkeyLike", "draw:projectionMatrix:modelViewMatrix:cameraMinXWorld:cameraMaxXWorld:cameraMinYWorld:cameraMaxYWorld:"),
-    "bone_matrix_calculation": ("DonkeyLike", "setupMatrices:dt:"),
-    "character_portrait_preview": ("Blockhead", "drawForButtonProjectionMatrix:modelViewMatrix:"),
-}
+BUILD_SHA256 = "d09418e9c0865902054a71358dcff3264d47f7b24ede58667cb5ea0e6f269b96"
+
+REQUIRED_FRAMES = [
+    ("UIApplication", "run"),
+    ("World", "render:cameraZ:projectionMatrix:pinchScale:"),
+    ("UIManager", "render:projectionMatrix:cameraZ:cameraMinXWorld:cameraMaxXWorld:cameraMinYWorld:cameraMaxYWorld:hideUIType:pinchScale:mapAlpha:"),
+    ("WorldUI", "render:translation:pinchScale:paused:"),
+    ("SleepProgressUI", "render:translation:pinchScale:"),
+    ("Tutorial", "render:translation:pinchScale:"),
+    ("MJButton", "renderFrame:projectionMatrix:"),
+    ("MJTextView", "renderFrame:projectionMatrix:"),
+    ("MJView", "renderFrame:projectionMatrix:"),
+    ("BitmapString", "renderWithProjectionMatrix:modelViewMatrix:"),
+    ("Blockhead", "drawForButtonProjectionMatrix:modelViewMatrix:"),
+    ("NoiseFunction", "getX:Y:octaves:"),
+]
 
 
 def main() -> int:
@@ -29,22 +41,33 @@ def main() -> int:
 
     assert data["thread_name"] == "UIKitMain", data["thread_name"]
     assert data["root_driver"] == "World render:cameraZ:projectionMatrix:pinchScale:"
+    assert data["build_libApplication_sha256"] == BUILD_SHA256, data["build_libApplication_sha256"]
 
-    # the declared count must match the recorded data, and the capture must carry its
-    # provenance explicitly (build-unbound is recorded, not silently glossed)
+    # the declared count must match the recorded data
     assert data["frame_count"] == len(data["frames"]), (
         f"frame_count {data['frame_count']} != len(frames) {len(data['frames'])}"
     )
-    prov = data["provenance"]
-    assert prov["build"] == "unrecorded", prov
-    assert "build-unbound" in prov["note"], prov
+    assert len(data["frames"]) >= 15, "implausibly small frame list"
 
-    frames_by_role = {f["role"]: (f["class"], f["selector"]) for f in data["frames"]}
-    for role, (cls, sel) in REQUIRED_ROLES.items():
-        assert role in frames_by_role, f"missing role {role}"
-        assert frames_by_role[role] == (cls, sel), f"role {role}: got {frames_by_role[role]}, expected {(cls, sel)}"
+    # every listed frame carries its call-site evidence and a resolved function start
+    for frame in data["frames"]:
+        assert frame["callsite_insn"], f"frame without call-site evidence: {frame}"
+        assert frame["fn_start"], f"frame without fn_start: {frame}"
+        if frame["attribution"] == "objc-method":
+            assert isinstance(frame["offset"], int) and frame["offset"] >= 0, frame
+        else:
+            assert frame["attribution"] == "unnamed-function", frame
+        assert frame["stack_addr"].startswith("0x") and frame["return_addr"].startswith("0x"), frame
 
-    print(f"live-frame-stack: PASS ({len(data['frames'])} frames; count consistent; build unbound)")
+    credited = [(f["class"], f["selector"]) for f in data["frames"]
+                if f["attribution"] == "objc-method"]
+    for pair in REQUIRED_FRAMES:
+        assert pair in credited, f"missing credited frame {pair}"
+
+    non_calls = [w for w in data["stack_words"] if not w["callsite"]]
+    assert non_calls, "the stack-word table should retain the non-call words as negatives"
+
+    print(f"live-frame-stack: PASS ({len(data['frames'])} verified frames; build-bound)")
     return 0
 
 
