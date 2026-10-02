@@ -4,38 +4,20 @@ on:
   push:
     branches: [ main, master, rebuild-v2, reverse-v3 ]
   pull_request:
-    branches: [ main, master ]
+    # reverse-v3 is the reconstruction integration branch: every methods/*
+    # PR must pass the real Gradle build and packaged-APK contract here.
+    branches: [ main, master, reverse-v3 ]
   workflow_dispatch:
 
 jobs:
-  build:
+  # Fast evidence lane: artifact-only contract tests, seconds to run. The lane the loop lives on.
+  contracts:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
       with:
         submodules: true
         fetch-depth: 0
-
-    - name: set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-      with:
-        # Google removed the legacy `tools` package from the SDK repository;
-        # the action's default (`tools platform-tools`) now hard-fails the
-        # install. The image already ships cmdline-tools/platform-tools, and
-        # setup-java+AGP resolve the rest via licenses below.
-        packages: ""
-
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-      working-directory: .
-
     - name: Validate render contract
       run: python3 tools/validate_render_contract.py
       working-directory: .
@@ -46,6 +28,156 @@ jobs:
 
     - name: Validate reverse evidence contract
       run: python3 tools/validate_reverse_evidence.py
+      working-directory: .
+
+    - name: Test item id alignment evidence contract
+      run: python3 tools/test_item_id_alignment_evidence.py
+      working-directory: .
+
+    - name: Test tile content render map contract
+      run: python3 tools/test_tile_content_render_map.py
+      working-directory: .
+
+    - name: Test tile record header cross-check
+      run: python3 tools/test_tile_record_header_crosscheck.py
+      working-directory: .
+
+    - name: Test grp identifiers contract
+      run: python3 tools/test_grp_identifiers.py
+      working-directory: .
+
+    - name: Test live runtime ivars contract
+      run: python3 tools/test_live_runtime_ivars.py
+      working-directory: .
+
+    - name: Test live frame stack contract
+      run: python3 tools/test_live_frame_stack.py
+      working-directory: .
+
+    - name: Test blockhead clothing pipeline contract
+      run: python3 tools/test_blockhead_clothing_pipeline.py
+      working-directory: .
+
+    - name: Test ivar offset divergence contract
+      run: python3 tools/test_ivar_offset_divergence.py
+      working-directory: .
+
+    - name: Test selector senders contract
+      run: python3 tools/test_selector_senders.py
+      working-directory: .
+
+    - name: Test ObjC send-channel probe contract
+      run: python3 tools/test_objc_send_channel.py
+      working-directory: .
+
+    - name: Test audio API surface contract
+      run: python3 tools/test_audio_api_surface.py
+      working-directory: .
+
+    - name: Test item mapping contract
+      run: python3 tools/test_item_mapping_functions.py
+      working-directory: .
+
+    - name: Test item predicate matrix contract
+      run: python3 tools/test_item_predicates.py
+      working-directory: .
+
+    - name: Test craftable-item struct contract
+      run: python3 tools/test_craftable_item_struct.py
+      working-directory: .
+
+    - name: Test tile record save-data contract
+      run: python3 tools/test_tile_record_save_data.py
+      working-directory: .
+
+    - name: Test tile record layout contract
+      run: python3 tools/test_tile_record_layout.py
+      working-directory: .
+
+    - name: Test shared-body constants join contract
+      run: python3 tools/test_shared_body_constants.py
+      working-directory: .
+
+    - name: Test draw-value domains contract
+      run: python3 tools/test_draw_value_domains.py
+      working-directory: .
+
+    - name: Test tile shared-body structure contract
+      run: python3 tools/test_tile_shared_body_structure.py
+      working-directory: .
+
+    - name: Test item display-name source audit
+      run: python3 tools/test_item_display_name_sources.py
+      working-directory: .
+
+    - name: Run every contract test with a bounded timeout
+      run: python3 tools/run_contract_tests.py --timeout 300 --jobs 4
+      working-directory: .
+
+    - name: Check artifact consumers (no stale column reads)
+      run: |
+        python3 tools/check_artifact_consumers.py
+        python3 tools/test_check_artifact_consumers.py
+      working-directory: .
+
+    - name: Test text asset inventory contract
+      run: python3 tools/test_text_asset_inventory.py
+      working-directory: .
+
+    - name: Test sprite cell content contract
+      run: python3 tools/test_sprite_cell_content.py
+      working-directory: .
+
+    - name: Test atlas geometry contract
+      run: python3 tools/test_atlas_geometry_contract.py
+      working-directory: .
+
+    - name: Test shader declaration cross-check
+      run: python3 tools/test_shader_declaration_crosscheck.py
+      working-directory: .
+
+    - name: Test texture resolution sets contract
+      run: python3 tools/test_texture_resolution_sets.py
+      working-directory: .
+
+    - name: Test tile sprite domain contract
+      run: python3 tools/test_tile_sprite_domain.py
+      working-directory: .
+
+    - name: Lint evidence scanning (no raw-byte filename regex)
+      run: |
+        python3 tools/lint_evidence_scan.py
+        python3 tools/test_lint_evidence_scan.py
+      working-directory: .
+
+    - name: Test font glyph content contract
+      run: python3 tools/test_font_glyph_content.py
+      working-directory: .
+
+    - name: Test font glyph table contract
+      run: python3 tools/test_font_glyph_tables.py
+      working-directory: .
+
+    - name: Test shader asset coverage contract
+      run: python3 tools/test_shader_asset_coverage.py
+      working-directory: .
+
+    - name: Test audio asset coverage contract
+      run: python3 tools/test_audio_asset_coverage.py
+      working-directory: .
+
+    - name: Test tile content render map contract
+      run: python3 tools/test_tile_content_render_map.py
+      working-directory: .
+
+    - name: Test item sprite map contract
+      run: python3 tools/test_item_sprite_map.py
+      working-directory: .
+
+    - name: Test conditional TileType evidence contract
+      run: |
+        python3 tools/test_tile_conditional_evidence.py
+        python3 tools/gen_tile_conditional_table.py --check
       working-directory: .
 
     - name: Test ClientTileLoader semantic evidence contract
@@ -63,8 +195,8 @@ jobs:
           --json /tmp/reverse-coverage-ledger.json \
           --markdown /tmp/reverse-coverage-ledger.md
         grep -F "Methods: 10478" /tmp/reverse-coverage-ledger.md
-        grep -F "semantics | 45" /tmp/reverse-coverage-ledger.md
-        grep -F "implemented | 45" /tmp/reverse-coverage-ledger.md
+        grep -F "semantics | 65" /tmp/reverse-coverage-ledger.md
+        grep -F "implemented | 65" /tmp/reverse-coverage-ledger.md
         grep -F "behavior-verified | 0" /tmp/reverse-coverage-ledger.md
       working-directory: .
 
@@ -92,6 +224,16 @@ jobs:
         python3 tools/test_drawframe_slices.py
       working-directory: .
 
+
+
+  # Recovered-code lane: the recovered C++ numerical slices that are independent of the GameView chain.
+  recovered:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+        fetch-depth: 0
     - name: Test recovered scroll inertia numerical slice
       run: |
         for opt in 0 2; do
@@ -157,7 +299,27 @@ jobs:
           /tmp/test_zoom_initial_cap
         done
 
-    - name: Test complete recovered GameView method batch
+    - name: Test original 1.7.6 save decoder
+      run: |
+        c++ -std=c++17 -Wall -Wextra -Werror \
+          -Iapp/src/main/cpp \
+          tools/test_original_save_format.cpp \
+          app/src/main/cpp/original_save_format.cpp \
+          -lz -o /tmp/test_original_save_format
+        /tmp/test_original_save_format
+      working-directory: .
+
+
+
+  # GameView lane A: the python contracts and the two NDEBUG negative controls.
+  gameview-contracts:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+        fetch-depth: 0
+    - name: Test recovered GameView python contracts and negative controls
       run: |
         export PYTHONDONTWRITEBYTECODE=1
         python3 tools/test_gameview_method_map.py
@@ -172,24 +334,41 @@ jobs:
           -Ireconstruction/recovered tools/test_world_translation.cpp \
           -o /tmp/world-translation-negative
         python3 -c 'import subprocess; p=subprocess.run(["/tmp/world-translation-negative"],capture_output=True,text=True); print("setter negative control:",p.returncode,p.stderr); assert p.returncode != 0 and "s.accurateTranslation.x==expected" in p.stderr'
-        for opt in 0 2; do
-          build="/tmp/blockheads-methods-O${opt}"
-          cmake -S reconstruction/recovered -B "$build" \
-            -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE="-O${opt} -DNDEBUG"
-          cmake --build "$build" --parallel 2
-          ctest --test-dir "$build" --output-on-failure --verbose
-        done
-
-    - name: Test original 1.7.6 save decoder
-      run: |
-        c++ -std=c++17 -Wall -Wextra -Werror \
-          -Iapp/src/main/cpp \
-          tools/test_original_save_format.cpp \
-          app/src/main/cpp/original_save_format.cpp \
-          -lz -o /tmp/test_original_save_format
-        /tmp/test_original_save_format
       working-directory: .
 
+  # GameView lane B: the -O0 cmake build + ctest, split from -O2 so the two optimisation rounds stop queueing behind each other.
+  gameview-o0:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+        fetch-depth: 0
+    - name: Recovered GameView batch -O0 build and ctest
+      run: |
+        build="/tmp/blockheads-methods-O0"
+        cmake -S reconstruction/recovered -B "$build" \
+          -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE="-O0 -DNDEBUG"
+        cmake --build "$build" --parallel 2
+        ctest --test-dir "$build" --output-on-failure --verbose
+      working-directory: .
+
+  # GameView lane C: the -O2 round plus the inventory chain. /tmp/blockheads-methods-O2 is produced by the -O2 cmake step and consumed by the inventory steps and both uploads, so they travel together.
+  gameview-o2:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+        fetch-depth: 0
+    - name: Recovered GameView batch -O2 build and ctest
+      run: |
+        build="/tmp/blockheads-methods-O2"
+        cmake -S reconstruction/recovered -B "$build" \
+          -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE="-O2 -DNDEBUG"
+        cmake --build "$build" --parallel 2
+        ctest --test-dir "$build" --output-on-failure --verbose
+      working-directory: .
     - name: Generate native item data for unit tests
       run: |
         mkdir -p /tmp/blockheads-generated
@@ -212,14 +391,6 @@ jobs:
           -Wl,--gc-sections \
           -o /tmp/test_inventory
         /tmp/test_inventory
-      working-directory: .
-
-    - name: Build with Gradle
-      run: ./gradlew assembleDebug
-      working-directory: .
-
-    - name: Validate packaged APK contract
-      run: python3 tools/validate_apk.py app/build/outputs/apk/debug/app-debug.apk
       working-directory: .
 
     - name: Upload recovered inventory host contracts
@@ -250,8 +421,69 @@ jobs:
           /tmp/blockheads-methods-O2/test_gameview_secondarytouch
         if-no-files-found: error
 
+
+
+
+  # Packaging lane: JDK + SDK + Gradle + APK contract. The NDK, the Gradle caches and
+  # the AGP CMake tree (app/.cxx) are restored before the build, because the four
+  # per-ABI CMake *configure* rounds - not compilation - are what costs the time.
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+        fetch-depth: 0
+    - name: set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      with:
+        # Google removed the legacy `tools` package from the SDK repository;
+        # the action's default (`tools platform-tools`) now hard-fails the
+        # install. The image already ships cmdline-tools/platform-tools, and
+        # setup-java+AGP resolve the rest via licenses below.
+        packages: ""
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Cache CMake configure and build tree (app/.cxx)
+      uses: actions/cache@v4
+      with:
+        path: app/.cxx
+        key: cxx-${{ runner.os }}-${{ hashFiles('app/src/main/cpp/**', 'app/build.gradle') }}
+        restore-keys: |
+          cxx-${{ runner.os }}-
+    - name: Cache NDK
+      uses: actions/cache@v4
+      with:
+        path: /usr/local/lib/android/sdk/ndk/26.1.10909125
+        key: ndk-26.1.10909125-${{ runner.os }}
+    - name: Cache Gradle caches and wrapper
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', 'gradle/wrapper/gradle-wrapper.properties') }}
+        restore-keys: |
+          gradle-${{ runner.os }}-
+
+    - name: Build with Gradle
+      run: ./gradlew assembleDebug --build-cache
+      working-directory: .
+
+    - name: Validate packaged APK contract
+      run: python3 tools/validate_apk.py app/build/outputs/apk/debug/app-debug.apk
+      working-directory: .
+
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
         path: app/build/outputs/apk/debug/app-debug.apk
+

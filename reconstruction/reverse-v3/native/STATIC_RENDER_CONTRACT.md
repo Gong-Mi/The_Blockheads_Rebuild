@@ -193,7 +193,9 @@ collapses that state into one ID and one pass.
 are not the original TileType or ItemType namespace. They remain a replacement
 compatibility layer until the direct renderer-side mappings used by
 `WorldHelper +reloadDrawBlock:...` are fully recovered and wired into the world
-representation.
+representation. The item-id relation to the original namespace is now explicit
+and machine-checked (`original_type` in `assets/gamedata/items.json`, see
+`ITEM_ID_ALIGNMENT.md`); the rebuild ids themselves are still not renumbered.
 
 ## Rebuild conformance ledger
 

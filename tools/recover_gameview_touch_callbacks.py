@@ -42,7 +42,9 @@ def references(elf, selector):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("elf", type=Path)
-    ap.add_argument("--output", type=Path, required=True)
+    ap.add_argument(
+        "--output", type=Path,
+        default=Path("reconstruction/reverse-v3/native/gameview_touch_callbacks.json"))
     ap.add_argument("--check", action="store_true")
     args = ap.parse_args()
     blob = args.elf.read_bytes()

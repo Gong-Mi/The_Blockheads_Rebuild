@@ -75,7 +75,9 @@ def extract(elf: Elf32Arm, sha: str) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("libapplication", type=Path)
-    parser.add_argument("--json", type=Path)
+    parser.add_argument(
+        "--json", type=Path,
+        default=Path("reconstruction/reverse-v3/native/world_time_domain.json"))
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
 

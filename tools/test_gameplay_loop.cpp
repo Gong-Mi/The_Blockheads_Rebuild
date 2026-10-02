@@ -10,6 +10,7 @@
 #include <string>
 #include <filesystem>
 #include "blockhead_ai.h"
+#include "item_manager.h"
 #include "persistence_manager.h"
 
 struct Scene {
@@ -148,6 +149,36 @@ static void closedLoop() {
     std::filesystem::remove_all(pattern);
 }
 
+static void originalIdRoundTrip() {
+    Scene s;
+    Player& p = s.entities.player;
+    assert(p.addOriginalItem(31, 101) == 101); // original CopperOre, NOT legacy Dodo Meat
+    assert(p.addOriginalItem(1088, 1) == 1);
+    assert(p.slots[0] == ITEM_COPPER_ORE && p.slots[2] == ITEM_ELEVATOR_MOTOR);
+    p.selectedSlot = 2;
+    p.x = 5.5f; // Stand at the placement target, as in the existing closedLoop fixture.
+    s.ai.addAction(ACTION_PLACE, 5, 4);
+    assert(s.step());
+    assert(s.tile(5, 4).foreground == ITEM_ELEVATOR_MOTOR);
+    assert(ItemManager::getInstance().toOriginalType(s.tile(5, 4).foreground) == 1088);
+    std::string pattern = (std::filesystem::temp_directory_path()/"bh-original-ids-XXXXXX").string();
+    assert(mkdtemp(pattern.data()));
+    PersistenceManager::saveWorld(pattern.c_str(), s.world.get(), &s.entities);
+    auto loaded = std::make_unique<GameWorld>();
+    loaded->stopThread = true; loaded->queueCV.notify_all(); loaded->workerThread.join();
+    EntityManager restored;
+    assert(PersistenceManager::loadWorld(pattern.c_str(), loaded.get(), &restored));
+    assert(restored.player.originalItemType(0) == 31 && restored.player.counts[0] == 99);
+    assert(restored.player.originalItemType(1) == 31 && restored.player.counts[1] == 2);
+    assert(std::memcmp(p.slots, restored.player.slots, sizeof(p.slots)) == 0);
+    assert(std::memcmp(p.counts, restored.player.counts, sizeof(p.counts)) == 0);
+    assert(ItemManager::getInstance().toOriginalType(loaded->getTile(5, 4)->foreground) == 1088);
+    assert(loaded->chunks[0]->meshReady);
+    for (auto* chunk : loaded->chunks) delete chunk;
+    loaded->chunks.clear();
+    std::filesystem::remove_all(pattern);
+}
+
 static void rejectedTargets() {
     Scene s;
     for (int y=-CHUNK_SIZE; y<0; ++y) assert(s.world->getTile(4,y)==nullptr);
@@ -200,6 +231,7 @@ int main(int argc,char** argv) {
     else if(name=="pickup") fullPickup();
     else if(name=="placement") { placement(); neighborLighting(); }
     else if(name=="loop") closedLoop();
+    else if(name=="original_ids") originalIdRoundTrip();
     else if(name=="movement") movement();
     else if(name=="reject") rejectedTargets();
     else return 2;

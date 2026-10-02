@@ -1,0 +1,102 @@
+{
+  "boundary": "0x004c39a0",
+  "chains": [
+    {
+      "conversion": "intValue",
+      "conversion_site": "0x004c2f70",
+      "ivar": "OBJC_IVAR_$_Tree.treeSeasonOffset",
+      "ivar_offset": 84,
+      "key": "treeSeasonOffset",
+      "objectforkey_site": "0x004c2f60",
+      "store_kind": "word_store",
+      "store_site": "0x004c2f84"
+    },
+    {
+      "conversion": "boolValue",
+      "conversion_site": "0x004c2fac",
+      "ivar": "OBJC_IVAR_$_Tree.dead",
+      "ivar_offset": 104,
+      "key": "dead",
+      "objectforkey_site": "0x004c2f9c",
+      "store_kind": "byte_store",
+      "store_site": "0x004c2fc0"
+    },
+    {
+      "conversion": "doubleValue",
+      "conversion_site": "0x004c2fe8",
+      "ivar": "OBJC_IVAR_$_Tree.timeDied",
+      "ivar_offset": 112,
+      "key": "timeDied",
+      "objectforkey_site": "0x004c2fd8",
+      "store_kind": "double_store",
+      "store_site": "0x004c3000"
+    },
+    {
+      "conversion": "floatValue",
+      "conversion_site": "0x004c3028",
+      "ivar": "OBJC_IVAR_$_Tree.removeCheckCount",
+      "ivar_offset": 120,
+      "key": "removeCheckCount",
+      "objectforkey_site": "0x004c3018",
+      "store_kind": "float_store",
+      "store_site": "0x004c3040"
+    }
+  ],
+  "claim": "Tree -[loadSaveDictValues:] reads treeSeasonOffset/dead/timeDied/removeCheckCount via objectForKey+intValue/boolValue/doubleValue/floatValue into word/byte/64-bit/float ivar stores, reconstructs treeFruit from per-fruit dictionaries (pos.x/pos.y/hasCreatedFreeBlockThisSeason into 12-byte treeFruits records with fruitCount reset first), and gates the gene/growth block behind isStaticTree \u2014 mirroring the save-side conditional from b2o; saveTime is NOT read (write-only world stamp \u2014 first proven save/load key asymmetry); static level-A only, runtime roundtrip unresolved",
+  "class": "Tree",
+  "code_words": 748,
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "imp": "0x004c2df0",
+  "isStaticTree_gate": {
+    "bne": "0x004c3570",
+    "cmp": "0x004c356c",
+    "note": "gene/growth block loaded only for non-static trees, mirroring the save-side gate (b2o)",
+    "sxtb": "0x004c3568"
+  },
+  "method": "Tree loadSaveDictValues: read-back evidence (batch b3a)",
+  "pic_base": "0x0105faf4",
+  "pool_keys": [
+    "age",
+    "dead",
+    "growthCounter",
+    "growthRate",
+    "growthRateGene",
+    "hasCreatedFreeBlockThisSeason",
+    "height",
+    "maxAge",
+    "maxHeight",
+    "maxHeightGene",
+    "maxHeightReached",
+    "pos.x",
+    "pos.y",
+    "removeCheckCount",
+    "timeDied",
+    "treeFruit",
+    "treeSeasonOffset"
+  ],
+  "saveTime_read_back": false,
+  "schema": 1,
+  "site_gates": [
+    "treeFruit_objectforkey_site@0x004c3058",
+    "fruitcount_reset_store@0x004c3074",
+    "fruit_enumerate_site@0x004c30b8",
+    "fruit_empty_beq@0x004c30c4",
+    "fruit_stride_movw_0xc@0x004c32a8",
+    "hcfb_sxtb@0x004c3290",
+    "isstatictree_sxtb@0x004c3568",
+    "isstatictree_cmp@0x004c356c",
+    "isstatictree_bne@0x004c3570",
+    "geneblock_maxheightreached_key_load@0x004c35a4"
+  ],
+  "treeFruit": {
+    "enumerate_site": "0x004c30b8",
+    "fruit_keys": [
+      "pos.x",
+      "pos.y",
+      "hasCreatedFreeBlockThisSeason"
+    ],
+    "fruitcount_reset": true,
+    "objectforkey_site": "0x004c3058",
+    "record_stride": 12
+  }
+}

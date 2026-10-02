@@ -24,6 +24,28 @@ int GameWorld::wrapChunkX(int cx) {
     return cx % chunksW;
 }
 
+std::pair<float, float> GameWorld::generationSeedOffset(long long seed) {
+    // SplitMix64-style mix so that nearby seeds do not produce nearby terrain,
+    // then map the two halves onto a modest coordinate shift. Every imported
+    // seed (0 included) yields a deterministic offset; "no seed" is a
+    // separate state that callers read through hasGenerationSeed().
+    std::uint64_t mixed = static_cast<std::uint64_t>(seed);
+    mixed += 0x9E3779B97F4A7C15ull;
+    mixed = (mixed ^ (mixed >> 30)) * 0xBF58476D1CE4E5B9ull;
+    mixed = (mixed ^ (mixed >> 27)) * 0x94D049BB133111EBull;
+    mixed ^= (mixed >> 31);
+    const float x = static_cast<float>((mixed >> 16) & 0xFFFFu) * 0.5f;
+    const float y = static_cast<float>(mixed & 0xFFFFu) * 0.5f;
+    return {x, y};
+}
+
+void GameWorld::setGenerationSeed(long long seed) {
+    const auto offset = generationSeedOffset(seed);
+    has_generation_seed_ = true;
+    seed_offset_x_ = offset.first;
+    seed_offset_y_ = offset.second;
+}
+
 void GameWorld::updateLighting() {
     std::lock_guard<std::mutex> lock(chunksMutex);
     
@@ -288,6 +310,21 @@ void GameWorld::workerLoop() {
         }
 
         tick++;
+        // World clock (WORLD_TIME_DOMAIN.md): elapsed REAL time scaled by
+        // clockTimeScale. The wait wakes early on chunk tasks, so ticks are
+        // not a clock; steady_clock deltas are. worldTime stays the derived
+        // day fraction for existing consumers (temperature/renderer/loop).
+        {
+            const auto now = std::chrono::steady_clock::now();
+            if (clockLast != std::chrono::steady_clock::time_point{}) {
+                const double elapsed =
+                    std::chrono::duration<double>(now - clockLast).count();
+                worldSeconds += elapsed * static_cast<double>(clockTimeScale);
+                hasWorldSeconds = true;
+            }
+            clockLast = now;
+            worldTime = static_cast<float>(dayFraction());
+        }
         if (tick % 10 == 0) updateFluids();
         if (tick % 30 == 0) updateElectricity();
         if (tick % 60 == 0) updateTemperature();
@@ -449,10 +486,10 @@ void GameWorld::generateChunkSync(int cx, int cy) {
         Tile& t = block->tiles[i];
         t.damage = 0; t.sunlight = 0; t.artLight = 0;
         
-        float h = Noise::fbm(worldX * 0.02f, 3); 
+        float h = Noise::fbm((worldX + seed_offset_x_) * 0.02f, 3); 
         
         // --- Biome Logic ---
-        float temperature = Noise::fbm(worldX * 0.0005f + 1000.0f, 2); // Large scale temperature
+        float temperature = Noise::fbm((worldX + seed_offset_x_) * 0.0005f + 1000.0f, 2); // Large scale temperature
         t.temperature = (uint16_t)((temperature + 1.0f) * 0.5f * 65535.0f); // Store for later
         
         int surfaceHeight = 80 + (int)(h * 20.0f);
@@ -473,7 +510,8 @@ void GameWorld::generateChunkSync(int cx, int cy) {
                 else type = BLOCK_GRASS;
             }
             
-            float caveNoise = Noise::noise2d(worldX * 0.08f, worldY * 0.08f);
+            float caveNoise = Noise::noise2d((worldX + seed_offset_x_) * 0.08f,
+                                        (worldY + seed_offset_y_) * 0.08f);
             float caveDensity = 0.55f; 
             if (worldY < 50) caveDensity = 0.45f;
 
@@ -481,7 +519,8 @@ void GameWorld::generateChunkSync(int cx, int cy) {
                 t.foreground = ITEM_EMPTY;
             } else {
                 t.foreground = type;
-                float oreNoise = Noise::noise2d(worldX * 0.2f, worldY * 0.2f);
+                float oreNoise = Noise::noise2d((worldX + seed_offset_x_) * 0.2f,
+                                       (worldY + seed_offset_y_) * 0.2f);
                 if (oreNoise > 0.75f) {
                     if (worldY < 60 && worldY > 30) t.foreground = ITEM_COPPER_ORE;
                     if (worldY < 40) t.foreground = ITEM_TIN_ORE;
@@ -513,7 +552,7 @@ void GameWorld::generateChunkSync(int cx, int cy) {
     
     for (int i = 0; i < CHUNK_SIZE; i++) {
         int worldX = wrappedX * CHUNK_SIZE + i;
-        float h = Noise::fbm(worldX * 0.02f, 3);
+        float h = Noise::fbm((worldX + seed_offset_x_) * 0.02f, 3);
         int surfaceHeight = 80 + (int)(h * 20.0f);
         
         if (cy * CHUNK_SIZE <= surfaceHeight && (cy + 1) * CHUNK_SIZE > surfaceHeight) {

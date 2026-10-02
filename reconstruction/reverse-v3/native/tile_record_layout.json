@@ -1,0 +1,271 @@
+{
+  "schema": 1,
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "claim": "byte fields of the 64-byte tile record that the drawing path reads, extracted from verified code windows with each read site and the base chain recorded; the pointer slot [fp,-0x1c0] is itself a record pointer",
+  "record_pointer_slot": "[fp,-0x1c0] is set at 0x00a1dfc4 to [[fp,-0x198]+8] + index*64, so field reads through it are fields of the 64-byte tile record",
+  "mode_slot_note": "the direct case bodies write the draw image into [fp,-0x540]/[fp,-0x544] and a mode (2) into [fp,-0x554], then branch into the shared body at 0x00a22d74, whose first compare cluster is at 0x00a22d78 - the images the body compares against are the six leaf images those cases just wrote",
+  "record_stride": 64,
+  "stride_evidence": "add r3, ip, r3, lsl #6 at 0x00a22dfc",
+  "fields": [
+    {
+      "offset": 1,
+      "size": "byte",
+      "read_sites": [
+        "0x00a1e004",
+        "0x00a1e018",
+        "0x00a22ea8"
+      ],
+      "bases": [
+        "fp-0x1c0"
+      ],
+      "in_64_byte_record": true,
+      "windows": [
+        "record setup",
+        "shared body"
+      ],
+      "purpose": "backWallType: indexes the 77-entry table (<= 0x4c after subtracting one) and is compared against 2 and 3"
+    },
+    {
+      "offset": 3,
+      "size": "byte",
+      "read_sites": [
+        "0x00a23500"
+      ],
+      "bases": [
+        "fp-0x1c0"
+      ],
+      "in_64_byte_record": true,
+      "windows": [
+        "tail"
+      ],
+      "purpose": "contentsType: tested against zero"
+    },
+    {
+      "offset": 5,
+      "size": "byte",
+      "read_sites": [
+        "0x00a22408",
+        "0x00a22454",
+        "0x00a2248c",
+        "0x00a224d8",
+        "0x00a22510",
+        "0x00a2255c",
+        "0x00a22594",
+        "0x00a225e0",
+        "0x00a22618"
+      ],
+      "bases": [
+        "fp-0x1c0"
+      ],
+      "in_64_byte_record": true,
+      "windows": [
+        "direct cases"
+      ],
+      "purpose": "variant selector: every direct case body computes bool = (byte > 0) with cmp/movgt, and when it is zero the mode drops from 2 to 0 before falling into the shared body"
+    },
+    {
+      "offset": 6,
+      "size": "byte",
+      "read_sites": [
+        "0x00a1dfcc",
+        "0x00a1e080",
+        "0x00a1e0c8"
+      ],
+      "bases": [
+        "fp-0x1c0",
+        "fp-0x1c8",
+        "fp-0x1cc"
+      ],
+      "in_64_byte_record": false,
+      "windows": [
+        "record setup"
+      ],
+      "purpose": "tested against zero in the record-setup window"
+    },
+    {
+      "offset": 8,
+      "size": "byte",
+      "read_sites": [
+        "0x00a22e00"
+      ],
+      "bases": [
+        "([fp-0x198]+0x8 + index*64)"
+      ],
+      "in_64_byte_record": true,
+      "windows": [
+        "shared body"
+      ],
+      "purpose": "fed into the arithmetic (byte - 127) * constant + [fp,-0x19c]"
+    },
+    {
+      "offset": 12,
+      "size": "byte",
+      "read_sites": [
+        "0x00a234e4"
+      ],
+      "bases": [
+        "fp-0x1c0"
+      ],
+      "in_64_byte_record": true,
+      "windows": [
+        "tail"
+      ],
+      "purpose": "compared against 0x45 in the tail"
+    }
+  ],
+  "counts": {
+    "windows_scanned": 4,
+    "record_field_reads": 18,
+    "distinct_offsets": 6,
+    "tail_constant": 69,
+    "distinct_bases": 4,
+    "fields_in_64_byte_record": 5,
+    "fields_in_other_object": 1
+  },
+  "raw_reads": [
+    {
+      "window": "record setup",
+      "at": "0x00a1dfcc",
+      "mnemonic": "ldrb",
+      "offset": 6,
+      "base": "fp-0x1c0",
+      "text": "ldrb r2, [r2, #6]"
+    },
+    {
+      "window": "record setup",
+      "at": "0x00a1e004",
+      "mnemonic": "ldrb",
+      "offset": 1,
+      "base": "fp-0x1c0",
+      "text": "ldrb r1, [r1, #1]"
+    },
+    {
+      "window": "record setup",
+      "at": "0x00a1e018",
+      "mnemonic": "ldrb",
+      "offset": 1,
+      "base": "fp-0x1c0",
+      "text": "ldrb r0, [r0, #1]"
+    },
+    {
+      "window": "record setup",
+      "at": "0x00a1e080",
+      "mnemonic": "ldrb",
+      "offset": 6,
+      "base": "fp-0x1c8",
+      "text": "ldrb r0, [r0, #6]"
+    },
+    {
+      "window": "record setup",
+      "at": "0x00a1e0c8",
+      "mnemonic": "ldrb",
+      "offset": 6,
+      "base": "fp-0x1cc",
+      "text": "ldrb r0, [r0, #6]"
+    },
+    {
+      "window": "direct cases",
+      "at": "0x00a22408",
+      "mnemonic": "ldrb",
+      "offset": 5,
+      "base": "fp-0x1c0",
+      "text": "ldrb r1, [r1, #5]"
+    },
+    {
+      "window": "direct cases",
+      "at": "0x00a22454",
+      "mnemonic": "ldrb",
+      "offset": 5,
+      "base": "fp-0x1c0",
+      "text": "ldrb r1, [r1, #5]"
+    },
+    {
+      "window": "direct cases",
+      "at": "0x00a2248c",
+      "mnemonic": "ldrb",
+      "offset": 5,
+      "base": "fp-0x1c0",
+      "text": "ldrb r1, [r1, #5]"
+    },
+    {
+      "window": "direct cases",
+      "at": "0x00a224d8",
+      "mnemonic": "ldrb",
+      "offset": 5,
+      "base": "fp-0x1c0",
+      "text": "ldrb r1, [r1, #5]"
+    },
+    {
+      "window": "direct cases",
+      "at": "0x00a22510",
+      "mnemonic": "ldrb",
+      "offset": 5,
+      "base": "fp-0x1c0",
+      "text": "ldrb r1, [r1, #5]"
+    },
+    {
+      "window": "direct cases",
+      "at": "0x00a2255c",
+      "mnemonic": "ldrb",
+      "offset": 5,
+      "base": "fp-0x1c0",
+      "text": "ldrb r1, [r1, #5]"
+    },
+    {
+      "window": "direct cases",
+      "at": "0x00a22594",
+      "mnemonic": "ldrb",
+      "offset": 5,
+      "base": "fp-0x1c0",
+      "text": "ldrb r1, [r1, #5]"
+    },
+    {
+      "window": "direct cases",
+      "at": "0x00a225e0",
+      "mnemonic": "ldrb",
+      "offset": 5,
+      "base": "fp-0x1c0",
+      "text": "ldrb r1, [r1, #5]"
+    },
+    {
+      "window": "direct cases",
+      "at": "0x00a22618",
+      "mnemonic": "ldrb",
+      "offset": 5,
+      "base": "fp-0x1c0",
+      "text": "ldrb r1, [r1, #5]"
+    },
+    {
+      "window": "shared body",
+      "at": "0x00a22e00",
+      "mnemonic": "ldrb",
+      "offset": 8,
+      "base": "([fp-0x198]+0x8 + index*64)",
+      "text": "ldrb r3, [r3, #8]"
+    },
+    {
+      "window": "shared body",
+      "at": "0x00a22ea8",
+      "mnemonic": "ldrb",
+      "offset": 1,
+      "base": "fp-0x1c0",
+      "text": "ldrb r0, [r0, #1]"
+    },
+    {
+      "window": "tail",
+      "at": "0x00a234e4",
+      "mnemonic": "ldrb",
+      "offset": 12,
+      "base": "fp-0x1c0",
+      "text": "ldrb r0, [r0, #0xc]"
+    },
+    {
+      "window": "tail",
+      "at": "0x00a23500",
+      "mnemonic": "ldrb",
+      "offset": 3,
+      "base": "fp-0x1c0",
+      "text": "ldrb r0, [r0, #3]"
+    }
+  ]
+}

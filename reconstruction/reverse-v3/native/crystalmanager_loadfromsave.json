@@ -1,0 +1,110 @@
+{
+  "batch": "b3e",
+  "boundary": "0x009f452c",
+  "claim": "CrystalManager -[loadFromSave] (506 w) has no super call: it first asks SFHFKeychainUtils getPasswordForUsername:andServiceName:error: for the literal account com.majicjungle.blockheads.crystalcount and, when the password is non-nil and the error is nil, sets crystalCount@8 = [password intValue] and amountString@12 = a retained MD5 of stringWithFormat:@\"7acfe93afc08%dc65ae2c54ecaf07f\" with that count; otherwise it falls back to the file path (NSSearchPathForDirectoriesInDomains(14,1,1) \u2192 docs/game/4bbf9ea9f3e11dd7afcb0f22ccb635d2 read as a UTF-8 string, then NSData dataWithContentsOfFile: \u2192 gzipInflate \u2192 a local parser thunk 0x009f4508 \u2192 0x009f602c whose callee is not decoded), requires [derived isEqualToString:[plist objectForKey:@\"loadSaveIDB\"]] before writing, and finally sets crystalCount@8 = [fileString intValue] >> 2 (the file stores 4x the count) and amountString@12 to the same retained MD5 form; static level-A evidence only, no runtime roundtrip",
+  "class": "CrystalManager",
+  "classref_cells": {
+    "getpassword_class": {
+      "cell": "0x00e8add0",
+      "class": "OBJC_CLASS_$_SFHFKeychainUtils",
+      "kind": "relative_pointer"
+    },
+    "nsdata_cell": {
+      "cell": "0x00e8addc",
+      "class": "OBJC_CLASS_$_NSData",
+      "kind": "abs32_zero_slot"
+    },
+    "nsstring_cell": {
+      "cell": "0x00e8add4",
+      "class": "OBJC_CLASS_$_NSString",
+      "kind": "abs32_zero_slot"
+    },
+    "uiddevice_cell": {
+      "cell": "0x00e8add8",
+      "class": "OBJC_CLASS_$_UIDevice",
+      "kind": "relative_pointer"
+    }
+  },
+  "code_words": 506,
+  "constants": {
+    "expand_tilde": 1,
+    "file_encoding_utf8": 4,
+    "search_path_directory": 14,
+    "search_path_domain_mask": 1
+  },
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "file_path": {
+    "data_file": "NSData dataWithContentsOfFile:<game/%@ path> (0x009f42a4) \u2192 gzipInflate (0x009f42bc)",
+    "not_decoded": "the derived-string mix (device name / game/%@ / %@_%@ / stringFromMD5) is gated call-site by call-site but not symbolically evaluated",
+    "parser_thunk": "0x009f4508 \u2192 0x009f602c (r0 unchanged, r1=0; callee NOT decoded)",
+    "search_paths": "NSSearchPathForDirectoriesInDomains(14,1,1) via ABI veneer 0x001c3f20 (slot 0x010602c4)",
+    "string_file": "docs/game/4bbf9ea9f3e11dd7afcb0f22ccb635d2, read with stringWithContentsOfFile:encoding:4 error:nil (0x009f3fb4); nil \u2192 return",
+    "tamper_gate": "[[derived] isEqualToString:[plist objectForKey:@\"loadSaveIDB\"]] (0x009f4344); mismatch \u2192 return without writing",
+    "writes": {
+      "amountString@12": "retain([[NSString stringWithFormat:@\"7acfe93afc08%dc65ae2c54ecaf07f\", crystalCount] stringFromMD5]) (0x009f447c)",
+      "crystalCount@8": "[string intValue] >> 2 (0x009f4400 asr r0,r0,#2 \u2192 0x009f4414)"
+    }
+  },
+  "imp": "0x009f3d44",
+  "ivar_offsets": {
+    "amountString": 12,
+    "crystalCount": 8
+  },
+  "keychain_path": {
+    "call_site": "0x009f3da4",
+    "class": "OBJC_CLASS_$_SFHFKeychainUtils",
+    "error_out_param": "fp-0x28",
+    "guard": "password != nil && error == nil, else file path (0x009f3db8 / 0x009f3dc8)",
+    "selector": "getPasswordForUsername:andServiceName:error:",
+    "username_and_service_key": "com.majicjungle.blockheads.crystalcount",
+    "writes": {
+      "amountString@12": "retain([[NSString stringWithFormat:@\"7acfe93afc08%dc65ae2c54ecaf07f\", crystalCount] stringFromMD5]) (0x009f3ed4)",
+      "crystalCount@8": "[password intValue] (0x009f3e6c)"
+    }
+  },
+  "method": "CrystalManager loadFromSave read-back evidence (batch b3e)",
+  "pic_base": "0x0105faf4",
+  "pool_key_cells": {
+    "%@_%@": "0x00f96b98",
+    "7a7224101400f92fa0fad63308856865": "0x00f96b88",
+    "7acfe93afc08%dc65ae2c54ecaf07f": "0x00f96b68",
+    "com.majicjungle.blockheads.crystalcount": "0x00f96b58",
+    "game/%@": "0x00f96ba8",
+    "game/4bbf9ea9f3e11dd7afcb0f22ccb635d2": "0x00f96b78",
+    "loadSaveIDB": "0x00f96bb8"
+  },
+  "pool_keys": [
+    "%@_%@",
+    "7a7224101400f92fa0fad63308856865",
+    "7acfe93afc08%dc65ae2c54ecaf07f",
+    "com.majicjungle.blockheads.crystalcount",
+    "game/%@",
+    "game/4bbf9ea9f3e11dd7afcb0f22ccb635d2",
+    "loadSaveIDB"
+  ],
+  "schema": 1,
+  "selector": "loadFromSave",
+  "selrefs": [
+    "currentDevice",
+    "dataWithContentsOfFile:",
+    "getPasswordForUsername:andServiceName:error:",
+    "gzipInflate",
+    "intValue",
+    "isEqualToString:",
+    "name",
+    "objectAtIndex:",
+    "objectForKey:",
+    "retain",
+    "stringByAppendingFormat:",
+    "stringByAppendingPathComponent:",
+    "stringFromMD5",
+    "stringWithContentsOfFile:encoding:error:",
+    "stringWithFormat:"
+  ],
+  "stored_scale": {
+    "file": 4,
+    "keychain": 1,
+    "note": "the on-disk string holds 4x the crystal count; the keychain password holds it 1:1"
+  },
+  "super_call": null
+}

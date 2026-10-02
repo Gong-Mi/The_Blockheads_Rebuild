@@ -608,7 +608,8 @@ def main() -> None:
     require(
         NATIVE / "original_item_image_map.tsv",
         [
-            "item_type\timage_dataA0\tcol_dataA0\trow_dataA0",
+            "item_type\timage_dataA0\tcol_from_image_a0\trow_from_image_a0",
+            "col=image%32,row=image//32 (derived; TileMap:32x32)",
             "1024\t33\t1\t1\t33\t1\t1\t0x004d73c0",
             "1043\t342\t22\t10\t343\t23\t10\t0x004d74e0",
             "1104\t742\t6\t23\t743\t7\t23\t0x004d7528",
@@ -641,6 +642,837 @@ def main() -> None:
             '"selector": "startTouch:withTouch:withEvent:"',
             '"selector": "endSecondaryTouch:"',
             '"implementation": "0x92cdd8"',
+        ],
+    )
+    require(
+        ROOT / "tools/verify_font_glyph_content.py",
+        [
+            "scale_probe",
+            "glyphs_with_ink",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "FONT_GLYPH_CONTENT.md",
+        [
+            "confirmed by pixels",
+            "99 / 100",
+            "the space character",
+        ],
+    )
+    require(
+        NATIVE / "font_glyph_content.json",
+        [
+            '"glyphs_empty": 51',
+            '"glyphs_with_ink_at_scale": 99',
+        ],
+    )
+    require(
+        ROOT / "tools/parse_original_fonts.py",
+        [
+            "BMFont",
+            "atlas_size_matches",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "FONT_ASSET_TABLES.md",
+        [
+            "2048x1024",
+            "ASCII 126",
+            "Blockheads_64.png",
+        ],
+    )
+    require(
+        NATIVE / "font_glyph_tables.json",
+        [
+            '"fonts": 5',
+            '"glyphs": 500',
+            '"atlas_size_mismatches": 1',
+        ],
+    )
+    require(
+        ROOT / "tools/audit_shader_assets.py",
+        [
+            "SHADER_SUFFIXES",
+            "from string_evidence import classify, contains_token, nul_strings",
+            "def sweep_sources",
+            "suffix-composition",
+        ],
+    )
+    require(
+        NATIVE / "SHADER_ASSET_COVERAGE.md",
+        [
+            "%@.vsh",
+            "whole APK",
+            "count of unresolved programs",
+            "84",
+        ],
+    )
+    require(
+        NATIVE / "shader_asset_coverage.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"ships": 92',
+            '"original_suffix_composition": 70',
+            '"original_unattributed": 0',
+        ],
+    )
+    require(
+        ROOT / "tools/audit_item_display_names.py",
+        [
+            "classify_context",
+            "name-list",
+            "name_table_found",
+        ],
+    )
+    require(
+        NATIVE / "ITEM_DISPLAY_NAME_SOURCES.md",
+        [
+            "Why the token search alone is wrong",
+            "not extractable from this APK",
+            "Clay` only appears inside `Clayton",
+        ],
+    )
+    require(
+        NATIVE / "item_display_name_sources.json",
+        [
+            '"name_table_found": 0',
+            '"exact_objc_class_matches": 18',
+        ],
+    )
+    require(
+        ROOT / "tools/audit_text_assets.py",
+        [
+            "sentence_like",
+            "PROBE_SYMBOLS",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "TEXT_ASSET_INVENTORY.md",
+        [
+            "no localization pipeline to consume",
+            "InfoPlist.strings",
+            "Item display names are not solved here",
+        ],
+    )
+    require(
+        NATIVE / "text_asset_inventory.json",
+        [
+            '"localization_key_value_pairs": 0',
+            '"sentence_like_strings": 413',
+        ],
+    )
+    require(
+        ROOT / "tools/verify_sprite_cell_content.py",
+        [
+            "image_domain_in_tilemap",
+            "image_domain_in_items",
+            "out_of_bounds",
+        ],
+    )
+    require(
+        NATIVE / "SPRITE_CELL_CONTENT.md",
+        [
+            "The pixels decide",
+            "image-id domain lives in",
+            "the numbers were never wrong, the atlas was",
+        ],
+    )
+    require(
+        NATIVE / "sprite_cell_content.json",
+        [
+            '"image_with_ink_in_tilemap": 82',
+            '"image_out_of_bounds_in_items": 11',
+        ],
+    )
+    require(
+        ROOT / "tools/verify_atlas_geometry.py",
+        [
+            "image_id_domain",
+            "atlas_attribution",
+            "inherited",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "ATLAS_GEOMETRY_CONTRACT.md",
+        [
+            "wrong attribution in the check",
+            "TileMap:32x32",
+            "32 x 32 x 64",
+        ],
+    )
+    require(
+        NATIVE / "atlas_geometry_contract.json",
+        [
+            '"item_image_id_violations": 0',
+            '"item_formula_violations": 0',
+            '"tile_violations": 0',
+        ],
+    )
+    require(
+        ROOT / "tools/crosscheck_shader_declarations.py",
+        [
+            "declared-attribute",
+            "undeclared",
+            "binding markers",
+        ],
+    )
+    require(
+        NATIVE / "SHADER_DECLARATION_CROSSCHECK.md",
+        [
+            "not a declaration list",
+            "ColoredNoTexture",
+            "never-claimed attributes",
+        ],
+    )
+    require(
+        NATIVE / "shader_declaration_crosscheck.json",
+        [
+            '"undeclared_binding_markers": 63',
+            '"shaders_missing_source": 0',
+        ],
+    )
+    require(
+        ROOT / "tools/audit_texture_sets.py",
+        [
+            "ratio_uniform",
+            "identical-duplicate",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "TEXTURE_RESOLUTION_SETS.md",
+        [
+            "yakNeck.png",
+            "32x",
+            "HDTex/` membership does not imply a different resolution",
+        ],
+    )
+    require(
+        NATIVE / "texture_resolution_sets.json",
+        [
+            '"sd_hd_pair": 122',
+            '"non_uniform_ratio": 1',
+            '"8x": 23',
+        ],
+    )
+    require(
+        NATIVE / "TILE_CONTENT_RENDER_MAP.md",
+        [
+            "delegated-dispatch",
+            "0x00a22c38",
+            "never guesses one",
+        ],
+    )
+    require(
+        ROOT / "tools/crosscheck_tile_record_header.py",
+        [
+            "ACCESSOR_RE",
+            "documented_but_unread",
+            "size_agrees",
+        ],
+    )
+    require(
+        NATIVE / "TILE_RECORD_HEADER_CROSSCHECK.md",
+        [
+            "backWallType - 1",
+            "new",
+            "not original source",
+        ],
+    )
+    require(
+        NATIVE / "tile_record_header_crosscheck.json",
+        [
+            '"size_agrees": true',
+            '"agreeing_offsets": 2',
+        ],
+    )
+    require(
+        ROOT / "tools/extract_grp_identifiers.py",
+        [
+            "GROUP_PREFIX = \"grp.\"",
+            "boundary",
+        ],
+    )
+    require(
+        NATIVE / "GRP_IDENTIFIERS.md",
+        [
+            "Adjacency is not membership",
+            "17,209",
+            "bird%d.wav",
+        ],
+    )
+    require(
+        NATIVE / "grp_identifiers.json",
+        [
+            '"group_key_count": 117',
+            '"audio_names_not_shipped": [\n    "bird%d.wav"\n  ]',
+        ],
+    )
+    require(
+        ROOT / "tools/test_live_runtime_ivars.py",
+        [
+            "EXPECTED_COUNTS",
+            "VERIFIED_OFFSETS",
+            "527",
+        ],
+    )
+    require(
+        NATIVE / "LIVE_RUNTIME_IVARS.md",
+        [
+            "Live runtime ivar offsets",
+            "corrected",
+            "Blockhead.headCube",
+        ],
+    )
+    require(
+        NATIVE / "live_runtime_ivar_offsets.json",
+        [
+            '"ivar_count": 527',
+            '"Blockhead.headCube": 212',
+            '"DynamicWorld.world": 4',
+        ],
+    )
+    require(
+        ROOT / "tools/test_live_frame_stack.py",
+        [
+            "REQUIRED_FRAMES",
+            "render:cameraZ:projectionMatrix:pinchScale:",
+            "drawForButtonProjectionMatrix:modelViewMatrix:",
+        ],
+    )
+    require(
+        NATIVE / "LIVE_FRAME_STACK.md",
+        [
+            "Live frame stack and dispatch hierarchy",
+            "UIKitMain",
+            "World render:cameraZ:projectionMatrix:pinchScale:",
+        ],
+    )
+    require(
+        NATIVE / "live_frame_stack.json",
+        [
+            '"thread_name": "UIKitMain"',
+            '"root_driver": "World render:cameraZ:projectionMatrix:pinchScale:"',
+            '"build_libApplication_sha256"',
+        ],
+    )
+    require(
+        ROOT / "tools/probe_live_frame_stack.py",
+        [
+            "callsite_ok",
+            "fn_start_a32",
+            "BUILD MISMATCH",
+        ],
+    )
+    require(
+        ROOT / "tools/test_probe_live_frame_stack.py",
+        [
+            "attribute_word",
+            "words_from_blob",
+        ],
+    )
+    require(
+        NATIVE / "disasm_donkeylike_setupmatrices.txt",
+        [
+            "DonkeyLike -[setupMatrices:dt:]",
+            "bodyMatrix",
+            "galloping",
+        ],
+    )
+    require(
+        NATIVE / "disasm_blockhead_updateanimation.txt",
+        [
+            "Blockhead -[updateAnimation]",
+            "traverseToKeyFrame",
+            "isInJetPackFreeFlightMode",
+        ],
+    )
+    require(
+        ROOT / "tools/test_blockhead_clothing_pipeline.py",
+        [
+            "REQUIRED_SLOTS",
+            "JET_TEXTURES",
+            "hatPomPomCubes",
+        ],
+    )
+    require(
+        NATIVE / "BLOCKHEAD_CLOTHING_PIPELINE.md",
+        [
+            "Blockhead clothing and accessory mesh pipeline",
+            "updateClothingCubes",
+            "hatPomPomCubes",
+        ],
+    )
+    require(
+        NATIVE / "disasm_blockhead_updateclothingcubes.txt",
+        [
+            "Blockhead -[updateClothingCubes]",
+            "hatPomPomCubes",
+            "jet1.png",
+        ],
+    )
+    require(
+        ROOT / "tools/probe_live_ivar_offsets.py",
+        [
+            "OBJC_IVAR_$_",
+            "cells_rewritten",
+            "BUILD MISMATCH",
+        ],
+    )
+    require(
+        NATIVE / "IVAR_OFFSET_READING.md",
+        [
+            "cross-build misread",
+            "instance discovery",
+            "live_verified_fields.json",
+        ],
+    )
+    require(
+        NATIVE / "live_ivar_offset_divergence.json",
+        [
+            '"cells_compared": 3793',
+            '"cells_identical": 3714',
+            '"cells_rewritten": 79',
+            '"cells_rewritten": 3735',
+        ],
+    )
+    require(
+        ROOT / "tools/find_selector_senders.py",
+        [
+            "pool_word + PIC_BASE == target address",
+            "0x0105FAF4",
+            "prologue-verified",
+            "objc_msgSend",
+            "static_string_args",
+        ],
+    )
+    require(
+        NATIVE / "SELECTOR_SENDERS.md",
+        [
+            "reference sites",
+            "0x105faf4",
+            "settled by the prologue walk-back",
+            "noPath.wav",
+        ],
+    )
+    require(
+        NATIVE / "selector_senders.json",
+        [
+            '"pic_base": "0x105faf4"',
+            '"selector": "soundNamed:"',
+            '"slots": [\n        "0xe7de14"',
+            '"objc_msgSend_stub": "0x1c281c"',
+            '"static_args"',
+        ],
+    )
+    require(
+        ROOT / "tools/extract_sound_call_sites.py",
+        [
+            "LITERAL_WINDOW",
+            "prologue-verified",
+        ],
+    )
+    require(
+        NATIVE / "audio_call_site_literals.json",
+        [
+            '"selector": "soundNamed:"',
+            '"attribution": "prologue-verified"',
+        ],
+    )
+    require(
+        ROOT / "tools/test_audio_call_site_literals.py",
+        [
+            "EXPECTED_FUNCTIONS",
+            "prologue-verified",
+        ],
+    )
+    require(
+        ROOT / "tools/probe_objc_send_channel.py",
+        [
+            "msgrefs_unit_matches",
+            "relocation_sections",
+            "send_idiom",
+        ],
+    )
+    require(
+        NATIVE / "OBJC_SEND_CHANNEL.md",
+        [
+            "recorded negative result",
+            ".rel.dyn",
+            "does not transfer here as-is",
+            "bl objc_msgSend",
+        ],
+    )
+    require(
+        NATIVE / "objc_send_channel.json",
+        [
+            '"string_va": "0xecf8e2"',
+            '"msgrefs_unit_matches": []',
+        ],
+    )
+    require(
+        ROOT / "tools/extract_audio_api.py",
+        [
+            "MJSoundManager",
+            "OBJC_IVAR_$_",
+            "classes_with_methods",
+        ],
+    )
+    require(
+        NATIVE / "AUDIO_API_SURFACE.md",
+        [
+            "the owner. Loading and lookup",
+            "Which game action",
+            "reached indirectly",
+        ],
+    )
+    require(
+        NATIVE / "audio_api_surface.json",
+        [
+            '"methods_total": 128',
+            '"ivars_total": 85',
+        ],
+    )
+    require(
+        ROOT / "tools/extract_item_mapping_functions.py",
+        [
+            "FUNCTIONS",
+            "return_constant",
+            "pairs_with_output",
+        ],
+    )
+    require(
+        NATIVE / "ITEM_MAPPINGS.md",
+        [
+            "seed item -> tree type",
+            "324-330",
+            "not decoded",
+        ],
+    )
+    require(
+        NATIVE / "item_mapping_functions.json",
+        [
+            '"pairs_decoded": 26',
+            '"mapped_entries": 14',
+        ],
+    )
+    require(
+        ROOT / "tools/extract_item_predicates.py",
+        [
+            "ITEM_DOMAIN",
+            "item_type_count",
+            "predicates_naming_item_types",
+        ],
+    )
+    require(
+        NATIVE / "ITEM_PREDICATES.md",
+        [
+            "item attribute matrix",
+            "no liquid item",
+            "Boundary that matters",
+        ],
+    )
+    require(
+        NATIVE / "item_predicates.json",
+        [
+            '"distinct_item_types_named": 191',
+            '"always-constant": 2',
+        ],
+    )
+    require(
+        ROOT / "tools/parse_craftable_item_struct.py",
+        [
+            "CraftableItem",
+            "blob_length_from_savedict",
+            "sizes_agree",
+        ],
+    )
+    require(
+        NATIVE / "CRAFTABLE_ITEM_STRUCT.md",
+        [
+            "layout from the type encoding",
+            "measured twice in",
+            "Field meanings",
+        ],
+    )
+    require(
+        NATIVE / "craftable_item_struct.json",
+        [
+            '"packed_size": 124',
+            '"int_arrays": 3',
+        ],
+    )
+    require(
+        ROOT / "tools/histogram_save_tile_fields.py",
+        [
+            "blocks_records",
+            "nonzero_offset8_states",
+            "int16_windows",
+        ],
+    )
+    require(
+        NATIVE / "TILE_RECORD_SAVE_DATA.md",
+        [
+            "zero in every one of the 40,960 tiles",
+            "cold-region tiles carrying",
+            "One world",
+        ],
+    )
+    require(
+        NATIVE / "tile_record_save_data.json",
+        [
+            '"tiles": 40960',
+            '"tiles_per_record": 1024',
+        ],
+    )
+    require(
+        ROOT / "tools/extract_tile_record_layout.py",
+        [
+            "WINDOWS",
+            "FIELD_PATTERN",
+            "STRIDE_SHIFT",
+        ],
+    )
+    require(
+        NATIVE / "TILE_RECORD_LAYOUT.md",
+        [
+            "candidate reading",
+            "loses sync",
+            "without a hex prefix",
+        ],
+    )
+    require(
+        NATIVE / "tile_record_layout.json",
+        [
+            '"record_stride": 64',
+            '"tail_constant": 69',
+        ],
+    )
+    require(
+        ROOT / "tools/join_shared_body_constants.py",
+        [
+            "writes_to_case_slots",
+            "direct_cases_writing_the_compared_slot",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "SHARED_BODY_CONSTANTS.md",
+        [
+            "Apple, Cherry, Maple",
+            "61 / 61",
+            "not \"all leaves\"",
+        ],
+    )
+    require(
+        NATIVE / "shared_body_constants.json",
+        [
+            '"constants_with_exactly_one_producer": 6',
+            '"direct_cases_writing_the_compared_slot": 61',
+        ],
+    )
+    require(
+        ROOT / "tools/crosscheck_draw_value_domains.py",
+        [
+            "shared_body_vs_sprites",
+            "constants_vs_direct_cases",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "DRAW_VALUE_DOMAINS.md",
+        [
+            "same kind of number",
+            "6 / 6",
+            "different sub-domain",
+        ],
+    )
+    require(
+        NATIVE / "draw_value_domains.json",
+        [
+            '"shared": 37',
+            '"shared": 6',
+        ],
+    )
+    require(
+        ROOT / "tools/extract_tile_shared_body.py",
+        [
+            "decode_movw_imm",
+            "register_comparisons",
+            "0x00A22ED0",
+        ],
+    )
+    require(
+        NATIVE / "TILE_SHARED_BODY_STRUCTURE.md",
+        [
+            "is a real dispatch",
+            "0x112",
+            "64-byte stride",
+            "branch bodies",
+        ],
+    )
+    require(
+        NATIVE / "tile_shared_body_structure.json",
+        [
+            '"jump_table_entries": 77',
+            '"constants_compared": 6',
+        ],
+    )
+    require(
+        ROOT / "tools/resolve_tile_sprite_domain.py",
+        [
+            "itemTypeFromTileIsForegorund",
+            "cross_check_mismatches",
+            "contents-conditional",
+        ],
+    )
+    require(
+        NATIVE / "TILE_SPRITE_DOMAIN.md",
+        [
+            "tile-map-inline",
+            "item-sprite-domain",
+            "0** |",
+        ],
+    )
+    require(
+        NATIVE / "tile_sprite_domain.json",
+        [
+            '"tile_types": 77',
+            '"cross_check_mismatches": 0',
+            '"unresolved": 0',
+        ],
+    )
+    require(
+        ROOT / "tools/check_artifact_consumers.py",
+        [
+            "stale references",
+            "LOOKALIKE",
+            "artifact_columns",
+        ],
+    )
+    require(
+        ROOT / "tools/prepush_gate.py",
+        [
+            "the four checks that have to pass before a commit goes out",
+            "changed_test_names",
+            "--changed-only",
+        ],
+    )
+    require(
+        ROOT / "tools/run_contract_tests.py",
+        [
+            "per-test timeout",
+            "bounded timeout per test",
+            "ThreadPoolExecutor",
+        ],
+    )
+    require(
+        ROOT / "tools/lint_evidence_scan.py",
+        [
+            "no tool may recover a filename by regexing raw binary bytes",
+            "BASENAME_RE",
+            "violations",
+        ],
+    )
+    require(
+        ROOT / "tools/string_evidence.py",
+        [
+            "def nul_strings",
+            "format-string",
+            "suffix-composition",
+            "def classify",
+        ],
+    )
+    require(
+        ROOT / "tools/audit_audio_assets.py",
+        [
+            "AUDIO_SUFFIXES",
+            "from string_evidence import classify, contains_token, nul_strings",
+            "def sweep_sources",
+        ],
+    )
+    require(
+        NATIVE / "AUDIO_ASSET_COVERAGE.md",
+        [
+            "original_named_not_in_replacement",
+            "OBJC_IVAR_$_KelpPlant.waveTimer",
+            "bird%d.wav",
+            "whole-APK sweep",
+            "136",
+        ],
+    )
+    require(
+        NATIVE / "audio_asset_coverage.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"ships": 161',
+            '"original_format_string": 14',
+            '"original_unattributed": 9',
+        ],
+    )
+    require(
+        ROOT / "tools/extract_original_tile_content_render_map.py",
+        [
+            "TABLE_VA = 0x00A221F4",
+            "SHARED_BODY_VA = 0x00A22D70",
+            "shared-body",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "tile_content_render_map.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"direct": 61',
+            '"shared-body": 59',
+            '"delegated-dispatch": 1',
+        ],
+    )
+    require(
+        NATIVE / "original_tile_content_render_map.tsv",
+        [
+            "content_value\tcandidate_name\tdraw_image\tdraw_col\tdraw_row",
+            "17\t\t\t\t\t\t\t\tshared-body\t0x00a22d70",
+            "46\t\t\t\t\t\t\t\tdelegated-dispatch\t0x00a22b90",
+        ],
+    )
+    require(
+        ROOT / "tools/extract_original_item_sprite_map.py",
+        [
+            "FUNCTION_VA = 0x004D6040",
+            "POOL_F64",
+            "POOL_F32",
+            "--check",
+        ],
+    )
+    require(
+        NATIVE / "ITEM_SPRITE_COORDS.md",
+        [
+            "texCoordsForItemType",
+            "0x004d6040",
+            "col = type % 32",
+            "126/2048",
+            "62/2048",
+        ],
+    )
+    require(
+        NATIVE / "item_sprite_map.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"formula": 344',
+            '"jump_table": 82',
+            '"unresolved": 0',
+        ],
+    )
+    require(
+        NATIVE / "original_item_sprite_map.tsv",
+        [
+            "item_type\tatlas\timage\tcol\trow\tu\tv\tu_span\tv_span\tsource",
+            "1105\t746\t746\t10\t23",
         ],
     )
     require(
@@ -700,6 +1532,64 @@ def main() -> None:
             "0\t53\tdirect\t1066\t112\t16\t3\t0x00a18cc8",
             "0\t77\tdirect\t1105\t746\t10\t23\t0x00a18c44",
             "0\t2\tconditional",
+        ],
+    )
+    require(
+        ROOT / "tools/extract_original_tile_conditional.py",
+        [
+            "DEFAULT_PATH = 0x00A18DAC",
+            "CONTENTS_OFFSET = 3",
+            "helper-gated",
+            "OriginalTile.contentsType()",
+        ],
+    )
+    require(
+        ROOT / "tools/gen_tile_conditional_table.py",
+        [
+            "original_tile_conditional.json",
+            "kConditionalTileSteps",
+            "KIND",
+        ],
+    )
+    conditional_tsv = NATIVE / "original_tile_conditional.tsv"
+    require(
+        conditional_tsv,
+        [
+            # header must stay aligned with the 8-value rows (the old header
+            # declared a `depends_on` column that was never emitted)
+            "tile_type\tresolution\tcontents_type\titem_type\thelper\tcase_target\tstep_index\tstatus",
+            "1\tcontents\t61\t31\t\t0x00a18b04\t0\tresolved",
+            "2\thelper\t\t1049\t0x00a11390\t0x00a187c0\t7\tresolved",
+            "6\tcontents\t\t1048\t\t0x00a18a98\t2\tfallback-value",
+            "12\tcontents\t\t1028\t\t0x00a18c10\t1\tfallback-value",
+        ],
+    )
+    conditional_lines = conditional_tsv.read_text(encoding="utf-8").splitlines()
+    conditional_tiles = sorted({int(line.split("\t")[0]) for line in conditional_lines[1:]})
+    map_conditional = sorted(
+        int(row.split("\t")[1]) for row in tile_item_lines[1:] if "\tconditional" in row
+    )
+    if conditional_tiles != map_conditional:
+        raise SystemExit(
+            "conditional TileType sets disagree: "
+            f"resolved {conditional_tiles} vs map {map_conditional}"
+        )
+    require(
+        ROOT / "app/src/main/cpp/original_tile_conditional_table.inc",
+        [
+            "Generated by tools/gen_tile_conditional_table.py",
+            "struct ConditionalTileStep",
+            '{2, 96, 0, 178, "0x00a187c0"}',
+            "// 0x00a11390",
+        ],
+    )
+    require(
+        NATIVE / "ORIGINAL_TILE_CONDITIONAL.md",
+        [
+            "itemTypeFromTileIsForegorund",
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "OriginalTile.contentsType()",
+            "helper-gated",
         ],
     )
     require(
@@ -764,7 +1654,10 @@ def main() -> None:
     )
     content_render_map = NATIVE / "original_tile_content_render_map.tsv"
     content_render_lines = content_render_map.read_text(encoding="utf-8").splitlines()
-    if len(content_render_lines) != 62:
+    # The domain is closed to every value in [3, 123]: 121 rows + the header.
+    # The count moved from 62 (direct assignments only) when the map gained
+    # explicit shared-body/unresolved rows; a silent change is still an error.
+    if len(content_render_lines) != 122:
         raise SystemExit(
             f"original Tile content render map count changed: {len(content_render_lines) - 1}"
         )

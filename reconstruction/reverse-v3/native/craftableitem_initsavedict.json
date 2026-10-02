@@ -1,0 +1,318 @@
+{
+  "batch": "b3c",
+  "claim": "The three craftable-item deserialisers call their own-class super init through objc_msgSendSuper2 (CraftableItemObject via selector(init), the two subclasses via selector(initWithSaveDict:)), return nil when that init returns nil, then restore their state: CraftableItemObject copies a 124-byte inline struct out of the craftableItem NSData blob via getBytes:length:, PaintingCraftableItemObject retains the imageData/outputImageData objects into ivars 128/132, and BlockheadCraftableItemObject retains name@128 then fills its 20-byte skinOptions@132 record from either the skinOptions blob (getBytes:length: 20) or, when that blob is absent, from the scalar keys isMale/headIndex/skinIndex/hairStyleIndex converted and packed by local helper 0x008112d8 whose 20-byte result is memcpy-ed into the ivar (helper internals not decoded in this batch); static level-A evidence only, no runtime roundtrip",
+  "classes": [
+    {
+      "blob": {
+        "dest_site": "0x00ac79f8",
+        "key": "craftableItem",
+        "length": 124,
+        "length_word": "e300307c"
+      },
+      "boundary": "0x00ac7a54",
+      "class": "CraftableItemObject",
+      "code_words": 85,
+      "imp": "0x00ac7900",
+      "keys": [
+        {
+          "cfstring_object": "0x00f9b7b8",
+          "conversion": "getBytes:length:",
+          "conversion_site": "0x00ac7a18",
+          "form": "blob_getbytes",
+          "ivar": "OBJC_IVAR_$_CraftableItemObject.craftableItem",
+          "ivar_offset": 4,
+          "key": "craftableItem",
+          "length": 124,
+          "length_movw_site": "0x00ac7984",
+          "objectforkey_site": "0x00ac79e0",
+          "store_kind": "blob_store",
+          "store_site": "0x00ac7a18"
+        }
+      ],
+      "nil_guard": {
+        "bne_site": "0x00ac7974",
+        "cmp_site": "0x00ac7970",
+        "continue_target": "0x00ac7984"
+      },
+      "pool_key_cells": {
+        "craftableItem": "0x00f9b7b8"
+      },
+      "pool_keys": [
+        "craftableItem"
+      ],
+      "save_side": {
+        "keys": [
+          "craftableItem"
+        ],
+        "read_only": [],
+        "source": "item_savedict_keys.json",
+        "style": "fresh_dictionary_pod_blob",
+        "write_only": []
+      },
+      "selector": "initWithSaveDict:",
+      "selrefs": [
+        "getBytes:length:",
+        "init",
+        "objectForKey:"
+      ],
+      "style": "super_init_then_blob",
+      "super_class": null,
+      "super_init": {
+        "call_site": "0x00ac7958",
+        "class_object": "OBJC_CLASS_$_CraftableItemObject",
+        "class_struct": "0x00e91cc8",
+        "got_slot": "0x0105b79c",
+        "instance_size": 128,
+        "instance_start": 4,
+        "record_fit": [
+          4,
+          124
+        ],
+        "root_class": true,
+        "runtime_superclass": null,
+        "selector": "init",
+        "superref_slot": "0x00e8be74"
+      }
+    },
+    {
+      "boundary": "0x00741fb4",
+      "class": "PaintingCraftableItemObject",
+      "code_words": 103,
+      "imp": "0x00741e18",
+      "keys": [
+        {
+          "cfstring_object": "0x00f8ceb8",
+          "conversion": "retain",
+          "conversion_site": "0x00741f20",
+          "form": "retain_object",
+          "ivar": "OBJC_IVAR_$_PaintingCraftableItemObject.imageData",
+          "ivar_offset": 128,
+          "key": "imageData",
+          "objectforkey_site": "0x00741f10",
+          "store_kind": "word_store",
+          "store_site": "0x00741f34"
+        },
+        {
+          "cfstring_object": "0x00f8cec8",
+          "conversion": "retain",
+          "conversion_site": "0x00741f5c",
+          "form": "retain_object",
+          "ivar": "OBJC_IVAR_$_PaintingCraftableItemObject.outputImageData",
+          "ivar_offset": 132,
+          "key": "outputImageData",
+          "objectforkey_site": "0x00741f4c",
+          "store_kind": "word_store",
+          "store_site": "0x00741f70"
+        }
+      ],
+      "nil_guard": {
+        "bne_site": "0x00741e90",
+        "cmp_site": "0x00741e8c",
+        "continue_target": "0x00741ea0"
+      },
+      "pool_key_cells": {
+        "imageData": "0x00f8ceb8",
+        "outputImageData": "0x00f8cec8"
+      },
+      "pool_keys": [
+        "imageData",
+        "outputImageData"
+      ],
+      "save_side": {
+        "keys": [
+          "craftableObjectType",
+          "imageData",
+          "outputImageData"
+        ],
+        "read_only": [],
+        "source": "subclass_savedict_keys_b2d.json",
+        "style": null,
+        "write_only": [
+          "craftableObjectType"
+        ]
+      },
+      "selector": "initWithSaveDict:",
+      "selrefs": [
+        "initWithSaveDict:",
+        "objectForKey:",
+        "retain"
+      ],
+      "style": "super_init_then_retain",
+      "super_class": "CraftableItemObject",
+      "super_init": {
+        "call_site": "0x00741e74",
+        "class_object": "OBJC_CLASS_$_PaintingCraftableItemObject",
+        "class_struct": "0x00e90e18",
+        "got_slot": "0x0105b79c",
+        "instance_size": 136,
+        "instance_start": 128,
+        "record_fit": [
+          128,
+          8
+        ],
+        "root_class": false,
+        "runtime_superclass": "CraftableItemObject",
+        "selector": "initWithSaveDict:",
+        "superref_slot": "0x00e8bd0c"
+      }
+    },
+    {
+      "boundary": "0x00811b60",
+      "class": "BlockheadCraftableItemObject",
+      "code_words": 788,
+      "imp": "0x00810f10",
+      "keys": [
+        {
+          "cfstring_object": "0x00f91e18",
+          "conversion": "retain",
+          "conversion_site": "0x00811014",
+          "form": "retain_object",
+          "ivar": "OBJC_IVAR_$_BlockheadCraftableItemObject.name",
+          "ivar_offset": 128,
+          "key": "name",
+          "objectforkey_site": "0x00811004",
+          "store_kind": "word_store",
+          "store_site": "0x00811028"
+        }
+      ],
+      "nil_guard": {
+        "bne_site": "0x00810f88",
+        "cmp_site": "0x00810f84",
+        "continue_target": "0x00810f98"
+      },
+      "pool_key_cells": {
+        "hairStyleIndex": "0x00f91e68",
+        "headIndex": "0x00f91e48",
+        "isMale": "0x00f91e38",
+        "name": "0x00f91e18",
+        "skinIndex": "0x00f91e58",
+        "skinOptions": "0x00f91e28"
+      },
+      "pool_keys": [
+        "hairStyleIndex",
+        "headIndex",
+        "isMale",
+        "name",
+        "skinIndex",
+        "skinOptions"
+      ],
+      "save_side": {
+        "keys": [
+          "craftableObjectType",
+          "name",
+          "skinOptions"
+        ],
+        "read_only": [
+          "hairStyleIndex",
+          "headIndex",
+          "isMale",
+          "skinIndex"
+        ],
+        "source": "subclass_savedict_keys_b2e.json",
+        "style": "super_plus_own_keys",
+        "write_only": [
+          "craftableObjectType"
+        ]
+      },
+      "selector": "initWithSaveDict:",
+      "selrefs": [
+        "boolValue",
+        "getBytes:length:",
+        "initWithSaveDict:",
+        "intValue",
+        "objectForKey:",
+        "retain"
+      ],
+      "skin_options": {
+        "blob_path": {
+          "blob_absent_branch": "0x0081104c",
+          "getbytes_site": "0x008110e4",
+          "length_movw_site": "0x00811050",
+          "nil_cmp_site": "0x00811048",
+          "objectforkey_site": "0x00811040"
+        },
+        "dual_source": true,
+        "ivar": "OBJC_IVAR_$_BlockheadCraftableItemObject.skinOptions",
+        "ivar_offset": 132,
+        "pack_helper": {
+          "args": "r0=&local struct, r1=isMale(sxtb), r2=headIndex, r3=skinIndex, [sp]=hairStyleIndex",
+          "code_words": 353,
+          "decoded_in_batch": false,
+          "gates": [
+            [
+              "helper_prologue",
+              8458968,
+              "e92d4830"
+            ],
+            [
+              "helper_movw_r5_2",
+              8459000,
+              "e3005002"
+            ]
+          ],
+          "imp": "0x008112d8",
+          "memcpy": "0x001c2894",
+          "result_bytes": 20
+        },
+        "record_bytes": 20,
+        "scalar_path": {
+          "dest_add_site": "0x00811228",
+          "entry_branch_target": "0x008110ec",
+          "helper_call_site": "0x0081125c",
+          "memcpy_len_movw_site": "0x00811260",
+          "memcpy_site": "0x00811278",
+          "scalars": [
+            {
+              "conversion": "boolValue",
+              "conversion_site": "0x00811190",
+              "key": "isMale",
+              "local_byte_store": "0x00811194",
+              "objectforkey_site": "0x00811180",
+              "sxtb_site": "0x00811244"
+            },
+            {
+              "conversion": "intValue",
+              "conversion_site": "0x008111bc",
+              "key": "headIndex",
+              "objectforkey_site": "0x008111ac"
+            },
+            {
+              "conversion": "intValue",
+              "conversion_site": "0x008111e8",
+              "key": "skinIndex",
+              "objectforkey_site": "0x008111d8"
+            },
+            {
+              "conversion": "intValue",
+              "conversion_site": "0x00811214",
+              "key": "hairStyleIndex",
+              "objectforkey_site": "0x00811204"
+            }
+          ]
+        }
+      },
+      "style": "dual_source_skinoptions",
+      "super_class": "CraftableItemObject",
+      "super_init": {
+        "call_site": "0x00810f6c",
+        "class_object": "OBJC_CLASS_$_BlockheadCraftableItemObject",
+        "class_struct": "0x00e91228",
+        "got_slot": "0x0105b79c",
+        "instance_size": 152,
+        "instance_start": 128,
+        "record_fit": [
+          132,
+          20
+        ],
+        "root_class": false,
+        "runtime_superclass": "CraftableItemObject",
+        "selector": "initWithSaveDict:",
+        "superref_slot": "0x00e8bd6c"
+      }
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "method": "craftable-item family initWithSaveDict: read-back evidence (batch b3c)",
+  "pic_base": "0x0105faf4",
+  "schema": 1
+}

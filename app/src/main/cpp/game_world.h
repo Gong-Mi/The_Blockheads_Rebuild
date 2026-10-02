@@ -7,7 +7,9 @@
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
+#include <chrono>
 #include <map>
+#include <cmath>
 #include <cstdint>
 #include "game_constants.h"
 #include "noise_utils.h"
@@ -61,12 +63,50 @@ public:
     void refreshTileMesh(int x, int y);
     void buildMeshCache(PhysicalBlock* block);
     void generateChunkSync(int cx, int cy);
+
+public:
+    // Original-save world seed (worldv2 randomSeed). The replacement noise
+    // functions take no seed of their own, so an imported seed shifts the
+    // sample coordinates by a deterministic offset. With no seed imported the
+    // offsets stay 0 and generation is unchanged.
+    static std::pair<float, float> generationSeedOffset(long long seed);
+    void setGenerationSeed(long long seed);
+    bool hasGenerationSeed() const { return has_generation_seed_; }
+    float generationSeedOffsetX() const { return seed_offset_x_; }
+    float generationSeedOffsetY() const { return seed_offset_y_; }
+
+private:
+    bool has_generation_seed_ = false;
+    std::chrono::steady_clock::time_point clockLast{};
+    float seed_offset_x_ = 0.0f;
+    float seed_offset_y_ = 0.0f;
+
+public:
+    // Access level restored: updateChunks/worldTime below were public before
+    // the seed block and are used by game_engine's frame loop (an accidental
+    // access change here broke the APK build: Android CI 36741931331).
     void updateChunks(float camX, float camY);
     void updateFluids();
     void updateElectricity();
     void updateVegetation();
     void updateTemperature();
     
+    // Original-domain world clock (WORLD_TIME_DOMAIN.md, A-grade: the
+    // getDayNightFraction pool divisor is 900.0 and Plant's season gate
+    // compares seconds). worldTime below stays the DERIVED day fraction for
+    // existing consumers; worldSeconds is the source of truth.
+    static constexpr double kOriginalSecondsPerDay = 900.0;
+    double worldSeconds = 0.0;
+    // set only when a value was imported from the original save or loaded
+    // from a v4 world.bin; distinguishes 'clock at zero' from 'no clock yet'
+    bool hasWorldSeconds = false;
+    // sleep acceleration multiplies the world clock, not the frame count
+    float clockTimeScale = 1.0f;
+    double dayFraction() const {
+        double f = worldSeconds / kOriginalSecondsPerDay;
+        f -= std::floor(f);
+        return f;
+    }
     float worldTime = 0.0f;
 };
 

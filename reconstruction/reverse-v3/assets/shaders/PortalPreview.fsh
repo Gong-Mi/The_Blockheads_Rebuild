@@ -1,0 +1,24 @@
+//
+//  Shader.fsh
+//  SandLandiPad
+//
+//  Created by David Frampton on 8/03/11.
+//  Copyright 2011 Jungle Ltd. All rights reserved.
+//
+
+//varying lowp vec4 colorVarying;
+
+uniform sampler2D texture;
+uniform sampler2D mask;
+uniform highp vec4 color;
+
+varying highp vec4 outTexCoord;
+
+void main()
+{
+    lowp vec4 tex = texture2D(texture, outTexCoord.xy);
+    lowp vec4 mask = texture2D(mask, outTexCoord.xy);
+    
+    
+    gl_FragColor = tex * color * mask.r;
+}

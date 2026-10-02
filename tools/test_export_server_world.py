@@ -20,6 +20,7 @@ class ArchiveTest(unittest.TestCase):
    with self.assertRaises(FileExistsError):restore_world(dest,restored)
    with self.assertRaises(FileExistsError):export_world(source,dest)
    with self.assertRaises(ValueError):export_world(source,source/'nested')
+   with self.assertRaises(ValueError):export_world(base/'nonexistent',base/'dest_nonexistent')
    (dest/'blobs'/row['sha256']).write_bytes(b'bad')
    with self.assertRaises(ValueError):verify_archive(dest)
  def test_unsafe_paths_rejected_before_output_creation(self):
