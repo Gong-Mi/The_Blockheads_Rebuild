@@ -45,8 +45,10 @@ and an in-game day is **900 seconds**. Everything day/night-related derives its
 The real `worldv2` record of the assembled save carries `worldTime: 900.0` — i.e.
 this world has run **exactly one in-game day**. Together with `saveDate`
 (2026-09-05 16:52:35) and `creationDate` (16:43:32), the 543-second wall-clock gap
-between creation and save is consistent with a seconds-based clock (900 worldTime
-elapsed during play including pauses), so the decoded value is credible as seconds.
+between creation and save is *not* consistent with a 1-unit-per-second clock (900
+units cannot elapse in 543 s); it is consistent with the 20-units-per-second state
+measured live in `LIVE_WORLD_CLOCK.md`, where 900 units is 45 s of unpaused
+simulation inside that window.
 
 ## Regeneration
 
@@ -89,3 +91,20 @@ only representation.
 - The 0.40927970959267024 constant is recorded as read, without asserting its meaning.
 - No device run, no original-runtime differential, and no replacement-side change
   is claimed by this document.
+
+## Rate qualifier: the unit is fixed, the rate is not (live)
+
+The divisor above fixes that a day is **900 `worldTime` units**. How long that is in real
+time is state-dependent, and the state is `World.fastForward`:
+
+- with `fastForward` set, the live original advanced `worldTime` at **20.0 units per real
+  second** (measured against `lastUpdateTime`, an NSDate-reference wall clock that the same
+  probe verified at 1.000/s) — so one 900-unit day took ~45 real seconds, and the
+  1800-unit plant gate fires after ~90 s;
+- `-[DynamicWorld update:accurateDT:isSimulation:]` applies the constant `20.0f` only
+  under that flag (`LIVE_WORLD_CLOCK.md` has the instruction sequence);
+- no `fastForward == 0` session has been observed, so the 1x rate is inferred from the
+  `beq` that skips the whole block, not measured.
+
+Read the claim below as "900 units, whose real-time length depends on `fastForward`" —
+and never record a rate without recording the flag.

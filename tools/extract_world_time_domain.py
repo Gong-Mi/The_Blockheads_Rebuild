@@ -60,10 +60,24 @@ def extract(elf: Elf32Arm, sha: str) -> dict:
         "function_address": FUNCTION,
         "constants": records,
         "claim": (
-            "worldTime is a seconds clock; an in-game day is "
-            f"{seconds_per_day:g} seconds; the day phase is derived by "
-            "fmod(worldTime / seconds_per_day) then (0.5 - fraction) * 2*pi"
+            "worldTime is one monotonic clock: an in-game day is "
+            f"{seconds_per_day:g} worldTime units, and the day phase is derived by "
+            "fmod(worldTime / seconds_per_day) then (0.5 - fraction) * 2*pi. The "
+            "real-time LENGTH of those units is state-dependent and must be recorded "
+            "with any rate"
         ),
+        "rate_qualifier": {
+            "live_evidence": "reconstruction/reverse-v3/native/LIVE_WORLD_CLOCK.md",
+            "measured_state": {
+                "World.fastForward": 1,
+                "units_per_real_second": 20.0,
+                "real_seconds_per_900_unit_day": 45.0,
+            },
+            "unmeasured_state": "no fastForward == 0 session has been observed; the 1x "
+                                "rate is inferred from the beq that skips the 20.0f "
+                                "block in DynamicWorld update:accurateDT:isSimulation:, "
+                                "not measured",
+        },
         "season_gate": {
             "evidence": "reconstruction/reverse-v3/native/PLANT_LOADSAVE_ARM.md",
             "threshold_seconds": 1800.0,

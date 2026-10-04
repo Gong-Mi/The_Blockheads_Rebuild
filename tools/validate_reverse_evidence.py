@@ -1483,6 +1483,7 @@ def main() -> None:
             "900.0",
             "6.283185307179586",
             "worldTime - saveTime > 1800.0",
+            "never record a rate without recording the flag",
         ],
     )
     require(
@@ -1492,6 +1493,52 @@ def main() -> None:
             "getDayNightFractionForX:atWorldTime:",
             '"seconds_per_day_divisor"',
             "900.0",
+            '"rate_qualifier"',
+            '"units_per_real_second": 20.0',
+        ],
+    )
+    require(
+        NATIVE / "LIVE_WORLD_CLOCK.md",
+        [
+            "runs 20 units per real second",
+            "a 900-unit day lasts",
+            "0x008cdc6c",
+            "20.00012",
+            "What sets the flag is not located",
+        ],
+    )
+    require(
+        NATIVE / "live_world_clock.json",
+        [
+            '"d09418e9c0865902054a71358dcff3264d47f7b24ede58667cb5ea0e6f269b96"',
+            '"build_binding": "ok"',
+            '"fastForward_states_seen": [\n   1\n  ]',
+            '"fastForward_test_at": "0x008cdc58"',
+            '"worldTime": 648',
+        ],
+    )
+    require(
+        ROOT / "tools/probe_live_world_clock.py",
+        [
+            "BUILD MISMATCH",
+            "derive_save_dir",
+            "find_pid",
+            "def decode_ivar_list",
+        ],
+    )
+    require(
+        ROOT / "tools/test_probe_live_world_clock.py",
+        [
+            "decode_ivar_list",
+            "degenerate header accepted",
+            "unterminated cstring accepted",
+        ],
+    )
+    require(
+        ROOT / "tools/extract_world_time_domain.py",
+        [
+            '"rate_qualifier"',
+            "is state-dependent and must be recorded",
         ],
     )
     require(

@@ -1,0 +1,237 @@
+{
+ "schema": 1,
+ "title": "Live world clock: worldTime advances 20 units per real second while fastForward is set",
+ "measured_on": {
+  "package": "com.noodlecake.blockheads",
+  "version_name": "1.7.5",
+  "running_lib_sha256": "d09418e9c0865902054a71358dcff3264d47f7b24ede58667cb5ea0e6f269b96",
+  "pinned_elf_sha256": "d09418e9c0865902054a71358dcff3264d47f7b24ede58667cb5ea0e6f269b96",
+  "build_binding": "ok",
+  "pid_at_capture": 24937,
+  "save_dir_name": "a8124d2b4dea3347ddef22a1550a78c6",
+  "note": "measured on the 1.7.5 build the device actually runs; the committed ELF evidence base is 1.7.6 (733d8210) - see cross_build for what was checked"
+ },
+ "instance_discovery": {
+  "found_via": "heap scan ''",
+  "world_class": "0xb61126a4"
+ },
+ "clock_field_layout": {
+  "worldTime": {
+   "encoding": "d",
+   "offset_ptr": "0xf328a4",
+   "offset": 648,
+   "symbol_denotes_same_cell": true
+  },
+  "lastUpdateTime": {
+   "encoding": "d",
+   "offset_ptr": "0xf32950",
+   "offset": 3112,
+   "symbol_denotes_same_cell": true
+  },
+  "fastForward": {
+   "encoding": "c",
+   "offset_ptr": "0xf328e0",
+   "offset": 934,
+   "symbol_denotes_same_cell": true
+  },
+  "timeOfDayFraction": {
+   "encoding": "f",
+   "offset_ptr": "0xf32b28",
+   "offset": 880,
+   "symbol_denotes_same_cell": true
+  }
+ },
+ "measurement": {
+  "window_seconds": 15.003,
+  "sample_count": 16,
+  "worldTime_per_real_second_slope": 19.995013336648164,
+  "worldTime_per_lastUpdateTime_slope": 20.000121278833962,
+  "real_clock_per_second_slope": 0.9997449074480772,
+  "fastForward_states_seen": [
+   1
+  ],
+  "timeOfDayFraction_span": [
+   0.10096731781959534,
+   0.44775718450546265
+  ],
+  "implied_real_seconds_per_900_unit_day": 44.99972712427829,
+  "worldTime_first_last": [
+   302316.7676833719,
+   302616.7614630312
+  ]
+ },
+ "watcher_window": {
+  "source": "passive sampler, 20 s cadence, one row per interval",
+  "rows": 20,
+  "first": "07:27:47",
+  "last": "07:33:47",
+  "fastForward_states_seen": [
+   1
+  ],
+  "worldTime_per_s_min": 19.9955,
+  "worldTime_per_s_max": 20.0311,
+  "real_per_s_min": 0.999841,
+  "real_per_s_max": 1.001544,
+  "flag_cleared_within_observed_window": false
+ },
+ "code_mechanism": {
+  "build": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "function": "DynamicWorld update:accurateDT:isSimulation:",
+  "function_imp": "0x008cbf40",
+  "fastForward_test_at": "0x008cdc58",
+  "constant_20_site": "0x008cdc6c",
+  "sequence": [
+   "0x008cdc58 blx r2                      ; [world fastForward] (selref slot 0x00e8300c)",
+   "0x008cdc5c sxtb r0, r0",
+   "0x008cdc60 cmp r0, #0",
+   "0x008cdc64 beq #0x8cdc84               ; flag clear -> skip",
+   "0x008cdc68 movw r0, #0x14              ; 20",
+   "0x008cdc6c vmov.f32 s0, #2.000000e+01  ; 20.0f",
+   "0x008cdc74 vldr s2, [r1]",
+   "0x008cdc78 vdiv.f32 s0, s2, s0         ; value / 20.0f",
+   "0x008cdc7c vstr s0, [r1]",
+   "0x008cdc80 str r0, [sp, #0x214]       ; the factor 20 is kept for later use"
+  ],
+  "reading": "the 20x factor is an explicit code constant applied only under the fastForward flag; it is not an artefact of frame-dt timing, which is also why the real-time domain in the same object stays at 1.000/s"
+ },
+ "cross_build": {
+  "ivar_offsets_identical_1_7_5_vs_1_7_6": {
+   "worldTime": 648,
+   "dynamicWorld": 416,
+   "saveID": 436,
+   "timeOfDayFraction": 880,
+   "lastUpdateTime": 3112
+  },
+  "day_divisor_1_7_5": {
+   "function_imp": "0x00582c30",
+   "literal_pool": "0x582f38",
+   "f64": 900.0
+  },
+  "day_divisor_1_7_6": {
+   "function_imp": "0x00582ad8",
+   "literal_pool": "0x582de0",
+   "f64": 900.0
+  },
+  "note": "only the __objc_ivar cell ADDRESSES shift (+0x50); the offsets themselves are identical, so the 1.7.6 method table validly interprets the live 1.7.5 object"
+ },
+ "boundary": [
+  "No session with fastForward == 0 was observed; the 1x rate is inferred from the constant's placement, not measured.",
+  "Nothing here says why the flag is set, or what clears it. The writer of the fastForward ivar (World+934) is not located: no direct store to that offset exists in World/DynamicWorld/GameView/UIManager methods, and -setFastForward: is not referenced anywhere in the 1.7.6 build.",
+  "The sample window is 16 s plus a 4-minute 20 s-cadence watcher; the flag did not clear during either.",
+  "Units are stated as 'worldTime units'; whether the designers consider one unit a second is not settled by this measurement."
+ ],
+ "samples": [
+  {
+   "t": 0.0,
+   "worldTime": 302316.7676833719,
+   "lastUpdateTime": 812849611.406852,
+   "fastForward": 1,
+   "timeOfDayFraction": 0.10096731781959534
+  },
+  {
+   "t": 1.0003,
+   "worldTime": 302336.7894819826,
+   "lastUpdateTime": 812849612.407902,
+   "fastForward": 1,
+   "timeOfDayFraction": 0.12872295081615448
+  },
+  {
+   "t": 2.0005,
+   "worldTime": 302356.7633036226,
+   "lastUpdateTime": 812849613.406674,
+   "fastForward": 1,
+   "timeOfDayFraction": 0.15736043453216553
+  },
+  {
+   "t": 3.0008,
+   "worldTime": 302376.7806223482,
+   "lastUpdateTime": 812849614.407503,
+   "fastForward": 1,
+   "timeOfDayFraction": 0.1873282492160797
+  },
+  {
+   "t": 4.001,
+   "worldTime": 302396.7670420259,
+   "lastUpdateTime": 812849615.40679,
+   "fastForward": 1,
+   "timeOfDayFraction": 0.21795138716697693
+  },
+  {
+   "t": 5.0013,
+   "worldTime": 302416.76524196565,
+   "lastUpdateTime": 812849616.406651,
+   "fastForward": 1,
+   "timeOfDayFraction": 0.24871724843978882
+  },
+  {
+   "t": 6.0015,
+   "worldTime": 302436.76628385484,
+   "lastUpdateTime": 812849617.406797,
+   "fastForward": 1,
+   "timeOfDayFraction": 0.2790334224700928
+  },
+  {
+   "t": 7.0017,
+   "worldTime": 302456.7722824663,
+   "lastUpdateTime": 812849618.407056,
+   "fastForward": 1,
+   "timeOfDayFraction": 0.3083322048187256
+  },
+  {
+   "t": 8.0019,
+   "worldTime": 302476.77316223085,
+   "lastUpdateTime": 812849619.407017,
+   "fastForward": 1,
+   "timeOfDayFraction": 0.3360469341278076
+  },
+  {
+   "t": 9.0021,
+   "worldTime": 302496.76178251207,
+   "lastUpdateTime": 812849620.40651,
+   "fastForward": 1,
+   "timeOfDayFraction": 0.3616469204425812
+  },
+  {
+   "t": 10.0024,
+   "worldTime": 302516.7710021585,
+   "lastUpdateTime": 812849621.40695,
+   "fastForward": 1,
+   "timeOfDayFraction": 0.38468730449676514
+  },
+  {
+   "t": 11.0025,
+   "worldTime": 302536.7652038187,
+   "lastUpdateTime": 812849622.406759,
+   "fastForward": 1,
+   "timeOfDayFraction": 0.4046873152256012
+  },
+  {
+   "t": 12.0027,
+   "worldTime": 302556.762063846,
+   "lastUpdateTime": 812849623.406555,
+   "fastForward": 1,
+   "timeOfDayFraction": 0.42128339409828186
+  },
+  {
+   "t": 13.0028,
+   "worldTime": 302576.7656234354,
+   "lastUpdateTime": 812849624.406632,
+   "fastForward": 1,
+   "timeOfDayFraction": 0.4341542720794678
+  },
+  {
+   "t": 14.003,
+   "worldTime": 302596.7671636194,
+   "lastUpdateTime": 812849625.406721,
+   "fastForward": 1,
+   "timeOfDayFraction": 0.4430389404296875
+  },
+  {
+   "t": 15.0032,
+   "worldTime": 302616.7614630312,
+   "lastUpdateTime": 812849626.40645,
+   "fastForward": 1,
+   "timeOfDayFraction": 0.44775718450546265
+  }
+ ]
+}
