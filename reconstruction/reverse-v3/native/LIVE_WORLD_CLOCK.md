@@ -113,9 +113,10 @@ Landed in the replacement with this batch:
   1.7.6 build, and no direct store to `World+934` exists in any `World` / `DynamicWorld` /
   `GameView` / `UIManager` method (the store must go through the ivar cell or from another
   class). The flag is a runtime state — it is not a savedict key.
-- The flag did not clear during ~7 minutes of passive watching, but whether it is a menu
-  setting, a server/catch-up state, or a side effect of the app not being the focused
-  window is **not established**.
+- The flag did not clear across a 60-row / 20.0-minute passive window (`watcher_window` in the
+  artifact: 07:27:47 -> 07:47:27, `fastForward` 1 on every row, mean ratio 19.9587), so a transient
+  catch-up is ruled out for that period. Whether it is a menu setting, a server state, or a
+  side effect of the app not being the focused window is still **not established**.
 - Offsets are verified for the 1.7.5 build measured and are byte-identical in 1.7.6
   (only the `__objc_ivar` cell *addresses* shift by +0x50); the mechanism block above is
   read from the 1.7.6 base and is not claimed to be byte-verified in 1.7.5.
