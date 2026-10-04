@@ -466,14 +466,16 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
     if (frameLog++ % 600 == 0) logToFile("Frame %d", frameLog);
 
     if (g_world && g_entities && g_ai) {
-        // Time Acceleration Logic
-        float timeSpeed = 1.0f;
-        if (g_ai->isSleeping) {
-            timeSpeed = 100.0f; // 100x speed
-            // Wake up if it's morning (0.25 is usually dawn)
-            if (g_renderer && g_renderer->worldTime > 0.25f && g_renderer->worldTime < 0.3f) {
-                g_ai->isSleeping = false;
-            }
+        // Time acceleration. The only multiplier measured in the original is the
+        // fastForward state's 20.0 (LIVE_WORLD_CLOCK.md); the previous 100.0 here
+        // had no evidence behind it. Which condition sets fastForward in the
+        // original is still unknown, so mapping our sleep state onto it is an
+        // inference - the STATE and the 20.0 are measured, the trigger is not.
+        const bool sleeping = g_ai->isSleeping;
+        g_world->setFastForward(sleeping);
+        const float timeSpeed = g_world->clockTimeScale;
+        if (sleeping && g_renderer && g_renderer->worldTime > 0.25f && g_renderer->worldTime < 0.3f) {
+            g_ai->isSleeping = false;   // wake up if it's morning (0.25 is usually dawn)
         }
         if (g_renderer) g_renderer->timeScale = timeSpeed;
         // World clock (WORLD_TIME_DOMAIN.md): the engine's own seconds clock

@@ -41,6 +41,18 @@ int main() {
         world.worldSeconds = -450.0;  // floor-based fmod, never negative
         assert(std::abs(world.dayFraction() - 0.5) < 1e-9);
         assert(GameWorld::kOriginalSecondsPerDay == 900.0);
+
+        // fastForward: the measured factor and the state that carries it
+        // (LIVE_WORLD_CLOCK.md - 20.0 units per real second while the flag is set)
+        assert(GameWorld::kOriginalFastForwardScale == 20.0);
+        assert(!world.fastForward && world.clockTimeScale == 1.0f);
+        world.setFastForward(true);
+        assert(world.fastForward && world.clockTimeScale == 20.0f);
+        world.setFastForward(false);
+        assert(!world.fastForward && world.clockTimeScale == 1.0f);
+        // in the measured state one 900-unit day is 45 real seconds
+        assert(std::abs(GameWorld::kOriginalSecondsPerDay /
+                        GameWorld::kOriginalFastForwardScale - 45.0) < 1e-9);
     }
 
     // ---- v4 persistence round-trips the clock ------------------------------
@@ -57,6 +69,7 @@ int main() {
             EntityManager entities;
             world.worldSeconds = 1234.5;
             world.hasWorldSeconds = true;
+            world.setFastForward(true);   // must NOT survive a save
             PersistenceManager::saveWorld(root.c_str(), &world, &entities);
         }
         {
@@ -68,6 +81,9 @@ int main() {
             assert(PersistenceManager::loadWorld(root.c_str(), &world, &entities));
             assert(world.hasWorldSeconds);
             assert(std::abs(world.worldSeconds - 1234.5) < 1e-6);
+            // runtime-only, by evidence: the original's World.fastForward is not a
+            // savedict key, so v4 must not resurrect it
+            assert(!world.fastForward && world.clockTimeScale == 1.0f);
         }
         fs::remove_all(root);
     }
@@ -82,12 +98,16 @@ int main() {
         const double advanced = world.worldSeconds - before;
         assert(advanced > 0.15 && advanced < 1.2);  // ~0.35s, tolerant to CI jitter
 
-        // sleep acceleration scales the world clock, not the frame count
-        world.clockTimeScale = 100.0f;
+        // fastForward scales the world clock, not the frame count - and it is the
+        // measured 20.0, so a regression to the old invented 100.0 must fail here
+        world.setFastForward(true);
         const double before_fast = world.worldSeconds;
         std::this_thread::sleep_for(std::chrono::milliseconds(300));
         const double fast = world.worldSeconds - before_fast;
-        assert(fast > 15.0);
+        assert(fast > 3.0);    // ~6.0 at 20x over 300ms
+        assert(fast < 15.0);   // a 100x regression would give ~30
+        world.setFastForward(false);
+        assert(world.clockTimeScale == 1.0f);
         world.stopThread = true;
         world.queueCV.notify_all();
         world.workerThread.join();

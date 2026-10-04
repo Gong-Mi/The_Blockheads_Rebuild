@@ -87,9 +87,22 @@ drives `worldSeconds` from real elapsed time will therefore disagree with the or
 20x whenever the original is in this state — and the 1800-unit plant gate (`Plant
 loadSaveDictValues:`) fires after 90 real seconds in that state, not 30 minutes.
 
-Consequence: the replacement needs the flag as a first-class concept (a `fastForward`
-equivalent that scales the world clock), not just a seconds counter. Recording a rate
-without recording the flag is meaningless, which is why the probe reports both.
+Landed in the replacement with this batch:
+
+- `GameWorld::kOriginalFastForwardScale = 20.0` and a `fastForward` state with
+  `setFastForward(bool)` that drives `clockTimeScale` (`app/src/main/cpp/game_world.h`).
+  The worker still advances `worldSeconds` by real elapsed time, now scaled by that
+  state, so the clock stays a seconds domain and the day fraction stays derived.
+- `game_engine.cpp` drove the acceleration from a hard-coded `100.0f` with no evidence
+  behind it; it now derives it from the fastForward state, so the factor in the code is
+  the measured one. **The mapping is an inference**: the state and the 20.0 are measured,
+  but *which condition sets fastForward in the original* is not located, so mapping the
+  replacement's sleep state onto it is a guess that a future batch must replace.
+- The flag is deliberately **not** persisted (v4 `world.bin` still stores only
+  `worldSeconds` + `hasWorldSeconds`), because the original's flag is not a savedict key
+  either. `tools/test_world_clock.cpp` pins both directions: the scale is 20.0 with a
+  discriminating upper bound (a regression to 100 fails) and a save/load round-trip must
+  not resurrect the flag.
 
 ## Boundary
 

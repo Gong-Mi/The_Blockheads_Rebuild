@@ -96,12 +96,27 @@ public:
     // compares seconds). worldTime below stays the DERIVED day fraction for
     // existing consumers; worldSeconds is the source of truth.
     static constexpr double kOriginalSecondsPerDay = 900.0;
+    // Measured on the running original: WHILE World.fastForward is set, the
+    // world clock advances 20.0 units per real second (LIVE_WORLD_CLOCK.md;
+    // build d09418e9, worldTime/lastUpdateTime ratio 20.00012). The flag scales
+    // the world clock ONLY - the real-time fields in the same object
+    // (lastUpdateTime, saveCount, forcedCalibrationTimer) stay at 1.000/s,
+    // which is why this is a state, not a global time scale.
+    static constexpr double kOriginalFastForwardScale = 20.0;
     double worldSeconds = 0.0;
     // set only when a value was imported from the original save or loaded
     // from a v4 world.bin; distinguishes 'clock at zero' from 'no clock yet'
     bool hasWorldSeconds = false;
     // sleep acceleration multiplies the world clock, not the frame count
     float clockTimeScale = 1.0f;
+    // Mirror of the original's World.fastForward. Runtime-only ON PURPOSE: the
+    // original's flag is not a savedict key, so it does not survive a save in
+    // the original either, and v4 persistence deliberately does not carry it.
+    bool fastForward = false;
+    void setFastForward(bool on) {
+        fastForward = on;
+        clockTimeScale = on ? static_cast<float>(kOriginalFastForwardScale) : 1.0f;
+    }
     double dayFraction() const {
         double f = worldSeconds / kOriginalSecondsPerDay;
         f -= std::floor(f);
