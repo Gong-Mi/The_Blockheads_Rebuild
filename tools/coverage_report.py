@@ -78,8 +78,22 @@ def main() -> int:
     total_words = sum(r["words"] for r in rows)
     text_words = (TEXT_HI - TEXT_LO) // 4
 
-    # ledger stages by imp
-    ledger = json.loads((NATIVE / "reverse_coverage_ledger.json").read_text())
+    # Ledger stages by imp. Built here by calling the ledger generator, not read from a JSON file: the file this
+    # used to read (reverse_coverage_ledger.json, lower-case) is not the artifact the repository commits - CI writes
+    # the ledger JSON to /tmp and only the .md is tracked - so the audit had been reading a stale leftover and
+    # reporting a semantics count that disagreed with the ledger it claims to summarise. Calling the generator
+    # makes the two numbers the same number by construction.
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import build_reverse_coverage_ledger as _bld
+    _methods = _bld.read_methods(NATIVE / "libApplication_objc_methods.tsv")
+    _refs, _cfg = _bld.implementations_in_files(_bld.evidence_files(NATIVE))
+    _rec_path = NATIVE / "implemented_methods.json"
+    _recs = _bld.read_implementation_records(_rec_path, Path(__file__).resolve().parents[1]) if _rec_path.is_file() else {}
+    _runtime_path = NATIVE / "origin_runtime_evidence.json"
+    _runtime = (_bld.read_runtime_records(_runtime_path, Path(__file__).resolve().parents[1], _recs)
+                if _runtime_path.is_file() else {})
+    ledger = _bld.build(_methods, _refs, _cfg, _recs, _runtime)
     stages_by_imp = {}
     for e in ledger["entries"]:
         try:

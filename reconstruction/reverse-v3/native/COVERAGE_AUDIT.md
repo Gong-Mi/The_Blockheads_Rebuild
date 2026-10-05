@@ -12,8 +12,8 @@ ELF sha256 `733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7`. G
 | level-A annotated listings | 208 | 92721 | 2.96% |
 | level-A batch evidence (recover_*.py jsons) | 118 | 28407 | 0.91% |
 | executed under Unicorn (ARM harnesses) | 220 | 38381 | 1.22% |
-| ledger semantics | 65 | 18205 | 0.58% |
-| ledger implemented | 65 | 18205 | 0.58% |
+| ledger semantics | 71 | 18319 | 0.58% |
+| ledger implemented | 71 | 18319 | 0.58% |
 
 The ledger stages are the repo's ORIGINAL pipeline; listing-level decodes do not promote stages by convention, so the two bottom rows understate the save/load front. The three top rows are the front's own evidence sets (union shown below).
 
