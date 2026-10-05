@@ -49,7 +49,9 @@ def main() -> int:
             print("   ", p)
         print("This is exactly the failure a local build cannot see - add them before pushing.")
         return 1
-    print(f"cmake-sources-tracked: {len(set(re.findall(chr(39) + chr(39), text)))}")
+    n_src = len(set(re.findall(r"[A-Za-z0-9_]+\.cpp", text)))
+    print(f"cmake-sources-tracked: {n_src} referenced sources; every included header and every "
+          f"tools/test_*.py is present in git")
     return 0
 
 
