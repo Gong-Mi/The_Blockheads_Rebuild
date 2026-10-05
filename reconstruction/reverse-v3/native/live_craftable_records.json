@@ -528,5 +528,36 @@
    "and the route that does not depend on recognising a form at all: execute the frame-step method under the emulator with a write watch over the object's field range, which reports the storing instruction itself"
   ],
   "next_step": "the third route is the one to take: tools/watch_record_build.py already watches writes into a byte range on a receiver; pointed at a World-shaped receiver and its clock offsets it would name the instruction that advances the phase, and that is executed evidence rather than a pattern match"
+ },
+ "executed_watch_on_the_frame_step": {
+  "what_was_run": "the msgSend-trace tool with its write watch over the modelled clock offsets (648, 660, 880, 916, 934, 3260, 3072, 3140) on a fabricated receiver - now including writes that land inside the zero pages the run invents for NULL pointer fields, so a write into a reached object is seen too",
+  "results": {
+   "DynamicWorld -[update:accurateDT:isSimulation:]": {
+    "instructions": 1999,
+    "writes": 0,
+    "invented_pages": 3
+   },
+   "World -[update:accurateDT:pinchScale:dragInProgress:]": {
+    "instructions": 372,
+    "writes": 0,
+    "invented_pages": 2
+   },
+   "DynamicWorld -[simulate:]": {
+    "instructions": 249,
+    "writes": 0,
+    "invented_pages": 0
+   }
+  },
+  "so_three_routes_are_empty": [
+   "the cell idiom: no writer, and not even a reference for sunDirection",
+   "immediate-offset stores: dominated by stack frames, nothing attributable",
+   "execution with a write watch over these methods: zero writes across 2620 instructions"
+  ],
+  "conclusion": "the phase is advanced by a DIFFERENT method than the three frame-step candidates, and one that the fabricated receiver does not reach. Combined with the live measurement (no numeric ivar of World or DynamicWorld advances at its rate), the writer is elsewhere entirely.",
+  "next_plan_stays_read_only": [
+   "sample the phase at high rate together with a cheap thread-PC census (/proc/<pid>/task/*/stat or the stack, both read-only under root) so the function that runs while the phase steps can be identified without hooking anything",
+   "or find the writer by asking the live world a different question: read the phase twice around a known game action and see which method's completion moves it"
+  ],
+  "note": "this is the fourth empty static/executed result on this field, and the live value is the only evidence of the behaviour - which is the record a future attempt needs so it does not repeat these four"
  }
 }
