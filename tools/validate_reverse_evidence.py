@@ -1596,6 +1596,14 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "FLOAT_GETTER_EMULATION.md",
+        [
+            "three abstraction classes, and they are not the same abstraction",
+            "rejects the `vldr` outright",
+            "UC_ARM_REG_R0 == 66",
+        ],
+    )
+    require(
         NATIVE / "WORLD_METHOD_EXECUTION_CLASSIFICATION.md",
         [
             "can be executed under Unicorn",
