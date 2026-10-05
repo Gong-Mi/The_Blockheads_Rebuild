@@ -1,5 +1,5 @@
-// The original-domain world clock (WORLD_TIME_DOMAIN.md, A-grade: a seconds
-// clock, 900s per in-game day, the day fraction DERIVED).
+// The original-domain world clock (WORLD_TIME_DOMAIN.md, A-grade: a seconds clock, 900s per in-game day,
+// the day fraction DERIVED - and DERIVED FROM A MEASUREMENT: the fraction is a sinusoid, see day_phase.h).
 //
 // Pinned here: fraction derivation, the v4 persistence round-trip of the
 // clock, and that the worker advances the clock by real elapsed time with the
@@ -30,16 +30,47 @@ int main() {
         world.queueCV.notify_all();
         world.workerThread.join();
 
+        // The day fraction is a MEASURED sinusoid, not a sawtooth. This block used to assert
+        // fmod(worldSeconds, 900) / 900 - the naive reading - and the live measurement on the running original
+        // disproved the WAVEFORM (the period is indeed ~900, but the phase is a sinusoid of amplitude ~0.22
+        // around ~0.25, so it swings within roughly 0.03..0.47 and never reaches 0 or 1). See day_phase.h for
+        // the derivation and tools/test_day_phase.py, which replays the committed 100-sample fixture.
         world.worldSeconds = 0.0;
-        assert(std::abs(world.dayFraction() - 0.0) < 1e-9);
-        world.worldSeconds = 450.0;  // half a day
-        assert(std::abs(world.dayFraction() - 0.5) < 1e-9);
-        world.worldSeconds = 900.0;  // the assembled save: exactly one day
-        assert(std::abs(world.dayFraction() - 0.0) < 1e-9);
-        world.worldSeconds = 1125.0;  // one day + quarter
-        assert(std::abs(world.dayFraction() - 0.25) < 1e-9);
-        world.worldSeconds = -450.0;  // floor-based fmod, never negative
-        assert(std::abs(world.dayFraction() - 0.5) < 1e-9);
+        const double at_zero = world.dayFraction();
+        world.worldSeconds = 895.0;  // the fitted period
+        assert(std::abs(world.dayFraction() - at_zero) < 1e-9);
+        world.worldSeconds = 1790.0;  // and again, exactly two periods on
+        assert(std::abs(world.dayFraction() - at_zero) < 1e-9);
+        world.worldSeconds = -895.0;
+        assert(std::abs(world.dayFraction() - at_zero) < 1e-9);
+
+        // NON-TAUTOLOGICAL CONTROL. A sawtooth is monotone inside a cycle and jumps at the wrap; a sinusoid
+        // rises AND falls. Requiring both directions means any reintroduced monotone day fraction fails here,
+        // whichever way it is written - this is the assertion that would have caught the change silently
+        // reverting the other way.
+        bool rose = false, fell = false;
+        world.worldSeconds = 0.0;
+        double prev = world.dayFraction();
+        for (double w = 3.0; w < 900.0; w += 3.0) {
+            world.worldSeconds = w;
+            const double cur = world.dayFraction();
+            if (cur > prev + 1e-9) rose = true;
+            if (cur < prev - 1e-9) fell = true;
+            prev = cur;
+        }
+        assert(rose && fell);
+
+        // the range the measurement established: this is what "the phase never reaches its extremes" means
+        for (double w = -1800.0; w < 3600.0; w += 7.0) {
+            world.worldSeconds = w;
+            const double f = world.dayFraction();
+            assert(f > 0.02 && f < 0.48);
+        }
+        // the direction flag the original exposes is the derivative's sign, not a stored value
+        world.worldSeconds = 0.0;
+        const bool at_zero_rising = world.headingTowardsMidday();
+        world.worldSeconds = 895.0 / 2.0;  // half a period later the slope has the opposite sign
+        assert(world.headingTowardsMidday() != at_zero_rising);
         assert(GameWorld::kOriginalSecondsPerDay == 900.0);
 
         // fastForward: the measured factor and the state that carries it
