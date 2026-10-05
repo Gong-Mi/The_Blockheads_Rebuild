@@ -1,0 +1,136 @@
+{
+ "schema": 1,
+ "target": "PaintMixUI:craftButton:",
+ "imp": "0x673388",
+ "method": "the record buffer is identified AT RUN TIME by the length-124 memset/memcpy stub call (its destination is the base), and every store inside [base, base+124) is a record field write by construction - observed addresses, not matched offsets",
+ "counts": {
+  "instructions": 577,
+  "stub_calls": 1,
+  "stores_total": 180,
+  "field_stores": 7,
+  "distinct_field_offsets": 7,
+  "zero_pages_invented": 1
+ },
+ "record_base": "0x40ffff50",
+ "field_stores": [
+  {
+   "offset": 16,
+   "size": 4,
+   "site": "0x673564",
+   "value": 101,
+   "occurrences": 1
+  },
+  {
+   "offset": 48,
+   "size": 4,
+   "site": "-0x10000002",
+   "value": 1,
+   "occurrences": 1
+  },
+  {
+   "offset": 52,
+   "size": 4,
+   "site": "0x6734a0",
+   "value": 0,
+   "occurrences": 1
+  },
+  {
+   "offset": 56,
+   "size": 4,
+   "site": "0x6734a0",
+   "value": 0,
+   "occurrences": 1
+  },
+  {
+   "offset": 60,
+   "size": 4,
+   "site": "0x6734a0",
+   "value": 0,
+   "occurrences": 1
+  },
+  {
+   "offset": 72,
+   "size": 4,
+   "site": "0x6734a0",
+   "value": 3,
+   "occurrences": 1
+  },
+  {
+   "offset": 86,
+   "size": 2,
+   "site": "-0x10000001",
+   "value": 0,
+   "occurrences": 1
+  }
+ ],
+ "stubs": [
+  {
+   "stub": "stub-2924(memset)",
+   "site": "0x1c2924",
+   "r0": "0x40ffff50",
+   "r1": "0x0",
+   "r2": "0x7c"
+  }
+ ],
+ "stopped": null,
+ "boundary": "a fabricated zeroed receiver decides which branch this run takes, sends are stubbed with r0 = 0, VFP is skipped: these are the writes THIS RUN performed into the record it built, not every write the original performs; and this run's branch is the one a zeroed receiver implies, so the field subset it exercises is what that branch builds - a different receiver would exercise others",
+ "why_this_is_different": "the static tracker needed a rule to recognise a record buffer and its precision measured 1 in 3; here the buffer is identified AT RUN TIME - the destination of the length-124 memset stub call - so a store inside [base, base+124) is a field write because its address was observed, not because an offset matched",
+ "observed_construction": {
+  "record_base": "0x40ffff50",
+  "writes": [
+   {
+    "offset": 16,
+    "size": 4,
+    "value": 101,
+    "site": "0x673564",
+    "meaning": "f2[2] (int[8] at 8, element 2)"
+   },
+   {
+    "offset": 48,
+    "size": 4,
+    "value": 1,
+    "site": "-0x10000002",
+    "meaning": "f3[2] (int[8] at 40, element 2)"
+   },
+   {
+    "offset": 52,
+    "size": 4,
+    "value": 0,
+    "site": "0x6734a0",
+    "meaning": "f3[3]"
+   },
+   {
+    "offset": 56,
+    "size": 4,
+    "value": 0,
+    "site": "0x6734a0",
+    "meaning": "f3[4]"
+   },
+   {
+    "offset": 60,
+    "size": 4,
+    "value": 0,
+    "site": "0x6734a0",
+    "meaning": "f3[5]"
+   },
+   {
+    "offset": 72,
+    "size": 4,
+    "value": 3,
+    "site": "0x6734a0",
+    "meaning": "f4"
+   },
+   {
+    "offset": 86,
+    "size": 2,
+    "value": 0,
+    "site": "-0x10000001",
+    "meaning": "f8 (the 16-bit field the static reading also found)"
+   }
+  ]
+ },
+ "agreements_with_the_static_reading": [
+  "offset 86 is the 16-bit field both approaches find (static: strh r7,[fp,#-0x52]; here: a 2-byte store)",
+  "offset 40's array receives small integers (static: a slot set to 1; here: f3[2] = 1, f3[3..5] = 0)"
+ ]
+}

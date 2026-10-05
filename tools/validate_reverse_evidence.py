@@ -1708,6 +1708,14 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "record_build_watch.json",
+        [
+            '"why_this_is_different"',
+            '"observed_construction"',
+            '"agreements_with_the_static_reading"',
+        ],
+    )
+    require(
         NATIVE / "record_base_tracking_status.json",
         [
             '"rule_sensitivity"',
