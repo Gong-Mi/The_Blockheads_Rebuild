@@ -122,6 +122,20 @@ def main() -> int:
         assert "kCraftableItemCraftEntryPoint" in hdr
         assert "kCraftableItemInitializerDispatchUnknown" in hdr
 
+    # the field-level evidence: the three observed offsets must be real offsets of this record, which the
+    # layout above already defines - so a rename or a re-derived layout has to keep them meaningful
+    ev = ROOT / "reconstruction/reverse-v3/native/craftable_item_field_evidence.json"
+    if ev.is_file():
+        e = json.loads(ev.read_text())
+        offs = {f[0]: off for f, (_, off, _) in zip(
+            [("f0",), ("f1",), ("f2",), ("f3",), ("f4",), ("f5",), ("f6",), ("f7",), ("f8",), ("f9",), ("f10",)],
+            fields)}
+        for name, obs in e["observed"].items():
+            idx = int(name[1:])
+            assert fields[idx][1] == obs["offset"], (name, fields[idx][1], obs["offset"])
+            assert e["record_base_in_frame"] == "fp-0xa8"
+        assert "kRecordBaseFrameDelta = -0xa8" in hdr and "kObservedFieldOffsetF8 = 86" in hdr
+
     print(f"craftable item record: {len(fields)} fields, {total} bytes, derived from the encoding "
           f"and confirmed by the signature's argument span ({span})")
     return 0

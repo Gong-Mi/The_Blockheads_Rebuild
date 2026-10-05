@@ -97,6 +97,19 @@ inline constexpr bool kCraftableItemInitializerDispatchUnknown = true;
 // field values are computed in or below it. That is where f0..f10 would get their meaning.
 inline constexpr std::uint32_t kCraftableItemSetSelectorSlot = 0x00e7f55cU;
 inline constexpr std::uint32_t kCraftableItemCraftEntryPoint = 0x0067390cU;
+
+// The record is BUILT on the stack of PaintMixUI -[craftButton:] at fp-0xa8, and that base is pinned by the
+// 124-byte copy-family calls that take the address - so field stores at fp-0xa8+offset are this record's
+// fields rather than an offset coincidence. Three fields have observed write patterns (see
+// reconstruction/reverse-v3/native/craftable_item_field_evidence.json):
+//   offset 8  (f2, int[8]): slots written with the result of the local helper at 0x00668560;
+//   offset 40 (f3, int[8]): slot set to 1 at 0x00673540, and a msgSend result stored at 0x00673724;
+//   offset 86 (f8, S):      a 16-bit value read by ldrh stored at 0x00673468.
+// Observed WRITES, not meanings - the eight remaining fields still have no evidence.
+inline constexpr std::int32_t kRecordBaseFrameDelta = -0xa8;
+inline constexpr std::size_t kObservedFieldOffsetF2 = 8;
+inline constexpr std::size_t kObservedFieldOffsetF3 = 40;
+inline constexpr std::size_t kObservedFieldOffsetF8 = 86;
 inline constexpr std::size_t kCraftableItemObjectRecordOffset = 4;
 inline constexpr std::uint32_t kCraftableItemObjectRecordCell = 0x00f34ea0U;
 inline constexpr std::size_t kCraftableItemObjectInstanceSize = 128;   // isa (4) + record (124)
