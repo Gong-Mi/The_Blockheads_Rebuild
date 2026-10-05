@@ -2,6 +2,7 @@
 """Validate checked-in reverse-v3 evidence without requiring the copyrighted APK."""
 
 import re
+import subprocess
 from pathlib import Path
 
 
@@ -33,6 +34,10 @@ def require(path: Path, needles: list[str]) -> None:
 
 
 def main() -> None:
+    # a local build cannot see a file that was never committed; git can (see the guard's docstring)
+    subprocess.run([sys.executable, str(ROOT / "tools/check_cmake_sources_tracked.py")], check=True)
+
+
     methods = NATIVE / "libApplication_objc_methods.tsv"
     lines = methods.read_text(encoding="utf-8").splitlines()
     if lines[0] != "implementation\tclass\tkind\tselector\ttypes":
