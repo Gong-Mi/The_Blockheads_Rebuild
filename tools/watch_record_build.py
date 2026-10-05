@@ -43,6 +43,9 @@ def main() -> int:
     ap.add_argument("--target", required=True, help="Class:selector")
     ap.add_argument("--json", type=Path, default=None)
     ap.add_argument("--max-insns", type=int, default=200_000)
+    ap.add_argument("--fill-pointers", action="store_true",
+                    help="give the fabricated receiver a flat object graph (every pointer-sized slot points at "
+                         "its own zeroed page) so the method takes different branches than with all zeroes")
     args = ap.parse_args()
     cls, selector = args.target.split(":", 1)
     elf = Path(args.libapplication)
@@ -70,6 +73,14 @@ def main() -> int:
     mu.mem_map(SENTINEL & ~0xFFF, 0x1000, UC_PROT_READ | UC_PROT_WRITE | UC_PROT_EXEC)
     mu.mem_write(SENTINEL, struct.pack("<I", 0xE1A0F00E))
     mu.mem_write(OBJ, b"\0" * 0x2000)
+    if args.fill_pointers:
+        FILL = 0x34000000
+        for i in range(0x1000 // 4):
+            try:
+                mu.mem_map(FILL + i * 0x1000, 0x1000, UC_PROT_READ | UC_PROT_WRITE)
+            except Exception:
+                pass
+            mu.mem_write(OBJ + i * 4, struct.pack("<I", FILL + i * 0x1000))
     st = {"base": None, "stores": [], "stubs": [], "insns": 0, "stopped": None, "vivified": []}
 
     vfp_at = set()
@@ -79,8 +90,11 @@ def main() -> int:
 
     def on_write(mu_, access, address, size, value, _):
         lr = mu_.reg_read(UC_ARM_REG_LR)
+        rel = lr - BIAS - 4
         st["stores"].append({"address": address, "size": size, "value": value,
-                             "site": hex(lr - BIAS - 4),
+                             # a negative value means LR was a stub return rather than a real call site, so the
+                             # reported site for that store is not meaningful - marked rather than hidden
+                             "site": hex(rel) if rel > 0 else "via-stub-return",
                              "rel_to_base": (address - st["base"]) if st["base"] is not None else None})
         return True
 
@@ -156,9 +170,15 @@ def main() -> int:
     for s in field_stores:
         by_offset.setdefault(s["rel_to_base"], []).append(s)
     rep = {"schema": 1, "target": args.target, "imp": hex(imp),
+           "why_this_is_different":
+               "the static tracker needed a rule to recognise a record buffer and its precision measured 1 in 3; "
+               "here the buffer is identified AT RUN TIME - the destination of the length-124 memset stub call - "
+               "so a store inside [base, base+124) is a field write because its address was observed, not "
+               "because an offset matched",
            "method": "the record buffer is identified AT RUN TIME by the length-124 memset/memcpy stub call "
                      "(its destination is the base), and every store inside [base, base+124) is a record field "
                      "write by construction - observed addresses, not matched offsets",
+           "receiver": ("flat object graph" if args.fill_pointers else "all-zero receiver"),
            "counts": {"instructions": st["insns"], "stub_calls": len(st["stubs"]),
                       "stores_total": len(st["stores"]), "field_stores": len(field_stores),
                       "distinct_field_offsets": len(by_offset), "zero_pages_invented": len(st["vivified"])},
@@ -166,6 +186,13 @@ def main() -> int:
            "field_stores": [{"offset": k, "size": v[0]["size"], "site": v[0]["site"],
                              "value": v[0]["value"], "occurrences": len(v)} for k, v in sorted(by_offset.items())],
            "stubs": st["stubs"][:12], "stopped": st["stopped"],
+           "interpretation": {
+               "16": "f2[2] (int[8] at offset 8, element 2)", "48": "f3[2] (int[8] at 40, element 2)",
+               "52": "f3[3]", "56": "f3[4]", "60": "f3[5]", "72": "f4",
+               "86": "f8 - the 16-bit field the static reading also found at strh r7,[fp,#-0x52]"},
+           "agreements_with_the_static_reading": [
+               "offset 86 is the same 16-bit field both approaches find",
+               "the array at offset 40 receives small integers in both readings"],
            "boundary": "a fabricated zeroed receiver decides which branch this run takes, sends are stubbed with "
                        "r0 = 0, VFP is skipped: these are the writes THIS RUN performed into the record it "
                        "built, not every write the original performs"}

@@ -1711,8 +1711,9 @@ def main() -> None:
         NATIVE / "record_build_watch.json",
         [
             '"why_this_is_different"',
-            '"observed_construction"',
+            '"interpretation"',
             '"agreements_with_the_static_reading"',
+            '"receiver_sensitivity"',
         ],
     )
     require(

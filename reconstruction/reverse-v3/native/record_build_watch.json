@@ -2,7 +2,9 @@
  "schema": 1,
  "target": "PaintMixUI:craftButton:",
  "imp": "0x673388",
+ "why_this_is_different": "the static tracker needed a rule to recognise a record buffer and its precision measured 1 in 3; here the buffer is identified AT RUN TIME - the destination of the length-124 memset stub call - so a store inside [base, base+124) is a field write because its address was observed, not because an offset matched",
  "method": "the record buffer is identified AT RUN TIME by the length-124 memset/memcpy stub call (its destination is the base), and every store inside [base, base+124) is a record field write by construction - observed addresses, not matched offsets",
+ "receiver": "all-zero receiver",
  "counts": {
   "instructions": 577,
   "stub_calls": 1,
@@ -23,7 +25,7 @@
   {
    "offset": 48,
    "size": 4,
-   "site": "-0x10000002",
+   "site": "via-stub-return",
    "value": 1,
    "occurrences": 1
   },
@@ -58,7 +60,7 @@
   {
    "offset": 86,
    "size": 2,
-   "site": "-0x10000001",
+   "site": "via-stub-return",
    "value": 0,
    "occurrences": 1
   }
@@ -73,64 +75,32 @@
   }
  ],
  "stopped": null,
- "boundary": "a fabricated zeroed receiver decides which branch this run takes, sends are stubbed with r0 = 0, VFP is skipped: these are the writes THIS RUN performed into the record it built, not every write the original performs; and this run's branch is the one a zeroed receiver implies, so the field subset it exercises is what that branch builds - a different receiver would exercise others",
- "why_this_is_different": "the static tracker needed a rule to recognise a record buffer and its precision measured 1 in 3; here the buffer is identified AT RUN TIME - the destination of the length-124 memset stub call - so a store inside [base, base+124) is a field write because its address was observed, not because an offset matched",
- "observed_construction": {
-  "record_base": "0x40ffff50",
-  "writes": [
-   {
-    "offset": 16,
-    "size": 4,
-    "value": 101,
-    "site": "0x673564",
-    "meaning": "f2[2] (int[8] at 8, element 2)"
-   },
-   {
-    "offset": 48,
-    "size": 4,
-    "value": 1,
-    "site": "-0x10000002",
-    "meaning": "f3[2] (int[8] at 40, element 2)"
-   },
-   {
-    "offset": 52,
-    "size": 4,
-    "value": 0,
-    "site": "0x6734a0",
-    "meaning": "f3[3]"
-   },
-   {
-    "offset": 56,
-    "size": 4,
-    "value": 0,
-    "site": "0x6734a0",
-    "meaning": "f3[4]"
-   },
-   {
-    "offset": 60,
-    "size": 4,
-    "value": 0,
-    "site": "0x6734a0",
-    "meaning": "f3[5]"
-   },
-   {
-    "offset": 72,
-    "size": 4,
-    "value": 3,
-    "site": "0x6734a0",
-    "meaning": "f4"
-   },
-   {
-    "offset": 86,
-    "size": 2,
-    "value": 0,
-    "site": "-0x10000001",
-    "meaning": "f8 (the 16-bit field the static reading also found)"
-   }
-  ]
+ "interpretation": {
+  "16": "f2[2] (int[8] at offset 8, element 2)",
+  "48": "f3[2] (int[8] at 40, element 2)",
+  "52": "f3[3]",
+  "56": "f3[4]",
+  "60": "f3[5]",
+  "72": "f4",
+  "86": "f8 - the 16-bit field the static reading also found at strh r7,[fp,#-0x52]"
  },
  "agreements_with_the_static_reading": [
-  "offset 86 is the 16-bit field both approaches find (static: strh r7,[fp,#-0x52]; here: a 2-byte store)",
-  "offset 40's array receives small integers (static: a slot set to 1; here: f3[2] = 1, f3[3..5] = 0)"
- ]
+  "offset 86 is the same 16-bit field both approaches find",
+  "the array at offset 40 receives small integers in both readings"
+ ],
+ "boundary": "a fabricated zeroed receiver decides which branch this run takes, sends are stubbed with r0 = 0, VFP is skipped: these are the writes THIS RUN performed into the record it built, not every write the original performs",
+ "receiver_sensitivity": {
+  "measured": {
+   "all-zero receiver": {
+    "instructions": 577,
+    "field_stores": 7
+   },
+   "flat object graph (every pointer slot -> its own zeroed page)": {
+    "instructions": 589,
+    "field_stores": 0,
+    "record_base": null
+   }
+  },
+  "reading": "enriching the receiver REMOVED the case: with non-null pointer fields the method takes the other branch and never builds a record (the length-124 stub call does not happen). Same receiver-sensitivity the msgSend traces showed; the productive receiver here is the zeroed one"
+ }
 }
