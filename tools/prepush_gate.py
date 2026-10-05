@@ -81,6 +81,9 @@ def main() -> int:
     args = ap.parse_args()
 
     steps: list[tuple[str, list[str]]] = [
+        # Workflow YAML is code that runs before every other check. An edit that broke android.yml
+        # once reached CI because this gate had no opinion about YAML at all.
+        ("workflow yaml", [sys.executable, str(TOOLS / "check_workflow_yaml.py")]),
         ("evidence-scan lint", [sys.executable, str(TOOLS / "lint_evidence_scan.py")]),
         ("artifact consumers", [sys.executable, str(TOOLS / "check_artifact_consumers.py")]),
         ("reverse-evidence contract", [sys.executable, str(TOOLS / "validate_reverse_evidence.py")]),

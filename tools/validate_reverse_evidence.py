@@ -1551,6 +1551,21 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "tools/check_workflow_yaml.py",
+        [
+            "does not parse",
+            "has neither run nor uses",
+            "workflow yaml:",
+        ],
+    )
+    require(
+        ROOT / "tools/test_check_workflow_yaml.py",
+        [
+            "BROKEN_INDENT",
+            "the defect that actually shipped",
+        ],
+    )
+    require(
         ROOT / "tools/extract_audio_wiring_map.py",
         [
             "SELF_CHECK",

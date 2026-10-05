@@ -26,10 +26,14 @@ jobs:
       run: python3 tools/validate_runtime_contract.py
       working-directory: .
 
+    - name: Load-time sound list is regenerated from its artifacts
+      run: |
+        python3 tools/gen_sound_preload_list.py --wiring reconstruction/reverse-v3/native/audio_wiring_map.json \
+          --coverage reconstruction/reverse-v3/native/audio_asset_coverage.json \
+          --out reconstruction/recovered/sound_preload_list.h --check
+      working-directory: .
+
     - name: Validate reverse evidence contract
-- name: Load-time sound list is regenerated from its artifacts
-  run: |
-    python3 tools/gen_sound_preload_list.py --wiring reconstruction/reverse-v3/native/audio_wiring_map.json --coverage reconstruction/reverse-v3/native/audio_asset_coverage.json --out reconstruction/recovered/sound_preload_list.h --check
       run: python3 tools/validate_reverse_evidence.py
       working-directory: .
 
