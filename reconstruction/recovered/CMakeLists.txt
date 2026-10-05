@@ -576,12 +576,12 @@ target_link_libraries(test_frame_loop_participants PRIVATE blockheads_recovered_
 target_compile_options(test_frame_loop_participants PRIVATE -UNDEBUG)
 add_test(NAME recovered_frame_loop_participants COMMAND test_frame_loop_participants)
 
-add_executable(test_dynamic_object_layout ../../tools/test_dynamic_object_layout.cpp audio_wiring_model.cpp world_layout.cpp craftable_item_record.cpp interaction_test_result.cpp dynamic_object_net_data.cpp dynamic_world_layout.cpp)
+add_executable(test_dynamic_object_layout ../../tools/test_dynamic_object_layout.cpp)
 target_link_libraries(test_dynamic_object_layout PRIVATE blockheads_recovered_view)
 target_compile_options(test_dynamic_object_layout PRIVATE -UNDEBUG)
 add_test(NAME recovered_dynamic_object_layout COMMAND test_dynamic_object_layout)
 
-add_executable(test_audio_wiring_model ../../tools/test_audio_wiring_model.cpp world_layout.cpp craftable_item_record.cpp interaction_test_result.cpp dynamic_object_net_data.cpp dynamic_world_layout.cpp)
+add_executable(test_audio_wiring_model ../../tools/test_audio_wiring_model.cpp)
 target_link_libraries(test_audio_wiring_model PRIVATE blockheads_recovered_view)
 target_compile_options(test_audio_wiring_model PRIVATE -UNDEBUG)
 add_test(NAME recovered_audio_wiring_model COMMAND test_audio_wiring_model)
