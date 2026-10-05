@@ -51,4 +51,25 @@ static_assert(offsetof(CraftableItemRecord, f8) == 86, "field f8");
 static_assert(offsetof(CraftableItemRecord, f9) == 88, "field f9");
 static_assert(offsetof(CraftableItemRecord, f10) == 92, "field f10");
 
+// Where the record actually lives, from the deserialiser evidence
+// (reconstruction/reverse-v3/native/craftableitem_initsavedict.json, batch b3c):
+//   * CraftableItemObject stores it inline at ivar offset 4 (cell 0x00f34ea0) - i.e. immediately
+//     after the object's isa pointer, which is why the class's instance size is 128: 4 + 124;
+//   * it is serialised as an opaque 124-byte NSData blob under the key `craftableItem`, written by
+//     getBytes:length: at site 0x00ac7a18 into 0x00ac79f8;
+//   * PaintingCraftableItemObject and BlockheadCraftableItemObject keep their own additions after it
+//     (imageData/outputImageData at 128/132, name then a 20-byte skinOptions at 128/132).
+//
+// That is why the field MEANINGS are still open while the shape is not: the bytes arrive as an opaque
+// blob, so what f0..f10 mean has to come from whoever BUILDS the blob (the crafting pipeline), not from
+// the deserialiser.
+namespace craftable_item_host {
+inline constexpr std::size_t kCraftableItemObjectRecordOffset = 4;
+inline constexpr std::uint32_t kCraftableItemObjectRecordCell = 0x00f34ea0U;
+inline constexpr std::size_t kCraftableItemObjectInstanceSize = 128;   // isa (4) + record (124)
+inline constexpr std::size_t kCraftableItemBlobLength = 124;
+inline constexpr const char* kCraftableItemBlobKey = "craftableItem";
+static_assert(kCraftableItemObjectRecordOffset + kCraftableItemBlobLength == kCraftableItemObjectInstanceSize);
+}  // namespace blockheads::recovered::craftable_item_host
+
 }  // namespace blockheads::recovered

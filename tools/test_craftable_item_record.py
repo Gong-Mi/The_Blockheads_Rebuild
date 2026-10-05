@@ -63,6 +63,23 @@ def main() -> int:
         offs = [f["offset"] if isinstance(f, dict) else f for f in rec] if rec else []
         if offs:
             assert offs == [o for _, o, _ in fields], (offs, [o for _, o, _ in fields])
+
+    # cross-artifact: the host facts must agree with the deserialiser evidence, not just with the encoding
+    des = ROOT / "reconstruction/reverse-v3/native/craftableitem_initsavedict.json"
+    if des.is_file():
+        d = json.loads(des.read_text())
+        ci = [c for c in d["classes"] if c["class"] == "CraftableItemObject"][0]
+        assert ci["blob"]["length"] == total, (ci["blob"]["length"], total)
+        assert ci["blob"]["key"] == "craftableItem"
+        host_off = None
+        for k in ci["keys"]:
+            if k.get("ivar", "").endswith(".craftableItem"):
+                host_off = k["ivar_offset"]
+        assert host_off == 4, host_off
+        assert f"kCraftableItemObjectRecordOffset = {host_off};" in hdr
+        assert "kCraftableItemObjectInstanceSize = 128" in hdr
+        assert f"kCraftableItemBlobLength = {total};" in hdr
+
     print(f"craftable item record: {len(fields)} fields, {total} bytes, derived from the encoding "
           f"and confirmed by the signature's argument span ({span})")
     return 0

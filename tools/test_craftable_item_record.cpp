@@ -4,8 +4,10 @@
 #include <cassert>
 #include <cstddef>
 #include <cstdio>
+#include <string>
 
 using namespace blockheads::recovered;
+using namespace blockheads::recovered::craftable_item_host;
 
 int main() {
     assert(sizeof(CraftableItemRecord) == 124);
@@ -32,6 +34,12 @@ int main() {
     // the two narrow fields share one aligned 4-byte slot, which is why f9 lands on 88
     assert(offsetof(CraftableItemRecord, f7) + 2 == offsetof(CraftableItemRecord, f8));
     assert(offsetof(CraftableItemRecord, f9) == 88);
+
+    // hosting facts: the record sits inline after the isa pointer, which is why the class is 128 bytes
+    assert(kCraftableItemObjectRecordOffset == 4);
+    assert(kCraftableItemObjectRecordOffset + kCraftableItemBlobLength == kCraftableItemObjectInstanceSize);
+    assert(kCraftableItemBlobLength == 124);
+    assert(std::string(kCraftableItemBlobKey) == "craftableItem");
 
     std::puts("craftable-item-record: PASS");
     return 0;
