@@ -395,5 +395,35 @@
    "now": "at this snapshot the fraction reads 0.2286 while the sun's Y component is ~0.0094, i.e. the sun is essentially on the horizon - the phase and the sun agree with each other. So the fraction IS a day phase (~0.25 = sunrise); what disagrees is its rate against worldTime",
    "falsifiable_next_question": "which counter advances the phase? The fraction is consistent with the sun and inconsistent with worldTime/900, so either a second counter exists or the fraction is derived per frame with a different constant - both are answerable statically now that the question is that specific."
   }
+ },
+ "live_world_rate_table": {
+  "method": "sample every numeric World ivar twice, 25.001 s apart, and report units/second (the probe reuses the validated Probe class; read-only)",
+  "window_seconds": 25.001,
+  "moving_fields": {
+   "worldTime": 19.999315,
+   "noRainTimer": 19.859284,
+   "lastUpdateTime": 0.999973,
+   "saveCount": 0.999959,
+   "forcedCalibrationTimer": 0.983724,
+   "slowAnimationIndex": -0.55998,
+   "waterAnimationIndex": -0.479983,
+   "updateGeometryDrawBlockIndex": 0.199993,
+   "saveCounter": 0.199993,
+   "isHeadingTowardsMIdday": -0.039999,
+   "mapUpdateTimer": 0.018661,
+   "timeOfDayFraction": 0.011831,
+   "cloudFraction": -0.011298,
+   "weatherFraction": -0.000565
+  },
+  "semantics_earned_from_rates": [
+   "isHeadingTowardsMIdday is a one-byte DIRECTION flag for the day phase (it toggles 1 -> 0 in this window, and its name is in the World layout this project already derived) - a meaning the live rates give and the static reading could not",
+   "noRainTimer advances with worldTime and carries worldTime's magnitude (459607 -> 460104 against 461585 -> 462085), so it is the same clock domain expressed as seconds, not an independent timer",
+   "slowAnimationIndex and waterAnimationIndex advance by WRAPPING (14 -> 0, 12 -> 0), which is what frame-cycled animation counters look like",
+   "saveCount and saveCounter are DIFFERENT fields with different rates (0.99996/s vs 0.19999/s) and this also corrects an earlier note of mine that read saveCounter as decreasing: live data says it increments"
+  ],
+  "anomaly_answered": {
+   "question": "which counter advances the day phase? (recorded last batch as falsifiable)",
+   "answer": "not worldTime. The phase advances 0.01183/s while worldTime advances 20/s - a ratio of about 1:1690 worldTime units per full phase, whereas a naive 900-units-per-day reading would put it at 1:900. So a second counter or a different constant exists, and the static search now has a target rather than a mystery"
+  }
  }
 }
