@@ -7,7 +7,9 @@
 //
 // The second array carries the part that decays. The artifact records a per-name boolean
 // `replacement_referenced`, and that boolean was STALE when this header was written: it said 120 names
-// were unwired, while measuring the current sources shows 42 wired and 94 still unwired.
+// were unwired, while measuring the current sources shows 43 wired and 93 still unwired (fanfare.wav moved
+// out when craft completion started queueing it - note this counts a name APPEARING in a shipped source,
+// not the replacement playing it, which is the smaller number the app's queueSound call sites represent).
 // Rather than transcribe a number that goes wrong on its own, the list below is RE-MEASURED by
 // tools/test_audio_wiring_model.py on every run: a TODO list with evidence, not a stored count.
 #pragma once
