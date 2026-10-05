@@ -1487,6 +1487,23 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "CRAFTABLE_ITEM_BLOB_BOUNDARY.md",
+        [
+            "CraftableItem blob: proved, and sealed",
+            "0xac7a18",
+            "passed by value",
+            "An empty result covers only the channel that was",
+        ],
+    )
+    require(
+        NATIVE / "craftable_item_blob_boundary.json",
+        [
+            '"struct_is_passed_by_value"',
+            '"0xac7ccc',
+            '"condition_needed"',
+        ],
+    )
+    require(
         NATIVE / "WORLD_CLOCK_WRITER_BOUNDARY.md",
         [
             "The world-clock writer boundary",
