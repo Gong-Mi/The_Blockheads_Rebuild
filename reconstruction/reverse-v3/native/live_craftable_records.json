@@ -440,5 +440,33 @@
    "what_replaces_it": "the phase is its own triangle wave with a measured period; the flag reports its direction. Both are now measured rather than read off a single sample."
   },
   "supersedes": "the previous batch's derivation of 'about 1690 worldTime units per full phase' - that number came from a 60 s delta that contained a turnaround, so it was an average over a fold, not a period. The triangle measurement replaces it."
+ },
+ "craft_path_probe": {
+  "tool": "live175/probe_craft_path.py",
+  "why": "BFS found nothing deeper and reported that as 'nothing found'; following the KNOWN ivar path instead shows exactly which hop is null, which is the difference between 'not reachable' and 'not loaded'",
+  "path_verified": [
+   "World +240 uiManager        -> UIManager   0x6206a240",
+   "UIManager +56 paintMixUI    -> PaintMixUI  0x77073ba0",
+   "PaintMixUI +20 world        -> World       0x61f96000  (backref, closes the loop)"
+  ],
+  "null_at_this_moment": {
+   "PaintMixUI +104 workbench": "0x0",
+   "PaintMixUI +112 incomingCraftableItemObject": "0x0",
+   "PaintMixUI +120 craftButton": "0x0",
+   "PaintMixUI +128 countSlider": "0x0",
+   "PaintMixUI +132 currentCount": "0x0"
+  },
+  "reading": "the paint-mix UI object exists and is wired to the World, but every crafting-related ivar is null: no workbench screen is open, so no craftable object has been bound. The path is proven and the fields that will hold the record are identified - this is a state question, not a mechanism one",
+  "ready_when_the_state_is_loaded": {
+   "watch": [
+    "PaintMixUI +104 workbench",
+    "PaintMixUI +112 incomingCraftableItemObject",
+    "Workbench +132 craftableItems",
+    "Workbench +180 craftingItemObject",
+    "Workbench +124 numberOfCraftableItems"
+   ],
+   "then": "re-run live175/probe_craft_path.py; any non-null CraftableItemObject on that path has its 124-byte record read inline at its own ivar offset and decoded against the model",
+   "records_seen_so_far": []
+  }
  }
 }
