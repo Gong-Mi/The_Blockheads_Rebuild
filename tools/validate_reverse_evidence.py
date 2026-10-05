@@ -1708,6 +1708,15 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "record_base_tracking_status.json",
+        [
+            '"proven_bases"',
+            '"false_negative"',
+            '"false_positive_risk"',
+            '"verified_by_hand_elsewhere"',
+        ],
+    )
+    require(
         NATIVE / "WORLDTIME_GETTER_EMULATION.md",
         [
             "executed under Unicorn",
