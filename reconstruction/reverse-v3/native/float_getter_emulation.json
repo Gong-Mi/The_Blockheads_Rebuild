@@ -4,7 +4,7 @@
  "method": "intercept the word load whose effective address equals self+offset, where the offset comes from the getter's literal pool cross-checked against the symbol table; the value is read at whatever address the original's own instruction computes, so a rewritten cell is followed rather than overridden",
  "counts": {
   "attempted": 5,
-  "executed": 4
+  "executed": 5
  },
  "results": [
   {
@@ -163,8 +163,35 @@
    "cell": "0xf32b0c",
    "offset": 3136,
    "symbol_cell_agrees": true,
-   "status": "error in pass 1: UcError: Invalid instruction (UC_ERR_INSN_INVALID)"
+   "provenance": {
+    "first_load_ea": "0x30000c40",
+    "expected_ea": "0x30000c40",
+    "matches_derived_offset": true,
+    "load_instruction": "0x56dd60",
+    "stopped_by": null
+   },
+   "positive": [
+    {
+     "planted": 0.375,
+     "returned": 0.375,
+     "ok": true
+    },
+    {
+     "planted": -12.5,
+     "returned": -12.5,
+     "ok": true
+    }
+   ],
+   "cross_control": {
+    "cell_rewritten_to": "timeOfDayFraction",
+    "offset": 880,
+    "expected_ea": "0x30000370",
+    "returned": 7.25,
+    "decoy_at_original_offset": 99.0,
+    "follows_cell": true
+   },
+   "status": "executed"
   }
  ],
- "passed": false
+ "passed": true
 }

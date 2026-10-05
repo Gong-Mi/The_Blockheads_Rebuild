@@ -4,8 +4,9 @@
 Pins what the batch would silently lose:
   * the four float getters that executed must still execute, with the address-provenance check AND the
     cross-control recorded true - not merely a matching number;
-  * `simulationProgress` must stay reported as not-executed, so a future change cannot quietly claim
-    it works;
+  * `simulationProgress` goes through a DIFFERENT instruction (a direct `vldr`) than the other four
+    (a plain `ldr` into a stack copy), so the test requires the tool to collect VFP loads as well -
+    otherwise the field silently stops being explained;
   * the Unicorn register-id pitfall must stay fixed: the tool may not build a register table from
     range(), because UC_ARM_REG_R0 is 66 and id 0 reads back garbage.
 
@@ -41,16 +42,18 @@ def main() -> int:
     rep = json.loads(ART.read_text())
     executed = {r["field"]: r for r in rep["results"] if r.get("status") == "executed"}
     for name in ("timeOfDayFraction", "weatherFraction", "rainFraction",
-                 "rainFractionNotIncludingSnow"):
+                 "rainFractionNotIncludingSnow", "simulationProgress"):
         assert name in executed, name
         row = executed[name]
         assert all(p["ok"] for p in row["positive"]), row
         assert row["provenance"]["matches_derived_offset"] is True, row
         assert row["cross_control"]["follows_cell"] is True, row
-    skipped = [r for r in rep["results"] if r.get("status") != "executed"]
-    assert [r["field"] for r in skipped] == ["simulationProgress"], skipped
-    print(f"float getters: {len(executed)} executed with provenance + cross-control, "
-          f"{len(skipped)} still unexplained ({skipped[0]['field']})")
+    assert len(executed) == 5, sorted(executed)
+    assert not [r for r in rep["results"] if r.get("status") != "executed"], rep["results"]
+    # the rule must collect VFP loads too, or simulationProgress goes unexplained again
+    tool = (ROOT / "tools/emulate_float_getters.py").read_text()
+    assert 'ins.mnemonic.startswith("vldr")' in tool, "VFP loads must be collected"
+    print(f"float getters: {len(executed)} executed, each with provenance + cross-control")
     return 0
 
 

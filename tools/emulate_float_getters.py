@@ -88,11 +88,17 @@ def derive(blob: bytes, imp: int) -> dict:
 
 
 def loads_in(blob: bytes, imp: int) -> dict[int, tuple[str, str | None, int]]:
-    """address -> (base register, index register or None, immediate) for every ldr in the getter."""
+    """address -> (base, index, immediate) for every memory load in the getter, VFP included.
+
+    The rule this feeds is "the access whose effective address equals self+offset", and the family uses
+    two different instructions for that read: a plain `ldr` into a stack copy (the weather getters), and
+    a direct `vldr s0,[r0]` (simulationProgress). Collecting only integer loads is why the latter came
+    back unexplained.
+    """
     md = Cs(CS_ARCH_ARM, CS_MODE_ARM | CS_MODE_LITTLE_ENDIAN)
     out = {}
     for ins in list(md.disasm(blob[imp:imp + 0x60], imp))[:24]:
-        if ins.mnemonic not in ("ldr", "ldrb", "ldrsb", "ldrh"):
+        if not (ins.mnemonic in ("ldr", "ldrb", "ldrsb", "ldrh") or ins.mnemonic.startswith("vldr")):
             continue
         if "[" not in ins.op_str:
             continue

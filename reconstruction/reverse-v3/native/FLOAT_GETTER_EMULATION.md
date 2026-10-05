@@ -1,6 +1,6 @@
 # The third abstraction: the float clock/weather getters
 
-Evidence grade: **executed** - four getters ran in a real ARM emulator with their values read back
+Evidence grade: **executed** - all five getters ran in a real ARM emulator with their values read back
 bit-exact, each with an address-provenance check and a cross-control that can fail.
 
 Tool: `tools/emulate_float_getters.py` (+ `float_getter_emulation.json`).
@@ -8,20 +8,36 @@ Tool: `tools/emulate_float_getters.py` (+ `float_getter_emulation.json`).
 ## The correction this batch makes
 
 `WORLD_METHOD_EXECUTION_CLASSIFICATION.md` put the clock/weather getters in one bucket and I wrote
-that **one abstraction covers eight methods**. That was a cost estimate, and running them showed it
-is wrong: the family has **three abstraction classes, and they are not the same abstraction**.
+that **one abstraction covers eight methods**. That was a cost estimate, and running them showed it is
+wrong: the family has **three abstraction classes, and they are not the same abstraction**.
 
 | class | shape in the original | what must be supplied |
 |---|---|---|
 | `char` (`fastForward`, `doubleTimeUnlocked`) | `ldrsb r0,[r0,r1]` - value in r0 | **nothing** |
 | `double` (`worldTime`) | field read through the 8-byte copy helper, then moved by VFP | serve the copy, read the buffer |
-| `float` (this batch) | `ldr r0,[r0,r1]` -> `dmb ish` -> `str r0,[sp,#8]` -> `vldr s0,[sp,#8]` -> `vmov r0,s0` | intercept the **word load** that addresses the field |
+| `float` (this batch) | see below - two instruction shapes, one rule | intercept the access that addresses the field |
 
-The float shape is the trap: the only VFP instruction sits on a **stack copy**, so hooking it reads the
-stack, not the field (`vldr s0,[sp,#8]`). The real read is the plain `ldr` one instruction after
-`dmb ish`. Unicorn's default ARM model rejects the `vldr` outright
-(`UC_ERR_INSN_INVALID`), so the getter cannot simply be run to completion - it must be stopped at the
-read, which is also the only reading that is faithful.
+## Two instruction shapes, one rule
+
+The float getters do not even agree with each other on how to read the field:
+
+    weather family (timeOfDayFraction, weatherFraction, rainFraction, rainFractionNotIncludingSnow)
+        ldr r0, [r0, r1]     <- the field, 32-bit word
+        dmb ish
+        str r0, [sp, #8]
+        vldr s0, [sp, #8]    <- VFP on a STACK COPY, not on the field
+        vmov r0, s0
+
+    simulationProgress
+        add r0, r0, r1
+        vldr s0, [r0]        <- VFP DIRECTLY on the field
+
+The weather shape is the trap: the only VFP instruction operates on a stack copy, so hooking it reads
+the stack rather than the field, and Unicorn's default ARM model rejects the `vldr` outright
+(`UC_ERR_INSN_INVALID`) - the getter cannot be run to completion. The rule that covers both shapes is
+**"the memory access whose effective address equals `self + offset`"**, and it must collect VFP loads
+as well as integer ones. Collecting only integer loads is exactly why `simulationProgress` first came
+back unexplained: a limitation of the tool, not a property of the target.
 
 ## Result
 
@@ -31,11 +47,7 @@ read, which is also the only reading that is faithful.
 | `weatherFraction` | 916 | yes | EA == self+offset | follows a rewritten cell |
 | `rainFraction` | 920 | yes | EA == self+offset | follows a rewritten cell |
 | `rainFractionNotIncludingSnow` | 924 | yes | EA == self+offset | follows a rewritten cell |
-| `simulationProgress` | 3136 | **no** | - | - |
-
-`simulationProgress` is not a failure of the method but a different shape: its offset is derived
-correctly (3136) yet no load in its body hits that address, so it addresses the field some other way
-and needs its own reading.
+| `simulationProgress` | 3136 | yes | EA == self+offset (via `vldr`) | follows a rewritten cell |
 
 ## What the provenance check buys
 
