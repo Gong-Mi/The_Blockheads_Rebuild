@@ -590,5 +590,19 @@
    "'the phase and the sun agree with each other' - still wrong, and now for a sharper reason: the phase is a sinusoid of worldTime while sunDirection.y is monotone, so they are independent signals that happen to share a period"
   ],
   "what_this_settles": "the day phase is a sinusoid over the 900-unit day, which is consistent with its name and with isHeadingTowardsMIdday reporting its derivative's sign. The writer's location is still unfound (four static/executed routes empty), but its BEHAVIOUR is now modelled numerically rather than guessed"
+ },
+ "fifth_route_and_a_unifying_clue": {
+  "route": "find the callers of World -[getDayNightFractionForX:atWorldTime:] (the function carrying the 900.0 day constant) by resolving its selref slot to loading sites - the chain that worked for setCraftableItem:",
+  "result": {
+   "selref_slot": "0x00e7d6d4",
+   "in_objc_selrefs": true,
+   "loading_sites": 0
+  },
+  "the_unifying_clue": {
+   "observation": "three selectors, three different visibilities: setCraftableItem: HAS a pool-word loading site (which is how the crafting entry point was found), getDayNightFractionForX:atWorldTime: has a selref slot but NO pool-word loading site, and the subclass's initWithCraftableItem:imageData:outputImageData: has neither",
+   "reading": "the pool-word form is only ONE of the ways these senders are reached. A slot existing in __objc_selrefs means the selector IS sent by something, so a selector with a slot and no loading site is a dispatch form neither this project's tooling nor mine models - most likely a table-relative or indexed lookup",
+   "why_it_matters": "it explains the crafting boundary recorded several batches ago by the same mechanism, so the two mysteries are one: the tooling cannot see that form, and both the crafting initialiser and this clock function are reached through it"
+  },
+  "stopping_rule_applied": "this is the fifth empty result on the day phase's writer, and my own record from the fourth says to start from that list rather than re-run it. So the hunt stops here, with the five routes and this clue written down - the behaviour is modelled numerically (sinusoid over the 900-unit day) and does not depend on finding the writer."
  }
 }
