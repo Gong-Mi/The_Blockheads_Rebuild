@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Validate checked-in reverse-v3 evidence without requiring the copyrighted APK."""
 
+import re
 from pathlib import Path
 
 
@@ -8,11 +9,23 @@ ROOT = Path(__file__).resolve().parents[1]
 NATIVE = ROOT / "reconstruction" / "reverse-v3" / "native"
 
 
+def _normalise(s: str) -> str:
+    """Strip markdown emphasis/backticks and collapse whitespace before comparing a needle.
+
+    A phrase that reads as one sentence in review can be split across two lines in the file, or carry
+    `*emphasis*` / `**bold**` / backticks inside it. Three separate times an author-side formatting
+    difference like that failed the gate on a *correct* document, which teaches the wrong lesson:
+    rewrite the check, not the prose. Matching is therefore on normalised text.
+    """
+    return re.sub(r"\s+", " ", re.sub(r"[`*_]", "", s)).strip()
+
+
 def require(path: Path, needles: list[str]) -> None:
     if not path.is_file():
         raise SystemExit(f"missing evidence file: {path.relative_to(ROOT)}")
     text = path.read_text(encoding="utf-8")
-    missing = [needle for needle in needles if needle not in text]
+    hay = _normalise(text)
+    missing = [needle for needle in needles if _normalise(needle) not in hay]
     if missing:
         raise SystemExit(
             f"{path.relative_to(ROOT)} is missing required evidence: {missing}"
@@ -1593,6 +1606,14 @@ def main() -> None:
             "SELF_CHECK",
             "no_cfstring",
             "PIC_BASE",
+        ],
+    )
+    require(
+        NATIVE / "STRUCT_GETTER_EMULATION.md",
+        [
+            "does not take self in r0",
+            "A control that cannot exist is not evidence of a bug",
+            "the symbol cross-check is *unavailable*",
         ],
     )
     require(
