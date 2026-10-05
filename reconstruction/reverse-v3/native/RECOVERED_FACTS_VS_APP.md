@@ -25,7 +25,7 @@
 |---|---|---|
 | DynamicObject 标志簇 `isNet@52` / `needsRemoved@48` / `updateNeedsToBeSent@49` / `creationDataNeedsToBeSent@50` / `unreliableUpdateNeedsToBeSent@51` | 原版用这五个字节承载**网络脏位与移除位**，而 v4 存档要保存动态对象 | 读 `app/src/main/cpp/dynamic_object_registry.{h,cpp}` 与 v4 序列化，看它是否用别的结构表达同一状态；grep 只能证明字符串不在，证明不了语义不在 |
 | `worldChangedSimulateCounter`（活体 ≈30/s） | 模拟步进计数；若 app 要复现"每秒 30 次模拟更新"的节奏就需要等价物 | 同类：看 app 帧循环的模拟节奏是否有对应计数 |
-| 音频 94 个未接名字（共 275 对、已接 42） | **此前本表把它写成"事件→音效语义仍缺"，那是错的**：`audio_wiring_model.h` 的 `kWiring[275]` 就是 (方法, 音效名) 对，**94/95 个未接名字都有已恢复的方法映射**（如 `blockheadDie.wav <- Blockhead -[dieForGood]`、`camera.wav <- World -[doCameraScreenshot]`）⇒ 语义已在手，缺的是**替换版代码引用**它们 | 这是**产品接线**任务，不是逆向缺口；只有 1 个名字确实无映射（verbatim-only）需要单独看 |
+| 音频：app **实际播放 14 个**资产 / 已恢复 275 对 | 两处更正：① 我先前写"94 未接"是错的；② 那个指标（`test_audio_wiring_model.py`）测的是"名字在**随仓源码**里出现过"，而 recovered 侧自己的表（`sound_preload_list.h` 等）也算在内 ⇒ 42 与 14 之差（28）来自 **recovered 侧**的文件（该测试同时统计 `app/src/main/cpp` 与 `reconstruction/recovered`；具体落在哪些文件未逐个核，不点名），**不是 app 在播**。app 源码里真实出现的 `.wav` 只有 **14** 个（`pickaxe`/`dig`/`place`/`portalInteraction`/`crunch` …），全部经 `entities->queueSound()` → JNI → Java `playSound` ✓ | **机制现成、映射现成**；剩下约 261 个播不出来，是因为**替换版还没实现触发它们的事件**（death / chat / screenshot / craft-complete 在 app 里**不存在**，只有一个存档键 `workbench_has_been_crafted`）⇒ **音频被 gameplay 功能卡住，不是被逆向卡住**。硬塞名字只会让指标好看而不会出声 |
 
 ## 已界定（追到底了，结论有边界）
 
