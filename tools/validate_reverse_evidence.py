@@ -1720,6 +1720,7 @@ def main() -> None:
             '"classlist_cross_check_agrees"',
             'open discrepancy',
             '"instance_identification_negative"',
+            '"static_scan_vs_live_contradiction"',
         ],
     )
     require(

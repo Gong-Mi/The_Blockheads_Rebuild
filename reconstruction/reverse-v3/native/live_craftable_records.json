@@ -474,5 +474,24 @@
   "consequence": "the world's dynamic objects (Workbench among them) live inside those containers, so an ObjC-graph walk that follows ivars and checks isas will ALWAYS stop in front of them. That is the mechanistic reason the BFS reported 'nothing deeper', not a wrong path",
   "what_it_would_take": "decoding an inline C++ container's internal layout (libc++ or custom) to enumerate its elements - a project of its own, and not needed for the crafting record: opening the workbench screen binds PaintMixUI.workbench (1 hop) and the record becomes readable",
   "consequence_for_the_plan": "the live route to the crafting record is the one hop that the game state provides, while the container route would be a large detour. That settles which one to wait for."
+ },
+ "static_scan_vs_live_contradiction": {
+  "static": {
+   "tool": "tools/extract_ivar_cell_references.py (the fused-store-fixed version)",
+   "timeOfDayFraction cell 0xf32b78": "exactly 1 site, classified read",
+   "sunDirection cell 0xf32b6c": "0 sites at all - not even its own getter",
+   "worldTime cell 0xf328f4": "3 sites: 2 reads plus its own getter"
+  },
+  "live": {
+   "timeOfDayFraction": "advances at 0.011831/s (measured over 25 s and again over 96 s)",
+   "sunDirection": "reads out as a unit vector at offset 660"
+  },
+  "conclusion": "the static scan reports no writer for a field that demonstrably changes, and no reference at all for a field it can read - so this family's per-ivar coverage has a CONFIRMED gap, and the contradiction comes from live data rather than from a hunch. For these fields the live read is the authority and the cell scan's silence is not evidence of absence.",
+  "why_this_matters": "it is the same failure mode as the fused-store gap (a tool limitation read as a property of the binary), but this time the counter-example is a measurement rather than a reasoned suspicion - which is what makes it worth recording separately",
+  "candidates_for_the_missing_writer": [
+   "a store through a computed pointer (the C++ side writing a field of a World-like struct)",
+   "a store form the classifier still does not recognise",
+   "the value being derived per frame from another quantity rather than stored - in which case the ivar would only be written by whatever caches it, and the scan should have seen that too"
+  ]
  }
 }
