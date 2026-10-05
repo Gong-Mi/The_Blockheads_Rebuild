@@ -3,7 +3,7 @@ project(BlockheadsRecoveredView LANGUAGES CXX)
 
 add_library(blockheads_recovered_view STATIC
     gameview_update.cpp projection_update.cpp world_view_contracts.cpp world_translation.cpp sound_manager.cpp gameview_input.cpp gameview_starttouch.cpp gameview_move_touch.cpp world_move_touch.cpp gameview_end_touch.cpp world_end_touch.cpp gameview_cancel_touch.cpp gameview_secondary_touch.cpp
-    pinch_return.cpp translation_return.cpp zoom_settle.cpp dynamic_object_flags.cpp world_clock_domain.cpp frame_loop_participants.cpp dynamic_object_layout.cpp)
+    pinch_return.cpp translation_return.cpp zoom_settle.cpp dynamic_object_flags.cpp world_clock_domain.cpp frame_loop_participants.cpp dynamic_object_layout.cpp audio_wiring_model.cpp)
 target_include_directories(blockheads_recovered_view PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(blockheads_recovered_view PUBLIC cxx_std_17)
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
@@ -573,6 +573,10 @@ add_executable(test_frame_loop_participants ../../tools/test_frame_loop_particip
 target_link_libraries(test_frame_loop_participants PRIVATE blockheads_recovered_view)
 add_test(NAME recovered_frame_loop_participants COMMAND test_frame_loop_participants)
 
-add_executable(test_dynamic_object_layout ../../tools/test_dynamic_object_layout.cpp)
+add_executable(test_dynamic_object_layout ../../tools/test_dynamic_object_layout.cpp audio_wiring_model.cpp)
 target_link_libraries(test_dynamic_object_layout PRIVATE blockheads_recovered_view)
 add_test(NAME recovered_dynamic_object_layout COMMAND test_dynamic_object_layout)
+
+add_executable(test_audio_wiring_model ../../tools/test_audio_wiring_model.cpp)
+target_link_libraries(test_audio_wiring_model PRIVATE blockheads_recovered_view)
+add_test(NAME recovered_audio_wiring_model COMMAND test_audio_wiring_model)
