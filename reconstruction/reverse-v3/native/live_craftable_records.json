@@ -425,5 +425,20 @@
    "question": "which counter advances the day phase? (recorded last batch as falsifiable)",
    "answer": "not worldTime. The phase advances 0.01183/s while worldTime advances 20/s - a ratio of about 1:1690 worldTime units per full phase, whereas a naive 900-units-per-day reading would put it at 1:900. So a second counter or a different constant exists, and the static search now has a target rather than a mystery"
   }
+ },
+ "live_day_phase_measured": {
+  "method": "sample timeOfDayFraction, isHeadingTowardsMIdday, sunDirection.y and worldTime every 2 s for 96 s (offsets resolved by NAME through the ivar table, not hand-copied)",
+  "findings": {
+   "shape": "the fraction is a TRIANGLE wave between ~0.002 and ~0.476, not a monotone 0..1 day cycle: it rose to 0.476, turned, fell to 0.002, and turned again inside the window",
+   "flag_meaning": "isHeadingTowardsMIdday is 1 while the phase RISES and 0 while it FALLS - it is literally 'the phase is increasing', and it flips exactly at the turning points (1->0 at 0.476, 0->1 at 0.002)",
+   "period": "half period ~1320 worldTime units and a full cycle ~2640 units (about 132 s at the observed 20 units/s)",
+   "independence_from_the_sun": "sun_y decreased monotonically through the whole window (+0.081 -> -0.372) while the phase oscillated, so the two are independent"
+  },
+  "correction_of_my_own_earlier_claim": {
+   "earlier": "'at this snapshot the fraction reads 0.2286 while the sun's Y component is ~0.0094, i.e. the sun is essentially on the horizon - the phase and the sun agree with each other'",
+   "now": "WRONG, and the samples show why: the sun's Y is monotone while the fraction is a triangle, so 0.2286 with sun_y ~0 was a coincidence of that instant. The phase is not derived from the sun.",
+   "what_replaces_it": "the phase is its own triangle wave with a measured period; the flag reports its direction. Both are now measured rather than read off a single sample."
+  },
+  "supersedes": "the previous batch's derivation of 'about 1690 worldTime units per full phase' - that number came from a 60 s delta that contained a turnaround, so it was an average over a fold, not a period. The triangle measurement replaces it."
  }
 }
