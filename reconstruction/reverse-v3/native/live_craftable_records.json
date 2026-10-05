@@ -468,5 +468,11 @@
    "then": "re-run live175/probe_craft_path.py; any non-null CraftableItemObject on that path has its 124-byte record read inline at its own ivar offset and decoded against the model",
    "records_seen_so_far": []
   }
+ },
+ "why_the_objc_walk_stops_here": {
+  "evidence": "DynamicWorld's ivar table: dynamicObjects @60, dynamicObjectsToAdd @840, dynamicObjectsByWorldPosIndex @1620, freeBlocksByPosition @2400 - the strides are exactly 780 bytes, so these are INLINE C++ containers rather than Objective-C objects",
+  "consequence": "the world's dynamic objects (Workbench among them) live inside those containers, so an ObjC-graph walk that follows ivars and checks isas will ALWAYS stop in front of them. That is the mechanistic reason the BFS reported 'nothing deeper', not a wrong path",
+  "what_it_would_take": "decoding an inline C++ container's internal layout (libc++ or custom) to enumerate its elements - a project of its own, and not needed for the crafting record: opening the workbench screen binds PaintMixUI.workbench (1 hop) and the record becomes readable",
+  "consequence_for_the_plan": "the live route to the crafting record is the one hop that the game state provides, while the container route would be a large detour. That settles which one to wait for."
  }
 }
