@@ -493,5 +493,21 @@
    "a store form the classifier still does not recognise",
    "the value being derived per frame from another quantity rather than stored - in which case the ivar would only be written by whatever caches it, and the scan should have seen that too"
   ]
+ },
+ "live_dynamic_world_rate_table": {
+  "method": "the same rate table, run against the DynamicWorld reached by the validated walk (World+416, isa checked against the resolved class) instead of against World",
+  "moving_fields": {
+   "worldChangedSimulateCounter": 29.96,
+   "poleItemRestoreAddTimer": 0.19999,
+   "sendUnreliableCounter": -0.12,
+   "poleItemRestoreRecheckTimer": -0.048008,
+   "dynamicObjectIDCount": 0.04
+  },
+  "semantics_earned": [
+   "worldChangedSimulateCounter advances ~30 times per second while the game is in fast-forward: that is the simulation step counter, and it gives the frame loop's real cadence in the same units the clock was measured in (20 world units/s)",
+   "dynamicObjectIDCount increments one per 25 s in this idle world - an id allocator, not a clock"
+  ],
+  "negative_that_matters": "no DynamicWorld field advances at the day phase's 0.011831/s, and no World field did either. So the phase's driver is not a numeric ivar of either object, which narrows it to a derived value, a field of another object, or a form the cell scan cannot see",
+  "next_measurement": "sample the phase together with worldTime across two or three full cycles and fit the relation - if the phase is a function of worldTime the curve is deterministic and the period falls out; that sampler is running"
  }
 }
