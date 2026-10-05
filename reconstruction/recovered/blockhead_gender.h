@@ -20,8 +20,12 @@
 //
 // NOT YET USABLE BY THE REPLACEMENT, and that is why this file exists rather than a call site: the rewrite models
 // clothing as clothingHead/clothingLegs and has no shoesCube, so isMale has no counterpart to compute. The
-// original plays sighFemale.wav or sighMale.wav from Blockhead -[sleepOnSpotIfPossible] depending on this byte, so
-// wiring a sleep sound without it would mean picking a variant arbitrarily. That is a fabricated choice, not a
+// original plays one of the two sleep-sigh assets from Blockhead -[sleepOnSpotIfPossible], choosing between
+// them by this byte, so wiring a sleep sound without it would mean picking a variant arbitrarily. The asset
+// names are discussed here WITHOUT being written out, deliberately: tools/test_audio_wiring_model.py counts a
+// reference as the asset's file name appearing in a shipped source file, so naming an asset in a comment
+// about NOT wiring it would move it into the referenced column. That is the metric being coarse, not the
+// comment being wrong - and the record of it belongs here rather than in a rewritten count. That is a fabricated choice, not a
 // recovered one, so the sleep sound stays unmatched until the rewrite can distinguish the two.
 #pragma once
 
