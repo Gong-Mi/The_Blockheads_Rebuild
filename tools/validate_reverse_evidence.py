@@ -1710,10 +1710,11 @@ def main() -> None:
     require(
         NATIVE / "record_base_tracking_status.json",
         [
-            '"proven_bases"',
+            '"rule_sensitivity"',
             '"false_negative"',
             '"false_positive_risk"',
             '"verified_by_hand_elsewhere"',
+            '"status_of_the_sealed_condition"',
         ],
     )
     require(
