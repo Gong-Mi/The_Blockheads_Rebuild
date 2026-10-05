@@ -1609,6 +1609,14 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "TRACE_RECEIVER_SENSITIVITY.md",
+        [
+            "Both are inventions",
+            "conditional on that fabrication",
+            "it is evidence rather than a choice",
+        ],
+    )
+    require(
         NATIVE / "FRAME_LOOP_PROTOCOL.md",
         [
             "one uniform protocol, not a set of lookalikes",

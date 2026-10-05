@@ -86,6 +86,9 @@ def main() -> int:
     ap.add_argument("--json", type=Path, default=None)
     ap.add_argument("--limit", type=int, default=200)
     ap.add_argument("--max-insns", type=int, default=400_000)
+    ap.add_argument("--fill-pointers", action="store_true",
+                    help="give the fabricated receiver a flat object graph: every 4-byte slot in its "
+                         "first 4 KB points at its own zeroed page, instead of being NULL")
     ap.add_argument("--keep-vfp", action="store_true",
                     help="don't skip VFP instructions (Unicorn's default ARM model rejects them)")
     args = ap.parse_args()
@@ -120,6 +123,20 @@ def main() -> int:
     mu.mem_map(SENTINEL & ~0xFFF, 0x1000, UC_PROT_READ | UC_PROT_WRITE | UC_PROT_EXEC)
     mu.mem_write(SENTINEL, struct.pack("<I", 0xE1A0F00E))
     mu.mem_write(OBJ, b"\0" * 0x1000)
+    filled = 0
+    if args.fill_pointers:
+        # A NULL receiver field sends the body down the "no object" path. Pointing every pointer-sized
+        # slot at its own zeroed page lets it walk into "an object that exists and is all zeroes"
+        # instead - which reaches more code, and is exactly as fabricated. Numeric fields are
+        # collateral: worldTime etc. become page addresses, so any branch on them is arbitrary.
+        FILL = 0x34000000
+        for i in range(0x1000 // 4):
+            try:
+                mu.mem_map(FILL + i * 0x1000, 0x1000, UC_PROT_READ | UC_PROT_WRITE)
+            except Exception:
+                pass
+            mu.mem_write(OBJ + i * 4, struct.pack("<I", FILL + i * 0x1000))
+            filled += 1
 
     st = {"sends": [], "insns": 0, "stopped_by": None, "vfp_skipped": 0, "call_outs": []}
     call_sites = set()
@@ -250,6 +267,8 @@ def main() -> int:
                     "as no-ops (Unicorn rejects them), so float values are unobserved too; "
                     "vfp_skipped records how many, and a body branching on a float result is equally "
                     "unfaithful past that point",
+           "receiver": ("flat object graph: every 4-byte slot points at its own zeroed page"
+                        if args.fill_pointers else "all-zero receiver"),
            "counts": {"sends": len(st["sends"]), "vfp_skipped": st["vfp_skipped"],
                       "skipped_unsupported": st.get("skipped_unsupported", 0),
                       "zero_pages_invented": len(st["vivified"]),

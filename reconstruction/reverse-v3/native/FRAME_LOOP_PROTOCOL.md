@@ -82,6 +82,10 @@ The one that did reach a send is the useful one:
 skipping **230 VFP instructions** - float-heavy geometry that ends by handing a translation to the
 object, consistent with `translation` being a `Vector2` at offset 624 that this project already
 executes and verifies. Two independent lines meeting on the same field.
+Cross-reference: that trace is receiver-conditional. Under a different fabrication of the same
+receiver the same method sends nothing - see `TRACE_RECEIVER_SENSITIVITY.md`, which is why the
+claim here is scoped to "in this run" rather than to the original.
+
 
 `World:incrementalLoad`, `DynamicWorld:simulate:` and `DynamicWorld:update:accurateDT:` produced no
 sends here; their call-out sites are in the artifact, and any claim about their structure needs a better
