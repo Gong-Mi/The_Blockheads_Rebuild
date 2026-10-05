@@ -463,6 +463,16 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         target_link_libraries(test_world_clock PRIVATE blockheads_gameplay_host)
         target_compile_options(test_world_clock PRIVATE -UNDEBUG)
         add_test(NAME world_clock COMMAND test_world_clock)
+        # The craft-completion sound: drives the event and cross-checks the asset against the recovered
+        # table, so the call site and the evidence cannot disagree silently.
+        get_filename_component(BH_APP_CPP_DIR "${CMAKE_SOURCE_DIR}/../../app/src/main/cpp" ABSOLUTE)
+        add_executable(test_craft_completion_sound ../../tools/test_craft_completion_sound.cpp)
+        target_link_libraries(test_craft_completion_sound PRIVATE blockheads_gameplay_host)
+        target_include_directories(test_craft_completion_sound PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+        target_compile_definitions(test_craft_completion_sound PRIVATE
+                                   BH_APP_SOURCE_DIR="${BH_APP_CPP_DIR}")
+        target_compile_options(test_craft_completion_sound PRIVATE -UNDEBUG)
+        add_test(NAME craft_completion_sound COMMAND test_craft_completion_sound)
         # The GENERATED load-time sound list: data consumed by a real target, so that a
         # hand-edit of the generated header cannot survive the suite.
         add_executable(test_sound_preload_list ../../tools/test_sound_preload_list.cpp)

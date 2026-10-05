@@ -497,8 +497,20 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
 
         if (g_ai->update(g_entities->player.x, g_entities->player.y, g_world, g_entities)) g_world->updateLighting();
         
-        if (g_crafting && g_crafting->update(0.05f * timeSpeed, &g_entities->player)) {
-            g_entities->inventoryDirty = true;
+        if (g_crafting) {
+            const int done = g_crafting->craftsCompleted;
+            const bool inventoryChanged = g_crafting->update(0.05f * timeSpeed, &g_entities->player);
+            // A craft completing is where the original plays fanfare.wav: it is the sound of
+            // Blockhead -[craftProgressUICompleteButtonTapped], and the same asset plays again when the
+            // crafted blockhead is delivered. Both are recovered pairs in audio_wiring_model.h, and
+            // tools/test_craft_completion_sound.py keeps this call site and that table from disagreeing.
+            for (int i = done; i < g_crafting->craftsCompleted; ++i) g_entities->queueSound("fanfare.wav");
+            // unchanged from before this edit: the dirty flag follows update()'s return value, which means
+            // "the inventory changed", NOT "a craft completed" - those differ whenever a finished craft has
+            // output still being delivered.
+            if (inventoryChanged) {
+                g_entities->inventoryDirty = true;
+            }
         }
 
         if (g_ai->pendingInteractionBenchId != -1) {
