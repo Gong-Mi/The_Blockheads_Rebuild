@@ -434,7 +434,6 @@
   },
   "also": "the other eight fields arrive through the memcpy from a source record, so this method was never going to show them"
  },
- "status_of_the_sealed_condition": "the tracker is implemented, it proves BASES reliably (44 of them), and its access precision is measured at 1/3 on a hand-checked sample with both failure modes named and reproduced. The sealed condition is therefore partially satisfied: bases yes, field accesses only after hand verification.",
  "hand_check": {
   "sample": 3,
   "confirmed": [
@@ -464,5 +463,19 @@
   "precision_estimate": "1 of 3 on the first hand check - the tool's access hits must be treated as candidates at roughly that rate until the mechanism below is fixed",
   "mechanism_of_the_false_positives": "a method that contains ANY proven record base makes every [fp,#k] in it a candidate under some base's displacement, so ordinary locals get matched - the very collision the sealed note warned about, now with a measured example rather than a warning"
  },
- "false_negative_cause": "the length constant 0x7c is required NEAR the call, and in PaintMixUI -[craftButton:] it is materialised in the SIBLING branch (the memset path at 0x00673408) while the memcpy call at 0x006733f0 sits in the other branch - so a base detected only from a same-block length constant misses that method's record entirely"
+ "false_negative_cause": "the length constant 0x7c is required NEAR the call, and in PaintMixUI -[craftButton:] it is materialised in the SIBLING branch (the memset path at 0x00673408) while the memcpy call at 0x006733f0 sits in the other branch - so a base detected only from a same-block length constant misses that method's record entirely",
+ "rule_sensitivity": {
+  "why": "three tightenings of the base-recognition rule were tried, and the count moved with each - so the base census is a property of the rule, not of the binary. The earlier sentence in this artifact ('44 provably real record buffers') was therefore an overclaim and is corrected here.",
+  "measurements": {
+   "loose (0x7c anywhere near the call, nearest preceding sub/add)": 44,
+   "sibling-branch length constant allowed": 79,
+   "base displacement traced from the call's own arguments": 77,
+   "length required to arrive in r2 at the call, traced to movw #0x7c": 61
+  },
+  "access_precision": "1 of 3 confirmed on two independent hand-checked samples, before and after the tightening - so the changes improved recall and left precision alone",
+  "consequence": "the tracker cannot be used as a census either: neither the base count nor the access list is a fact until it is hand-checked, and hand-checking every hit is the actual method",
+  "what_remains_solid": "the hand-verified field evidence, which does not depend on the tool: three fields in PaintMixUI -[craftButton:] (offsets 8, 40, 86) and f0's observed use in World -[craftOrConfigureItem:...] (read at 0x005b8bc4 from a buffer proven by the memset/memcpy pair immediately above it, then compared with 103)",
+  "status_of_the_sealed_condition": "NOT satisfied. The condition asked for base provenance that makes field-level reads distinguishable from frame locals; this implementation proves individual bases when their construction is visible in one place and cannot be trusted to enumerate them, which the stable 1/3 access precision shows."
+ },
+ "status_of_the_sealed_condition": "the tracker is implemented, it proves BASES reliably (44 of them), and its access precision is measured at 1/3 on a hand-checked sample with both failure modes named and reproduced. The sealed condition is therefore partially satisfied: bases yes, field accesses only after hand verification."
 }

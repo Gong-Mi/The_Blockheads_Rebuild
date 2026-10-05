@@ -89,24 +89,57 @@ def main() -> int:
                 calls.append((a, tgt))
     findings, bases = [], []
     for site, stub in calls:
-        insns = list(md.disasm(blob[max(TEXT_LO, site - 0x40):site + 4], max(TEXT_LO, site - 0x40)))
-        # the record length must be materialised as 0x7c somewhere just before the call
-        if not any(i.mnemonic == "movw" and i.op_str.replace(" ", "").startswith("r") and
-                   "#0x7c" in i.op_str for i in insns):
+        insns = list(md.disasm(blob[max(TEXT_LO, site - 0x80):site + 0x40], max(TEXT_LO, site - 0x80)))
+        # The length must arrive in r2 AT THIS CALL, traced back to a movw #0x7c. Requiring only that
+        # "0x7c appears nearby" was the remaining source of false bases: any unrelated movw #0x7c in the
+        # window qualified a call that has nothing to do with a record.
+        def r2_holds_7c(window):
+            for j in reversed(window[:-1]):
+                parts = [x.strip() for x in j.op_str.split(",")]
+                if not parts or parts[0] != "r2":
+                    continue
+                if j.mnemonic == "movw" and "#0x7c" in j.op_str.replace(" ", ""):
+                    return True
+                if j.mnemonic == "mov" and len(parts) == 2:
+                    src = parts[1]
+                    for k2 in reversed(window[:window.index(j)]):
+                        if k2.mnemonic == "movw" and k2.op_str.split(",")[0].strip() == src and "#0x7c" in k2.op_str.replace(" ", ""):
+                            return True
+                if j.mnemonic in ("sub", "add", "and"):      # r2 was computed, not the length
+                    return False
+            return False
+        if not r2_holds_7c(insns):
             continue
-        # find a frame address computed near the call: sub/add rX, fp|sp, #imm, and its register
+        # The buffer slot must come from the CALL'S OWN ARGUMENTS, not from "the nearest preceding
+        # sub/add": the confirmed hits are accesses to the frame slot that the memset/memcpy destination
+        # register holds, and taking an unrelated nearby computation was what let plain locals match.
+        # Trace r0 (the memset destination) back through a `mov r0, rY` to its `sub/add rY, fp|sp, #imm`.
         base_reg = None
-        for i in reversed(insns[:-1]):
-            if i.mnemonic in ("sub", "add") and len(i.op_str.split(",")) == 3:
-                rd, rn, imm = [x.strip() for x in i.op_str.split(",")]
-                if rn in ("fp", "sp") and imm.startswith("#"):
-                    base_reg = (rd, rn, imm, i.address)
+        window = list(md.disasm(blob[max(TEXT_LO, site - 0x30):site + 4], max(TEXT_LO, site - 0x30)))
+        for k, i in enumerate(reversed(window)):
+            if i.mnemonic in ("mov", "sub", "add") and len(i.op_str.split(",")) >= 2:
+                rd, rn = [x.strip() for x in i.op_str.split(",")[:2]]
+                if rd != "r0":
+                    continue
+                src = rn
+                # the direct form: sub r0, fp, #imm
+                if i.mnemonic in ("sub", "add") and src in ("fp", "sp"):
+                    base_reg = (rd, src, i.op_str.split(",")[2].strip(), i.address, i.mnemonic)
+                    break
+                # the indirect form: mov r0, rY where rY was computed just before
+                for j in reversed(window[:len(window) - k]):
+                    if j.mnemonic in ("sub", "add") and j.op_str.split(",")[0].strip() == src:
+                        parts = [x.strip() for x in j.op_str.split(",")]
+                        if len(parts) == 3 and parts[1] in ("fp", "sp"):
+                            base_reg = (rd, parts[1], parts[2], j.address, j.mnemonic)
+                            break
+                if base_reg:
                     break
         if not base_reg:
             continue
-        reg, rel, imm, at = base_reg
+        reg, rel, imm, at, base_mnemonic = base_reg
         bases.append({"call_site": hex(site), "stub": STUBS[stub], "base_register": reg,
-                      "frame": f"{rel} {imm}", "base_computed_at": hex(at)})
+                      "frame": f"{rel} {imm}", "base_computed_at": hex(at), "base_mnemonic": base_mnemonic})
         # Accesses are expressed relative to the FRAME register, not to the base register
         # (`strh r7,[fp,#-0x52]` where -0x52 == -0xa8 + 86), so the tracker works in frame displacement:
         # for a record whose base is fp-0xa8, an access at [fp,#k] is a field access iff k + 0xa8 is a field
@@ -115,11 +148,14 @@ def main() -> int:
         frame_disp = None
         if imm.startswith("#"):
             v = _imm(imm)
-            frame_disp = None if v is None else (-v if insns[-1].mnemonic == "sub" else v)
+            frame_disp = None if v is None else (-v if base_mnemonic == "sub" else v)
         if frame_disp is not None:
-            lo = site - 0x200
-            hi = site + 0x600
-            for i in md.disasm(blob[max(TEXT_LO, lo):min(TEXT_HI, hi)], max(TEXT_LO, lo)):
+            # The access must be in the shadow of THIS base: nearest preceding base computation within
+            # 0x100 bytes. Anchoring on "some base in the method" is what let ordinary locals be matched -
+            # a method with one proven record base made every [fp,#k] a candidate.
+            lo = at
+            hi = min(TEXT_HI, at + 0x100)
+            for i in md.disasm(blob[max(TEXT_LO, lo):hi], max(TEXT_LO, lo)):
                 if i.mnemonic not in LOADS + STORES or "," not in i.op_str:
                     continue
                 inner = i.op_str.split(",", 1)[1].strip().strip("[]")
