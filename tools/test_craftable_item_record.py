@@ -107,6 +107,14 @@ def main() -> int:
         assert sorted(refs) == [0x00ac79a8, 0x00ac7a68], [hex(r) for r in refs]
         assert "kCraftableItemKeyReferencesInBinary = 2" in hdr
 
+    # the dispatch boundary must stay recorded: it is the reason the fillers are still unfound
+    pair = ROOT / "reconstruction/reverse-v3/native/craftable_item_serialisation_pair.json"
+    if pair.is_file():
+        pd = json.loads(pair.read_text())
+        assert "dispatch_boundary" in pd, "the selector-dispatch boundary must stay documented"
+        assert pd["dispatch_boundary"]["selector"].startswith("initWithCraftableItem:")
+        assert "kCraftableItemInitializerDispatchUnknown" in hdr
+
     print(f"craftable item record: {len(fields)} fields, {total} bytes, derived from the encoding "
           f"and confirmed by the signature's argument span ({span})")
     return 0

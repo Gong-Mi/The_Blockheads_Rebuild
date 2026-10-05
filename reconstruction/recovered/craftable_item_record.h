@@ -77,6 +77,16 @@ inline constexpr std::uint32_t kCraftableItemCfstringVa = 0x00f9b7b8U;
 inline constexpr std::uint32_t kCraftableItemReaderKeySite = 0x00ac79a8U;
 inline constexpr std::uint32_t kCraftableItemWriterKeySite = 0x00ac7a68U;
 inline constexpr std::size_t kCraftableItemKeyReferencesInBinary = 2;
+
+// The by-value initialiser -[PaintingCraftableItemObject initWithCraftableItem:imageData:outputImageData:]
+// is the entry point a caller would use to hand in a freshly built record, and it is where the field
+// semantics should be readable. Its senders are NOT findable statically today: the selector's cfstring
+// (0x00fec1f8) and a slot containing it (0x00146c10) both exist, but no .text pool word addresses that slot
+// PIC-relatively, and find_selector_senders.py reports 0 slots and 0 send sites for it. So its dispatch is
+// not the channel the selector tooling models (most likely class-indexed). Recorded rather than worked
+// around, because "the selector has no senders" and "our channel cannot see its senders" are different
+// claims and only the second one is supported.
+inline constexpr bool kCraftableItemInitializerDispatchUnknown = true;
 inline constexpr std::size_t kCraftableItemObjectRecordOffset = 4;
 inline constexpr std::uint32_t kCraftableItemObjectRecordCell = 0x00f34ea0U;
 inline constexpr std::size_t kCraftableItemObjectInstanceSize = 128;   // isa (4) + record (124)

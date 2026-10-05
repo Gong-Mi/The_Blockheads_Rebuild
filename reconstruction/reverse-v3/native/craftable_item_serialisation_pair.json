@@ -25,5 +25,14 @@
   ],
   "method": "scanning .text for words equal to the cfstring VA or its PIC-relative form (cfstring - 0x105faf4)"
  },
- "next_target": "who FILLS the record's fields - that is where f0..f10 get their meaning; the serialisation pair only moves opaque bytes"
+ "next_target": "who FILLS the record's fields - that is where f0..f10 get their meaning; the serialisation pair only moves opaque bytes",
+ "dispatch_boundary": {
+  "selector": "initWithCraftableItem:imageData:outputImageData:",
+  "cfstring_va": "0x00fec1f8",
+  "cstring_va": "0x00ee739d",
+  "slot_candidate": "0x00146c10",
+  "finding": "the selector exists in the method table and its cfstring and a slot containing it are both present, but NO .text pool word references that slot PIC-relatively, and the project's own find_selector_senders.py returns 0 slots / 0 send sites for it",
+  "meaning": "this selector's dispatch is not the pool-word channel the cell/selector tooling models - most likely a class-indexed/table-relative send - so the callers that BUILD the record cannot be reached by the two known static channels today. Recorded so the next attempt does not simply re-run the same two tools and conclude the selector is unused.",
+  "why_it_matters": "the record's field semantics live in whoever builds it, and that is exactly the code this boundary is currently hiding"
+ }
 }
