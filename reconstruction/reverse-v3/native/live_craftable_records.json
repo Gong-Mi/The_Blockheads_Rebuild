@@ -307,5 +307,62 @@
    ]
   },
   "conclusion": "the heap scan is replaced, not patched: the right route is to WALK THE OBJECT GRAPH from a root that can be identified with a strong signature - _validate_world does exactly that (header class, DynamicWorld hop, backref, saveID string) - and this project's world_layout.h with its 227 named ivar offsets is the map for that walk. The deliverable becomes the tool."
+ },
+ "graph_walk": {
+  "method": "identify a root with a strong signature (find_world: header class, DynamicWorld hop, its backref, saveID string), then follow KNOWN ivar offsets - the project's own layouts used as the map",
+  "world": "0x61f96000",
+  "world_info": {
+   "world_class": "0x671276a4",
+   "dw_class": "0x671284b4",
+   "classlist_reloc_world": "0x671276a4",
+   "world_dynamicWorld_off": 416,
+   "dw_world_off": 4,
+   "world_saveID_off": 436,
+   "stack_words_scanned": 24709120,
+   "stack_candidates": [],
+   "heap_hits": 1,
+   "heap_rejections": {}
+  },
+  "reachable_within_3_hops": [
+   {
+    "path": "root -> worldTileLoader",
+    "depth": 1,
+    "class": "WorldTileLoader",
+    "object": "0x370cc040",
+    "offset": 420
+   },
+   {
+    "path": "root -> uiManager",
+    "depth": 1,
+    "class": "UIManager",
+    "object": "0x6206a240",
+    "offset": 240
+   },
+   {
+    "path": "root -> dynamicWorld",
+    "depth": 1,
+    "class": "DynamicWorld",
+    "object": "0x254fd000",
+    "offset": 416
+   },
+   {
+    "path": "root -> uiManager -> paintMixUI",
+    "depth": 2,
+    "class": "PaintMixUI",
+    "object": "0x77073ba0",
+    "offset": 56
+   }
+  ],
+  "class_identity_checked_at_every_hop": true,
+  "notes": [
+   "DynamicWorld sits at World+416, which is the offset world_layout.h records - the model agrees with the live object, which is the first time this project's static layout has been checked against reality",
+   "PaintMixUI is reachable at depth 2 via World -> UIManager -> paintMixUI (0x77073ba0), i.e. the crafting entry point's own class is locatable live",
+   "deeper walking found nothing more, and inspecting PaintMixUI's 28 ivars shows only ONE pointer to a known class: its world backref. The idle paint-mix UI holds no workbench and no craftable object - which is exactly why the record is not here to read"
+  ]
+ },
+ "next_action_required": {
+  "what": "with the game in the foreground, open the crafting interface and start/queue a craft (or select an item in a workbench) so a CraftableItemObject or Action exists in the live graph",
+  "then": "re-run walk_from_world.py and read_live_record.py - the machinery is proven end to end: root identification with a strong signature, class resolution cross-checked against the relocated classlist, graph walk with isa checks at every hop, and 124-byte record reads",
+  "why_it_matters": "those records are the only place the field VALUES (and therefore the semantics) exist; every static route to them is exhausted and recorded as such"
  }
 }
