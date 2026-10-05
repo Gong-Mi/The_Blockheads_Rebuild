@@ -559,5 +559,36 @@
    "or find the writer by asking the live world a different question: read the phase twice around a known game action and see which method's completion moves it"
   ],
   "note": "this is the fourth empty static/executed result on this field, and the live value is the only evidence of the behaviour - which is the record a future attempt needs so it does not repeat these four"
+ },
+ "day_phase_fitted": {
+  "sample": "100 points over 2943 world units (297 s), 3 s apart - three full cycles",
+  "period_measured_from_flips": {
+   "peak_to_peak_worldTime": [
+    948.4,
+    900.7
+   ],
+   "mean": 924.5,
+   "reading": "the phase's period is ~900 worldTime units, i.e. the same 900 the static analysis read as a constant in getDayNightFractionForX:atWorldTime: - so the period IS the naive one"
+  },
+  "waveform": {
+   "model": "phase = a + b*sin(2*pi*(worldTime - t0)/900 + phi)",
+   "fitted": {
+    "a": 0.2443,
+    "b": -0.2211,
+    "t0": 502830,
+    "phi": 1.276
+   },
+   "fit_quality": {
+    "sine_worst_residual": 0.0397,
+    "triangle_worst_residual": 0.2627
+   },
+   "reading": "the phase is a SINUSOID of period 900, not a ramp and not a triangle - amplitude ~0.221 around ~0.244, so it swings roughly 0.02..0.47"
+  },
+  "corrections_of_my_own_earlier_claims": [
+   "'the phase is not the naive 900-units-per-day relation' - WRONG in the part that mattered: the period IS 900. What differs is the WAVEFORM (a sinusoid, not fmod(worldTime,900)/900).",
+   "'~1690 worldTime units per full phase' and then '~2640' - both were averages over a window containing a turnaround. Three full cycles and seven flag flips put the period at ~900 with two independent peak-to-peak measurements (948.4, 900.7).",
+   "'the phase and the sun agree with each other' - still wrong, and now for a sharper reason: the phase is a sinusoid of worldTime while sunDirection.y is monotone, so they are independent signals that happen to share a period"
+  ],
+  "what_this_settles": "the day phase is a sinusoid over the 900-unit day, which is consistent with its name and with isHeadingTowardsMIdday reporting its derivative's sign. The writer's location is still unfound (four static/executed routes empty), but its BEHAVIOUR is now modelled numerically rather than guessed"
  }
 }
