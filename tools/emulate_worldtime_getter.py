@@ -71,6 +71,9 @@ FIELDS = {
                            # from the getter's own pool at imp 0x56783c, cross-checked vs OBJC_IVAR_$_World.isSimulating
                            "isSimulating": {"imp": 0x0056783C, "cell": 0xF32AFC, "got_slot": 0x105C93C,
                                             "offset": 3140, "kind": "sbyte"},
+                           # the loop gate the msgSend trace kept calling: DynamicObject -[needsRemoved]
+                           "needsRemoved": {"imp": 0X0083D0F0, "cell": 0XF33E44, "got_slot": 0X105C3C8,
+                                            "offset": 48, "kind": "sbyte"},
 }
 
 

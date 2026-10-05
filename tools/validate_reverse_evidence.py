@@ -1627,6 +1627,13 @@ def main() -> None:
     require(
         NATIVE / "MSG_SEND_TRACE.md",
         [
+            "The gate the trace's loop kept calling",
+            "one-byte ivar on the",
+        ],
+    )
+    require(
+        NATIVE / "MSG_SEND_TRACE.md",
+        [
             "Executed, with a fabricated receiver and stubbed sends",
             "a send of the method's own selector",
             "This produces structure, not semantics",

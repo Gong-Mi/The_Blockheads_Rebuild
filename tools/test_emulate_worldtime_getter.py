@@ -51,7 +51,7 @@ def main() -> int:
     assert fresh["fastForward"]["negative_control"]["equals_value_at_self_plus_cell"] is True
     assert [p["returned"] for p in fresh["fastForward"]["positive"]] == [0, 1, 127, -128, -1], \
         "ldrsb sign-extension must hold for 0x80 and 0xFF"
-    assert set(fresh["sbyte_fields"]) == {"fastForward", "doubleTimeUnlocked", "isSimulating"}, \
+    assert set(fresh["sbyte_fields"]) == {"fastForward", "doubleTimeUnlocked", "isSimulating", "needsRemoved"}, \
         "both char fields must be executed"
     for name, rep in fresh["sbyte_fields"].items():
         assert [p["returned"] for p in rep["positive"]] == [0, 1, 127, -128, -1], name

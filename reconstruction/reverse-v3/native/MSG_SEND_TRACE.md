@@ -50,3 +50,42 @@ This produces structure, not semantics. It cannot tell you what `needsRemoved` r
 branches on a stubbed value is only traced up to that branch. The reconstruction's open questions about
 this method - where the x20 division sits relative to what - are not settled by it; what it does settle
 is that the top-level body sends exactly these four selectors from these four sites.
+
+## The gate the trace's loop kept calling, identified statically
+
+The repeated cycle above calls `needsRemoved` twice per iteration. There is exactly **one**
+implementation of that selector in the whole binary - `DynamicObject -[needsRemoved]` at `0x83d0f0` -
+and it is the ordinary `char` getter shape, so it executes under the same harness as the world flags:
+
+    slot 0x105c3c8 · cell 0xf33e44 · offset 48 · kind char
+    0x00 -> 0, 0x01 -> 1, 0x7F -> 127, 0x80 -> -128, 0xFF -> -1, plus the cell-rewrite control
+
+The field at offset 48 is named by the symbol table independently of the getter: needsRemoved
+(cell `0xf33e44`). So the loop's exit condition is a one-byte ivar on the
+DynamicObject, and the trace looping forever is fully explained by stubbing that getter to 0: nothing is
+ever "removed", so the loop's condition never changes.
+
+### The layout that explains it
+
+Enumerating `DynamicObject`'s ivars by switching on each symbol's cell content shows a run of adjacent
+**one-byte flags**, which is why this family's accessors all share the `ldrsb` shape:
+
+| offset | ivar |
+|---:|---|
+| 4 | `world` |
+| 8 | `dynamicWorld` |
+| 12 | `macroTileOwner` |
+| 16 | `pos` |
+| 24 | `floatPos` |
+| 32 | `cache` |
+| 36 | `ownerID` |
+| 40 | `uniqueID` |
+| **48** | **`needsRemoved`** |
+| 49 | `updateNeedsToBeSent` |
+| 50 | `creationDataNeedsToBeSent` |
+| 51 | `unreliableUpdateNeedsToBeSent` |
+| 52 | `isNet` |
+
+Five flags at 48..52, each one byte. One of them gates the update loop; the others are network-dirty
+bits for an object that is `isNet` or not. That is a shape the reconstruction can use directly, and it
+came from two independent sources - the getter's own cell and the symbol table - naming the same thing.
