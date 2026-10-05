@@ -1609,6 +1609,14 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "FRAME_LOOP_PROTOCOL.md",
+        [
+            "one uniform protocol, not a set of lookalikes",
+            "never REACHED a send",
+            "needs a better receiver than a zeroed page",
+        ],
+    )
+    require(
         NATIVE / "MSG_SEND_TRACE.md",
         [
             "Executed, with a fabricated receiver and stubbed sends",
