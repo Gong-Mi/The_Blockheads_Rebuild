@@ -1713,6 +1713,7 @@ def main() -> None:
             '"worldTime_per_wall_second"',
             '"classlist_cross_check_agrees"',
             'open discrepancy',
+            '"instance_identification_negative"',
         ],
     )
     require(

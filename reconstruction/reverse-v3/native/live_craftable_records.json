@@ -157,5 +157,155 @@
   ],
   "observation": "one instance (0x67d65df4) carries small integers in the record (f0=1, f4=1, f9=1, arrays mostly 0 with a few 1s), which is what a crafting record should look like; the other two are pointer-heavy. With three instances no generalisation is claimed - the value here is that live records are now readable and reproducible."
  },
- "boundary": "three instances at one moment in one save. Nothing here names a field; the values are recorded as read."
+ "boundary": "three instances at one moment in one save. Nothing here names a field; the values are recorded as read.",
+ "instance_identification_negative": {
+  "what_was_tried": "find instances by scanning anonymous rw regions for a word equal to the class pointer, for both Action (reading interactionTestResult @52, modelled as iiSS) and CraftableItemObject",
+  "class_resolution_is_sound": "Action -> 0x67127d84 and CraftableItemObject -> 0x67128cac, both agreeing with the relocated __objc_classlist cell",
+  "but_the_criterion_is_not": "only three words matched per class, and their contents do not match the layouts the encodings declare: CraftableItemObject's records show pointers inside the int[8] array ranges, and Action's interactionTestResult decodes as pointers rather than iiSS. So 'first word == class pointer' still matches class references held elsewhere (tables, caches) rather than instances",
+  "raw": {
+   "Action_records": [
+    {
+     "object": "0x67d178b4",
+     "fields": {
+      "+0": 1768715361,
+      "+4": 29811,
+      "+8": 1313557575
+     },
+     "raw": "61746c6973740000474c4b4e"
+    },
+    {
+     "object": "0x67d34fcc",
+     "fields": {
+      "+0": 4294967295,
+      "+4": 0,
+      "+8": 1978729813
+     },
+     "raw": "ffffffff000000005505f175"
+    },
+    {
+     "object": "0x67d5719c",
+     "fields": {
+      "+0": 0,
+      "+4": 0,
+      "+8": 1729266208
+     },
+     "raw": "000000000000000020821267"
+    }
+   ],
+   "CraftableItemObject_records": [
+    {
+     "object": "0x67d35f34",
+     "fields": {
+      "+0": 1978731970,
+      "+4": 1978721200,
+      "+8": 1757234904,
+      "+12": 1757370348,
+      "+16": 1986648499,
+      "+20": 1986691420,
+      "+24": 1757238111,
+      "+28": 1757376428,
+      "+32": 1730436576,
+      "+36": 1729249868,
+      "+40": 4294967295,
+      "+44": 0,
+      "+48": 1978727985,
+      "+52": 1978716360,
+      "+56": 1978730261,
+      "+60": 1978719360,
+      "+64": 1730442264,
+      "+68": 1729258108,
+      "+72": 4294967295,
+      "+76": 0,
+      "+80": 4294967295,
+      "+84": 0,
+      "+88": 4294967295,
+      "+92": 0,
+      "+96": 4294967295,
+      "+100": 0,
+      "+104": 1978726717,
+      "+108": 1978714640,
+      "+112": 1757234708,
+      "+116": 1757369908,
+      "+120": 1730445016
+     },
+     "raw": "c20df175b0e3f075d846bd68ec57bf68b3d969765c816a765f53bd68ac6fbf68e05d24674c421267ffffffff0000000031fef075c8d0f0751507f17580dcf075187424677c621267ffffffff00000000ffffffff00000000ffffffff00000000ffffffff000000003df9f07510caf0751446bd683456bf68d87e2467"
+    },
+    {
+     "object": "0x67d5751c",
+     "fields": {
+      "+0": 2155872256,
+      "+4": 0,
+      "+8": 1730619384,
+      "+12": 1999531808,
+      "+16": 1742030496,
+      "+20": 0,
+      "+24": 0,
+      "+28": 1729261188,
+      "+32": 2147614720,
+      "+36": 7,
+      "+40": 1730619080,
+      "+44": 0,
+      "+48": 0,
+      "+52": 0,
+      "+56": 0,
+      "+60": 1729261208,
+      "+64": 2155872256,
+      "+68": 0,
+      "+72": 1730619824,
+      "+76": 1997495296,
+      "+80": 1997522880,
+      "+84": 0,
+      "+88": 0,
+      "+92": 1729261328,
+      "+96": 2147614720,
+      "+100": 7,
+      "+104": 1730619424,
+      "+108": 0,
+      "+112": 0,
+      "+116": 0,
+      "+120": 0
+     },
+     "raw": "0000808000000000f8272767206f2e77a046d5670000000000000000846e12670000028007000000c826276700000000000000000000000000000000986e12670000808000000000b0292767005c0f77c0c70f770000000000000000106f126700000280070000002028276700000000000000000000000000000000"
+    },
+    {
+     "object": "0x67d65df4",
+     "fields": {
+      "+0": 1,
+      "+4": 1757379328,
+      "+8": 0,
+      "+12": 0,
+      "+16": 0,
+      "+20": 0,
+      "+24": 1,
+      "+28": 1986692520,
+      "+32": 2,
+      "+36": 1741782116,
+      "+40": 0,
+      "+44": 0,
+      "+48": 0,
+      "+52": 0,
+      "+56": 1,
+      "+60": 1729268948,
+      "+64": 0,
+      "+68": 0,
+      "+72": 1,
+      "+76": 1978719800,
+      "+80": 0,
+      "+84": 0,
+      "+88": 1,
+      "+92": 1986694560,
+      "+96": 0,
+      "+100": 0,
+      "+104": 1,
+      "+108": 1978713660,
+      "+112": 0,
+      "+116": 0,
+      "+120": 3
+     },
+     "raw": "01000000007bbf680000000000000000000000000000000001000000a8856a7602000000647cd1670000000000000000000000000000000001000000d48c126700000000000000000100000038def075000000000000000001000000a08d6a760000000000000000010000003cc6f075000000000000000003000000"
+    }
+   ]
+  },
+  "conclusion": "the heap scan is replaced, not patched: the right route is to WALK THE OBJECT GRAPH from a root that can be identified with a strong signature - _validate_world does exactly that (header class, DynamicWorld hop, backref, saveID string) - and this project's world_layout.h with its 227 named ivar offsets is the map for that walk. The deliverable becomes the tool."
+ }
 }
