@@ -110,6 +110,14 @@ inline constexpr std::int32_t kRecordBaseFrameDelta = -0xa8;
 inline constexpr std::size_t kObservedFieldOffsetF2 = 8;
 inline constexpr std::size_t kObservedFieldOffsetF3 = 40;
 inline constexpr std::size_t kObservedFieldOffsetF8 = 86;
+
+// How the rest of the record gets its values, read off the stub bodies rather than guessed: the four stubs at
+// 0x001c2888/0x001c2918/0x001c2924/0x001c2948 are PLT trampolines to IMPORTED functions, not local helpers.
+// In craftButton: 0x001c2924 is called with (dest, 0, 0x7c) - memset(dest,0,124), zeroing the record - and
+// 0x001c2918 with (dest, source, n) - memcpy. So only f2, f3 and f8 are written field by field there; the
+// other eight arrive from a source record whose owner is where their meaning lives.
+inline constexpr std::uint32_t kRecordMemsetStub = 0x001c2924U;
+inline constexpr std::uint32_t kRecordMemcpyStub = 0x001c2918U;
 inline constexpr std::size_t kCraftableItemObjectRecordOffset = 4;
 inline constexpr std::uint32_t kCraftableItemObjectRecordCell = 0x00f34ea0U;
 inline constexpr std::size_t kCraftableItemObjectInstanceSize = 128;   // isa (4) + record (124)

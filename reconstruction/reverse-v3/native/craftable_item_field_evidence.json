@@ -44,5 +44,20 @@
   "copy_or_zero": "0x006733e4 bl 0x001c2918 with a source argument, guarded by a null check at 0x006733d0 - the record is either copied in or zeroed",
   "by_value_forward": "0x0067398c..0x006739b0 copies 124 bytes (r2 = 0x7c) from the stack record to an out-parameter for the objc_msgSend at 0x006739c4 - this is the setCraftableItem: call"
  },
- "boundary": "these are observed write patterns inside one method, not names: nothing here says what the values MEAN, and the remaining eight fields have no evidence yet. The value of the batch is that the record's base address is now known and field-level tracking works from it, which the project previously recorded as the blocker for small structs."
+ "boundary": "these are observed write patterns inside one method, not names: nothing here says what the values MEAN, and the remaining eight fields have no evidence yet. The value of the batch is that the record's base address is now known and field-level tracking works from it, which the project previously recorded as the blocker for small structs.",
+ "copy_semantics": {
+  "correction": "the stubs at 0x001c2888/0x001c2918/0x001c2924/0x001c2948 are NOT local copy helpers: each is a PLT-style trampoline (add ip,pc,#0xe00000 ; add ip,ip,#0x9d000 ; ldr pc,[ip,#imm]!) that jumps through a GOT slot, i.e. a call to an IMPORTED function. Several earlier artifacts of mine called them 'the copy family' - the mechanism I used to serve them was right, the name was not.",
+  "identifications": {
+   "0x001c2924": "called with (r0 = dest, r1 = 0, r2 = 0x7c) in craftButton: - the argument shape is memset(dest, 0, 124), so the record is zero-initialised",
+   "0x001c2918": "called with (r0 = dest, r1 = source, r2 = another value) - the shape is memcpy(dest, src, n)"
+  },
+  "consequence": "inside craftButton: only f2 (offset 8), f3 (offset 40) and f8 (offset 86) are written field by field; the other eight fields arrive through the memcpy from a SOURCE record. Their meaning therefore lives with whoever owns that source, not in this method"
+ },
+ "unresolved_source": {
+  "site": "0x006733b8..0x006733e4",
+  "what_the_code_does": "loads a value from an ivar of PaintMixUI, stores it at sp+0x124, and passes it as the memcpy source (guarded: if it is null the record is only zeroed)",
+  "cell_scan_says": "the chain resolves to the ivar PaintMixUI.craftButton",
+  "conflict": "a UIButton outlet is an odd thing to memcpy 124 bytes from, so either that ivar holds a source record rather than a button (the name would then be misleading), or the cell scan's chain attribution for this site is off - only one of the two source chains in the block resolved at all, and this project has already recorded that method attribution breaks down in places",
+  "status": "recorded as unresolved rather than asserted either way"
+ }
 }

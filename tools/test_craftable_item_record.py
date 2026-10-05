@@ -135,6 +135,11 @@ def main() -> int:
             assert fields[idx][1] == obs["offset"], (name, fields[idx][1], obs["offset"])
             assert e["record_base_in_frame"] == "fp-0xa8"
         assert "kRecordBaseFrameDelta = -0xa8" in hdr and "kObservedFieldOffsetF8 = 86" in hdr
+        cs = e.get("copy_semantics") or {}
+        assert cs.get("identifications", {}).get("0x001c2924", "").startswith("called with (r0 = dest")
+        assert "PLT-style trampoline" in cs.get("correction", "")
+        assert "unresolved" in e.get("unresolved_source", {}).get("status", "")
+        assert "kRecordMemsetStub" in hdr
 
     print(f"craftable item record: {len(fields)} fields, {total} bytes, derived from the encoding "
           f"and confirmed by the signature's argument span ({span})")
