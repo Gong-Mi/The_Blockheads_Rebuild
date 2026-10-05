@@ -1,40 +1,41 @@
-# Does any of these bodies write the clock fields? No - and what that does and does not mean
+# Who writes the clock/geometry fields? An empty watch, and the chain that explains it
 
-The static side says the clock/geometry fields have no writer **through the cell idiom**: `World.fastForward`
-resolves to exactly one site and it is a read, `worldTime` to two reads and its own getter. A negative from
-one method deserves a second, differently-shaped check, so this watches the fields for writes at run time.
+The static side says these fields have no writer through the cell idiom except where a setter exists. A
+negative from one method deserves a differently-shaped check, so the trace tool watches offsets for
+WRITES while a body runs - including writes that land **inside a zero page the run invented** for a NULL
+pointer field, because watching only "offset relative to the receiver" misses `otherObject->field`, which
+is precisely the indirection a fabricated receiver creates.
 
-Method: a write hook on the receiver watches offsets 624, 648, 660, 934, 3072, 3136, 3140, 3264 while each
-method body executes. A hit would name the exact instruction that stores the field.
+| method | instructions | field writes | invented pages watched |
+|---|---:|---:|---:|
+| `DynamicWorld:update:accurateDT:isSimulation:` | 1999 | 0 | 3 |
+| `World:update:accurateDT:pinchScale:dragInProgress:` | 1527 | 0 | 2 |
+| `World:incrementalLoad` | 445 | 0 | 1 |
+| `DynamicWorld:simulate:` | 249 | 0 | 0 |
 
-| method | instructions executed | field writes |
-|---|---:|---:|
-| `DynamicWorld:update:accurateDT:isSimulation:` | 1999 | 0 |
-| `DynamicWorld:simulate:` | 249 | 0 |
-| `DynamicWorld:update:accurateDT:` | 34 | 0 |
-| `World:incrementalLoad` | 445 | 0 |
-| `World:update:accurateDT:pinchScale:dragInProgress:` | 1527 | 0 |
+Zero, with the indirection hole closed.
 
-Zero. And the observed run is not trivial - `DynamicWorld -[update:accurateDT:isSimulation:]` executes
-1999 instructions under this receiver.
+## The chain that explains it
 
-## What this does not exclude, stated before what it does
+1. **executed**: `World -[update:accurateDT:pinchScale:dragInProgress:]` sends **`setTranslation:`** from
+   0x573548.
+2. **static**: `World -[setTranslation:]` @0x5531d0 writes cell `0xf328d4` - and it is the **only** write
+   site for `translation`, at 0x553204. It is reported as a write only because of the fused-store fix;
+   before that fix it would have shown as unknown.
+3. **field**: cell `0xf328d4` is `World.translation`, offset 624.
+4. **executed**: the pinch body itself writes offset 624 zero times.
 
-**(a)** The writes may happen inside callees, which this run **stubs** with `r0 = 0`. An executed watch on
-the body cannot see a callee's stores. Not excluded.
+So the negative is explained rather than mysterious: **the write lives in a callee, and this run stubs
+callees with `r0 = 0`.** Executed trace -> selector -> static setter -> write site -> field offset is a
+complete chain, each link from a different instrument.
 
-**(b)** The fabricated receiver may send the body down an empty path so it never reaches a write. Not
-excluded either.
+## What remains excluded, and what remains open
 
-## What it does exclude
+Excluded: these five bodies do not write these fields in their own instructions, nor one indirection into
+an object the run invented. Open: a write inside a stubbed callee (the chain above shows this is not a
+hypothetical), and any path a fabricated receiver never takes.
 
-These five bodies do **not** write these fields directly in their own instructions, under a receiver whose
-pointer fields are zero. That is a narrow statement, and it is the honest size of this result.
-
-## Why it is worth keeping anyway
-
-It agrees with the static result through a completely different mechanism, and it turns "the static method
-found no writer" into "two different methods found no writer" - so the remaining explanations narrow to a
-stubbed callee, a live-only path, or an addressing form neither method models. Running the same watch
-again would reproduce this, not advance it; the next step is a receiver from live state, which this
-project is blocked on while the original app is not running.
+One more open item, recorded rather than chased: the corrected site scan reports **0** sites for cell
+`0xf32b6c` (`World.sunDirection`) even though its own getter materialises it - so that scan's pattern or
+window misses one shape, while the value-level tools derive it without trouble. That is a tool question,
+not a fact about the binary.

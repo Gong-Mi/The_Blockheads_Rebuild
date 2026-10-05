@@ -1627,8 +1627,8 @@ def main() -> None:
     require(
         NATIVE / "CLOCK_FIELD_WRITE_WATCH.md",
         [
-            "two different methods found no writer",
-            "Zero. And the observed run is not trivial",
+            "the write lives in a callee",
+            "Zero, with the indirection hole closed",
         ],
     )
     require(

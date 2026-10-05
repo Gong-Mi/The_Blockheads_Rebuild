@@ -229,10 +229,25 @@ def main() -> int:
         from unicorn.arm_const import UC_ARM_REG_R0 as _R0, UC_ARM_REG_R1 as _R1, UC_ARM_REG_R2 as _R2
 
         def on_write(mu_, access, address, size, value, _):
+            # Watching only "offset relative to the receiver" has a hole: if the body writes
+            # `otherObject->field` and otherObject is a pointer field of the fabricated receiver, that
+            # write lands on one of the zero pages this run invented - so it is recorded here as a write
+            # INTO AN INVENTED OBJECT, with the offset inside that object. Without this the experiment
+            # would report "no writes" while a write was happening one indirection away.
             off = address - OBJ
-            if off in watch:
+            hit = off in watch
+            holder = "receiver"
+            if not hit:
+                for page_hex in st["vivified"]:
+                    base = int(page_hex, 16)
+                    if base <= address < base + 0x1000:
+                        inner = address - base
+                        if inner in watch:
+                            hit, off, holder = True, inner, f"invented page {page_hex}"
+                        break
+            if hit:
                 lr = mu_.reg_read(UC_ARM_REG_LR)
-                st["field_writes"].append({"offset": off, "size": size, "value": value,
+                st["field_writes"].append({"offset": off, "where": holder, "size": size, "value": value,
                                            "site": hex(lr - BIAS - 4),
                                            "r0": hex(mu_.reg_read(_R0)),
                                            "r1": hex(mu_.reg_read(_R1))})
