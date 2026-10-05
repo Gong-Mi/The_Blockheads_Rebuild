@@ -101,13 +101,27 @@ def build(elf_path: Path, coverage: Path, methods_tsv: Path | None) -> dict:
                  "replacement_referenced": r.get("replacement_referenced"),
                  "cstring_va": None, "cfstring_structs": [], "sites": [],
                  "methods": [], "status": None}
-        if "%" in name:
-            entry["status"] = "format_string_skipped"
+        # Inherit the coverage artifact's evidence class. Guessing from the shipped name missed all
+        # 14 bird1..bird14.wav rows: the original names those through the printf pattern bird%d.wav,
+        # and the artifact spells the class "format-string" (hyphen) while its counts use
+        # "format_string" - which is exactly how the first attempt got it wrong.
+        cls = r.get("original_class")
+        entry["original_class"] = cls
+        if cls == "format-string":
+            entry["status"] = "format_string_named"
+            entry["pattern"] = r.get("original_evidence")
+            rows.append(entry)
+            continue
+        if cls == "unattributed":
+            # the original never names this file: it cannot be wired from naming evidence at all,
+            # which is a different finding from "the name is composed at run time".
+            entry["status"] = "unnamed_by_original"
             rows.append(entry)
             continue
         off = blob.find(name.encode() + b"\0")
         if off < 0:
-            entry["status"] = "cstring_absent"
+            # a verbatim-class row whose cstring is missing contradicts the coverage artifact
+            entry["status"] = "verbatim_but_no_cstring"
             rows.append(entry)
             continue
         entry["cstring_va"] = hex(off)
@@ -141,7 +155,9 @@ def build(elf_path: Path, coverage: Path, methods_tsv: Path | None) -> dict:
                 "mapped": sum(1 for r in rows if r["status"] == "mapped"),
                 "no_cfstring": sum(1 for r in rows if r["status"] == "no_cfstring"),
                 "no_site": sum(1 for r in rows if r["status"] == "no_site"),
-                "cstring_absent": sum(1 for r in rows if r["status"] == "cstring_absent"),
+                "unnamed_by_original": sum(1 for r in rows if r["status"] == "unnamed_by_original"),
+                "verbatim_but_no_cstring": sum(1 for r in rows if r["status"] == "verbatim_but_no_cstring"),
+                "format_string_named": sum(1 for r in rows if r["status"] == "format_string_named"),
                 "format_string_skipped": sum(1 for r in rows if r["status"] == "format_string_skipped"),
             }}
 

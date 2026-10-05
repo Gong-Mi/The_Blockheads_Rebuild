@@ -38,9 +38,11 @@ Sample, hand-checked before the sweep:
 |---|---|
 | names considered | 161 |
 | **mapped to a referencing method** | **136** |
-| no `__cfstring` struct (referenced some other way) | 2 |
+| named through a printf pattern (`bird%d.wav`) | 14 |
+| named verbatim but never as an ObjC literal (no `__cfstring`) | 2 |
+| never named by the original at all | 9 |
 | cfstring but no located site | 0 |
-| cstring absent verbatim (composed at run time) | 23 |
+| verbatim-class row whose cstring is missing (artifact contradiction) | 0 |
 
 Of the mapped rows, **120 are still unreferenced by the replacement** - the mechanical
 wiring backlog, each row carrying the method and the pool-word site so a wiring commit can cite an
@@ -59,9 +61,26 @@ alone names 26 of them (a load-time list, the natural first wiring target),
 
 - Does: which method in the original references each shipped name, with the site address.
 - Does not: playback semantics. A reference says the code names the sound, not that this is the only
-  moment it plays. The `no_cfstring` (2) and `cstring_absent` (23)
-  rows are recorded rather than guessed: `axe.wav` is one of the two no-cfstring names, so it is
-  composed some other way and stays open.
+  moment it plays.
+
+## The three non-mapped classes, each with its own reason
+
+The status of every row is inherited from `audio_asset_coverage.json` rather than guessed from the
+filename, and that inheritance is itself a cross-artifact check: a `verbatim` row whose cstring is
+missing would mean the two artifacts disagree, and **{c['verbatim_but_no_cstring']} such rows exist**,
+so they agree.
+
+- **{c['format_string_named']} rows** - `bird1.wav` .. `bird14.wav` - are named by the original through
+  the printf pattern `bird%d.wav`. A name is composed at run time, so there is no literal to find; the
+  pattern is recorded per row. (The first version of this tool looked for a `%` in the *filename* and
+  misfiled all 14 as "cstring absent"; the coverage artifact spells the class `format-string` with a
+  hyphen while its counts use `format_string`, which is how that happened.)
+- **{c['unnamed_by_original']} rows** - {', '.join('`' + x['name'] + '`' for x in d['rows'] if x['status'] == 'unnamed_by_original')} -
+  are shipped but never named by the original in any form. They cannot be wired from naming evidence
+  at all. This is a different finding from "composed at run time" and is recorded as its own class.
+- **{c['no_cfstring']} rows** - `axe.wav`, `ice.wav` - *are* named verbatim in the ELF (the coverage
+  artifact found the cstring) but no `__cfstring` struct points at them, so no `@"..."` literal uses
+  them. They are probably reached through a C-level table; that stays open rather than guessed.
 
 ## Regeneration
 
