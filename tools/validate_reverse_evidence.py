@@ -1708,6 +1708,14 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "live_craftable_records.json",
+        [
+            '"worldTime_per_wall_second"',
+            '"classlist_cross_check_agrees"',
+            'open discrepancy',
+        ],
+    )
+    require(
         NATIVE / "struct_census.json",
         [
             '"distinct_structs"',

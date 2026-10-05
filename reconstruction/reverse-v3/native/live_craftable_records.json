@@ -1,0 +1,161 @@
+{
+ "schema": 1,
+ "captured": "2026-10-05T11:40+0800",
+ "grade": "LIVE - read from the running original (pid 4428) via /proc/<pid>/maps + pread on /proc/<pid>/mem; read-only, no injection, no ptrace",
+ "build": {
+  "running_lib_sha256": "d09418e9c0865902054a71358dcff3264d47f7b24ede58667cb5ea0e6f269b96",
+  "note": "the device runs 1.7.5 while the static baseline is 1.7.6; the live probe refuses to work against a mismatched ELF, which is how this was caught rather than silently mis-mapped"
+ },
+ "live_clock": {
+  "window_seconds": 60.017,
+  "worldTime_units_advanced": 1200.64874,
+  "worldTime_per_wall_second": 20.005144214,
+  "lastUpdateTime_advanced": 60.035153,
+  "reading": "the live game corroborates the x20 conclusion by a completely different method: 20.005 world units per wall second while the NSDate domain advances 1:1"
+ },
+ "live_clock_anomaly": {
+  "timeOfDayFraction_delta": 0.353949,
+  "implied_days_from_worldTime": 1.334,
+  "reading": "the day/night fraction moved by 0.35 while worldTime advanced 1.33 days, so the fraction is NOT the naive fmod(worldTime, 900)/900 - recorded as an open discrepancy against the simple reading of the clock model"
+ },
+ "live_craftable_objects": {
+  "class": "CraftableItemObject",
+  "class_ptr": "0x67128cac",
+  "classlist_cross_check_agrees": true,
+  "resolution": "the class object is relocated from the ELF's __objc_classlist through the live rw segment and cross-checked against the relocated classlist cell (both agree), rather than being read from the OBJC_CLASS_$_ symbol slot - an earlier attempt did the latter and 'found' 18 hits that were entries in the library's own pointer tables",
+  "candidates_in_anonymous_rw": 3,
+  "instances": [
+   {
+    "object": "0x67d35f34",
+    "fields": {
+     "+0": 1978731970,
+     "+4": 1978721200,
+     "+8": [
+      1757234904,
+      1757370348,
+      1986648499,
+      1986691420,
+      1757238111,
+      1757376428,
+      1730436576,
+      1729249868
+     ],
+     "+40": [
+      -1,
+      0,
+      1978727985,
+      1978716360,
+      1978730261,
+      1978719360,
+      1730442264,
+      1729258108
+     ],
+     "+72": -1,
+     "+76": 0,
+     "+80": -1,
+     "+84": 0,
+     "+86": 0,
+     "+88": -1,
+     "+92": [
+      0,
+      -1,
+      0,
+      1978726717,
+      1978714640,
+      1757234708,
+      1757369908,
+      1730445016
+     ]
+    }
+   },
+   {
+    "object": "0x67d5751c",
+    "fields": {
+     "+0": -2139095040,
+     "+4": 0,
+     "+8": [
+      1730619384,
+      1999531808,
+      1742030496,
+      0,
+      0,
+      1729261188,
+      -2147352576,
+      7
+     ],
+     "+40": [
+      1730619080,
+      0,
+      0,
+      0,
+      0,
+      1729261208,
+      -2139095040,
+      0
+     ],
+     "+72": 1730619824,
+     "+76": 1997495296,
+     "+80": 1997522880,
+     "+84": 0,
+     "+86": 0,
+     "+88": 0,
+     "+92": [
+      1729261328,
+      -2147352576,
+      7,
+      1730619424,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "object": "0x67d65df4",
+    "fields": {
+     "+0": 1,
+     "+4": 1757379328,
+     "+8": [
+      0,
+      0,
+      0,
+      0,
+      1,
+      1986692520,
+      2,
+      1741782116
+     ],
+     "+40": [
+      0,
+      0,
+      0,
+      0,
+      1,
+      1729268948,
+      0,
+      0
+     ],
+     "+72": 1,
+     "+76": 1978719800,
+     "+80": 0,
+     "+84": 0,
+     "+86": 0,
+     "+88": 1,
+     "+92": [
+      1986694560,
+      0,
+      0,
+      1,
+      1978713660,
+      0,
+      0,
+      3
+     ]
+    }
+   }
+  ],
+  "observation": "one instance (0x67d65df4) carries small integers in the record (f0=1, f4=1, f9=1, arrays mostly 0 with a few 1s), which is what a crafting record should look like; the other two are pointer-heavy. With three instances no generalisation is claimed - the value here is that live records are now readable and reproducible."
+ },
+ "boundary": "three instances at one moment in one save. Nothing here names a field; the values are recorded as read."
+}
