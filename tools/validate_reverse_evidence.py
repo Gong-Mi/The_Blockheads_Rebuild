@@ -1609,6 +1609,14 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "MSG_SEND_TRACE.md",
+        [
+            "Executed, with a fabricated receiver and stubbed sends",
+            "a send of the method's own selector",
+            "This produces structure, not semantics",
+        ],
+    )
+    require(
         NATIVE / "WORLD_METHOD_EXECUTION_CLASSIFICATION.md",
         [
             "it is a statement about",
