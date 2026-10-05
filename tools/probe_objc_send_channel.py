@@ -21,6 +21,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import os
 import hashlib
 import json
 import struct
@@ -147,8 +148,15 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--elf", type=Path, default=DEFAULT_ELF)
     ap.add_argument("--selector", default="soundNamed:")
-    ap.add_argument("--tsv", type=Path, default=native / "objc_send_channel.tsv")
-    ap.add_argument("--json", type=Path, default=native / "objc_send_channel.json")
+        # Default to scratch, NOT to the committed artifact under native/: this tool silently overwrote that
+    # artifact twice, once when run for a crafting selector and once for a clock selector, because the
+    # default output path was the repository copy. A probe must not be able to damage the evidence.
+    ap.add_argument("--tsv", type=Path,
+                    default=Path(os.environ.get("BH_SCRATCH", Path.home() / ".hermes/cache/scratch"))
+                    / "objc_send_channel.tsv")
+    ap.add_argument("--json", type=Path,
+                    default=Path(os.environ.get("BH_SCRATCH", Path.home() / ".hermes/cache/scratch"))
+                    / "objc_send_channel.json")
     ap.add_argument("--check", action="store_true")
     args = ap.parse_args()
 
