@@ -1596,6 +1596,22 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "WORLD_METHOD_EXECUTION_CLASSIFICATION.md",
+        [
+            "can be executed under Unicorn",
+            "runs as-is with a fabricated receiver",
+            "declared live-only",
+        ],
+    )
+    require(
+        NATIVE / "world_method_classification.json",
+        [
+            '"verdict"',
+            '"ruled"'.replace('"ruled"', '"rule"'),
+            '"unicorn-clean"',
+        ],
+    )
+    require(
         NATIVE / "WORLDTIME_GETTER_EMULATION.md",
         [
             "executed under Unicorn",
