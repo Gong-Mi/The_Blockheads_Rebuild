@@ -509,5 +509,24 @@
   ],
   "negative_that_matters": "no DynamicWorld field advances at the day phase's 0.011831/s, and no World field did either. So the phase's driver is not a numeric ivar of either object, which narrows it to a derived value, a field of another object, or a form the cell scan cannot see",
   "next_measurement": "sample the phase together with worldTime across two or three full cycles and fit the relation - if the phase is a function of worldTime the curve is deterministic and the period falls out; that sampler is running"
+ },
+ "second_static_form_also_empty": {
+  "what_was_tried": "the other static form for a field write: an immediate-offset store, str/strb/strh/vstr with an immediate equal to one of the modelled ivar offsets (660, 880, 648, 916, 934, 3260)",
+  "counts": {
+   "sunDirection 660": 384,
+   "timeOfDayFraction 880": 332,
+   "worldTime 648": 384,
+   "weatherFraction 916": 287,
+   "resetPauseIdleTimer field 3260": 50,
+   "fastForward 934": 0
+  },
+  "what_the_hits_are": "almost all of them are [sp, #imm] stack slots, in UI classes such as UICollectionView and UITableView. That is a property of the FORM rather than of the target: any frame with a local at that displacement matches, which is the same collision the project recorded when it first tried offset matching. The few heap-base hits (e.g. str r1,[r3,#0x370] in UIViewContext -[dealloc]) cannot be tied to World without base provenance.",
+  "conclusion": "neither static form reaches these fields' writers - the cell idiom reports no writer (and no reference at all for sunDirection), and the immediate-offset form is dominated by stack frames. fastForward at 934 is a clean zero, which is the one unambiguous result here.",
+  "what_this_leaves": [
+   "a store through a computed pointer, i.e. the C++ side writing a struct field",
+   "a form neither scan models (the sunDirection cell showing 0 sites at all says the cell scan has a blind spot in this family)",
+   "and the route that does not depend on recognising a form at all: execute the frame-step method under the emulator with a write watch over the object's field range, which reports the storing instruction itself"
+  ],
+  "next_step": "the third route is the one to take: tools/watch_record_build.py already watches writes into a byte range on a receiver; pointed at a World-shaped receiver and its clock offsets it would name the instruction that advances the phase, and that is executed evidence rather than a pattern match"
  }
 }
