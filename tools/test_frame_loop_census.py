@@ -35,6 +35,13 @@ def main() -> int:
     pinch = [t for k, t in rep["traces"].items() if k.endswith("pinchScale:dragInProgress:")]
     assert pinch and pinch[0]["counts"]["sends"] >= 1, "the pinch/pan trace reached setTranslation:"
     assert pinch[0]["counts"]["vfp_skipped"] > 100, "that method is float-heavy; the count must show it"
+
+    # cross-language: the recovered C++ list must carry exactly these participants
+    hdr = (ROOT / "reconstruction/recovered/frame_loop_participants.h").read_text()
+    for name in [m["class"] for m in rep["census"]["classes"]]:
+        assert f'"{name}",' in hdr, name
+    assert f"std::array<std::string_view, {rep['census']['members']}>" in hdr
+
     print(f"frame-loop protocol: {len(live)} classes, one signature; "
           f"{len(rep['traces'])} traces, sends={sorted(t['counts']['sends'] for t in rep['traces'].values())}")
     return 0
