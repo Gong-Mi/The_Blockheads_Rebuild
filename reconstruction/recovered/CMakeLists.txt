@@ -3,7 +3,7 @@ project(BlockheadsRecoveredView LANGUAGES CXX)
 
 add_library(blockheads_recovered_view STATIC
     gameview_update.cpp projection_update.cpp world_view_contracts.cpp world_translation.cpp sound_manager.cpp gameview_input.cpp gameview_starttouch.cpp gameview_move_touch.cpp world_move_touch.cpp gameview_end_touch.cpp world_end_touch.cpp gameview_cancel_touch.cpp gameview_secondary_touch.cpp
-    pinch_return.cpp translation_return.cpp zoom_settle.cpp dynamic_object_flags.cpp)
+    pinch_return.cpp translation_return.cpp zoom_settle.cpp dynamic_object_flags.cpp world_clock_domain.cpp)
 target_include_directories(blockheads_recovered_view PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(blockheads_recovered_view PUBLIC cxx_std_17)
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
@@ -564,3 +564,7 @@ endif()
 add_executable(test_dynamic_object_flags_model ../../tools/test_dynamic_object_flags_model.cpp)
 target_link_libraries(test_dynamic_object_flags_model PRIVATE blockheads_recovered_view)
 add_test(NAME recovered_dynamic_object_flags_model COMMAND test_dynamic_object_flags_model)
+
+add_executable(test_world_clock_domain ../../tools/test_world_clock_domain.cpp)
+target_link_libraries(test_world_clock_domain PRIVATE blockheads_recovered_view)
+add_test(NAME recovered_world_clock_domain COMMAND test_world_clock_domain)

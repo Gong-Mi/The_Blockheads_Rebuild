@@ -41,6 +41,15 @@ def main() -> int:
     assert w["writes_constant"] == 0.0, w
     assert struct.unpack_from("<I", blob, w["imp"] and 0x5AC390)[0] == 0x00000000, "literal must be zero"
     assert w["to_offset"] > 0
+
+    # cross-language: the recovered C++ header must carry the same derived offsets and cells
+    hdr = (ROOT / "reconstruction/recovered/world_clock_domain.h").read_text()
+    for row in rep["fields"]:
+        const = "".join(part.capitalize() for part in row["field"].split("_"))
+        const = row["field"][0].upper() + row["field"][1:]
+        assert f"kOffset{const} = {row['offset']};" in hdr, (row["field"], row["offset"])
+        assert f"kCell{const} = {row['cell']};" in hdr, (row["field"], row["cell"])
+
     print(f"domain map re-derived: {len(rep['fields'])} fields, writer stores {w['writes_constant']} "
           f"to offset {w['to_offset']}")
     return 0
