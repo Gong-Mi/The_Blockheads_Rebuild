@@ -1708,6 +1708,13 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "struct_census.json",
+        [
+            '"distinct_structs"',
+            '"the net-data family shares one 24-byte header',
+        ],
+    )
+    require(
         NATIVE / "record_build_watch.json",
         [
             '"why_this_is_different"',
