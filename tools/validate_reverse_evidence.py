@@ -1600,6 +1600,7 @@ def main() -> None:
         [
             "executed under Unicorn",
             "UC_ERR_INSN_INVALID",
+            "0xFF` | **-1**",
             "returned 42.25",
             "lazy",
         ],

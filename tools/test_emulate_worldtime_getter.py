@@ -48,7 +48,10 @@ def main() -> int:
     assert fresh["negative_control"]["equals_value_at_self_plus_cell"] is True
     assert ART.is_file(), "the committed artifact is missing"
     committed = json.loads(ART.read_text())
-    for key in ("getter_imp", "cell", "got_slot", "passed", "negative_control"):
+    assert fresh["fastForward"]["negative_control"]["equals_value_at_self_plus_cell"] is True
+    assert [p["returned"] for p in fresh["fastForward"]["positive"]] == [0, 1, 127, -128, -1], \
+        "ldrsb sign-extension must hold for 0x80 and 0xFF"
+    for key in ("getter_imp", "cell", "got_slot", "passed", "negative_control", "fastForward"):
         assert committed[key] == fresh[key], f"committed artifact drifted at {key}"
     print("worldtime getter emulation: controls hold and the committed artifact matches a fresh run")
     return 0

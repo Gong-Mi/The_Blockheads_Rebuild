@@ -1,4 +1,4 @@
-# `-[World worldTime]` executed under Unicorn
+# `-[World worldTime]` and `-[World fastForward]` executed under Unicorn
 
 Evidence grade: **B+** - the original's own ARM code runs and its result is checked against values the
 harness plants, but two pieces are abstracted and are named here rather than glossed.
@@ -44,6 +44,24 @@ form, and the test refuses to pass without the decoy).
    path, because its epilogue is `vldr d0,[fp,#-8]` - a VFP instruction Unicorn's default ARM model
    rejects with `UC_ERR_INSN_INVALID`. The value is still produced by the original's code; what is not
    emulated is the VFP move.
+
+## Second target: `-[World fastForward]` (a `char`, and a stronger control)
+
+Chosen for what it tests that the double cannot: the value returns in `r0`, so **nothing has to be
+abstracted** - there is no VFP epilogue to skip - and `ldrsb` means the result must be sign-extended:
+
+| planted at `self + 934` | returned | expected |
+|---:|---:|---:|
+| `0x00` | 0 | 0 |
+| `0x01` | 1 | 1 |
+| `0x7F` | 127 | 127 |
+| `0x80` | **-128** | -128 |
+| `0xFF` | **-1** | -1 |
+
+`0xFF -> -1` is the ivar's **encoding** verified by execution, not merely its offset - which is the
+step before this one (the offset came from the cell) plus one more. Controls: with the cell rewritten
+to 640 and `7` planted at `self + 640` (decoy `99` at `self + 934`) the getter returns 7; with the cell
+back at 934 and `3` planted (decoy `-5` at `self + 640`) it returns 3.
 
 ## Why it matters beyond this method
 
