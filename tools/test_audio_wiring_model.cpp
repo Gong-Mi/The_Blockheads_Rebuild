@@ -16,7 +16,7 @@ static std::size_t countFor(std::string_view method) {
 
 int main() {
     assert(kAudioWiring.size() == 275);
-    assert(kNotYetReferenced.size() == 77);
+    assert(kNotYetReferenced.size() == 94);
 
     // the largest group is anchored from both sides
     assert(countFor(kLargestLoader) == kLargestLoaderSoundCount);

@@ -5,6 +5,6 @@ namespace {
 static_assert(!kAudioWiring.empty());
 static_assert(!kNotYetReferenced.empty());
 static_assert(kAudioWiring.size() == 275);
-static_assert(kNotYetReferenced.size() == 77);
+static_assert(kNotYetReferenced.size() == 94);
 }  // namespace
 }  // namespace blockheads::recovered::audio

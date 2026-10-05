@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -29,11 +30,26 @@ SELF = {ROOT / "reconstruction/recovered/audio_wiring_model.h",
 
 
 def measure_referenced() -> str:
+    """Tracked, non-vendored sources only, matched by FULL asset name.
+
+    Two bugs made the first version disagree with CI by two names:
+      * it matched the bare stem, so `rail` counted as wired because vendored zstd comments contain
+        "trailing" - a substring hit, not a reference to an asset;
+      * it walked the working tree, which locally included untracked vendored trees (app/src/main/cpp/
+        external/**) that a fresh CI checkout does not have.
+    A reference is the asset's file name appearing in a source file that the repository actually ships.
+    """
+    files = subprocess.run(["git", "ls-files", "app/src/main/cpp", "reconstruction/recovered"],
+                           cwd=ROOT, capture_output=True, text=True).stdout.split()
+    if not files:
+        files = [str(x.relative_to(ROOT)) for d in SOURCES for x in (ROOT / d).rglob("*") if x.is_file()]
     text = ""
-    for base in SOURCES:
-        for p in (ROOT / base).rglob("*"):
-            if p.suffix in (".h", ".hpp", ".cpp", ".c", ".cc") and p not in SELF:
-                text += p.read_text(errors="ignore")
+    for rel in files:
+        if not rel.endswith((".h", ".hpp", ".cpp", ".c", ".cc")) or "/external/" in rel:
+            continue
+        if (ROOT / rel) in SELF:
+            continue
+        text += (ROOT / rel).read_text(errors="ignore")
     return text
 
 
@@ -53,7 +69,7 @@ def main() -> int:
     declared = set(re.findall(r'^    "([^"]+\.(?:wav|mp3|mp4))",$', hdr, re.M))
     mapped_names = sorted({r["name"] for r in rep["rows"] if r.get("methods")})
     sources = measure_referenced()
-    fresh = {n for n in mapped_names if n.split(".")[0] not in sources}
+    fresh = {n for n in mapped_names if n not in sources}   # full asset name
     assert declared == fresh, (
         f"stale list: header declares {len(declared)} unwired, fresh measurement says {len(fresh)}; "
         f"added={sorted(declared - fresh)[:5]} removed={sorted(fresh - declared)[:5]}")

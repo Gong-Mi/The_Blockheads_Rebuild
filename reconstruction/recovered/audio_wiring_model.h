@@ -7,7 +7,7 @@
 //
 // The second array carries the part that decays. The artifact records a per-name boolean
 // `replacement_referenced`, and that boolean was STALE when this header was written: it said 120 names
-// were unwired, while measuring the current sources shows 59 wired and 77 still unwired.
+// were unwired, while measuring the current sources shows 42 wired and 94 still unwired.
 // Rather than transcribe a number that goes wrong on its own, the list below is RE-MEASURED by
 // tools/test_audio_wiring_model.py on every run: a TODO list with evidence, not a stored count.
 #pragma once
@@ -302,16 +302,18 @@ inline constexpr std::array<Wiring, 275> kAudioWiring = {{
 }};
 
 // Sound names the original loads and the replacement's sources do not mention, measured at this head.
-inline constexpr std::array<std::string_view, 77> kNotYetReferenced = {{
+inline constexpr std::array<std::string_view, 94> kNotYetReferenced = {{
     "babyUnicorn.wav",
     "blockheadDie.wav",
     "bow.wav",
     "buzz1.wav",
+    "camera.wav",
     "chatMessage.wav",
     "chimeUpgrade.wav",
     "craftTool.wav",
     "craftWood.wav",
     "craftWorkbench.wav",
+    "die.wav",
     "divertissement.mp4",
     "doorClose.wav",
     "doorOpen.wav",
@@ -324,6 +326,7 @@ inline constexpr std::array<std::string_view, 77> kNotYetReferenced = {{
     "elevatorBell.wav",
     "elevatorDoor.wav",
     "fanfare.wav",
+    "fire.wav",
     "fireLoop.wav",
     "fireLoopLow.wav",
     "fireShort.wav",
@@ -339,18 +342,25 @@ inline constexpr std::array<std::string_view, 77> kNotYetReferenced = {{
     "ironDoorClose.wav",
     "ironDoorOpen.wav",
     "jaws.wav",
+    "jet.wav",
     "largo.mp4",
+    "leaves.wav",
     "magnet.wav",
     "menuPop.wav",
     "mountainKingLoop.mp4",
     "noPath.wav",
+    "paint.wav",
     "pickupGem.wav",
+    "portal.wav",
+    "press.wav",
     "punch.wav",
     "punchSmall.wav",
+    "rail.wav",
     "rainHeavy.wav",
     "rainLight.wav",
     "rainUnderground.wav",
     "razor.wav",
+    "regenerate.wav",
     "scorpion.wav",
     "scorpionAttack.wav",
     "scorpionFire.wav",
@@ -358,12 +368,17 @@ inline constexpr std::array<std::string_view, 77> kNotYetReferenced = {{
     "shortTwinkle.wav",
     "sighFemale.wav",
     "sighMale.wav",
+    "slowdown.wav",
     "sluice.wav",
     "sneakySnitch.mp4",
     "snip.wav",
+    "speedup.wav",
+    "steam.wav",
     "steamHiss.wav",
     "stove.wav",
     "sugarPlum.mp4",
+    "sword.wav",
+    "tap.wav",
     "tcMine.wav",
     "tear.wav",
     "tikopia.mp4",
@@ -377,6 +392,8 @@ inline constexpr std::array<std::string_view, 77> kNotYetReferenced = {{
     "trollFound.wav",
     "unicornDie.wav",
     "unicornprr.wav",
+    "upgrade.wav",
+    "wind.wav",
     "womanOuch.wav",
     "yawnFemale.wav",
     "yawnMale.wav",
