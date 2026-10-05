@@ -22,18 +22,34 @@ def main() -> int:
     tracked = set(subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True,
                                  text=True).stdout.split())
     problems = []
+    # (a) every source the CMakeLists lists
     for name in sorted(set(re.findall(r"\b([A-Za-z0-9_]+\.cpp)\b", text))):
         for rel in (f"reconstruction/recovered/{name}", f"tools/{name}"):
             if (ROOT / rel).exists() and rel not in tracked:
                 problems.append(rel)
+    # (b) every header those sources include - the gap that let dynamic_object_net_data.h through: the guard
+    #     checked sources only, and the header was the one CI could not find
+    for name in sorted(set(re.findall(r"\b([A-Za-z0-9_]+\.cpp)\b", text))):
+        src = ROOT / "reconstruction/recovered" / name
+        if not src.exists():
+            continue
+        for inc in re.findall(r'#include\s+"([^"]+)"', src.read_text()):
+            rel = f"reconstruction/recovered/{inc.lstrip('./')}"
+            if (ROOT / rel).exists() and rel not in tracked:
+                problems.append(rel)
+    # (c) contract tests that exist on disk but were never committed - they would silently stop running
+    #     rather than fail a build
+    for p in sorted((ROOT / "tools").glob("test_*.py")):
+        rel = f"tools/{p.name}"
+        if rel not in tracked:
+            problems.append(rel)
     if problems:
         print("CMakeLists references files that exist but are NOT in git:")
         for p in problems:
             print("   ", p)
         print("This is exactly the failure a local build cannot see - add them before pushing.")
         return 1
-    print(f"cmake-sources-tracked: {len(set(re.findall(r'[A-Za-z0-9_]+\.cpp', text)))} referenced sources, "
-          f"all present in git")
+    print(f"cmake-sources-tracked: {len(set(re.findall(chr(39) + chr(39), text)))}")
     return 0
 
 
