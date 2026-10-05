@@ -28,11 +28,20 @@
  "next_target": "who FILLS the record's fields - that is where f0..f10 get their meaning; the serialisation pair only moves opaque bytes",
  "dispatch_boundary": {
   "selector": "initWithCraftableItem:imageData:outputImageData:",
-  "cfstring_va": "0x00fec1f8",
   "cstring_va": "0x00ee739d",
+  "cfstring_va": "0x00fec1f8",
   "slot_candidate": "0x00146c10",
-  "finding": "the selector exists in the method table and its cfstring and a slot containing it are both present, but NO .text pool word references that slot PIC-relatively, and the project's own find_selector_senders.py returns 0 slots / 0 send sites for it",
-  "meaning": "this selector's dispatch is not the pool-word channel the cell/selector tooling models - most likely a class-indexed/table-relative send - so the callers that BUILD the record cannot be reached by the two known static channels today. Recorded so the next attempt does not simply re-run the same two tools and conclude the selector is unused.",
-  "why_it_matters": "the record's field semantics live in whoever builds it, and that is exactly the code this boundary is currently hiding"
+  "measured_with": "tools/probe_objc_send_channel.py --selector <this>",
+  "facts": [
+   "string_section: __TEXT,__objc_methname,cstring_literals",
+   "selref_slots: EMPTY - there is no __objc_selrefs slot for this selector (contrast soundNamed:,",
+   "which has one)",
+   "msgrefs_unit_matches: EMPTY",
+   "holders_of_string_va: a single __objc_const entry at 0x00fec1f8, i.e. the selector's own method metadata rather than a call site",
+   "no .text pool word addresses the slot candidate PIC-relatively, so find_selector_senders.py reports 0 slots / 0 send sites as well"
+  ],
+  "reading": "within this image there is no static call site for this selector: no selref slot, no msgrefs entry, and the only holder is its own type metadata. The tool's own claim says an empty selref route is NOT proof that a send is unresolvable in general - the SEL could be built at run time, and this image is a Mach-O conversion whose selrefs may be materialised by the translator - so the supported statement is 'no static caller in this image', not 'never called'.",
+  "correction": "an earlier message of mine attributed this channel to tools/extract_class_indexed_sends.py; that file does not exist in this tree. The tool that does this measurement is tools/probe_objc_send_channel.py, and the reading above is its output.",
+  "why_it_matters": "the record's field semantics live in whoever builds it, and that code is not reachable as a static call site in this image - which is exactly the kind of boundary worth writing down instead of guessing past"
  }
 }

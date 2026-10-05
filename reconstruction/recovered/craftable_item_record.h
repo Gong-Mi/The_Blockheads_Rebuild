@@ -83,9 +83,10 @@ inline constexpr std::size_t kCraftableItemKeyReferencesInBinary = 2;
 // semantics should be readable. Its senders are NOT findable statically today: the selector's cfstring
 // (0x00fec1f8) and a slot containing it (0x00146c10) both exist, but no .text pool word addresses that slot
 // PIC-relatively, and find_selector_senders.py reports 0 slots and 0 send sites for it. So its dispatch is
-// not the channel the selector tooling models (most likely class-indexed). Recorded rather than worked
-// around, because "the selector has no senders" and "our channel cannot see its senders" are different
-// claims and only the second one is supported.
+// not dispatched through the selector channel at all: probe_objc_send_channel.py shows NO __objc_selrefs
+// slot and NO msgrefs entry for it, and the only holder of the name is its own __objc_const metadata. So
+// within this image it has no static call site. "No static caller here" is not "never called" - the SEL
+// could be built at run time and this image is a Mach-O conversion - and that is the supported statement.
 inline constexpr bool kCraftableItemInitializerDispatchUnknown = true;
 inline constexpr std::size_t kCraftableItemObjectRecordOffset = 4;
 inline constexpr std::uint32_t kCraftableItemObjectRecordCell = 0x00f34ea0U;
