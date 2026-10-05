@@ -25,7 +25,7 @@
 |---|---|---|
 | DynamicObject 标志簇 `isNet@52` / `needsRemoved@48` / `updateNeedsToBeSent@49` / `creationDataNeedsToBeSent@50` / `unreliableUpdateNeedsToBeSent@51` | 原版用这五个字节承载**网络脏位与移除位**，而 v4 存档要保存动态对象 | 读 `app/src/main/cpp/dynamic_object_registry.{h,cpp}` 与 v4 序列化，看它是否用别的结构表达同一状态；grep 只能证明字符串不在，证明不了语义不在 |
 | `worldChangedSimulateCounter`（活体 ≈30/s） | 模拟步进计数；若 app 要复现"每秒 30 次模拟更新"的节奏就需要等价物 | 同类：看 app 帧循环的模拟节奏是否有对应计数 |
-| 音频 94 个未接播放点（共 275 对、已接 42） | 事件→音效语义仍缺 | 需要把播放点与游戏事件对上，属于尚未完成的逆向，不是回归 |
+| 音频 94 个未接名字（共 275 对、已接 42） | **此前本表把它写成"事件→音效语义仍缺"，那是错的**：`audio_wiring_model.h` 的 `kWiring[275]` 就是 (方法, 音效名) 对，**94/95 个未接名字都有已恢复的方法映射**（如 `blockheadDie.wav <- Blockhead -[dieForGood]`、`camera.wav <- World -[doCameraScreenshot]`）⇒ 语义已在手，缺的是**替换版代码引用**它们 | 这是**产品接线**任务，不是逆向缺口；只有 1 个名字确实无映射（verbatim-only）需要单独看 |
 
 ## 已界定（追到底了，结论有边界）
 
