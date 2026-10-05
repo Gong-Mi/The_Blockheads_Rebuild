@@ -1487,6 +1487,40 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "IVAR_CELL_REFERENCES.md",
+        [
+            "Every ivar offset cell and who touches it",
+            "ITS FILE CONTENTS ARE THE CELL VA",
+            "0x105c754",
+            "three references, all reads",
+            "Do not run the tool without",
+        ],
+    )
+    require(
+        NATIVE / "ivar_cell_references.json",
+        [
+            '"ivars_with_references": 1613',
+            '"sites": 5730',
+            '"World.fastForward"',
+            '"conclusion"',
+        ],
+    )
+    require(
+        ROOT / "tools/extract_ivar_cell_references.py",
+        [
+            "--self-check",
+            "self_check",
+            "method_entries_in_range",
+        ],
+    )
+    require(
+        ROOT / "tools/test_extract_ivar_cell_references.py",
+        [
+            "fixture must reproduce the PIC base",
+            "the old rd-pinning mask would miss rd=2",
+        ],
+    )
+    require(
         NATIVE / "world_time_domain.json",
         [
             "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
