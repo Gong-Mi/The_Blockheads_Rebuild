@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import struct
 from pathlib import Path
 
@@ -52,6 +53,16 @@ def main() -> int:
         "isNet's writer is still unexplained; do not quietly claim one"
     assert rep.get("supersedes"), "the superseded reading must stay recorded"
     assert rep["global_by_access"]["write"] > 400, rep["global_by_access"]
+
+    # cross-language check: the recovered C++ model must carry the SAME offsets as this artifact, or the
+    # replacement and the evidence have silently diverged
+    hdr = (ROOT / "reconstruction/recovered/dynamic_object_flags.h").read_text()
+    hdr_offsets = {m.group(1): int(m.group(2)) for m in re.finditer(
+        r"kOffset(\w+)\s*=\s*(\d+);", hdr)}
+    for flag, off in EXPECTED.items():
+        const = "NeedsRemoved" if flag == "needsRemoved" else flag[0].upper() + flag[1:]
+        assert hdr_offsets.get(const) == off, (const, hdr_offsets.get(const), off)
+
     print(f"flag cluster: 5 flags at 48..52 confirmed by symbol table; updateNeedsToBeSent has "
           f"{rep['per_flag']['updateNeedsToBeSent']['sites']} sites and {len(writes)} writes; "
           f"isNet writes={rep['per_flag']['isNet']['by_access'].get('write', 0)}")
