@@ -604,5 +604,23 @@
    "why_it_matters": "it explains the crafting boundary recorded several batches ago by the same mechanism, so the two mysteries are one: the tooling cannot see that form, and both the crafting initialiser and this clock function are reached through it"
   },
   "stopping_rule_applied": "this is the fifth empty result on the day phase's writer, and my own record from the fourth says to start from that list rather than re-run it. So the hunt stops here, with the five routes and this clue written down - the behaviour is modelled numerically (sinusoid over the 900-unit day) and does not depend on finding the writer."
+ },
+ "live_path_round_trip": {
+  "observation": "the crafting path probe now reads PaintMixUI.world @20 and gets 0x61f96000 - the same World pointer the walk started from and that the signature check accepted",
+  "why_it_is_stronger_than_the_one_way_walk": "a one-way walk proves each hop is reachable, but a round trip proves the hops belong to the SAME object graph: starting at World, descending through UIManager+56 to paintMixUI, and reading paintMixUI+20 returns the original World address. Two independent routes through the graph agree on the identity.",
+  "state_right_now": {
+   "PaintMixUI.world": "0x61f96000 (== the World root)",
+   "PaintMixUI.workbench": "0x0",
+   "Workbench.craftingItemObject": "0x0",
+   "Workbench.numberOfCraftableItems": "0x0",
+   "Workbench.selectedIndex": "0x0"
+  },
+  "what_that_means": "the Workbench OBJECT is reachable and its table reads (the probe prints its rows), while the crafting fields inside it are all null - so the crafting UI is instantiated but no crafting is selected or in progress. The pending live read needs a selection, not just the screen.",
+  "models_that_now_cover_this_path": [
+   "world_layout.h (the World end)",
+   "u_i_manager_layout.h (paintMixUI@56, the live-verified hop)",
+   "workbench_layout.h (the 48 rows, anchored on the runtime's own offsets)",
+   "craftable_item_record.h + craftable_item_object_layout.h (the 124-byte record and its host at offset 4)"
+  ]
  }
 }
