@@ -470,7 +470,10 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
         // fastForward state's 20.0 (LIVE_WORLD_CLOCK.md); the previous 100.0 here
         // had no evidence behind it. Which condition sets fastForward in the
         // original is still unknown, so mapping our sleep state onto it is an
-        // inference - the STATE and the 20.0 are measured, the trigger is not.
+        // inference - the STATE and the 20.0 are measured, the trigger is not. See
+        // reconstruction/reverse-v3/native/WORLD_CLOCK_WRITER_BOUNDARY.md: eight
+        // mechanisms that could have set it statically were each excluded, so the trigger is
+        // outside static reach and this mapping stays a labelled guess.
         const bool sleeping = g_ai->isSleeping;
         g_world->setFastForward(sleeping);
         const float timeSpeed = g_world->clockTimeScale;

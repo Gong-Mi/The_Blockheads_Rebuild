@@ -1487,6 +1487,23 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "WORLD_CLOCK_WRITER_BOUNDARY.md",
+        [
+            "The world-clock writer boundary",
+            "Eight mechanisms excluded",
+            "0x1c27c0",
+            "a name match is not an attribution",
+        ],
+    )
+    require(
+        NATIVE / "world_clock_writer_boundary.json",
+        [
+            '"verdict": "premise holds - the readings are valid"',
+            '"mechanism": "a bulk copy into the object (memcpy-family)"',
+            "ZERO in World-family methods",
+        ],
+    )
+    require(
         NATIVE / "IVAR_CELL_REFERENCES.md",
         [
             "Every ivar offset cell and who touches it",
