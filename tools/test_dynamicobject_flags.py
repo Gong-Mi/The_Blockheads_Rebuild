@@ -16,7 +16,7 @@ import struct
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-ART = ROOT / "reconstruction/reverse-v3/native/dynamicobject_flags.json"
+ART = ROOT / "reconstruction/reverse-v3/native/dynamicobject_flag_sites.json"
 
 EXPECTED = {"needsRemoved": 48, "updateNeedsToBeSent": 49, "creationDataNeedsToBeSent": 50,
             "unreliableUpdateNeedsToBeSent": 51, "isNet": 52}

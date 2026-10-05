@@ -68,6 +68,17 @@ def changed_test_names() -> set[str]:
         for candidate in dirty:
             if candidate.startswith(stem):
                 names.add(f"test_{stem}.py")
+    # A file can be consumed by tests whose names do not match its stem: an artifact called
+    # dynamicobject_flags.json was READ by test_dynamic_object_flags_evidence.py, so the stem mapping
+    # ran the author's own test, passed, and CI went red on the other one. Include every test whose
+    # TEXT mentions a dirty file by name - the mapping that would have caught it.
+    for name in dirty:
+        for t in sorted(TOOLS.glob("test_*.py")):
+            try:
+                if name in t.read_text(encoding="utf-8", errors="ignore"):
+                    names.add(t.name)
+            except OSError:
+                continue
     return {n for n in names if (TOOLS / n).exists()}
 
 
