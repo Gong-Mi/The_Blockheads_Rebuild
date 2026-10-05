@@ -1625,6 +1625,13 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "DYNAMICOBJECT_FLAGS.md",
+        [
+            "Do NOT read the write counts as a writer census",
+            "exactly where a dirty bit belongs",
+        ],
+    )
+    require(
         NATIVE / "MSG_SEND_TRACE.md",
         [
             "The gate the trace's loop kept calling",
