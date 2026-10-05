@@ -199,12 +199,13 @@ jobs:
           reconstruction/reverse-v3/native/libApplication_objc_methods.tsv \
           --evidence-root reconstruction/reverse-v3/native \
           --implementation-records reconstruction/reverse-v3/native/implemented_methods.json \
+          --origin-runtime-records reconstruction/reverse-v3/native/origin_runtime_evidence.json \
           --json /tmp/reverse-coverage-ledger.json \
           --markdown /tmp/reverse-coverage-ledger.md
         grep -F "Methods: 10478" /tmp/reverse-coverage-ledger.md
-        grep -F "semantics | 65" /tmp/reverse-coverage-ledger.md
-        grep -F "implemented | 65" /tmp/reverse-coverage-ledger.md
-        grep -F "behavior-verified | 0" /tmp/reverse-coverage-ledger.md
+        grep -F "semantics | 71" /tmp/reverse-coverage-ledger.md
+        grep -F "implemented | 71" /tmp/reverse-coverage-ledger.md
+        grep -F "behavior-verified | 6" /tmp/reverse-coverage-ledger.md
       working-directory: .
 
     - name: Test ARM indirect call index

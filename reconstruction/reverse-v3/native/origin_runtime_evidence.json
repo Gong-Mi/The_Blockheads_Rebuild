@@ -1,0 +1,46 @@
+{
+ "schema": 1,
+ "stage": "behavior-verified",
+ "what_this_is": "methods whose BEHAVIOUR was measured on the running original with read-only /proc reads, rather than modelled from static evidence. The ledger's last stage was pinned at 0 because nothing ever fed it: the generator writes behavior_status = not-tested and has no registration path.",
+ "what_does_not_qualify": "host emulation of the binary (Unicorn) and local fixtures - that is the stage's own definition. doubleTimeUnlocked is therefore deliberately absent (derived and emulated, never measured running), as is any ivar pointer read that is not a method's behaviour: the PaintMixUI.world round trip is recorded in the artifact but counts as an identity check, not as a method here.",
+ "how_to_extend": "add a record only when a specific measurement of the RUNNING original can be pointed at, with the build hash it was taken on and an explicit boundary statement.",
+ "methods": [
+  {
+   "implementation": "0x005d9a68",
+   "measured_on": "the day fraction, 100 samples over three full cycles",
+   "boundary": "modelled and reproduced (worst residual 0.0366 against the committed samples); the code that WRITES the field was not found after five static and executed routes, which is why it is measured rather than disassembled",
+   "evidence": "reconstruction/live/sample_phase_flag.py"
+  },
+  {
+   "implementation": "0x005da444",
+   "measured_on": "the direction flag the running original reports, sampled with the fraction",
+   "boundary": "agrees with the modelled derivative at every sample except within one sample interval of a turnaround, where a sampled flag can lag; the test counts those and requires the rest to agree",
+   "evidence": "reconstruction/live/sample_phase_flag.py"
+  },
+  {
+   "implementation": "0x005d9e50",
+   "measured_on": "the flag's live value against the clock it scales",
+   "boundary": "establishes the flag is set and the clock moves 20 units per real second while it is; it does NOT establish what the flag does to the simulation step rate, which the ledger records as still open",
+   "evidence": "reconstruction/live/rate_table_any.py"
+  },
+  {
+   "implementation": "0x005d99a4",
+   "measured_on": "the clock's advance rate, measured in two separate sessions",
+   "boundary": "20.00012 and 20.005 units per real second; its meaning as a save key is separate and not claimed here",
+   "evidence": "reconstruction/live/rate_table_any.py"
+  },
+  {
+   "implementation": "0x005d9a08",
+   "measured_on": "the vector read at its modelled offset in the running original",
+   "boundary": "a unit vector (|v| = 1.0000), which cross-checks the offset and the copy-stub reading at once; the components' individual meanings are not claimed",
+   "evidence": "reconstruction/live/probe_clock_175.py"
+  },
+  {
+   "implementation": "0x00ade6cc",
+   "measured_on": "the hop the walk follows at UIManager+56 in the running original",
+   "boundary": "resolves to an object whose isa matches the resolved paintMixUI class; a measured pointer chain, not a claim about that screen's contents",
+   "evidence": "reconstruction/live/probe_craft_path.py"
+  }
+ ],
+ "note": "These entries are a SUBSET of implemented_methods.json. Implementation data lives there so there is one registry; this file only records that the behaviour of each listed method was measured on the running original, with the measurement and its boundary."
+}
