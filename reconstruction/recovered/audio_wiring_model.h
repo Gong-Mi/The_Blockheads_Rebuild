@@ -302,7 +302,7 @@ inline constexpr std::array<Wiring, 275> kAudioWiring = {{
 }};
 
 // Sound names the original loads and the replacement's sources do not mention, measured at this head.
-inline constexpr std::array<std::string_view, 94> kNotYetReferenced = {{
+inline constexpr std::array<std::string_view, 93> kNotYetReferenced = {{
     "babyUnicorn.wav",
     "blockheadDie.wav",
     "bow.wav",
@@ -325,7 +325,6 @@ inline constexpr std::array<std::string_view, 94> kNotYetReferenced = {{
     "electricMetalwork.wav",
     "elevatorBell.wav",
     "elevatorDoor.wav",
-    "fanfare.wav",
     "fire.wav",
     "fireLoop.wav",
     "fireLoopLow.wav",
