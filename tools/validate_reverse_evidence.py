@@ -1487,6 +1487,40 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "AUDIO_WIRING_MAP.md",
+        [
+            "Audio wiring map: every shipped sound",
+            "PIC_BASE",
+            "blockheadDie.wav",
+            "wiring backlog",
+        ],
+    )
+    require(
+        NATIVE / "audio_wiring_map.json",
+        [
+            '"mapped": 136',
+            '"status"',
+            '"self_check"',
+            "blockheadDie.wav",
+        ],
+    )
+    require(
+        ROOT / "tools/test_extract_audio_wiring_map.py",
+        [
+            "the wrap",
+            "SELF_CHECK",
+            "wrapped negative offset",
+        ],
+    )
+    require(
+        ROOT / "tools/extract_audio_wiring_map.py",
+        [
+            "SELF_CHECK",
+            "no_cfstring",
+            "PIC_BASE",
+        ],
+    )
+    require(
         NATIVE / "CRAFTABLE_ITEM_BLOB_BOUNDARY.md",
         [
             "CraftableItem blob: proved, and sealed",
