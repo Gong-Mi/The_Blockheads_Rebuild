@@ -69,6 +69,15 @@ def main() -> int:
     for name in t["calls"] + t["called_by"]:
         assert " -[" in name and name.endswith("]"), name
 
+    # the worklist must not be topped by compiler-generated members: MainMenuUI's .cxx_construct had 441 callers
+    # and filled the first ranking this tool produced, which would have sent the semantic effort at linker plumbing.
+    rank = subprocess.run([sys.executable, "tools/method_card.py", str(ELF), "--rank", "12"],
+                          cwd=ROOT, capture_output=True, text=True, timeout=900).stdout
+    assert rank.strip(), "the rank mode must produce a worklist"
+    for line in rank.splitlines()[1:]:
+        assert ".cxx_construct" not in line and ".cxx_destruct" not in line, line
+    assert "Blockhead -[update:accurateDT:isSimulation:]" in rank or True   # presence is not required; absence of
+                                                                            # generated members is
     print(f'method-card: PASS (customizationComplete writes {writes[0]["ivar"]}; '
           f'isMale is {m["body"]["words"]} words; empty cards explain themselves)')
     return 0

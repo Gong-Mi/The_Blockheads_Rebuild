@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import struct
 import subprocess
 import sys
@@ -134,11 +135,22 @@ def main() -> int:
         for t in tgts:
             called_by.setdefault(t, []).append(r["imp"])
 
+    # Compiler-generated members are not semantic targets: .cxx_construct/.cxx_destruct/.dtor bodies are huge and
+    # called from everywhere, and they filled the top of the first worklist this produced (MainMenuUI's
+    # .cxx_construct had 441 callers). Filtered here rather than in the reader's head.
+    GENERATED = re.compile(r"(\.cxx_construct|\.cxx_destruct|\.dtor|\.cxx_dtor|^__|^_\$)")
+
+    def is_generated(r: dict) -> bool:
+        return bool(GENERATED.search(r["selector"]))
+
+    # The score is stated so it can be argued with: callers are reach (who breaks if this is wrong) and sites are
+    # state touched (how much semantics it carries). Weighting sites higher because a method that reads and writes
+    # many fields is where understanding pays off, while a widely-called one-liner is cheap to get right anyway.
     def leverage(r: dict) -> int:
-        return len(called_by.get(r["imp"], [])) * 2 + len(by_method.get(r["imp"], []))
+        return len(called_by.get(r["imp"], [])) + 3 * len(by_method.get(r["imp"], []))
 
     if a.rank:
-        work = sorted(rows, key=leverage, reverse=True)[: a.rank]
+        work = sorted((r for r in rows if not is_generated(r)), key=leverage, reverse=True)[: a.rank]
         print(f"{'leverage':>8}  {'callers':>7}  {'sites':>5}  {'words':>6}  method")
         for r in work:
             lo, hi = body(rows, rows.index(r), blob)
