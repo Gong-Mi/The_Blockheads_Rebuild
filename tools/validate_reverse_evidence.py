@@ -1601,6 +1601,8 @@ def main() -> None:
             "executed under Unicorn",
             "UC_ERR_INSN_INVALID",
             "0xFF` | **-1**",
+            "runs with no abstraction at all",
+            "corrects an earlier claim",
             "returned 42.25",
             "lazy",
         ],

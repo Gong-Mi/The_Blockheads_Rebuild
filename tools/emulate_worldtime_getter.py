@@ -63,6 +63,10 @@ FIELDS = {
                     "offset": 648, "kind": "double"},
     "fastForward": {"imp": 0x005D9E50, "cell": 0xF32930, "got_slot": 0x105C778,
                     "offset": 934, "kind": "sbyte"},
+    # slot derived from the getter's own literal pool (wA + PIC base), not guessed:
+    #   0x5d9e98 ldr r3,[pc,#0x20] -> wA = 0xffffcde4; slot = wA + 0x105faf4 = 0x0105c8d8
+    "doubleTimeUnlocked": {"imp": 0x005D9E8C, "cell": 0xF32A98, "got_slot": 0X105C8D8,
+                           "offset": 3072, "kind": "sbyte"},
 }
 
 
@@ -136,9 +140,9 @@ def run_getter(mu: Uc, planted: float, cell_value: int, planted_at: int = 648,
 
 
 def run_byte_getter(mu: Uc, planted: int, cell_value: int, planted_at: int,
-                    decoy: int | None = None) -> int:
-    """-[World fastForward]: ldrsb after the same cell arithmetic; returns in r0."""
-    pres = FIELDS["fastForward"]
+                    decoy: int | None = None, field: str = "fastForward") -> int:
+    """A `char` getter: ldrsb after the same cell arithmetic; returns in r0."""
+    pres = FIELDS[field]
     mu.mem_write(BIAS + pres["got_slot"], struct.pack("<I", BIAS + pres["cell"]))
     mu.mem_write(BIAS + pres["cell"], struct.pack("<i", cell_value))
     mu.mem_write(OBJ, b"\0" * 0x1000)
@@ -201,7 +205,32 @@ def main() -> int:
     neg2_ok = struct.pack("<d", got_sane) == struct.pack("<d", 7.5)
     ok &= neg2_ok
 
-    # ---- second field: fastForward (char, sign-extended, no VFP involved) ----------------
+    # ---- every `char` field: sign-extended, returns in r0, no VFP involved --------------------
+    sbyte_reports = {}
+    for fname in sorted(k for k, v in FIELDS.items() if v["kind"] == "sbyte"):
+        pres = FIELDS[fname]
+        off = pres["offset"]
+        rows = []
+        for planted, expect in ((0x00, 0), (0x01, 1), (0x7F, 127), (0x80, -128), (0xFF, -1)):
+            got = run_byte_getter(mu, planted, off, off, field=fname)
+            good = got == expect
+            ok &= good
+            rows.append({"planted": hex(planted), "returned": got, "expected": expect, "ok": good})
+        alt = 640 if off != 640 else 700
+        got_alt_b = run_byte_getter(mu, 7, alt, alt, decoy=99, field=fname)
+        neg_b = got_alt_b == 7
+        ok &= neg_b
+        got_sane_b = run_byte_getter(mu, 3, off, off, decoy=-5, field=fname)
+        neg_b2 = got_sane_b == 3
+        ok &= neg_b2
+        sbyte_reports[fname] = {
+            "positive": rows,
+            "negative_control": {"cell_rewritten_to": alt, "returned": got_alt_b,
+                                 "equals_value_at_self_plus_cell": neg_b},
+            "second_negative": {"cell_back_to": off, "returned": got_sane_b, "bit_exact": neg_b2},
+            "note": "ldrsb semantics: planting 0xFF returns -1, which is the ivar's ENCODING "
+                    "checked, not merely its offset"}
+    rep_fastforward = sbyte_reports.get("fastForward", {})
     sbyte = []
     for planted, expect in ((0x00, 0), (0x01, 1), (0x7F, 127), (0x80, -128), (0xFF, -1)):
         got = run_byte_getter(mu, planted, FIELDS["fastForward"]["offset"], 934)
@@ -214,13 +243,6 @@ def main() -> int:
     got_sane_b = run_byte_getter(mu, 3, 934, 934, decoy=-5)
     neg_b2 = got_sane_b == 3
     ok &= neg_b2
-    rep_fastforward = {"positive": sbyte,
-                       "negative_control": {"cell_rewritten_to": 640, "returned": got_alt_b,
-                                            "equals_value_at_self_plus_cell": neg_b},
-                       "second_negative": {"cell_back_to": 934, "returned": got_sane_b,
-                                           "bit_exact": neg_b2},
-                       "note": "ldrsb semantics: planting 0xFF returns -1, which is the ivar's "
-                               "ENCODING checked, not merely its offset"}
 
     rep = {"schema": 1, "what": "execute the original's World getters under Unicorn",
            "getter_imp": hex(GETTER), "cell": hex(CELL), "got_slot": hex(GOT_SLOT),
@@ -232,6 +254,7 @@ def main() -> int:
            "negative_control": {"cell_rewritten_to": alt, "returned": got_alt,
                                 "equals_value_at_self_plus_cell": neg_ok},
            "second_negative": {"cell_back_to": 648, "returned": got_sane, "bit_exact": neg2_ok},
+           "sbyte_fields": sbyte_reports,
            "fastForward": rep_fastforward,
            "passed": bool(ok)}
     if args.json:

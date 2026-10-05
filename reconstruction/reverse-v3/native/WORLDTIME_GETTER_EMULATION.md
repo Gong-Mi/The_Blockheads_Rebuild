@@ -1,4 +1,4 @@
-# `-[World worldTime]` and `-[World fastForward]` executed under Unicorn
+# Three `World` getters executed under Unicorn, with failure-capable controls
 
 Evidence grade: **B+** - the original's own ARM code runs and its result is checked against values the
 harness plants, but two pieces are abstracted and are named here rather than glossed.
@@ -62,6 +62,37 @@ abstracted** - there is no VFP epilogue to skip - and `ldrsb` means the result m
 step before this one (the offset came from the cell) plus one more. Controls: with the cell rewritten
 to 640 and `7` planted at `self + 640` (decoy `99` at `self + 934`) the getter returns 7; with the cell
 back at 934 and `3` planted (decoy `-5` at `self + 640`) it returns 3.
+
+## Third target: `-[World doubleTimeUnlocked]` (same 60-byte shape)
+
+Added because it costs nothing and because its .got slot was DERIVED rather than guessed: the getter's
+own pool word `0x5d9e98 ldr r3,[pc,#0x20]` gives `wA = 0xffffcde4`, and `wA + PIC base 0x105faf4 =
+0x105c8d8` whose contents are this ivar's cell `0xf32a98`. Same controls, same result: `0x00 -> 0`,
+`0x01 -> 1`, `0x7F -> 127`, `0x80 -> -128`, `0xFF -> -1`, with both cell-rewrite negatives holding.
+
+## Which methods are worth this treatment
+
+The recipe is mechanical, so the choice is too. Count the calls in the body and look for VFP:
+
+| method | bytes | calls | external | VFP | verdict |
+|---|---:|---:|---:|:--:|---|
+| `worldTime` | 100 | 1 | 1 | yes | needs one abstraction (the copy stub) |
+| `fastForward`, `doubleTimeUnlocked`, `isAdmin`, `serverMinorVersion` | 60 | 0 | 0 | no | **runs with no abstraction at all** |
+| `serverClients`, `server`, `client`, `worldName`, `serverPassword`, `clientPassword`, `serverPrivacySetting` | 68 | 0 | 0 | no | same, slightly larger bodies |
+| `startPortalPos` | 96 | 1 | 1 | no | needs abstraction |
+| `serverFillReply` | 576 | 6 | 6 | no | needs a runtime |
+| `clientDisconnected:wasKick:` | 972 | 11 | 11 | yes | needs a runtime |
+
+That table is why `worldTime` was hard and `fastForward` was free - not luck.
+
+## A limit on the static map's METHOD attribution (corrects an earlier claim)
+
+`IVAR_CELL_REFERENCES.md` says `World.fastForward`'s cell has exactly one resolving site. That is
+still true, and the tool itself marks its attribution `ambiguous` - because the one-line getters
+(`startPortalPos`, `serverClients`, `server`, `client`, `fastForward`, `doubleTimeUnlocked`, ...) share
+one enclosing body, so the prologue walk lands on `0x5d9d24` for all of them. What is reliable is the
+CELL (the slot's contents equal the cell VA). Earlier I reported that single site as "its own getter",
+which the map never claimed; the executed evidence here is what actually ties `0x5d9e50` to offset 934.
 
 ## Why it matters beyond this method
 

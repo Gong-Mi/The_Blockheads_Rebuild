@@ -29,6 +29,98 @@
   "returned": 7.5,
   "bit_exact": true
  },
+ "sbyte_fields": {
+  "doubleTimeUnlocked": {
+   "positive": [
+    {
+     "planted": "0x0",
+     "returned": 0,
+     "expected": 0,
+     "ok": true
+    },
+    {
+     "planted": "0x1",
+     "returned": 1,
+     "expected": 1,
+     "ok": true
+    },
+    {
+     "planted": "0x7f",
+     "returned": 127,
+     "expected": 127,
+     "ok": true
+    },
+    {
+     "planted": "0x80",
+     "returned": -128,
+     "expected": -128,
+     "ok": true
+    },
+    {
+     "planted": "0xff",
+     "returned": -1,
+     "expected": -1,
+     "ok": true
+    }
+   ],
+   "negative_control": {
+    "cell_rewritten_to": 640,
+    "returned": 7,
+    "equals_value_at_self_plus_cell": true
+   },
+   "second_negative": {
+    "cell_back_to": 3072,
+    "returned": 3,
+    "bit_exact": true
+   },
+   "note": "ldrsb semantics: planting 0xFF returns -1, which is the ivar's ENCODING checked, not merely its offset"
+  },
+  "fastForward": {
+   "positive": [
+    {
+     "planted": "0x0",
+     "returned": 0,
+     "expected": 0,
+     "ok": true
+    },
+    {
+     "planted": "0x1",
+     "returned": 1,
+     "expected": 1,
+     "ok": true
+    },
+    {
+     "planted": "0x7f",
+     "returned": 127,
+     "expected": 127,
+     "ok": true
+    },
+    {
+     "planted": "0x80",
+     "returned": -128,
+     "expected": -128,
+     "ok": true
+    },
+    {
+     "planted": "0xff",
+     "returned": -1,
+     "expected": -1,
+     "ok": true
+    }
+   ],
+   "negative_control": {
+    "cell_rewritten_to": 640,
+    "returned": 7,
+    "equals_value_at_self_plus_cell": true
+   },
+   "second_negative": {
+    "cell_back_to": 934,
+    "returned": 3,
+    "bit_exact": true
+   },
+   "note": "ldrsb semantics: planting 0xFF returns -1, which is the ivar's ENCODING checked, not merely its offset"
+  }
+ },
  "fastForward": {
   "positive": [
    {

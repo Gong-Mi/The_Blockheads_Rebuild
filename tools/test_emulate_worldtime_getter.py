@@ -51,6 +51,14 @@ def main() -> int:
     assert fresh["fastForward"]["negative_control"]["equals_value_at_self_plus_cell"] is True
     assert [p["returned"] for p in fresh["fastForward"]["positive"]] == [0, 1, 127, -128, -1], \
         "ldrsb sign-extension must hold for 0x80 and 0xFF"
+    assert set(fresh["sbyte_fields"]) == {"fastForward", "doubleTimeUnlocked"}, \
+        "both char fields must be executed"
+    for name, rep in fresh["sbyte_fields"].items():
+        assert [p["returned"] for p in rep["positive"]] == [0, 1, 127, -128, -1], name
+        assert rep["negative_control"]["equals_value_at_self_plus_cell"] is True, name
+    src_tool = (ROOT / "tools/emulate_worldtime_getter.py").read_text()
+    assert "slot derived from the getter's own literal pool" in src_tool, \
+        "the doubleTimeUnlocked slot must stay derived, not guessed"
     for key in ("getter_imp", "cell", "got_slot", "passed", "negative_control", "fastForward"):
         assert committed[key] == fresh[key], f"committed artifact drifted at {key}"
     print("worldtime getter emulation: controls hold and the committed artifact matches a fresh run")

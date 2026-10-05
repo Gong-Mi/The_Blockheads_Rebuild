@@ -70,3 +70,13 @@ the site. Four separate decode bugs were caught by the self-check while building
 pinned Rd and therefore only ever scanned `rd=0`; the offset load's direction; the cell VA
 landing in the *destination* register; a same-named register swallowing the access instruction),
 each of which presented as "no error, absurd result". Do not run the tool without `--self-check`.
+
+## Method attribution has a known limit (added after the Unicorn work)
+
+The site counts here are **cell** facts: a row exists because the slot's contents equal that ivar's
+cell VA. The method named alongside it is weaker evidence for one case - the one-line getters
+(`startPortalPos`, `serverClients`, `server`, `client`, `fastForward`, `doubleTimeUnlocked`, ...) share
+one enclosing body, so the prologue walk lands on `0x5d9d24` for all of them and the tool reports
+`ambiguous` rather than guessing. Read `World.fastForward`'s single row as "one cell-resolving site
+inside that shared body", not as "its own getter" - the executed evidence in
+`WORLDTIME_GETTER_EMULATION.md` is what ties IMP `0x5d9e50` to offset 934.
