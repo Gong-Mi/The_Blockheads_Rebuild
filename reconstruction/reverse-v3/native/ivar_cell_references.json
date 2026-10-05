@@ -112,6 +112,7 @@
   "Absence of a write is a statement about this library. A runtime-resolved offset (KVC setValue:forKey: / object_setIvar with the ivar fetched by name), a table-indexed offset write, or a bulk copy into the object are all still open.",
   "Method attribution is reported with its basis: unique / ambiguous / none, plus every method-table entry in [fn_start, site]. The fastForward site is 'ambiguous' on purpose - it sits in a run of one-line getters sharing one body.",
   "Regenerate with: python3 tools/extract_ivar_cell_references.py <libApplication.so> --methods reconstruction/reverse-v3/native/libApplication_objc_methods.tsv --self-check --json OUT",
-  "Method naming is weaker than the cell fact for the shared one-line-getter body (the tool reports attribution 'ambiguous' there): read fastForward's single row as one cell-resolving site inside that body, not as 'its own getter'."
+  "Method naming is weaker than the cell fact for the shared one-line-getter body (the tool reports attribution 'ambiguous' there): read fastForward's single row as one cell-resolving site inside that body, not as 'its own getter'.",
+  "SUPERSEDED COUNTS: the by_access totals in this file predate the fused-store fix in the classifier (tools/extract_ivar_cell_references.py). With fused register-offset stores recognised, reads/writes are 4898/464 and 1831 remain unclassified - see IVAR_ACCESS_CLASSIFIER_FIX.md. The per-ivar site lists are unchanged; only the labels moved."
  ]
 }

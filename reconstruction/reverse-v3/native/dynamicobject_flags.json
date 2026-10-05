@@ -1,9 +1,9 @@
 {
- "schema": 1,
+ "schema": 2,
  "scope": "the one-byte flag cluster in DynamicObject (offsets 48..52)",
- "method": "cell references from the committed cell machinery; access labels are the tool's heuristic; the cluster and the naming are cross-checked against the symbol table",
+ "method": "cell references after the FUSED-FORM fix in the classifier; access labels are the tool's heuristic, cluster naming cross-checked against the symbol table",
  "cluster": {
-  "note": "five adjacent one-byte flags at 48..52, which is why this family's accessors all share the ldrsb shape",
+  "note": "five adjacent one-byte flags at 48..52, which is why this family's accessors share the ldrsb shape",
   "offsets": {
    "needsRemoved": 48,
    "updateNeedsToBeSent": 49,
@@ -17,105 +17,24 @@
    "cell": "0xf33e40",
    "sites": 6,
    "by_access": {
-    "pointer-or-unknown": 4,
-    "read": 2
+    "pointer-or-unknown": 1,
+    "read": 5
    },
-   "classified_writes": [],
-   "unclassified": [
-    {
-     "add_site": "0x5f6710",
-     "method": "InteractionObject -[startInteractionWithBlockhead:]"
-    },
-    {
-     "add_site": "0xb97620",
-     "method": "Blockhead -[initWithWorld:dynamicWorld:saveDict:savedInventorySlots:cache:repositionOnLoadFailure:clientSaveDir:clientLocallySavedDict:]"
-    },
-    {
-     "add_site": "0xbd76d4",
-     "method": "Blockhead -[update:accurateDT:isSimulation:]"
-    },
-    {
-     "add_site": "0xbdb8e0",
-     "method": "Blockhead -[update:accurateDT:isSimulation:]"
-    }
-   ],
-   "genuine_reads": [
-    {
-     "add_site": "0x650228",
-     "method": "NPC -[checkCurrentPositionForFood]"
-    },
-    {
-     "add_site": "0x675d40",
-     "method": "FireObject -[update:accurateDT:isSimulation:]"
-    }
-   ]
+   "writes": []
   },
   "needsRemoved": {
    "cell": "0xf33e44",
    "sites": 14,
    "by_access": {
-    "pointer-or-unknown": 10,
-    "read": 4
+    "pointer-or-unknown": 9,
+    "read": 4,
+    "write": 1
    },
-   "classified_writes": [],
-   "unclassified": [
-    {
-     "add_site": "0x6cb214",
-     "method": "Donkey -[blockheadCanRide:usingItem:]"
-    },
-    {
-     "add_site": "0x78f378",
-     "method": "ClownFish -[remoteCreationDataUpdate:]"
-    },
-    {
-     "add_site": "0x78f608",
-     "method": "ClownFish -[draw:projectionMatrix:modelViewMatrix:cameraMinXWorld:cameraMaxXWorld:cameraMinYWorld:cameraMaxYWorld:]"
-    },
-    {
-     "add_site": "0x7c9d60",
-     "method": "Shark -[doRemoteUpdate:]"
-    },
-    {
-     "add_site": "0x7ca41c",
-     "method": "Shark -[draw:projectionMatrix:modelViewMatrix:cameraMinXWorld:cameraMaxXWorld:cameraMinYWorld:cameraMaxYWorld:]"
-    },
-    {
-     "add_site": "0x7ddad0",
-     "method": "Shark -[.cxx_construct]"
-    },
+   "writes": [
     {
      "add_site": "0x83d148",
+     "instruction": "strb r2, [r0, r1] (fused: offset register is the index)",
      "method": "DynamicObject -[uniqueID]"
-    },
-    {
-     "add_site": "0xab2144",
-     "method": "DonkeyLike -[update:accurateDT:isSimulation:]"
-    },
-    {
-     "add_site": "0xd55f04",
-     "method": "CaveTroll -[remoteCreationDataUpdate:]"
-    },
-    {
-     "add_site": "0xd85278",
-     "method": "CaveTroll -[nextPos]"
-    }
-   ],
-   "genuine_reads": [
-    {
-     "add_site": "0x83caf4",
-     "method": "DynamicObject -[getLightRGB]"
-    },
-    {
-     "add_site": "0x8ac3b4",
-     "method": "Scorpion -[blockheadUnloaded:]"
-    },
-    {
-     "add_site": "0x96dce4",
-     "method": "Boat -[updatePosition:]"
-    },
-    {
-     "add_site": "0xa809b8",
-     "method": "Dodo -[blockheadUnloaded:]"
     }
    ]
   },
@@ -123,83 +42,120 @@
    "cell": "0xf33e48",
    "sites": 29,
    "by_access": {
-    "pointer-or-unknown": 24,
-    "read": 4,
-    "write": 1
+    "pointer-or-unknown": 3,
+    "write": 22,
+    "read": 4
    },
-   "classified_writes": [
-    {
-     "add_site": "0x5f63a4",
-     "instruction": "strb lr, [r0]",
-     "method": "InteractionObject -[startInteractionWithBlockhead:]"
-    }
-   ],
-   "unclassified": [
-    {
-     "add_site": "0x4b8b60",
-     "method": "Torch -[worldChanged:]"
-    },
+   "writes": [
     {
      "add_site": "0x5ebc04",
+     "instruction": "strb r3, [r0, r1] (fused: offset register is the index)",
      "method": "TradingPost -[contentsDidChange]"
     },
     {
      "add_site": "0x5f28dc",
+     "instruction": "strb r3, [r0, r1] (fused: offset register is the index)",
      "method": "TradingPost -[paint:]"
     },
     {
+     "add_site": "0x5f63a4",
+     "instruction": "strb lr, [r0]",
+     "method": "InteractionObject -[startInteractionWithBlockhead:]"
+    },
+    {
      "add_site": "0x6011ac",
+     "instruction": "strb r3, [r0, r1] (fused: offset register is the index)",
      "method": "Sign -[paint:]"
     },
     {
      "add_site": "0x627ac0",
+     "instruction": "strb r3, [r0, r1] (fused: offset register is the index)",
      "method": "FreeBlock -[initWithWorld:dynamicWorld:saveDict:cache:]"
     },
     {
      "add_site": "0x6cc184",
+     "instruction": "strb r3, [r0, r1] (fused: offset register is the index)",
      "method": "Stairs -[updateConfiguration]"
     },
     {
      "add_site": "0x6d03c0",
+     "instruction": "strb r3, [r0, r1] (fused: offset register is the index)",
      "method": "Stairs -[paint:]"
     },
     {
      "add_site": "0x768fe8",
+     "instruction": "strb r3, [r0, r1] (fused: offset register is the index)",
      "method": "Door -[checkAndUpdateBlockedStatus]"
     },
     {
      "add_site": "0x77a5c0",
+     "instruction": "strb r3, [r0, r1] (fused: offset register is the index)",
      "method": "Rail -[updateRailConfiguration]"
     },
     {
      "add_site": "0x77b768",
+     "instruction": "strb r3, [r0, r1] (fused: offset register is the index)",
      "method": "Rail -[remoteUpdate:]"
     },
     {
      "add_site": "0x7ad82c",
+     "instruction": "strb ip, [r0, r1] (fused: offset register is the index)",
      "method": "DropBear -[update:accurateDT:isSimulation:]"
     },
     {
      "add_site": "0x8195e8",
+     "instruction": "strb r3, [r0, r1] (fused: offset register is the index)",
      "method": "KelpPlant -[tileHarvested:removeBlockhead:correctToolMultiplier:]"
-    }
-   ],
-   "genuine_reads": [
-    {
-     "add_site": "0x5ee8c0",
-     "method": "TradingPost -[sellTitle]"
     },
     {
-     "add_site": "0x5f667c",
-     "method": "InteractionObject -[startInteractionWithBlockhead:]"
+     "add_site": "0x834400",
+     "instruction": "strb r3, [r0, r1] (fused: offset register is the index)",
+     "method": "Column -[updateConfiguration]"
     },
     {
-     "add_site": "0x5f7334",
-     "method": "InteractionObject -[blockheadWouldLikeToTakeOwnership:withSaveDict:]"
+     "add_site": "0x838c18",
+     "instruction": "strb r3, [r0, r1] (fused: offset register is the index)",
+     "method": "Column -[paint:]"
     },
     {
-     "add_site": "0xcafb5c",
-     "method": "ElevatorShaft -[staticGeometryDrawQuadCountForMacroPos:]"
+     "add_site": "0x83d1c8",
+     "instruction": "strb r2, [r0, r1] (fused: offset register is the index)",
+     "method": "DynamicObject -[uniqueID]"
+    },
+    {
+     "add_site": "0x94fb48",
+     "instruction": "strb r3, [r0, r1] (fused: offset register is the index)",
+     "method": "Wire -[updateWireConfiguration]"
+    },
+    {
+     "add_site": "0xa3a944",
+     "instruction": "strb r2, [r0, r1] (fused: offset register is the index)",
+     "method": "TrainCar -[remoteUpdate:]"
+    },
+    {
+     "add_site": "0xaafe5c",
+     "instruction": "strb r3, [r0, r1] (fused: offset register is the index)",
+     "method": "Ladder -[paint:]"
+    },
+    {
+     "add_site": "0xbba13c",
+     "instruction": "strb ip, [r1, r2] (fused: offset register is the index)",
+     "method": "Blockhead -[update:accurateDT:isSimulation:]"
+    },
+    {
+     "add_site": "0xcb1450",
+     "instruction": "strb r3, [r0, r1] (fused: offset register is the index)",
+     "method": "ElevatorShaft -[paint:]"
+    },
+    {
+     "add_site": "0xcc3b00",
+     "instruction": "strb r3, [r0, r1] (fused: offset register is the index)",
+     "method": "Chest -[paint:]"
+    },
+    {
+     "add_site": "0xd49cbc",
+     "instruction": "strb r3, [r0, r1] (fused: offset register is the index)",
+     "method": "Bed -[paint:]"
     }
    ]
   },
@@ -207,40 +163,44 @@
    "cell": "0xf33e4c",
    "sites": 1,
    "by_access": {
-    "pointer-or-unknown": 1
+    "write": 1
    },
-   "classified_writes": [],
-   "unclassified": [
+   "writes": [
     {
      "add_site": "0x83d248",
+     "instruction": "strb r2, [r0, r1] (fused: offset register is the index)",
      "method": "DynamicObject -[uniqueID]"
     }
-   ],
-   "genuine_reads": []
+   ]
   },
   "unreliableUpdateNeedsToBeSent": {
    "cell": "0xf33e50",
    "sites": 1,
    "by_access": {
-    "pointer-or-unknown": 1
+    "write": 1
    },
-   "classified_writes": [],
-   "unclassified": [
+   "writes": [
     {
      "add_site": "0x83d2c8",
+     "instruction": "strb r2, [r0, r1] (fused: offset register is the index)",
      "method": "DynamicObject -[uniqueID]"
     }
-   ],
-   "genuine_reads": []
+   ]
   }
  },
+ "global_by_access": {
+  "read": 4898,
+  "pointer-or-unknown": 1831,
+  "write": 464
+ },
+ "supersedes": "the first version of this artifact, written before the fused-form fix, reported 1 classified write for updateNeedsToBeSent and 24 unclassified - a tool gap, not the binary",
  "findings": [
-  "the reads are semantically coherent: needsRemoved is read by NPC -[checkCurrentPositionForFood], Scorpion/Dodo -[blockheadUnloaded:], Boat -[updatePosition:]; isNet by NPC, FireObject -[update:accurateDT:isSimulation:] and Blockhead",
-  "exactly one site is classified as a write: strb lr,[r0] at 0x5f63a4 in InteractionObject -[startInteractionWithBlockhead:] (cell 0xf33e48 = updateNeedsToBeSent)"
+  "updateNeedsToBeSent now has 22 writes, and they sit exactly where a network dirty bit belongs: TradingPost -[contentsDidChange], TradingPost/Sign/Stairs -[paint:], Door -[checkAndUpdateBlockedStatus], FreeBlock -[initWithWorld:dynamicWorld:saveDict:cache:]",
+  "isNet still has 0 writes through this channel, so its writer uses another mechanism (a constructor field store, memset, or a form still unclassified)",
+  "World.fastForward keeps exactly 1 site and it is still a READ, so the world-clock claim survives the better classifier - the same correction that flips the flag census leaves that one intact"
  ],
  "boundary": [
-  "DO NOT read the write counts as 'how many writers exist': 24 of updateNeedsToBeSent's 29 sites are labelled pointer-or-unknown because the classifier only inspects the instruction after the address computation, and these sites use strb rX,[rY,rZ] store forms it does not recognise. '0 writers' would be a wrong conclusion drawn from a classifier gap.",
-  "the flag getters sit in a run of adjacent functions (0x83d1xx), so prologue attribution packs several of their self-reads under DynamicObject -[uniqueID]; cell identity is reliable, method naming is not, exactly as recorded for the shared one-line getters.",
-  "the reads being coherent is an observation, not proof that every labelled site is a flag use."
+  "access labels remain a heuristic over the instruction window; the fused rule is checked before the add form because a fused site has no add to find",
+  "method attribution is unreliable in runs of adjacent getters (0x83d1xx): cell identity is reliable, the method name is not"
  ]
 }

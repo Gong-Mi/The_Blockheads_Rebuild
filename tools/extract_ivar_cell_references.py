@@ -172,6 +172,20 @@ def classify(blob, add_addr, slot, cell, ivar, methods, disasm, prologue_lo=TEXT
                     lhs, _, rhs = ins.op_str.partition(",")
                     if rhs.strip().strip("[]").split(",")[0].strip() == cell_reg:
                         off_reg = lhs.strip()
+        # 3a. The FUSED form: the compiler often folds `add rF, rObj, rO` into the access itself, so a
+        #     byte flag is written as `strb r3, [r0, r1]` with r1 holding the cell's content and no
+        #     separate add anywhere. Requiring that add - which this classifier used to do - silently
+        #     files the most common way a flag is SET as "pointer-or-unknown", and that is exactly how a
+        #     "0 writers" conclusion gets drawn from a tool gap. Checked before the add form, since a
+        #     fused site has no add to find.
+        if off_reg and access == "pointer-or-unknown":
+            for i, ins in enumerate(insns[cell_idx + 1:], cell_idx + 1):
+                if ins.mnemonic in LOADS + STORES and "," in ins.op_str:
+                    inner = ins.op_str.partition(",")[2].strip()
+                    if inner.startswith("[") and inner.rstrip("]").split(",")[-1].strip() == off_reg:
+                        access = "read" if ins.mnemonic in LOADS else "write"
+                        detail = f"{ins.mnemonic} {ins.op_str} (fused: offset register is the index)"
+                        break
         # 3. the field address, then the first real access through it
         if off_reg:
             for i, ins in enumerate(insns[cell_idx + 1:], cell_idx + 1):

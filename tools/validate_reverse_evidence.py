@@ -1625,9 +1625,16 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "IVAR_ACCESS_CLASSIFIER_FIX.md",
+        [
+            "tool gap that reads as an",
+            "left the world-clock conclusion alone",
+        ],
+    )
+    require(
         NATIVE / "DYNAMICOBJECT_FLAGS.md",
         [
-            "Do NOT read the write counts as a writer census",
+            "the network-sync trigger is a one-byte flag",
             "exactly where a dirty bit belongs",
         ],
     )
