@@ -22,7 +22,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-HDR = ROOT / "reconstruction/recovered/day_phase.h"
+HDR = ROOT / "app/src/main/cpp/day_phase.h"
 FIXTURE = ROOT / "reconstruction/reverse-v3/native/phase_long_sample.json"
 
 
@@ -43,11 +43,11 @@ def main() -> int:
         return 0
     samples = json.loads(a.fixture.read_text())["samples"]
     hdr = HDR.read_text()
-    period = const(hdr, "DayPhasePeriod")
-    amp = const(hdr, "DayPhaseAmplitude")
-    off = const(hdr, "DayPhaseOffset")
-    ref = const(hdr, "DayPhaseReferenceWorldTime")
-    shift = const(hdr, "DayPhaseShift")
+    period = const(hdr, "Period")
+    amp = const(hdr, "Amplitude")
+    off = const(hdr, "Offset")
+    ref = const(hdr, "ReferenceWorldTime")
+    shift = const(hdr, "Shift")
 
     def turns(wt: float) -> float:
         return (wt - ref) / period + shift / (2 * math.pi)

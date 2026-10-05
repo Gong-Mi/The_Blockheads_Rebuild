@@ -1,3 +1,5 @@
+#include "day_phase.h"
+
 #ifndef GAME_WORLD_H
 #define GAME_WORLD_H
 
@@ -117,11 +119,13 @@ public:
         fastForward = on;
         clockTimeScale = on ? static_cast<float>(kOriginalFastForwardScale) : 1.0f;
     }
-    double dayFraction() const {
-        double f = worldSeconds / kOriginalSecondsPerDay;
-        f -= std::floor(f);
-        return f;
-    }
+    // The day fraction the original reports (World.timeOfDayFraction). This used to be a sawtooth,
+    // fmod(worldSeconds, 900) / 900 - the naive 900-units-per-day reading - and the live measurement (100 samples
+    // over three cycles) showed the waveform is wrong: the period is indeed ~900, but the phase is a SINUSOID with
+    // amplitude 0.2198 and offset 0.2458, swinging roughly 0.03..0.47. day_phase.h carries the fit and its
+    // evidence; tools/test_day_phase.py replays the committed sample against it.
+    double dayFraction() const { return blockheads::dayPhaseFraction(worldSeconds); }
+    bool headingTowardsMidday() const { return blockheads::isHeadingTowardsMidday(worldSeconds); }
     float worldTime = 0.0f;
 };
 
