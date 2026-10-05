@@ -1596,6 +1596,14 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "CLOCK_DOMAIN_LAYOUT.md",
+        [
+            "so this table cannot drift into a",
+            "which is a layout hint the two independent derivations agree on",
+            "a window tuned to one getter is a guess",
+        ],
+    )
+    require(
         NATIVE / "FLOAT_GETTER_EMULATION.md",
         [
             "three abstraction classes, and they are not the same abstraction",

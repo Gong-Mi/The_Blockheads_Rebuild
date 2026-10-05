@@ -71,7 +71,10 @@ def derive(blob: bytes, imp: int) -> dict:
             continue
         k = int(prev.op_str.split("#")[1].rstrip("]"), 16)
         pic = (ins.address + 8 + struct.unpack_from("<I", blob, prev.address + 8 + k)[0]) & 0xFFFFFFFF
-        order = list(range(i - 2, max(0, i - 5), -1)) + list(range(i + 1, min(len(insns), i + 4)))
+        # Scan the WHOLE prologue for the companion pool load. A fixed window is wrong:
+        # sunDirection's companion is 9 instructions after the add, so +3 and +7 both reported
+        # 'slot not derivable' - a window tuned to one getter is a guess, not a derivation.
+        order = list(range(i - 2, max(0, i - 6), -1)) + list(range(i + 1, len(insns)))
         for j in order:
             q = insns[j]
             if q.mnemonic != "ldr" or "pc" not in q.op_str or q.op_str.split(",")[0].strip() == rd:

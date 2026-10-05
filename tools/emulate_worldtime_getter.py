@@ -67,6 +67,10 @@ FIELDS = {
     #   0x5d9e98 ldr r3,[pc,#0x20] -> wA = 0xffffcde4; slot = wA + 0x105faf4 = 0x0105c8d8
     "doubleTimeUnlocked": {"imp": 0x005D9E8C, "cell": 0xF32A98, "got_slot": 0X105C8D8,
                            "offset": 3072, "kind": "sbyte"},
+                           # same 60-byte shape as fastForward (ldrsb after add r0,r0,r1); slot/cell/offset derived
+                           # from the getter's own pool at imp 0x56783c, cross-checked vs OBJC_IVAR_$_World.isSimulating
+                           "isSimulating": {"imp": 0x0056783C, "cell": 0xF32AFC, "got_slot": 0x105C93C,
+                                            "offset": 3140, "kind": "sbyte"},
 }
 
 
