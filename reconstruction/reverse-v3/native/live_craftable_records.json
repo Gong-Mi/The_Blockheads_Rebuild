@@ -364,5 +364,36 @@
   "what": "with the game in the foreground, open the crafting interface and start/queue a craft (or select an item in a workbench) so a CraftableItemObject or Action exists in the live graph",
   "then": "re-run walk_from_world.py and read_live_record.py - the machinery is proven end to end: root identification with a strong signature, class resolution cross-checked against the relocated classlist, graph walk with isa checks at every hop, and 124-byte record reads",
   "why_it_matters": "those records are the only place the field VALUES (and therefore the semantics) exist; every static route to them is exhausted and recorded as such"
+ },
+ "live_clock_domain_snapshot": {
+  "method": "read the LIVE World at exactly the offsets world_clock_domain.h declares, decoding by the model's own types - i.e. the deliverable checked against a running game rather than against the binary",
+  "world": "0x61f96000",
+  "values": {
+   "worldTime": 459886.87642370164,
+   "sunDirection": [
+    -0.09148769825696945,
+    0.00937353353947401,
+    -0.9957621097564697,
+    1.0
+   ],
+   "timeOfDayFraction": 0.2286284863948822,
+   "weatherFraction": 0.13606323301792145,
+   "rainFraction": 0.0,
+   "rainFractionNotIncludingSnow": 0.0,
+   "fastForward": 1,
+   "doubleTimeUnlocked": 0,
+   "simulationProgress": 0.0,
+   "isSimulating": 0
+  },
+  "model_confirmations": [
+   "sunDirection came out as a UNIT vector (|v| = 1.0000, fourth float 1.0), so the model's '4 floats' is right and the semantics is a direction - the strongest kind of live confirmation available short of reading a crafting record",
+   "fastForward reads 1 at the same time the clock advances 20.005 units per wall second, so the flag and the rate agree as two independent live signals",
+   "the offsets/types for all ten fields decoded without a single implausible value (fractions are in [0,1], flags are 0/1, worldTime is a large double)"
+  ],
+  "anomaly_sharpened": {
+   "before": "timeOfDayFraction moved 0.354 while worldTime advanced 1.33 days, so the fraction is not fmod(worldTime, 900)/900",
+   "now": "at this snapshot the fraction reads 0.2286 while the sun's Y component is ~0.0094, i.e. the sun is essentially on the horizon - the phase and the sun agree with each other. So the fraction IS a day phase (~0.25 = sunrise); what disagrees is its rate against worldTime",
+   "falsifiable_next_question": "which counter advances the phase? The fraction is consistent with the sun and inconsistent with worldTime/900, so either a second counter exists or the fraction is derived per frame with a different constant - both are answerable statically now that the question is that specific."
+  }
  }
 }
