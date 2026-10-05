@@ -3,7 +3,7 @@ project(BlockheadsRecoveredView LANGUAGES CXX)
 
 add_library(blockheads_recovered_view STATIC
     gameview_update.cpp projection_update.cpp world_view_contracts.cpp world_translation.cpp sound_manager.cpp gameview_input.cpp gameview_starttouch.cpp gameview_move_touch.cpp world_move_touch.cpp gameview_end_touch.cpp world_end_touch.cpp gameview_cancel_touch.cpp gameview_secondary_touch.cpp
-    pinch_return.cpp translation_return.cpp zoom_settle.cpp dynamic_object_flags.cpp world_clock_domain.cpp frame_loop_participants.cpp dynamic_object_layout.cpp audio_wiring_model.cpp world_layout.cpp craftable_item_record.cpp interaction_test_result.cpp dynamic_object_net_data.cpp dynamic_world_layout.cpp paint_mix_ui_layout.cpp)
+    pinch_return.cpp translation_return.cpp zoom_settle.cpp dynamic_object_flags.cpp world_clock_domain.cpp frame_loop_participants.cpp dynamic_object_layout.cpp audio_wiring_model.cpp world_layout.cpp craftable_item_record.cpp interaction_test_result.cpp dynamic_object_net_data.cpp dynamic_world_layout.cpp paint_mix_ui_layout.cpp action_layout.cpp)
 target_include_directories(blockheads_recovered_view PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(blockheads_recovered_view PUBLIC cxx_std_17)
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
@@ -615,3 +615,8 @@ add_executable(test_paint_mix_ui_layout ../../tools/test_paint_mix_ui_layout.cpp
 target_link_libraries(test_paint_mix_ui_layout PRIVATE blockheads_recovered_view)
 target_compile_options(test_paint_mix_ui_layout PRIVATE -UNDEBUG)
 add_test(NAME recovered_paint_mix_ui_layout COMMAND test_paint_mix_ui_layout)
+
+add_executable(test_action_layout ../../tools/test_action_layout.cpp)
+target_link_libraries(test_action_layout PRIVATE blockheads_recovered_view)
+target_compile_options(test_action_layout PRIVATE -UNDEBUG)
+add_test(NAME recovered_action_layout COMMAND test_action_layout)
