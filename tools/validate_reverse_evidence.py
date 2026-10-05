@@ -1596,6 +1596,30 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "WORLDTIME_GETTER_EMULATION.md",
+        [
+            "executed under Unicorn",
+            "UC_ERR_INSN_INVALID",
+            "returned 42.25",
+            "lazy",
+        ],
+    )
+    require(
+        NATIVE / "worldtime_getter_emulation.json",
+        [
+            '"getter_imp": "0x5d99a4"',
+            '"passed": true',
+            '"equals_value_at_self_plus_cell": true',
+        ],
+    )
+    require(
+        ROOT / "tools/emulate_worldtime_getter.py",
+        [
+            "decoy",
+            "lazy trampoline",
+        ],
+    )
+    require(
         NATIVE / "CRAFTABLE_ITEM_BLOB_BOUNDARY.md",
         [
             "CraftableItem blob: proved, and sealed",
