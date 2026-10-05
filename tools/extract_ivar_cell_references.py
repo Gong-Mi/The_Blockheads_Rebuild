@@ -116,7 +116,7 @@ def scan(blob: bytes, cells: dict[int, str], methods: dict[int, str], disasm,
         if la < lo or W(la) is None or not ldr_pc(W(la), rd):
             continue
         v = (a + 8 + W(la + 8 + (W(la) & 0xFFF))) & 0xFFFFFFFF
-        for b in range(la - 4, max(lo - 4, la - 4 * 24), -4):
+        for b in range(la - 4, max(lo - 4, la - 4 * 240), -4):
             w2 = W(b)
             if w2 is None:
                 continue

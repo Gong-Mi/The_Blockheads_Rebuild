@@ -22,17 +22,17 @@ ldr  rX, [rX]           ; the runtime offset
 
 So a reference exists exactly when `*(wA + v)` is a known cell VA. The middle address lands in
 `.got` (`World.worldTime` -> slot `0x105c754`, `World.fastForward` -> slot `0x105c778`), and
-every resolved site reproduced the PIC base, which is the internal consistency check.
+every resolved site reproduced the PIC base, which is the internal consistency check. The bias-load search window is 240 instructions back: a 24-instruction window resolves only 13430/27155 add sites and silently loses ~34% of references, which is how these numbers were first understated. Both fields' site lists were identical under either window. The bias-load search window is 240 instructions: a 24-instruction window resolves only 13430/27155 add sites and silently loses ~34% of references, which is how these numbers were first understated. Both fields' site lists were identical under either window.
 
 ## Result
 
 | | |
 |---|---|
 | ivar symbols | 3793 |
-| ivars with cell-based references | 1613 |
-| reference sites | 5730 |
-| by access | read 1007, write 153, pointer-or-unknown 4570 |
-| attribution | unique 4977, ambiguous 714, none 39 |
+| ivars with cell-based references | 2003 |
+| reference sites | 7193 |
+| by access | read 1517, write 197, pointer-or-unknown 5479 |
+| attribution | unique 6265, ambiguous 803, none 125 |
 
 ## The two fields this batch was about
 

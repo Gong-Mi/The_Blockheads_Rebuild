@@ -1494,13 +1494,14 @@ def main() -> None:
             "0x105c754",
             "three references, all reads",
             "Do not run the tool without",
+            "240 instructions back",
         ],
     )
     require(
         NATIVE / "ivar_cell_references.json",
         [
-            '"ivars_with_references": 1613',
-            '"sites": 5730',
+            '"ivars_with_references": 2003',
+            '"sites": 7193',
             '"World.fastForward"',
             '"conclusion"',
         ],
