@@ -116,7 +116,12 @@ def scan(blob: bytes, cells: dict[int, str], methods: dict[int, str], disasm,
         if la < lo or W(la) is None or not ldr_pc(W(la), rd):
             continue
         v = (a + 8 + W(la + 8 + (W(la) & 0xFFF))) & 0xFFFFFFFF
-        for b in range(la - 4, max(lo - 4, la - 4 * 240), -4):
+        # The bias word may sit BEFORE the add (the order this tool was written for) or AFTER it: Blockhead
+        # -[isMale] computes its base first, loads the bias word second, and only then dereferences. A
+        # backwards-only search silently drops that ordering, which is how the ivar that getter reads ended up
+        # absent from this tool's own output.
+        candidates = list(range(la - 4, max(lo - 4, la - 4 * 240), -4)) + list(range(a + 4, min(hi, a + 4 * 8), 4))
+        for b in candidates:
             w2 = W(b)
             if w2 is None:
                 continue

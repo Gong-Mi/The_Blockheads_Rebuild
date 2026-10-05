@@ -473,6 +473,10 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
                                    BH_APP_SOURCE_DIR="${BH_APP_CPP_DIR}")
         target_compile_options(test_craft_completion_sound PRIVATE -UNDEBUG)
         add_test(NAME craft_completion_sound COMMAND test_craft_completion_sound)
+        add_executable(test_blockhead_gender_model ../../tools/test_blockhead_gender_model.cpp)
+        target_include_directories(test_blockhead_gender_model PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+        target_compile_options(test_blockhead_gender_model PRIVATE -UNDEBUG)
+        add_test(NAME recovered_blockhead_gender_model COMMAND test_blockhead_gender_model)
         # The GENERATED load-time sound list: data consumed by a real target, so that a
         # hand-edit of the generated header cannot survive the suite.
         add_executable(test_sound_preload_list ../../tools/test_sound_preload_list.cpp)

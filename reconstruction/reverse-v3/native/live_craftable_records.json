@@ -622,5 +622,13 @@
    "workbench_layout.h (the 48 rows, anchored on the runtime's own offsets)",
    "craftable_item_record.h + craftable_item_object_layout.h (the 124-byte record and its host at offset 4)"
   ]
+ },
+ "cell_scan_blind_spot_negative_wA": {
+  "status": "WITHDRAWN - it was my own arithmetic error, not a tool defect",
+  "what_i_claimed": "that the ivar-cell scanner had a blind spot on Blockhead -[isMale], because 0 sites came back for the cell I attributed to it (0xf35440, 'shoesCube at 280'), and I proposed that a bias load sitting after the add was the unmodelled form",
+  "what_is_true": "I had used the pc of the 'ldr' instead of the pc of the 'add'. ARM's pc is the instruction address + 8, and the add is four bytes after the ldr, so my base came out 4 low (0x105faf0 instead of 0x105faf4), putting the cell on 0xf35440 and naming the wrong ivar. With the correct base the cell is 0xf3544c = OBJC_IVAR_$_Blockhead.skinOptions at 728, and the scanner resolves it with FIVE sites, including the writer.",
+  "the_writer": "Blockhead -[customizationComplete:] (IMP 0xc89eec) sets it: 0xc89f78 'mov r3,#1' then 0xc89f7c 'strb r3,[r0,r1]' where r0 is self and r1 is the offset from that cell, i.e. self[728] = 1. The scanner reports the ADD's address (0xc89f2c) and the store follows it ~20 instructions later.",
+  "why_it_is_recorded_this_way": "a four-byte slip produced a plausible-sounding tool defect and a wrong model entry (shoesCube@280) that had already been written into a header and a test. The test could not catch it because it re-derived the chain the same wrong way, so the two agreed. It now asserts the base equals the PIC base before anything else, which is the check that fails instantly on the slip.",
+  "kept_from_the_exercise": "the scanner extension (accepting a bias load that sits after the add) is an independent improvement: 20593 -> 20814 resolved pairs, 7193 -> 7281 sites, 2003 -> 2013 ivars. It was motivated by a wrong diagnosis and is still worth keeping, which is exactly the kind of thing that should be said out loud."
  }
 }
