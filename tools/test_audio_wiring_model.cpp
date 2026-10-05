@@ -27,7 +27,10 @@ int main() {
                            [sound](const Wiring& w) { return w.sound == sound; });
     };
     assert(has("blockheadDie.wav"));
-    assert(has("axe.wav"));
+    // axe.wav is one of the two shipped names the original never references through a __cfstring, so it
+    // has no method attribution and CANNOT appear in a wiring table. Asserting the opposite was a fact
+    // error that stayed invisible while this build had asserts compiled out.
+    assert(!has("axe.wav"));
 
     // every entry names a method that looks like "Class -[selector]"
     for (const Wiring& w : kAudioWiring) {

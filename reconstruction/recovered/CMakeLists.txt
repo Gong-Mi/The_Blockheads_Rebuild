@@ -563,20 +563,25 @@ endif()
 
 add_executable(test_dynamic_object_flags_model ../../tools/test_dynamic_object_flags_model.cpp)
 target_link_libraries(test_dynamic_object_flags_model PRIVATE blockheads_recovered_view)
+target_compile_options(test_dynamic_object_flags_model PRIVATE -UNDEBUG)
 add_test(NAME recovered_dynamic_object_flags_model COMMAND test_dynamic_object_flags_model)
 
 add_executable(test_world_clock_domain ../../tools/test_world_clock_domain.cpp)
 target_link_libraries(test_world_clock_domain PRIVATE blockheads_recovered_view)
+target_compile_options(test_world_clock_domain PRIVATE -UNDEBUG)
 add_test(NAME recovered_world_clock_domain COMMAND test_world_clock_domain)
 
 add_executable(test_frame_loop_participants ../../tools/test_frame_loop_participants.cpp)
 target_link_libraries(test_frame_loop_participants PRIVATE blockheads_recovered_view)
+target_compile_options(test_frame_loop_participants PRIVATE -UNDEBUG)
 add_test(NAME recovered_frame_loop_participants COMMAND test_frame_loop_participants)
 
 add_executable(test_dynamic_object_layout ../../tools/test_dynamic_object_layout.cpp audio_wiring_model.cpp)
 target_link_libraries(test_dynamic_object_layout PRIVATE blockheads_recovered_view)
+target_compile_options(test_dynamic_object_layout PRIVATE -UNDEBUG)
 add_test(NAME recovered_dynamic_object_layout COMMAND test_dynamic_object_layout)
 
 add_executable(test_audio_wiring_model ../../tools/test_audio_wiring_model.cpp)
 target_link_libraries(test_audio_wiring_model PRIVATE blockheads_recovered_view)
+target_compile_options(test_audio_wiring_model PRIVATE -UNDEBUG)
 add_test(NAME recovered_audio_wiring_model COMMAND test_audio_wiring_model)

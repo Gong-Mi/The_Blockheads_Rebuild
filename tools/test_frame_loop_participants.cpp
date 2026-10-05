@@ -15,8 +15,13 @@ int main() {
     for (const char* name : {"Blockhead", "Chest", "NPC", "Tree"}) {
         assert(isFrameLoopParticipant(name));
     }
-    assert(!isFrameLoopParticipant("World"));      // World is the driver, not a participant
-    assert(!isFrameLoopParticipant("DynamicWorld"));
+    // DynamicWorld IS a participant: it implements the protocol itself (this is the method carrying the
+    // x20 divisor) AND drives the loop over its children. The first version of this test asserted the
+    // opposite, which is a fact error the Debug CI build caught because it runs the asserts.
+    assert(isFrameLoopParticipant("DynamicWorld"));
+    // World and GameView drive the loop without implementing it - their update methods take a different
+    // selector (update:accurateDT:pinchScale:dragInProgress: and update:accurateDT: respectively)
+    assert(!isFrameLoopParticipant("World"));
     assert(!isFrameLoopParticipant("GameView"));
     assert(!isFrameLoopParticipant(""));
     assert(!isFrameLoopParticipant("Blockhead "));  // exact match, no prefix nonsense
