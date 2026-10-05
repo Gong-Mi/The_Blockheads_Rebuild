@@ -63,6 +63,15 @@ def main() -> int:
         const = "NeedsRemoved" if flag == "needsRemoved" else flag[0].upper() + flag[1:]
         assert hdr_offsets.get(const) == off, (const, hdr_offsets.get(const), off)
 
+
+    # cross-language, and cross-SOURCE: the recovered layout header must carry every DynamicObject ivar
+    # exactly as the binary's own ivar table has it
+    layout = (ROOT / "reconstruction/recovered/dynamic_object_layout.h").read_text()
+    for name, (cell, content) in sorted(named.items()):
+        const = name[0].upper() + name[1:]
+        assert f"kOffset{const} = {content};" in layout, (name, content)
+        assert f"kCell{const} = {cell:#010x};" in layout, (name, hex(cell))
+
     print(f"flag cluster: 5 flags at 48..52 confirmed by symbol table; updateNeedsToBeSent has "
           f"{rep['per_flag']['updateNeedsToBeSent']['sites']} sites and {len(writes)} writes; "
           f"isNet writes={rep['per_flag']['isNet']['by_access'].get('write', 0)}")
