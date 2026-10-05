@@ -1609,6 +1609,13 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "WORLD_METHOD_EXECUTION_CLASSIFICATION.md",
+        [
+            "it is a statement about",
+            "Every decision in this class is in the",
+        ],
+    )
+    require(
         NATIVE / "STRUCT_GETTER_EMULATION.md",
         [
             "does not take self in r0",

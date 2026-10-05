@@ -73,3 +73,32 @@ Rows carrying an abstraction, i.e. the ones that need one stated decision each:
   an upper bound on what runs standalone, and each executed method is verified on its own anyway.
 - Nothing here is executed in this batch: the verdicts are computed, and the three executed methods
   were executed by `emulate_worldtime_getter.py` with their own controls.
+
+## What the clean verdict actually implies (checked afterwards, not assumed)
+
+Counting branches exposed a claim I had made loosely. With `bx lr` excluded - it is a return, and
+counting it as a branch makes almost every method look like it has decision logic - the result is:
+
+| set | methods | with a conditional branch | mean instructions |
+|---|---:|---:|---:|
+| `unicorn-clean` | 81 | **0** | 14.2 |
+| `needs-runtime` | 259 | 168 | 224.6 |
+
+So "executable under Unicorn" here is not a statement about difficulty, it is a statement about
+**shape**: all 81 clean methods are straight-line accessors - resolve the ivar cell, address the field,
+move the value out, return. Every decision in this class is in the 259 methods that need a runtime,
+which is exactly where the reconstruction's open problems (the crafting field semantics among them)
+have to be attacked. The longest clean bodies:
+
+- `startPinchOrPan` - 34 instructions, 0 conditional branches
+- `setRepairMode:` - 23 instructions, 0 conditional branches
+- `stopFollowingOrTranslatingToGoal` - 21 instructions, 0 conditional branches
+- `tutorialActive` - 19 instructions, 0 conditional branches
+- `renderingTeaserFrames` - 18 instructions, 0 conditional branches
+- `translation` - 16 instructions, 0 conditional branches
+- `highestPoint` - 16 instructions, 0 conditional branches
+- `macroTiles` - 15 instructions, 0 conditional branches
+
+Recorded boundary: this is observed on this class, not proven in general - a body can be branch-free and
+still call out, which is what the copy-stub class does. `world_clean_set_shape.json` carries the
+per-method counts, and the contract test re-measures them.
