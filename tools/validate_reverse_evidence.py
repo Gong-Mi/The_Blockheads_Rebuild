@@ -1625,6 +1625,13 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "CLOCK_FIELD_WRITE_WATCH.md",
+        [
+            "two different methods found no writer",
+            "Zero. And the observed run is not trivial",
+        ],
+    )
+    require(
         NATIVE / "IVAR_ACCESS_CLASSIFIER_FIX.md",
         [
             "tool gap that reads as an",

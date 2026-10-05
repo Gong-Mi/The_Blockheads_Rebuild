@@ -86,6 +86,10 @@ def main() -> int:
     ap.add_argument("--json", type=Path, default=None)
     ap.add_argument("--limit", type=int, default=200)
     ap.add_argument("--max-insns", type=int, default=400_000)
+    ap.add_argument("--watch-offsets", default=None,
+                    help="comma-separated field offsets to watch for WRITES on the receiver, e.g. "
+                         "648,934,3264 - the executed answer to 'who writes this field', which static "
+                         "cell scanning answers only for the cell idiom")
     ap.add_argument("--fill-pointers", action="store_true",
                     help="give the fabricated receiver a flat object graph: every 4-byte slot in its "
                          "first 4 KB points at its own zeroed page, instead of being NULL")
@@ -107,7 +111,7 @@ def main() -> int:
         raise SystemExit(f"no {cls} instance method {selector!r} in the method table")
 
     from unicorn import (Uc, UC_ARCH_ARM, UC_MODE_ARM, UC_PROT_READ, UC_PROT_WRITE, UC_PROT_EXEC,
-                         UC_HOOK_CODE, UC_HOOK_MEM_READ_UNMAPPED)
+                         UC_HOOK_CODE, UC_HOOK_MEM_READ_UNMAPPED, UC_HOOK_MEM_WRITE)
     from elftools.elf.elffile import ELFFile as _ELF
     allowed = []
     with elf.open("rb") as fh:
@@ -219,6 +223,23 @@ def main() -> int:
         st["vivified"].append(hex(page))
         return True
 
+    st["field_writes"] = []
+    watch = {int(x.strip(), 0) for x in (args.watch_offsets or "").split(",") if x.strip()}
+    if watch:
+        from unicorn.arm_const import UC_ARM_REG_R0 as _R0, UC_ARM_REG_R1 as _R1, UC_ARM_REG_R2 as _R2
+
+        def on_write(mu_, access, address, size, value, _):
+            off = address - OBJ
+            if off in watch:
+                lr = mu_.reg_read(UC_ARM_REG_LR)
+                st["field_writes"].append({"offset": off, "size": size, "value": value,
+                                           "site": hex(lr - BIAS - 4),
+                                           "r0": hex(mu_.reg_read(_R0)),
+                                           "r1": hex(mu_.reg_read(_R1))})
+            return True
+
+        hw = mu.hook_add(UC_HOOK_MEM_WRITE, on_write)
+
     h = mu.hook_add(UC_HOOK_CODE, hook)
     hm = mu.hook_add(UC_HOOK_MEM_READ_UNMAPPED, on_unmapped)
     mu.reg_write(UC_ARM_REG_R0, OBJ)
@@ -278,6 +299,7 @@ def main() -> int:
                       "unresolved_selectors": sum(1 for s in st["sends"] if not s["selector"])},
            "stopped_by": st["stopped_by"], "zero_pages_invented": st["vivified"],
            "call_outs": st["call_outs"][:40],
+           "watched_offsets": sorted(watch), "field_writes": st["field_writes"][:40],
            "trace": st["sends"]}
     if args.json:
         args.json.write_text(json.dumps(rep, indent=1) + "\n")

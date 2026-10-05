@@ -1,0 +1,49 @@
+{
+ "schema": 1,
+ "scope": "who writes the clock/geometry fields (offsets [624, 648, 660, 934, 3072, 3136, 3140, 3264]) - executed watch",
+ "method": "a write hook on the receiver watches these offsets while the method body runs; a hit would name the instruction that writes the field",
+ "watched_offsets": [
+  624,
+  648,
+  660,
+  934,
+  3072,
+  3136,
+  3140,
+  3264
+ ],
+ "runs": {
+  "DynamicWorld:update:accurateDT:isSimulation:": {
+   "instructions": 1999,
+   "field_writes": [],
+   "stopped_by": null
+  },
+  "DynamicWorld:simulate:": {
+   "instructions": 249,
+   "field_writes": [],
+   "stopped_by": null
+  },
+  "DynamicWorld:update:accurateDT:": {
+   "instructions": 34,
+   "field_writes": [],
+   "stopped_by": null
+  },
+  "World:incrementalLoad": {
+   "instructions": 445,
+   "field_writes": [],
+   "stopped_by": null
+  },
+  "World:update:accurateDT:pinchScale:dragInProgress:": {
+   "instructions": 1527,
+   "field_writes": [],
+   "stopped_by": null
+  }
+ },
+ "result": "zero writes to any watched offset in all five methods, including 1999 instructions of DynamicWorld -[update:accurateDT:isSimulation:]",
+ "reading_both_ways": [
+  "(a) the writes happen inside callees that this run STUBS (r0 = 0), so an executed watch on the body cannot see them - not excluded by this experiment",
+  "(b) the fabricated receiver sends the body down its empty path, so it never reaches a write - also not excluded",
+  "what IS excluded: these five bodies do not write these fields directly in their own instructions"
+ ],
+ "boundary": "no field writes is a statement about this run's receiver and this stubbing, not about the original. It does not contradict the static result (no writer through the cell idiom) - it agrees with it and shows the negative is not an artifact of the static method alone."
+}
