@@ -26,6 +26,9 @@
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
 
 // 全局实例
+#include "sound_preload_registry.h"
+static blockheads::replacement::SoundPreloadRegistry g_soundPreload;
+
 static GameWorld* g_world = nullptr;
 EntityManager* g_entities = nullptr;
 BlockheadAI* g_ai = nullptr;
@@ -222,6 +225,12 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
                 // world clock so season gates and day/night continue where the
                 // original left off (this save: 900.0 = exactly one day).
                 g_world->worldSeconds = g_originalClientApp.worldTime();
+
+            // Audio: register the original's load-time sound names (World -[incrementalLoad], 32 of
+            // them, generated with a --check gate into sound_preload_list.h). This only records what
+            // the original names - it plays nothing and claims no playback order. 26 of the 32 are
+            // still unreferenced by this replacement, which is the wiring backlog the artifact lists.
+            g_soundPreload.registerLoadTimeSounds();
                 g_world->hasWorldSeconds = true;
                 logToFile("Original world seed applied: randomSeed=%lld "
                           "(offset %.1f,%.1f)",

@@ -1503,6 +1503,28 @@ def main() -> None:
         ],
     )
     require(
+        ROOT / "app/src/main/cpp/sound_preload_registry.h",
+        [
+            "Replacement-side consumer of the GENERATED load-time sound list",
+            "NOT part of reconstruction/recovered/",
+            "std::size_t pendingWiring() const",
+        ],
+    )
+    require(
+        ROOT / "tools/test_sound_preload_registry.py",
+        [
+            "must bind to kOriginalLoadTimeSoundCount",
+            "hard-coded count",
+        ],
+    )
+    require(
+        ROOT / "tools/test_sound_preload_registry.cpp",
+        [
+            "26 of the 32 are still unreferenced",
+            "registration is idempotent",
+        ],
+    )
+    require(
         ROOT / "tools/test_sound_preload_list.cpp",
         [
             "26 remain to wire",
