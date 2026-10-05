@@ -1,0 +1,29 @@
+{
+ "schema": 1,
+ "scope": "the serialisation pair for the CraftableItem record",
+ "key": "craftableItem",
+ "cfstring_va": "0x00f9b7b8",
+ "record_bytes": 124,
+ "reader": {
+  "method": "CraftableItemObject -[initWithSaveDict:]",
+  "imp": "0x00ac7900",
+  "key_reference_site": "0x00ac79a8",
+  "evidence": "known from batch b3c: copies 124 bytes into ivar offset 4 via getBytes:length: at 0x00ac7a18"
+ },
+ "writer": {
+  "method": "CraftableItemObject -[getSaveDict]",
+  "imp": "0x00ac7a54",
+  "key_reference_site": "0x00ac7a68",
+  "evidence": "the body loads the same cfstring and materialises movw r5,#0x7c (124) into the argument list, then adds the record pointer to the ivar offset before the call - located by scanning .text for the cfstring literal, not guessed",
+  "grade": "static: the site, the constant and the address arithmetic are read; the selector NAMES at the two call sites are NOT resolved (these bodies use the blx-through-slot form, which the msgSend-trampoline tracer does not see and the 12-selector watchlist artifact does not cover)"
+ },
+ "references_in_binary": {
+  "count": 2,
+  "sites": [
+   "0x00ac79a8",
+   "0x00ac7a68"
+  ],
+  "method": "scanning .text for words equal to the cfstring VA or its PIC-relative form (cfstring - 0x105faf4)"
+ },
+ "next_target": "who FILLS the record's fields - that is where f0..f10 get their meaning; the serialisation pair only moves opaque bytes"
+}

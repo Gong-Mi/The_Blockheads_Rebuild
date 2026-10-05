@@ -12,7 +12,9 @@ The field SEMANTICS remain unknown and are not asserted anywhere - f0..f10 are p
 from __future__ import annotations
 
 import json
+import os
 import re
+import struct
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -79,6 +81,31 @@ def main() -> int:
         assert f"kCraftableItemObjectRecordOffset = {host_off};" in hdr
         assert "kCraftableItemObjectInstanceSize = 128" in hdr
         assert f"kCraftableItemBlobLength = {total};" in hdr
+
+
+    # the "exactly two references" claim is re-scanned here, not quoted: a third use of the key would mean
+    # another writer or reader exists and this model's story about the pair would be incomplete
+    pinned2 = Path(os.environ.get("BH_ELF", ROOT.parent.parent /
+                                  "extracted/lib/armeabi-v7a/libApplication.so"))
+    if pinned2.is_file():
+        blob2 = pinned2.read_bytes()
+        cf, pic = 0x00f9b7b8, 0x105faf4
+        want = {(cf - pic) & 0xffffffff, cf}
+        pool = [a for a in range(0x001C4500, 0x00DB8AA8, 4) if struct.unpack_from("<I", blob2, a)[0] in want]
+        refs = []
+        for a in pool:
+            for back in range(4, 0x600, 4):
+                addr = a - back
+                if addr < 0 or addr + 4 > len(blob2):
+                    continue
+                w = struct.unpack_from("<I", blob2, addr)[0]
+                if (w >> 28) == 0xE and ((w >> 24) & 0xF) in (0x5,):   # ldr rX,[pc,#imm]
+                    imm = w & 0xFFF
+                    if addr + 8 + imm == a:
+                        refs.append(addr)
+                        break
+        assert sorted(refs) == [0x00ac79a8, 0x00ac7a68], [hex(r) for r in refs]
+        assert "kCraftableItemKeyReferencesInBinary = 2" in hdr
 
     print(f"craftable item record: {len(fields)} fields, {total} bytes, derived from the encoding "
           f"and confirmed by the signature's argument span ({span})")

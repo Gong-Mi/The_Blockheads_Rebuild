@@ -64,6 +64,19 @@ static_assert(offsetof(CraftableItemRecord, f10) == 92, "field f10");
 // blob, so what f0..f10 mean has to come from whoever BUILDS the blob (the crafting pipeline), not from
 // the deserialiser.
 namespace craftable_item_host {
+
+// The serialisation pair, located by scanning .text for the `craftableItem` cfstring literal - there are
+// exactly TWO references to that key in the whole binary, one per direction:
+//   reader  CraftableItemObject -[initWithSaveDict:] @0x00ac7900, key site 0x00ac79a8 (copies 124 bytes
+//           into ivar offset 4 via getBytes:length: at 0x00ac7a18);
+//   writer  CraftableItemObject -[getSaveDict] @0x00ac7a54, key site 0x00ac7a68, whose body materialises
+//           movw r5,#0x7c (124) into the argument list and adds the record pointer to the ivar offset.
+// The selector NAMES at the two call sites are not resolved: these bodies call in the blx-through-slot
+// form, which neither the trampoline tracer nor the selector watchlist covers. Recorded as unknown.
+inline constexpr std::uint32_t kCraftableItemCfstringVa = 0x00f9b7b8U;
+inline constexpr std::uint32_t kCraftableItemReaderKeySite = 0x00ac79a8U;
+inline constexpr std::uint32_t kCraftableItemWriterKeySite = 0x00ac7a68U;
+inline constexpr std::size_t kCraftableItemKeyReferencesInBinary = 2;
 inline constexpr std::size_t kCraftableItemObjectRecordOffset = 4;
 inline constexpr std::uint32_t kCraftableItemObjectRecordCell = 0x00f34ea0U;
 inline constexpr std::size_t kCraftableItemObjectInstanceSize = 128;   // isa (4) + record (124)
