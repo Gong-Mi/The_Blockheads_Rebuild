@@ -630,5 +630,17 @@
   "the_writer": "Blockhead -[customizationComplete:] (IMP 0xc89eec) sets it: 0xc89f78 'mov r3,#1' then 0xc89f7c 'strb r3,[r0,r1]' where r0 is self and r1 is the offset from that cell, i.e. self[728] = 1. The scanner reports the ADD's address (0xc89f2c) and the store follows it ~20 instructions later.",
   "why_it_is_recorded_this_way": "a four-byte slip produced a plausible-sounding tool defect and a wrong model entry (shoesCube@280) that had already been written into a header and a test. The test could not catch it because it re-derived the chain the same wrong way, so the two agreed. It now asserts the base equals the PIC base before anything else, which is the check that fails instantly on the slip.",
   "kept_from_the_exercise": "the scanner extension (accepting a bias load that sits after the add) is an independent improvement: 20593 -> 20814 resolved pairs, 7193 -> 7281 sites, 2003 -> 2013 ivars. It was motivated by a wrong diagnosis and is still worth keeping, which is exactly the kind of thing that should be said out loud."
+ },
+ "scope_of_the_four_byte_error": {
+  "why_this_check_exists": "after finding that a hand-derived cell was wrong by four bytes, the question is which OTHER recorded facts came from hand derivation alone. So the clock/weather cells the artifacts record were cross-checked against the corrected scanner's own resolutions.",
+  "results": {
+   "World.worldTime cell 0xf328f4": "scanner names this ivar at this cell, 3 sites (2 read, 1 pointer)",
+   "World.timeOfDayFraction cell 0xf32b78": "scanner names it, 1 read",
+   "World.fastForward cell 0xf32930": "scanner names it, 1 read",
+   "World.sunDirection cell 0xf32b6c": "scanner still resolves nothing, as recorded - but this cell was confirmed independently by the struct-getter emulation, which read the field through it and got a unit vector",
+   "World.doubleTimeUnlocked cell 0xf32a98": "no cell-idiom sites, but it is reached through a .got SLOT, and the emulator read that slot's contents and found this cell"
+  },
+  "conclusion": "the four-byte error's blast radius is one file. Every clock/weather cell in the models is either named by the scanner at that cell or confirmed by a second, independent method (emulation, or the live read of a unit vector). blockhead_gender.h was the one derivation that rested on hand arithmetic alone, and it was wrong.",
+  "the_rule_this_earns": "a derived constant is trustworthy in proportion to how many INDEPENDENT methods confirm it. Hand derivation with no second witness is the weakest kind, and the fix is not more care but another witness: the scanner for cells, emulation for layouts, the live original for behaviour."
  }
 }
