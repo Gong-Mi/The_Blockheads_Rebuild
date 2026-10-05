@@ -43,5 +43,21 @@
   "reading": "within this image there is no static call site for this selector: no selref slot, no msgrefs entry, and the only holder is its own type metadata. The tool's own claim says an empty selref route is NOT proof that a send is unresolvable in general - the SEL could be built at run time, and this image is a Mach-O conversion whose selrefs may be materialised by the translator - so the supported statement is 'no static caller in this image', not 'never called'.",
   "correction": "an earlier message of mine attributed this channel to tools/extract_class_indexed_sends.py; that file does not exist in this tree. The tool that does this measurement is tools/probe_objc_send_channel.py, and the reading above is its output.",
   "why_it_matters": "the record's field semantics live in whoever builds it, and that code is not reachable as a static call site in this image - which is exactly the kind of boundary worth writing down instead of guessing past"
+ },
+ "callers": {
+  "method": "slot -> pool word (slot - 0x105faf4) -> ldr -> enclosing method, the same chain that works for cfstrings; both selectors resolve to exactly ONE loader each",
+  "initWithCraftableItem:": {
+   "selref_slot": "0x00e80abc",
+   "loader_site": "0x00741c6c",
+   "enclosing_method": "PaintingCraftableItemObject -[initWithCraftableItem:imageData:outputImageData:]",
+   "reading": "the subclass initialiser delegates to the base one; no external caller takes the by-value path in this image"
+  },
+  "setCraftableItem:": {
+   "selref_slot": "0x00e7f55c",
+   "loader_site": "0x0067390c",
+   "enclosing_method": "PaintMixUI -[craftButton:]",
+   "reading": "THE crafting entry point: the paint-mix UI's craft button is the single place in this image that hands a CraftableItem to an object. The record's field values are therefore built in or below this method, which is where f0..f10 get their meaning"
+  },
+  "next_step": "read PaintMixUI -[craftButton:] @0x00673388 and follow where the record's fields are computed - that is the semantics source this project has been missing"
  }
 }

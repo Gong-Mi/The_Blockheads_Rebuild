@@ -116,6 +116,10 @@ def main() -> int:
         assert "selref_slots: EMPTY" in " ".join(pd["dispatch_boundary"]["facts"]), \
             "the measured selref fact must stay recorded"
         assert "correction" in pd["dispatch_boundary"], "the tool-attribution correction must stay"
+        callers = pd.get("callers") or {}
+        assert callers.get("setCraftableItem:", {}).get("enclosing_method") == "PaintMixUI -[craftButton:]", \
+            "the crafting entry point must stay recorded"
+        assert "kCraftableItemCraftEntryPoint" in hdr
         assert "kCraftableItemInitializerDispatchUnknown" in hdr
 
     print(f"craftable item record: {len(fields)} fields, {total} bytes, derived from the encoding "

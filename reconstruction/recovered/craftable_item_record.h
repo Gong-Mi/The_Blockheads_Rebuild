@@ -88,6 +88,15 @@ inline constexpr std::size_t kCraftableItemKeyReferencesInBinary = 2;
 // within this image it has no static call site. "No static caller here" is not "never called" - the SEL
 // could be built at run time and this image is a Mach-O conversion - and that is the supported statement.
 inline constexpr bool kCraftableItemInitializerDispatchUnknown = true;
+
+// The way in, found by resolving the base-class selectors' selref slots through the same chain that works
+// for cfstrings: each resolves to exactly ONE loader.
+//   setCraftableItem:        slot 0x00e7f55c -> loader 0x0067390c in PaintMixUI -[craftButton:]
+//   initWithCraftableItem:   slot 0x00e80abc -> loader 0x00741c6c in the Painting subclass's initialiser
+// The first is the crafting entry point: one place in the image hands a CraftableItem to an object, so the
+// field values are computed in or below it. That is where f0..f10 would get their meaning.
+inline constexpr std::uint32_t kCraftableItemSetSelectorSlot = 0x00e7f55cU;
+inline constexpr std::uint32_t kCraftableItemCraftEntryPoint = 0x0067390cU;
 inline constexpr std::size_t kCraftableItemObjectRecordOffset = 4;
 inline constexpr std::uint32_t kCraftableItemObjectRecordCell = 0x00f34ea0U;
 inline constexpr std::size_t kCraftableItemObjectInstanceSize = 128;   // isa (4) + record (124)
