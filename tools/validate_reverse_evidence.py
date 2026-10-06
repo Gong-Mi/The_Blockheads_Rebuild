@@ -612,6 +612,36 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "WORLDHELPER_RECURSIVE_REMOVE.md",
+        [
+            "0x00a1bd10",
+            "0x00a1c680",
+            "604",
+            "objectAtIndex:0",
+            "level monotonicity",
+            "minx",
+            "0x00a18f68",
+        ],
+    )
+    require(
+        NATIVE / "disasm_worldhelper_recursiveremovesunlight.txt",
+        [
+            "# WorldHelper +[recursivelyRemoveAllSunLightWithList:openIndices:lightWasRemovedList:removeIndices:world:minx:maxX:]",
+            "# implementation: 0x00a1bd10",
+            "# ARM.exidx end: 0x00a1c680",
+        ],
+    )
+    require(
+        NATIVE / "worldhelper_recursiveremove.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 604",
+            "OBJC_CLASS_$_NSNumber",
+            "recalculateDrawBlockLightingForTile",
+            "0x00a156a8",
+        ],
+    )
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
