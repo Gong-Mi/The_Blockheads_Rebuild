@@ -702,6 +702,47 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "ARTIFICIALLIGHT_TILES.md",
+        [
+            "0x00a92238",
+            "0x00a93160",
+            "0x00a93198",
+            "0x00a93728",
+            "970",
+            "addedGrid",
+            "0xdfff",
+            "recursivelyUpdateLightWithList",
+            "loadTroll",
+        ],
+    )
+    require(
+        NATIVE / "disasm_artificiallight_addtotiles.txt",
+        [
+            "# ArtificialLight -[addToTiles]",
+            "# implementation: 0x00a92238",
+            "# ARM.exidx end: 0x00a93160",
+        ],
+    )
+    require(
+        NATIVE / "disasm_artificiallight_removefromtiles.txt",
+        [
+            "# ArtificialLight -[removeFromTiles]",
+            "# implementation: 0x00a93198",
+            "# ARM.exidx end: 0x00a93728",
+        ],
+    )
+    require(
+        NATIVE / "artificiallight_tiles.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 970",
+            "\"verified_words\": 356",
+            "contributionGridOrigin",
+            "0x00a14824",
+            "tileRequiresGlowBlock",
+        ],
+    )
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
