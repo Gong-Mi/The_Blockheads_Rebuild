@@ -1079,6 +1079,59 @@ def main() -> None:
     ):
         require(NATIVE / _cu_file, [_cu_imp, _cu_end])
     require(
+        NATIVE / "ELEVATOR_MOTOR.md",
+        [
+            "2569",
+            "0x006ffeec",
+            "findAndSubtractAllPowerUpTo:forUser:",
+            "dmb ish",
+            "macroTiles",
+            "fillBuffer:fromIndex:matrix:",
+            "texture 584",
+        ],
+    )
+    require(
+        NATIVE / "elevator_motor.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 396",
+            "\"verified_words\": 303",
+            "availableElectricity",
+            "timeUntilNextPowerCheck",
+            "findAndSubtractAllPowerUpTo:forUser:",
+            "fillBuffer:fromIndex:matrix:width:height:depth:centerX:centerY:centerZ",
+        ],
+    )
+    for _em_file, _em_imp, _em_end in (
+        ("disasm_elevatormotor_initsubderiveditems.txt", "# implementation: 0x006ffeec", "# ARM.exidx end: 0x006fff94"),
+        ("disasm_elevatormotor_objecttype.txt", "# implementation: 0x006fff94", "# ARM.exidx end: 0x006fffb0"),
+        ("disasm_elevatormotor_initwithworld_position.txt", "# implementation: 0x006fffb0", "# ARM.exidx end: 0x0070046c"),
+        ("disasm_elevatormotor_initwithworld_savedict.txt", "# implementation: 0x0070046c", "# ARM.exidx end: 0x007007d4"),
+        ("disasm_elevatormotor_initwithworld_netdata.txt", "# implementation: 0x007007d4", "# ARM.exidx end: 0x00700b38"),
+        ("disasm_elevatormotor_getsavedict.txt", "# implementation: 0x00700b5c", "# ARM.exidx end: 0x00700ed8"),
+        ("disasm_elevatormotor_dealloc.txt", "# implementation: 0x00700ed8", "# ARM.exidx end: 0x00700f9c"),
+        ("disasm_elevatormotor_updatenetdata.txt", "# implementation: 0x00700f9c", "# ARM.exidx end: 0x00700ff0"),
+        ("disasm_elevatormotor_creationnetdata.txt", "# implementation: 0x00700ff0", "# ARM.exidx end: 0x0070136c"),
+        ("disasm_elevatormotor_remoteupdate.txt", "# implementation: 0x007014d8", "# ARM.exidx end: 0x007017a0"),
+        ("disasm_elevatormotor_update.txt", "# implementation: 0x007017a0", "# ARM.exidx end: 0x00701a1c"),
+        ("disasm_elevatormotor_draw.txt", "# implementation: 0x00701a1c", "# ARM.exidx end: 0x00701c44"),
+        ("disasm_elevatormotor_freeblockcreationitemtype.txt", "# implementation: 0x00701c44", "# ARM.exidx end: 0x00701c80"),
+        ("disasm_elevatormotor_freeblockcreationsavedict.txt", "# implementation: 0x00701c80", "# ARM.exidx end: 0x00701ccc"),
+        ("disasm_elevatormotor_freeblockcreationdataa.txt", "# implementation: 0x00701ccc", "# ARM.exidx end: 0x00701d04"),
+        ("disasm_elevatormotor_freeblockcreationdatab.txt", "# implementation: 0x00701ce8", "# ARM.exidx end: 0x00701d04"),
+        ("disasm_elevatormotor_worldchanged.txt", "# implementation: 0x00701d04", "# ARM.exidx end: 0x00702334"),
+        ("disasm_elevatormotor_staticgeometrydrawcubecount.txt", "# implementation: 0x00702334", "# ARM.exidx end: 0x00702354"),
+        ("disasm_elevatormotor_adddrawcubedata.txt", "# implementation: 0x00702354", "# ARM.exidx end: 0x00702660"),
+        ("disasm_elevatormotor_removefrommacroblock.txt", "# implementation: 0x007026d4", "# ARM.exidx end: 0x007027dc"),
+        ("disasm_elevatormotor_isstoragedevice.txt", "# implementation: 0x007027dc", "# ARM.exidx end: 0x00702848"),
+        ("disasm_elevatormotor_occupiesnormalcontents.txt", "# implementation: 0x007029a8", "# ARM.exidx end: 0x00702a00"),
+        ("disasm_elevatormotor_miny.txt", "# implementation: 0x007029c4", "# ARM.exidx end: 0x00702a00"),
+        ("disasm_elevatormotor_setminy.txt", "# implementation: 0x00702a00", "# ARM.exidx end: 0x00702a44"),
+        ("disasm_elevatormotor_maxy.txt", "# implementation: 0x00702a44", "# ARM.exidx end: 0x00702a80"),
+        ("disasm_elevatormotor_setmaxy.txt", "# implementation: 0x00702a80", "# ARM.exidx end: 0x00702ac4"),
+    ):
+        require(NATIVE / _em_file, [_em_imp, _em_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",

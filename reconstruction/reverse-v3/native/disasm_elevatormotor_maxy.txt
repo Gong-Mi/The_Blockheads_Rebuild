@@ -1,0 +1,20 @@
+# ElevatorMotor -[maxY]
+# types: i8@0:4
+# implementation: 0x00702a44
+# ARM.exidx end: 0x00702a80
+
+            0x00702a44      08d04de2       sub sp, sp, 8
+            0x00702a48      04008de5       str r0, [sp, 4]
+            0x00702a4c      00108de5       str r1, [sp]
+            0x00702a50      04009de5       ldr r0, [sp, 4]
+            0x00702a54      1c109fe5       ldr r1, [0x00702a78]        ; [0x702a78:4]=0xffffd810
+            0x00702a58      1c209fe5       ldr r2, [0x00702a7c]        ; [0x702a7c:4]=0x95d090
+            0x00702a5c      02208fe0       add r2, pc, r2
+            0x00702a60      021091e7       ldr r1, [r1, r2]
+            0x00702a64      001091e5       ldr r1, [r1]
+            0x00702a68      010090e7       ldr r0, [r0, r1]
+            0x00702a6c      5bf07ff5       dmb ish
+            0x00702a70      08d08de2       add sp, sp, 8
+            0x00702a74      1eff2fe1       bx lr
+            0x00702a78      10d8ffff       invalid
+            0x00702a7c      90d09500       umullseq sp, r5, r0, r0
