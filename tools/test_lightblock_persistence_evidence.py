@@ -89,7 +89,7 @@ def test_load_save():
     for needle in ('%@_%d_%d', 'hasFinishedDatabaseMigrationTo17',
                    'playerLightBlocks/', '%@%d_%d_lightBlock', 'fileExistsAtPath',
                    'gzipInflate', 'malloc(0x400)', 'calloc(1, 0x400)',
-                   'fullyLoadIfNeededAroundPos:clientLightBlockIndex:forBlockhead:',
+                   'fullyLoadIfNeededAroundPos:', 'forBlockhead:nil',
                    'startPortalPos'):
         assert needle in l['semantics'], needle
     for needle in ('x@0', 'y@4', 'tiles[32]@0x20', 'flags[32]@0xA0'):
