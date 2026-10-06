@@ -67,8 +67,17 @@ def main() -> int:
     for s in data["selectors"]:
         for entry in s.get("sends", []):
             via[entry["via"]] = via.get(entry["via"], 0) + 1
-    assert sum(via.values()) == 15, via
-    assert via.get("objc_msgSend") == 14 and via.get("blx-window") == 1, via
+    assert sum(via.values()) == 30, via
+    assert via.get("objc_msgSend") == 14 and via.get("blx-window") == 16, via
+
+    # the blx-window form is detected on the documented shape: `ldr rA,[sp,#k]` (the slot
+    # pointer, re-materialised from its spill) -> `ldr rA,[rA]` (the SEL) -> `blx rB`
+    # (stack-spilled dispatcher). The old byte-mask rule matched none of the heartbeat
+    # sites (recorded then as "uses neither detected form"), so these pins are what keeps
+    # the detector from silently regressing to it.
+    hb = [e for e in by_sel["soundNamed:"]["sends"] if e["via"] == "blx-window"]
+    assert [e["at"] for e in hb] == ["0x5552cc", "0x5552dc"], hb
+    assert all(e["static_args"] == ["slowdown.wav"] for e in hb), hb
 
     # decoded static string args (__DATA,__cfstring cells, cstring at cell+8)
     multi = by_sel["multiSoundNamed:"]["sends"]
@@ -81,7 +90,7 @@ def main() -> int:
     assert all("static_args" in entry for entry in multi), multi
 
     print("selector-senders: PASS (mechanism + counts pinned; 19/19 prologue-verified; "
-          "15 send sites; trigger args decoded)")
+          "30 send sites (14 objc_msgSend + 16 blx-window); trigger args decoded)")
     return 0
 
 

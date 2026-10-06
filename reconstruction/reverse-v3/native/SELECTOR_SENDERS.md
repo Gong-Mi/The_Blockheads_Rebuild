@@ -57,6 +57,14 @@ sites pass **`noPath.wav`**, and the `placeWorkbenchOfType:` site passes **`fire
 (no static string), and the Weather cricket-sound key is stack-loaded too - those
 arguments need a register/stack read at the recorded `bl` sites.
 
+**The window-local form decodes too (2026-10-07).** With the blx-window rule rebuilt on
+the materialisation shape, `World heartbeatDataRecieved:fromPeer:` decodes
+**`slowdown.wav`** (2 sites) and **`speedup.wav`** (2 sites), and `World doCameraScreenshot`
+decodes **`camera.wav`** - the same (method, sound) pairs `audio_wiring_map.json` maps from
+the string-reference side, so the two routes now witness each other. The blx-window
+`static_args` are read from a wider window (0x80) than the `bl objc_msgSend` form (0x20),
+which is why the empty-arg entries in that subset are expected.
+
 `World heartbeatDataRecieved:fromPeer:` showing up as the enclosing method for the
 `soundNamed:` site was originally only a nearest-IMP fact. It is now
 **settled by the prologue walk-back**: for all 19 loader sites in this table, the nearest
@@ -79,14 +87,26 @@ build and both are now recorded (`sends` entries carry a `via` field):
   the stub from `.rel.plt` (never hardcoded) and records a send when a loader's window
   contains a `bl` to it (`"via": "objc_msgSend"`). This is the form the `World tap:`
   trigger sites use: materialise the slot, `ldr r1,[r1,base]` (SEL), `bl objc_msgSend`.
-- **`blx` through a stack-spilled descriptor** (`"via": "blx-window"`): the original
-  conservative rule, kept as-is.
+- **`blx` through a stack-spilled descriptor** (`"via": "blx-window"`): the send target
+  is reached with the SEL materialised from the slot pointer's spill - `ldr rA,[sp,#k]`
+  (the pointer) -> `ldr rA,[rA]` (the SEL) -> `blx rB` (dispatcher), the stub-table
+  dispatch idiom `OBJC_SEND_CHANNEL.md` records from `-[MJSoundManager soundNamed:]`. The
+  rule was rebuilt on that shape (2026-10-07): the earlier byte-mask scan matched none of
+  the sites in `World heartbeatDataRecieved:fromPeer:` - recorded at the time as "uses
+  neither detected form" - and with the shape rule the watchlist's send count goes 15 ->
+  30 (14 `objc_msgSend` + 16 `blx-window`; the old rule had matched one site). The new
+  entries are the heartbeat method (6: 2 `soundNamed:` + 4 `multiSoundNamed:`), the
+  `update:accurateDT:pinchScale:dragInProgress:` trio, one in the `World tap:` window
+  (shared by `multiSoundNamed:` and `playAtPosition:`), three in `doCameraScreenshot` and
+  two in the `MJMultiSound initWithFileNames:` loop (`initWithFile:`) over 13 distinct
+  addresses.
 
-A `bl` is counted under every loader whose window contains it, so adjacent loaders (the tap
+A send is counted under every loader whose window contains it, so adjacent loaders (the tap
 pair does exactly this) share send sites; `sends` is therefore "send sites near a
 reference" - one step stronger than a reference, one step weaker than a per-selector
-proof. What neither rule proves is the **arguments** (which is where sound names live);
-read those from the recorded `bl` sites, not from this table.
+proof. Neither rule proves the **argument binding** (which value goes to which parameter);
+`static_args` names the cfstring(s) loaded in a window around the site - the recorded site
+address is where a register/stack read settles the binding.
 
 ## Next step, concrete
 

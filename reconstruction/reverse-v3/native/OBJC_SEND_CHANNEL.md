@@ -87,3 +87,18 @@ rule lifts the watchlist's send count from 1 to 15.
 
 Nothing above is superseded: the four empty scans, the `.rel.dyn` finding and the msgrefs
 note all stand. This adds the missing second form and the detection for it.
+
+## Update (2026-10-07): the `blx` rule rebuilt on the materialisation shape
+
+The first sentence above about `blx`-through-descriptor was written when that rule was a
+byte-mask scan that "never matched the recorded heartbeat send at all". It is retracted
+and replaced: the send target is reached with the SEL materialised from the slot pointer's
+spill - `ldr rA,[sp,#k]` (the pointer) -> `ldr rA,[rA]` (the SEL) -> `blx rB` (the
+stack-spilled dispatcher), which is the same stub-table dispatch idiom this file records
+from `-[MJSoundManager soundNamed:]` at the top. With the shape rule the watchlist's send
+count goes 15 -> 30 (14 `bl objc_msgSend` + 16 `blx-window`), and the heartbeat sites now
+resolve at all; their window-local `static_args` decode `slowdown.wav` / `speedup.wav` in
+`World heartbeatDataRecieved:fromPeer:` and `camera.wav` in `doCameraScreenshot` - the
+same (method, sound) pairs `audio_wiring_map.json` already maps from the string-reference
+side, so the two routes witness each other. The window-local caveat (adjacent loaders
+share sites; arguments are not bound) is unchanged and recorded in `SELECTOR_SENDERS.md`.

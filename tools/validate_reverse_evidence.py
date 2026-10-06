@@ -1997,6 +1997,7 @@ def main() -> None:
             "prologue-verified",
             "objc_msgSend",
             "static_string_args",
+            "SEL materialisation",
         ],
     )
     require(
@@ -2006,6 +2007,7 @@ def main() -> None:
             "0x105faf4",
             "settled by the prologue walk-back",
             "noPath.wav",
+            "slowdown.wav",
         ],
     )
     require(

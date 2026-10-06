@@ -147,7 +147,7 @@ def msg_send_stub(elf: bytes, secs: list[dict]) -> int | None:
     return None
 
 
-def static_string_args(elf: bytes, secs: list[dict], site: int) -> list[str]:
+def static_string_args(elf: bytes, secs: list[dict], site: int, back: int = 0x20) -> list[str]:
     """Static NSString args near a msg-send site.
 
     Pool loads in the preceding window are resolved through the PIC base; targets landing
@@ -158,7 +158,7 @@ def static_string_args(elf: bytes, secs: list[dict], site: int) -> list[str]:
         return []
     _, md_a = _frame_probe._mds()
     out = []
-    start = max(0, site - 0x20)
+    start = max(0, site - back)
     for ins in md_a.disasm(elf[start:site], start):
         if ins.mnemonic != "ldr" or "pc" not in ins.op_str:
             continue
@@ -295,23 +295,35 @@ def scan(elf: bytes, sed: list[dict], selector: str,
                     out["sends"].append({"at": at, "method": entry["method"],
                                          "via": "objc_msgSend",
                                          "static_args": static_string_args(elf, sed, int(at, 16))})
-                # the other form: re-materialise *slot into the selector argument register
-                # (ldr rN,[rN]) and then blx the send target; require both, in order,
-                # so an unrelated message in the same window is not counted.
+                # the other form: `ldr rA,[sp,#k]` (slot pointer) -> `ldr rA,[rA]`
+                # (SEL materialisation) -> ... -> `blx rB` (stack-spilled dispatcher).
+                # Detected with capstone on the documented shape; the previous byte-mask
+                # rule never matched the recorded heartbeat send at all.
                 sends = []
-                indirect = None
-                for off in range(0, len(window) - 8, 4):
-                    w = struct.unpack_from("<I", window, off)[0]
-                    if (w >> 28) != 0xF and ((w >> 26) & 3) == 1 and ((w >> 24) & 1) == 0 \
-                            and ((w >> 20) & 0xF) != 0xF:
-                        indirect = off
-                    if indirect is not None and off > indirect and blx_at(window, off):
-                        sends.append(f"0x{loader + off:x}")
-                        indirect = None
+                if _frame_probe is not None and send_stub is not None:
+                    _, md_a = _frame_probe._mds()
+                    insns = list(md_a.disasm(window, loader))
+                    for idx, ins in enumerate(insns):
+                        if ins.mnemonic != "blx":
+                            continue
+                        pair_ok = False
+                        for p in range(max(0, idx - 6), idx):
+                            a = insns[p]
+                            b = insns[p + 1] if p + 1 < idx + 1 else None
+                            if a.mnemonic != "ldr" or b is None or b.mnemonic != "ldr":
+                                continue
+                            rm = re.match(r"^(r\d+), \[sp, #0x[0-9a-f]+\]$", a.op_str)
+                            if rm and b.op_str == f"{rm.group(1)}, [{rm.group(1)}]":
+                                pair_ok = True
+                                break
+                        if pair_ok:
+                            sends.append(f"0x{ins.address:x}")
                 entry["send_targets_in_window"] = sends
-                if sends:
-                    out["sends"].append({"at": sends[0], "method": entry["method"],
-                                         "via": "blx-window"})
+                for at in sends:
+                    out["sends"].append({"at": at, "method": entry["method"],
+                                         "via": "blx-window",
+                                         "static_args": static_string_args(elf, sed, int(at, 16),
+                                                                           back=0x80)})
             out["loaders"].append(entry)
     out["n_sends"] = len(out["sends"])
     return out
