@@ -1108,7 +1108,7 @@ def main() -> None:
         ("disasm_elevatormotor_initwithworld_position.txt", "# implementation: 0x006fffb0", "# ARM.exidx end: 0x0070046c"),
         ("disasm_elevatormotor_initwithworld_savedict.txt", "# implementation: 0x0070046c", "# ARM.exidx end: 0x007007d4"),
         ("disasm_elevatormotor_initwithworld_netdata.txt", "# implementation: 0x007007d4", "# ARM.exidx end: 0x00700b38"),
-        ("disasm_elevatormotor_getsavedict.txt", "# implementation: 0x00700b5c", "# ARM.exidx end: 0x00700ed8"),
+        ("disasm_elevatormotor_getsavedict_closure.txt", "# implementation: 0x00700b5c", "# ARM.exidx end: 0x00700ed8"),
         ("disasm_elevatormotor_dealloc.txt", "# implementation: 0x00700ed8", "# ARM.exidx end: 0x00700f9c"),
         ("disasm_elevatormotor_updatenetdata.txt", "# implementation: 0x00700f9c", "# ARM.exidx end: 0x00700ff0"),
         ("disasm_elevatormotor_creationnetdata.txt", "# implementation: 0x00700ff0", "# ARM.exidx end: 0x0070136c"),
