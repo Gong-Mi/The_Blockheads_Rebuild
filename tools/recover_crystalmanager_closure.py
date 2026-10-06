@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Hash-gated recovery of the CrystalManager closure batch (E10).
 
-Closes the CrystalManager class (the game's crystal/premium store): 12 bodies,
-1305 instruction words, from the pinned original libApplication.so
+Closes the CrystalManager class (the crystal store the trade portal fingerprints):
+12 bodies, 1305 instruction words, from the pinned original libApplication.so
 (1.7.6, armeabi-v7a).  Every instruction word is re-verified; tool refuses to
 emit on drift.
 
@@ -577,10 +577,9 @@ def recover(path: Path) -> dict:
     return {
         'schema': 1,
         'elf_sha256': sha,
-        'batch': 'CrystalManager closure batch (E10): trade pricing and settlement - loadPriceOffsets: (price dict rebuild, [0.5, 2.0] clamp), currentBlockhead trio, setPaused:, sellItem:atTotalPrice:count:usageMultiplier:, buyItem:atTotalPrice:count:, upgradeToNextLevel, upgradeCraftableItem (level jump table), takeItemsFromBlockheadForUpgradeToNextLevel, randomizeLocalTradeOffsets (trade-table walk + powf price jitter), worldChanged:(vector<intpair>), isSellInteraction/isMissionInteraction (14 bodies)',
-        'claim': ('static bounded-body maps with per-instruction anchors; the crystal store backing '
-                  'state (iCloud/KVS contents), the Keychain/crypto layer and the runtime values '
-                  'are outside these bodies'),
+        'batch': 'CrystalManager closure batch (E10): the crystal store - +instance (lazy singleton), -init (serial NSOperationQueue, saveQueue@4), -amount (crystalCount@8), -amountString, -countWatcher/-setCountWatcher: (dmb ish pair), -needsSave/-save (flag pair), -commitSaveIfNeeded (clears the flag, then enqueues a _NSConcreteStackBlock), -modify:modifyString: (fingerprint gate over crystalCount - amount + 73), -iCloudID (four-source id resolver) and -iCloudServerRejoinID (MD5 of iCloudID + the literal salt rejoin); 12 bodies',
+        'claim': ('static bounded-body maps with per-instruction anchors; runtime values, '
+                  'the UI consumers and the trade-table contents are outside these bodies'),
         'classes': methods,
     }
 
