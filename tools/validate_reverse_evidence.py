@@ -1005,6 +1005,34 @@ def main() -> None:
     ):
         require(NATIVE / _wc_file, [_wc_imp, _wc_end])
     require(
+        NATIVE / "WIRE_RENDER.md",
+        [
+            "2861",
+            "0x00952770",
+            "fillBuffer:",
+            "staticGeometryDrawCubeCount",
+            "floatPos@24",
+            "0x70",
+        ],
+    )
+    require(
+        NATIVE / "wire_render.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 2194",
+            "\"verified_words\": 138",
+            "fillBuffer:fromIndex:matrix:",
+            "texCoordsForImageIndex",
+            "OBJC_CLASS_$_DrawCube",
+        ],
+    )
+    for _wr_file, _wr_imp, _wr_end in (
+        ("disasm_wire_draw.txt", "# implementation: 0x009510f8", "# ARM.exidx end: 0x00951320"),
+        ("disasm_wire_staticgeometrydrawcubecount.txt", "# implementation: 0x00951f2c", "# ARM.exidx end: 0x00952770"),
+        ("disasm_wire_adddrawcubedata.txt", "# implementation: 0x00952770", "# ARM.exidx end: 0x009549b8"),
+    ):
+        require(NATIVE / _wr_file, [_wr_imp, _wr_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
