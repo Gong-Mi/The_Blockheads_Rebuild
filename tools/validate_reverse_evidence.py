@@ -1415,6 +1415,39 @@ def main() -> None:
         ("disasm_worldtileloader_findbeststartposition.txt", "# implementation: 0x00864188", "# ARM.exidx end: 0x00865074"),
     ):
         require(NATIVE / _tg_file, [_tg_imp, _tg_end])
+
+    require(
+        NATIVE / "LIGHTBLOCK_PERSISTENCE.md",
+        [
+            "2260",
+            "lightBlockDatabaseEnvironment@248",
+            "macroPosForMacroIndex",
+            "playerLightBlocks",
+            "flags[32]@0xA0",
+            "finishBulkTransaction",
+        ],
+    )
+    require(
+        NATIVE / "lightblock_persistence.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '\"verified_words\": 632',
+            '\"verified_words\": 26',
+            "OBJC_IVAR_$_WorldTileLoader.lightBlockDatabase",
+            "OBJC_IVAR_$_WorldTileLoader.lightBlockDatabaseEnvironment",
+            "sendLightBlockToClientWithoutSavingForBlock:pos:sendToClient:server:",
+            "startBulkTransaction",
+        ],
+    )
+    for _lb_file, _lb_imp, _lb_end in (
+        ("disasm_worldtileloader_unarchivelightblocksforclient_.txt", "# implementation: 0x0086652c", "# ARM.exidx end: 0x00866f0c"),
+        ("disasm_worldtileloader_archivelightblocksforclient_.txt", "# implementation: 0x00866f30", "# ARM.exidx end: 0x00867650"),
+        ("disasm_worldtileloader_loadlightblockforclientlightblockindex_c.txt", "# implementation: 0x00867a58", "# ARM.exidx end: 0x008681e4"),
+        ("disasm_worldtileloader_sendlightblocktoclientwithoutsavingforbl.txt", "# implementation: 0x008681e4", "# ARM.exidx end: 0x00868700"),
+        ("disasm_worldtileloader_savelightblockforclientlightblockindex_c.txt", "# implementation: 0x00868700", "# ARM.exidx end: 0x00868b70"),
+        ("disasm_worldtileloader_startbulklightblocktransaction.txt", "# implementation: 0x00868b70", "# ARM.exidx end: 0x00868c40"),
+        ("disasm_worldtileloader_finishbulklightblocktransaction.txt", "# implementation: 0x00868bd8", "# ARM.exidx end: 0x00868c40"),    ):
+        require(NATIVE / _lb_file, [_lb_imp, _lb_end])
     require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
