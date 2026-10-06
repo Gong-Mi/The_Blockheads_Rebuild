@@ -773,6 +773,36 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "ARTIFICIALLIGHT_RECURSIVE_UPDATE.md",
+        [
+            "0x00a8f22c",
+            "0x00a91d30",
+            "2753",
+            "max(r*5/6, 5)",
+            "max(r*7/6, 7)",
+            "lightDirection",
+            "pop_front",
+        ],
+    )
+    require(
+        NATIVE / "disasm_artificiallight_recursiveupdate.txt",
+        [
+            "# ArtificialLight -[recursivelyUpdateLightWithList:]",
+            "# implementation: 0x00a8f22c",
+            "# ARM.exidx end: 0x00a91d30",
+        ],
+    )
+    require(
+        NATIVE / "artificiallight_recursiveupdate.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 2753",
+            "lightDirection",
+            "0x00a15518",
+            "pop_front",
+        ],
+    )
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
