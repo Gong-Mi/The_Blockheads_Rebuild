@@ -642,6 +642,36 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "WORLDHELPER_RECURSIVE_UPDATE.md",
+        [
+            "0x00a19c0c",
+            "0x00a1b7d4",
+            "1778",
+            "(+1,+1)",
+            "torch kind `0x4b`",
+            "createTreasureChestOrTroll",
+            "0x00a18f68",
+        ],
+    )
+    require(
+        NATIVE / "disasm_worldhelper_recursiveupdatesunlight.txt",
+        [
+            "# WorldHelper +[recursivelyUpdateSunLightWithList:openIndices:world:]",
+            "# implementation: 0x00a19c0c",
+            "# ARM.exidx end: 0x00a1b7d4",
+        ],
+    )
+    require(
+        NATIVE / "worldhelper_recursiveupdate.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 1778",
+            "saveSunlightChangedAtPos:",
+            "addTorchAtPos:ofType:dataA:dataB:saveDict:placedByClient:",
+            "0x00a15518",
+        ],
+    )
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
