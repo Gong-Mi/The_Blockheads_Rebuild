@@ -865,6 +865,34 @@ def main() -> None:
     ):
         require(NATIVE / _pow_file, [_pow_imp])
     require(
+        NATIVE / "POWER_FIND.md",
+        [
+            "2769",
+            "0x00db2690",
+            "0x00db51d4",
+            "subtractElectricty:",
+            "addElectricityParticleWithPath:size:",
+            "openList@8",
+        ],
+    )
+    require(
+        NATIVE / "power_find.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 2769",
+            "availableElectricity",
+            "subtractElectricty:",
+            "OBJC_CLASS_$_ParticleEmitter",
+        ],
+    )
+    require(
+        NATIVE / "disasm_wirepathcreator_findandsubtractpower.txt",
+        [
+            "# implementation: 0x00db2690",
+            "# ARM.exidx end: 0x00db51d4",
+        ],
+    )
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
