@@ -1132,6 +1132,60 @@ def main() -> None:
     ):
         require(NATIVE / _em_file, [_em_imp, _em_end])
     require(
+        NATIVE / "ELEVATOR_SHAFT.md",
+        [
+            "4175",
+            "0x00cacc58",
+            "elevatorMotorForShaftAtPos:",
+            "solidTile@86",
+            "opening@68",
+            "paintColor@84",
+            "lastKnownMotorPos@60",
+            "fillQuadBufferColored",
+            "objc_copyStruct",
+        ],
+    )
+    require(
+        NATIVE / "elevator_shaft.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 714",
+            "\"verified_words\": 802",
+            "elevatorMotorForShaftAtPos:",
+            "lastKnownMotorPos",
+            "fillBuffer:fromIndex:matrix:width:height:depth:centerX:centerY:centerZ",
+        ],
+    )
+    for _es_file, _es_imp, _es_end in (
+        ("disasm_elevatorshaft_initsubderiveditems.txt", "# implementation: 0x00cacc58", "# ARM.exidx end: 0x00cacf38"),
+        ("disasm_elevatorshaft_objecttype.txt", "# implementation: 0x00cacf38", "# ARM.exidx end: 0x00cacf54"),
+        ("disasm_elevatorshaft_initwithworld_atposition.txt", "# implementation: 0x00cacf54", "# ARM.exidx end: 0x00cad2cc"),
+        ("disasm_elevatorshaft_initwithworld_savedict_closure.txt", "# implementation: 0x00cad2cc", "# ARM.exidx end: 0x00cad624"),
+        ("disasm_elevatorshaft_initwithworld_netdata.txt", "# implementation: 0x00cad624", "# ARM.exidx end: 0x00cad974"),
+        ("disasm_elevatorshaft_getsavedict_closure.txt", "# implementation: 0x00cad998", "# ARM.exidx end: 0x00cadd14"),
+        ("disasm_elevatorshaft_updatenetdata.txt", "# implementation: 0x00cadd14", "# ARM.exidx end: 0x00cadd68"),
+        ("disasm_elevatorshaft_creationnetdata.txt", "# implementation: 0x00cadd68", "# ARM.exidx end: 0x00cae0ac"),
+        ("disasm_elevatorshaft_remoteupdate.txt", "# implementation: 0x00cae218", "# ARM.exidx end: 0x00cae414"),
+        ("disasm_elevatorshaft_dealloc.txt", "# implementation: 0x00cae414", "# ARM.exidx end: 0x00cae4d8"),
+        ("disasm_elevatorshaft_draw.txt", "# implementation: 0x00cae4d8", "# ARM.exidx end: 0x00caf000"),
+        ("disasm_elevatorshaft_worldchanged.txt", "# implementation: 0x00caf680", "# ARM.exidx end: 0x00cafb50"),
+        ("disasm_elevatorshaft_staticgeometrydrawquadcount.txt", "# implementation: 0x00cafb50", "# ARM.exidx end: 0x00cafbb8"),
+        ("disasm_elevatorshaft_adddrawquaddata.txt", "# implementation: 0x00cafbb8", "# ARM.exidx end: 0x00cb0394"),
+        ("disasm_elevatorshaft_staticgeometrydrawcubecount.txt", "# implementation: 0x00cb0394", "# ARM.exidx end: 0x00cb03f0"),
+        ("disasm_elevatorshaft_freeblockcreationitemtype.txt", "# implementation: 0x00cb03f0", "# ARM.exidx end: 0x00cb042c"),
+        ("disasm_elevatorshaft_freeblockcreationsavedict.txt", "# implementation: 0x00cb042c", "# ARM.exidx end: 0x00cb0478"),
+        ("disasm_elevatorshaft_freeblockcreationdataa.txt", "# implementation: 0x00cb0478", "# ARM.exidx end: 0x00cb04b0"),
+        ("disasm_elevatorshaft_freeblockcreationdatab.txt", "# implementation: 0x00cb0494", "# ARM.exidx end: 0x00cb04b0"),
+        ("disasm_elevatorshaft_adddrawcubedata.txt", "# implementation: 0x00cb04b0", "# ARM.exidx end: 0x00cb1138"),
+        ("disasm_elevatorshaft_open.txt", "# implementation: 0x00cb1138", "# ARM.exidx end: 0x00cb1178"),
+        ("disasm_elevatorshaft_removefrommacroblock.txt", "# implementation: 0x00cb1178", "# ARM.exidx end: 0x00cb12f4"),
+        ("disasm_elevatorshaft_paint.txt", "# implementation: 0x00cb12f4", "# ARM.exidx end: 0x00cb150c"),
+        ("disasm_elevatorshaft_ispaintable.txt", "# implementation: 0x00cb150c", "# ARM.exidx end: 0x00cb1544"),
+        ("disasm_elevatorshaft_occupiesnormalcontents.txt", "# implementation: 0x00cb1528", "# ARM.exidx end: 0x00cb1544"),
+        ("disasm_elevatorshaft_lastknownmotorpos.txt", "# implementation: 0x00cb1544", "# ARM.exidx end: 0x00cb15a4"),
+    ):
+        require(NATIVE / _es_file, [_es_imp, _es_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
