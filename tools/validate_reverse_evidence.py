@@ -1335,6 +1335,47 @@ def main() -> None:
     ):
         require(NATIVE / _cm_file, [_cm_imp, _cm_end])
     require(
+        NATIVE / "PORTAL_CHEST_MANAGER.md",
+        [
+            "3820",
+            "portalChestTransaction",
+            "saveItemSlots",
+            "customRules",
+            "std::set<int>",
+            "NSApplicationSupportDirectory",
+        ],
+    )
+    require(
+        NATIVE / "portalchest_closure.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 786',
+            '"verified_words": 742',
+            "OBJC_IVAR_$_PortalChestManager.pendingTransactionIsResend",
+            "OBJC_IVAR_$_PortalChestManager.transactionIdentifierCount",
+            "OBJC_IVAR_$_PortalChestManager.pendingSaveData",
+            "moveInventoryItemsFromArray:toIndex:count:movedItems:assignedIndexes:",
+            "sendDataToServer:reliable:",
+        ],
+    )
+    for _pcm_file, _pcm_imp, _pcm_end in (
+        ("disasm_portalchestmanager_initwithworld_.txt", "# implementation: 0x00957db4", "# ARM.exidx end: 0x0095894c"),
+        ("disasm_portalchestmanager_dealloc.txt", "# implementation: 0x00958970", "# ARM.exidx end: 0x00958a34"),
+        ("disasm_portalchestmanager_savewithmainthreadblock_.txt", "# implementation: 0x00958a34", "# ARM.exidx end: 0x0095926c"),
+        ("disasm_portalchestmanager_saveanypendingdatatodisk.txt", "# implementation: 0x009593d8", "# ARM.exidx end: 0x009595a4"),
+        ("disasm_portalchestmanager_savetransactionwithfailurecreation_ite.txt", "# implementation: 0x009595a4", "# ARM.exidx end: 0x00959f68"),
+        ("disasm_portalchestmanager_takeincominginventoryitemsfromarray_to.txt", "# implementation: 0x00959f68", "# ARM.exidx end: 0x0095a038"),
+        ("disasm_portalchestmanager_moveinventoryitemswithinchestfromarray.txt", "# implementation: 0x0095a038", "# ARM.exidx end: 0x0095a108"),
+        ("disasm_portalchestmanager_portalchestserverackreceivedwithsucces.txt", "# implementation: 0x0095a108", "# ARM.exidx end: 0x0095a934"),
+        ("disasm_portalchestmanager_portalchestinventoryitems.txt", "# implementation: 0x0095a934", "# ARM.exidx end: 0x0095a9bc"),
+        ("disasm_portalchestmanager_takeincominginventoryitemsfromarray_to_a9bc.txt", "# implementation: 0x0095a9bc", "# ARM.exidx end: 0x0095aba4"),
+        ("disasm_portalchestmanager_itemsremovedtoinventory_andordropped_.txt", "# implementation: 0x0095aba4", "# ARM.exidx end: 0x0095ad94"),
+        ("disasm_portalchestmanager_moveinventoryitemswithinchestfromarray_ad94.txt", "# implementation: 0x0095ad94", "# ARM.exidx end: 0x0095ae70"),
+        ("disasm_portalchestmanager_moveinventoryitemsfromarray_toindex_co.txt", "# implementation: 0x0095ae70", "# ARM.exidx end: 0x0095bab8"),
+        ("disasm_portalchestmanager_haspendingtransaction.txt", "# implementation: 0x0095bab8", "# ARM.exidx end: 0x0095baf4"),
+    ):
+        require(NATIVE / _pcm_file, [_pcm_imp, _pcm_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
