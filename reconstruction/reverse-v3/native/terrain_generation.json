@@ -1,0 +1,3130 @@
+{
+  "batch": "Terrain generation batch (E12): the WorldTileLoader material and shape bodies - the limestone/sandstone fraction pair, the sand fractions (high and low resolution), the desert / beach / desert-or-beach predicates, the floating-island cave test, fillDirtTile:worldPos:worldDirtHeight:parentType: (block-id choice and the flint tile[3] bands), the recursive dirt and water flow-out bodies, placeGemsInCaveForPhysicalBlock:tileIndex:worldX:worldY:floatingIslandType: (the ore/gem stamping path) and findBestStartPosition (the spawn-column search); 13 bodies",
+  "claim": "static bounded-body maps with per-instruction anchors; the 64-byte world customRules struct, the Tile byte field names, the noise function classes and the game-side block/gem name tables are outside these bodies",
+  "classes": [
+    {
+      "boundary": "ARM.exidx end 0x008578b8 (listing bound); next ObjC IMP 0x008578b8 WorldTileLoader -[sandstoneFractionForX:y:faultOffset:limestoneFraction:]",
+      "boundary_end": "0x008578b8",
+      "branches": [
+        {
+          "address": "0x00857850",
+          "destination": "0x00857860",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085785c",
+          "destination": "0x00857868",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00857770"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00857800"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00857684",
+      "ivars": {
+        "0x0085789c": {
+          "offset": 244,
+          "slot": "0x0105dd48",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.yHeightDivider"
+        },
+        "0x008578a0": {
+          "offset": 32,
+          "slot": "0x0105dda0",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.rockTypeNoiseFunction"
+        },
+        "0x008578ac": {
+          "offset": 4,
+          "slot": "0x0105dd4c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.world"
+        }
+      },
+      "method": "WorldTileLoader -[limestoneFractionForX:y:faultOffset:]",
+      "name": "wtl_limestonefractionforx_",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00857890": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00857894": {
+          "selector": "getX:Y:octaves:",
+          "slot": "0x00e82420"
+        },
+        "0x008578b0": {
+          "selector": "worldWidthMacro",
+          "slot": "0x00e823a8"
+        }
+      },
+      "semantics": "limestoneFractionForX:y:faultOffset: is the noise-driven material fraction: the result is <second dispatch result> * min((faultOffset / 1024.0f) * 2.0f, 1.0f). The body primes 1.0f (vmov.f32 s0, 1 at 0x008576a0), 2.0f (0x008576a8), the f32 1024.0 (0x0085788c), f32 32.0 (0x00857898) and f32 39599.0 (0x008578a8), and fetches self->rockTypeNoiseFunction@32 (cell 0x008578a0) and self->world@4. The first dispatch (objc_msgSend at 0x00857770, selector cell 0x00857894 = getX:Y:octaves:, with y + 39599.0f at 0x00857714 and a 5 / 32 / 1024 constant frame) returns an int which the body scales (lsl r0, r0, 5 at 0x00857778) to form term A = (y + 39599.0f) / ((float)(ret << 5) * 2.0f) (0x00857788/0x00857790, vcvt.f64.f32 d6 at 0x00857794) and term B = (faultOffset - arg4) / (32.0f * self->yHeightDivider@244 * 2.0f) (0x008577c4/0x008577c8/0x008577cc, vcvt d7 at 0x008577d0). A second dispatch through the saved objc_msgSend (0x00857800, receiving both doubles) returns the scale (vcvt.f32.f64 at 0x00857808). The multiplier is min((faultOffset / 1024.0f) * 2.0f, 1.0f) (0x00857824/0x00857830 for the first term, the 1.0f from [sp,0x28], vcmpe.f32 at 0x00857848, min stored 0x00857868/0x0085786c) and the product is returned in r0 (vmul.f32 at 0x00857878, vmov r0, s0 at 0x00857880). Both denominators are measured; the semantic names of the 39599.0f offset and of yHeightDivider@244 are not.",
+      "types": "f20@0:4i8i12i16",
+      "verified_words": 141
+    },
+    {
+      "boundary": "ARM.exidx end 0x00857a2c (listing bound); next ObjC IMP 0x00857a2c WorldTileLoader -[unmodifiedGroundLevelForX:]",
+      "boundary_end": "0x00857a2c",
+      "branches": [
+        {
+          "address": "0x008578f8",
+          "destination": "0x008579ec",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x00857980",
+          "destination": "0x00857990",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x0085798c",
+          "destination": "0x00857998",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008579dc",
+          "destination": "0x008579ec",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008579e8",
+          "destination": "0x008579fc",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00857924"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008579d0"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008578b8",
+      "ivars": {
+        "0x00857a18": {
+          "offset": 96,
+          "slot": "0x0105dd60",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.rockHeights"
+        },
+        "0x00857a20": {
+          "offset": 92,
+          "slot": "0x0105dd5c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.dirtHeights"
+        }
+      },
+      "method": "WorldTileLoader -[sandstoneFractionForX:y:faultOffset:limestoneFraction:]",
+      "name": "wtl_sandstonefractionforx_",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00857a24": {
+          "selector": "isDesertForPos:height:",
+          "slot": "0x00e8240c"
+        }
+      },
+      "semantics": "sandstoneFractionForX:y:faultOffset:limestoneFraction: returns the limestone fraction when the column is a desert and the sentinel -1.0f otherwise. It converts the incoming float to double and compares it with 0.45 (pool double at 0x00857a10, vldr d1 at 0x008578cc, vcmpe.f64 at 0x008578f0); below the cutoff it takes the -1.0f path (mvn r0, 0 at 0x008579ec, vmov.f32 s0, -1 at 0x008579f0). Otherwise it builds makeIntpair(x, y) (0x00857924), reads self->rockHeights@96 and self->dirtHeights@92 through their ivar cells (0x00857a18/0x00857a20, indexed [y] then [x] at 0x00857948/0x00857968), keeps the smaller of the two heights (cmp/bge 0x0085797c/0x00857980, min stored at 0x00857998) and dispatches [self isDesertForPos:pos height:minHeight] (selector cell 0x00857a24, call 0x008579d0). A desert answers with the limestoneFraction argument unchanged (0x008579e4); otherwise -1.0f.",
+      "types": "f24@0:4i8i12i16f20",
+      "verified_words": 93
+    },
+    {
+      "boundary": "ARM.exidx end 0x00858664 (listing bound); next ObjC IMP 0x00858664 WorldTileLoader -[sendBlockToClientWithoutSavingForBlock:pos:sendToClient:server:sendDynamicObjects:reliable:]",
+      "boundary_end": "0x00858664",
+      "branches": [
+        {
+          "address": "0x0085838c",
+          "destination": "0x008583a4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008583a0",
+          "destination": "0x008583c4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008583cc",
+          "destination": "0x008583dc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x008583d8",
+          "destination": "0x008585f8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008585e0",
+          "destination": "0x008585f0",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x008585ec",
+          "destination": "0x008585f8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00858618",
+          "destination": "0x0085862c",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x0085839c"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x008583c0"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x008584a8"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x0085853c"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00858598"
+        },
+        {
+          "callee": "0x001c28b8",
+          "route": "bl sym.imp.__stack_chk_fail",
+          "site": "0x0085862c"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00858320",
+      "ivars": {
+        "0x0085863c": {
+          "offset": 4,
+          "slot": "0x0105dd4c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.world"
+        },
+        "0x0085864c": {
+          "offset": 56,
+          "slot": "0x0105dd74",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.caveNoiseFunctionB"
+        },
+        "0x00858650": {
+          "offset": 52,
+          "slot": "0x0105dd78",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.caveNoiseFunctionA"
+        },
+        "0x00858654": {
+          "offset": 244,
+          "slot": "0x0105dd48",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.yHeightDivider"
+        }
+      },
+      "method": "WorldTileLoader -[isFloatingIslandCaveForX:y:]",
+      "name": "wtl_isfloatingislandcavefo",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00858638": {
+          "selector": "customRules",
+          "slot": "0x00e823f4"
+        },
+        "0x00858640": {
+          "import": "__stack_chk_guard",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7e0"
+        },
+        "0x00858644": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00858648": {
+          "selector": "getX:Y:octaves:",
+          "slot": "0x00e82420"
+        },
+        "0x0085865c": {
+          "selector": "worldWidthMacro",
+          "slot": "0x00e823a8"
+        }
+      },
+      "semantics": "isFloatingIslandCaveForX:y: reads the 64-byte [world customRules] struct (objc_msgSend_stret at 0x0085839c, memset 0x40 when world is nil at 0x008583a8) and returns 0 unless byte +12 is non-zero (ldrsb [fp,-0x54]). It then computes x' = (x/32)/worldWidthMacro (0x008584a8/0x008584bc) and y' = (y/32)/self->yHeightDivider@244 (0x008584e8) and returns |noiseA + 0.5 * noiseB| < 0.2 (double at 0x00858630, vmul/vadd at 0x008585a4/0x008585b8, vcmpe at 0x008585d8, bpl 0x008585e0), where noiseA = [self->caveNoiseFunctionA@52 getX:Y:octaves:2] (0x0085853c) and noiseB = [self->caveNoiseFunctionB@56 getX:Y:octaves:1] (0x00858598), both sampled at (x'*8, y'*8).",
+      "types": "c16@0:4i8i12",
+      "verified_words": 209
+    },
+    {
+      "boundary": "ARM.exidx end 0x0085ab18 (listing bound); next ObjC IMP 0x0085ab18 WorldTileLoader -[sandFractionForPos:height:highRes:]",
+      "boundary_end": "0x0085ab18",
+      "branches": [
+        {
+          "address": "0x0085a878",
+          "destination": "0x0085a8f0",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x0085a8d4",
+          "destination": "0x0085a8ec",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x0085a8e8",
+          "destination": "0x0085aadc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085a8ec",
+          "destination": "0x0085a9f8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085a944",
+          "destination": "0x0085a9f4",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x0085a9d8",
+          "destination": "0x0085a9f0",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x0085a9ec",
+          "destination": "0x0085aadc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085a9f0",
+          "destination": "0x0085a9f4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085a9f4",
+          "destination": "0x0085a9f8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085aa70",
+          "destination": "0x0085aa80",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x0085aa7c",
+          "destination": "0x0085aa88",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085a8b0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085a92c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085a988"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085a9c0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085aad0"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x0085a84c",
+      "ivars": {
+        "0x0085aaec": {
+          "offset": 4,
+          "slot": "0x0105dd4c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.world"
+        },
+        "0x0085ab04": {
+          "offset": 96,
+          "slot": "0x0105dd60",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.rockHeights"
+        },
+        "0x0085ab0c": {
+          "offset": 92,
+          "slot": "0x0105dd5c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.dirtHeights"
+        }
+      },
+      "method": "WorldTileLoader -[sandFractionForPos:highRes:]",
+      "name": "wtl_sandfractionforpos_hig",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x0085aaf4": {
+          "selector": "worldWidthMacro",
+          "slot": "0x00e823a8"
+        },
+        "0x0085ab10": {
+          "selector": "sandFractionForPos:height:highRes:",
+          "slot": "0x00e82418"
+        }
+      },
+      "semantics": "sandFractionForPos:highRes: is the bounds-normalising delegate: it wraps pos.x into [0, worldWidthMacro * 32) by adding or subtracting the period once (0x0085a8b8/0x0085a8c0 for the negative side, 0x0085a934 for the upper side) and returns 0.0f (pool 0x0085aafc) when x is still out of range; then it takes h = max(rockHeights@96[x], dirtHeights@92[x]) (0x0085aa30/0x0085aa50/0x0085aa64, bge 0x0085aa80) and forwards [self sandFractionForPos:{x, y} height:h highRes:highRes] (selector cell 0x0085ab10, call 0x0085aad0, stack args h at 0x0085aabc and the sign-extended highRes at 0x0085aab8), returning that float unchanged.",
+      "types": "f20@0:4{?=ii}8c16",
+      "verified_words": 179
+    },
+    {
+      "boundary": "ARM.exidx end 0x0085b0d0 (listing bound); next ObjC IMP 0x0085b0d0 WorldTileLoader -[isDesertForPos:height:]",
+      "boundary_end": "0x0085b0d0",
+      "branches": [
+        {
+          "address": "0x0085ac50",
+          "destination": "0x0085ac60",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x0085ac5c",
+          "destination": "0x0085aca4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085ad94",
+          "destination": "0x0085adac",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085ada8",
+          "destination": "0x0085adcc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085add8",
+          "destination": "0x0085ae84",
+          "mnemonic": "bhi"
+        },
+        {
+          "address": "0x0085ae24",
+          "destination": "0x0085ae88",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085ae40",
+          "destination": "0x0085ae88",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085ae5c",
+          "destination": "0x0085ae88",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085ae80",
+          "destination": "0x0085ae88",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085ae84",
+          "destination": "0x0085ae88",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085aed0",
+          "destination": "0x0085b060",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085af0c",
+          "destination": "0x0085af28",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085af20",
+          "destination": "0x0085af48",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085af50",
+          "destination": "0x0085b060",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085b080",
+          "destination": "0x0085b094",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r5",
+          "site": "0x0085abdc"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x0085ac48"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x0085ac9c"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x0085ad58"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x0085ada4"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x0085adc8"
+        },
+        {
+          "callee": "0x004be068",
+          "route": "bl sym.clamp_float__float__float_",
+          "site": "0x0085aeb8"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x0085af1c"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x0085af44"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x0085afb8"
+        },
+        {
+          "callee": "0x001c3d4c",
+          "route": "bl sym.imp.__wrap_fmodf",
+          "site": "0x0085afd8"
+        },
+        {
+          "callee": "0x004be068",
+          "route": "bl sym.clamp_float__float__float_",
+          "site": "0x0085b044"
+        },
+        {
+          "callee": "0x001c28b8",
+          "route": "bl sym.imp.__stack_chk_fail",
+          "site": "0x0085b094"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x0085ab18",
+      "ivars": {
+        "0x0085b0a8": {
+          "offset": 4,
+          "slot": "0x0105dd4c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.world"
+        },
+        "0x0085b0c0": {
+          "offset": 44,
+          "slot": "0x0105dd80",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.sandNoiseFunction"
+        }
+      },
+      "method": "WorldTileLoader -[sandFractionForPos:height:highRes:]",
+      "name": "wtl_sandfractionforpos_hei",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x0085b0a0": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x0085b0a4": {
+          "selector": "worldWidthMacro",
+          "slot": "0x00e823a8"
+        },
+        "0x0085b0b0": {
+          "import": "__stack_chk_guard",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7e0"
+        },
+        "0x0085b0b8": {
+          "selector": "customRules",
+          "slot": "0x00e823f4"
+        },
+        "0x0085b0bc": {
+          "selector": "getX:Y:octaves:",
+          "slot": "0x00e82420"
+        }
+      },
+      "semantics": "sandFractionForPos:height:highRes: computes the sand fraction: width = MAX(512, [world worldWidthMacro]) (the send is re-issued by the MAX macro at 0x0085ac9c, floor compared against 0x200 at 0x0085ac4c), X = (pos.x / 32.0f) / width (0x0085abec) and Y = ((pos.y - 0.5 * h) / 32.0f) / width * 4.0f (0x0085ac20 and the 4.0f factor). It samples noise = [self->sandNoiseFunction@44 getX:X Y:Y octaves:(highRes ? 11 : 4)] (0x0085ad58, r5 = 11 with moveq r5, 4 at 0x0085ad30) and narrows the double to float (vcvt.f32.f64 at 0x0085ad60). The [world customRules] byte +8 then selects a delta through the 5-entry jump table at 0x0085adf0 (cmp r0, 4 at 0x0085add0): 0 -> +1.0, 1 -> +0.6, 2 -> none, 3 -> -0.6, 4 -> 1.0 - value, > 4 -> none (0x0085ae14); the sum is clamped to [-1, 1] (clamp call at 0x0085aeb8) and a value <= 0 returns immediately (0x0085aed0). Otherwise, when the customRules byte +8 is non-zero, the value is scaled by weight = clamp((1 - |fmodf((pos.x/32)/width, 0.5) - 0.25| / 0.25) * 3.0 - 0.5, 0, 1) (__wrap_fmodf at 0x0085afd8, clamp_float at 0x0085b044) and the product is returned (0x0085b058).",
+      "types": "f24@0:4{?=ii}8i16c20",
+      "verified_words": 366
+    },
+    {
+      "boundary": "ARM.exidx end 0x0085b190 (listing bound); next ObjC IMP 0x0085b190 WorldTileLoader -[isBeachForPos:height:]",
+      "boundary_end": "0x0085b190",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085b148"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x0085b0d0",
+      "ivars": {},
+      "method": "WorldTileLoader -[isDesertForPos:height:]",
+      "name": "wtl_isdesertforpos_height_",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x0085b188": {
+          "selector": "sandFractionForPos:height:highRes:",
+          "slot": "0x00e82418"
+        }
+      },
+      "semantics": "isDesertForPos:height: = ([self sandFractionForPos:pos height:height highRes:YES] > 0.3). The body loads the double 0.3 from the pool (vldr d0, [0x0085b180] at 0x0085b0e0), dispatches the sand-fraction selector (cell 0x0085b188) with highRes = 1 (mov r4, 1 at 0x0085b12c, stack argument stored at 0x0085b130), converts the returned float to double (vmov s2, r0 at 0x0085b14c, vcvt.f64.f32 at 0x0085b158) and returns the comparison result (vcmpe.f64 at 0x0085b160, movgt r0, 1 at 0x0085b16c, sxtb at 0x0085b174). No ivar is touched.",
+      "types": "c20@0:4{?=ii}8i16",
+      "verified_words": 48
+    },
+    {
+      "boundary": "ARM.exidx end 0x0085b480 (listing bound); next ObjC IMP 0x0085b480 WorldTileLoader -[isDesertOrBeachForPos:height:]",
+      "boundary_end": "0x0085b480",
+      "branches": [
+        {
+          "address": "0x0085b1d8",
+          "destination": "0x0085b1e8",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x0085b1e4",
+          "destination": "0x0085b450",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085b200",
+          "destination": "0x0085b210",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085b20c",
+          "destination": "0x0085b450",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085b210",
+          "destination": "0x0085b214",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085b2f8",
+          "destination": "0x0085b308",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x0085b304",
+          "destination": "0x0085b34c",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x0085b284"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x0085b2f0"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x0085b344"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x0085b3f0"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x0085b190",
+      "ivars": {
+        "0x0085b464": {
+          "offset": 4,
+          "slot": "0x0105dd4c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.world"
+        },
+        "0x0085b474": {
+          "offset": 44,
+          "slot": "0x0105dd80",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.sandNoiseFunction"
+        }
+      },
+      "method": "WorldTileLoader -[isBeachForPos:height:]",
+      "name": "wtl_isbeachforpos_height_",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x0085b45c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x0085b460": {
+          "selector": "worldWidthMacro",
+          "slot": "0x00e823a8"
+        },
+        "0x0085b470": {
+          "selector": "getX:Y:octaves:",
+          "slot": "0x00e82420"
+        }
+      },
+      "semantics": "isBeachForPos:height: answers from the height band first: (float)Y < 1008 - H returns YES (512 - H + 0x1f0 at 0x0085b1cc, movw r0, 1 at 0x0085b1dc) and (float)Y > 1040 - H returns NO (512 - H + 0x210 at 0x0085b1f8, movw r0, 0 at 0x0085b204). Otherwise it samples noise: nx = ((float)X / 32.0f) / [world worldWidthMacro] (0x0085b248/0x0085b284) and ny = (((double)Y - 0.5 * H) / 32.0) / MAX(worldWidth, 512) * 4.0f (0x0085b2bc, 0x0085b2f4, 0x0085b394/0x0085b398), then dispatches [self->sandNoiseFunction@44 getX:nx Y:ny octaves:11] (0x0085b3f0, octaves 11 at 0x0085b3e0) and returns (float)Y < 512.0f - noise * 16.0f + (512 - H) = 1024 - 16 * noise - H (vadd.f32 at 0x0085b434, vcmpe at 0x0085b438, movmi r0, 1 at 0x0085b444). The 1008/1040 early-outs span exactly +/-16 around 1024 - H, consistent with the 16.0f noise weight.",
+      "types": "c20@0:4{?=ii}8i16",
+      "verified_words": 188
+    },
+    {
+      "boundary": "ARM.exidx end 0x0085b5b0 (listing bound); next ObjC IMP 0x0085b5b0 WorldTileLoader -[fillDirtTile:worldPos:worldDirtHeight:parentType:]",
+      "boundary_end": "0x0085b5b0",
+      "branches": [
+        {
+          "address": "0x0085b504",
+          "destination": "0x0085b580",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085b4f0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085b55c"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x0085b480",
+      "ivars": {},
+      "method": "WorldTileLoader -[isDesertOrBeachForPos:height:]",
+      "name": "wtl_isdesertorbeachforpos_",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x0085b5a0": {
+          "selector": "isBeachForPos:height:",
+          "slot": "0x00e8241c"
+        },
+        "0x0085b5a8": {
+          "selector": "sandFractionForPos:height:highRes:",
+          "slot": "0x00e82418"
+        }
+      },
+      "semantics": "isDesertOrBeachForPos:height: = [self isBeachForPos:pos height:height] ? YES : ([self sandFractionForPos:pos height:height highRes:YES] > 0.3). The first dispatch (selector cell 0x0085b5a0) at 0x0085b4f0 is sxtb-tested and a non-zero result takes the early return at 0x0085b504/0x0085b580 (r0 = 1); otherwise the second dispatch (cell 0x0085b5a8) at 0x0085b55c is compared against the double 0.3 (a separate pool copy at 0x0085b598, vldr at 0x0085b508, vcmpe.f64 at 0x0085b56c, movgt 1 at 0x0085b578). Both thresholds carry the same value (0.3) from two different pool copies.",
+      "types": "c20@0:4{?=ii}8i16",
+      "verified_words": 76
+    },
+    {
+      "boundary": "ARM.exidx end 0x0085c214 (listing bound); next ObjC IMP 0x0085c214 WorldTileLoader -[recursivelyFlowOutWaterFromTile:atPos:]",
+      "boundary_end": "0x0085c214",
+      "branches": [
+        {
+          "address": "0x0085b640",
+          "destination": "0x0085b6a8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085b654",
+          "destination": "0x0085b6a8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085b668",
+          "destination": "0x0085b6a8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085b67c",
+          "destination": "0x0085b6a8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085b690",
+          "destination": "0x0085b6a8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085b6bc",
+          "destination": "0x0085b990",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085b720",
+          "destination": "0x0085b730",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x0085b72c",
+          "destination": "0x0085b738",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085b82c",
+          "destination": "0x0085b83c",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x0085b838",
+          "destination": "0x0085b880",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085b914",
+          "destination": "0x0085b924",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085b920",
+          "destination": "0x0085b988",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085b974",
+          "destination": "0x0085b984",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085b984",
+          "destination": "0x0085b988",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085b988",
+          "destination": "0x0085ba0c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085b9a0",
+          "destination": "0x0085b9cc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085b9b4",
+          "destination": "0x0085b9cc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085b9e8",
+          "destination": "0x0085ba00",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085ba14",
+          "destination": "0x0085ba58",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085ba20",
+          "destination": "0x0085ba3c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085ba38",
+          "destination": "0x0085ba50",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085ba50",
+          "destination": "0x0085ba6c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085ba74",
+          "destination": "0x0085be94",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085ba80",
+          "destination": "0x0085bc24",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085bb9c",
+          "destination": "0x0085bbb8",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x0085bba8",
+          "destination": "0x0085bbfc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085bcf8",
+          "destination": "0x0085bd10",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085bd0c",
+          "destination": "0x0085bd30",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085bd38",
+          "destination": "0x0085bd50",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085bd4c",
+          "destination": "0x0085bde0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085bd88",
+          "destination": "0x0085bda0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085bd9c",
+          "destination": "0x0085bdc0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085bdc8",
+          "destination": "0x0085bddc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085bddc",
+          "destination": "0x0085bde0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085be28",
+          "destination": "0x0085be48",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085be58",
+          "destination": "0x0085be6c",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085be68",
+          "destination": "0x0085be90",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085be7c",
+          "destination": "0x0085be8c",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085be8c",
+          "destination": "0x0085be90",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085be90",
+          "destination": "0x0085be94",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085be9c",
+          "destination": "0x0085c104",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085bea8",
+          "destination": "0x0085c048",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085bfc4",
+          "destination": "0x0085bfdc",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x0085bfd0",
+          "destination": "0x0085c020",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085c0e8",
+          "destination": "0x0085c100",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085c100",
+          "destination": "0x0085c104",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085c10c",
+          "destination": "0x0085c184",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085c11c",
+          "destination": "0x0085c184",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x0085c130",
+          "destination": "0x0085c184",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085c16c",
+          "destination": "0x0085c184",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x0085c19c",
+          "destination": "0x0085c1a8",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r4",
+          "site": "0x0085b7b8"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x0085b824"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x0085b878"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085b8f4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085b968"
+        },
+        {
+          "callee": null,
+          "route": "blx r4",
+          "site": "0x0085bb28"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x0085bb94"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x0085bbf4"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x0085bcac"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x0085bd08"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x0085bd2c"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x0085bd98"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x0085bdbc"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x0085be1c"
+        },
+        {
+          "callee": null,
+          "route": "blx r4",
+          "site": "0x0085bf50"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x0085bfbc"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x0085c018"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x0085c0c8"
+        },
+        {
+          "callee": "0x001c28b8",
+          "route": "bl sym.imp.__stack_chk_fail",
+          "site": "0x0085c1a8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x0085b5b0",
+      "ivars": {
+        "0x0085c1c0": {
+          "offset": 96,
+          "slot": "0x0105dd60",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.rockHeights"
+        },
+        "0x0085c1c8": {
+          "offset": 92,
+          "slot": "0x0105dd5c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.dirtHeights"
+        },
+        "0x0085c1d4": {
+          "offset": 4,
+          "slot": "0x0105dd4c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.world"
+        },
+        "0x0085c1f8": {
+          "offset": 36,
+          "slot": "0x0105dd9c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.flintDensityNoiseFunction"
+        },
+        "0x0085c208": {
+          "offset": 100,
+          "slot": "0x0105dd64",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.lakeHeights"
+        }
+      },
+      "method": "WorldTileLoader -[fillDirtTile:worldPos:worldDirtHeight:parentType:]",
+      "name": "wtl_filldirttile_worldpos_",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x0085c1b8": {
+          "import": "__stack_chk_guard",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7e0"
+        },
+        "0x0085c1cc": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x0085c1d0": {
+          "selector": "worldWidthMacro",
+          "slot": "0x00e823a8"
+        },
+        "0x0085c1dc": {
+          "selector": "sandFractionForPos:height:highRes:",
+          "slot": "0x00e82418"
+        },
+        "0x0085c1e4": {
+          "selector": "isBeachForPos:height:",
+          "slot": "0x00e8241c"
+        },
+        "0x0085c1f0": {
+          "selector": "customRules",
+          "slot": "0x00e823f4"
+        },
+        "0x0085c1f4": {
+          "selector": "getX:Y:octaves:",
+          "slot": "0x00e82420"
+        },
+        "0x0085c1fc": {
+          "selector": "expertMode",
+          "slot": "0x00e82494"
+        }
+      },
+      "semantics": "fillDirtTile:worldPos:worldDirtHeight:parentType: fills the passed Tile* (r2) during terrain generation. It tests whether parentType is one of {6, 7, 8, 27, 28, 58} (0x0085b6b0): when it is, the block id is inherited rather than computed (7 when parentType is in {7, 8, 58}, 8 when in {8, 58}, else 6; 0x0085b990..0x0085ba08). Otherwise it takes H = max(rockHeights@96[x], dirtHeights@92[x]) (0x0085b6e4/0x0085b720) and dispatches [self sandFractionForPos:{x,y} height:H highRes:1] (0x0085b8f4): the id becomes 7 when the fraction > 0.3 (double 0x3FD3333333333333 at 0x0085bbb0, vcmpe 0x0085b90c), otherwise 8 when [self isBeachForPos:{x,y} height:H] answers (0x0085b968), otherwise 6. tile[0] and tile[1] both receive that id (0x0085ba2c/0x0085ba44/0x0085ba60); byte 2 is never written here. Dirt tiles then sample [self.flintDensityNoiseFunction@36 getX:fracA Y:fracB octaves:3] (0x0085bcac) and store tile[3] = 1 above the high threshold and 2 below the low one (0x0085be64/0x0085be88); fracA = (x/32)/[world worldWidthMacro] and fracB = 4 * ((y - 0.5*H)/32) / MAX(512, [world worldWidthMacro]). Thresholds are 0.5 / -0.6 by default, 0.75 / -0.8 when customRules byte 15 == 1 (0x0085bd30), 0.125 / -0.15 when it is 3, and both are halved when [world expertMode] (0x0085be1c). Beach tiles re-sample the noise with fracA*0.0625, fracB*0.625 (0x0085c0c8) and overwrite tile[0]/tile[1] with block 58 when the result > 0.4f (0x0085c0f4, pool 0x0085c204). Finally a dirt tile with y >= 511, y == worldDirtHeight-1 and lakeHeights@100[x] < worldDirtHeight becomes 27 (0x0085c11c/0x0085c170).",
+      "types": "v28@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8{?=ii}12i20i24",
+      "verified_words": 793
+    },
+    {
+      "boundary": "ARM.exidx end 0x0085c518 (listing bound); next ObjC IMP 0x0085c518 WorldTileLoader -[recursivelyFlowOutDirtFromTile:atPos:]",
+      "boundary_end": "0x0085c518",
+      "branches": [
+        {
+          "address": "0x0085c29c",
+          "destination": "0x0085c320",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085c2ac",
+          "destination": "0x0085c320",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085c2bc",
+          "destination": "0x0085c320",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085c388",
+          "destination": "0x0085c40c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085c398",
+          "destination": "0x0085c40c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085c3a8",
+          "destination": "0x0085c40c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085c474",
+          "destination": "0x0085c4f8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085c484",
+          "destination": "0x0085c4f8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085c494",
+          "destination": "0x0085c4f8",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x0085c254"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x0085c288"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085c31c"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x0085c330"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x0085c374"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085c408"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x0085c41c"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x0085c460"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085c4f4"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x0085c214",
+      "ivars": {
+        "0x0085c500": {
+          "offset": 4,
+          "slot": "0x0105dd4c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.world"
+        }
+      },
+      "method": "WorldTileLoader -[recursivelyFlowOutWaterFromTile:atPos:]",
+      "name": "wtl_recursivelyflowoutwate",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x0085c504": {
+          "selector": "recursivelyFlowOutWaterFromTile:atPos:",
+          "slot": "0x00e82430"
+        }
+      },
+      "semantics": "recursivelyFlowOutWaterFromTile:atPos: is a depth-first flood fill from the argument tile over water-like neighbours: (x, y-1), (x+1, y) and (x-1, y) - (x, y+1) is never visited. Each neighbour comes from tileAtWorldPositionLoaded(a, b, self->world@4) (0x0085c288/0x0085c374/0x0085c460, coordinates built by makeIntpair at 0x0085c254/0x0085c330/0x0085c41c) and is accepted only when its byte0 == 2 (cmp at 0x0085c2a8) and byte2 == 1 (cmp at 0x0085c2b8); an accepted tile is rewritten in place - byte0 = 3 (0x0085c2c8), byte4 = 0xff (0x0085c2d4), byte7 = 0 (0x0085c2e0) - and the method recurses on it (self-recursive objc_msgSend at 0x0085c31c, selector cell 0x0085c504). The Tile byte field names are not in the listing; only the tested/written offsets are.",
+      "types": "v20@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8{?=ii}12",
+      "verified_words": 193
+    },
+    {
+      "boundary": "ARM.exidx end 0x0085ce60 (listing bound); next ObjC IMP 0x0085ce60 WorldTileLoader -[placeGemsInCaveForPhysicalBlock:tileIndex:worldX:worldY:floatingIslandType:]",
+      "boundary_end": "0x0085ce60",
+      "branches": [
+        {
+          "address": "0x0085c554",
+          "destination": "0x0085c564",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x0085c558",
+          "destination": "0x0085ce10",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085c5bc",
+          "destination": "0x0085c688",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085c5cc",
+          "destination": "0x0085c5e0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085c5dc",
+          "destination": "0x0085c688",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085c5ec",
+          "destination": "0x0085c688",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085c6c4",
+          "destination": "0x0085c718",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x0085c728",
+          "destination": "0x0085c868",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085c798",
+          "destination": "0x0085c864",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085c7a8",
+          "destination": "0x0085c7bc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085c7b8",
+          "destination": "0x0085c864",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085c7c8",
+          "destination": "0x0085c864",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085c864",
+          "destination": "0x0085c868",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085c8c0",
+          "destination": "0x0085c914",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x0085c924",
+          "destination": "0x0085ca64",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085c994",
+          "destination": "0x0085ca60",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085c9a4",
+          "destination": "0x0085c9b8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085c9b4",
+          "destination": "0x0085ca60",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085c9c4",
+          "destination": "0x0085ca60",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085ca60",
+          "destination": "0x0085ca64",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085ca70",
+          "destination": "0x0085cac4",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x0085cad4",
+          "destination": "0x0085cc14",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085cb44",
+          "destination": "0x0085cc10",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085cb54",
+          "destination": "0x0085cb68",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085cb64",
+          "destination": "0x0085cc10",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085cb74",
+          "destination": "0x0085cc10",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085cc10",
+          "destination": "0x0085cc14",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085cc6c",
+          "destination": "0x0085ccc0",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x0085ccd0",
+          "destination": "0x0085ce10",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085cd40",
+          "destination": "0x0085ce0c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085cd50",
+          "destination": "0x0085cd64",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085cd60",
+          "destination": "0x0085ce0c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085cd70",
+          "destination": "0x0085ce0c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085ce0c",
+          "destination": "0x0085ce10",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x0085c574"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x0085c5a8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085c64c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085c684"
+        },
+        {
+          "callee": "0x008540cc",
+          "route": "bl 0x8540cc",
+          "site": "0x0085c688"
+        },
+        {
+          "callee": "0x008540cc",
+          "route": "bl 0x8540cc",
+          "site": "0x0085c6a0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085c6fc"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x0085c740"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x0085c784"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085c828"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085c860"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085c8a8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085c8f8"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x0085c93c"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x0085c980"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085ca24"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085ca5c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085caa8"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x0085caec"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x0085cb30"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085cbd4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085cc0c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085cc54"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085cca4"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x0085cce8"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x0085cd2c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085cdd0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085ce08"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x0085c518",
+      "ivars": {
+        "0x0085ce18": {
+          "offset": 4,
+          "slot": "0x0105dd4c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.world"
+        }
+      },
+      "method": "WorldTileLoader -[recursivelyFlowOutDirtFromTile:atPos:]",
+      "name": "wtl_recursivelyflowoutdirt",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x0085ce1c": {
+          "selector": "fillDirtTile:worldPos:worldDirtHeight:parentType:",
+          "slot": "0x00e82498"
+        },
+        "0x0085ce24": {
+          "selector": "recursivelyFlowOutDirtFromTile:atPos:",
+          "slot": "0x00e8249c"
+        },
+        "0x0085ce2c": {
+          "selector": "worldWidthMacro",
+          "slot": "0x00e823a8"
+        }
+      },
+      "semantics": "recursivelyFlowOutDirtFromTile:atPos: is the recursive dirt redistributor: pos.y < 1 returns at once (0x0085c558). For the row above it probes (x, y-1) with tileAtWorldPositionLoaded(x, y-1, self->world@4) (0x0085c5a8): when the neighbour exists and its byte0 is 2 or 3 (0x0085c5c8/0x0085c5d8) with byte2 == 1 (0x0085c5e8) it sends [self fillDirtTile:t worldPos:{x,y-1} worldDirtHeight:99999999 (0x5f5e0ff, movt 0x5f5 at 0x0085c634) parentType:parentTile->byte0] (0x0085c64c) and then recurses with [self recursivelyFlowOutDirtFromTile:t atPos:{x,y-1}] (0x0085c684). It then draws f1, f2 = (float)lrand48() / 2147483648.0f from the four-instruction lrand48 wrapper at 0x8540cc (0x0085c688/0x0085c68c) and wraps x into [0, worldWidthMacro << 5) (0x0085c704 plus the four corrections). The same probe + fill + recurse triple runs on (x-1, y-1) when f1 > 0.7 (0.7f at 0x0085c560, gate 0x0085c728), on (x+1, y-1) when f2 > 0.7, on (x-2, y-1) when f1 > 0.9 (0.9f at 0x0085ce44, gate 0x0085ccd0) and on (x+2, y-1) when f2 > 0.9 - 30% per adjacent column, 10% per two-away column, always one row up. The `movw r0, 5` written before each worldWidthMacro send (0x0085c6c8 and siblings) lands in a stack slot that is never read back, i.e. a dead spill (the same shape recurs in the sibling bodies).",
+      "types": "v20@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8{?=ii}12",
+      "verified_words": 594
+    },
+    {
+      "boundary": "ARM.exidx end 0x0085e6b0 (listing bound); next ObjC IMP 0x0085e6b0 WorldTileLoader -[loadPhysicalBlock:atXPos:yPos:createIfNotCreated:]",
+      "boundary_end": "0x0085e6b0",
+      "branches": [
+        {
+          "address": "0x0085cf58",
+          "destination": "0x0085cfa4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085cfa0",
+          "destination": "0x0085d044",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d050",
+          "destination": "0x0085d8f0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085d0f4",
+          "destination": "0x0085d10c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085d108",
+          "destination": "0x0085d138",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d170",
+          "destination": "0x0085d214",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085d1fc",
+          "destination": "0x0085d2d8",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085d210",
+          "destination": "0x0085d2d8",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085d24c",
+          "destination": "0x0085d270",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085d260",
+          "destination": "0x0085d290",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d298",
+          "destination": "0x0085d2d4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085d2ac",
+          "destination": "0x0085d2d0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085d2d0",
+          "destination": "0x0085d2d4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d2d4",
+          "destination": "0x0085d8ec",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d450",
+          "destination": "0x0085d488",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085d464",
+          "destination": "0x0085d4a8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d4b0",
+          "destination": "0x0085d4bc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085d504",
+          "destination": "0x0085d518",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085d588",
+          "destination": "0x0085d5a8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085d59c",
+          "destination": "0x0085d5c8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d5d0",
+          "destination": "0x0085d610",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085d60c",
+          "destination": "0x0085d788",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d648",
+          "destination": "0x0085d660",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085d65c",
+          "destination": "0x0085d680",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d68c",
+          "destination": "0x0085d6e0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085d6d0",
+          "destination": "0x0085d784",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d718",
+          "destination": "0x0085d738",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085d72c",
+          "destination": "0x0085d758",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d764",
+          "destination": "0x0085d780",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085d780",
+          "destination": "0x0085d784",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d784",
+          "destination": "0x0085d788",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d7a8",
+          "destination": "0x0085d7b8",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085d7b4",
+          "destination": "0x0085d7c0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d7e0",
+          "destination": "0x0085d8e8",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085d7f4",
+          "destination": "0x0085d8e8",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085d844",
+          "destination": "0x0085d8ac",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085d858",
+          "destination": "0x0085d880",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085d87c",
+          "destination": "0x0085d8a0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d8a0",
+          "destination": "0x0085d8e4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d8bc",
+          "destination": "0x0085d8e0",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085d8e0",
+          "destination": "0x0085d8e4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d8e4",
+          "destination": "0x0085d8e8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d8e8",
+          "destination": "0x0085d8ec",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d8ec",
+          "destination": "0x0085d8f0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d8fc",
+          "destination": "0x0085e614",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085d96c",
+          "destination": "0x0085d984",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085d980",
+          "destination": "0x0085d9a4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d9b0",
+          "destination": "0x0085e610",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085d9c4",
+          "destination": "0x0085d9d4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085d9d0",
+          "destination": "0x0085da40",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d9dc",
+          "destination": "0x0085d9ec",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085d9e8",
+          "destination": "0x0085da3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085d9f4",
+          "destination": "0x0085da04",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085da00",
+          "destination": "0x0085da38",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085da0c",
+          "destination": "0x0085da1c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085da18",
+          "destination": "0x0085da34",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085da24",
+          "destination": "0x0085da30",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085da30",
+          "destination": "0x0085da34",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085da34",
+          "destination": "0x0085da38",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085da38",
+          "destination": "0x0085da3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085da3c",
+          "destination": "0x0085da40",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085da64",
+          "destination": "0x0085da7c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085da78",
+          "destination": "0x0085db00",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085db18",
+          "destination": "0x0085db30",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085db2c",
+          "destination": "0x0085dbbc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085db68",
+          "destination": "0x0085db80",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085db7c",
+          "destination": "0x0085dba0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085dbfc",
+          "destination": "0x0085dc14",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085dc10",
+          "destination": "0x0085dc34",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085dc40",
+          "destination": "0x0085dc58",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085dc54",
+          "destination": "0x0085dd50",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085dc90",
+          "destination": "0x0085dd04",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085dca4",
+          "destination": "0x0085dd24",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085dd30",
+          "destination": "0x0085dd4c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085dd4c",
+          "destination": "0x0085dd50",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085dd5c",
+          "destination": "0x0085e60c",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085de48",
+          "destination": "0x0085dfb4",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085de5c",
+          "destination": "0x0085dfb4",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085de68",
+          "destination": "0x0085de90",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085de8c",
+          "destination": "0x0085dfb4",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085df48",
+          "destination": "0x0085dfb0",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085df58",
+          "destination": "0x0085df84",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085df64",
+          "destination": "0x0085df90",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085df8c",
+          "destination": "0x0085df90",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085dfb0",
+          "destination": "0x0085dfb4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085dfe4",
+          "destination": "0x0085e158",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085dff8",
+          "destination": "0x0085e158",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085e004",
+          "destination": "0x0085e028",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085e024",
+          "destination": "0x0085e158",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085e0e0",
+          "destination": "0x0085e154",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085e0f0",
+          "destination": "0x0085e128",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085e0fc",
+          "destination": "0x0085e134",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085e130",
+          "destination": "0x0085e134",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085e154",
+          "destination": "0x0085e158",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085e188",
+          "destination": "0x0085e2e8",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085e19c",
+          "destination": "0x0085e2e8",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085e1a8",
+          "destination": "0x0085e1cc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085e1c8",
+          "destination": "0x0085e2e8",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085e280",
+          "destination": "0x0085e2e4",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085e290",
+          "destination": "0x0085e2b8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085e29c",
+          "destination": "0x0085e2c4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085e2c0",
+          "destination": "0x0085e2c4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085e2e4",
+          "destination": "0x0085e2e8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085e318",
+          "destination": "0x0085e470",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085e32c",
+          "destination": "0x0085e470",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085e338",
+          "destination": "0x0085e358",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085e354",
+          "destination": "0x0085e470",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085e410",
+          "destination": "0x0085e46c",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085e420",
+          "destination": "0x0085e440",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085e42c",
+          "destination": "0x0085e44c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085e448",
+          "destination": "0x0085e44c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085e46c",
+          "destination": "0x0085e470",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085e4a0",
+          "destination": "0x0085e608",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0085e4b4",
+          "destination": "0x0085e608",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085e4c0",
+          "destination": "0x0085e4e4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0085e4e0",
+          "destination": "0x0085e608",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085e598",
+          "destination": "0x0085e604",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0085e5a8",
+          "destination": "0x0085e5d8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0085e5b4",
+          "destination": "0x0085e5e4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085e5e0",
+          "destination": "0x0085e5e4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085e604",
+          "destination": "0x0085e608",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085e608",
+          "destination": "0x0085e60c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085e60c",
+          "destination": "0x0085e610",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085e610",
+          "destination": "0x0085e614",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0085e62c",
+          "destination": "0x0085e63c",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x0085cf98"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x0085d010"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x0085d03c"
+        },
+        {
+          "callee": null,
+          "route": "blx r4",
+          "site": "0x0085d0dc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0085d1c0"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x0085d25c"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x0085d28c"
+        },
+        {
+          "callee": null,
+          "route": "blx r4",
+          "site": "0x0085d404"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x0085d460"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x0085d4a4"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x0085d4f8"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x0085d598"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x0085d5c4"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x0085d658"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x0085d67c"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x0085d728"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x0085d754"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x0085d97c"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x0085d9a0"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x0085daf4"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x0085db78"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x0085db9c"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x0085dc0c"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x0085dc30"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x0085dca0"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x0085dd20"
+        },
+        {
+          "callee": null,
+          "route": "blx r4",
+          "site": "0x0085de08"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x0085df28"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x0085e0c0"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x0085e260"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x0085e3f0"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x0085e578"
+        },
+        {
+          "callee": "0x001c28b8",
+          "route": "bl sym.imp.__stack_chk_fail",
+          "site": "0x0085e63c"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x0085ce60",
+      "ivars": {
+        "0x0085dcac": {
+          "offset": 244,
+          "slot": "0x0105dd48",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.yHeightDivider"
+        },
+        "0x0085df80": {
+          "offset": 36,
+          "slot": "0x0105dd9c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.flintDensityNoiseFunction"
+        },
+        "0x0085e104": {
+          "offset": 36,
+          "slot": "0x0105dd9c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.flintDensityNoiseFunction"
+        },
+        "0x0085e108": {
+          "offset": 76,
+          "slot": "0x0105dd8c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.bestStartPosition"
+        },
+        "0x0085e10c": {
+          "offset": 4,
+          "slot": "0x0105dd4c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.world"
+        },
+        "0x0085e674": {
+          "offset": 36,
+          "slot": "0x0105dd9c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.flintDensityNoiseFunction"
+        },
+        "0x0085e678": {
+          "offset": 4,
+          "slot": "0x0105dd4c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.world"
+        },
+        "0x0085e684": {
+          "offset": 60,
+          "slot": "0x0105dd90",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.gemNoiseFunction"
+        }
+      },
+      "method": "WorldTileLoader -[placeGemsInCaveForPhysicalBlock:tileIndex:worldX:worldY:floatingIslandType:]",
+      "name": "wtl_placegemsincaveforphys",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x0085dcb0": {
+          "import": "__stack_chk_guard",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7e0"
+        },
+        "0x0085dd00": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x0085df68": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x0085df6c": {
+          "selector": "isFloatingIslandCaveForX:y:",
+          "slot": "0x00e824a0"
+        },
+        "0x0085df70": {
+          "selector": "isCaveForX:y:faultOffset:",
+          "slot": "0x00e82408"
+        },
+        "0x0085df74": {
+          "selector": "faultOffsetForX:y:",
+          "slot": "0x00e82404"
+        },
+        "0x0085df7c": {
+          "selector": "getX:Y:octaves:",
+          "slot": "0x00e82420"
+        },
+        "0x0085e100": {
+          "selector": "getX:Y:octaves:",
+          "slot": "0x00e82420"
+        },
+        "0x0085e114": {
+          "selector": "expertMode",
+          "slot": "0x00e82494"
+        },
+        "0x0085e124": {
+          "selector": "customRules",
+          "slot": "0x00e823f4"
+        },
+        "0x0085e2a0": {
+          "selector": "customRules",
+          "slot": "0x00e823f4"
+        },
+        "0x0085e668": {
+          "import": "__stack_chk_guard",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7e0"
+        },
+        "0x0085e66c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x0085e670": {
+          "selector": "getX:Y:octaves:",
+          "slot": "0x00e82420"
+        },
+        "0x0085e67c": {
+          "selector": "customRules",
+          "slot": "0x00e823f4"
+        }
+      },
+      "semantics": "placeGemsInCaveForPhysicalBlock:tileIndex:worldX:worldY:floatingIslandType: stamps ore/gem bytes into one terrain tile (physicalBlock->tiles@8 + tileIndex*64). Normalisation: nx = ((float)worldX + 1453.0f)/32.0f/self->yHeightDivider@244 ([sp,0x268]) and ny = ((float)worldY + 1247.0f)/32.0f/yHeightDivider ([sp,0x264]) with the f32 pool 32.0 (0x0085d264), 1247.0 (0x0085d268) and 1453.0 (0x0085d26c). The cave predicate is chosen on floatingIslandType (cmp at 0x0085cf4c): non-zero dispatches [self isFloatingIslandCaveForX:worldX y:worldY-1] (0x0085cf98), zero dispatches [self faultOffsetForX:y:] (0x0085d010) and feeds it to [self isCaveForX:y:faultOffset:] (0x0085d03c); the BOOL lands at [sp,0x262]. The cave branch jumps straight to the gem body; the non-cave branch (0x0085d054) samples self->flintDensityNoiseFunction@36 through getX:Y:octaves: (0x0085d0dc, fractions nx*1.423 / ny*1.4536), reads [self->world@4 expertMode] (0x0085d1c0) to pick the 0.11 / 0.22 factor (pool 0x0085d5a0/0x0085d5a4) and the 64-byte [world customRules] struct (objc_msgSend_stret at 0x0085d25c, byte0 tested 0x0085d290), then writes the tile: byte0 = 16 when floatingIslandType == 0 (0x0085d2c8), otherwise byte0 = 2 (0x0085d818), byte4 = 0 and byte3 in {0x5e, 0x91, 0x90} (0x0085d85c/0x0085d880/0x0085d8c0). The gem body (0x0085d900) sets byte0 = 2 and byte4 = 0 (0x0085d930/0x0085d944) and returns early unless customRules byte 0x11 != 0 (0x0085d9b0); floatingIslandType 1..5 maps to gem ids {0x3a, 0x38, 0x36, 0x34, 0x3c} (0x0085d9c8..0x0085da28) and five band tests sample self->gemNoiseFunction@60 (cell 0x0085e684) through getX:Y:octaves:, writing the gem id or the branch fallback into tiles[tileIndex].byte0xb (0x0085dfa8 plus four siblings). Stack canary checked at 0x0085e614. The numeric block/gem ids are measured bytes; no game-side name table is asserted here.",
+      "types": "v28@0:4^{PhysicalBlock=ii^{Tile}cCdII[32*][32C]}8i12i16i20i24",
+      "verified_words": 1556
+    },
+    {
+      "boundary": "ARM.exidx end 0x00865074 (listing bound); next ObjC IMP 0x00865074 WorldTileLoader -[distanceOrderedFoodTypes]",
+      "boundary_end": "0x00865074",
+      "branches": [
+        {
+          "address": "0x008642bc",
+          "destination": "0x00864ea8",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00864380",
+          "destination": "0x008644ec",
+          "mnemonic": "bmi"
+        },
+        {
+          "address": "0x008643f8",
+          "destination": "0x00864474",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00864470",
+          "destination": "0x008644ec",
+          "mnemonic": "bmi"
+        },
+        {
+          "address": "0x008644e8",
+          "destination": "0x00864500",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x008644f4",
+          "destination": "0x00864e98",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008645d8",
+          "destination": "0x008646b8",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x008646b4",
+          "destination": "0x00864890",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x008647a0",
+          "destination": "0x0086489c",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0086488c",
+          "destination": "0x0086489c",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00864898",
+          "destination": "0x00864e98",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0086489c",
+          "destination": "0x008648a0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00864910",
+          "destination": "0x00864920",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x0086491c",
+          "destination": "0x00864928",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008649dc",
+          "destination": "0x008649f4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008649f0",
+          "destination": "0x00864a14",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00864a1c",
+          "destination": "0x00864a78",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00864a40",
+          "destination": "0x00864a68",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00864a74",
+          "destination": "0x00864acc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00864a98",
+          "destination": "0x00864ac0",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00864b00",
+          "destination": "0x00864cbc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00864b0c",
+          "destination": "0x00864cbc",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x00864b1c",
+          "destination": "0x00864cbc",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00864b2c",
+          "destination": "0x00864cbc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00864b44",
+          "destination": "0x00864cbc",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00864b9c",
+          "destination": "0x00864c98",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00864bd8",
+          "destination": "0x00864bf0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00864bec",
+          "destination": "0x00864c10",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00864c18",
+          "destination": "0x00864c98",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00864c54",
+          "destination": "0x00864c6c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00864c68",
+          "destination": "0x00864c8c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00864c94",
+          "destination": "0x00864cbc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00864ca0",
+          "destination": "0x00864cac",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00864cb8",
+          "destination": "0x00864e90",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00864d30",
+          "destination": "0x00864d40",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00864d3c",
+          "destination": "0x00864d48",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00864d5c",
+          "destination": "0x00864e7c",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00864d98",
+          "destination": "0x00864db0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00864dac",
+          "destination": "0x00864dd0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00864ddc",
+          "destination": "0x00864dec",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00864de8",
+          "destination": "0x00864e7c",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00864e24",
+          "destination": "0x00864e40",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00864e38",
+          "destination": "0x00864e60",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00864e6c",
+          "destination": "0x00864e88",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00864e78",
+          "destination": "0x00864e88",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x00864e84",
+          "destination": "0x00864ea8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00864ea4",
+          "destination": "0x00864268",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00864eb0",
+          "destination": "0x00864ed4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00864ed0",
+          "destination": "0x00864fe0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00864ff8",
+          "destination": "0x00865004",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x008540cc",
+          "route": "bl 0x8540cc",
+          "site": "0x008641e8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00864218"
+        },
+        {
+          "callee": "0x001c3020",
+          "route": "bl sym.imp.__modsi3",
+          "site": "0x0086423c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008642a4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00864318"
+        },
+        {
+          "callee": "0x001c3020",
+          "route": "bl sym.imp.__modsi3",
+          "site": "0x00864324"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00864354"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008643cc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00864444"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008644bc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00864574"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x0086458c"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x008645bc"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x008645c4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00864650"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x00864668"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00864698"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x008646a0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00864734"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x0086474c"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00864784"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x0086478c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00864820"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x00864838"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00864870"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x00864878"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00864948"
+        },
+        {
+          "callee": "0x00a14f28",
+          "route": "bl sym.baseTemperatureForWorldPos_intpair__float__float__float__World_",
+          "site": "0x00864998"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x008649ec"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x00864a10"
+        },
+        {
+          "callee": "0x008540fc",
+          "route": "bl 0x8540fc",
+          "site": "0x00864b3c"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00864b64"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00864b90"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x00864be8"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x00864c0c"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x00864c64"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x00864c88"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00864d14"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x00864d1c"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x00864da8"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x00864dcc"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x00864e34"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x00864e5c"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00864ecc"
+        },
+        {
+          "callee": "0x008540cc",
+          "route": "bl 0x8540cc",
+          "site": "0x00864f0c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00864f78"
+        },
+        {
+          "callee": "0x001c3020",
+          "route": "bl sym.imp.__modsi3",
+          "site": "0x00864f9c"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00864fc4"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00864fdc"
+        },
+        {
+          "callee": "0x001c28b8",
+          "route": "bl sym.imp.__stack_chk_fail",
+          "site": "0x00865004"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00864188",
+      "ivars": {
+        "0x00865010": {
+          "offset": 4,
+          "slot": "0x0105dd4c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.world"
+        },
+        "0x00865040": {
+          "offset": 92,
+          "slot": "0x0105dd5c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.dirtHeights"
+        },
+        "0x00865048": {
+          "offset": 96,
+          "slot": "0x0105dd60",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.rockHeights"
+        },
+        "0x00865054": {
+          "offset": 100,
+          "slot": "0x0105dd64",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.lakeHeights"
+        }
+      },
+      "method": "WorldTileLoader -[findBestStartPosition]",
+      "name": "wtl_findbeststartposition",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00865008": {
+          "import": "__stack_chk_guard",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7e0"
+        },
+        "0x00865014": {
+          "selector": "worldWidthMacro",
+          "slot": "0x00e823a8"
+        },
+        "0x0086502c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x0086504c": {
+          "selector": "customRules",
+          "slot": "0x00e823f4"
+        },
+        "0x0086505c": {
+          "selector": "isDesertOrBeachForPos:height:",
+          "slot": "0x00e824d4"
+        },
+        "0x00865064": {
+          "selector": "unmodifiedGroundLevelForX:",
+          "slot": "0x00e824d8"
+        }
+      },
+      "semantics": "findBestStartPosition returns an intpair (two ints) through a hidden pointer in r0 (saved fp-0x1d8) after scanning for a spawn column. It takes a random start offset r = helper_0x8540cc() % (W*32) (lsl r0, r0, 5 at 0x00864220, __modsi3 at 0x0086423c, stored fp-0x16c) and sweeps x = (r+i) mod (W*32) for i = 0 .. W*32-1 (0x00864268..0x00864ea4). Per candidate it applies a band gate of [2W,14W] U [18W,30W] with the doubles 0.0625 (0x008644f8), 0.4375 (0x00864384), 0.5625 (0x008643fc) and 0.9375 (0x00864474) against [self->world worldWidthMacro]; reads dirtHeights@92[x] and rockHeights@96[x] and keeps ground = max (0x008648c4/0x008648e4); rejects lakeHeights@100[x] != 0, ground < 512 (0x00864b0c) and dirt <= rock; requires |prevGround - ground| < 2 through helper 0x8540fc (0x00864b3c) and a base temperature in (-10.0f, 40.0f) from baseTemperatureForWorldPos(intpair{x, dirt}, 0.25f, 0.25f, 0.0f, world) (0x00864998/0x00864a28/0x00864e3c), tightened to (-5.0f, 25.0f) when [world customRules] byte +3 == 2 (0x00864a14); it also requires NOT [self isDesertOrBeachForPos:{x, dirt-1} height:dirt] (0x00864b90), with customRules byte +8 == 1 or byte +2 in {3,4} overriding that test. An accepted-column streak (counter fp-0x174, first x fp-0x178) commits when it reaches min(256, W/2) (0x00864d5c) or 32/8 by rule byte +2; the committed x is (firstX + 4 + (rand()/2^31) * (streak-8)) mod (W*32) (0x00864e80) and y is [self unmodifiedGroundLevelForX:thatX]. When the sweep finds nothing the method returns (-1,-1) (mvn r0, 0 at 0x00864eb4).",
+      "types": "{?=ii}8@0:4",
+      "verified_words": 955
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "schema": 1
+}

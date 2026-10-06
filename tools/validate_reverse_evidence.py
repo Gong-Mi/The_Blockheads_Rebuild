@@ -1376,6 +1376,46 @@ def main() -> None:
     ):
         require(NATIVE / _pcm_file, [_pcm_imp, _pcm_end])
     require(
+        NATIVE / "TERRAIN_GENERATION.md",
+        [
+            "5391",
+            "worldWidthMacro",
+            "customRules",
+            "lrand48()",
+            "0x5f5e0ff",
+            "getX:Y:octaves:",
+        ],
+    )
+    require(
+        NATIVE / "terrain_generation.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '\"verified_words\": 1556',
+            '\"verified_words\": 955',
+            "OBJC_IVAR_$_WorldTileLoader.rockTypeNoiseFunction",
+            "OBJC_IVAR_$_WorldTileLoader.sandNoiseFunction",
+            "OBJC_IVAR_$_WorldTileLoader.gemNoiseFunction",
+            "OBJC_IVAR_$_WorldTileLoader.yHeightDivider",
+            "fillDirtTile:worldPos:worldDirtHeight:parentType:",
+        ],
+    )
+    for _tg_file, _tg_imp, _tg_end in (
+        ("disasm_worldtileloader_limestonefractionforx_y_faultoffset_.txt", "# implementation: 0x00857684", "# ARM.exidx end: 0x008578b8"),
+        ("disasm_worldtileloader_sandstonefractionforx_y_faultoffset_lime.txt", "# implementation: 0x008578b8", "# ARM.exidx end: 0x00857a2c"),
+        ("disasm_worldtileloader_isfloatingislandcaveforx_y_.txt", "# implementation: 0x00858320", "# ARM.exidx end: 0x00858664"),
+        ("disasm_worldtileloader_sandfractionforpos_highres_.txt", "# implementation: 0x0085a84c", "# ARM.exidx end: 0x0085ab18"),
+        ("disasm_worldtileloader_sandfractionforpos_height_highres_.txt", "# implementation: 0x0085ab18", "# ARM.exidx end: 0x0085b0d0"),
+        ("disasm_worldtileloader_isdesertforpos_height_.txt", "# implementation: 0x0085b0d0", "# ARM.exidx end: 0x0085b190"),
+        ("disasm_worldtileloader_isbeachforpos_height_.txt", "# implementation: 0x0085b190", "# ARM.exidx end: 0x0085b480"),
+        ("disasm_worldtileloader_isdesertorbeachforpos_height_.txt", "# implementation: 0x0085b480", "# ARM.exidx end: 0x0085b5b0"),
+        ("disasm_worldtileloader_filldirttile_worldpos_worlddirtheight_pa.txt", "# implementation: 0x0085b5b0", "# ARM.exidx end: 0x0085c214"),
+        ("disasm_worldtileloader_recursivelyflowoutwaterfromtile_atpos_.txt", "# implementation: 0x0085c214", "# ARM.exidx end: 0x0085c518"),
+        ("disasm_worldtileloader_recursivelyflowoutdirtfromtile_atpos_.txt", "# implementation: 0x0085c518", "# ARM.exidx end: 0x0085ce60"),
+        ("disasm_worldtileloader_placegemsincaveforphysicalblock_tileinde.txt", "# implementation: 0x0085ce60", "# ARM.exidx end: 0x0085e6b0"),
+        ("disasm_worldtileloader_findbeststartposition.txt", "# implementation: 0x00864188", "# ARM.exidx end: 0x00865074"),
+    ):
+        require(NATIVE / _tg_file, [_tg_imp, _tg_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
