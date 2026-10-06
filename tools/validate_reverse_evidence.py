@@ -519,6 +519,61 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "WORLDTILELOADER_COLUMN_HEIGHTS.md",
+        [
+            "0x00857a2c",
+            "0x00857bf8",
+            "0x00857dc8",
+            "0x00857340",
+            "return i + (flag != 0 ? 1 : 0)",
+            "lakeHeights",
+            "heightNoiseFunctionA",
+        ],
+    )
+    require(
+        NATIVE / "disasm_worldtileloader_unmodifiedgroundlevel.txt",
+        [
+            "# WorldTileLoader -[unmodifiedGroundLevelForX:]",
+            "# implementation: 0x00857a2c",
+            "# ARM.exidx end: 0x00857bf8",
+        ],
+    )
+    require(
+        NATIVE / "disasm_worldtileloader_maxofrockanddirt.txt",
+        [
+            "# WorldTileLoader -[maxOfRockAndDirtHeightForX:]",
+            "# implementation: 0x00857bf8",
+            "# ARM.exidx end: 0x00857dc8",
+        ],
+    )
+    require(
+        NATIVE / "disasm_worldtileloader_lakeheight.txt",
+        [
+            "# WorldTileLoader -[lakeHeightForX:]",
+            "# implementation: 0x00857dc8",
+            "# ARM.exidx end: 0x00857f48",
+        ],
+    )
+    require(
+        NATIVE / "disasm_worldtileloader_getcloudheight.txt",
+        [
+            "# WorldTileLoader -[getCloudHeightForX:]",
+            "# implementation: 0x00857340",
+            "# ARM.exidx end: 0x00857684",
+        ],
+    )
+    require(
+        NATIVE / "worldtileloader_column_heights.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 209",
+            "0x3fc99999a0000000",
+            "OBJC_IVAR_$_WorldTileLoader.heightNoiseFunctionB",
+            "OBJC_IVAR_$_WorldTileLoader.lakeHeights",
+            "getX:Y:octaves:",
+        ],
+    )
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",

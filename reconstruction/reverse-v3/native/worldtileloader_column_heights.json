@@ -1,0 +1,402 @@
+{
+  "batch": "WorldTileLoader column-height helpers",
+  "claim": "static bounded-body maps with per-instruction anchors; NoiseFunction internals, customRules layout and runtime values are outside these bodies",
+  "classes": [
+    {
+      "boundary": "no own ARM.exidx entry; closed by the next method IMP 0x00857bf8 (-[maxOfRockAndDirtHeightForX:])",
+      "boundary_end": "0x00857bf8",
+      "branches": [
+        {
+          "address": "0x00857a9c",
+          "destination": "0x00857aac",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00857aa8",
+          "destination": "0x00857ab4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00857ad4",
+          "destination": "0x00857bd0",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00857b24",
+          "destination": "0x00857b34",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00857b30",
+          "destination": "0x00857bd8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00857b80",
+          "destination": "0x00857bb0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00857bac",
+          "destination": "0x00857bd8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00857bb0",
+          "destination": "0x00857bb4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00857bcc",
+          "destination": "0x00857acc",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "note": "objc_msgSend: [self getRockAndDirtHeightforX:x rockHeight:&fp-0x1c dirtHeight:&fp-0x20] (r3=fp-0x1c arg3, [sp]=fp-0x20 arg4)",
+          "route": "blx r4",
+          "site": "0x00857a7c"
+        },
+        {
+          "callee": null,
+          "note": "objc_msgSend: [self faultOffsetForX:x y:i] (r2=x arg1, r3=i arg2)",
+          "route": "blx ip",
+          "site": "0x00857b10"
+        },
+        {
+          "callee": null,
+          "note": "objc_msgSend: [self isCaveForX:x y:i faultOffset:off] (r2=x, r3=i, [sp]=off)",
+          "route": "blx ip",
+          "site": "0x00857b74"
+        }
+      ],
+      "constants": {},
+      "imp": "0x00857a2c",
+      "ivars": {},
+      "method": "WorldTileLoader -[unmodifiedGroundLevelForX:]",
+      "name": "unmodifiedGroundLevelForX",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00857be4": {
+          "import": "objc_msgSend",
+          "slot": "0x0105b7a0"
+        },
+        "0x00857be8": {
+          "selector": "getRockAndDirtHeightforX:rockHeight:dirtHeight:",
+          "slot": "0x00e82438"
+        },
+        "0x00857bec": {
+          "selector": "faultOffsetForX:y:",
+          "slot": "0x00e82404"
+        },
+        "0x00857bf0": {
+          "selector": "isCaveForX:y:faultOffset:",
+          "slot": "0x00e82408"
+        }
+      },
+      "semantics": "i0 = max(rock, dirt) from [self getRockAndDirtHeightforX:x ...]; flag = 0; while (i > 0) { off = [self faultOffsetForX:x y:i]; if (i > rock) return i; if ([self isCaveForX:x y:i faultOffset:off]) { flag = 1; i--; continue; } return i + (flag != 0 ? 1 : 0); } return 0. Both out-parameters are ints (array lookups upstream); when dirt > rock the first iteration returns immediately with dirt; otherwise the loop scans downward from the rock line while isCave stays true and returns the first non-cave level, +1 when it entered a cave at least once, else the plain level.",
+      "types": "i12@0:4i8",
+      "verified_words": 115
+    },
+    {
+      "boundary": "no own ARM.exidx entry; closed by the next method IMP 0x00857dc8 (-[lakeHeightForX:])",
+      "boundary_end": "0x00857dc8",
+      "branches": [
+        {
+          "address": "0x00857c18",
+          "destination": "0x00857c70",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00857c6c",
+          "destination": "0x00857d1c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00857cc4",
+          "destination": "0x00857d18",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00857d18",
+          "destination": "0x00857d1c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00857d7c",
+          "destination": "0x00857d8c",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00857d88",
+          "destination": "0x00857d94",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "note": "objc_msgSend: [world worldWidthMacro] (x < 0 path)",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00857c50"
+        },
+        {
+          "callee": "0x001c281c",
+          "note": "objc_msgSend: [world worldWidthMacro] (x >= 0 path, compare)",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00857cac"
+        },
+        {
+          "callee": "0x001c281c",
+          "note": "objc_msgSend: [world worldWidthMacro] (x > W path, subtract)",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00857cfc"
+        }
+      ],
+      "constants": {},
+      "imp": "0x00857bf8",
+      "ivars": {
+        "0x00857da8": {
+          "descriptor": "0x00f33f08",
+          "offset": 4,
+          "slot": "0x0105dd4c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.world"
+        },
+        "0x00857dbc": {
+          "descriptor": "0x00f33f20",
+          "offset": 96,
+          "slot": "0x0105dd60",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.rockHeights"
+        },
+        "0x00857dc4": {
+          "descriptor": "0x00f33f1c",
+          "offset": 92,
+          "slot": "0x0105dd5c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.dirtHeights"
+        }
+      },
+      "method": "WorldTileLoader -[maxOfRockAndDirtHeightForX:]",
+      "name": "maxOfRockAndDirtHeightForX",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00857db0": {
+          "selector": "worldWidthMacro",
+          "slot": "0x00e823a8"
+        }
+      },
+      "semantics": "W = worldWidthMacro * 32 (lsl #5). if (x < 0) x += W; else if (x > W) x -= W (x == W is kept). rock = rockHeights[x]; dirt = dirtHeights[x]; return rock >= dirt ? rock : dirt (max, strict >= keeps rock on ties).",
+      "types": "i12@0:4i8",
+      "verified_words": 116
+    },
+    {
+      "boundary": "no own ARM.exidx entry; closed by the next method IMP 0x00857f48 (-[isCaveForX:y:faultOffset:])",
+      "boundary_end": "0x00857f48",
+      "branches": [
+        {
+          "address": "0x00857de8",
+          "destination": "0x00857e40",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00857e3c",
+          "destination": "0x00857eec",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00857e94",
+          "destination": "0x00857ee8",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00857ee8",
+          "destination": "0x00857eec",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "note": "objc_msgSend: [world worldWidthMacro] (x < 0 path)",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00857e20"
+        },
+        {
+          "callee": "0x001c281c",
+          "note": "objc_msgSend: [world worldWidthMacro] (x >= 0 path, compare)",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00857e7c"
+        },
+        {
+          "callee": "0x001c281c",
+          "note": "objc_msgSend: [world worldWidthMacro] (x > W path, subtract)",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00857ecc"
+        }
+      ],
+      "constants": {},
+      "imp": "0x00857dc8",
+      "ivars": {
+        "0x00857f28": {
+          "descriptor": "0x00f33f08",
+          "offset": 4,
+          "slot": "0x0105dd4c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.world"
+        },
+        "0x00857f3c": {
+          "descriptor": "0x00f33f24",
+          "offset": 100,
+          "slot": "0x0105dd64",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.lakeHeights"
+        }
+      },
+      "method": "WorldTileLoader -[lakeHeightForX:]",
+      "name": "lakeHeightForX",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00857f30": {
+          "selector": "worldWidthMacro",
+          "slot": "0x00e823a8"
+        }
+      },
+      "semantics": "W = worldWidthMacro * 32. if (x < 0) x += W; else if (x > W) x -= W (x == W is kept). return lakeHeights[x] (int array, lsl #2 index). Same wrap shape as maxOfRockAndDirtHeightForX:.",
+      "types": "i12@0:4i8",
+      "verified_words": 96
+    },
+    {
+      "boundary": "no own ARM.exidx entry; closed by the next method IMP 0x00857684 (-[limestoneFractionForX:y:faultOffset:])",
+      "boundary_end": "0x00857684",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "note": "objc_msgSend: [world worldWidthMacro] -> q = x / 32.0f / W",
+          "route": "blx r5",
+          "site": "0x00857464"
+        },
+        {
+          "callee": null,
+          "note": "objc_msgSend: [heightNoiseFunctionA getX:q+0.1 Y:5.0 octaves:3]",
+          "route": "blx lr",
+          "site": "0x008574c0"
+        },
+        {
+          "callee": null,
+          "note": "objc_msgSend: [heightNoiseFunctionB getX:q+0.07 Y:5.0 octaves:3]",
+          "route": "blx lr",
+          "site": "0x00857520"
+        },
+        {
+          "callee": null,
+          "note": "objc_msgSend: [heightNoiseFunctionB getX:q+0.05 Y:7.0 octaves:9]",
+          "route": "blx lr",
+          "site": "0x00857580"
+        },
+        {
+          "callee": "0x004be068",
+          "note": "clamp(w3, 0.0, 1.0)",
+          "route": "bl sym.clamp_float__float__float_",
+          "site": "0x008575b8"
+        },
+        {
+          "callee": "0x00582a14",
+          "note": "linearInterpolate(w1, w2, clamp(w3,0,1))",
+          "route": "bl sym.linearInterpolate_float__float__float_",
+          "site": "0x008575dc"
+        }
+      ],
+      "constants": {
+        "0x00857638": {
+          "bits": "0x3fc99999a0000000",
+          "kind": "double",
+          "value": 0.20000000298023224
+        },
+        "0x00857640": {
+          "bits": "0x3fe99999a0000000",
+          "kind": "double",
+          "value": 0.800000011920929
+        },
+        "0x00857648": {
+          "bits": "0x3fd3333340000000",
+          "kind": "double",
+          "value": 0.30000001192092896
+        },
+        "0x00857650": {
+          "bits": "0x42200000",
+          "kind": "float",
+          "value": 40.0
+        },
+        "0x00857654": {
+          "bits": "0x42000000",
+          "kind": "float",
+          "value": 32.0
+        },
+        "0x00857658": {
+          "bits": "0x00000000",
+          "kind": "float",
+          "value": 0.0
+        },
+        "0x00857664": {
+          "bits": "0x3d4ccccd",
+          "kind": "float",
+          "value": 0.05000000074505806
+        },
+        "0x0085766c": {
+          "bits": "0x3d8f5c29",
+          "kind": "float",
+          "value": 0.07000000029802322
+        },
+        "0x00857670": {
+          "bits": "0x3dcccccd",
+          "kind": "float",
+          "value": 0.10000000149011612
+        }
+      },
+      "imp": "0x00857340",
+      "ivars": {
+        "0x00857668": {
+          "descriptor": "0x00f33f38",
+          "offset": 20,
+          "slot": "0x0105dd84",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.heightNoiseFunctionB"
+        },
+        "0x00857674": {
+          "descriptor": "0x00f33f34",
+          "offset": 16,
+          "slot": "0x0105dd88",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.heightNoiseFunctionA"
+        },
+        "0x0085767c": {
+          "descriptor": "0x00f33f08",
+          "offset": 4,
+          "slot": "0x0105dd4c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.world"
+        }
+      },
+      "method": "WorldTileLoader -[getCloudHeightForX:]",
+      "name": "getCloudHeightForX",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x0085765c": {
+          "import": "objc_msgSend",
+          "slot": "0x0105b7a0"
+        },
+        "0x00857660": {
+          "selector": "getX:Y:octaves:",
+          "slot": "0x00e82420"
+        },
+        "0x00857678": {
+          "selector": "worldWidthMacro",
+          "slot": "0x00e823a8"
+        }
+      },
+      "semantics": "q = (float)x / 32.0f / (float)[world worldWidthMacro]; n1 = [heightNoiseFunctionA getX:q+0.1 Y:5.0 octaves:3]; n2 = [heightNoiseFunctionB getX:q+0.07 Y:5.0 octaves:3]; n3 = [heightNoiseFunctionB getX:q+0.05 Y:7.0 octaves:9]; w1 = n1*0.3+5.0; w2 = n2*5.0+5.0; w3 = n3*0.8+0.2; t = clamp(w3, 0.0, 1.0); return (int)(40.0f + linearInterpolate(w1, w2, t) * 3.0f * 32.0f). The 0.2/0.8/0.3 doubles are float-precision constants widened to double ((double)0.2f bit patterns), as in the recovered getInitialRockAndDirt constants family.",
+      "types": "i12@0:4i8",
+      "verified_words": 209
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "schema": 1,
+  "scope": "WorldTileLoader column-height helpers: height-array accessors and the cloud-noise composition"
+}
