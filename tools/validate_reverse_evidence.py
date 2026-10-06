@@ -1252,6 +1252,49 @@ def main() -> None:
     ):
         require(NATIVE / _tp_file, [_tp_imp, _tp_end])
     require(
+        NATIVE / "TRADE_PORTAL_ECON.md",
+        [
+            "3573",
+            "0x00e18ee0",
+            "lrand48()",
+            "0.997",
+            "0x7c",
+            "[self remove:0]",
+            "[0.5, 2.0]",
+            "is not a price hash",
+        ],
+    )
+    require(
+        NATIVE / "trade_portal_econ.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 699',
+            '"verified_words": 575',
+            "createFreeBlockAtPosition:ofType:dataA:dataB:subItems:dynamicObjectSaveDict:hovers:playSound:priorityBlockhead:",
+            "displayInterstitialForTag:",
+            "OBJC_CLASS_$_CrystalManager",
+            "OBJC_IVAR_$_TradePortal.isMissionInteraction",
+            '"disjoint_branch_rows"',
+        ],
+    )
+    for _tpe_file, _tpe_imp, _tpe_end in (
+        ("disasm_tradeportal_loadpriceoffsets_closure.txt", "# implementation: 0x00d37a78", "# ARM.exidx end: 0x00d37d8c"),
+        ("disasm_tradeportal_worldchanged.txt", "# implementation: 0x00d3a8f8", "# ARM.exidx end: 0x00d3b1f4"),
+        ("disasm_tradeportal_currentblockheadcash.txt", "# implementation: 0x00d3c624", "# ARM.exidx end: 0x00d3c6d4"),
+        ("disasm_tradeportal_currentblockheadcountofinventoryitemsoftype.txt", "# implementation: 0x00d3c6d4", "# ARM.exidx end: 0x00d3c818"),
+        ("disasm_tradeportal_currentblockheadusagemultiplierforfirstitemoftype.txt", "# implementation: 0x00d3c818", "# ARM.exidx end: 0x00d3c8e4"),
+        ("disasm_tradeportal_setpaused.txt", "# implementation: 0x00d3c8e4", "# ARM.exidx end: 0x00d3c9b8"),
+        ("disasm_tradeportal_upgradetonextlevel.txt", "# implementation: 0x00d3cf20", "# ARM.exidx end: 0x00d3d638"),
+        ("disasm_tradeportal_sellitem.txt", "# implementation: 0x00d3d638", "# ARM.exidx end: 0x00d3dcf0"),
+        ("disasm_tradeportal_buyitem.txt", "# implementation: 0x00d3dcf0", "# ARM.exidx end: 0x00d3e7dc"),
+        ("disasm_tradeportal_upgradecraftableitem.txt", "# implementation: 0x00d3e7dc", "# ARM.exidx end: 0x00d3eb54"),
+        ("disasm_tradeportal_takeitemsfromblockhead.txt", "# implementation: 0x00d3eb54", "# ARM.exidx end: 0x00d3f38c"),
+        ("disasm_tradeportal_randomizelocaloffsets.txt", "# implementation: 0x00d3f460", "# ARM.exidx end: 0x00d3f7ac"),
+        ("disasm_tradeportal_issellinteraction.txt", "# implementation: 0x00d3f8f4", "# ARM.exidx end: 0x00d3f96c"),
+        ("disasm_tradeportal_ismissioninteraction.txt", "# implementation: 0x00d3f930", "# ARM.exidx end: 0x00d3f96c"),
+    ):
+        require(NATIVE / _tpe_file, [_tpe_imp, _tpe_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
