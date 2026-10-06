@@ -14,7 +14,7 @@ have recovered semantics, replacement code, or behavioral verification.
 | cfg | 262 | explicit IMP owner in CFG statistics or bounded disassembly; not a completeness claim |
 | semantics | 71 | explicit reviewed method records and their stated limits |
 | implemented | 71 | explicit source/test/evidence records; not gameplay integration |
-| behavior-verified | 6 | controlled original-runtime evidence, not local fixtures |
+| behavior-verified | 8 | controlled original-runtime evidence, not local fixtures |
 
 Unknown/conditional/indirect cases remain unknown. This file is an index,
 not a completion percentage or an equivalence claim.

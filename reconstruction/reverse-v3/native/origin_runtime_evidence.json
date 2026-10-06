@@ -40,6 +40,18 @@
    "measured_on": "the hop the walk follows at UIManager+56 in the running original",
    "boundary": "resolves to an object whose isa matches the resolved paintMixUI class; a measured pointer chain, not a claim about that screen's contents",
    "evidence": "reconstruction/live/probe_craft_path.py"
+  },
+  {
+   "implementation": "0x00ac7518",
+   "measured_on": "objc_msgSend on a live [InventoryItem alloc] instance in the shell32 standalone-original process (runtime-lab shell32/logs/run119.log): setSelectedSubItemIndex(0x99), then the paired getter read the value back",
+   "boundary": "instance is alloc-only (no initWith*), so this measures the accessor pair and not any initialization path; the call went through the runtime's own sel_registerName + objc_msgSend dispatch; dispatch itself is exercised, the field meaning is not claimed beyond the round trip",
+   "evidence": "reconstruction/live/probe_shell32_inventoryitem.py"
+  },
+  {
+   "implementation": "0x00ac74dc",
+   "measured_on": "the read-back side of the same run119 round trip: 153 (0x99) after the setter, and 0 on a freshly allocated instance",
+   "boundary": "same alloc-only instance and standalone-original process as the setter record; two observed states (fresh=0, after set=0x99); no claim about behavior on initialized instances",
+   "evidence": "reconstruction/live/probe_shell32_inventoryitem.py"
   }
  ],
  "note": "These entries are a SUBSET of implemented_methods.json. Implementation data lives there so there is one registry; this file only records that the behaviour of each listed method was measured on the running original, with the measurement and its boundary."
