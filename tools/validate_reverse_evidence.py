@@ -1033,6 +1033,52 @@ def main() -> None:
     ):
         require(NATIVE / _wr_file, [_wr_imp, _wr_end])
     require(
+        NATIVE / "CAMERA_UI.md",
+        [
+            "3024",
+            "0x009d414c",
+            "0x005c3278",
+            "NoodlePermissionGranter",
+            "shaderNamed:attributes:uniforms:",
+            "dmb ish",
+        ],
+    )
+    require(
+        NATIVE / "camera_ui.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 1080",
+            "\"verified_words\": 354",
+            "showCameraUI",
+            "doCameraScreenshot",
+            "UIImageWriteToSavedPhotosAlbum",
+        ],
+    )
+    for _cu_file, _cu_imp, _cu_end in (
+        ("disasm_cameraui_initwithworld.txt", "# implementation: 0x009d414c", "# ARM.exidx end: 0x009d522c"),
+        ("disasm_cameraui_dealloc.txt", "# implementation: 0x009d53d0", "# ARM.exidx end: 0x009d54d0"),
+        ("disasm_cameraui_windowinfochanged.txt", "# implementation: 0x009d54d0", "# ARM.exidx end: 0x009d5c24"),
+        ("disasm_cameraui_render.txt", "# implementation: 0x009d5c24", "# ARM.exidx end: 0x009d6054"),
+        ("disasm_cameraui_touchisinviewatall.txt", "# implementation: 0x009d6054", "# ARM.exidx end: 0x009d60d4"),
+        ("disasm_cameraui_touchisinui.txt", "# implementation: 0x009d60d4", "# ARM.exidx end: 0x009d620c"),
+        ("disasm_cameraui_starttouch.txt", "# implementation: 0x009d620c", "# ARM.exidx end: 0x009d6398"),
+        ("disasm_cameraui_movetouch.txt", "# implementation: 0x009d6398", "# ARM.exidx end: 0x009d65a8"),
+        ("disasm_cameraui_endtouch.txt", "# implementation: 0x009d64a0", "# ARM.exidx end: 0x009d65a8"),
+        ("disasm_cameraui_cancelbutton.txt", "# implementation: 0x009d65a8", "# ARM.exidx end: 0x009d6610"),
+        ("disasm_cameraui_takephotobutton.txt", "# implementation: 0x009d6610", "# ARM.exidx end: 0x009d6678"),
+        ("disasm_uimanager_showcameraui.txt", "# implementation: 0x00adc97c", "# ARM.exidx end: 0x00adc9ec"),
+        ("disasm_uimanager_dismisscameraui.txt", "# implementation: 0x00ade3f0", "# ARM.exidx end: 0x00ade42c"),
+        ("disasm_uimanager_setdismisscameraui.txt", "# implementation: 0x00ade42c", "# ARM.exidx end: 0x00ade608"),
+        ("disasm_world_docamerascreenshot.txt", "# implementation: 0x005c3278", "# ARM.exidx end: 0x005c3800"),
+        ("disasm_world_startusingcamera.txt", "# implementation: 0x005c3d24", "# ARM.exidx end: 0x005c3e10"),
+        ("disasm_world_takephotobuttontapped.txt", "# implementation: 0x005c3e10", "# ARM.exidx end: 0x005c3ebc"),
+        ("disasm_world_canceltakephotobuttontapped.txt", "# implementation: 0x005c3ebc", "# ARM.exidx end: 0x005c4030"),
+        ("disasm_world_takingphoto.txt", "# implementation: 0x005c4030", "# ARM.exidx end: 0x005c40b4"),
+        ("disasm_world_sharephotofinished.txt", "# implementation: 0x005c40b4", "# ARM.exidx end: 0x005c4228"),
+        ("disasm_world_hasjusttakenphoto.txt", "# implementation: 0x005da600", "# ARM.exidx end: 0x005da63c"),
+    ):
+        require(NATIVE / _cu_file, [_cu_imp, _cu_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
