@@ -926,6 +926,42 @@ def main() -> None:
     ):
         require(NATIVE / _ps_file, [_ps_imp, _ps_end])
     require(
+        NATIVE / "POWER_WORKBENCH.md",
+        [
+            "1400",
+            "0xb0137c",
+            "0xb01cac",
+            "subtractElectricty:",
+            "doAddElectricityParticleWithPath:size:",
+            "availableElectricity@222",
+        ],
+    )
+    require(
+        NATIVE / "power_workbench.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 182",
+            "\"verified_words\": 242",
+            "subtractElectricty:",
+            "makeIntpair",
+            "getDayNightFractionForX:atWorldTime:",
+        ],
+    )
+    for _wb_file, _wb_imp, _wb_end in (
+        ("disasm_workbench_combinedlightfullsun.txt", "# implementation: 0x00aee208", "# ARM.exidx end: 0x00aee508"),
+        ("disasm_workbench_combinedlightsolarpanel.txt", "# implementation: 0x00aee508", "# ARM.exidx end: 0x00aeea18"),
+        ("disasm_workbench_availableelectricity.txt", "# implementation: 0x00b01284", "# ARM.exidx end: 0x00b012c0"),
+        ("disasm_workbench_conductselectricity.txt", "# implementation: 0x00b012c0", "# ARM.exidx end: 0x00b0137c"),
+        ("disasm_workbench_subtractelectricty.txt", "# implementation: 0x00b0137c", "# ARM.exidx end: 0x00b01750"),
+        ("disasm_workbench_generateselectricity.txt", "# implementation: 0x00b01c24", "# ARM.exidx end: 0x00b01ec0"),
+        ("disasm_workbench_usesstoresconductsorproduces.txt", "# implementation: 0x00b01cac", "# ARM.exidx end: 0x00b01ec0"),
+        ("disasm_workbench_requireselectricty.txt", "# implementation: 0x00b0b7d0", "# ARM.exidx end: 0x00b0bca4"),
+        ("disasm_dynamicworld_findandsubtractpower.txt", "# implementation: 0x008fdee8", "# ARM.exidx end: 0x008fdf6c"),
+        ("disasm_particleemitter_addelectricityparticle.txt", "# implementation: 0x00d8753c", "# ARM.exidx end: 0x00d876b0"),
+        ("disasm_particleemitter_doaddelectricityparticle.txt", "# implementation: 0x00d876b0", "# ARM.exidx end: 0x00d87b04"),
+    ):
+        require(NATIVE / _wb_file, [_wb_imp, _wb_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",

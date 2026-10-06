@@ -1,0 +1,916 @@
+{
+  "batch": "electricity consumers + producers closure: Workbench electric API (combinedLightForSolarPanelWithFullSunlight / combinedLightForSolarPanel / availableElectricity / conductsElectricity / subtractElectricty: / generatesElectricity / usesStoresConductsOrProducesElectricity / requiresElectricty), DynamicWorld findAndSubtractAllPowerUpTo:forUser: forwarder, ParticleEmitter add/doAddElectricityParticleWithPath:size:",
+  "claim": "static bounded-body maps with per-instruction anchors; runtime values and the render consumers are outside these bodies",
+  "classes": [
+    {
+      "boundary": "body 0x00aee208..0x00aee4e0; trailing literal pool 0x00aee4e0..0x00aee508 excluded (own ARM.exidx bound)",
+      "boundary_end": "0x00aee4e0",
+      "branches": [
+        {
+          "address": "0x00aee2d4",
+          "destination": "0x00aee4c0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00aee2e4",
+          "destination": "0x00aee4c0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00aee394",
+          "destination": "0x00aee3a4",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00aee3a0",
+          "destination": "0x00aee3ac",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00aee3e4",
+          "destination": "0x00aee3f4",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00aee3f0",
+          "destination": "0x00aee3fc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00aee434",
+          "destination": "0x00aee444",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00aee440",
+          "destination": "0x00aee454",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00aee498",
+          "destination": "0x00aee4b4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00aee4bc",
+          "destination": "0x00aee4d0",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00aee290"
+        },
+        {
+          "callee": "0x00a16e68",
+          "route": "bl sym.tileAtWorldPosition_int__int__MacroTile__World_",
+          "site": "0x00aee2bc"
+        },
+        {
+          "callee": "0x00a12760",
+          "route": "bl sym.tileIsAirOrSnow_Tile_",
+          "site": "0x00aee2c8"
+        },
+        {
+          "callee": "0x001c3f98",
+          "route": "bl sym.imp.__wrap_powf",
+          "site": "0x00aee334"
+        },
+        {
+          "callee": "0x00a13214",
+          "route": "bl sym.tileIsTree_Tile_",
+          "site": "0x00aee48c"
+        }
+      ],
+      "imp": "0x00aee208",
+      "ivars": {
+        "0x00aee4e8": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x00aee4f4": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        }
+      },
+      "method": "Workbench -[combinedLightForSolarPanelWithFullSunlight]",
+      "name": "wb_fullsun",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00aee4ec": {
+          "import": "objc_msgSend",
+          "slot": "0x0105b7a0"
+        },
+        "0x00aee4f0": {
+          "selector": "macroTiles",
+          "slot": "0x00e85f08"
+        }
+      },
+      "semantics": "Solar-panel light input with full sunlight. (float, no args). world@4 -> macroTiles lookup -> tileAtWorldPosition(pos.x+1, pos.y, macroTile, world); gates: !tileIsAirOrSnow(tile) or tile[3]==0x2e -> return 0.0. Light = powf(tile[7]/255.0, 4.0); A = clamp(powf, 0, 1); B = min(sum16(tile+0xe, +0x10, +0x12), 2000.0) (the L2a light-word accumulators); total = A + B * 1e-4 (f64 const 0x3f1a36e2eb1c432d); tileIsTree(tile) -> total /= 2.0; return.",
+      "types": "f8@0:4",
+      "verified_words": 182
+    },
+    {
+      "boundary": "body 0x00aee508..0x00aee9d0; trailing literal pool 0x00aee9d0..0x00aeea18 excluded (own ARM.exidx bound)",
+      "boundary_end": "0x00aee9d0",
+      "branches": [
+        {
+          "address": "0x00aee5d8",
+          "destination": "0x00aee9b0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00aee5e8",
+          "destination": "0x00aee9b0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00aee790",
+          "destination": "0x00aee7a0",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00aee79c",
+          "destination": "0x00aee7a8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00aee828",
+          "destination": "0x00aee8ac",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00aee850",
+          "destination": "0x00aee864",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00aee860",
+          "destination": "0x00aee86c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00aee8d4",
+          "destination": "0x00aee8e4",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00aee8e0",
+          "destination": "0x00aee8ec",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00aee924",
+          "destination": "0x00aee934",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00aee930",
+          "destination": "0x00aee944",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00aee988",
+          "destination": "0x00aee9a4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00aee9ac",
+          "destination": "0x00aee9c0",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00aee594"
+        },
+        {
+          "callee": "0x00a16e68",
+          "route": "bl sym.tileAtWorldPosition_int__int__MacroTile__World_",
+          "site": "0x00aee5c0"
+        },
+        {
+          "callee": "0x00a12760",
+          "route": "bl sym.tileIsAirOrSnow_Tile_",
+          "site": "0x00aee5cc"
+        },
+        {
+          "callee": "0x001c3f98",
+          "route": "bl sym.imp.__wrap_powf",
+          "site": "0x00aee638"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00aee71c"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00aee744"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00aee80c"
+        },
+        {
+          "callee": "0x00a13214",
+          "route": "bl sym.tileIsTree_Tile_",
+          "site": "0x00aee97c"
+        }
+      ],
+      "imp": "0x00aee508",
+      "ivars": {
+        "0x00aee9e8": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x00aee9f4": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        }
+      },
+      "method": "Workbench -[combinedLightForSolarPanel]",
+      "name": "wb_solarpanel",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00aee9ec": {
+          "import": "objc_msgSend",
+          "slot": "0x0105b7a0"
+        },
+        "0x00aee9f0": {
+          "selector": "macroTiles",
+          "slot": "0x00e85f08"
+        },
+        "0x00aeea00": {
+          "selector": "getDayNightFractionForX:atWorldTime:",
+          "slot": "0x00e86094"
+        },
+        "0x00aeea04": {
+          "selector": "worldTime",
+          "slot": "0x00e85f54"
+        },
+        "0x00aeea0c": {
+          "selector": "getWeatherFractionForPos:",
+          "slot": "0x00e86098"
+        }
+      },
+      "semantics": "Solar-panel light input with live daylight. Same skeleton as combinedLightForSolarPanelWithFullSunlight, but daylight is measured: day = [world getDayNightFractionForX:(pos.x+1) atWorldTime:[world worldTime]]; light = clamp((day - 0.23f) * 4.0, 0, 1) * powf(tile[7]/255.0, 4.0); weather = [world getWeatherFractionForPos:pos]; when weather > 0 -> light *= (1 - min(weather, 0.2) * 4); clamp light >= 0; total = light + min(sum16(tile+0xe, +0x10, +0x12), 2000.0) * 1e-4; tileIsTree(tile) -> total /= 2.0; return.",
+      "types": "f8@0:4",
+      "verified_words": 306
+    },
+    {
+      "boundary": "consecutive IMPs: [conductsElectricity] follows at 0x00b012c0",
+      "boundary_end": "0x00b012c0",
+      "branches": [],
+      "calls": [],
+      "imp": "0x00b01284",
+      "ivars": {
+        "0x00b012b8": {
+          "offset": 222,
+          "slot": "0x0105ec44",
+          "symbol": "OBJC_IVAR_$_Workbench.availableElectricity"
+        }
+      },
+      "method": "Workbench -[availableElectricity]",
+      "name": "wb_avail",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "(uint16 getter) return *(uint16 *)((char *)self + 222) - Workbench.availableElectricity@222; pure leaf read (sub sp/add sp/bx lr).",
+      "types": "S8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "consecutive IMPs: [subtractElectricty:] follows at 0x00b0137c",
+      "boundary_end": "0x00b0137c",
+      "branches": [
+        {
+          "address": "0x00b01314",
+          "destination": "0x00b01358",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00b01300"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00b01340"
+        }
+      ],
+      "imp": "0x00b012c0",
+      "ivars": {},
+      "method": "Workbench -[conductsElectricity]",
+      "name": "wb_conducts",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00b0136c": {
+          "import": "objc_msgSend",
+          "slot": "0x0105b7a0"
+        },
+        "0x00b01370": {
+          "selector": "isStorageDevice",
+          "slot": "0x00e86164"
+        },
+        "0x00b01374": {
+          "selector": "generatesElectricity",
+          "slot": "0x00e86168"
+        }
+      },
+      "semantics": "return [self isStorageDevice] || [self generatesElectricity]; short-circuit through two objc_msgSend blx trampolines + sxtb normalisation (the second call only runs when the first is false).",
+      "types": "c8@0:4",
+      "verified_words": 47
+    },
+    {
+      "boundary": "body 0x00b0137c..0x00b01744; tail pool 0x00b01744..0x00b01750 excluded (float consts 0.1 / 0.000583 / literal)",
+      "boundary_end": "0x00b01744",
+      "branches": [
+        {
+          "address": "0x00b013c8",
+          "destination": "0x00b01484",
+          "mnemonic": "bgt"
+        },
+        {
+          "address": "0x00b014a4",
+          "destination": "0x00b01704",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00b014cc",
+          "destination": "0x00b01700",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00b014f0",
+          "destination": "0x00b01700",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00b014f4",
+          "destination": "0x00b014f8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00b01524",
+          "destination": "0x00b01554",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00b0155c",
+          "destination": "0x00b015d0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00b015cc",
+          "destination": "0x00b014f8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00b01600",
+          "destination": "0x00b0162c",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00b01700",
+          "destination": "0x00b01704",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00b0145c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00b01480"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00b016ac"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00b016d0"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00b016fc"
+        }
+      ],
+      "imp": "0x00b0137c",
+      "ivars": {
+        "0x00b01710": {
+          "offset": 222,
+          "slot": "0x0105ec44",
+          "symbol": "OBJC_IVAR_$_Workbench.availableElectricity"
+        },
+        "0x00b01718": {
+          "offset": 49,
+          "slot": "0x0105c3cc",
+          "symbol": "OBJC_IVAR_$_DynamicObject.updateNeedsToBeSent"
+        },
+        "0x00b0171c": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        },
+        "0x00b01720": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x00b0172c": {
+          "offset": 120,
+          "slot": "0x0105ec14",
+          "symbol": "OBJC_IVAR_$_Workbench.type"
+        },
+        "0x00b01730": {
+          "offset": 212,
+          "slot": "0x0105ec40",
+          "symbol": "OBJC_IVAR_$_Workbench.fuelFraction"
+        },
+        "0x00b01734": {
+          "offset": 280,
+          "slot": "0x0105ec9c",
+          "symbol": "OBJC_IVAR_$_Workbench.particleCreateTimerSteamEngine"
+        }
+      },
+      "method": "Workbench -[subtractElectricty:]",
+      "name": "wb_subtract",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00b01724": {
+          "selector": "objectType",
+          "slot": "0x00e85fc8"
+        },
+        "0x00b01728": {
+          "selector": "dynamicWorldChangedAtPos:objectType:",
+          "slot": "0x00e85fcc"
+        },
+        "0x00b01738": {
+          "import": "objc_msgSend",
+          "slot": "0x0105b7a0"
+        },
+        "0x00b0173c": {
+          "selector": "updateHasFuel",
+          "slot": "0x00e860a0"
+        }
+      },
+      "semantics": "(uint16 amount) -> BOOL deducted. If amount > availableElectricity@222 -> skip deduction (flag stays 0). Else available -= amount (strh), flag := 1, updateNeedsToBeSent@49 := 1; re-broadcast through the objectType / dynamicWorldChangedAtPos:objectType: pair. Then when Workbench.type@120 == 0xf: steam regeneration loop while fuelFraction@212 > 0.0f && available < 100 (0x64): fuelFraction -= 0.000583f (0x3a18d478); available += 10; particleCreateTimerSteamEngine@280 += 0.1f (0x3dcccccd); after the loop clamp particleCreateTimerSteamEngine <= 4.0f; tail: objectType/dynamicWorldChangedAtPos: pair + updateHasFuel + updateNeedsToBeSent@49 := 1. Return the flag byte [fp,-0x1b] (ldrsb).",
+      "types": "c12@0:4S8",
+      "verified_words": 242
+    },
+    {
+      "boundary": "body trimmed to next IMP [usesStoresConductsOrProducesElectricity] 0x00b01cac (exidx over-covered 0x00b01ec0)",
+      "boundary_end": "0x00b01cac",
+      "branches": [
+        {
+          "address": "0x00b01c60",
+          "destination": "0x00b01c90",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [],
+      "imp": "0x00b01c24",
+      "ivars": {
+        "0x00b01ca4": {
+          "offset": 120,
+          "slot": "0x0105ec14",
+          "symbol": "OBJC_IVAR_$_Workbench.type"
+        }
+      },
+      "method": "Workbench -[generatesElectricity]",
+      "name": "wb_generates",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "return Workbench.type@120 == 0xf || type == 0x14 (two compares; moveq).",
+      "types": "c8@0:4",
+      "verified_words": 34
+    },
+    {
+      "boundary": "consecutive IMPs: [energyFraction] follows at 0x00b01ec0",
+      "boundary_end": "0x00b01ec0",
+      "branches": [
+        {
+          "address": "0x00b01ce8",
+          "destination": "0x00b01ea4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00b01d14",
+          "destination": "0x00b01ea4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00b01d40",
+          "destination": "0x00b01ea4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00b01d6c",
+          "destination": "0x00b01ea4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00b01d98",
+          "destination": "0x00b01ea4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00b01dc4",
+          "destination": "0x00b01ea4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00b01df0",
+          "destination": "0x00b01ea4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00b01e1c",
+          "destination": "0x00b01ea4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00b01e48",
+          "destination": "0x00b01ea4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00b01e74",
+          "destination": "0x00b01ea4",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [],
+      "imp": "0x00b01cac",
+      "ivars": {
+        "0x00b01eb8": {
+          "offset": 120,
+          "slot": "0x0105ec14",
+          "symbol": "OBJC_IVAR_$_Workbench.type"
+        }
+      },
+      "method": "Workbench -[usesStoresConductsOrProducesElectricity]",
+      "name": "wb_usesstores",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "return type in {0xf, 0x14, 0x15, 0x11, 0x10, 0x1b, 0x12, 0x13, 0x1a, 0x1d, 0x1e} - an 11-compare whitelist over Workbench.type@120 (each match returns 1; the final 0x1e compare stores moveq).",
+      "types": "c8@0:4",
+      "verified_words": 133
+    },
+    {
+      "boundary": "body trimmed to next IMP [upgradeName] 0x00b0b868 (exidx over-covered 0x00b0bca4)",
+      "boundary_end": "0x00b0b868",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00b0b814"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00b0b834"
+        },
+        {
+          "callee": "0x00ae3574",
+          "route": "bl 0xae3574",
+          "site": "0x00b0b848"
+        }
+      ],
+      "imp": "0x00b0b7d0",
+      "ivars": {},
+      "method": "Workbench -[requiresElectricty]",
+      "name": "wb_requires",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00b0b858": {
+          "import": "objc_msgSend",
+          "slot": "0x0105b7a0"
+        },
+        "0x00b0b85c": {
+          "selector": "level",
+          "slot": "0x00e86188"
+        },
+        "0x00b0b860": {
+          "selector": "type",
+          "slot": "0x00e86184"
+        }
+      },
+      "semantics": "return H([self type], [self level]) - two objc_msgSend blx trampolines ('type' then 'level') whose results feed the shared helper bl 0xae3574 (internals out of body); sxtb result.",
+      "types": "c8@0:4",
+      "verified_words": 38
+    },
+    {
+      "boundary": "consecutive IMPs: [pathUsers] follows at 0x008fdf6c",
+      "boundary_end": "0x008fdf6c",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x008fdf50"
+        }
+      ],
+      "imp": "0x008fdee8",
+      "ivars": {
+        "0x008fdf64": {
+          "offset": 9496,
+          "slot": "0x0105e020",
+          "symbol": "OBJC_IVAR_$_DynamicWorld.wirePathCreator"
+        }
+      },
+      "method": "DynamicWorld -[findAndSubtractAllPowerUpTo:forUser:]",
+      "name": "dw_findsub",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008fdf5c": {
+          "import": "objc_msgSend",
+          "slot": "0x0105b7a0"
+        },
+        "0x008fdf60": {
+          "selector": "findAndSubtractAllPowerUpTo:forUser:",
+          "slot": "0x00e83220"
+        }
+      },
+      "semantics": "Forwarder: return [self.wirePathCreator@9496 findAndSubtractAllPowerUpTo:upTo forUser:user] - one objc_msgSend (uxth on upTo); the engine itself is the WirePathCreator body 0x00db2690 (E2 batch).",
+      "types": "i16@0:4S8@12",
+      "verified_words": 33
+    },
+    {
+      "boundary": "consecutive IMPs: [doAddElectricityParticleWithPath:size:] follows at 0x00d876b0",
+      "boundary_end": "0x00d876b0",
+      "branches": [
+        {
+          "address": "0x00d875c8",
+          "destination": "0x00d875cc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d875f8",
+          "destination": "0x00d8761c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d875fc",
+          "destination": "0x00d8766c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d87618",
+          "destination": "0x00d8768c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8765c",
+          "destination": "0x00d87660",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x005caef8",
+          "route": "bl method.std::__1::vector_ElectrictyParticlePathIndex__std::__1::allocator_ElectrictyParticlePathIndex___.vector_std::__1::vector_ElectrictyParticlePathIndex__std::__1::allocator_ElectrictyParticlePathIndex____const_",
+          "site": "0x00d8759c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d875c4"
+        },
+        {
+          "callee": "0x005cb054",
+          "route": "bl method.std::__1::vector_ElectrictyParticlePathIndex__std::__1::allocator_ElectrictyParticlePathIndex___._vector__",
+          "site": "0x00d875d0"
+        },
+        {
+          "callee": "0x005cb054",
+          "route": "bl method.std::__1::vector_ElectrictyParticlePathIndex__std::__1::allocator_ElectrictyParticlePathIndex___._vector__",
+          "site": "0x00d87610"
+        },
+        {
+          "callee": "0x005caef8",
+          "route": "bl method.std::__1::vector_ElectrictyParticlePathIndex__std::__1::allocator_ElectrictyParticlePathIndex___.vector_std::__1::vector_ElectrictyParticlePathIndex__std::__1::allocator_ElectrictyParticlePathIndex____const_",
+          "site": "0x00d87638"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d87658"
+        },
+        {
+          "callee": "0x005cb054",
+          "route": "bl method.std::__1::vector_ElectrictyParticlePathIndex__std::__1::allocator_ElectrictyParticlePathIndex___._vector__",
+          "site": "0x00d87664"
+        },
+        {
+          "callee": "0x005cb054",
+          "route": "bl method.std::__1::vector_ElectrictyParticlePathIndex__std::__1::allocator_ElectrictyParticlePathIndex___._vector__",
+          "site": "0x00d87684"
+        },
+        {
+          "callee": "0x001c29c0",
+          "route": "bl sym.imp._Unwind_Resume",
+          "site": "0x00d87690"
+        }
+      ],
+      "imp": "0x00d8753c",
+      "ivars": {
+        "0x00d87694": {
+          "offset": 4,
+          "slot": "0x0105fa40",
+          "symbol": "OBJC_IVAR_$_ParticleEmitter.world"
+        },
+        "0x00d876a0": {
+          "offset": 96,
+          "slot": "0x0105fa44",
+          "symbol": "OBJC_IVAR_$_ParticleEmitter.stopAllParticles"
+        }
+      },
+      "method": "ParticleEmitter -[addElectricityParticleWithPath:size:]",
+      "name": "pe_add",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d8769c": {
+          "selector": "sendNetDataForElectricityParticlePathIfRequired:size:ignoreClient:",
+          "slot": "0x00e88cfc"
+        },
+        "0x00d876a4": {
+          "selector": "doAddElectricityParticleWithPath:size:",
+          "slot": "0x00e88d00"
+        }
+      },
+      "semantics": "if [self.world@4 sendNetDataForElectricityParticlePathIfRequired:(vector copy) size:size ignoreClient:0]; then when !stopAllParticles@96 -> [self doAddElectricityParticleWithPath:(vector copy) size:size]. Two vector copies on the stack; ~vector x3 unwind paths + _Unwind_Resume (0x00d87690).",
+      "types": "v24@0:4{vector<ElectrictyParticlePathIndex, std::__1::allocator<ElectrictyParticlePathIndex> >=^{ElectrictyParticlePathIndex}^{ElectrictyParticlePathIndex}{__compressed_pair<ElectrictyParticlePathIndex *, std::__1::allocator<ElectrictyParticlePathIndex> >=^{ElectrictyParticlePathIndex}}}8f20",
+      "verified_words": 93
+    },
+    {
+      "boundary": "ARM.exidx bound 0x00d87b04 (next IMP [addParticleAtPos:...connectionGoal:] at 0x00d87b8c; trailing pool/alignment excluded)",
+      "boundary_end": "0x00d87b04",
+      "branches": [
+        {
+          "address": "0x00d876f8",
+          "destination": "0x00d87700",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d876fc",
+          "destination": "0x00d87ab4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8773c",
+          "destination": "0x00d87ab4",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d8779c",
+          "destination": "0x00d87aac",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8787c",
+          "destination": "0x00d878b8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d87aa8",
+          "destination": "0x00d87ab0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d87aac",
+          "destination": "0x00d87ab4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d87ab0",
+          "destination": "0x00d87730",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00d87788"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00d8780c"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d87834"
+        },
+        {
+          "callee": "0x00d8cd3c",
+          "route": "bl method.std::__1::enable_if___is_forward_iterator_ElectrictyParticlePathIndex_::value__void_::type_std::__1::vector_ElectrictyParticlePathIndex__std::__1::allocator_ElectrictyParticlePathIndex___.assign_ElectrictyParticlePathIndex__ElectrictyParticlePathIndex__ElectrictyParticlePathIndex_",
+          "site": "0x00d878b4"
+        },
+        {
+          "callee": "0x00d87b04",
+          "route": "bl method.std::__1::vector_ElectrictyParticlePathIndex__std::__1::allocator_ElectrictyParticlePathIndex___.at_unsigned_long_",
+          "site": "0x00d8791c"
+        },
+        {
+          "callee": "0x001c3020",
+          "route": "bl sym.imp.__modsi3",
+          "site": "0x00d8795c"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x00d87970"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d87988"
+        },
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x00d879f4"
+        }
+      ],
+      "imp": "0x00d876b0",
+      "ivars": {
+        "0x00d87ac8": {
+          "offset": 96,
+          "slot": "0x0105fa44",
+          "symbol": "OBJC_IVAR_$_ParticleEmitter.stopAllParticles"
+        },
+        "0x00d87adc": {
+          "offset": 52,
+          "slot": "0x0105fa18",
+          "symbol": "OBJC_IVAR_$_ParticleEmitter.electrictyFreeIndices"
+        },
+        "0x00d87ae0": {
+          "offset": 48,
+          "slot": "0x0105fa10",
+          "symbol": "OBJC_IVAR_$_ParticleEmitter.electrictyParticles"
+        },
+        "0x00d87ae8": {
+          "offset": 56,
+          "slot": "0x0105fa14",
+          "symbol": "OBJC_IVAR_$_ParticleEmitter.electrictyTakenIndices"
+        },
+        "0x00d87af4": {
+          "offset": 100,
+          "slot": "0x0105fa48",
+          "symbol": "OBJC_IVAR_$_ParticleEmitter.worldWidthMacro"
+        }
+      },
+      "method": "ParticleEmitter -[doAddElectricityParticleWithPath:size:]",
+      "name": "pe_doadd",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d87ad4": {
+          "import": "objc_msgSend",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d87ad8": {
+          "selector": "firstIndex",
+          "slot": "0x00e88d04"
+        },
+        "0x00d87ae4": {
+          "selector": "addIndex:",
+          "slot": "0x00e88cd0"
+        },
+        "0x00d87aec": {
+          "selector": "removeIndex:",
+          "slot": "0x00e88d08"
+        }
+      },
+      "semantics": "Segment allocator for the electricity particle path visual. Guard: stopAllParticles@96 != 0 -> return. step = 50.0/size (f64 0x4049000000000000); remaining = size; t = 0.0f. Loop while remaining > 0: index = [electrictyFreeIndices@52 firstIndex]; 0x7fffffff (NSNotFound) -> return; index moves free -> taken (removeIndex:/addIndex: on the two NSMutableIndexSet ivars); slot = electrictyParticles@48 + index*40; slot+0x10 vector <- path (vector::assign); cursor +0x1c := 0; {x,y} = slot.path.at(cursor); macro = makeIntpair(x mod (worldWidthMacro@100<<5), y / (worldWidthMacro<<5)); pos Vector = (macro.x+5, macro.y+5, z) with z = (low byte of y == 1) ? 0.03f : -1.47f (0x3cf5c28f / 0xbfbc28f6); slot+0x20 = 0.0f; slot+0x24 = t; t += step; remaining -= 5.0f.",
+      "types": "v24@0:4{vector<ElectrictyParticlePathIndex, std::__1::allocator<ElectrictyParticlePathIndex> >=^{ElectrictyParticlePathIndex}^{ElectrictyParticlePathIndex}{__compressed_pair<ElectrictyParticlePathIndex *, std::__1::allocator<ElectrictyParticlePathIndex> >=^{ElectrictyParticlePathIndex}}}8f20",
+      "verified_words": 277
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "schema": 1
+}
