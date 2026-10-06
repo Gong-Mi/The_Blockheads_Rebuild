@@ -1186,6 +1186,72 @@ def main() -> None:
     ):
         require(NATIVE / _es_file, [_es_imp, _es_end])
     require(
+        NATIVE / "TRADE_PORTAL.md",
+        [
+            "4716",
+            "0x00d37d8c",
+            "ArtificialLight",
+            "LEVEL JUMP TABLE",
+            "createFreeBlockAtPosition",
+            "updateQuadBufferTexCoords",
+            "stringWithFormat:",
+        ],
+    )
+    require(
+        NATIVE / "trade_portal.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 682",
+            "\"verified_words\": 472",
+            "ArtificialLight",
+            "initWithWorld:dynamicWorld:atPosition:cache:parentObject:colorR:colorG:colorB:heat:radius:lightDirection:",
+            "createFreeBlockAtPosition:ofType:dataA:dataB:subItems:dynamicObjectSaveDict:hovers:playSound:priorityBlockhead:",
+        ],
+    )
+    for _tp_file, _tp_imp, _tp_end in (
+        ("disasm_tradeportal_initsubderiveditems.txt", "# implementation: 0x00d37598", "# ARM.exidx end: 0x00d37798"),
+        ("disasm_tradeportal_objecttype.txt", "# implementation: 0x00d377a8", "# ARM.exidx end: 0x00d377c4"),
+        ("disasm_tradeportal_getlightrgb.txt", "# implementation: 0x00d377c4", "# ARM.exidx end: 0x00d37828"),
+        ("disasm_tradeportal_updateportallight.txt", "# implementation: 0x00d37828", "# ARM.exidx end: 0x00d37a78"),
+        ("disasm_tradeportal_initwithworld_atposition.txt", "# implementation: 0x00d37d8c", "# ARM.exidx end: 0x00d382fc"),
+        ("disasm_tradeportal_initwithworld_savedict.txt", "# implementation: 0x00d382fc", "# ARM.exidx end: 0x00d38760"),
+        ("disasm_tradeportal_initwithworld_netdata.txt", "# implementation: 0x00d38760", "# ARM.exidx end: 0x00d38dfc"),
+        ("disasm_tradeportal_updatenetdata.txt", "# implementation: 0x00d38e20", "# ARM.exidx end: 0x00d391d4"),
+        ("disasm_tradeportal_dealloc.txt", "# implementation: 0x00d39340", "# ARM.exidx end: 0x00d39460"),
+        ("disasm_tradeportal_getsavedict_closure.txt", "# implementation: 0x00d39460", "# ARM.exidx end: 0x00d396d4"),
+        ("disasm_tradeportal_interactionobjecttype.txt", "# implementation: 0x00d396d4", "# ARM.exidx end: 0x00d396f0"),
+        ("disasm_tradeportal_remoteupdate.txt", "# implementation: 0x00d396f0", "# ARM.exidx end: 0x00d3a198"),
+        ("disasm_tradeportal_draw.txt", "# implementation: 0x00d3a198", "# ARM.exidx end: 0x00d3a8f8"),
+        ("disasm_tradeportal_worldcontentschanged.txt", "# implementation: 0x00d3b230", "# ARM.exidx end: 0x00d3b248"),
+        ("disasm_tradeportal_isdoubleheight.txt", "# implementation: 0x00d3b248", "# ARM.exidx end: 0x00d3b264"),
+        ("disasm_tradeportal_setneedsremoved.txt", "# implementation: 0x00d3b264", "# ARM.exidx end: 0x00d3b3b8"),
+        ("disasm_tradeportal_freeblockcreationitemtype.txt", "# implementation: 0x00d3b3b8", "# ARM.exidx end: 0x00d3b3d4"),
+        ("disasm_tradeportal_freeblockcreationsavedict.txt", "# implementation: 0x00d3b3d4", "# ARM.exidx end: 0x00d3b420"),
+        ("disasm_tradeportal_freeblockcreationdataa.txt", "# implementation: 0x00d3b420", "# ARM.exidx end: 0x00d3b458"),
+        ("disasm_tradeportal_freeblockcreationdatab.txt", "# implementation: 0x00d3b43c", "# ARM.exidx end: 0x00d3b458"),
+        ("disasm_tradeportal_remove.txt", "# implementation: 0x00d3b458", "# ARM.exidx end: 0x00d3b860"),
+        ("disasm_tradeportal_destroyitemtype.txt", "# implementation: 0x00d3b860", "# ARM.exidx end: 0x00d3b87c"),
+        ("disasm_tradeportal_title.txt", "# implementation: 0x00d3b87c", "# ARM.exidx end: 0x00d3b910"),
+        ("disasm_tradeportal_actiontitle.txt", "# implementation: 0x00d3b910", "# ARM.exidx end: 0x00d3bbc4"),
+        ("disasm_tradeportal_secondoptiontitle.txt", "# implementation: 0x00d3bbc4", "# ARM.exidx end: 0x00d3c054"),
+        ("disasm_tradeportal_thirdoptiontitle.txt", "# implementation: 0x00d3c054", "# ARM.exidx end: 0x00d3c3cc"),
+        ("disasm_tradeportal_setworkbenchchoiceuioption.txt", "# implementation: 0x00d3c3cc", "# ARM.exidx end: 0x00d3c608"),
+        ("disasm_tradeportal_requireshumaninteraction.txt", "# implementation: 0x00d3c608", "# ARM.exidx end: 0x00d3c624"),
+        ("disasm_tradeportal_staticgeometrydrawcubecount.txt", "# implementation: 0x00d3c9b8", "# ARM.exidx end: 0x00d3c9d8"),
+        ("disasm_tradeportal_adddrawquaddata.txt", "# implementation: 0x00d3c9d8", "# ARM.exidx end: 0x00d3cd80"),
+        ("disasm_tradeportal_staticgeometrydrawquadcount.txt", "# implementation: 0x00d3cdf4", "# ARM.exidx end: 0x00d3ce18"),
+        ("disasm_tradeportal_removefrommacroblock.txt", "# implementation: 0x00d3ce18", "# ARM.exidx end: 0x00d3cf20"),
+        ("disasm_tradeportal_lightglowquadcount.txt", "# implementation: 0x00d3f38c", "# ARM.exidx end: 0x00d3f3a8"),
+        ("disasm_tradeportal_lightpos.txt", "# implementation: 0x00d3f3a8", "# ARM.exidx end: 0x00d3f460"),
+        ("disasm_tradeportal_interactionrenderitemtype.txt", "# implementation: 0x00d3f7ac", "# ARM.exidx end: 0x00d3f7e4"),
+        ("disasm_tradeportal_occupiesnormalcontents.txt", "# implementation: 0x00d3f7c8", "# ARM.exidx end: 0x00d3f7e4"),
+        ("disasm_tradeportal_addartificiallightcontribution.txt", "# implementation: 0x00d3f7e4", "# ARM.exidx end: 0x00d3f858"),
+        ("disasm_tradeportal_canbeusedinexpertmode.txt", "# implementation: 0x00d3f858", "# ARM.exidx end: 0x00d3f874"),
+        ("disasm_tradeportal_localpriceoffsets.txt", "# implementation: 0x00d3f874", "# ARM.exidx end: 0x00d3f8b8"),
+        ("disasm_tradeportal_level.txt", "# implementation: 0x00d3f8b8", "# ARM.exidx end: 0x00d3f96c"),
+    ):
+        require(NATIVE / _tp_file, [_tp_imp, _tp_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
