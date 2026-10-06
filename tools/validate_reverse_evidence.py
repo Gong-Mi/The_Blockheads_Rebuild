@@ -893,6 +893,39 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "POWER_SYNC.md",
+        [
+            "1912",
+            "0x005ca058",
+            "0x005caef8",
+            "sendNetDataForElectricityParticlePathIfRequired",
+            "doAddElectricityParticleWithPath:size:",
+            "0x1800",
+        ],
+    )
+    require(
+        NATIVE / "power_sync.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 603",
+            "\"verified_words\": 725",
+            "gzipDeflate",
+            "doAddElectricityParticleWithPath:size:",
+            "addStandardObjectAtPos:objectType:itemType:saveDict:placedByClient:",
+        ],
+    )
+    for _ps_file, _ps_imp, _ps_end in (
+        ("disasm_world_sendelectricitynetdata.txt", "# implementation: 0x005ca058", "# ARM.exidx end: 0x005ca9c4"),
+        ("disasm_world_electricitypathrecv.txt", "# implementation: 0x005ca9c4", "# ARM.exidx end: 0x005caef8"),
+        ("disasm_dynamicworld_initialwirenets.txt", "# implementation: 0x008b5300", "# ARM.exidx end: 0x008b5e54"),
+        ("disasm_dynamicworld_addwireatpos.txt", "# implementation: 0x008eb9c0", "# ARM.exidx end: 0x008eba64"),
+        ("disasm_dynamicworld_wireatpos.txt", "# implementation: 0x008eba64", "# ARM.exidx end: 0x008ebad4"),
+        ("disasm_dynamicworld_removewireatpos.txt", "# implementation: 0x008ebad4", "# ARM.exidx end: 0x008ebb88"),
+        ("disasm_wirepathcreator_init.txt", "# implementation: 0x00db1e90", "# ARM.exidx end: 0x00db1f84"),
+        ("disasm_wirepathcreator_dealloc.txt", "# implementation: 0x00db1f84", "# ARM.exidx end: 0x00db20b4"),
+    ):
+        require(NATIVE / _ps_file, [_ps_imp, _ps_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",

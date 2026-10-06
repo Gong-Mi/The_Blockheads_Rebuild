@@ -10,8 +10,8 @@ have recovered semantics, replacement code, or behavioral verification.
 | stage | count | meaning |
 |---|---:|---|
 | indexed | 10478 | present in the method map |
-| refs | 291 | explicit implementation owner in refs/disassembly evidence |
-| cfg | 290 | explicit IMP owner in CFG statistics or bounded disassembly; not a completeness claim |
+| refs | 299 | explicit implementation owner in refs/disassembly evidence |
+| cfg | 298 | explicit IMP owner in CFG statistics or bounded disassembly; not a completeness claim |
 | semantics | 71 | explicit reviewed method records and their stated limits |
 | implemented | 71 | explicit source/test/evidence records; not gameplay integration |
 | behavior-verified | 8 | controlled original-runtime evidence, not local fixtures |
