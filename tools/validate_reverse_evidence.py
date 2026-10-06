@@ -1456,7 +1456,7 @@ def main() -> None:
             "physicalBlock+8",
             "sendDynamicObjects",
             "macroIndex",
-            "initialDynamicObjectsNetDataForMacroTileIndex:wireForClient:",
+            "initialDynamicObjectsNetDataForMacroTileIndex:macroIndex",
         ],
     )
     require(
