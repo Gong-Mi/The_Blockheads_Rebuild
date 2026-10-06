@@ -962,6 +962,49 @@ def main() -> None:
     ):
         require(NATIVE / _wb_file, [_wb_imp, _wb_end])
     require(
+        NATIVE / "WIRE_CLOSURE.md",
+        [
+            "2104",
+            "0x0094fca0",
+            "worldChanged:",
+            "updateWireConfiguration",
+            "createFreeBlockAtPosition:",
+            "0x60",
+        ],
+    )
+    require(
+        NATIVE / "wire_closure.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 720",
+            "\"verified_words\": 42",
+            "gzipDeflate",
+            "createFreeBlockAtPosition:",
+            "worldWidthMacro",
+        ],
+    )
+    for _wc_file, _wc_imp, _wc_end in (
+        ("disasm_wire_initsubderiveditems.txt", "# implementation: 0x0094fca0", "# ARM.exidx end: 0x0094fd48"),
+        ("disasm_wire_objecttype.txt", "# implementation: 0x0094fd48", "# ARM.exidx end: 0x0094fd64"),
+        ("disasm_wire_initwithworld_position.txt", "# implementation: 0x0094fd64", "# ARM.exidx end: 0x0095002c"),
+        ("disasm_wire_initwithworld_savedict.txt", "# implementation: 0x0095002c", "# ARM.exidx end: 0x0095034c"),
+        ("disasm_wire_initwithworld_netdata.txt", "# implementation: 0x0095034c", "# ARM.exidx end: 0x00950688"),
+        ("disasm_wire_dealloc.txt", "# implementation: 0x009506ac", "# ARM.exidx end: 0x00950770"),
+        ("disasm_wire_getsavedict_closure.txt", "# implementation: 0x00950770", "# ARM.exidx end: 0x00950a64"),
+        ("disasm_wire_updatenetdata.txt", "# implementation: 0x00950a64", "# ARM.exidx end: 0x00950ab8"),
+        ("disasm_wire_creationnetdata.txt", "# implementation: 0x00950ab8", "# ARM.exidx end: 0x00950dbc"),
+        ("disasm_wire_remoteupdate.txt", "# implementation: 0x00950f28", "# ARM.exidx end: 0x009510f8"),
+        ("disasm_wire_freeblockcreationitemtype.txt", "# implementation: 0x00951320", "# ARM.exidx end: 0x009513b0"),
+        ("disasm_wire_freeblockcreationsavedict.txt", "# implementation: 0x0095135c", "# ARM.exidx end: 0x009513b0"),
+        ("disasm_wire_freeblockcreationdataa.txt", "# implementation: 0x00951378", "# ARM.exidx end: 0x009513b0"),
+        ("disasm_wire_freeblockcreationdatab.txt", "# implementation: 0x00951394", "# ARM.exidx end: 0x009513b0"),
+        ("disasm_wire_worldchanged.txt", "# implementation: 0x009513b0", "# ARM.exidx end: 0x00951ef0"),
+        ("disasm_wire_removefrommacroblock.txt", "# implementation: 0x00954a2c", "# ARM.exidx end: 0x00954c74"),
+        ("disasm_wire_occupiesforegroundcontents.txt", "# implementation: 0x00954b34", "# ARM.exidx end: 0x00954c74"),
+        ("disasm_wire_occupiesnormalcontents.txt", "# implementation: 0x00954bd4", "# ARM.exidx end: 0x00954c74"),
+    ):
+        require(NATIVE / _wc_file, [_wc_imp, _wc_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
