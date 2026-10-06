@@ -69,6 +69,14 @@ def main() -> int:
     for name in t["calls"] + t["called_by"]:
         assert " -[" in name and name.endswith("]"), name
 
+    # A card fact that a LIVE measurement independently verified: the device walk followed World+416 to the
+    # DynamicWorld, and this card derives the same offset from the code. Two methods, one number.
+    f = card("World", "fillTile:atPos:withType:dataA:dataB:placedByClient:saveDict:placedByBlockhead:placedByClientName:")
+    dw = [v for v in f["ivars"] if v["ivar"] == "World.dynamicWorld"]
+    assert dw, f"the fillTile card must show the dynamicWorld read, got {f['ivars'][:4]}"
+    assert dw[0]["offset"] == 416, dw[0]
+    assert all(v["access"] == "read" for v in dw), "this method only reads the world's dynamicWorld here"
+
     # the worklist must not be topped by compiler-generated members: MainMenuUI's .cxx_construct had 441 callers
     # and filled the first ranking this tool produced, which would have sent the semantic effort at linker plumbing.
     rank = subprocess.run([sys.executable, "tools/method_card.py", str(ELF), "--rank", "12"],

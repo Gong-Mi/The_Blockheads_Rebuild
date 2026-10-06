@@ -135,6 +135,12 @@ def main() -> int:
         for t in tgts:
             called_by.setdefault(t, []).append(r["imp"])
 
+    # The score is stated so it can be argued with: callers are reach (who breaks if this is wrong) and sites are
+    # state touched (how much semantics it carries). Weighting sites higher because a method that reads and writes
+    # many fields is where understanding pays off, while a widely-called one-liner is cheap to get right anyway.
+    def leverage(r: dict) -> int:
+        return len(called_by.get(r["imp"], [])) + 3 * len(by_method.get(r["imp"], []))
+
     # Compiler-generated members are not semantic targets: .cxx_construct/.cxx_destruct/.dtor bodies are huge and
     # called from everywhere, and they filled the top of the first worklist this produced (MainMenuUI's
     # .cxx_construct had 441 callers). Filtered here rather than in the reader's head.
@@ -143,11 +149,6 @@ def main() -> int:
     def is_generated(r: dict) -> bool:
         return bool(GENERATED.search(r["selector"]))
 
-    # The score is stated so it can be argued with: callers are reach (who breaks if this is wrong) and sites are
-    # state touched (how much semantics it carries). Weighting sites higher because a method that reads and writes
-    # many fields is where understanding pays off, while a widely-called one-liner is cheap to get right anyway.
-    def leverage(r: dict) -> int:
-        return len(called_by.get(r["imp"], [])) + 3 * len(by_method.get(r["imp"], []))
 
     if a.rank:
         work = sorted((r for r in rows if not is_generated(r)), key=leverage, reverse=True)[: a.rank]
@@ -172,15 +173,23 @@ def main() -> int:
         "method": f'{want["class"]} -[{want["selector"]}]',
         "imp": f'{want["imp"]:#010x}', "kind": want["kind"], "types": want["types"],
         "body": {"lo": f"{lo:#x}", "hi": f"{hi:#x}", "words": (hi - lo) // 4},
-        "ivars": [{"ivar": s.get("ivar"), "offset": s.get("offset"), "access": s.get("access"),
-                   "attribution": s.get("attribution"),
+        "ivars": [{"ivar": s.get("ivar"),
+                   "offset": (struct.unpack_from("<i", blob, int(s["cell"], 16))[0]
+                              if s.get("cell") else None),
+                   "access": s.get("access"), "attribution": s.get("attribution"),
                    "at": s.get("add_site"), "instruction": s.get("site_instruction")}
                   for s in by_method.get(want["imp"], [])],
         "calls": [f'{c["class"]} -[{c["selector"]}]'
-                  for c in (owner_of(rows, t) for t in calls.get(want["imp"], [])) if c],
+                  for c in (owner_of(rows, t) for t in calls.get(want["imp"], []))
+                  if c and not is_generated(c)],
         "called_by": [f'{c["class"]} -[{c["selector"]}]'
-                      for c in (owner_of(rows, t) for t in called_by.get(want["imp"], [])) if c],
+                      for c in (owner_of(rows, t) for t in called_by.get(want["imp"], []))
+                      if c and not is_generated(c)],
         "leverage": leverage(want),
+        "call_graph_note": ("callers are derived from the enclosing method-table entry of each direct bl into this "
+                            "body and check out against known call sites; the called-set is the same derivation run "
+                            "the other way and has shown implausible targets on very large bodies, so treat it as a "
+                            "starting point rather than a complete list"),
     }
     if a.json:
         a.json.write_text(json.dumps(card, indent=1) + "\n")
