@@ -1,0 +1,1107 @@
+{
+  "batch": "CrystalManager closure batch (E10): trade pricing and settlement - loadPriceOffsets: (price dict rebuild, [0.5, 2.0] clamp), currentBlockhead trio, setPaused:, sellItem:atTotalPrice:count:usageMultiplier:, buyItem:atTotalPrice:count:, upgradeToNextLevel, upgradeCraftableItem (level jump table), takeItemsFromBlockheadForUpgradeToNextLevel, randomizeLocalTradeOffsets (trade-table walk + powf price jitter), worldChanged:(vector<intpair>), isSellInteraction/isMissionInteraction (14 bodies)",
+  "claim": "static bounded-body maps with per-instruction anchors; the crystal store backing state (iCloud/KVS contents), the Keychain/crypto layer and the runtime values are outside these bodies",
+  "classes": [
+    {
+      "boundary": "consecutive IMPs: next method follows at 0x009f3bdc",
+      "boundary_end": "0x009f3bdc",
+      "branches": [
+        {
+          "address": "0x009f3b48",
+          "destination": "0x009f3bac",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x009f3b90"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x009f3ba0"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x009f3b14",
+      "ivars": {},
+      "method": "CrystalManager -[instance]",
+      "name": "cm_instance",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x009f3bc8": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x009f3bcc": {
+          "selector": "init",
+          "slot": "0x00e8491c"
+        },
+        "0x009f3bd0": {
+          "selector": "alloc",
+          "slot": "0x00e84918"
+        },
+        "0x009f3bd4": {
+          "class": "OBJC_CLASS_$_CrystalManager",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8adc8"
+        }
+      },
+      "semantics": "CrystalManager +[instance] singleton: the static slot (cell 0x009f3bc4 -> 0x01064984) is tested against nil (cmp at 0x009f3b40); when it is already set the body falls through to the load at 0x009f3bb8 and returns it. When it is nil it dispatches [[CrystalManager alloc] init] - 'alloc' selector cell 0x009f3bd0 with the OBJC_CLASS_$_CrystalManager class cell 0x009f3bd4 at 0x009f3b90, then 'init' selector cell 0x009f3bcc through the saved IMP at 0x009f3ba0 - and stores the result back into the static (str r0, [r1] at 0x009f3ba8). Single-threaded lazy init: no lock, no dmb.",
+      "types": "@8@0:4",
+      "verified_words": 50
+    },
+    {
+      "boundary": "consecutive IMPs: next method follows at 0x009f3d44",
+      "boundary_end": "0x009f3d44",
+      "branches": [
+        {
+          "address": "0x009f3c4c",
+          "destination": "0x009f3c5c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x009f3c58",
+          "destination": "0x009f3d14",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x009f3c30"
+        },
+        {
+          "callee": null,
+          "route": "blx r5",
+          "site": "0x009f3cc0"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x009f3cd0"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x009f3d08"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x009f3bdc",
+      "ivars": {
+        "0x009f3d34": {
+          "offset": 4,
+          "slot": "0x0105e758",
+          "symbol": "OBJC_IVAR_$_CrystalManager.saveQueue"
+        }
+      },
+      "method": "CrystalManager -[init]",
+      "name": "cm_init",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x009f3d20": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x009f3d24": {
+          "selector": "init",
+          "slot": "0x00e8491c"
+        },
+        "0x009f3d28": {
+          "class": "OBJC_CLASS_$_CrystalManager",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8be14"
+        },
+        "0x009f3d2c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x009f3d30": {
+          "selector": "setMaxConcurrentOperationCount:",
+          "slot": "0x00e84920"
+        },
+        "0x009f3d38": {
+          "selector": "alloc",
+          "slot": "0x00e84918"
+        },
+        "0x009f3d3c": {
+          "class": "OBJC_CLASS_$_NSOperationQueue",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8adcc"
+        }
+      },
+      "semantics": "-[init]: objc_msgSendSuper2 init (import cell 0x009f3d20, selector cell 0x009f3d24, class cell 0x009f3d28) at 0x009f3c30, then the nil-self guard returns nil (0x009f3c50/0x009f3c54). Otherwise it builds a serial background queue: saveQueue@4 = [[NSOperationQueue alloc] init] (OBJC_CLASS_$_NSOperationQueue cell 0x009f3d3c, 'alloc' cell 0x009f3d38 at 0x009f3cc0, 'init' cell 0x009f3d24 at 0x009f3cd0, stored through the saveQueue ivar cell 0x009f3d34 at 0x009f3ce4) and then calls [saveQueue setMaxConcurrentOperationCount:1] (selector cell 0x009f3d30, argument 1 from movw r2, 1 at 0x009f3c5c, dispatch at 0x009f3d08). Returns self (0x009f3d0c/0x009f3d10).",
+      "types": "@8@0:4",
+      "verified_words": 90
+    },
+    {
+      "boundary": "consecutive IMPs: next method follows at 0x009f4568",
+      "boundary_end": "0x009f4568",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x009f452c",
+      "ivars": {
+        "0x009f4560": {
+          "offset": 8,
+          "slot": "0x0105e760",
+          "symbol": "OBJC_IVAR_$_CrystalManager.crystalCount"
+        }
+      },
+      "method": "CrystalManager -[amount]",
+      "name": "cm_amount",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "amount = a plain load of CrystalManager.crystalCount@8 (ivar cell 0x009f4560 -> OBJC_IVAR_$_CrystalManager.crystalCount = 8, ldr r0, [r0] at 0x009f4554). No call, no branch, no barrier - the crystal count is the 'amount' the trade portal fingerprints.",
+      "types": "i8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "ARM.exidx end 0x009f4678; the next ObjC IMP (CrystalManager -[save]) is at 0x009f4f34, past 2236 bytes of non-method code",
+      "boundary_end": "0x009f4678",
+      "branches": [
+        {
+          "address": "0x009f45a4",
+          "destination": "0x009f464c",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x009f4648"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x009f4568",
+      "ivars": {
+        "0x009f4654": {
+          "offset": 20,
+          "slot": "0x0105e764",
+          "symbol": "OBJC_IVAR_$_CrystalManager.needsSave"
+        },
+        "0x009f4670": {
+          "offset": 4,
+          "slot": "0x0105e758",
+          "symbol": "OBJC_IVAR_$_CrystalManager.saveQueue"
+        }
+      },
+      "method": "CrystalManager -[commitSaveIfNeeded]",
+      "name": "cm_commitsaveifneeded",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x009f4658": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x009f465c": {
+          "selector": "addOperationWithBlock:",
+          "slot": "0x00e84978"
+        },
+        "0x009f466c": {
+          "import": "_NSConcreteStackBlock",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7b8"
+        }
+      },
+      "semantics": "commitSaveIfNeeded: returns immediately when the needsSave byte is clear (ldrsb at 0x009f4598, beq 0x009f464c; ivar cell 0x009f4654 -> needsSave = 20). Otherwise it clears the flag first (strb r8 = 0 at 0x009f4600) and enqueues a stack block on saveQueue@4 (ivar cell 0x009f4670) with addOperationWithBlock: (selector cell 0x009f465c, dispatch at 0x009f4648). The block literal is built on the frame at sp+8: isa = _NSConcreteStackBlock (0x009f4614), flags word 0xc2000000 (0x009f4618 = HAS_EXTENDED_LAYOUT|HAS_SIGNATURE|HAS_COPY_DISPOSE; the r2 listing misdecodes that pool word as an instruction), reserved 0, invoke = 0x009f4678 (r lr at 0x009f4620: the delta cell 0x009f4664 resolves to base-0x6b47c, and the word at 0x009f4678 is 0xe92d4df0, the push prologue of the block body - which is exactly the start of the non-method byte gap after this body), descriptor = 0x010524c0 (0x009f4624: delta cell 0x009f4660 -> base-0xd634, first word 0 in the file), and self captured at [sp,0x1c] (0x009f462c).",
+      "types": "v8@0:4",
+      "verified_words": 68
+    },
+    {
+      "boundary": "consecutive IMPs: next method follows at 0x009f4f74",
+      "boundary_end": "0x009f4f74",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x009f4f34",
+      "ivars": {
+        "0x009f4f6c": {
+          "offset": 20,
+          "slot": "0x0105e764",
+          "symbol": "OBJC_IVAR_$_CrystalManager.needsSave"
+        }
+      },
+      "method": "CrystalManager -[save]",
+      "name": "cm_save",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "save = sets CrystalManager.needsSave@20 to 1 (movw r3, 1 at 0x009f4f40, strb r3, [r0] at 0x009f4f60, ivar cell 0x009f4f6c -> needsSave = 20) and returns; it does not write the store itself - commitSaveIfNeeded: is what consumes the flag.",
+      "types": "v8@0:4",
+      "verified_words": 16
+    },
+    {
+      "boundary": "consecutive IMPs: next method follows at 0x009f526c",
+      "boundary_end": "0x009f526c",
+      "branches": [
+        {
+          "address": "0x009f5068",
+          "destination": "0x009f522c",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x009f5030"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x009f5040"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x009f505c"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x009f51b4"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x009f51c4"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x009f51d4"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x009f5214"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x009f5228"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x009f4f74",
+      "ivars": {
+        "0x009f5248": {
+          "offset": 8,
+          "slot": "0x0105e760",
+          "symbol": "OBJC_IVAR_$_CrystalManager.crystalCount"
+        },
+        "0x009f5258": {
+          "offset": 16,
+          "slot": "0x0105e768",
+          "symbol": "OBJC_IVAR_$_CrystalManager.countWatcher"
+        },
+        "0x009f525c": {
+          "offset": 12,
+          "slot": "0x0105e75c",
+          "symbol": "OBJC_IVAR_$_CrystalManager.amountString"
+        }
+      },
+      "method": "CrystalManager -[modify:modifyString:]",
+      "name": "cm_modify_modifystring_",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x009f5234": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x009f5238": {
+          "selector": "isEqualToString:",
+          "slot": "0x00e8495c"
+        },
+        "0x009f523c": {
+          "selector": "stringFromMD5",
+          "slot": "0x00e84930"
+        },
+        "0x009f5240": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f96bf8"
+        },
+        "0x009f5244": {
+          "selector": "stringWithFormat:",
+          "slot": "0x00e8492c"
+        },
+        "0x009f524c": {
+          "class": "OBJC_CLASS_$_NSString",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8add4"
+        },
+        "0x009f5250": {
+          "selector": "save",
+          "slot": "0x00e84980"
+        },
+        "0x009f5254": {
+          "selector": "crystalCountChanged:",
+          "slot": "0x00e8497c"
+        },
+        "0x009f5260": {
+          "selector": "retain",
+          "slot": "0x00e84934"
+        },
+        "0x009f5264": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f96b68"
+        }
+      },
+      "semantics": "modify:modifyString: (int amount, NSString *fingerprint) gates on a fingerprint and then applies the delta. It recomputes the expected string [NSString stringWithFormat:@\"7acfe93afc08c%d65ae2c54ecaf07f\" (cell 0x009f5240 -> slot 0x00f96bf8), crystalCount@8 - amount + 73] at 0x009f5030 (the +0x49 is added at 0x009f500c; crystalCount through the ivar cell 0x009f5248) and compares [that stringFromMD5] (selector cell 0x009f523c at 0x009f5040) against the argument with isEqualToString: (cell 0x009f5238) at 0x009f505c; a mismatch returns immediately (beq 0x9f522c after sxtb at 0x009f5060). On a match it decrements crystalCount (sub r0, r1, r0 at 0x009f5144, stored at 0x009f514c), rewrites amountString@12 from the new count through the three dispatches at 0x009f51b4/0x009f51c4/0x009f51d4 (selector cells stringWithFormat: 0x009f5244, stringFromMD5 0x009f523c, retain 0x009f5260; the format string is @\"7acfe93afc08%dc65ae2c54ecaf07f\" at cell 0x009f5264 -> slot 0x00f96b68 - which is exactly the string the E9b consumer re-reads and compares), stores the result at 0x009f51e8 through the amountString ivar cell 0x009f525c, then notifies [countWatcher@16 crystalCountChanged:1] (selector cell 0x009f5254, watcher cell 0x009f5258, argument 1 via movw ip, 1 at 0x009f5084, dispatch at 0x009f5214) and calls [self save] (selector cell 0x009f5250 at 0x009f5228), which only raises the needsSave flag.",
+      "types": "v16@0:4i8@12",
+      "verified_words": 190
+    },
+    {
+      "boundary": "ARM.exidx end 0x009f5e68; the next ObjC IMP (CrystalManager -[iCloudServerRejoinID]) is at 0x009f5e78, past 16 bytes of non-method code",
+      "boundary_end": "0x009f5e68",
+      "branches": [
+        {
+          "address": "0x009f52f0",
+          "destination": "0x009f5308",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x009f5304",
+          "destination": "0x009f5d84",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x009f5380",
+          "destination": "0x009f56c4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x009f5584",
+          "destination": "0x009f55f4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x009f565c",
+          "destination": "0x009f56c0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x009f56c0",
+          "destination": "0x009f56c4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x009f5740",
+          "destination": "0x009f57a8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x009f5824",
+          "destination": "0x009f588c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x009f5888",
+          "destination": "0x009f58b0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x009f5898",
+          "destination": "0x009f58ac",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x009f58ac",
+          "destination": "0x009f58b0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x009f593c",
+          "destination": "0x009f5a10",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x009f59a8",
+          "destination": "0x009f5a0c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x009f5a0c",
+          "destination": "0x009f5a10",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x009f5a1c",
+          "destination": "0x009f5a78",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x009f5a54",
+          "destination": "0x009f5a78",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x009f5a58",
+          "destination": "0x009f5a5c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x009f5a74",
+          "destination": "0x009f5bb8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x009f5a84",
+          "destination": "0x009f5aa4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x009f5aa0",
+          "destination": "0x009f5bb4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x009f5ab0",
+          "destination": "0x009f5ad0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x009f5acc",
+          "destination": "0x009f5bb0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x009f5adc",
+          "destination": "0x009f5afc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x009f5af8",
+          "destination": "0x009f5bac",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x009f5bac",
+          "destination": "0x009f5bb0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x009f5bb0",
+          "destination": "0x009f5bb4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x009f5bb4",
+          "destination": "0x009f5bb8",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x009f52cc"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x009f52e0"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x009f536c"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x009f549c"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x009f54b0"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x009f54d0"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x009f54ec"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x009f5508"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x009f5524"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x009f5548"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x009f555c"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x009f5574"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x009f55d4"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x009f55ec"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x009f563c"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x009f5654"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009f5688"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009f56a4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009f56b4"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x009f5718"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x009f572c"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x009f578c"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x009f57a0"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x009f5804"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x009f581c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009f5850"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009f586c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009f587c"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x009f5928"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x009f5988"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x009f59a0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009f59d4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009f59f0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009f5a00"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009f5b1c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009f5b2c"
+        },
+        {
+          "callee": "0x001c37f4",
+          "route": "bl sym.imp.time",
+          "site": "0x009f5b40"
+        },
+        {
+          "callee": "0x009f5e68",
+          "route": "bl 0x9f5e68",
+          "site": "0x009f5b48"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009f5b70"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009f5b80"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009f5b9c"
+        },
+        {
+          "callee": "0x001c2990",
+          "route": "bl sym.imp.__aeabi_d2lz",
+          "site": "0x009f5ba0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009f5cf0"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x009f5d14"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x009f5d2c"
+        },
+        {
+          "callee": null,
+          "route": "blx r6",
+          "site": "0x009f5d74"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x009f526c",
+      "ivars": {},
+      "method": "CrystalManager -[iCloudID]",
+      "name": "cm_icloudid",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x009f5d90": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f96c08"
+        },
+        "0x009f5d94": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x009f5d98": {
+          "selector": "integerForKey:",
+          "slot": "0x00e84988"
+        },
+        "0x009f5d9c": {
+          "selector": "standardUserDefaults",
+          "slot": "0x00e84984"
+        },
+        "0x009f5da0": {
+          "class": "OBJC_CLASS_$_NSUserDefaults",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8ade8"
+        },
+        "0x009f5da4": {
+          "selector": "decryptDepricatedKeychain",
+          "slot": "0x00e8498c"
+        },
+        "0x009f5da8": {
+          "class": "OBJC_CLASS_$_NCKeychainCompatibility",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8adec"
+        },
+        "0x009f5dac": {
+          "selector": "release",
+          "slot": "0x00e84998"
+        },
+        "0x009f5db0": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f96c88"
+        },
+        "0x009f5db4": {
+          "selector": "objectForKey:",
+          "slot": "0x00e84958"
+        },
+        "0x009f5db8": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f96c68"
+        },
+        "0x009f5dbc": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f96c78"
+        },
+        "0x009f5dc0": {
+          "selector": "setValue:forKey:",
+          "slot": "0x00e84994"
+        },
+        "0x009f5dc4": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f96c28"
+        },
+        "0x009f5dc8": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f96c58"
+        },
+        "0x009f5dcc": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f96c48"
+        },
+        "0x009f5dd0": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f96c38"
+        },
+        "0x009f5dd4": {
+          "selector": "initWithCapacity:",
+          "slot": "0x00e84990"
+        },
+        "0x009f5dd8": {
+          "selector": "alloc",
+          "slot": "0x00e84918"
+        },
+        "0x009f5ddc": {
+          "class": "OBJC_CLASS_$_NSMutableDictionary",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8adf0"
+        },
+        "0x009f5de0": {
+          "selector": "initWithData:encoding:",
+          "slot": "0x00e8499c"
+        },
+        "0x009f5de4": {
+          "class": "OBJC_CLASS_$_NSString",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8add4"
+        },
+        "0x009f5de8": {
+          "selector": "count",
+          "slot": "0x00e849a4"
+        },
+        "0x009f5dec": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f96c98"
+        },
+        "0x009f5df0": {
+          "selector": "componentsSeparatedByString:",
+          "slot": "0x00e849a0"
+        },
+        "0x009f5df4": {
+          "selector": "objectAtIndex:",
+          "slot": "0x00e84938"
+        },
+        "0x009f5dfc": {
+          "selector": "longLongValue",
+          "slot": "0x00e849a8"
+        },
+        "0x009f5e00": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f96ca8"
+        },
+        "0x009f5e04": {
+          "selector": "stringForKey:",
+          "slot": "0x00e849b0"
+        },
+        "0x009f5e08": {
+          "selector": "defaultStore",
+          "slot": "0x00e849ac"
+        },
+        "0x009f5e0c": {
+          "class": "OBJC_CLASS_$_NSUbiquitousKeyValueStore",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8adf4"
+        },
+        "0x009f5e10": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f96cb8"
+        },
+        "0x009f5e18": {
+          "selector": "getPasswordForUsername:andServiceName:error:",
+          "slot": "0x00e84924"
+        },
+        "0x009f5e1c": {
+          "class": "OBJC_CLASS_$_SFHFKeychainUtils",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8add0"
+        },
+        "0x009f5e24": {
+          "class": "OBJC_CLASS_$_UIDevice",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8add8"
+        },
+        "0x009f5e2c": {
+          "selector": "currentDevice",
+          "slot": "0x00e84944"
+        },
+        "0x009f5e30": {
+          "selector": "uniqueDeviceIdentifier",
+          "slot": "0x00e849b4"
+        },
+        "0x009f5e34": {
+          "selector": "stringByAppendingFormat:",
+          "slot": "0x00e8494c"
+        },
+        "0x009f5e38": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f96cc8"
+        },
+        "0x009f5e3c": {
+          "selector": "stringFromMD5",
+          "slot": "0x00e84930"
+        },
+        "0x009f5e40": {
+          "class": "OBJC_CLASS_$_NSDate",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8ade4"
+        },
+        "0x009f5e44": {
+          "selector": "timeIntervalSinceReferenceDate",
+          "slot": "0x00e849b8"
+        },
+        "0x009f5e48": {
+          "selector": "storeUsername:andPassword:forServiceName:updateExisting:error:",
+          "slot": "0x00e84960"
+        },
+        "0x009f5e4c": {
+          "selector": "setString:forKey:",
+          "slot": "0x00e849bc"
+        },
+        "0x009f5e50": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f96cd8"
+        },
+        "0x009f5e58": {
+          "selector": "stringWithFormat:",
+          "slot": "0x00e8492c"
+        },
+        "0x009f5e60": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f96c18"
+        }
+      },
+      "semantics": "iCloudID (767w) resolves the cloud id as a four-source min-selection. (1) GDPR gate: [NSUserDefaults standardUserDefaults] (cell 0x009f5d9c) integerForKey:@\"gdprStatus\" (0x009f52e0) == 3 returns @\"gdpr_declined\" (cmp at 0x009f52ec, early return 0x009f5304). (2) Legacy Keychain migration, only when +[NCKeychainCompatibility decryptDepricatedKeychain] (0x009f536c, nil-check 0x009f5380) answers: it builds a 4-entry query dictionary (kSecAttrAccount/kSecAttrLabel/kSecAttrService = @\"com.majicjungle.blockheads.cloudid2\", kSecClass = @\"kSecClassGenericPassword\"; 0x009f54d0 / 0x009f5524), reads [[result objectForKey:query] objectForKey:@\"kSecValueData\"] (0x009f5548 / 0x009f555c) and decodes it as UTF-8 ([[NSString alloc] initWithData:encoding:4] at 0x009f55ec), splitting on @\"?\" (0x009f563c) - exactly 2 parts required (0x009f5658) with [parts[1] longLongValue] as the 64-bit suffix (0x009f56b4). (3) Ubiquitous store: [NSUbiquitousKeyValueStore defaultStore] (0x009f5718) stringForKey:@\"iCloudIDv2\" (0x009f572c) with the @\"iCloudID\" fallback (0x009f57a0); a string without \"?\" yields suffix 100 (0x009f58a4). (4) Keychain: [SFHFKeychainUtils getPasswordForUsername:@\"com.majicjungle.blockheads.cloudid2\" andServiceName:same error:&err] (0x009f5928). The candidate with the smallest 64-bit suffix wins (branch at 0x009f5a54); when no candidate exists one is generated as MD5([[UIDevice currentDevice] (0x009f5e2c) uniqueDeviceIdentifier] + [NSString stringByAppendingFormat:@\"%lu%d\", time(NULL) (0x009f5b40), lrand48() through the thunk at 0x009f5e68 (0x009f5b48)]) (stringFromMD5 at 0x009f5b80), with the value taken from [NSDate timeIntervalSinceReferenceDate] converted by __aeabi_d2lz. Both stores are written before the bare id is returned at 0x009f5d84: [store setString:forKey:@\"iCloudIDv2\"] of [NSString stringWithFormat:@\"%@?%lld\", id, suffix] (0x009f5d2c) and [SFHFKeychainUtils storeUsername:...updatePassword:...updateExisting:1 error:] (0x009f5d74).",
+      "types": "@8@0:4",
+      "verified_words": 767
+    },
+    {
+      "boundary": "consecutive IMPs: next method follows at 0x009f5f24",
+      "boundary_end": "0x009f5f24",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x009f5edc"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x009f5ef0"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x009f5f00"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x009f5e78",
+      "ivars": {},
+      "method": "CrystalManager -[iCloudServerRejoinID]",
+      "name": "cm_icloudserverrejoinid",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x009f5f0c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x009f5f10": {
+          "selector": "stringFromMD5",
+          "slot": "0x00e84930"
+        },
+        "0x009f5f14": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f96ce8"
+        },
+        "0x009f5f18": {
+          "selector": "stringByAppendingString:",
+          "slot": "0x00e849c4"
+        },
+        "0x009f5f1c": {
+          "selector": "iCloudID",
+          "slot": "0x00e849c0"
+        }
+      },
+      "semantics": "iCloudServerRejoinID = [[[self iCloudID] stringByAppendingString:@\"rejoin\"] stringFromMD5]: objc_msgSend(self, 'iCloudID', selector cell 0x009f5f1c) at 0x009f5edc, then 'stringByAppendingString:' (cell 0x009f5f18) with the CFString @\"rejoin\" (cell 0x009f5f14 -> __CFConstantStringClassReference, slot 0x00f96ce8, data pointer 0x00f5be3d, length 6) at 0x009f5ef0, then 'stringFromMD5' (cell 0x009f5f10) at 0x009f5f00 - the rejoin id is the MD5 of the iCloud id plus the literal salt \"rejoin\", the same fingerprint scheme the trade portal uses for the crystal amount.",
+      "types": "@8@0:4",
+      "verified_words": 43
+    },
+    {
+      "boundary": "body trimmed at the next IMP 0x009f5f68 (ARM.exidx over-covers into CrystalManager -[setCountWatcher:])",
+      "boundary_end": "0x009f5f68",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x009f5f24",
+      "ivars": {
+        "0x009f5f60": {
+          "offset": 16,
+          "slot": "0x0105e768",
+          "symbol": "OBJC_IVAR_$_CrystalManager.countWatcher"
+        }
+      },
+      "method": "CrystalManager -[countWatcher]",
+      "name": "cm_countwatcher",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "countWatcher = dmb ish atomic load of CrystalManager.countWatcher@16 (ivar cell 0x009f5f60; dmb at 0x009f5f4c, field load at 0x009f5f48).",
+      "types": "@8@0:4",
+      "verified_words": 17
+    },
+    {
+      "boundary": "consecutive IMPs: next method follows at 0x009f5fac",
+      "boundary_end": "0x009f5fac",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x009f5f68",
+      "ivars": {
+        "0x009f5fa4": {
+          "offset": 16,
+          "slot": "0x0105e768",
+          "symbol": "OBJC_IVAR_$_CrystalManager.countWatcher"
+        }
+      },
+      "method": "CrystalManager -[setCountWatcher:]",
+      "name": "cm_setcountwatcher_",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "setCountWatcher: stores the object argument into CrystalManager.countWatcher@16 between two dmb ish barriers (dmb at 0x009f5f90, str r2, [r0, r1] at 0x009f5f94, dmb at 0x009f5f98; ivar cell 0x009f5fa4) - an explicitly atomic setter, matching the atomic getter in -[countWatcher].",
+      "types": "v12@0:4@8",
+      "verified_words": 17
+    },
+    {
+      "boundary": "consecutive IMPs: next method follows at 0x009f5fe8",
+      "boundary_end": "0x009f5fe8",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x009f5fac",
+      "ivars": {
+        "0x009f5fe0": {
+          "offset": 20,
+          "slot": "0x0105e764",
+          "symbol": "OBJC_IVAR_$_CrystalManager.needsSave"
+        }
+      },
+      "method": "CrystalManager -[needsSave]",
+      "name": "cm_needssave",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "needsSave = ldrsb of CrystalManager.needsSave@20 (ivar cell 0x009f5fe0; signed-byte load at 0x009f5fd4) - the flag -[save] sets and -[commitSaveIfNeeded] clears.",
+      "types": "c8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "ARM.exidx end 0x009f602c; the next ObjC IMP (MJControl -[initWithFrame:cache:windowInfo:]) is at 0x009f6198, past 364 bytes of non-method code",
+      "boundary_end": "0x009f602c",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x009f5fe8",
+      "ivars": {
+        "0x009f6024": {
+          "offset": 12,
+          "slot": "0x0105e75c",
+          "symbol": "OBJC_IVAR_$_CrystalManager.amountString"
+        }
+      },
+      "method": "CrystalManager -[amountString]",
+      "name": "cm_amountstring",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "amountString = dmb ish atomic load of CrystalManager.amountString@12 (object; ivar cell 0x009f6024, field load at 0x009f600c, dmb at 0x009f6010). This is the string the trade portal MD5-fingerprints before and after modify:modifyString: (which rewrites it as MD5 of the new count).",
+      "types": "@8@0:4",
+      "verified_words": 17
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "schema": 1
+}

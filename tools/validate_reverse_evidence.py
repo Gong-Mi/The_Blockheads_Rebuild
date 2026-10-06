@@ -1295,6 +1295,46 @@ def main() -> None:
     ):
         require(NATIVE / _tpe_file, [_tpe_imp, _tpe_end])
     require(
+        NATIVE / "CRYSTALMANAGER_CLOSURE.md",
+        [
+            "1305",
+            "crystalCount",
+            "amountString",
+            "countWatcher",
+            "needsSave",
+            "rejoin",
+            "singleton",
+        ],
+    )
+    require(
+        NATIVE / "crystalmanager_closure.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 767',
+            '"verified_words": 190',
+            "OBJC_IVAR_$_CrystalManager.crystalCount",
+            "OBJC_IVAR_$_CrystalManager.amountString",
+            "OBJC_IVAR_$_CrystalManager.countWatcher",
+            "OBJC_IVAR_$_CrystalManager.needsSave",
+            "__CFConstantStringClassReference",
+        ],
+    )
+    for _cm_file, _cm_imp, _cm_end in (
+        ("disasm_crystalmanager_instance.txt", "# implementation: 0x009f3b14", "# ARM.exidx end: 0x009f3bdc"),
+        ("disasm_crystalmanager_init.txt", "# implementation: 0x009f3bdc", "# ARM.exidx end: 0x009f3d44"),
+        ("disasm_crystalmanager_amount.txt", "# implementation: 0x009f452c", "# ARM.exidx end: 0x009f4568"),
+        ("disasm_crystalmanager_commitsaveifneeded.txt", "# implementation: 0x009f4568", "# ARM.exidx end: 0x009f4678"),
+        ("disasm_crystalmanager_save.txt", "# implementation: 0x009f4f34", "# ARM.exidx end: 0x009f4f74"),
+        ("disasm_crystalmanager_modify_modifystring_.txt", "# implementation: 0x009f4f74", "# ARM.exidx end: 0x009f526c"),
+        ("disasm_crystalmanager_icloudid.txt", "# implementation: 0x009f526c", "# ARM.exidx end: 0x009f5e68"),
+        ("disasm_crystalmanager_icloudserverrejoinid.txt", "# implementation: 0x009f5e78", "# ARM.exidx end: 0x009f5f24"),
+        ("disasm_crystalmanager_countwatcher.txt", "# implementation: 0x009f5f24", "# ARM.exidx end: 0x009f5fac"),
+        ("disasm_crystalmanager_setcountwatcher_.txt", "# implementation: 0x009f5f68", "# ARM.exidx end: 0x009f5fac"),
+        ("disasm_crystalmanager_needssave.txt", "# implementation: 0x009f5fac", "# ARM.exidx end: 0x009f5fe8"),
+        ("disasm_crystalmanager_amountstring.txt", "# implementation: 0x009f5fe8", "# ARM.exidx end: 0x009f602c"),
+    ):
+        require(NATIVE / _cm_file, [_cm_imp, _cm_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
