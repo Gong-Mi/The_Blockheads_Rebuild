@@ -837,6 +837,34 @@ def main() -> None:
     ):
         require(NATIVE / _emit_file, [_emit_imp])
     require(
+        NATIVE / "POWER_CORE.md",
+        [
+            "1010",
+            "0x0094f000",
+            "0x00db20b4",
+            "usesStoresConductsOrProducesElectricity",
+            "currentConfiguration@60",
+            "0x1ff",
+        ],
+    )
+    require(
+        NATIVE / "power_core.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 808",
+            "\"verified_words\": 94",
+            "usesStoresConductsOrProducesElectricity",
+            "derivedTilePropertiesArray",
+        ],
+    )
+    for _pow_file, _pow_imp in (
+        ("disasm_wire_updatewireconfiguration.txt", "# implementation: 0x0094f000"),
+        ("disasm_wirepathcreator_tilederivedproperties.txt", "# implementation: 0x00db20b4"),
+        ("disasm_elevatormotor_hasrequiredpower.txt", "# implementation: 0x007027f8"),
+        ("disasm_elevatormotor_usepower.txt", "# implementation: 0x00702848"),
+    ):
+        require(NATIVE / _pow_file, [_pow_imp])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
