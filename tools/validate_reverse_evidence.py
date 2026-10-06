@@ -1449,6 +1449,34 @@ def main() -> None:
         ("disasm_worldtileloader_finishbulklightblocktransaction.txt", "# implementation: 0x00868bd8", "# ARM.exidx end: 0x00868c40"),    ):
         require(NATIVE / _lb_file, [_lb_imp, _lb_end])
     require(
+        NATIVE / "BLOCK_SAVE_SYNC.md",
+        [
+            "2079",
+            "65541",
+            "physicalBlock+8",
+            "sendDynamicObjects",
+            "macroIndex",
+            "initialDynamicObjectsNetDataForMacroTileIndex:wireForClient:",
+        ],
+    )
+    require(
+        NATIVE / "block_save_sync.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 882',
+            '"verified_words": 1197',
+            "OBJC_IVAR_$_WorldTileLoader.blockDatabase",
+            "loadLightBlockForClientLightBlockIndex:clientID:intoPhysicalBlock:",
+            "initialDynamicObjectsNetDataForMacroTileIndex:wireForClient:",
+            "sendNetworkData:toPeers:reliable:",
+        ],
+    )
+    for _bs_file, _bs_imp, _bs_end in (
+        ("disasm_worldtileloader_savephysicalblock_macrotile_sendtoclient.txt", "# implementation: 0x00859a84", "# ARM.exidx end: 0x0085a84c"),
+        ("disasm_worldtileloader_sendblocktoclientwithoutsavingforblock_p.txt", "# implementation: 0x00858664", "# ARM.exidx end: 0x00859918"),
+    ):
+        require(NATIVE / _bs_file, [_bs_imp, _bs_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
