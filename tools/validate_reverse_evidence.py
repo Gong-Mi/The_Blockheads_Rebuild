@@ -672,6 +672,36 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "WORLDHELPER_RECALCULATE_LIGHTING.md",
+        [
+            "0x00a1ca64",
+            "0x00a1d730",
+            "819",
+            "d2 >= 0x1e4",
+            "0x422",
+            "exploreLightChangedAtMacroPos",
+            "updateSunLightForTile",
+        ],
+    )
+    require(
+        NATIVE / "disasm_worldhelper_recalculatelighting.txt",
+        [
+            "# WorldHelper +[recalculateLightingForPhysicalBlockIfNeeded:world:clientLightBlockIndex:forBlockhead:]",
+            "# implementation: 0x00a1ca64",
+            "# ARM.exidx end: 0x00a1d730",
+        ],
+    )
+    require(
+        NATIVE / "worldhelper_recalculatelighting.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 819",
+            "getDayNightFractionForX:atWorldTime:",
+            "currentTemperatureForTileAtWorldPos",
+            "0x00a15404",
+        ],
+    )
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
