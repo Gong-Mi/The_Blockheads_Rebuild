@@ -1477,6 +1477,30 @@ def main() -> None:
     ):
         require(NATIVE / _bs_file, [_bs_imp, _bs_end])
     require(
+        NATIVE / "BLOCK_MIGRATION.md",
+        [
+            "1311",
+            "cumulative version ladder",
+            "createTreasureChestOrTrollAtTile",
+            "bestStartPosition",
+            "no writer of offset 13",
+        ],
+    )
+    require(
+        NATIVE / "block_migration.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 1311',
+            "OBJC_IVAR_$_WorldTileLoader.bestStartPosition",
+            "OBJC_IVAR_$_WorldTileLoader.tinDensityNoiseFunction",
+            "createTreasureChestOrTrollAtTile:atPos:loadTroll:loadTreasure:",
+        ],
+    )
+    for _bm_file, _bm_imp, _bm_end in (
+        ("disasm_worldtileloader_updatephysicalblocktolatestversion_.txt", "# implementation: 0x008650b0", "# ARM.exidx end: 0x0086652c"),
+    ):
+        require(NATIVE / _bm_file, [_bm_imp, _bm_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
