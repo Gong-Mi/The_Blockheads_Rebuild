@@ -574,6 +574,44 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "WORLDHELPER_SUNLIGHT.md",
+        [
+            "0x00a1b7d4",
+            "0x00a1c680",
+            "0x00a1ca64",
+            "recursivelyRemoveAllSunLightWithList:",
+            "containsIndex:",
+            "_Z25worldIndexAtWorldPositioniiP5World",
+            "minx:x-32 maxX:x+32",
+        ],
+    )
+    require(
+        NATIVE / "disasm_worldhelper_updatesunlight.txt",
+        [
+            "# WorldHelper +[updateSunLightForTile:atPos:world:]",
+            "# implementation: 0x00a1b7d4",
+            "# ARM.exidx end: 0x00a1bd10",
+        ],
+    )
+    require(
+        NATIVE / "disasm_worldhelper_updatesunlightremoved.txt",
+        [
+            "# WorldHelper +[updateSunLightRemovedForTile:atPos:world:]",
+            "# implementation: 0x00a1c680",
+            "# ARM.exidx end: 0x00a1ca64",
+        ],
+    )
+    require(
+        NATIVE / "worldhelper_sunlight.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 335",
+            "OBJC_CLASS_$_NSMutableIndexSet",
+            "recursivelyUpdateSunLightWithList:openIndices:world:",
+            "0x00a156a8",
+        ],
+    )
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
