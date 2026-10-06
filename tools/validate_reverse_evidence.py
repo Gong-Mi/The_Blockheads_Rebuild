@@ -803,6 +803,40 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "LIGHT_EMITTERS.md",
+        [
+            "1301",
+            "0x00a93bbc",
+            "0x004be0d4",
+            "253, 150, 55",
+            "connectionType",
+            "Torch.itemType",
+        ],
+    )
+    require(
+        NATIVE / "lightemitters.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 803",
+            "\"verified_words\": 261",
+            "@selector(lightColor)",
+            "Torch.connectionType",
+        ],
+    )
+    for _emit_file, _emit_imp in (
+        ("disasm_artificiallight_lightcolor.txt", "# implementation: 0x00a93bbc"),
+        ("disasm_fireobject_getlightrgb.txt", "# implementation: 0x006746a4"),
+        ("disasm_glowblock_getlightrgb.txt", "# implementation: 0x00ca8334"),
+        ("disasm_glowblock_lightpos.txt", "# implementation: 0x00ca955c"),
+        ("disasm_glowblock_glowquadcount.txt", "# implementation: 0x00ca9500"),
+        ("disasm_torch_getlightrgb.txt", "# implementation: 0x004b4e98"),
+        ("disasm_torch_glowquadcount.txt", "# implementation: 0x004bed90"),
+        ("disasm_torch_isdownlight.txt", "# implementation: 0x004bedec"),
+        ("disasm_torch_isuplight.txt", "# implementation: 0x004bee3c"),
+        ("disasm_torch_lightpos.txt", "# implementation: 0x004be0d4"),
+    ):
+        require(NATIVE / _emit_file, [_emit_imp])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
