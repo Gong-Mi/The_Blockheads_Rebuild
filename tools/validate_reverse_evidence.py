@@ -743,6 +743,36 @@ def main() -> None:
         ],
     )
     require(
+        NATIVE / "ARTIFICIALLIGHT_BLOCKLOAD.md",
+        [
+            "0x00a95248",
+            "0x00a958bc",
+            "413",
+            "x-cylindrical",
+            "removeFromTiles",
+            "addToTiles",
+            "0xe85518",
+        ],
+    )
+    require(
+        NATIVE / "disasm_artificiallight_addcontribution.txt",
+        [
+            "# ArtificialLight -[addContributionForPhysicalBlockLoadedAtXPos:yPos:]",
+            "# implementation: 0x00a95248",
+            "# ARM.exidx end: 0x00a958bc",
+        ],
+    )
+    require(
+        NATIVE / "artificiallight_blockload.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            "\"verified_words\": 413",
+            "@selector(removeFromTiles)",
+            "objc_msgSend function",
+            "memset(self.contributionGrid",
+        ],
+    )
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
