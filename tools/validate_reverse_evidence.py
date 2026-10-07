@@ -2316,6 +2316,32 @@ def main() -> None:
     ):
         require(NATIVE / _sc_file, [_sc_imp, _sc_end])
     require(
+        NATIVE / "DRAW_PASS.md",
+        [
+            "2344",
+            "ffe23538",
+            "ffe23534",
+            "0xa8",
+            "0x00E4AA1C",
+            "map<int, int>",
+        ],
+    )
+    require(
+        NATIVE / "draw_pass.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 1395',
+            "preDrawUpdate:cameraMinXWorld:cameraMaxXWorld:cameraMinYWorld:cameraMaxYWorld:",
+            "drawFreeBlocks:projectionMatrix:",
+        ],
+    )
+    for _dp_file, _dp_imp, _dp_end in (
+        ("disasm_worldtileloader_predrawupdate_cameraminxworld_cameramaxx.txt", "# implementation: 0x008d11a8", "# ARM.exidx end: 0x008d17ec"),
+        ("disasm_worldtileloader_drawopaqueobjects_projectionmatrix_model.txt", "# implementation: 0x008d17ec", "# ARM.exidx end: 0x008d2db8"),
+        ("disasm_worldtileloader_drawfreeblocks_projectionmatrix_modelvie.txt", "# implementation: 0x008d4760", "# ARM.exidx end: 0x008d4ff0"),
+    ):
+        require(NATIVE / _dp_file, [_dp_imp, _dp_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
