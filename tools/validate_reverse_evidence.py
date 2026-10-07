@@ -2402,6 +2402,56 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "TREE_BASE.md",
+        [
+            "4378",
+            "baseGrowthRateForTreeType",
+            "__wrap_calloc",
+            "tileIsTreeTrunk",
+            "0x4c0bc4",
+        ],
+    )
+    require(
+        NATIVE / "tree_base.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 334',
+            "checkIfDeadTilesNeedRemoved",
+            "updateAllOwnedTilesToNewIDSize",
+        ],
+    )
+    for _tb_file, _tb_imp, _tb_end in (
+        ("disasm_worldtileloader_tr_rmmacro.txt", "implementation: 0x004c0320", "ARM.exidx end: 0x004c03d4"),
+        ("disasm_worldtileloader_tr_initstatic.txt", "implementation: 0x004c03d4", "ARM.exidx end: 0x004c0638"),
+        ("disasm_worldtileloader_tr_ctor.txt", "implementation: 0x004c0638", "ARM.exidx end: 0x004c0b70"),
+        ("disasm_worldtileloader_tr_compost.txt", "implementation: 0x004c1f84", "ARM.exidx end: 0x004c205c"),
+        ("disasm_worldtileloader_tr_fruititem.txt", "implementation: 0x004c205c", "ARM.exidx end: 0x004c2094"),
+        ("disasm_worldtileloader_tr_shouldfall.txt", "implementation: 0x004c2078", "ARM.exidx end: 0x004c2094"),
+        ("disasm_worldtileloader_tr_fruitseason.txt", "implementation: 0x004c2094", "ARM.exidx end: 0x004c20b4"),
+        ("disasm_worldtileloader_tr_fallenfruits.txt", "implementation: 0x004c20b4", "ARM.exidx end: 0x004c2568"),
+        ("disasm_worldtileloader_tr_ctorsave.txt", "implementation: 0x004c39a0", "ARM.exidx end: 0x004c3be8"),
+        ("disasm_worldtileloader_tr_dealloc.txt", "implementation: 0x004c3be8", "ARM.exidx end: 0x004c3cac"),
+        ("disasm_worldtileloader_tr_worldchanged.txt", "implementation: 0x004c4974", "ARM.exidx end: 0x004c5730"),
+        ("disasm_worldtileloader_tr_incheight.txt", "implementation: 0x004c576c", "ARM.exidx end: 0x004c57b0"),
+        ("disasm_worldtileloader_tr_update.txt", "implementation: 0x004c57b0", "ARM.exidx end: 0x004c6898"),
+        ("disasm_worldtileloader_tr_growth.txt", "implementation: 0x004c6898", "ARM.exidx end: 0x004c68e8"),
+        ("disasm_worldtileloader_tr_kindself.txt", "implementation: 0x004c68b0", "ARM.exidx end: 0x004c68e8"),
+        ("disasm_worldtileloader_tr_makedead.txt", "implementation: 0x004c68d0", "ARM.exidx end: 0x004c68e8"),
+        ("disasm_worldtileloader_tr_killtiles.txt", "implementation: 0x004c68e8", "ARM.exidx end: 0x004c6b50"),
+        ("disasm_worldtileloader_tr_checkdead.txt", "implementation: 0x004c6b50", "ARM.exidx end: 0x004c7008"),
+        ("disasm_worldtileloader_tr_killabove.txt", "implementation: 0x004c7008", "ARM.exidx end: 0x004c7354"),
+        ("disasm_worldtileloader_tr_removeall.txt", "implementation: 0x004c7354", "ARM.exidx end: 0x004c76d8"),
+        ("disasm_worldtileloader_tr_updateidsize.txt", "implementation: 0x004c76d8", "ARM.exidx end: 0x004c78dc"),
+        ("disasm_worldtileloader_tr_soiltype.txt", "implementation: 0x004c78dc", "ARM.exidx end: 0x004c7978"),
+        ("disasm_worldtileloader_tr_treetype.txt", "implementation: 0x004c7978", "ARM.exidx end: 0x004c7994"),
+        ("disasm_worldtileloader_tr_maxheightgene.txt", "implementation: 0x004c7994", "ARM.exidx end: 0x004c7af4"),
+        ("disasm_worldtileloader_tr_growthgene.txt", "implementation: 0x004c7a44", "ARM.exidx end: 0x004c7af4"),
+        ("disasm_worldtileloader_tr_height.txt", "implementation: 0x004c7af4", "ARM.exidx end: 0x004c7b68"),
+        ("disasm_worldtileloader_tr_isstatic.txt", "implementation: 0x004c7b30", "ARM.exidx end: 0x004c7b68"),
+        ("disasm_worldtileloader_tr_occupiesnormal.txt", "implementation: 0x004c7b4c", "ARM.exidx end: 0x004c7b68"),
+    ):
+        require(NATIVE / _tb_file, [_tb_imp, _tb_end])
+    require(
         NATIVE / "PLANT_BASE.md",
         [
             "2168",
