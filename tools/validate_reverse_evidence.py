@@ -2402,6 +2402,29 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "CXX_CONSTRUCT.md",
+        [
+            "866",
+            "0x30c",
+            "ffffe554",
+            "Vector::Vector()",
+            "262/262",
+            "disasm_dynamicworld_cxx_construct.txt",
+        ],
+    )
+    require(
+        NATIVE / "cxx_construct.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 866',
+            "OBJC_IVAR_$_DynamicWorld.dynamicObjects",
+        ],
+    )
+    require(
+        NATIVE / "disasm_dynamicworld_cxx_construct.txt",
+        ["# implementation: 0x00907218", "# ARM.exidx end: 0x00907fa0"],
+    )
+    require(
         NATIVE / "COMPRESS_STUB.md",
         [
             "5",
