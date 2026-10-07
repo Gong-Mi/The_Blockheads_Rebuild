@@ -2402,6 +2402,51 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "KELP_PLANT.md",
+        [
+            "5280",
+            "sinf",
+            "updateArbitraryQuadV",
+            "macroTileAtMacroPostion",
+            "tileIsWater",
+        ],
+    )
+    require(
+        NATIVE / "kelp_plant.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 918',
+            "dieOfOldAge",
+            "addDrawQuadData:fromIndex:forMacroPos:",
+        ],
+    )
+    for _kp_file, _kp_imp, _kp_end in (
+        ("disasm_worldtileloader_k_objecttype.txt", "implementation: 0x00814a54", "ARM.exidx end: 0x00814a70"),
+        ("disasm_worldtileloader_k_initsubderived.txt", "implementation: 0x00814a70", "ARM.exidx end: 0x00814f44"),
+        ("disasm_worldtileloader_k_ctor.txt", "implementation: 0x00814f54", "ARM.exidx end: 0x00815be8"),
+        ("disasm_worldtileloader_k_ctornet.txt", "implementation: 0x00816560", "ARM.exidx end: 0x008166e0"),
+        ("disasm_worldtileloader_k_creationdata.txt", "implementation: 0x00816960", "ARM.exidx end: 0x008169ec"),
+        ("disasm_worldtileloader_k_dealloc.txt", "implementation: 0x008169ec", "ARM.exidx end: 0x00816a58"),
+        ("disasm_worldtileloader_k_remoteupdate.txt", "implementation: 0x00816a58", "ARM.exidx end: 0x00816e34"),
+        ("disasm_worldtileloader_k_update.txt", "implementation: 0x00816e34", "ARM.exidx end: 0x00817c8c"),
+        ("disasm_worldtileloader_k_dieofoldage.txt", "implementation: 0x00817c8c", "ARM.exidx end: 0x00818150"),
+        ("disasm_worldtileloader_k_draw.txt", "implementation: 0x00818150", "ARM.exidx end: 0x00818cec"),
+        ("disasm_worldtileloader_k_kindself.txt", "implementation: 0x00818d9c", "ARM.exidx end: 0x00818dd0"),
+        ("disasm_worldtileloader_k_planttype.txt", "implementation: 0x00818dd0", "ARM.exidx end: 0x00818dec"),
+        ("disasm_worldtileloader_k_soiltype.txt", "implementation: 0x00818dec", "ARM.exidx end: 0x00818e74"),
+        ("disasm_worldtileloader_k_gatherprogress.txt", "implementation: 0x00818e74", "ARM.exidx end: 0x00818f7c"),
+        ("disasm_worldtileloader_k_harvested.txt", "implementation: 0x00818f7c", "ARM.exidx end: 0x00819858"),
+        ("disasm_worldtileloader_k_setgather.txt", "implementation: 0x00819858", "ARM.exidx end: 0x008199ac"),
+        ("disasm_worldtileloader_k_tilesabove.txt", "implementation: 0x008199ac", "ARM.exidx end: 0x00819a04"),
+        ("disasm_worldtileloader_k_droppeditem.txt", "implementation: 0x008199e8", "ARM.exidx end: 0x00819a04"),
+        ("disasm_worldtileloader_k_staticquadcount.txt", "implementation: 0x00819a04", "ARM.exidx end: 0x00819cd8"),
+        ("disasm_worldtileloader_k_adddrawquad.txt", "implementation: 0x00819cd8", "ARM.exidx end: 0x0081a6f0"),
+        ("disasm_worldtileloader_k_rmmacro.txt", "implementation: 0x0081a6f0", "ARM.exidx end: 0x0081a890"),
+        ("disasm_worldtileloader_k_availfood.txt", "implementation: 0x0081a890", "ARM.exidx end: 0x0081a924"),
+        ("disasm_worldtileloader_k_setavailfood.txt", "implementation: 0x0081a8d8", "ARM.exidx end: 0x0081a924"),
+    ):
+        require(NATIVE / _kp_file, [_kp_imp, _kp_end])
+    require(
         NATIVE / "VINE_PLANT.md",
         [
             "4102",
