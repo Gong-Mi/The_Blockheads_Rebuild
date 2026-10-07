@@ -2402,6 +2402,44 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "WORKBENCH_FUEL.md",
+        [
+            "1684",
+            "0x64",
+            "124",
+            "fffff1a0",
+            "fffff160",
+        ],
+    )
+    require(
+        NATIVE / "workbench_fuel.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 428',
+            "hurryCompletion:",
+            "startManagingFuelWithBlockhead:",
+        ],
+    )
+    for _wf_file, _wf_imp, _wf_end in (
+        ("disasm_worldtileloader_wf_updatehasfuel.txt", "implementation: 0x00aedb58", "ARM.exidx end: 0x00aee208"),
+        ("disasm_worldtileloader_wf_hurry.txt", "implementation: 0x00aed558", "ARM.exidx end: 0x00aedb58"),
+        ("disasm_worldtileloader_wf_addfuel.txt", "implementation: 0x00afdf94", "ARM.exidx end: 0x00afe31c"),
+        ("disasm_worldtileloader_wf_addfuelitem.txt", "implementation: 0x00b019c0", "ARM.exidx end: 0x00b01a84"),
+        ("disasm_worldtileloader_wf_startfuel.txt", "implementation: 0x00afc87c", "ARM.exidx end: 0x00afcafc"),
+        ("disasm_worldtileloader_wf_totalleft.txt", "implementation: 0x00aed318", "ARM.exidx end: 0x00aed558"),
+        ("disasm_worldtileloader_wf_fuelitems.txt", "implementation: 0x00b01894", "ARM.exidx end: 0x00b018f8"),
+        ("disasm_worldtileloader_wf_crafttype.txt", "implementation: 0x00aed44c", "ARM.exidx end: 0x00aed558"),
+        ("disasm_worldtileloader_wf_fuelitemcount.txt", "implementation: 0x00b0179c", "ARM.exidx end: 0x00b01800"),
+        ("disasm_worldtileloader_wf_hasreqfuel.txt", "implementation: 0x00afe31c", "ARM.exidx end: 0x00afe40c"),
+        ("disasm_worldtileloader_wf_fuelcount.txt", "implementation: 0x00afdec4", "ARM.exidx end: 0x00afdf94"),
+        ("disasm_worldtileloader_wf_doubleheight.txt", "implementation: 0x00afe40c", "ARM.exidx end: 0x00afe458"),
+        ("disasm_worldtileloader_wf_frac.txt", "implementation: 0x00afe63c", "ARM.exidx end: 0x00afe67c"),
+        ("disasm_worldtileloader_wf_reqhuman.txt", "implementation: 0x00afcafc", "ARM.exidx end: 0x00afcb38"),
+        ("disasm_worldtileloader_wf_candismiss.txt", "implementation: 0x00b02134", "ARM.exidx end: 0x00b02150"),
+        ("disasm_worldtileloader_wf_iobjtype.txt", "implementation: 0x00ae9b5c", "ARM.exidx end: 0x00ae9b78"),
+    ):
+        require(NATIVE / _wf_file, [_wf_imp, _wf_end])
+    require(
         NATIVE / "WORKBENCH_ELECTRICITY.md",
         [
             "1699",
