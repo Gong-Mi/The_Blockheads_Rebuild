@@ -81,3 +81,58 @@ T2 slices.
 
 Each slice lands as its own commit with tests run at O0/O2 and registered in
 `reconstruction/recovered/CMakeLists.txt` with the batch comment style.
+
+---
+
+# Extension: E24–E44 batches into equivalent slices (E45 batch)
+
+The World-line evidence batches continued past E23 (E24–E44, ~30 batches:
+object query/lifecycle, draw/reload, world mutate, breed/NPC, client session,
+reload tail, placement actions, load/session, remote receive, users/bans,
+query/accessors, block-load, typed accessor families A–C, workbench/
+interaction, save/remote/simulate, draw cluster, final/last smalls, and the
+giant draw composite as a structural pass). Mapping of the load-bearing
+contracts:
+
+| batch range | evidence artifact | equivalent candidate | grade |
+|---|---|---|---|
+| E36 | accessor_a.json | type codes fire 16 / torch 17 / egg 30 / painting 52; the ffe235f0 / ffe23624 / ffe23600 triplet cells | T1 |
+| E37 | accessor_b.json | ladder 19 / column 53 / stairs 54 / shaft 56 | T1 |
+| E38 | accessor_c.json | window 31 / door 20; the 0x46 tile-marker write; pos then y−1 probe; boat +0x180 slice | T2 |
+| E39 | workbench_interaction.json | workbench 45; the fffe234ac gate reuse; ffffe560 ID counter | T2 |
+| E40 | save_remote_sim.json | 0x2e/0x18 save skips; 0xe FreeBlock remote skip; dt/8.0 family step | T2 |
+| E41/E44 | draw_pass.json / draw_composite.json | the ffe23538/fee2353c dispatch unifications; the +0xa8 slice; <<11 macro maths | T3 |
+| E43 | last_smalls.json | rail 40; motor 55 (ffe23640 pair with E23); 0xE4AA64 11-arm tree table | T1/T2 |
+| E24/E30/E31/E33 | object_life/placement/load_session/users_bans | the ffffe550/ffffe554 registry pair contract + ffe234ac gate | T2 |
+
+## Landed in this batch (E45)
+
+### `dynamic_object_type_codes.{h,cpp}` (T1)
+
+The pinned type table (13 types), the >= 0x41 gate, the three per-body skip
+sets ({0x16,0x1d}, {0x2e,0x18}, {0xe}), the four family-index gates (11/8/9/4),
+the ffffe54c slice offsets (+0xa8/+0x180/+0x1d4/+0x1e0/+0x21c/+0x270/+0xcc)
+with the ridable probe order, and `worldPosToMacro` (trunc-toward-zero /32,
+matching `__aeabi_idiv`). Tests: `tools/test_dynamic_object_type_codes.cpp`
+(exact values, gate boundaries, skip sets, family gates, slice offsets, macro
+conversion on the signs of E22/E23's cases). O0/O2 green.
+
+### `object_registry_pair.{h,cpp}` (T2)
+
+The ffffe550 (`dynamicObjectsToAdd`, uniqueID face) + ffffe554
+(`dynamicObjectsByWorldPosIndex`, world-index face) bookkeeping contract:
+type-gated registration writing both faces, the two lookup faces, and the
+ffe234ac loaded-gate resolution (`resolvedByWorldIndex`). Tests:
+`tools/test_object_registry_pair.cpp` — registration round trip on both
+faces, the >= 0x41 refusal, gate + unloaded behaviour, missing keys and the
+operator[]-overwrite re-registration. O0/O2 green.
+
+Fidelity error caught by the tests (recorded because the class will recur):
+the first `markUnloaded` implementation updated only the uniqueID face; the
+world-index face held a copy and kept resolving. The original keeps one
+object with one gate; the slice now keeps both faces in sync and documents
+that the gate belongs to the object.
+
+Boundaries: the slice abstracts the per-type 65-segment indexing into a flat
+type dimension; registration/loader call sites and the ffe232a0 flag-1 call
+are not modelled; no runtime-equivalence claim (no differential oracle).

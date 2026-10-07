@@ -670,3 +670,25 @@ if(NOT TARGET test_world_change_queues)
     target_compile_options(test_world_change_queues PRIVATE -UNDEBUG)
     add_test(NAME recovered_world_change_queues COMMAND test_world_change_queues)
 endif()
+
+# Dynamic-object type-code slice (E24-E44): the pinned type immediates, the
+# >= 0x41 type gate, the per-body skip sets, the family index gates and the
+# ffffe54c member slice offsets, plus the macro-position helper.
+target_sources(blockheads_recovered_view PRIVATE dynamic_object_type_codes.cpp)
+if(NOT TARGET test_dynamic_object_type_codes)
+    add_executable(test_dynamic_object_type_codes ../../tools/test_dynamic_object_type_codes.cpp)
+    target_link_libraries(test_dynamic_object_type_codes PRIVATE blockheads_recovered_view)
+    target_compile_options(test_dynamic_object_type_codes PRIVATE -UNDEBUG)
+    add_test(NAME recovered_dynamic_object_type_codes COMMAND test_dynamic_object_type_codes)
+endif()
+
+# Object registry pair slice (E26/E30/E31/E33/E40): the ffffe550/ffffe554
+# (dynamicObjectsToAdd / dynamicObjectsByWorldPosIndex) bookkeeping contract
+# with the type gate and the ffe234ac loaded gate.
+target_sources(blockheads_recovered_view PRIVATE object_registry_pair.cpp)
+if(NOT TARGET test_object_registry_pair)
+    add_executable(test_object_registry_pair ../../tools/test_object_registry_pair.cpp)
+    target_link_libraries(test_object_registry_pair PRIVATE blockheads_recovered_view)
+    target_compile_options(test_object_registry_pair PRIVATE -UNDEBUG)
+    add_test(NAME recovered_object_registry_pair COMMAND test_object_registry_pair)
+endif()
