@@ -2402,6 +2402,36 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "STEAMTRAIN_CORE.md",
+        [
+            "4243",
+            "texCoordsForImageIndex",
+            "0x243",
+            "0x68",
+            "0x62",
+            "fffffc8c",
+        ],
+    )
+    require(
+        NATIVE / "steamtrain_core.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 1371',
+            "updateSearchForStations",
+            "loadDerivedStuff",
+        ],
+    )
+    for _st_file, _st_imp, _st_end in (
+        ("disasm_worldtileloader_st_loadderived.txt", "# implementation: 0x00d170b0", "# ARM.exidx end: 0x00d17e7c"),
+        ("disasm_worldtileloader_st_ctor_pos.txt", "# implementation: 0x00d17e98", "# ARM.exidx end: 0x00d18834"),
+        ("disasm_worldtileloader_st_ctor_net.txt", "# implementation: 0x00d18b04", "# ARM.exidx end: 0x00d18e60"),
+        ("disasm_worldtileloader_st_creationnetdata.txt", "# implementation: 0x00d19188", "# ARM.exidx end: 0x00d1972c"),
+        ("disasm_worldtileloader_st_dealloc.txt", "# implementation: 0x00d19898", "# ARM.exidx end: 0x00d19b84"),
+        ("disasm_worldtileloader_st_remoteupdate.txt", "# implementation: 0x00d19b84", "# ARM.exidx end: 0x00d1a510"),
+        ("disasm_worldtileloader_st_searchstations.txt", "# implementation: 0x00d1a510", "# ARM.exidx end: 0x00d1ba7c"),
+    ):
+        require(NATIVE / _st_file, [_st_imp, _st_end])
+    require(
         NATIVE / "ELECTRIC_LIGHTING.md",
         [
             "2390",
