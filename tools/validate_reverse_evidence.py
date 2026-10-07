@@ -2402,6 +2402,39 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "TREE_CTORS.md",
+        [
+            "6331",
+            "growthVigorForTreeTypeAtPos",
+            "0x1869f",
+            "0x3fffffff",
+            "0x30/31/32",
+        ],
+    )
+    require(
+        NATIVE / "tree_ctors.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 730',
+            "seasonOffsetNoiseFunction:adultTree:adultMaxAge:",
+            "treeDensityNoiseFunction:",
+        ],
+    )
+    for _tc_file, _tc_imp, _tc_end in (
+        ("disasm_worldtileloader_cf_ctor.txt", "implementation: 0x007de1c0", "ARM.exidx end: 0x007deb18"),
+        ("disasm_worldtileloader_lt_ctor.txt", "implementation: 0x00809278", "ARM.exidx end: 0x00809c2c"),
+        ("disasm_worldtileloader_at_ctor.txt", "implementation: 0x009bca70", "ARM.exidx end: 0x009bd3a0"),
+        ("disasm_worldtileloader_ot_ctor.txt", "implementation: 0x00a95c40", "ARM.exidx end: 0x00a965f4"),
+        ("disasm_worldtileloader_cn_ctor.txt", "implementation: 0x00a990a0", "ARM.exidx end: 0x00a99938"),
+        ("disasm_worldtileloader_ct_ctor.txt", "implementation: 0x00b52850", "ARM.exidx end: 0x00b533ac"),
+        ("disasm_worldtileloader_pt_ctor.txt", "implementation: 0x00b643d0", "ARM.exidx end: 0x00b64f38"),
+        ("disasm_worldtileloader_pt_ctorsave.txt", "implementation: 0x00b64f48", "ARM.exidx end: 0x00b651bc"),
+        ("disasm_worldtileloader_ch_ctor.txt", "implementation: 0x00d0d670", "ARM.exidx end: 0x00d0df1c"),
+        ("disasm_worldtileloader_mg_ctor.txt", "implementation: 0x00d4ab38", "ARM.exidx end: 0x00d4b4e4"),
+        ("disasm_worldtileloader_mp_ctor.txt", "implementation: 0x00db56d0", "ARM.exidx end: 0x00db5fa4"),
+    ):
+        require(NATIVE / _tc_file, [_tc_imp, _tc_end])
+    require(
         NATIVE / "TREE_SMALLS.md",
         [
             "1463",
