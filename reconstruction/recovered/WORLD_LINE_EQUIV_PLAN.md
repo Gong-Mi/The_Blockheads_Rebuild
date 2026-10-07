@@ -301,3 +301,18 @@ sweep. O0/O2 green (first run).
 Boundaries: the +0x120 slice is abstracted into the same container (offset
 recorded as a constant); the 57c consumer role stays unestablished (E23);
 the save flags remain in the world_change_queues flush contract.
+
+## Landed in batch E55
+
+### `blockhead_selection.{h,cpp}` (T2)
+
+The active-blockhead selection (E42): the **ffffe55c** index slot (default 0),
+the range-check-then-store setter (in range -> the index; **out of range -> 0**,
+covering index >= count per the bhs boundary) and the resolver's nil path
+when the stored index exceeds the collection count (the slot is NOT
+rewritten by the resolver). Tests: `tools/test_blockhead_selection.cpp` — the
+default slot, in-range stores, the 0-store rule (5 / -1 / index==count) and
+the shrink-then-resolve boundary. O0/O2 green (first run).
+
+Boundaries: the ffffe4f8 collection is an ordered id vector; ffe231cc fetch
+opaque.

@@ -787,3 +787,13 @@ if(NOT TARGET test_save_sweep)
     target_compile_options(test_save_sweep PRIVATE -UNDEBUG)
     add_test(NAME recovered_save_sweep COMMAND test_save_sweep)
 endif()
+
+# Blockhead-selection slice (E42): the ffffe55c index slot, the range-check-
+# then-store setter (0-on-out-of-range) and the resolver's nil path.
+target_sources(blockheads_recovered_view PRIVATE blockhead_selection.cpp)
+if(NOT TARGET test_blockhead_selection)
+    add_executable(test_blockhead_selection ../../tools/test_blockhead_selection.cpp)
+    target_link_libraries(test_blockhead_selection PRIVATE blockheads_recovered_view)
+    target_compile_options(test_blockhead_selection PRIVATE -UNDEBUG)
+    add_test(NAME recovered_blockhead_selection COMMAND test_blockhead_selection)
+endif()
