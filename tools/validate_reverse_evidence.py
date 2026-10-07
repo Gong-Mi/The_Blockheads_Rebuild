@@ -2402,6 +2402,39 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "WORKBENCH_FINAL.md",
+        [
+            "10326",
+            "texCoordsForImageIndex",
+            "reloadDrawBlockLightGlowQuadsForTile",
+            "ceil(remaining / 10)",
+            "96/96",
+        ],
+    )
+    require(
+        NATIVE / "workbench_final.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 4847',
+            "addDrawCubeData:fromIndex:",
+            "staticGeometryDrawCubeCount",
+        ],
+    )
+    for _wz_file, _wz_imp, _wz_end in (
+        ("disasm_worldtileloader_wz_adddrawquad.txt", "implementation: 0x00b02608", "ARM.exidx end: 0x00b05ec4"),
+        ("disasm_worldtileloader_wz_adddrawcube.txt", "implementation: 0x00b05f90", "ARM.exidx end: 0x00b0ab4c"),
+        ("disasm_worldtileloader_wz_ctor_placed.txt", "implementation: 0x00ae42c0", "ARM.exidx end: 0x00ae4ed8"),
+        ("disasm_worldtileloader_wz_initsubderived.txt", "implementation: 0x00ae3634", "ARM.exidx end: 0x00ae3c5c"),
+        ("disasm_worldtileloader_wz_craftableitems.txt", "implementation: 0x00afb128", "ARM.exidx end: 0x00afb164"),
+        ("disasm_worldtileloader_wz_hurrycost.txt", "implementation: 0x00b0bc24", "ARM.exidx end: 0x00b0bca4"),
+        ("disasm_worldtileloader_wz_rmmacro.txt", "implementation: 0x00b0aec0", "ARM.exidx end: 0x00b0b25c"),
+        ("disasm_worldtileloader_wz_lightpos.txt", "implementation: 0x00b0b51c", "ARM.exidx end: 0x00b0b648"),
+        ("disasm_worldtileloader_wz_addartistlight.txt", "implementation: 0x00b0b664", "ARM.exidx end: 0x00b0b6d8"),
+        ("disasm_worldtileloader_wz_staticquadcount.txt", "implementation: 0x00b0222c", "ARM.exidx end: 0x00b02608"),
+        ("disasm_worldtileloader_wz_staticcubecount.txt", "implementation: 0x00b05ec4", "ARM.exidx end: 0x00b05f90"),
+    ):
+        require(NATIVE / _wz_file, [_wz_imp, _wz_end])
+    require(
         NATIVE / "WORKBENCH_TAIL.md",
         [
             "2324",
