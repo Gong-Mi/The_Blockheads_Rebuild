@@ -2249,6 +2249,39 @@ def main() -> None:
     ):
         require(NATIVE / _a3_file, [_a3_imp, _a3_end])
     require(
+        NATIVE / "WORKBENCH_INTERACTION.md",
+        [
+            "887",
+            "0x2d (45)",
+            "0x00E4AA90",
+            "0x21c",
+            "ffffe588",
+            "ffffe560",
+        ],
+    )
+    require(
+        NATIVE / "workbench_interaction.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 238',
+            "workbenchAtPos:",
+            "getNextDynamicObjectID",
+        ],
+    )
+    for _wb_file, _wb_imp, _wb_end in (
+        ("disasm_worldtileloader_workbenchatpos_.txt", "# implementation: 0x008efe3c", "# ARM.exidx end: 0x008f0090"),
+        ("disasm_worldtileloader_workbenchhasbeencrafted.txt", "# implementation: 0x008f015c", "# ARM.exidx end: 0x008f0198"),
+        ("disasm_worldtileloader_assigncraftprogressuitoloadedworkbenches.txt", "# implementation: 0x008f0198", "# ARM.exidx end: 0x008f0550"),
+        ("disasm_worldtileloader_interactionobjectwithid_.txt", "# implementation: 0x008f1048", "# ARM.exidx end: 0x008f1284"),
+        ("disasm_worldtileloader_interactionobjecttypeforobjectatpos_.txt", "# implementation: 0x008f1284", "# ARM.exidx end: 0x008f1354"),
+        ("disasm_worldtileloader_removeworkbenchatpos_removeblockhead_.txt", "# implementation: 0x008f1354", "# ARM.exidx end: 0x008f145c"),
+        ("disasm_worldtileloader_removeinteractionobjectatpos_removeblock.txt", "# implementation: 0x008f145c", "# ARM.exidx end: 0x008f1564"),
+        ("disasm_worldtileloader_freeblocksexistatpos_.txt", "# implementation: 0x008f1564", "# ARM.exidx end: 0x008f16bc"),
+        ("disasm_worldtileloader_getnextdynamicobjectid.txt", "# implementation: 0x008f1a78", "# ARM.exidx end: 0x008f1acc"),
+        ("disasm_worldtileloader_portal.txt", "# implementation: 0x008f0090", "# ARM.exidx end: 0x008f015c"),
+    ):
+        require(NATIVE / _wb_file, [_wb_imp, _wb_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",

@@ -1,0 +1,26 @@
+# DynamicWorld -[getNextDynamicObjectID]
+# types: Q8@0:4
+# implementation: 0x008f1a78
+# ARM.exidx end: 0x008f1acc
+
+            0x008f1a78      08d04de2       sub sp, sp, 8
+            0x008f1a7c      04008de5       str r0, [sp, 4]
+            0x008f1a80      00108de5       str r1, [sp]
+            0x008f1a84      04009de5       ldr r0, [sp, 4]
+            0x008f1a88      34109fe5       ldr r1, [0x008f1ac4]        ; [0x8f1ac4:4]=0xffffe560
+            0x008f1a8c      34209fe5       ldr r2, [0x008f1ac8]        ; [0x8f1ac8:4]=0x76e05c
+            0x008f1a90      02208fe0       add r2, pc, r2
+            0x008f1a94      021091e7       ldr r1, [r1, r2]
+            0x008f1a98      001091e5       ldr r1, [r1]
+            0x008f1a9c      0110b0e7       ldr r1, [r0, r1]!
+            0x008f1aa0      042090e5       ldr r2, [r0, 4]
+            0x008f1aa4      011091e2       adds r1, r1, 1
+            0x008f1aa8      0020a2e2       adc r2, r2, 0
+            0x008f1aac      001080e5       str r1, [r0]
+            0x008f1ab0      042080e5       str r2, [r0, 4]
+            0x008f1ab4      0100a0e1       mov r0, r1
+            0x008f1ab8      0210a0e1       mov r1, r2
+            0x008f1abc      08d08de2       add sp, sp, 8
+            0x008f1ac0      1eff2fe1       bx lr
+            0x008f1ac4      60e5ffff       invalid
+            0x008f1ac8      5ce07600       rsbseq lr, r6, ip, asr r0
