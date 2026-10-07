@@ -2402,6 +2402,37 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "WORKBENCH_SMALLS.md",
+        [
+            "786",
+            "0x2d (45)",
+            "__wrap_malloc",
+            "ffe26678",
+        ],
+    )
+    require(
+        NATIVE / "workbench_smalls.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 363',
+            "titleForCraftProgressUI",
+            "requiresPhysicalBlock",
+        ],
+    )
+    for _ws_file, _ws_imp, _ws_end in (
+        ("disasm_worldtileloader_ws_initlevel.txt", "implementation: 0x00ae1acc", "ARM.exidx end: 0x00ae2078"),
+        ("disasm_worldtileloader_ws_title.txt", "implementation: 0x00afa7e8", "ARM.exidx end: 0x00afa8b0"),
+        ("disasm_worldtileloader_ws_reqphys.txt", "implementation: 0x00afe67c", "ARM.exidx end: 0x00afe968"),
+        ("disasm_worldtileloader_ws_fbitem.txt", "implementation: 0x00afd4e8", "ARM.exidx end: 0x00afd54c"),
+        ("disasm_worldtileloader_ws_fbsavedict.txt", "implementation: 0x00afd7f0", "ARM.exidx end: 0x00afd83c"),
+        ("disasm_worldtileloader_ws_fbdataa.txt", "implementation: 0x00afd83c", "ARM.exidx end: 0x00afd874"),
+        ("disasm_worldtileloader_ws_fbdatab.txt", "implementation: 0x00afd858", "ARM.exidx end: 0x00afd874"),
+        ("disasm_worldtileloader_ws_objecttype.txt", "implementation: 0x00ae1ab0", "ARM.exidx end: 0x00ae1acc"),
+        ("disasm_worldtileloader_ws_actiontitle.txt", "implementation: 0x00b01750", "ARM.exidx end: 0x00b01800"),
+        ("disasm_worldtileloader_ws_titlecraft.txt", "implementation: 0x00b0bb8c", "ARM.exidx end: 0x00b0bca4"),
+    ):
+        require(NATIVE / _ws_file, [_ws_imp, _ws_end])
+    require(
         NATIVE / "WORKBENCH_CRAFTING.md",
         [
             "5964",
