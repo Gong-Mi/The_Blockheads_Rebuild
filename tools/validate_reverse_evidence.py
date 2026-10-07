@@ -2077,6 +2077,37 @@ def main() -> None:
     ):
         require(NATIVE / _ub_file, [_ub_imp, _ub_end])
     require(
+        NATIVE / "QUERY_ACCESS.md",
+        [
+            "1133",
+            "0x00E4AA1C",
+            "0x00E4AA0C",
+            "0x1d4",
+            "pathUsers",
+            "hasLightsToAdd",
+        ],
+    )
+    require(
+        NATIVE / "query_access.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 334',
+            "npcWithID:",
+            "localAndDisconnectedClientBlockheads",
+        ],
+    )
+    for _qa_file, _qa_imp, _qa_end in (
+        ("disasm_worldtileloader_npcwithid_.txt", "# implementation: 0x008f23f4", "# ARM.exidx end: 0x008f2630"),
+        ("disasm_worldtileloader_harmabledynamicobjectwithid_.txt", "# implementation: 0x008f2630", "# ARM.exidx end: 0x008f28a4"),
+        ("disasm_worldtileloader_blockheadwithidincludingnet_.txt", "# implementation: 0x008f932c", "# ARM.exidx end: 0x008f956c"),
+        ("disasm_worldtileloader_localanddisconnectedclientblockheads.txt", "# implementation: 0x008f67f8", "# ARM.exidx end: 0x008f6954"),
+        ("disasm_worldtileloader_localnetid.txt", "# implementation: 0x008f6568", "# ARM.exidx end: 0x008f6698"),
+        ("disasm_worldtileloader_pathusers.txt", "# implementation: 0x008fdf6c", "# ARM.exidx end: 0x008fe4a4"),
+        ("disasm_worldtileloader_railorstationnamechanged.txt", "# implementation: 0x008fe280", "# ARM.exidx end: 0x008fe4a4"),
+        ("disasm_worldtileloader_haslightstoadd.txt", "# implementation: 0x009034b8", "# ARM.exidx end: 0x00903594"),
+    ):
+        require(NATIVE / _qa_file, [_qa_imp, _qa_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
