@@ -2402,6 +2402,32 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "WORKBENCH_CRAFTING.md",
+        [
+            "5964",
+            "preserveItemDataAInCraftedItem",
+            "fff3c074",
+            "0x00aebb94",
+        ],
+    )
+    require(
+        NATIVE / "workbench_crafting.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 1891',
+            "blockheadWouldLikeToTakeOwnership:withSaveDict:",
+            "abortImmediatelyAndRestoreBlockheadItems",
+        ],
+    )
+    for _wc_file, _wc_imp, _wc_end in (
+        ("disasm_worldtileloader_wc_craftcompleted.txt", "implementation: 0x00aeb47c", "ARM.exidx end: 0x00aed208"),
+        ("disasm_worldtileloader_wc_craftitem.txt", "implementation: 0x00afb164", "ARM.exidx end: 0x00afc87c"),
+        ("disasm_worldtileloader_wc_bhownership.txt", "implementation: 0x00ae7248", "ARM.exidx end: 0x00ae81d0"),
+        ("disasm_worldtileloader_wc_abortcraft.txt", "implementation: 0x00ae9b78", "ARM.exidx end: 0x00aeaac4"),
+        ("disasm_worldtileloader_wc_abortrestore.txt", "implementation: 0x00aeaac4", "ARM.exidx end: 0x00aeb47c"),
+    ):
+        require(NATIVE / _wc_file, [_wc_imp, _wc_end])
+    require(
         NATIVE / "WORKBENCH_LIFECYCLE.md",
         [
             "7590",
