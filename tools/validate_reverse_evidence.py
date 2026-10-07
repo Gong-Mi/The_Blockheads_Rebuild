@@ -2402,6 +2402,30 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "DRAW_COMPOSITE.md",
+        [
+            "7203",
+            "ffe2353c",
+            "ffe23538",
+            "0x00E4AA3C",
+            "structural pass",
+            "boundary",
+        ],
+    )
+    require(
+        NATIVE / "draw_composite.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 7203',
+            "draw:projectionMatrix:",
+            "hideUIType:",
+        ],
+    )
+    require(
+        NATIVE / "disasm_worldtileloader_draw_projectionmatrix_modelviewmatrix_ca.txt",
+        ["# implementation: 0x008d4ff0", "# ARM.exidx end: 0x008dc07c"],
+    )
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
