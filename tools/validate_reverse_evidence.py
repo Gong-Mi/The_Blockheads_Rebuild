@@ -2402,6 +2402,29 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "WORKBENCH_GIANTS.md",
+        [
+            "11150",
+            "tileIsBurnable",
+            "itemTypeIsPainting",
+            "96/96",
+        ],
+    )
+    require(
+        NATIVE / "workbench_giants.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 8600',
+            "updateQuadBufferTexCoords",
+            "fillQuadBuffer",
+        ],
+    )
+    for _wg_file, _wg_imp, _wg_end in (
+        ("disasm_worldtileloader_wg_update.txt", "implementation: 0x00aeea18", "ARM.exidx end: 0x00af11f0"),
+        ("disasm_worldtileloader_wg_draw.txt", "implementation: 0x00af11f0", "ARM.exidx end: 0x00af9850"),
+    ):
+        require(NATIVE / _wg_file, [_wg_imp, _wg_end])
+    require(
         NATIVE / "WORKBENCH_SMALLS.md",
         [
             "786",
