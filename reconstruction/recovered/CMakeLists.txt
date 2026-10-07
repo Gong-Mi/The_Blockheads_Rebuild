@@ -887,3 +887,19 @@ if(NOT TARGET test_torch_placement_codes)
     target_compile_options(test_torch_placement_codes PRIVATE -UNDEBUG)
     add_test(NAME recovered_torch_placement_codes COMMAND test_torch_placement_codes)
 endif()
+
+# Train type traits slice (E70/E71/E74): the pinned train constants (itemType
+# 205 = the fuel item, objectType 42, fuelItemCount 4, maxRiders 1, fuelUI
+# offset 4.0f) and the boolean traits.
+target_sources(blockheads_recovered_view PRIVATE train_type_traits.cpp)
+if(NOT TARGET test_particle_pool_slots)
+    add_executable(test_particle_pool_slots ../../tools/test_particle_pool_slots.cpp)
+    target_link_libraries(test_particle_pool_slots PRIVATE blockheads_recovered_view)
+    target_compile_options(test_particle_pool_slots PRIVATE -UNDEBUG)
+    add_test(NAME recovered_particle_pool_slots COMMAND test_particle_pool_slots)
+endif()
+
+# Particle pool slots slice (E73): the 2048-slot pool with the 0x7fffffff
+# sentinel, the stop gate and the world-width band; plus the train traits
+# static_asserts in the same test.
+target_sources(blockheads_recovered_view PRIVATE particle_pool_slots.cpp)

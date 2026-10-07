@@ -729,6 +729,16 @@ jobs:
           /tmp/test_torch_placement_codes
         done
 
+    - name: Test recovered train traits + particle pool slices
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_particle_pool_slots.cpp \
+            reconstruction/recovered/particle_pool_slots.cpp \
+            reconstruction/recovered/train_type_traits.cpp -o /tmp/test_particle_pool_slots
+          /tmp/test_particle_pool_slots
+        done
+
     - name: Test recovered tile markers slice
       run: |
         for opt in 0 2; do
