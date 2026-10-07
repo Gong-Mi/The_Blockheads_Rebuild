@@ -1,0 +1,52 @@
+# SunflowerPlant -[lightFactor]
+# types: f8@0:4
+# implementation: 0x009bc394
+# ARM.exidx end: 0x009bc450
+
+            0x009bc394      00482de9       push {fp, lr}
+            0x009bc398      0db0a0e1       mov fp, sp
+            0x009bc39c      10d04de2       sub sp, sp, 0x10
+            0x009bc3a0      04000be5       str r0, [fp, -4]
+            0x009bc3a4      08108de5       str r1, [sp, 8]
+            0x009bc3a8      04001be5       ldr r0, [fp, -4]
+            0x009bc3ac      80109fe5       ldr r1, [0x009bc434]        ; [0x9bc434:4]=0xffffcabc
+            0x009bc3b0      80209fe5       ldr r2, [0x009bc438]        ; [0x9bc438:4]=0x6a3738
+            0x009bc3b4      02208fe0       add r2, pc, r2
+            0x009bc3b8      021091e7       ldr r1, [r1, r2]
+            0x009bc3bc      001091e5       ldr r1, [r1]
+            0x009bc3c0      011080e0       add r1, r0, r1
+            0x009bc3c4      000a91ed       vldr s0, [r1]
+            0x009bc3c8      6c109fe5       ldr r1, [0x009bc43c]        ; [0x9bc43c:4]=0xffe24664
+            0x009bc3cc      021091e7       ldr r1, [r1, r2]
+            0x009bc3d0      010a8ded       vstr s0, [sp, 4]
+            0x009bc3d4      00208de5       str r2, [sp]
+            0x009bc3d8      0f19e0eb       bl loc.imp.objc_msgSend
+            0x009bc3dc      100a00ee       vmov s0, r0
+            0x009bc3e0      011a9ded       vldr s2, [sp, 4]
+            0x009bc3e4      000a81ee       vdiv.f32 s0, s2, s0
+            0x009bc3e8      001ab6ee       vmov.f32 s2, 5
+            0x009bc3ec      010a20ee       vmul.f32 s0, s0, s2
+            0x009bc3f0      121a9fed       vldr s2, [0x009bc440]
+            0x009bc3f4      010a30ee       vadd.f32 s0, s0, s2
+            0x009bc3f8      04001be5       ldr r0, [fp, -4]
+            0x009bc3fc      40109fe5       ldr r1, [0x009bc444]        ; [0x9bc444:4]=0xffffcad4
+            0x009bc400      00209de5       ldr r2, [sp]
+            0x009bc404      021091e7       ldr r1, [r1, r2]
+            0x009bc408      001091e5       ldr r1, [r1]
+            0x009bc40c      0100d0e7       ldrb r0, [r0, r1]
+            0x009bc410      30108fe2       add r1, pc, 0x30
+            0x009bc414      043081e2       add r3, r1, 4
+            0x009bc418      000050e3       cmp r0, 0
+            0x009bc41c      0310a011       movne r1, r3
+            0x009bc420      001a91ed       vldr s2, [r1]
+            0x009bc424      010a30ee       vadd.f32 s0, s0, s2
+            0x009bc428      100a10ee       vmov r0, s0
+            0x009bc42c      0bd0a0e1       mov sp, fp
+            0x009bc430      0088bde8       pop {fp, pc}
+            0x009bc434      bccaffff       invalid
+            0x009bc438      38376a00       rsbeq r3, sl, r8, lsr r7
+            0x009bc43c      6446e2ff       invalid
+            0x009bc440      cdcccc3d       stcllo p12, c12, [ip, 0x334]
+            0x009bc444      d4caffff       invalid
+            0x009bc448      00000000       andeq r0, r0, r0
+            0x009bc44c      cdcccc3e       cdplo p12, 0xc, c12, c12, c13, 6

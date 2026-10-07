@@ -1,0 +1,114 @@
+# ChilliPlant -[lightColor]
+# types: {Vector=[4f]}8@0:4
+# implementation: 0x006b9fb4
+# ARM.exidx end: 0x006ba168
+
+            0x006b9fb4      104c2de9       push {r4, sl, fp, lr}
+            0x006b9fb8      08b08de2       add fp, sp, 8
+            0x006b9fbc      58d04de2       sub sp, sp, 0x58
+            0x006b9fc0      9c319fe5       ldr r3, [0x006ba164]        ; [0x6ba164:4]=0x9a5b28
+            0x006b9fc4      03308fe0       add r3, pc, r3
+            0x006b9fc8      ffc000e3       movw ip, 0xff
+            0x006b9fcc      5f0a9fed       vldr s0, [0x006ba150]
+            0x006b9fd0      7ce19fe5       ldr lr, [0x006ba154]        ; [0x6ba154:4]=0xffffbcac
+            0x006b9fd4      03e09ee7       ldr lr, [lr, r3]
+            0x006b9fd8      78419fe5       ldr r4, [0x006ba158]        ; [0x6ba158:4]=0xffe20094
+            0x006b9fdc      033084e0       add r3, r4, r3
+            0x006b9fe0      0c100be5       str r1, [fp, -0xc]
+            0x006b9fe4      10200be5       str r2, [fp, -0x10]
+            0x006b9fe8      0c101be5       ldr r1, [fp, -0xc]
+            0x006b9fec      002093e5       ldr r2, [r3]
+            0x006b9ff0      28008de5       str r0, [sp, 0x28]
+            0x006b9ff4      0100a0e1       mov r0, r1
+            0x006b9ff8      0210a0e1       mov r1, r2
+            0x006b9ffc      090a8ded       vstr s0, [sp, 0x24]
+            0x006ba000      20c08de5       str ip, [sp, 0x20]
+            0x006ba004      3eff2fe1       blx lr
+            0x006ba008      100a00ee       vmov s0, r0
+            0x006ba00c      050a0bed       vstr s0, [fp, -0x14]
+            0x006ba010      050a1bed       vldr s0, [fp, -0x14]
+            0x006ba014      091a9ded       vldr s2, [sp, 0x24]
+            0x006ba018      000a21ee       vmul.f32 s0, s2, s0
+            0x006ba01c      070a0bed       vstr s0, [fp, -0x1c]
+            0x006ba020      20009de5       ldr r0, [sp, 0x20]
+            0x006ba024      20000be5       str r0, [fp, -0x20]
+            0x006ba028      070a1bed       vldr s0, [fp, -0x1c]
+            0x006ba02c      20101be5       ldr r1, [fp, -0x20]
+            0x006ba030      101a02ee       vmov s4, r1
+            0x006ba034      c22ab8ee       vcvt.f32.s32 s4, s4
+            0x006ba038      c20ab4ee       vcmpe.f32 s0, s4
+            0x006ba03c      10faf1ee       vmrs apsr_nzcv, fpscr
+        ┌─< 0x006ba040      0200005a       bpl 0x6ba050
+        │   0x006ba044      070a1bed       vldr s0, [fp, -0x1c]
+        │   0x006ba048      070a8ded       vstr s0, [sp, 0x1c]
+       ┌──< 0x006ba04c      030000ea       b 0x6ba060
+       │└─> 0x006ba050      20001be5       ldr r0, [fp, -0x20]
+       │    0x006ba054      100a00ee       vmov s0, r0
+       │    0x006ba058      c00ab8ee       vcvt.f32.s32 s0, s0
+       │    0x006ba05c      070a8ded       vstr s0, [sp, 0x1c]
+       └──> 0x006ba060      070a9ded       vldr s0, [sp, 0x1c]
+            0x006ba064      ff0000e3       movw r0, 0xff
+            0x006ba068      4b1000e3       movw r1, 0x4b               ; 'K'
+            0x006ba06c      3a1a9fed       vldr s2, [0x006ba15c]
+            0x006ba070      090a0bed       vstr s0, [fp, -0x24]
+            0x006ba074      090a1bed       vldr s0, [fp, -0x24]
+            0x006ba078      c00abdee       vcvt.s32.f32 s0, s0
+            0x006ba07c      102a10ee       vmov r2, s0
+            0x006ba080      18200be5       str r2, [fp, -0x18]
+            0x006ba084      050a1bed       vldr s0, [fp, -0x14]
+            0x006ba088      000a21ee       vmul.f32 s0, s2, s0
+            0x006ba08c      0b0a0bed       vstr s0, [fp, -0x2c]
+            0x006ba090      30008de5       str r0, [sp, 0x30]
+            0x006ba094      0b0a1bed       vldr s0, [fp, -0x2c]
+            0x006ba098      30009de5       ldr r0, [sp, 0x30]
+            0x006ba09c      100a01ee       vmov s2, r0
+            0x006ba0a0      c11ab8ee       vcvt.f32.s32 s2, s2
+            0x006ba0a4      c10ab4ee       vcmpe.f32 s0, s2
+            0x006ba0a8      10faf1ee       vmrs apsr_nzcv, fpscr
+            0x006ba0ac      18108de5       str r1, [sp, 0x18]
+        ┌─< 0x006ba0b0      0200005a       bpl 0x6ba0c0
+        │   0x006ba0b4      0b0a1bed       vldr s0, [fp, -0x2c]
+        │   0x006ba0b8      050a8ded       vstr s0, [sp, 0x14]
+       ┌──< 0x006ba0bc      030000ea       b 0x6ba0d0
+       │└─> 0x006ba0c0      30009de5       ldr r0, [sp, 0x30]
+       │    0x006ba0c4      100a00ee       vmov s0, r0
+       │    0x006ba0c8      c00ab8ee       vcvt.f32.s32 s0, s0
+       │    0x006ba0cc      050a8ded       vstr s0, [sp, 0x14]
+       └──> 0x006ba0d0      050a9ded       vldr s0, [sp, 0x14]
+            0x006ba0d4      000000e3       movw r0, 0
+            0x006ba0d8      201a9fed       vldr s2, [0x006ba160]
+            0x006ba0dc      021000e3       movw r1, 2
+            0x006ba0e0      002ab0ee       vmov.f32 s4, 2
+            0x006ba0e4      0b0a8ded       vstr s0, [sp, 0x2c]
+            0x006ba0e8      0b0a9ded       vldr s0, [sp, 0x2c]
+            0x006ba0ec      c00abdee       vcvt.s32.f32 s0, s0
+            0x006ba0f0      102a10ee       vmov r2, s0
+            0x006ba0f4      28200be5       str r2, [fp, -0x28]
+            0x006ba0f8      18201be5       ldr r2, [fp, -0x18]
+            0x006ba0fc      102a00ee       vmov s0, r2
+            0x006ba100      c00ab8ee       vcvt.f32.s32 s0, s0
+            0x006ba104      28201be5       ldr r2, [fp, -0x28]
+            0x006ba108      102a03ee       vmov s6, r2
+            0x006ba10c      c33ab8ee       vcvt.f32.s32 s6, s6
+            0x006ba110      054a1bed       vldr s8, [fp, -0x14]
+            0x006ba114      022a24ee       vmul.f32 s4, s8, s4
+            0x006ba118      28209de5       ldr r2, [sp, 0x28]
+            0x006ba11c      10008de5       str r0, [sp, 0x10]
+            0x006ba120      0200a0e1       mov r0, r2
+            0x006ba124      103a10ee       vmov r3, s0
+            0x006ba128      0c108de5       str r1, [sp, 0xc]
+            0x006ba12c      0310a0e1       mov r1, r3
+            0x006ba130      102a13ee       vmov r2, s6
+            0x006ba134      103a11ee       vmov r3, s2
+            0x006ba138      10ca12ee       vmov ip, s4
+            0x006ba13c      00c08de5       str ip, [sp]
+            0x006ba140      f05af8eb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+            0x006ba144      08008de5       str r0, [sp, 8]
+            0x006ba148      08d04be2       sub sp, fp, 8
+            0x006ba14c      108cbde8       pop {r4, sl, fp, pc}
+            0x006ba150      00007f43       cmnmi pc, 0
+            0x006ba154      acbcffff       invalid
+            0x006ba158      9400e2ff       invalid
+            0x006ba15c      00009642       addsmi r0, r6, 0
+            0x006ba160      00000000       andeq r0, r0, r0
+            0x006ba164      285b9a00       addseq r5, sl, r8, lsr 22

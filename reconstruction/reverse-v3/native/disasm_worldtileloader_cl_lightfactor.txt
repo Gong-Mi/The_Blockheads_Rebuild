@@ -1,0 +1,52 @@
+# ChilliPlant -[lightFactor]
+# types: f8@0:4
+# implementation: 0x006b9ef8
+# ARM.exidx end: 0x006b9fb4
+
+            0x006b9ef8      00482de9       push {fp, lr}
+            0x006b9efc      0db0a0e1       mov fp, sp
+            0x006b9f00      10d04de2       sub sp, sp, 0x10
+            0x006b9f04      04000be5       str r0, [fp, -4]
+            0x006b9f08      08108de5       str r1, [sp, 8]
+            0x006b9f0c      04001be5       ldr r0, [fp, -4]
+            0x006b9f10      80109fe5       ldr r1, [0x006b9f98]        ; [0x6b9f98:4]=0xffffcabc
+            0x006b9f14      80209fe5       ldr r2, [0x006b9f9c]        ; [0x6b9f9c:4]=0x9a5bd4
+            0x006b9f18      02208fe0       add r2, pc, r2
+            0x006b9f1c      021091e7       ldr r1, [r1, r2]
+            0x006b9f20      001091e5       ldr r1, [r1]
+            0x006b9f24      011080e0       add r1, r0, r1
+            0x006b9f28      000a91ed       vldr s0, [r1]
+            0x006b9f2c      6c109fe5       ldr r1, [0x006b9fa0]        ; [0x6b9fa0:4]=0xffe20090
+            0x006b9f30      021091e7       ldr r1, [r1, r2]
+            0x006b9f34      010a8ded       vstr s0, [sp, 4]
+            0x006b9f38      00208de5       str r2, [sp]
+            0x006b9f3c      3622eceb       bl loc.imp.objc_msgSend
+            0x006b9f40      100a00ee       vmov s0, r0
+            0x006b9f44      011a9ded       vldr s2, [sp, 4]
+            0x006b9f48      000a81ee       vdiv.f32 s0, s2, s0
+            0x006b9f4c      001ab6ee       vmov.f32 s2, 5
+            0x006b9f50      010a20ee       vmul.f32 s0, s0, s2
+            0x006b9f54      121a9fed       vldr s2, [0x006b9fa4]
+            0x006b9f58      010a30ee       vadd.f32 s0, s0, s2
+            0x006b9f5c      04001be5       ldr r0, [fp, -4]
+            0x006b9f60      40109fe5       ldr r1, [0x006b9fa8]        ; [0x6b9fa8:4]=0xffffcad4
+            0x006b9f64      00209de5       ldr r2, [sp]
+            0x006b9f68      021091e7       ldr r1, [r1, r2]
+            0x006b9f6c      001091e5       ldr r1, [r1]
+            0x006b9f70      0100d0e7       ldrb r0, [r0, r1]
+            0x006b9f74      30108fe2       add r1, pc, 0x30
+            0x006b9f78      043081e2       add r3, r1, 4
+            0x006b9f7c      000050e3       cmp r0, 0
+            0x006b9f80      0310a011       movne r1, r3
+            0x006b9f84      001a91ed       vldr s2, [r1]
+            0x006b9f88      010a30ee       vadd.f32 s0, s0, s2
+            0x006b9f8c      100a10ee       vmov r0, s0
+            0x006b9f90      0bd0a0e1       mov sp, fp
+            0x006b9f94      0088bde8       pop {fp, pc}
+            0x006b9f98      bccaffff       invalid
+            0x006b9f9c      d45b9a00       ldrsbeq r5, [sl], r4
+            0x006b9fa0      9000e2ff       invalid
+            0x006b9fa4      cdcccc3d       stcllo p12, c12, [ip, 0x334]
+            0x006b9fa8      d4caffff       invalid
+            0x006b9fac      00000000       andeq r0, r0, r0
+            0x006b9fb0      cdcccc3e       cdplo p12, 0xc, c12, c12, c13, 6
