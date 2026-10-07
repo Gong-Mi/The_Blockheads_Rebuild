@@ -182,3 +182,21 @@ return. O0/O2 green (first run).
 Boundaries: cell identities are opaque dispatch-slot handles (pinned values
 as stable identities); the add-frame payload fields are recorded, not
 resolved; door/workbench removal legs are deliberately out of the table.
+
+## Landed in batch E48
+
+### `world_collections.{h,cpp}` (T2)
+
+The blockhead-collection members and merge getters: the trio ffffe4f0
+(local) / ffffe4f4 (net) / ffffe4f8 (blockheads), the client/server slot
+booleans (ffffe518 / ffffe51c != nil; ffffe514 serverClients via the E40
+setter), `netBlockheads` = merge(local, net), `allBlockheadsIncludingNet` =
+merge(local, net, blockheads) and `localAndDisconnectedClientBlockheads` =
+client -> blockheads directly, server -> merge(local, blockheads). Tests:
+`tools/test_world_collections.cpp` — booleans, the three merges, the branch
+split and duplicate preservation (no dedup evidence). O0/O2 green (first
+run).
+
+Boundaries: collections are ordered id lists (container classes not
+modelled); the server-side merge call handles (ffe23204/ffe236a8) are opaque;
+merge duplication is preserved because no dedup evidence exists.

@@ -714,3 +714,14 @@ if(NOT TARGET test_accessor_triplets)
     target_compile_options(test_accessor_triplets PRIVATE -UNDEBUG)
     add_test(NAME recovered_accessor_triplets COMMAND test_accessor_triplets)
 endif()
+
+# World-collections merge slice (E35 readers + the slot tables of E27/E29/E31/
+# E40/E42): the ffffe4f0/ffffe4f4/ffffe4f8 trio, the client/server slot
+# booleans and the three merge getters.
+target_sources(blockheads_recovered_view PRIVATE world_collections.cpp)
+if(NOT TARGET test_world_collections)
+    add_executable(test_world_collections ../../tools/test_world_collections.cpp)
+    target_link_libraries(test_world_collections PRIVATE blockheads_recovered_view)
+    target_compile_options(test_world_collections PRIVATE -UNDEBUG)
+    add_test(NAME recovered_world_collections COMMAND test_world_collections)
+endif()
