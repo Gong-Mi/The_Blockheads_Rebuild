@@ -2402,6 +2402,64 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "NORMAL_PLANT.md",
+        [
+            "5090",
+            "growthVigorForPlantTypeAtPos",
+            "reloadDrawBlockDynamicObjectQuad",
+            "emitsLight",
+            "0x384",
+        ],
+    )
+    require(
+        NATIVE / "normal_plant.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 1736',
+            "tileHarvested:removeBlockhead:correctToolMultiplier:",
+            "addLightGlowQuadData:fromIndex:",
+        ],
+    )
+    for _np_file, _np_imp, _np_end in (
+        ("disasm_worldtileloader_np_objecttype.txt", "implementation: 0x00a6532c", "ARM.exidx end: 0x00a65348"),
+        ("disasm_worldtileloader_np_maxagebase.txt", "implementation: 0x00a65348", "ARM.exidx end: 0x00a65378"),
+        ("disasm_worldtileloader_np_contentstype.txt", "implementation: 0x00a65378", "ARM.exidx end: 0x00a653d8"),
+        ("disasm_worldtileloader_np_flowercontents.txt", "implementation: 0x00a654f4", "ARM.exidx end: 0x00a65554"),
+        ("disasm_worldtileloader_np_mintemp.txt", "implementation: 0x00a65554", "ARM.exidx end: 0x00a655c4"),
+        ("disasm_worldtileloader_np_seeditem.txt", "implementation: 0x00a65570", "ARM.exidx end: 0x00a655c4"),
+        ("disasm_worldtileloader_np_folliageitem.txt", "implementation: 0x00a6558c", "ARM.exidx end: 0x00a655c4"),
+        ("disasm_worldtileloader_np_renderimage.txt", "implementation: 0x00a655a8", "ARM.exidx end: 0x00a655c4"),
+        ("disasm_worldtileloader_np_foodremove.txt", "implementation: 0x00a655c4", "ARM.exidx end: 0x00a655f4"),
+        ("disasm_worldtileloader_np_floweringseason.txt", "implementation: 0x00a655f4", "ARM.exidx end: 0x00a65634"),
+        ("disasm_worldtileloader_np_candie.txt", "implementation: 0x00a65614", "ARM.exidx end: 0x00a65634"),
+        ("disasm_worldtileloader_np_npcspawn.txt", "implementation: 0x00a65634", "ARM.exidx end: 0x00a6566c"),
+        ("disasm_worldtileloader_np_emitslight.txt", "implementation: 0x00a65650", "ARM.exidx end: 0x00a6566c"),
+        ("disasm_worldtileloader_np_lightfactor.txt", "implementation: 0x00a6566c", "ARM.exidx end: 0x00a65698"),
+        ("disasm_worldtileloader_np_lightcolor.txt", "implementation: 0x00a65698", "ARM.exidx end: 0x00a659a0"),
+        ("disasm_worldtileloader_np_initsubderived.txt", "implementation: 0x00a656e4", "ARM.exidx end: 0x00a659a0"),
+        ("disasm_worldtileloader_np_ctor.txt", "implementation: 0x00a659a0", "ARM.exidx end: 0x00a66604"),
+        ("disasm_worldtileloader_np_ctorsave.txt", "implementation: 0x00a66614", "ARM.exidx end: 0x00a66a78"),
+        ("disasm_worldtileloader_np_ctornet.txt", "implementation: 0x00a66a78", "ARM.exidx end: 0x00a66b94"),
+        ("disasm_worldtileloader_np_dealloc.txt", "implementation: 0x00a66b94", "ARM.exidx end: 0x00a66c7c"),
+        ("disasm_worldtileloader_np_setneedsremoved.txt", "implementation: 0x00a66c7c", "ARM.exidx end: 0x00a66e14"),
+        ("disasm_worldtileloader_np_setflowering.txt", "implementation: 0x00a67034", "ARM.exidx end: 0x00a672d0"),
+        ("disasm_worldtileloader_np_remoteupdate.txt", "implementation: 0x00a672d0", "ARM.exidx end: 0x00a67414"),
+        ("disasm_worldtileloader_np_glowquadcount.txt", "implementation: 0x00a67414", "ARM.exidx end: 0x00a674cc"),
+        ("disasm_worldtileloader_np_addglowquad.txt", "implementation: 0x00a674cc", "ARM.exidx end: 0x00a675a0"),
+        ("disasm_worldtileloader_np_update.txt", "implementation: 0x00a675a0", "ARM.exidx end: 0x00a690c0"),
+        ("disasm_worldtileloader_np_kindself.txt", "implementation: 0x00a690c0", "ARM.exidx end: 0x00a691a0"),
+        ("disasm_worldtileloader_np_harvested.txt", "implementation: 0x00a691a0", "ARM.exidx end: 0x00a69888"),
+        ("disasm_worldtileloader_np_tilesabove.txt", "implementation: 0x00a69888", "ARM.exidx end: 0x00a698e0"),
+        ("disasm_worldtileloader_np_droppeditem.txt", "implementation: 0x00a698e0", "ARM.exidx end: 0x00a699d8"),
+        ("disasm_worldtileloader_np_staticquadcount.txt", "implementation: 0x00a699d8", "ARM.exidx end: 0x00a69a00"),
+        ("disasm_worldtileloader_np_adddrawquad.txt", "implementation: 0x00a69a00", "ARM.exidx end: 0x00a69eec"),
+        ("disasm_worldtileloader_np_rmmacro.txt", "implementation: 0x00a69f60", "ARM.exidx end: 0x00a6a180"),
+        ("disasm_worldtileloader_np_addartistlight.txt", "implementation: 0x00a6a180", "ARM.exidx end: 0x00a6a1f4"),
+        ("disasm_worldtileloader_np_availfood.txt", "implementation: 0x00a6a1f4", "ARM.exidx end: 0x00a6a288"),
+        ("disasm_worldtileloader_np_setavailfood.txt", "implementation: 0x00a6a23c", "ARM.exidx end: 0x00a6a288"),
+    ):
+        require(NATIVE / _np_file, [_np_imp, _np_end])
+    require(
         NATIVE / "TREE_BASE.md",
         [
             "4378",
