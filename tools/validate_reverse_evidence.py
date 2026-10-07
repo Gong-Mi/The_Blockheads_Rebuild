@@ -2402,6 +2402,54 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "WORKBENCH_TAIL.md",
+        [
+            "2324",
+            "0x18 (24)",
+            "fffff17c",
+            "dmb ish",
+            "0xb0b958",
+        ],
+    )
+    require(
+        NATIVE / "workbench_tail.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 371',
+            "numberOfCraftableItemsUpToCurrentLevel",
+            "rendersDynamicObjectCubes",
+        ],
+    )
+    for _wt_file, _wt_imp, _wt_end in (
+        ("disasm_worldtileloader_wt_destroyitem.txt", "implementation: 0x00b02150", "ARM.exidx end: 0x00b0222c"),
+        ("disasm_worldtileloader_wt_fueluipos.txt", "implementation: 0x00b021b4", "ARM.exidx end: 0x00b0222c"),
+        ("disasm_worldtileloader_wt_renderquad.txt", "implementation: 0x00b0ab4c", "ARM.exidx end: 0x00b0aec0"),
+        ("disasm_worldtileloader_wt_rendercubes.txt", "implementation: 0x00b0ae18", "ARM.exidx end: 0x00b0aec0"),
+        ("disasm_worldtileloader_wt_bhunloaded.txt", "implementation: 0x00b0b25c", "ARM.exidx end: 0x00b0b398"),
+        ("disasm_worldtileloader_wt_glowquadcount.txt", "implementation: 0x00b0b398", "ARM.exidx end: 0x00b0b51c"),
+        ("disasm_worldtileloader_wt_occupiesnormal.txt", "implementation: 0x00b0b648", "ARM.exidx end: 0x00b0b664"),
+        ("disasm_worldtileloader_wt_expertuse.txt", "implementation: 0x00b0b6d8", "ARM.exidx end: 0x00b0bca4"),
+        ("disasm_worldtileloader_wt_requiresfuel.txt", "implementation: 0x00b0b738", "ARM.exidx end: 0x00b0bca4"),
+        ("disasm_worldtileloader_wt_upgradename.txt", "implementation: 0x00b0b868", "ARM.exidx end: 0x00b0bca4"),
+        ("disasm_worldtileloader_wt_fueltypescount.txt", "implementation: 0x00b0ba64", "ARM.exidx end: 0x00b0bca4"),
+        ("disasm_worldtileloader_wt_fueltypes.txt", "implementation: 0x00b0baf8", "ARM.exidx end: 0x00b0bca4"),
+        ("disasm_worldtileloader_wt_upgradenamecraft.txt", "implementation: 0x00b0bbd8", "ARM.exidx end: 0x00b0bca4"),
+        ("disasm_worldtileloader_wt_numcraftable.txt", "implementation: 0x00b0bca4", "ARM.exidx end: 0x00b0bdd0"),
+        ("disasm_worldtileloader_wt_numcraftablelevel.txt", "implementation: 0x00b0bce0", "ARM.exidx end: 0x00b0bdd0"),
+        ("disasm_worldtileloader_wt_type.txt", "implementation: 0x00b0bd1c", "ARM.exidx end: 0x00b0bdd0"),
+        ("disasm_worldtileloader_wt_level.txt", "implementation: 0x00b0bd58", "ARM.exidx end: 0x00b0bdd0"),
+        ("disasm_worldtileloader_wt_selindex.txt", "implementation: 0x00b0bd94", "ARM.exidx end: 0x00b0bdd0"),
+        ("disasm_worldtileloader_wt_setselindex.txt", "implementation: 0x00b0bdd0", "ARM.exidx end: 0x00b0be58"),
+        ("disasm_worldtileloader_wt_craftobj.txt", "implementation: 0x00b0be14", "ARM.exidx end: 0x00b0be58"),
+        ("disasm_worldtileloader_wt_count.txt", "implementation: 0x00b0be58", "ARM.exidx end: 0x00b0bed0"),
+        ("disasm_worldtileloader_wt_countleft.txt", "implementation: 0x00b0be94", "ARM.exidx end: 0x00b0bed0"),
+        ("disasm_worldtileloader_wt_craftprog.txt", "implementation: 0x00b0bed0", "ARM.exidx end: 0x00b0bfec"),
+        ("disasm_worldtileloader_wt_setcraftprog.txt", "implementation: 0x00b0bf14", "ARM.exidx end: 0x00b0bfec"),
+        ("disasm_worldtileloader_wt_xscroll.txt", "implementation: 0x00b0bf58", "ARM.exidx end: 0x00b0bfec"),
+        ("disasm_worldtileloader_wt_setxscroll.txt", "implementation: 0x00b0bfa0", "ARM.exidx end: 0x00b0bfec"),
+    ):
+        require(NATIVE / _wt_file, [_wt_imp, _wt_end])
+    require(
         NATIVE / "WORKBENCH_GIANTS.md",
         [
             "11150",
