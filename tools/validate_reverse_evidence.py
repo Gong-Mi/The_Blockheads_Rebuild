@@ -2402,6 +2402,40 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "WORKBENCH_ELECTRICITY.md",
+        [
+            "1699",
+            "8192",
+            "tileIsAirOrSnow",
+            "powf",
+            "(48, 130, 220)",
+        ],
+    )
+    require(
+        NATIVE / "workbench_electricity.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 245',
+            "subtractElectricty:",
+            "usesStoresConductsOrProducesElectricity",
+        ],
+    )
+    for _wbe_file, _wbe_imp, _wbe_end in (
+        ("disasm_worldtileloader_wb_avaiablelec.txt", "implementation: 0x00b01284", "ARM.exidx end: 0x00b012c0"),
+        ("disasm_worldtileloader_wb_conductelec.txt", "implementation: 0x00b012c0", "ARM.exidx end: 0x00b0137c"),
+        ("disasm_worldtileloader_wb_subtractelec.txt", "implementation: 0x00b0137c", "ARM.exidx end: 0x00b01750"),
+        ("disasm_worldtileloader_wb_genelectric.txt", "implementation: 0x00b01c24", "ARM.exidx end: 0x00b01ec0"),
+        ("disasm_worldtileloader_wb_useselectric.txt", "implementation: 0x00b01cac", "ARM.exidx end: 0x00b01ec0"),
+        ("disasm_worldtileloader_wb_energyfrac.txt", "implementation: 0x00b01ec0", "ARM.exidx end: 0x00b02060"),
+        ("disasm_worldtileloader_wb_solarlight_full.txt", "implementation: 0x00aee208", "ARM.exidx end: 0x00aee508"),
+        ("disasm_worldtileloader_wb_solarlight.txt", "implementation: 0x00aee508", "ARM.exidx end: 0x00aeea18"),
+        ("disasm_worldtileloader_wb_getlightrgb.txt", "implementation: 0x00ae3c6c", "ARM.exidx end: 0x00ae3f64"),
+        ("disasm_worldtileloader_wb_portallight.txt", "implementation: 0x00ae3f64", "ARM.exidx end: 0x00ae42c0"),
+        ("disasm_worldtileloader_wb_storagedev.txt", "implementation: 0x00b01bd4", "ARM.exidx end: 0x00b01c24"),
+        ("disasm_worldtileloader_wb_conductelec.txt", "implementation: 0x00b012c0", "ARM.exidx end: 0x00b0137c"),
+    ):
+        require(NATIVE / _wbe_file, [_wbe_imp, _wbe_end])
+    require(
         NATIVE / "STEAMTRAIN_CLOSE.md",
         [
             "18484",
