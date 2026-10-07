@@ -332,3 +332,18 @@ first-hit-wins order and exhaustion. O0/O2 green (first run).
 
 Boundaries: arm identities are opaque; the second-registry fallback (ffffe550)
 stays out of the probe helpers.
+
+## Landed in batch E57
+
+### `interaction_objects.{h,cpp}` (T2)
+
+The interaction type query (ffe23570 fetch -> the ffe23688 type as
+**std::uint16_t** via strh/ldrh; absent -> 0) and the two remover legs
+sharing the **ffe23690** removal: the workbench leg's ffe233e0 check and the
+interaction leg's ffe23570 fetch, both returning 0 (refusal) on an early hit.
+Tests: `tools/test_interaction_objects.cpp` — the type values including the
+0xFFFF width, the leg refusals, the shared removal cell and the equality of
+both legs' removals. O0/O2 green (first run).
+
+Boundaries: the early-exit refusal shape is preserved as a refusal, not
+reinterpreted; cells opaque; the 9-arm lookup stays in family_probes.

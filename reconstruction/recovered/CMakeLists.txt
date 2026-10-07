@@ -807,3 +807,13 @@ if(NOT TARGET test_family_probes)
     target_compile_options(test_family_probes PRIVATE -UNDEBUG)
     add_test(NAME recovered_family_probes COMMAND test_family_probes)
 endif()
+
+# Interaction-object query/remover slice (E39): the uint16 type query and the
+# two remover legs sharing the ffe23690 removal.
+target_sources(blockheads_recovered_view PRIVATE interaction_objects.cpp)
+if(NOT TARGET test_interaction_objects)
+    add_executable(test_interaction_objects ../../tools/test_interaction_objects.cpp)
+    target_link_libraries(test_interaction_objects PRIVATE blockheads_recovered_view)
+    target_compile_options(test_interaction_objects PRIVATE -UNDEBUG)
+    add_test(NAME recovered_interaction_objects COMMAND test_interaction_objects)
+endif()
