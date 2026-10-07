@@ -2402,6 +2402,54 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "TULIP_PLANT.md",
+        [
+            "5691",
+            "0xffff",
+            "glUniform4f",
+            "clamp_float",
+            "0x1c2",
+        ],
+    )
+    require(
+        NATIVE / "tulip_plant.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 1465',
+            "colorGenesVariation",
+            "mixGenesVariation",
+        ],
+    )
+    for _tl_file, _tl_imp, _tl_end in (
+        ("disasm_worldtileloader_tl_objecttype.txt", "implementation: 0x0099f950", "ARM.exidx end: 0x0099f96c"),
+        ("disasm_worldtileloader_tl_initsubderived.txt", "implementation: 0x0099f96c", "ARM.exidx end: 0x009a0710"),
+        ("disasm_worldtileloader_tl_ctor.txt", "implementation: 0x009a09f8", "ARM.exidx end: 0x009a1368"),
+        ("disasm_worldtileloader_tl_ctorsave.txt", "implementation: 0x009a1368", "ARM.exidx end: 0x009a1684"),
+        ("disasm_worldtileloader_tl_ctornet.txt", "implementation: 0x009a1684", "ARM.exidx end: 0x009a1854"),
+        ("disasm_worldtileloader_tl_creationdata.txt", "implementation: 0x009a1b58", "ARM.exidx end: 0x009a1d20"),
+        ("disasm_worldtileloader_tl_setflowering.txt", "implementation: 0x009a1c24", "ARM.exidx end: 0x009a1d20"),
+        ("disasm_worldtileloader_tl_update.txt", "implementation: 0x009a1d20", "ARM.exidx end: 0x009a2b00"),
+        ("disasm_worldtileloader_tl_draw.txt", "implementation: 0x009a2b00", "ARM.exidx end: 0x009a41e4"),
+        ("disasm_worldtileloader_tl_kindself.txt", "implementation: 0x009a498c", "ARM.exidx end: 0x009a49c0"),
+        ("disasm_worldtileloader_tl_planttype.txt", "implementation: 0x009a49c0", "ARM.exidx end: 0x009a49dc"),
+        ("disasm_worldtileloader_tl_soiltype.txt", "implementation: 0x009a49dc", "ARM.exidx end: 0x009a4a78"),
+        ("disasm_worldtileloader_tl_harvested.txt", "implementation: 0x009a4a78", "ARM.exidx end: 0x009a4f1c"),
+        ("disasm_worldtileloader_tl_tilesabove.txt", "implementation: 0x009a4f1c", "ARM.exidx end: 0x009a4f90"),
+        ("disasm_worldtileloader_tl_droppeditem.txt", "implementation: 0x009a4f74", "ARM.exidx end: 0x009a4f90"),
+        ("disasm_worldtileloader_tl_staticquadcount.txt", "implementation: 0x009a4f90", "ARM.exidx end: 0x009a4fb8"),
+        ("disasm_worldtileloader_tl_adddrawquad.txt", "implementation: 0x009a4fb8", "ARM.exidx end: 0x009a5354"),
+        ("disasm_worldtileloader_tl_rmmacro.txt", "implementation: 0x009a53c8", "ARM.exidx end: 0x009a54d0"),
+        ("disasm_worldtileloader_tl_canbreed.txt", "implementation: 0x009a54d0", "ARM.exidx end: 0x009a557c"),
+        ("disasm_worldtileloader_tl_mixgenes.txt", "implementation: 0x009a557c", "ARM.exidx end: 0x009a5770"),
+        ("disasm_worldtileloader_tl_colorgenevar.txt", "implementation: 0x009a5770", "ARM.exidx end: 0x009a5c50"),
+        ("disasm_worldtileloader_tl_availfood.txt", "implementation: 0x009a5d24", "ARM.exidx end: 0x009a5db8"),
+        ("disasm_worldtileloader_tl_setavailfood.txt", "implementation: 0x009a5d6c", "ARM.exidx end: 0x009a5db8"),
+        ("disasm_worldtileloader_tl_colorgene.txt", "implementation: 0x009a5db8", "ARM.exidx end: 0x009a5df4"),
+        ("disasm_worldtileloader_tl_setcolorgene.txt", "implementation: 0x009a5df4", "ARM.exidx end: 0x009a5e3c"),
+        ("disasm_worldtileloader_tl_cxxconstruct.txt", "implementation: 0x009a5e3c", "ARM.exidx end: 0x009a5fb4"),
+    ):
+        require(NATIVE / _tl_file, [_tl_imp, _tl_end])
+    require(
         NATIVE / "KELP_PLANT.md",
         [
             "5280",
