@@ -2448,12 +2448,12 @@ def main() -> None:
     require(
         NATIVE / "WORLD_LINE_CLOSURE.md",
         [
-            "99.2%",
-            "51",
-            "209",
+            "100%",
+            "262/262",
             "compressBlocks",
             ".cxx_construct",
-            "boundary",
+            "E65",
+            "E66",
         ],
     )
     require(

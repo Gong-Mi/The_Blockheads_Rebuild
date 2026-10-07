@@ -1,7 +1,9 @@
 # World-line closure — final statement (E14–E44 reverse / E45–E63 equivalence)
 
 This document closes the WorldTileLoader + DynamicWorld work line. It states
-the exact coverage, the remaining bodies, and the boundary artifacts.
+the exact coverage and the boundary artifacts. **Status update (E65/E66):
+both formerly-remaining bodies are now closed — the line stands at 262/262
+rows touched.**
 
 ## Reverse-evidence coverage (JSON-verified)
 
@@ -11,25 +13,26 @@ reconstruction/reverse-v3/native/".
 
 | class | covered | total | percent |
 |---|---:|---:|---:|
-| WorldTileLoader | 51 | 52 | 98.1% |
-| DynamicWorld | 209 | 210 | 99.5% |
-| **World line** | **260** | **262** | **99.2%** |
+| WorldTileLoader | 52 | 52 | 100% |
+| DynamicWorld | 210 | 210 | 100% |
+| **World line** | **262** | **262** | **100% row-touched** |
 
 The ledger counters (refs / cfg) additionally include the arm64 CFG line and
 the pre-existing broad disasm dumps; they stood at refs 708 / cfg 707 at the
 E43/E44 plateau point (see the metric notes in those commits for why the
 broad `disasm_dw_*` dumps pre-count some IMPs).
 
-## The two remaining bodies (with reasons)
+## The two formerly-remaining bodies (now closed)
 
-1. **`-[WorldTileLoader compressBlocks]` (0x0085475c)** — not yet read. The
-   remaining WTL body; suitable for a future batch (medium size, block
-   compression path).
-2. **`-[DynamicWorld .cxx_construct]` (0x00907218)** — the ~15,050-word
-   compiler-generated member-constructor; classified as a **boundary
-   artifact** since the E29-era work (as is the ~7,200-word
-   `draw:...:hideUIType:` composite, which E44 landed as a structural pass
-   rather than a full transcription).
+1. **`-[WorldTileLoader compressBlocks]` (0x0085475c)** — landed in **E65**:
+   an empty 5-word stub (prologue/epilogue only; COMPRESS_STUB.md).
+2. **`-[DynamicWorld .cxx_construct]` (0x00907218)** — landed in **E66 as a
+   full read**: 866 instructions (the earlier "~15,050" figure was a
+   listing-text word count, not instructions; CXX_CONSTRUCT.md carries the
+   member-constructor inventory). The `draw:...:hideUIType:` composite (E44)
+   remains the line's structural pass.
+
+World line: **262/262 rows touched** (WTL 52/52 + DynamicWorld 210/210).
 
 ## Batch inventory (all CI-green at exact head, per-batch PR comments)
 
