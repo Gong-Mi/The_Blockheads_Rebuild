@@ -1886,6 +1886,36 @@ def main() -> None:
     ):
         require(NATIVE / _br_file, [_br_imp, _br_end])
     require(
+        NATIVE / "CLIENT_SESSION.md",
+        [
+            "3047",
+            "512",
+            "0x00E4AA1C",
+            "0x00E18104",
+            "NSSearchPathForDirectoriesInDomains",
+            "ffe23600",
+        ],
+    )
+    require(
+        NATIVE / "client_session.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 648',
+            "OBJC_IVAR_$_DynamicWorld.server",
+            "sendLightblocksToClients",
+            "clientPickupRequest:count:clientID:blockheadRequesterUniqueID:",
+        ],
+    )
+    for _se_file, _se_imp, _se_end in (
+        ("disasm_worldtileloader_initwithworld_worldtileloader_clienttile.txt", "# implementation: 0x008ac884", "# ARM.exidx end: 0x008ad2a4"),
+        ("disasm_worldtileloader_checkforharmabledynamicobjectundertap_ig.txt", "# implementation: 0x008f1acc", "# ARM.exidx end: 0x008f23f4"),
+        ("disasm_worldtileloader_clientblockheadwithid_fromclient_request.txt", "# implementation: 0x00905308", "# ARM.exidx end: 0x00905b2c"),
+        ("disasm_worldtileloader_sendlightblockstoclients.txt", "# implementation: 0x008b1dd4", "# ARM.exidx end: 0x008b254c"),
+        ("disasm_worldtileloader_clientpickuprequest_count_clientid_block.txt", "# implementation: 0x008f6954", "# ARM.exidx end: 0x008f7000"),
+        ("disasm_worldtileloader_sendchestinventoryforchest_toclientownin.txt", "# implementation: 0x00901b58", "# ARM.exidx end: 0x00902164"),
+    ):
+        require(NATIVE / _se_file, [_se_imp, _se_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
