@@ -2402,6 +2402,39 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "STEAM_RIDERS.md",
+        [
+            "2500",
+            "atan2f",
+            "0xcd",
+            "fffffcc0",
+            "ffffcacc",
+        ],
+    )
+    require(
+        NATIVE / "steam_riders.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 567',
+            "riderBodyMatrixForBlockhead:cameraX:",
+            "addToFuelForItem:",
+        ],
+    )
+    for _sr_file, _sr_imp, _sr_end in (
+        ("disasm_worldtileloader_st2_riderbody.txt", "# implementation: 0x00d2efd0", "# ARM.exidx end: 0x00d2f8ac"),
+        ("disasm_worldtileloader_st2_tapradius.txt", "# implementation: 0x00d307cc", "# ARM.exidx end: 0x00d3106c"),
+        ("disasm_worldtileloader_st2_riderpos.txt", "# implementation: 0x00d2eac8", "# ARM.exidx end: 0x00d2efd0"),
+        ("disasm_worldtileloader_st2_addfuelitem.txt", "# implementation: 0x00d30030", "# ARM.exidx end: 0x00d304cc"),
+        ("disasm_worldtileloader_st2_renderpos.txt", "# implementation: 0x00d2e5b4", "# ARM.exidx end: 0x00d2ea38"),
+        ("disasm_worldtileloader_st2_updatehasfuel.txt", "# implementation: 0x00d2fdf4", "# ARM.exidx end: 0x00d30030"),
+        ("disasm_worldtileloader_st2_removerider.txt", "# implementation: 0x00d31088", "# ARM.exidx end: 0x00d311dc"),
+        ("disasm_worldtileloader_st2_setneedsremoved.txt", "# implementation: 0x00d30580", "# ARM.exidx end: 0x00d306d0"),
+        ("disasm_worldtileloader_st2_setpaused.txt", "# implementation: 0x00d306d0", "# ARM.exidx end: 0x00d307cc"),
+        ("disasm_worldtileloader_st2_railname.txt", "# implementation: 0x00d311f8", "# ARM.exidx end: 0x00d312f8"),
+        ("disasm_worldtileloader_st2_camerapos.txt", "# implementation: 0x00d2ea38", "# ARM.exidx end: 0x00d2eac8"),
+    ):
+        require(NATIVE / _sr_file, [_sr_imp, _sr_end])
+    require(
         NATIVE / "STEAMTRAIN_CORE.md",
         [
             "4243",
