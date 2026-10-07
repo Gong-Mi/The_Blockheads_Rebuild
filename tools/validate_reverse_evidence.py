@@ -2402,6 +2402,45 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "GEM_TREE.md",
+        [
+            "4471",
+            "0x6e,0x71,0x74",
+            "0x57,0x56,0x4c",
+            "worldIndexAtWorldPosition",
+            "recursively",
+        ],
+    )
+    require(
+        NATIVE / "gem_tree.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 1640',
+            "bushContentsType",
+            "trunkBushContentsType",
+        ],
+    )
+    for _g_file, _g_imp, _g_end in (
+        ("disasm_worldtileloader_g_objecttype.txt", "implementation: 0x005275b4", "ARM.exidx end: 0x005275d0"),
+        ("disasm_worldtileloader_g_fruititem.txt", "implementation: 0x005275d0", "ARM.exidx end: 0x00527620"),
+        ("disasm_worldtileloader_g_fruitseason.txt", "implementation: 0x00527620", "ARM.exidx end: 0x0052772c"),
+        ("disasm_worldtileloader_g_shouldfall.txt", "implementation: 0x0052772c", "ARM.exidx end: 0x00527748"),
+        ("disasm_worldtileloader_g_ctor.txt", "implementation: 0x00527748", "ARM.exidx end: 0x005290e8"),
+        ("disasm_worldtileloader_g_growth.txt", "implementation: 0x00529578", "ARM.exidx end: 0x00529590"),
+        ("disasm_worldtileloader_g_bushcontents.txt", "implementation: 0x00529590", "ARM.exidx end: 0x005297b8"),
+        ("disasm_worldtileloader_g_trunkcontents.txt", "implementation: 0x00529648", "ARM.exidx end: 0x005297b8"),
+        ("disasm_worldtileloader_g_trunkbushcontents.txt", "implementation: 0x00529700", "ARM.exidx end: 0x005297b8"),
+        ("disasm_worldtileloader_g_makedead.txt", "implementation: 0x005297b8", "ARM.exidx end: 0x005298e0"),
+        ("disasm_worldtileloader_g_update.txt", "implementation: 0x005298e0", "ARM.exidx end: 0x0052a078"),
+        ("disasm_worldtileloader_g_worldchanged.txt", "implementation: 0x0052a078", "ARM.exidx end: 0x0052b6e8"),
+        ("disasm_worldtileloader_g_recursivetiles.txt", "implementation: 0x0052b750", "ARM.exidx end: 0x0052bae4"),
+        ("disasm_worldtileloader_g_treetype.txt", "implementation: 0x0052bae4", "ARM.exidx end: 0x0052bb20"),
+        ("disasm_worldtileloader_g_gemitem.txt", "implementation: 0x0052bb20", "ARM.exidx end: 0x0052bbdc"),
+        ("disasm_worldtileloader_g_kindself.txt", "implementation: 0x0052bbdc", "ARM.exidx end: 0x0052be44"),
+        ("disasm_worldtileloader_g_isstatic.txt", "implementation: 0x0052be44", "ARM.exidx end: 0x0052be60"),
+    ):
+        require(NATIVE / _g_file, [_g_imp, _g_end])
+    require(
         NATIVE / "TULIP_PLANT.md",
         [
             "5691",
