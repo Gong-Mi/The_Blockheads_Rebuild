@@ -1982,6 +1982,37 @@ def main() -> None:
     ):
         require(NATIVE / _pl_file, [_pl_imp, _pl_end])
     require(
+        NATIVE / "LOAD_SESSION.md",
+        [
+            "1671",
+            "netBlockheads",
+            "serverClients",
+            "dynamicObjects",
+            "objectTypeHasStaticPosition",
+            "classForDynamicObjectType",
+        ],
+    )
+    require(
+        NATIVE / "load_session.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 294',
+            "OBJC_IVAR_$_DynamicWorld.dynamicObjects",
+            "ridableObjectWithID:",
+            "exploreLightChangedAtMacroPos:clientLightBlockIndex:",
+        ],
+    )
+    for _ls_file, _ls_imp, _ls_end in (
+        ("disasm_worldtileloader_stopallblockheadactionsforclientduetokic.txt", "# implementation: 0x008f8108", "# ARM.exidx end: 0x008f85a0"),
+        ("disasm_worldtileloader_newfoundlistrecievedfromclient_list_.txt", "# implementation: 0x008fad90", "# ARM.exidx end: 0x008fb168"),
+        ("disasm_worldtileloader_appenddebuglog_.txt", "# implementation: 0x00902b2c", "# ARM.exidx end: 0x00902f00"),
+        ("disasm_worldtileloader_explorelightchangedatmacropos_clientligh.txt", "# implementation: 0x008e17ac", "# ARM.exidx end: 0x008e1b68"),
+        ("disasm_worldtileloader_loadlocalinventorydataforchest_.txt", "# implementation: 0x008b8fc4", "# ARM.exidx end: 0x008b933c"),
+        ("disasm_worldtileloader_ridableobjectwithid_.txt", "# implementation: 0x008f8fcc", "# ARM.exidx end: 0x008f932c"),
+        ("disasm_worldtileloader_loadstandarddynamicobjectoftype_atpos_.txt", "# implementation: 0x008e6250", "# ARM.exidx end: 0x008e6594"),
+    ):
+        require(NATIVE / _ls_file, [_ls_imp, _ls_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
