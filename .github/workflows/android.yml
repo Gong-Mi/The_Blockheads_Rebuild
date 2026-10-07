@@ -651,6 +651,15 @@ jobs:
           /tmp/test_bucket_arrays
         done
 
+    - name: Test recovered tile markers slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_tile_markers.cpp \
+            reconstruction/recovered/tile_markers.cpp -o /tmp/test_tile_markers
+          /tmp/test_tile_markers
+        done
+
     - name: Test recovered translation return numerical slice
       run: |
         for opt in 0 2; do

@@ -847,3 +847,13 @@ if(NOT TARGET test_bucket_arrays)
     target_compile_options(test_bucket_arrays PRIVATE -UNDEBUG)
     add_test(NAME recovered_bucket_arrays COMMAND test_bucket_arrays)
 endif()
+
+# Tile-marker slice (E30/E38): the 0x46/0x4b arm-1, 0x45 arm-2 and the strict
+# > 0xaa ore-threshold predicate.
+target_sources(blockheads_recovered_view PRIVATE tile_markers.cpp)
+if(NOT TARGET test_tile_markers)
+    add_executable(test_tile_markers ../../tools/test_tile_markers.cpp)
+    target_link_libraries(test_tile_markers PRIVATE blockheads_recovered_view)
+    target_compile_options(test_tile_markers PRIVATE -UNDEBUG)
+    add_test(NAME recovered_tile_markers COMMAND test_tile_markers)
+endif()

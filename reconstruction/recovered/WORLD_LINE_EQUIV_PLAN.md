@@ -398,3 +398,17 @@ Evidence correction recorded: E32's remoteUpdate walk reads ffffe51c, which
 E33/E35 later PROVED to be the server registry slot (setServer: writes it;
 isServer reads its nil-ness) — it is therefore deliberately NOT modelled as a
 third bucket array here.
+
+## Landed in batch E61
+
+### `tile_markers.{h,cpp}` (T1)
+
+The tile-marker constants and predicates (E30's background free-block
+dispatch; E38's door marker write): arm 1 = {0x46 'F', 0x4b 'K'}, arm 2 =
+{0x45 'E'}, the strict **> 0xaa** ore-threshold predicate (equality does not
+pass). Tests: `tools/test_tile_markers.cpp` — the values, the arm predicates
+including full-byte disjointness and the strict threshold boundaries. O0/O2
+green (first run).
+
+Boundaries: marker meanings (which content each byte denotes) unresolved;
+affected call sites stay out of scope.
