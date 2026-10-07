@@ -401,6 +401,15 @@ jobs:
           /tmp/test_pinch_inertia
         done
 
+    - name: Test recovered world change queue slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_world_change_queues.cpp \
+            reconstruction/recovered/world_change_queues.cpp -o /tmp/test_world_change_queues
+          /tmp/test_world_change_queues
+        done
+
     - name: Test recovered translation return numerical slice
       run: |
         for opt in 0 2; do

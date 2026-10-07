@@ -658,3 +658,15 @@ if(NOT TARGET test_workbench_layout)
     target_compile_options(test_workbench_layout PRIVATE -UNDEBUG)
     add_test(NAME recovered_workbench_layout COMMAND test_workbench_layout)
 endif()
+
+# World-change queue slice (E21/E22/E23): recovered contract for the
+# worldChangedAtPos:sendReliably: / waterChangedAtPos:fullBlock: /
+# lightChangedAtMacroPos:sendReliably:sendAtAll: queue producers and the
+# saveAndSendOnlyBlocksThatNeedToBeSent flush passes.
+target_sources(blockheads_recovered_view PRIVATE world_change_queues.cpp)
+if(NOT TARGET test_world_change_queues)
+    add_executable(test_world_change_queues ../../tools/test_world_change_queues.cpp)
+    target_link_libraries(test_world_change_queues PRIVATE blockheads_recovered_view)
+    target_compile_options(test_world_change_queues PRIVATE -UNDEBUG)
+    add_test(NAME recovered_world_change_queues COMMAND test_world_change_queues)
+endif()
