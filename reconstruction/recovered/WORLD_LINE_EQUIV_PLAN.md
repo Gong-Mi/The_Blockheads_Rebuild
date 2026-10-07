@@ -216,3 +216,21 @@ O0/O2 green (first run).
 
 Boundaries: ffe234e8/ffe234f8 are callbacks; the sxtb flag's origin is
 caller-provided (not established in the batch); slot semantics opaque.
+
+## Landed in batch E50
+
+### `tree_life_fraction.{h,cpp}` (T2 numeric kernel)
+
+The density kernel of `getTreeLifeFractionForPos:` (E23 0x008f9b70, 1160
+words, fully read in the batch): the **bilinear tent** max(0, 1 - |d| / 32)
+per axis with the **decay divisor 32.0** (bit-checked 0x42000000), the
+**2^31 random gate** predicate (< 0x80000000 passes), the per-tile product
+`tileContribution` and the `(weight / 32)` normalised `weightedTerm` in the
+ffe236fc domain. Tests: `tools/test_tree_life_fraction.cpp` — divisor bits,
+gate boundaries (0x7fffffff / 0x80000000), tent values incl. symmetry and
+clamping, product separability and the normalisation cases. O0/O2 green
+(first run).
+
+Boundaries: the radius ladder (2.0, x5, 10/50/250) is recorded as constants
+but not wired; the per-class weight table (0xE4AA60, 11 classes) stays
+opaque; the field summation is caller-side.

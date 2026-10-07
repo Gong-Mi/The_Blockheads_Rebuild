@@ -735,3 +735,14 @@ if(NOT TARGET test_simulation_step)
     target_compile_options(test_simulation_step PRIVATE -UNDEBUG)
     add_test(NAME recovered_simulation_step COMMAND test_simulation_step)
 endif()
+
+# Tree-life density kernel slice (E23): the bilinear tent max(0, 1 - |d|/32),
+# the 2^31 random gate and the (weight / 32) normalisation from
+# getTreeLifeFractionForPos:.
+target_sources(blockheads_recovered_view PRIVATE tree_life_fraction.cpp)
+if(NOT TARGET test_tree_life_fraction)
+    add_executable(test_tree_life_fraction ../../tools/test_tree_life_fraction.cpp)
+    target_link_libraries(test_tree_life_fraction PRIVATE blockheads_recovered_view)
+    target_compile_options(test_tree_life_fraction PRIVATE -UNDEBUG)
+    add_test(NAME recovered_tree_life_fraction COMMAND test_tree_life_fraction)
+endif()
