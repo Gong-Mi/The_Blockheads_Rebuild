@@ -268,3 +268,20 @@ pole/workbench pairs. O0/O2 green (first run).
 
 Boundaries: selector cells are opaque handles; the dict value domain is not
 resolved; the +0x270 slice identity is offset-pinned.
+
+## Landed in batch E53
+
+### `light_channels.{h,cpp}` (T2)
+
+The light-channel array (ffffe56c): the **32-slot** structure (0x180/12 from
+E29's destructor loop; the `cmp 0x20` bound in E28's sendLightblocksToClients),
+the per-channel changed byte written by E31's exploreLightChangedAtMacroPos:
+(including the **-1 all-channels arm**), the 12-byte record stride constant,
+the ffe23580 forwarder cell (E42) and the ascending send iteration contract.
+Tests: `tools/test_light_channels.cpp` — bounds (32 edges refused), the
+all-channels arm, the ascending emission order and clearAll. O0/O2 green
+(first run).
+
+Boundaries: only the changed byte of the 12-byte record participates; the
+remaining record fields are opaque; the queue feed itself lives in the E23
+world_change_queues slice.

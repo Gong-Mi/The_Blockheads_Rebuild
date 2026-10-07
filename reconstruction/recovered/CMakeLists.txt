@@ -767,3 +767,13 @@ if(NOT TARGET test_client_registry)
     target_compile_options(test_client_registry PRIVATE -UNDEBUG)
     add_test(NAME recovered_client_registry COMMAND test_client_registry)
 endif()
+
+# Light-channel array slice (E28/E29/E31/E42): the 32-slot ffffe56c channel
+# array (0x180/12), the -1 all-channels arm and the send iteration contract.
+target_sources(blockheads_recovered_view PRIVATE light_channels.cpp)
+if(NOT TARGET test_light_channels)
+    add_executable(test_light_channels ../../tools/test_light_channels.cpp)
+    target_link_libraries(test_light_channels PRIVATE blockheads_recovered_view)
+    target_compile_options(test_light_channels PRIVATE -UNDEBUG)
+    add_test(NAME recovered_light_channels COMMAND test_light_channels)
+endif()
