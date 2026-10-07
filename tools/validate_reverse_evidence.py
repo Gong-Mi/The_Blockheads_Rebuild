@@ -1853,6 +1853,39 @@ def main() -> None:
     ):
         require(NATIVE / _mu_file, [_mu_imp, _mu_end])
     require(
+        NATIVE / "BREED_NPC.md",
+        [
+            "2961",
+            "0x00E4AA3C",
+            "0x00E4AA1C",
+            "0x00E4AA0C",
+            "0x00E4AA90",
+            "cylindrical wrap-distance",
+            "0xfff34184",
+            "256-iteration",
+        ],
+    )
+    require(
+        NATIVE / "breed_npc.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 574',
+            "OBJC_IVAR_$_DynamicWorld.client",
+            "teleportBlockhead:toWorkbench:",
+            "npcCloseEnoughToBreedWithNPC:",
+        ],
+    )
+    for _br_file, _br_imp, _br_end in (
+        ("disasm_worldtileloader_npccloseenoughtobreedwithnpc_.txt", "# implementation: 0x008f3288", "# ARM.exidx end: 0x008f3b80"),
+        ("disasm_worldtileloader_findbreedingplantnearplant_.txt", "# implementation: 0x008e37c0", "# ARM.exidx end: 0x008e3ea0"),
+        ("disasm_worldtileloader_getplantatpos_.txt", "# implementation: 0x008ef6f8", "# ARM.exidx end: 0x008efe3c"),
+        ("disasm_worldtileloader_toomanynpcstospawnmorenearpos_.txt", "# implementation: 0x008f2bb4", "# ARM.exidx end: 0x008f3288"),
+        ("disasm_worldtileloader_setpaused_.txt", "# implementation: 0x008f9580", "# ARM.exidx end: 0x008f9b70"),
+        ("disasm_worldtileloader_saveblockheadinventory_.txt", "# implementation: 0x008b8634", "# ARM.exidx end: 0x008b8b80"),
+        ("disasm_worldtileloader_teleportblockhead_toworkbench_.txt", "# implementation: 0x008f5658", "# ARM.exidx end: 0x008f5b70"),
+    ):
+        require(NATIVE / _br_file, [_br_imp, _br_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
