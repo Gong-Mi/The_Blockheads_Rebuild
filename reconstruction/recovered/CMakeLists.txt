@@ -797,3 +797,13 @@ if(NOT TARGET test_blockhead_selection)
     target_compile_options(test_blockhead_selection PRIVATE -UNDEBUG)
     add_test(NAME recovered_blockhead_selection COMMAND test_blockhead_selection)
 endif()
+
+# Family-probe slice (E32/E34/E38/E39/E43): the indexed arm probe (gate ->
+# one arm) and the sequential loop probe (ascending arms, first hit wins).
+target_sources(blockheads_recovered_view PRIVATE family_probes.cpp)
+if(NOT TARGET test_family_probes)
+    add_executable(test_family_probes ../../tools/test_family_probes.cpp)
+    target_link_libraries(test_family_probes PRIVATE blockheads_recovered_view)
+    target_compile_options(test_family_probes PRIVATE -UNDEBUG)
+    add_test(NAME recovered_family_probes COMMAND test_family_probes)
+endif()

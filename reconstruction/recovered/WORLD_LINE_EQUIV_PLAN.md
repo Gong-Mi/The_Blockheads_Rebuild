@@ -316,3 +316,19 @@ the shrink-then-resolve boundary. O0/O2 green (first run).
 
 Boundaries: the ffffe4f8 collection is an ordered id vector; ffe231cc fetch
 opaque.
+
+## Landed in batch E56
+
+### `family_probes.{h,cpp}` (T2)
+
+The two family-probe disciplines: the **indexed arm probe** (`arg >= N` gate
+-> exactly one table arm -> the arm lookup; miss stays caller-side, as
+npcWithID: / interactionObjectWithID:) and the **sequential loop probe**
+(ascending arms 0..N-1, first hit wins, exhaustion -> nothing; treeAtPos:'s
+`add r0, r0, 1` loop). The pinned arm counts live here as constants (NPC 8 /
+interaction 9 / tree 11 / train 4). Tests: `tools/test_family_probes.cpp` —
+the counts, the gate refusals probing zero arms, single-arm dispatch, the
+first-hit-wins order and exhaustion. O0/O2 green (first run).
+
+Boundaries: arm identities are opaque; the second-registry fallback (ffffe550)
+stays out of the probe helpers.
