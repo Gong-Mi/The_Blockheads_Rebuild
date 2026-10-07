@@ -1501,6 +1501,31 @@ def main() -> None:
     ):
         require(NATIVE / _bm_file, [_bm_imp, _bm_end])
     require(
+        NATIVE / "BLOCK_LOAD.md",
+        [
+            "5736",
+            "block-load orchestrator",
+            "bestStartPosition",
+            "quarter-column",
+            "0x5e",
+            "0x10001",
+        ],
+    )
+    require(
+        NATIVE / "block_load.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 5736',
+            "OBJC_IVAR_$_WorldTileLoader.bestStartPosition",
+            "OBJC_IVAR_$_WorldTileLoader.lakeHeights",
+            "placeGemsInCaveForPhysicalBlock:tileIndex:worldX:worldY:floatingIslandType:",
+        ],
+    )
+    for _bl_file, _bl_imp, _bl_end in (
+        ("disasm_worldtileloader_loadphysicalblock_atxpos_ypos_createifno.txt", "# implementation: 0x0085e6b0", "# ARM.exidx end: 0x00864050"),
+    ):
+        require(NATIVE / _bl_file, [_bl_imp, _bl_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
