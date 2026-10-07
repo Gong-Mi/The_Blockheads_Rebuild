@@ -2402,6 +2402,27 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "COMPRESS_STUB.md",
+        [
+            "5",
+            "empty stub",
+            "52/52",
+            "0x0085475c",
+        ],
+    )
+    require(
+        NATIVE / "compress_stub.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 5',
+            "compressBlocks",
+        ],
+    )
+    require(
+        NATIVE / "disasm_worldtileloader_compressblocks.txt",
+        ["# implementation: 0x0085475c", "# ARM.exidx end: 0x00854770"],
+    )
+    require(
         NATIVE / "WORLD_LINE_CLOSURE.md",
         [
             "99.2%",
