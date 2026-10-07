@@ -1916,6 +1916,40 @@ def main() -> None:
     ):
         require(NATIVE / _se_file, [_se_imp, _se_end])
     require(
+        NATIVE / "RELOAD_TAIL.md",
+        [
+            "2280",
+            "0x1c4",
+            "0x30c",
+            "0x180",
+            "0x514",
+            "ffe23784",
+            "ffe237c0",
+            "objectTypeMayHaveArtificalLight",
+        ],
+    )
+    require(
+        NATIVE / "reload_tail.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 339',
+            "OBJC_IVAR_$_DynamicWorld.freeBlocksByPosition",
+            "reloadDodoEggQuadsForMacroTile:",
+            "freeBlocksAtPos:",
+        ],
+    )
+    for _rt_file, _rt_imp, _rt_end in (
+        ("disasm_worldtileloader_reloadlightglowquadsformacrotile_.txt", "# implementation: 0x00900ca0", "# ARM.exidx end: 0x00901180"),
+        ("disasm_worldtileloader_reloaddynamicobjectitemquadsformacrotile_.txt", "# implementation: 0x009007c0", "# ARM.exidx end: 0x00900ca0"),
+        ("disasm_worldtileloader_reloaddodoeggquadsformacrotile_.txt", "# implementation: 0x008ff3dc", "# ARM.exidx end: 0x008ff8bc"),
+        ("disasm_worldtileloader_cxx_destruct_dynamicworld.txt", "# implementation: 0x00906ccc", "# ARM.exidx end: 0x00907218"),
+        ("disasm_worldtileloader_addartificiallightcontributionforphysica.txt", "# implementation: 0x00903014", "# ARM.exidx end: 0x00903420"),
+        ("disasm_worldtileloader_hasdynamicobjectstosaveinmacropos_.txt", "# implementation: 0x008c98a0", "# ARM.exidx end: 0x008c9cac"),
+        ("disasm_worldtileloader_blockheadwillbeunloaded_.txt", "# implementation: 0x00901180", "# ARM.exidx end: 0x00901560"),
+        ("disasm_worldtileloader_freeblocksatpos_.txt", "# implementation: 0x008f16bc", "# ARM.exidx end: 0x008f1a78"),
+    ):
+        require(NATIVE / _rt_file, [_rt_imp, _rt_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
