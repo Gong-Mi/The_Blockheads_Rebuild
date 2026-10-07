@@ -2402,6 +2402,50 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "WINDOW_SMALLS.md",
+        [
+            "1185",
+            "dmb ish",
+            "16-byte frame alignment",
+            "4.0f",
+            "tileAtWorldPositionLoaded",
+        ],
+    )
+    require(
+        NATIVE / "window_smalls.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 169',
+            "occupiesBackgroundContents",
+            "setNeedsToUpdateChoiceUI:",
+        ],
+    )
+    for _ws_file, _ws_imp, _ws_end in (
+        ("disasm_worldtileloader_win_ctor_placed.txt", "# implementation: 0x00c986a0", "# ARM.exidx end: 0x00c98944"),
+        ("disasm_worldtileloader_win_ctor_net.txt", "# implementation: 0x00c98b70", "# ARM.exidx end: 0x00c98e5c"),
+        ("disasm_worldtileloader_win_creationdata.txt", "# implementation: 0x00c99094", "# ARM.exidx end: 0x00c99338"),
+        ("disasm_worldtileloader_win_updatenet.txt", "# implementation: 0x00c99040", "# ARM.exidx end: 0x00c99094"),
+        ("disasm_worldtileloader_win_draw.txt", "# implementation: 0x00c99568", "# ARM.exidx end: 0x00c99790"),
+        ("disasm_worldtileloader_win_setneedsremoved.txt", "# implementation: 0x00c98538", "# ARM.exidx end: 0x00c986a0"),
+        ("disasm_worldtileloader_win_dealloc.txt", "# implementation: 0x00c994a4", "# ARM.exidx end: 0x00c99568"),
+        ("disasm_worldtileloader_win_initsubderived.txt", "# implementation: 0x00c984cc", "# ARM.exidx end: 0x00c98538"),
+        ("disasm_worldtileloader_win_fbitemtype.txt", "# implementation: 0x00c984fc", "# ARM.exidx end: 0x00c98538"),
+        ("disasm_worldtileloader_win_occupiesbg.txt", "# implementation: 0x00c99790", "# ARM.exidx end: 0x00c997ac"),
+        ("disasm_worldtileloader_st3_setwbchoice.txt", "# implementation: 0x00d2f8e4", "# ARM.exidx end: 0x00d2fad8"),
+        ("disasm_worldtileloader_st3_fuelcount.txt", "# implementation: 0x00d2fcd8", "# ARM.exidx end: 0x00d2fda8"),
+        ("disasm_worldtileloader_st3_fuelitemcount.txt", "# implementation: 0x00d2fda8", "# ARM.exidx end: 0x00d2fdf4"),
+        ("disasm_worldtileloader_st3_fuelitems.txt", "# implementation: 0x00d2fdc4", "# ARM.exidx end: 0x00d2fdf4"),
+        ("disasm_worldtileloader_st3_fueluipos.txt", "# implementation: 0x00d30504", "# ARM.exidx end: 0x00d30580"),
+        ("disasm_worldtileloader_st3_needschoice.txt", "# implementation: 0x00d312f8", "# ARM.exidx end: 0x00d31334"),
+        ("disasm_worldtileloader_st3_setneedschoice.txt", "# implementation: 0x00d31334", "# ARM.exidx end: 0x00d31378"),
+        ("disasm_worldtileloader_st3_candismiss.txt", "# implementation: 0x00d304cc", "# ARM.exidx end: 0x00d30504"),
+        ("disasm_worldtileloader_st3_requiresfuel.txt", "# implementation: 0x00d304e8", "# ARM.exidx end: 0x00d30504"),
+        ("disasm_worldtileloader_st3_isengine.txt", "# implementation: 0x00d3106c", "# ARM.exidx end: 0x00d31088"),
+        ("disasm_worldtileloader_st3_maxriders.txt", "# implementation: 0x00d311dc", "# ARM.exidx end: 0x00d311f8"),
+        ("disasm_worldtileloader_st3_settargetvel.txt", "# implementation: 0x00d2f8ac", "# ARM.exidx end: 0x00d2f8c8"),
+    ):
+        require(NATIVE / _ws_file, [_ws_imp, _ws_end])
+    require(
         NATIVE / "STEAM_RIDERS.md",
         [
             "2500",
