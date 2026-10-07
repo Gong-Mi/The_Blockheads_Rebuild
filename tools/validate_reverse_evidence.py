@@ -2044,6 +2044,39 @@ def main() -> None:
     ):
         require(NATIVE / _rr_file, [_rr_imp, _rr_end])
     require(
+        NATIVE / "USERS_BANS.md",
+        [
+            "1013",
+            "0x270",
+            "ffffe51c",
+            "ffffe4f8",
+            "ffffe5ac",
+            "remotePickupRequestReply",
+            "loadDebugChestAtPos",
+        ],
+    )
+    require(
+        NATIVE / "users_bans.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 175',
+            "blockheadWithUniqueID:",
+            "getOwnerNameForObjectOwnerID:",
+        ],
+    )
+    for _ub_file, _ub_imp, _ub_end in (
+        ("disasm_worldtileloader_usermutechanged_.txt", "# implementation: 0x009023f4", "# ARM.exidx end: 0x009025e4"),
+        ("disasm_worldtileloader_userbanchanged_isbanned_.txt", "# implementation: 0x009025e4", "# ARM.exidx end: 0x0090280c"),
+        ("disasm_worldtileloader_playerisbannedwithid_.txt", "# implementation: 0x0090280c", "# ARM.exidx end: 0x009028c8"),
+        ("disasm_worldtileloader_playerschanged.txt", "# implementation: 0x009028c8", "# ARM.exidx end: 0x00902ac0"),
+        ("disasm_worldtileloader_getownernameforobjectownerid_.txt", "# implementation: 0x00902ac0", "# ARM.exidx end: 0x00902b2c"),
+        ("disasm_worldtileloader_iscontrollingblockheadsforclientplayer_.txt", "# implementation: 0x008fdbf0", "# ARM.exidx end: 0x008fdeac"),
+        ("disasm_worldtileloader_remotepickuprequestreply_.txt", "# implementation: 0x008f722c", "# ARM.exidx end: 0x008f7428"),
+        ("disasm_worldtileloader_blockheadwithuniqueid_.txt", "# implementation: 0x008f7000", "# ARM.exidx end: 0x008f722c"),
+        ("disasm_worldtileloader_loaddebugchestatpos_chest_.txt", "# implementation: 0x009067e0", "# ARM.exidx end: 0x00906998"),
+    ):
+        require(NATIVE / _ub_file, [_ub_imp, _ub_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
