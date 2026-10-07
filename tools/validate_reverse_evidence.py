@@ -1618,6 +1618,40 @@ def main() -> None:
     ):
         require(NATIVE / _dl_file, [_dl_imp, _dl_end])
     require(
+        NATIVE / "DYN_OBJECT_LEAVES.md",
+        [
+            "5479",
+            "Tree factory",
+            "occupancy scan",
+            "GemTree",
+            "conversionThread",
+            "rarity ladder",
+        ],
+    )
+    require(
+        NATIVE / "dyn_leaf.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 1447',
+            "OBJC_CLASS_$_AppleTree",
+            "OBJC_CLASS_$_TomatoPlant",
+            "currentlyAddingGlowBlocks",
+        ],
+    )
+    for _lf_file, _lf_imp, _lf_end in (
+        ("disasm_worldtileloader_conversionthread_.txt", "# implementation: 0x008ae5b8", "# ARM.exidx end: 0x008aedac"),
+        ("disasm_worldtileloader_loadtreeatposition_type_maxheight_growth.txt", "# implementation: 0x008e4e44", "# ARM.exidx end: 0x008e6250"),
+        ("disasm_worldtileloader_loadplantatposition_type_maxagegene_grow.txt", "# implementation: 0x008e69e8", "# ARM.exidx end: 0x008e7608"),
+        ("disasm_worldtileloader_loadnpcatposition_type_savedict_isadult_.txt", "# implementation: 0x008e66d4", "# ARM.exidx end: 0x008e69e8"),
+        ("disasm_worldtileloader_loadsnowsurfaceblockatpos_loadsnow_.txt", "# implementation: 0x008e6608", "# ARM.exidx end: 0x008e66d4"),
+        ("disasm_worldtileloader_loadsurfaceblockatpos_.txt", "# implementation: 0x008e6594", "# ARM.exidx end: 0x008e6608"),
+        ("disasm_worldtileloader_loadglowblockifneededatpos_tile_.txt", "# implementation: 0x008f4f88", "# ARM.exidx end: 0x008f5530"),
+        ("disasm_worldtileloader_addtorchatpos_oftype_dataa_datab_savedic.txt", "# implementation: 0x008e8320", "# ARM.exidx end: 0x008e86b4"),
+        ("disasm_worldtileloader_createtreasurechestortrollattile_atpos_l.txt", "# implementation: 0x008e909c", "# ARM.exidx end: 0x008ea738"),
+        ("disasm_worldtileloader_loadnewblockheadatpos_craftableitemobjec.txt", "# implementation: 0x008f5b70", "# ARM.exidx end: 0x008f64c0"),
+    ):
+        require(NATIVE / _lf_file, [_lf_imp, _lf_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",

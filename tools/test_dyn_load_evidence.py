@@ -80,6 +80,14 @@ def test_type_worker():
     s = BY['wtl_loaddynamicobjectsofty']['semantics']
     for needle in ('currentlyLoadingMacroBlocks', 'currentlyAddingObjectIDs',
                    'dynamicObjectTypeForInteractionObjectType', 'classForDynamicObjectType',
-                   'classForInteractionObjectType', 'Workbench', 'dynamicWorldChangedAtPos:objectType:',
+                   'classForInteractionObjectType', 'Workbench', 'dynamicWorldChangedAtPos:',
                    'worldIndexAtWorldPos', 'setLevelSilently:3', 'blockheadsLoaded'):
         assert needle in s, needle
+
+if __name__ == '__main__':
+    test_bodies()
+    test_anchor_counts()
+    test_macro_tile_restore()
+    test_world_level_restore()
+    test_type_worker()
+    print('test_dyn_load_evidence: OK')

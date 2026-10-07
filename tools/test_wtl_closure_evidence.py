@@ -97,3 +97,10 @@ def test_accessors():
     assert 'vmov r0, s0' in s
     s = BY['wtl_cxx_construct']['semantics']
     assert 'no-op stub' in s
+
+if __name__ == '__main__':
+    test_bodies()
+    test_anchor_counts()
+    test_dealloc()
+    test_accessors()
+    print('test_wtl_closure_evidence: OK')
