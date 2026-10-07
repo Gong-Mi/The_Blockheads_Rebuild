@@ -1551,6 +1551,46 @@ def main() -> None:
     ):
         require(NATIVE / _iw_file, [_iw_imp, _iw_end])
     require(
+        NATIVE / "WTL_CLOSURE.md",
+        [
+            "16 bodies",
+            "dealloc",
+            "__wrap_free",
+            "objc_msgSendSuper2",
+            "objc_copyStruct",
+            "dmb ish",
+        ],
+    )
+    require(
+        NATIVE / "wtl_closure.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 298',
+            "OBJC_IVAR_$_WorldTileLoader.blockDirectory",
+            "OBJC_IVAR_$_WorldTileLoader.lightBlockDatabaseEnvironment",
+            "objc_copyStruct",
+        ],
+    )
+    for _wc_file, _wc_imp, _wc_end in (
+        ("disasm_worldtileloader_dealloc.txt", "# implementation: 0x00854770", "# ARM.exidx end: 0x00854c18"),
+        ("disasm_worldtileloader_cxx_construct.txt", "# implementation: 0x00868fd8", "# ARM.exidx end: 0x00868ff0"),
+        ("disasm_worldtileloader_distanceorderedfoodtypes.txt", "# implementation: 0x00865074", "# ARM.exidx end: 0x008650b0"),
+        ("disasm_worldtileloader_randomseed.txt", "# implementation: 0x00868c40", "# ARM.exidx end: 0x00868c7c"),
+        ("disasm_worldtileloader_beststartposition.txt", "# implementation: 0x00868c7c", "# ARM.exidx end: 0x00868cdc"),
+        ("disasm_worldtileloader_treedensitynoisefunction.txt", "# implementation: 0x00868cdc", "# ARM.exidx end: 0x00868e30"),
+        ("disasm_worldtileloader_seasonoffsetnoisefunction.txt", "# implementation: 0x00868d20", "# ARM.exidx end: 0x00868e30"),
+        ("disasm_worldtileloader_treepositions.txt", "# implementation: 0x00868d64", "# ARM.exidx end: 0x00868e30"),
+        ("disasm_worldtileloader_npcpositions.txt", "# implementation: 0x00868da8", "# ARM.exidx end: 0x00868e30"),
+        ("disasm_worldtileloader_plantpositions.txt", "# implementation: 0x00868dec", "# ARM.exidx end: 0x00868e30"),
+        ("disasm_worldtileloader_highestpoint.txt", "# implementation: 0x00868e30", "# ARM.exidx end: 0x00868e90"),
+        ("disasm_worldtileloader_needstoexit.txt", "# implementation: 0x00868e90", "# ARM.exidx end: 0x00868ecc"),
+        ("disasm_worldtileloader_setneedstoexit_.txt", "# implementation: 0x00868ecc", "# ARM.exidx end: 0x00868f10"),
+        ("disasm_worldtileloader_xfrequencymultiplier.txt", "# implementation: 0x00868f10", "# ARM.exidx end: 0x00868f4c"),
+        ("disasm_worldtileloader_yheightdivider.txt", "# implementation: 0x00868f4c", "# ARM.exidx end: 0x00868fd8"),
+        ("disasm_worldtileloader_lightblockdatabase.txt", "# implementation: 0x00868f94", "# ARM.exidx end: 0x00868fd8"),
+    ):
+        require(NATIVE / _wc_file, [_wc_imp, _wc_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
