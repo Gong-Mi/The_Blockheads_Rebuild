@@ -2342,6 +2342,66 @@ def main() -> None:
     ):
         require(NATIVE / _dp_file, [_dp_imp, _dp_end])
     require(
+        NATIVE / "FINAL_SMALLS.md",
+        [
+            "380",
+            "ffffe55c",
+            "ffffe5a4",
+            "0xa8",
+            "ffe23580",
+            "0xfff34074",
+        ],
+    )
+    require(
+        NATIVE / "final_smalls.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 140',
+            "playTimeCrystalReceivedSoundAtPos:",
+            "activeBlockheadIndex",
+        ],
+    )
+    for _fs_file, _fs_imp, _fs_end in (
+        ("disasm_worldtileloader_playtimecrystalreceivedsoundatpos_.txt", "# implementation: 0x008de650", "# ARM.exidx end: 0x008de880"),
+        ("disasm_worldtileloader_freeblockwithuniqueid_.txt", "# implementation: 0x008df2a8", "# ARM.exidx end: 0x008df3c4"),
+        ("disasm_worldtileloader_lightchangedatmacropos_sendreliably_.txt", "# implementation: 0x008e1b68", "# ARM.exidx end: 0x008e1bf0"),
+        ("disasm_worldtileloader_activeblockhead.txt", "# implementation: 0x008e2bac", "# ARM.exidx end: 0x008e2cbc"),
+        ("disasm_worldtileloader_activeblockheadindex.txt", "# implementation: 0x008e2cbc", "# ARM.exidx end: 0x008e2cf8"),
+        ("disasm_worldtileloader_selectedblockheadchanged_.txt", "# implementation: 0x008e2cf8", "# ARM.exidx end: 0x008e2dc8"),
+    ):
+        require(NATIVE / _fs_file, [_fs_imp, _fs_end])
+    require(
+        NATIVE / "LAST_SMALLS.md",
+        [
+            "536",
+            "0x37 (55)",
+            "0x28 (40)",
+            "0x00E4AA64",
+            "ffe23640",
+            "ffe23648",
+        ],
+    )
+    require(
+        NATIVE / "last_smalls.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 186',
+            "openElevatorAtPos:",
+            "treeAtPos:",
+        ],
+    )
+    for _ls2_file, _ls2_imp, _ls2_end in (
+        ("disasm_worldtileloader_openelevatoratpos_.txt", "# implementation: 0x008ebd50", "# ARM.exidx end: 0x008ebed0"),
+        ("disasm_worldtileloader_elevatormotoratpos_.txt", "# implementation: 0x008ebed0", "# ARM.exidx end: 0x008ebf40"),
+        ("disasm_worldtileloader_addelevatormotoratpos_oftype_savedict_pl.txt", "# implementation: 0x008ecd4c", "# ARM.exidx end: 0x008ecdf0"),
+        ("disasm_worldtileloader_removeelevatormotoratpos_.txt", "# implementation: 0x008ecdf0", "# ARM.exidx end: 0x008ecea4"),
+        ("disasm_worldtileloader_getrailatpos_.txt", "# implementation: 0x008ed254", "# ARM.exidx end: 0x008ed2c4"),
+        ("disasm_worldtileloader_removerailatpos_.txt", "# implementation: 0x008ed2c4", "# ARM.exidx end: 0x008ed3a4"),
+        ("disasm_worldtileloader_treeatpos_.txt", "# implementation: 0x008ef618", "# ARM.exidx end: 0x008ef6f8"),
+        ("disasm_worldtileloader_sendpaintingdataforpaintingwithid_toclie.txt", "# implementation: 0x009016c0", "# ARM.exidx end: 0x009019a8"),
+    ):
+        require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
