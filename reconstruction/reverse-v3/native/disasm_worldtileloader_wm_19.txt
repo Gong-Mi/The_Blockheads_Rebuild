@@ -1,0 +1,39 @@
+# World -[getWeatherFractionForPos:]
+# types: f16@0:4{?=ii}8
+# implementation: 0x00582a50
+# ARM.exidx end: 0x00582ad8
+
+            0x00582a50      00482de9       push {fp, lr}
+            0x00582a54      0db0a0e1       mov fp, sp
+            0x00582a58      28d04de2       sub sp, sp, 0x28
+            0x00582a5c      08200be5       str r2, [fp, -8]
+            0x00582a60      04300be5       str r3, [fp, -4]
+            0x00582a64      0c000be5       str r0, [fp, -0xc]
+            0x00582a68      10100be5       str r1, [fp, -0x10]
+            0x00582a6c      0c001be5       ldr r0, [fp, -0xc]
+            0x00582a70      08101be5       ldr r1, [fp, -8]
+            0x00582a74      04201be5       ldr r2, [fp, -4]
+            0x00582a78      14208de5       str r2, [sp, 0x14]
+            0x00582a7c      10108de5       str r1, [sp, 0x10]
+            0x00582a80      0c101be5       ldr r1, [fp, -0xc]
+            0x00582a84      40209fe5       ldr r2, [0x00582acc]        ; [0x582acc:4]=0xffffcc60
+            0x00582a88      40309fe5       ldr r3, [0x00582ad0]        ; [0x582ad0:4]=0xadd060
+            0x00582a8c      03308fe0       add r3, pc, r3
+            0x00582a90      032092e7       ldr r2, [r2, r3]
+            0x00582a94      002092e5       ldr r2, [r2]
+            0x00582a98      021081e0       add r1, r1, r2
+            0x00582a9c      000b91ed       vldr d0, [r1]
+            0x00582aa0      2c109fe5       ldr r1, [0x00582ad4]        ; [0x582ad4:4]=0xffe1e8a4
+            0x00582aa4      031091e7       ldr r1, [r1, r3]
+            0x00582aa8      10209de5       ldr r2, [sp, 0x10]
+            0x00582aac      14309de5       ldr r3, [sp, 0x14]
+            0x00582ab0      0dc0a0e1       mov ip, sp
+            0x00582ab4      000b8ced       vstr d0, [ip]
+            0x00582ab8      57fff0eb       bl loc.imp.objc_msgSend
+            0x00582abc      100a01ee       vmov s2, r0
+            0x00582ac0      031a8ded       vstr s2, [sp, 0xc]
+            0x00582ac4      0bd0a0e1       mov sp, fp
+            0x00582ac8      0088bde8       pop {fp, pc}
+            0x00582acc      60ccffff       invalid
+            0x00582ad0      60d0ad00       adceq sp, sp, r0, rrx
+            0x00582ad4      a4e8e1ff       invalid
