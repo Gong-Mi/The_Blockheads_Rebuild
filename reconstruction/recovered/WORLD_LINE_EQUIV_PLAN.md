@@ -161,3 +161,24 @@ evidence) - callers must use `segmentAt(index)` and not depend on
 Test-side note: the first test revision asserted the dedup case as a
 successful record (the recorder returns false on a dedup hit) - fixed as a
 test-expectation bug, not an implementation change.
+
+## Landed in batch E47
+
+### `accessor_triplets.{h,cpp}` (T1/T2)
+
+The typed-accessor triplet dispatcher: the shared family cells (ffe235f0
+lookup / ffe23624 add / ffe23600 remove gate) and the **pinned per-type
+remove-cell table** (torch ffe23564, ladder ffe23628, egg ffe23618, window
+ffe2364c, rail ffe23648, painting ffe23558, column ffe2355c, stairs ffe23560,
+motor ffe23640, shaft ffe2362c), with the door (0x14) and workbench (0x2d)
+entries carrying the **pos-then-y-1 two-probe** contract (E38/E39) and NO
+single-cell remove leg (their removals ride ffe23650/58/6c + ffe233e0/
+ffe23690, which are not part of this table). Tests:
+`tools/test_accessor_triplets.cpp` — the cell table, the two-probe flag
+assignment, the two-probe fall-through (door/workbench hit at y-1; torch
+single-probe miss), the add/remove round trip and the per-type remove-cell
+return. O0/O2 green (first run).
+
+Boundaries: cell identities are opaque dispatch-slot handles (pinned values
+as stable identities); the add-frame payload fields are recorded, not
+resolved; door/workbench removal legs are deliberately out of the table.

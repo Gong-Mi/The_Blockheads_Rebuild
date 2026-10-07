@@ -703,3 +703,14 @@ if(NOT TARGET test_dynamic_world_changed)
     target_compile_options(test_dynamic_world_changed PRIVATE -UNDEBUG)
     add_test(NAME recovered_dynamic_world_changed COMMAND test_dynamic_world_changed)
 endif()
+
+# Typed-accessor triplet dispatcher slice (E36/E37/E38/E39/E43): the pinned
+# per-type remove-cell table over the shared ffe235f0/ffe23624/ffe23600
+# family cells, with the door/workbench pos-then-y-1 two-probe contract.
+target_sources(blockheads_recovered_view PRIVATE accessor_triplets.cpp)
+if(NOT TARGET test_accessor_triplets)
+    add_executable(test_accessor_triplets ../../tools/test_accessor_triplets.cpp)
+    target_link_libraries(test_accessor_triplets PRIVATE blockheads_recovered_view)
+    target_compile_options(test_accessor_triplets PRIVATE -UNDEBUG)
+    add_test(NAME recovered_accessor_triplets COMMAND test_accessor_triplets)
+endif()
