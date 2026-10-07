@@ -2013,6 +2013,37 @@ def main() -> None:
     ):
         require(NATIVE / _ls_file, [_ls_imp, _ls_end])
     require(
+        NATIVE / "REMOTE_RECEIVE.md",
+        [
+            "1197",
+            "0x00E4AA1C",
+            "ffffe588",
+            "ffffe544",
+            "remoteCreationDataUpdate",
+            "chestInventoryDataRecievedFromServer",
+        ],
+    )
+    require(
+        NATIVE / "remote_receive.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 205',
+            "npcExistsAtPos:ignoreNPC:",
+            "freeblockPositionChanged:oldPos:",
+        ],
+    )
+    for _rr_file, _rr_imp, _rr_end in (
+        ("disasm_worldtileloader_remotecreationdataupdate_forobjectsoftyp.txt", "# implementation: 0x008c3e64", "# ARM.exidx end: 0x008c3fa0"),
+        ("disasm_worldtileloader_remoteupdate_forobjectsoftype_fromclient.txt", "# implementation: 0x008c3fa0", "# ARM.exidx end: 0x008c420c"),
+        ("disasm_worldtileloader_snowchangedatmacropos_.txt", "# implementation: 0x008e1bf0", "# ARM.exidx end: 0x008e1f18"),
+        ("disasm_worldtileloader_npcexistsatpos_ignorenpc_.txt", "# implementation: 0x008f28a4", "# ARM.exidx end: 0x008f2bb4"),
+        ("disasm_worldtileloader_freeblockpositionchanged_oldpos_.txt", "# implementation: 0x00906998", "# ARM.exidx end: 0x00906ccc"),
+        ("disasm_worldtileloader_requestpaintingdataforpainting_.txt", "# implementation: 0x00901560", "# ARM.exidx end: 0x009016c0"),
+        ("disasm_worldtileloader_paintingdatarecievedfromserver_.txt", "# implementation: 0x009019a8", "# ARM.exidx end: 0x00901b58"),
+        ("disasm_worldtileloader_chestinventorydatarecievedfromserver_.txt", "# implementation: 0x00902164", "# ARM.exidx end: 0x009023f4"),
+    ):
+        require(NATIVE / _rr_file, [_rr_imp, _rr_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
