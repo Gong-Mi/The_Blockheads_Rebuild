@@ -1526,6 +1526,31 @@ def main() -> None:
     ):
         require(NATIVE / _bl_file, [_bl_imp, _bl_end])
     require(
+        NATIVE / "WTL_INITWITHWORLD.md",
+        [
+            "10857",
+            "world constructor",
+            "bestStartPosition",
+            "quarter-column",
+            "rockHeights",
+            "distanceOrderedFoodTypes",
+        ],
+    )
+    require(
+        NATIVE / "wtl_initwithworld.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 10857',
+            "OBJC_IVAR_$_WorldTileLoader.bestStartPosition",
+            "OBJC_IVAR_$_WorldTileLoader.distanceOrderedFoodTypes",
+            "growthVigorForTreeTypeAtPos",
+        ],
+    )
+    for _iw_file, _iw_imp, _iw_end in (
+        ("disasm_worldtileloader_initwithworld_randomseed_isnewworld_save.txt", "# implementation: 0x00849728", "# ARM.exidx end: 0x008540cc"),
+    ):
+        require(NATIVE / _iw_file, [_iw_imp, _iw_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
