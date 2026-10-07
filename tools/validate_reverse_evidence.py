@@ -2402,6 +2402,57 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "PLANT_BASE.md",
+        [
+            "2168",
+            "tileIsPlant",
+            "lrand48",
+            "ffffcad4",
+            "tileIsAirWaterOrSnow",
+        ],
+    )
+    require(
+        NATIVE / "plant_base.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 372',
+            "removePlantWithoutCreatingFreeblocks",
+            "maxAgeGeneVariation",
+        ],
+    )
+    for _pb_file, _pb_imp, _pb_end in (
+        ("disasm_worldtileloader_p_rmmacro.txt", "implementation: 0x00954f40", "ARM.exidx end: 0x00954fec"),
+        ("disasm_worldtileloader_p_ctor.txt", "implementation: 0x00954fec", "ARM.exidx end: 0x009554a0"),
+        ("disasm_worldtileloader_p_ctornet.txt", "implementation: 0x00955b98", "ARM.exidx end: 0x00955d10"),
+        ("disasm_worldtileloader_p_dealloc.txt", "implementation: 0x00955d10", "ARM.exidx end: 0x00955d7c"),
+        ("disasm_worldtileloader_p_updatenet.txt", "implementation: 0x0095649c", "ARM.exidx end: 0x009564f0"),
+        ("disasm_worldtileloader_p_creationdata.txt", "implementation: 0x009564f0", "ARM.exidx end: 0x00956608"),
+        ("disasm_worldtileloader_p_creationdata2.txt", "implementation: 0x00956608", "ARM.exidx end: 0x009566e8"),
+        ("disasm_worldtileloader_p_remoteupdate.txt", "implementation: 0x009566e8", "ARM.exidx end: 0x00956808"),
+        ("disasm_worldtileloader_p_setflowering.txt", "implementation: 0x00956808", "ARM.exidx end: 0x0095684c"),
+        ("disasm_worldtileloader_p_worldchanged.txt", "implementation: 0x0095684c", "ARM.exidx end: 0x00956e1c"),
+        ("disasm_worldtileloader_p_compost.txt", "implementation: 0x00956e1c", "ARM.exidx end: 0x00956ef8"),
+        ("disasm_worldtileloader_p_update.txt", "implementation: 0x00956ef8", "ARM.exidx end: 0x00957304"),
+        ("disasm_worldtileloader_p_soiltype.txt", "implementation: 0x00957304", "ARM.exidx end: 0x009573a0"),
+        ("disasm_worldtileloader_p_planttype.txt", "implementation: 0x009573a0", "ARM.exidx end: 0x009573bc"),
+        ("disasm_worldtileloader_p_gatherprogress.txt", "implementation: 0x009573bc", "ARM.exidx end: 0x00957404"),
+        ("disasm_worldtileloader_p_harvested.txt", "implementation: 0x00957404", "ARM.exidx end: 0x00957474"),
+        ("disasm_worldtileloader_p_setgather.txt", "implementation: 0x00957474", "ARM.exidx end: 0x009574c8"),
+        ("disasm_worldtileloader_p_removeplant.txt", "implementation: 0x009574c8", "ARM.exidx end: 0x0095773c"),
+        ("disasm_worldtileloader_p_maxagegene.txt", "implementation: 0x009575cc", "ARM.exidx end: 0x0095773c"),
+        ("disasm_worldtileloader_p_growthgene.txt", "implementation: 0x0095768c", "ARM.exidx end: 0x0095773c"),
+        ("disasm_worldtileloader_p_isflowering.txt", "implementation: 0x0095773c", "ARM.exidx end: 0x00957794"),
+        ("disasm_worldtileloader_p_droppeditem.txt", "implementation: 0x00957778", "ARM.exidx end: 0x00957794"),
+        ("disasm_worldtileloader_p_kindself.txt", "implementation: 0x00957794", "ARM.exidx end: 0x009577b4"),
+        ("disasm_worldtileloader_p_cleartiles.txt", "implementation: 0x009577b4", "ARM.exidx end: 0x00957af4"),
+        ("disasm_worldtileloader_p_setneedsremoved.txt", "implementation: 0x00957af4", "ARM.exidx end: 0x00957be4"),
+        ("disasm_worldtileloader_p_canbreed.txt", "implementation: 0x00957be4", "ARM.exidx end: 0x00957c54"),
+        ("disasm_worldtileloader_p_occupiesfg.txt", "implementation: 0x00957c00", "ARM.exidx end: 0x00957c54"),
+        ("disasm_worldtileloader_p_tilesabove.txt", "implementation: 0x00957c1c", "ARM.exidx end: 0x00957c54"),
+        ("disasm_worldtileloader_p_tilesbelow.txt", "implementation: 0x00957c38", "ARM.exidx end: 0x00957c54"),
+    ):
+        require(NATIVE / _pb_file, [_pb_imp, _pb_end])
+    require(
         NATIVE / "TREE_GROWTH.md",
         [
             "22630",
