@@ -2402,6 +2402,38 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "STEAMTRAIN_CLOSE.md",
+        [
+            "18484",
+            "drawShaderQuad",
+            "fmodf",
+            "tileIsWater",
+            "205",
+        ],
+    )
+    require(
+        NATIVE / "steamtrain_close.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 13137',
+            "update:accurateDT:isSimulation:",
+            "secondOptionTitle",
+        ],
+    )
+    for _sd_file, _sd_imp, _sd_end in (
+        ("disasm_worldtileloader_st4_draw.txt", "implementation: 0x00d20d20", "ARM.exidx end: 0x00d2da64"),
+        ("disasm_worldtileloader_st4_update.txt", "implementation: 0x00d1bab8", "ARM.exidx end: 0x00d20620"),
+        ("disasm_worldtileloader_st4_ctor_save.txt", "implementation: 0x00d18834", "ARM.exidx end: 0x00d18b04"),
+        ("disasm_worldtileloader_st4_getsavedict.txt", "implementation: 0x00d18e84", "ARM.exidx end: 0x00d19188"),
+        ("disasm_worldtileloader_st4_title.txt", "implementation: 0x00d2fca8", "ARM.exidx end: 0x00d2fcd8"),
+        ("disasm_worldtileloader_st4_actiontitle.txt", "implementation: 0x00d2fad8", "ARM.exidx end: 0x00d2fbc0"),
+        ("disasm_worldtileloader_st4_secondtitle.txt", "implementation: 0x00d2fbc0", "ARM.exidx end: 0x00d2fca8"),
+        ("disasm_worldtileloader_st4_itemtype.txt", "implementation: 0x00d2f8c8", "ARM.exidx end: 0x00d2f8e4"),
+        ("disasm_worldtileloader_st4_objecttype.txt", "implementation: 0x00d17e7c", "ARM.exidx end: 0x00d17e98"),
+        ("disasm_worldtileloader_st4_cxx_construct.txt", "implementation: 0x00d31378", "ARM.exidx end: 0x00d31390"),
+    ):
+        require(NATIVE / _sd_file, [_sd_imp, _sd_end])
+    require(
         NATIVE / "PARTICLES.md",
         [
             "6662",
