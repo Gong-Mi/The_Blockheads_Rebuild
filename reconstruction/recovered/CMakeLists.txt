@@ -725,3 +725,13 @@ if(NOT TARGET test_world_collections)
     target_compile_options(test_world_collections PRIVATE -UNDEBUG)
     add_test(NAME recovered_world_collections COMMAND test_world_collections)
 endif()
+
+# Simulation-step slice (E40): the /8.0f family step over 8 families, the
+# accurate-update single call and the 8-slot finisher loop.
+target_sources(blockheads_recovered_view PRIVATE simulation_step.cpp)
+if(NOT TARGET test_simulation_step)
+    add_executable(test_simulation_step ../../tools/test_simulation_step.cpp)
+    target_link_libraries(test_simulation_step PRIVATE blockheads_recovered_view)
+    target_compile_options(test_simulation_step PRIVATE -UNDEBUG)
+    add_test(NAME recovered_simulation_step COMMAND test_simulation_step)
+endif()

@@ -200,3 +200,19 @@ run).
 Boundaries: collections are ordered id lists (container classes not
 modelled); the server-side merge call handles (ffe23204/ffe236a8) are opaque;
 merge duplication is preserved because no dedup evidence exists.
+
+## Landed in batch E49
+
+### `simulation_step.{h,cpp}` (T2)
+
+The simulation-step family: `simulate:`'s **dt / 8.0f** family step over the
+**8 families** (E40 0x008c9740; the divisor pinned as the exact 8.0f literal,
+bit-checked), `update:accurateDT:`'s single-call both-floats contract
+(0x008c9810) and `finishSimulating`'s **8-slot inner loop** per ffffe4f8
+blockhead (0x008cbc8c). Tests: `tools/test_simulation_step.cpp` — the divisor
+bit pattern (0x41000000), family visitation order + divided dt, the
+one-call accurate variant and the finisher slot counts (3x8, zero case).
+O0/O2 green (first run).
+
+Boundaries: ffe234e8/ffe234f8 are callbacks; the sxtb flag's origin is
+caller-provided (not established in the batch); slot semantics opaque.
