@@ -1652,6 +1652,41 @@ def main() -> None:
     ):
         require(NATIVE / _lf_file, [_lf_imp, _lf_end])
     require(
+        NATIVE / "NET_SYNC.md",
+        [
+            "10076",
+            "dirty-macro-tile",
+            "65-slot",
+            "FreeBlock",
+            "remoteCreationDataUpdate:",
+            "setNeedsRemoved: 1",
+            "macroPosForWorldPos",
+            "sendDataToServer:",
+            "blockheadWillBeUnloaded:",
+            "liveServerClientBlockheadInventories",
+            "initForReadingWithData:",
+        ],
+    )
+    require(
+        NATIVE / "net_sync.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 3313',
+            "OBJC_IVAR_$_DynamicWorld.worldDatabase",
+            "OBJC_IVAR_$_DynamicWorld.worldChangedMacroPositions",
+            "remoteCreationDataUpdate:",
+        ],
+    )
+    for _ns_file, _ns_imp, _ns_end in (
+        ("disasm_worldtileloader_saveandsendonlyblocksthatneedtobesent.txt", "# implementation: 0x008b49f8", "# ARM.exidx end: 0x008b5300"),
+        ("disasm_worldtileloader_updatenetobjects.txt", "# implementation: 0x008c4c20", "# ARM.exidx end: 0x008c7fe4"),
+        ("disasm_worldtileloader_sendnetdataifneededforobject_iscreation_.txt", "# implementation: 0x008c7fe4", "# ARM.exidx end: 0x008c9740"),
+        ("disasm_worldtileloader_loadanyblockheadsfordisconnectedclients.txt", "# implementation: 0x008c9cac", "# ARM.exidx end: 0x008cbc8c"),
+        ("disasm_worldtileloader_clientblockheadinventoryrecievedforplaye.txt", "# implementation: 0x008fb288", "# ARM.exidx end: 0x008fbe90"),
+        ("disasm_worldtileloader_loadclientblockheadsdataforplayerid_.txt", "# implementation: 0x008fbe90", "# ARM.exidx end: 0x008fdbf0"),
+    ):
+        require(NATIVE / _ns_file, [_ns_imp, _ns_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
