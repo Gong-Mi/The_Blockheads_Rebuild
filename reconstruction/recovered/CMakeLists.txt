@@ -866,3 +866,24 @@ if(NOT TARGET test_world_line_scenario)
     target_compile_options(test_world_line_scenario PRIVATE -UNDEBUG)
     add_test(NAME recovered_world_line_scenario COMMAND test_world_line_scenario)
 endif()
+
+# Electric charge store slice (E75/E76): the u16 charge semantics - the drain
+# gate, the furnace fuel fence (100), the storage capacity divisor (8192) and
+# the pinned workbench type tables.
+target_sources(blockheads_recovered_view PRIVATE electric_charge_store.cpp)
+if(NOT TARGET test_electric_charge_store)
+    add_executable(test_electric_charge_store ../../tools/test_electric_charge_store.cpp)
+    target_link_libraries(test_electric_charge_store PRIVATE blockheads_recovered_view)
+    target_compile_options(test_electric_charge_store PRIVATE -UNDEBUG)
+    add_test(NAME recovered_electric_charge_store COMMAND test_electric_charge_store)
+endif()
+
+# Torch placement codes slice (E72): the neighbour-classification order and
+# the -2..3 codes (half-depth/full/empty/solid-below/marker 'd'/door arms).
+target_sources(blockheads_recovered_view PRIVATE torch_placement_codes.cpp)
+if(NOT TARGET test_torch_placement_codes)
+    add_executable(test_torch_placement_codes ../../tools/test_torch_placement_codes.cpp)
+    target_link_libraries(test_torch_placement_codes PRIVATE blockheads_recovered_view)
+    target_compile_options(test_torch_placement_codes PRIVATE -UNDEBUG)
+    add_test(NAME recovered_torch_placement_codes COMMAND test_torch_placement_codes)
+endif()

@@ -435,3 +435,15 @@ and the E60 registry-face sync error.)
 Note: the scenario test is an INTEROPERATION contract - it proves the slices
 compose under their documented boundaries, NOT runtime equivalence with the
 original.
+
+## Electricity line slices (E81+)
+
+The reverse-v3 electricity line (E68-E80: lighting, the SteamTrain, the
+torch, the arcs, the Workbench grid) feeds the same equivalence program:
+
+- `electric_charge_store` (E75/E76): the u16 charge semantics - the drain
+  gate (`stored >= requested`), the furnace fuel fence (0x64 = 100), the
+  storage capacity divisor (0x2000 = 8192) and the pinned workbench type
+  tables ({15, 20} generate / {21} storage / the 9-compare use-set).
+- `torch_placement_codes` (E72): the neighbour-classification ORDER (2/0/3/
+  1/-1/else -2) and the pinned codes with the marker byte 0x64 ('d').

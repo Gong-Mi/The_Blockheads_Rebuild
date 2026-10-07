@@ -711,6 +711,24 @@ jobs:
           /tmp/test_bucket_arrays
         done
 
+    - name: Test recovered electric charge store slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_electric_charge_store.cpp \
+            reconstruction/recovered/electric_charge_store.cpp -o /tmp/test_electric_charge_store
+          /tmp/test_electric_charge_store
+        done
+
+    - name: Test recovered torch placement codes slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_torch_placement_codes.cpp \
+            reconstruction/recovered/torch_placement_codes.cpp -o /tmp/test_torch_placement_codes
+          /tmp/test_torch_placement_codes
+        done
+
     - name: Test recovered tile markers slice
       run: |
         for opt in 0 2; do
