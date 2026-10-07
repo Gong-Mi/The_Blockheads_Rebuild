@@ -777,3 +777,13 @@ if(NOT TARGET test_light_channels)
     target_compile_options(test_light_channels PRIVATE -UNDEBUG)
     add_test(NAME recovered_light_channels COMMAND test_light_channels)
 endif()
+
+# Five-container save sweep slice (E22/E40): the pinned 570/574/578(+0x120)/
+# 57c/580 scan order with the insertion-order element walk.
+target_sources(blockheads_recovered_view PRIVATE save_sweep.cpp)
+if(NOT TARGET test_save_sweep)
+    add_executable(test_save_sweep ../../tools/test_save_sweep.cpp)
+    target_link_libraries(test_save_sweep PRIVATE blockheads_recovered_view)
+    target_compile_options(test_save_sweep PRIVATE -UNDEBUG)
+    add_test(NAME recovered_save_sweep COMMAND test_save_sweep)
+endif()

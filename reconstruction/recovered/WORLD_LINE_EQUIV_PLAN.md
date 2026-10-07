@@ -285,3 +285,19 @@ all-channels arm, the ascending emission order and clearAll. O0/O2 green
 Boundaries: only the changed byte of the 12-byte record participates; the
 remaining record fields are opaque; the queue feed itself lives in the E23
 world_change_queues slice.
+
+## Landed in batch E54
+
+### `save_sweep.{h,cpp}` (T2)
+
+The five-container save sweep of `saveGameWithWorldData:signOwnershipData:`
+(E22 0x008b29bc): the pinned scan order **570 (reliable) / 574 (unreliable) /
+578 +0x120 slice (dynamicChanged) / 57c (third queue) / 580 (snow)**, the
+element walk in insertion order (the (end-start)/8 count) and the per-element
+callback contract. Tests: `tools/test_save_sweep.cpp` — the exact container
+order, the insertion-order walk, empty-container skipping and the empty
+sweep. O0/O2 green (first run).
+
+Boundaries: the +0x120 slice is abstracted into the same container (offset
+recorded as a constant); the 57c consumer role stays unestablished (E23);
+the save flags remain in the world_change_queues flush contract.

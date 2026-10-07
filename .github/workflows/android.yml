@@ -588,6 +588,15 @@ jobs:
           /tmp/test_light_channels
         done
 
+    - name: Test recovered save sweep slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_save_sweep.cpp \
+            reconstruction/recovered/save_sweep.cpp -o /tmp/test_save_sweep
+          /tmp/test_save_sweep
+        done
+
     - name: Test recovered translation return numerical slice
       run: |
         for opt in 0 2; do
