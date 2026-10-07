@@ -2402,6 +2402,61 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "YAK.md",
+        [
+            "8563",
+            "0x13f",
+            "0x143",
+            "powf",
+            "lrand48",
+        ],
+    )
+    require(
+        NATIVE / "yak.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 3592',
+            "milkByBlockhead:",
+            "shaveByBlockhead:",
+        ],
+    )
+    for _yk_file, _yk_imp, _yk_end in (
+        ("disasm_worldtileloader_y_00.txt", "implementation: 0x0095c7c4", "ARM.exidx end: 0x0095c7e0"),
+        ("disasm_worldtileloader_y_01.txt", "implementation: 0x0095c7e0", "ARM.exidx end: 0x0095c874"),
+        ("disasm_worldtileloader_y_02.txt", "implementation: 0x0095c810", "ARM.exidx end: 0x0095c874"),
+        ("disasm_worldtileloader_y_03.txt", "implementation: 0x0095c844", "ARM.exidx end: 0x0095c874"),
+        ("disasm_worldtileloader_y_04.txt", "implementation: 0x0095c874", "ARM.exidx end: 0x0095c914"),
+        ("disasm_worldtileloader_y_05.txt", "implementation: 0x0095c890", "ARM.exidx end: 0x0095c914"),
+        ("disasm_worldtileloader_y_06.txt", "implementation: 0x0095c8c0", "ARM.exidx end: 0x0095c914"),
+        ("disasm_worldtileloader_y_07.txt", "implementation: 0x0095c8dc", "ARM.exidx end: 0x0095c914"),
+        ("disasm_worldtileloader_y_08.txt", "implementation: 0x0095c8f8", "ARM.exidx end: 0x0095c914"),
+        ("disasm_worldtileloader_y_09.txt", "implementation: 0x0095c914", "ARM.exidx end: 0x0095c9c0"),
+        ("disasm_worldtileloader_y_10.txt", "implementation: 0x0095c9c0", "ARM.exidx end: 0x0095cba8"),
+        ("disasm_worldtileloader_y_11.txt", "implementation: 0x0095cba8", "ARM.exidx end: 0x0095d640"),
+        ("disasm_worldtileloader_y_12.txt", "implementation: 0x0095d640", "ARM.exidx end: 0x0095d65c"),
+        ("disasm_worldtileloader_y_13.txt", "implementation: 0x0095d65c", "ARM.exidx end: 0x0095d868"),
+        ("disasm_worldtileloader_y_14.txt", "implementation: 0x0095d868", "ARM.exidx end: 0x0095dae4"),
+        ("disasm_worldtileloader_y_15.txt", "implementation: 0x0095dcfc", "ARM.exidx end: 0x0095dee4"),
+        ("disasm_worldtileloader_y_16.txt", "implementation: 0x0095e0a8", "ARM.exidx end: 0x0095e270"),
+        ("disasm_worldtileloader_y_17.txt", "implementation: 0x0095e270", "ARM.exidx end: 0x0095e47c"),
+        ("disasm_worldtileloader_y_18.txt", "implementation: 0x0095e47c", "ARM.exidx end: 0x0095e568"),
+        ("disasm_worldtileloader_y_19.txt", "implementation: 0x0095e568", "ARM.exidx end: 0x0095e6a0"),
+        ("disasm_worldtileloader_y_20.txt", "implementation: 0x0095e6a0", "ARM.exidx end: 0x0095e834"),
+        ("disasm_worldtileloader_y_21.txt", "implementation: 0x0095e834", "ARM.exidx end: 0x0095e99c"),
+        ("disasm_worldtileloader_y_22.txt", "implementation: 0x0095e99c", "ARM.exidx end: 0x0095e9b8"),
+        ("disasm_worldtileloader_y_23.txt", "implementation: 0x0095e9b8", "ARM.exidx end: 0x009621d8"),
+        ("disasm_worldtileloader_y_24.txt", "implementation: 0x00963040", "ARM.exidx end: 0x00965290"),
+        ("disasm_worldtileloader_y_25.txt", "implementation: 0x00965850", "ARM.exidx end: 0x009658b4"),
+        ("disasm_worldtileloader_y_26.txt", "implementation: 0x009658b4", "ARM.exidx end: 0x0096596c"),
+        ("disasm_worldtileloader_y_27.txt", "implementation: 0x0096596c", "ARM.exidx end: 0x00965c1c"),
+        ("disasm_worldtileloader_y_28.txt", "implementation: 0x00965c1c", "ARM.exidx end: 0x00965cd4"),
+        ("disasm_worldtileloader_y_29.txt", "implementation: 0x00965cd4", "ARM.exidx end: 0x00965fb0"),
+        ("disasm_worldtileloader_y_30.txt", "implementation: 0x00965fb0", "ARM.exidx end: 0x00966388"),
+        ("disasm_worldtileloader_y_31.txt", "implementation: 0x00966388", "ARM.exidx end: 0x009663bc"),
+        ("disasm_worldtileloader_y_32.txt", "implementation: 0x009663a4", "ARM.exidx end: 0x009663bc"),
+    ):
+        require(NATIVE / _yk_file, [_yk_imp, _yk_end])
+    require(
         NATIVE / "DONKEYLIKE.md",
         [
             "18480",
