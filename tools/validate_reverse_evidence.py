@@ -2144,6 +2144,39 @@ def main() -> None:
     ):
         require(NATIVE / _bl_file, [_bl_imp, _bl_end])
     require(
+        NATIVE / "ACCESSOR_A.md",
+        [
+            "711",
+            "0x11 (17)",
+            "0x1e (30)",
+            "0x34 (52)",
+            "tileIsPlant",
+            "0x270",
+        ],
+    )
+    require(
+        NATIVE / "accessor_a.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 160',
+            "placeFireAtPosition:",
+            "paintingWithID:",
+        ],
+    )
+    for _a1_file, _a1_imp, _a1_end in (
+        ("disasm_worldtileloader_placefireatposition_.txt", "# implementation: 0x008e80e4", "# ARM.exidx end: 0x008e8320"),
+        ("disasm_worldtileloader_objectoftype_atpos_.txt", "# implementation: 0x008e86b4", "# ARM.exidx end: 0x008e888c"),
+        ("disasm_worldtileloader_torchatpos_.txt", "# implementation: 0x008e888c", "# ARM.exidx end: 0x008e88fc"),
+        ("disasm_worldtileloader_removetorchatpos_.txt", "# implementation: 0x008e8fe8", "# ARM.exidx end: 0x008e909c"),
+        ("disasm_worldtileloader_eggatpos_.txt", "# implementation: 0x008ea738", "# ARM.exidx end: 0x008ea7a8"),
+        ("disasm_worldtileloader_addeggatpos_savedict_.txt", "# implementation: 0x008ea7a8", "# ARM.exidx end: 0x008eaa28"),
+        ("disasm_worldtileloader_removeeggatpos_.txt", "# implementation: 0x008eaa28", "# ARM.exidx end: 0x008eaadc"),
+        ("disasm_worldtileloader_paintingwithid_.txt", "# implementation: 0x008eaadc", "# ARM.exidx end: 0x008eabf8"),
+        ("disasm_worldtileloader_paintingatpos_.txt", "# implementation: 0x008eabf8", "# ARM.exidx end: 0x008eac68"),
+        ("disasm_worldtileloader_removepaintingatpos_.txt", "# implementation: 0x008eb00c", "# ARM.exidx end: 0x008eb0c0"),
+    ):
+        require(NATIVE / _a1_file, [_a1_imp, _a1_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
