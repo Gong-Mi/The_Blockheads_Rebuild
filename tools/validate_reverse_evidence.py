@@ -2402,6 +2402,48 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "TREE_GROWTH.md",
+        [
+            "22630",
+            "reloadDrawBlockGeometryForTile",
+            "seasonForWorldX",
+            "tileIsBush",
+            "0x9be67c",
+        ],
+    )
+    require(
+        NATIVE / "tree_growth.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 2017',
+            "update:accurateDT:isSimulation:",
+            "updateGrowth:",
+        ],
+    )
+    for _tg_file, _tg_imp, _tg_end in (
+        ("disasm_worldtileloader_cf_growth.txt", "implementation: 0x007deca0", "ARM.exidx end: 0x007e0c24"),
+        ("disasm_worldtileloader_cf_update.txt", "implementation: 0x007e0c8c", "ARM.exidx end: 0x007e1368"),
+        ("disasm_worldtileloader_lt_growth.txt", "implementation: 0x00809db0", "ARM.exidx end: 0x0080bc80"),
+        ("disasm_worldtileloader_lt_update.txt", "implementation: 0x0080bc80", "ARM.exidx end: 0x0080c3a8"),
+        ("disasm_worldtileloader_at_growth.txt", "implementation: 0x009bd680", "ARM.exidx end: 0x009bf588"),
+        ("disasm_worldtileloader_at_update.txt", "implementation: 0x009bf5f0", "ARM.exidx end: 0x009bff14"),
+        ("disasm_worldtileloader_ot_growth.txt", "implementation: 0x00a96778", "ARM.exidx end: 0x00a98648"),
+        ("disasm_worldtileloader_ot_update.txt", "implementation: 0x00a98648", "ARM.exidx end: 0x00a98d70"),
+        ("disasm_worldtileloader_cn_growth.txt", "implementation: 0x00a99b30", "ARM.exidx end: 0x00a9aa30"),
+        ("disasm_worldtileloader_cn_update.txt", "implementation: 0x00a9aa30", "ARM.exidx end: 0x00a9b268"),
+        ("disasm_worldtileloader_ct_growth.txt", "implementation: 0x00b53a50", "ARM.exidx end: 0x00b54c60"),
+        ("disasm_worldtileloader_ct_update.txt", "implementation: 0x00b54c60", "ARM.exidx end: 0x00b5561c"),
+        ("disasm_worldtileloader_pt_growth.txt", "implementation: 0x00b652f8", "ARM.exidx end: 0x00b66f40"),
+        ("disasm_worldtileloader_pt_update.txt", "implementation: 0x00b66fa8", "ARM.exidx end: 0x00b67a18"),
+        ("disasm_worldtileloader_ch_growth.txt", "implementation: 0x00d0e0a0", "ARM.exidx end: 0x00d0fd4c"),
+        ("disasm_worldtileloader_ch_update.txt", "implementation: 0x00d0fdb4", "ARM.exidx end: 0x00d1048c"),
+        ("disasm_worldtileloader_mg_growth.txt", "implementation: 0x00d4b668", "ARM.exidx end: 0x00d4d314"),
+        ("disasm_worldtileloader_mg_update.txt", "implementation: 0x00d4d314", "ARM.exidx end: 0x00d4da38"),
+        ("disasm_worldtileloader_mp_growth.txt", "implementation: 0x00db6128", "ARM.exidx end: 0x00db8010"),
+        ("disasm_worldtileloader_mp_update.txt", "implementation: 0x00db8078", "ARM.exidx end: 0x00db879c"),
+    ):
+        require(NATIVE / _tg_file, [_tg_imp, _tg_end])
+    require(
         NATIVE / "TREE_CTORS.md",
         [
             "6331",
