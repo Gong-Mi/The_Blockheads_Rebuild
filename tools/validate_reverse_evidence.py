@@ -2402,6 +2402,42 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "WORLD_RENDER.md",
+        [
+            "33840",
+            "29808",
+            "glVertexAttribPointer",
+            "pushDepthMaskState",
+            "0xbe2",
+        ],
+    )
+    require(
+        NATIVE / "world_render.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 29808',
+            "exportCurrentFrame",
+            "doPortalScreenshot",
+        ],
+    )
+    for _wd_file, _wd_imp, _wd_end in (
+        ("disasm_worldtileloader_wd_00.txt", "implementation: 0x0058c7f8", "ARM.exidx end: 0x005a99b8"),
+        ("disasm_worldtileloader_wd_01.txt", "implementation: 0x005aa5c8", "ARM.exidx end: 0x005ab1ac"),
+        ("disasm_worldtileloader_wd_02.txt", "implementation: 0x005ab5bc", "ARM.exidx end: 0x005ac12c"),
+        ("disasm_worldtileloader_wd_03.txt", "implementation: 0x005b3e78", "ARM.exidx end: 0x005b3fb0"),
+        ("disasm_worldtileloader_wd_04.txt", "implementation: 0x005b3fb0", "ARM.exidx end: 0x005b4304"),
+        ("disasm_worldtileloader_wd_05.txt", "implementation: 0x005b466c", "ARM.exidx end: 0x005b4a00"),
+        ("disasm_worldtileloader_wd_06.txt", "implementation: 0x005b6698", "ARM.exidx end: 0x005b6820"),
+        ("disasm_worldtileloader_wd_07.txt", "implementation: 0x005b6820", "ARM.exidx end: 0x005b6fa8"),
+        ("disasm_worldtileloader_wd_08.txt", "implementation: 0x005c29c0", "ARM.exidx end: 0x005c3278"),
+        ("disasm_worldtileloader_wd_09.txt", "implementation: 0x005c3800", "ARM.exidx end: 0x005c3d24"),
+        ("disasm_worldtileloader_wd_10.txt", "implementation: 0x005c5ce0", "ARM.exidx end: 0x005c5fa8"),
+        ("disasm_worldtileloader_wd_11.txt", "implementation: 0x005c5fa8", "ARM.exidx end: 0x005c60ac"),
+        ("disasm_worldtileloader_wd_12.txt", "implementation: 0x005c6414", "ARM.exidx end: 0x005c6898"),
+        ("disasm_worldtileloader_wd_13.txt", "implementation: 0x005d5534", "ARM.exidx end: 0x005d5584"),
+    ):
+        require(NATIVE / _wd_file, [_wd_imp, _wd_end])
+    require(
         NATIVE / "WORLD_SIMULATION.md",
         [
             "22239",
