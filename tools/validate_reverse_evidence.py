@@ -2402,6 +2402,40 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "WORLD_SIMULATION.md",
+        [
+            "22239",
+            "7369",
+            "glDeleteTextures",
+            "itemTypeIsSowable",
+            "0x15180",
+        ],
+    )
+    require(
+        NATIVE / "world_simulation.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 7369',
+            "continueSimulate",
+            "addSimulationEventOfType:",
+        ],
+    )
+    for _ws_file, _ws_imp, _ws_end in (
+        ("disasm_worldtileloader_ws_00.txt", "implementation: 0x00564c64", "ARM.exidx end: 0x00564f2c"),
+        ("disasm_worldtileloader_ws_01.txt", "implementation: 0x00564f2c", "ARM.exidx end: 0x005650d8"),
+        ("disasm_worldtileloader_ws_02.txt", "implementation: 0x005650d8", "ARM.exidx end: 0x00566948"),
+        ("disasm_worldtileloader_ws_03.txt", "implementation: 0x00566e64", "ARM.exidx end: 0x0056783c"),
+        ("disasm_worldtileloader_ws_04.txt", "implementation: 0x00567878", "ARM.exidx end: 0x0056871c"),
+        ("disasm_worldtileloader_ws_05.txt", "implementation: 0x0056884c", "ARM.exidx end: 0x0056b278"),
+        ("disasm_worldtileloader_ws_06.txt", "implementation: 0x0056b278", "ARM.exidx end: 0x0056b674"),
+        ("disasm_worldtileloader_ws_07.txt", "implementation: 0x0056dd38", "ARM.exidx end: 0x0056dd78"),
+        ("disasm_worldtileloader_ws_08.txt", "implementation: 0x0056dd78", "ARM.exidx end: 0x0057509c"),
+        ("disasm_worldtileloader_ws_09.txt", "implementation: 0x00583c50", "ARM.exidx end: 0x0058b764"),
+        ("disasm_worldtileloader_ws_10.txt", "implementation: 0x005ac1a4", "ARM.exidx end: 0x005ac350"),
+        ("disasm_worldtileloader_ws_11.txt", "implementation: 0x005c78c4", "ARM.exidx end: 0x005c8094"),
+    ):
+        require(NATIVE / _ws_file, [_ws_imp, _ws_end])
+    require(
         NATIVE / "WORLD_MUTATION.md",
         [
             "15099",
