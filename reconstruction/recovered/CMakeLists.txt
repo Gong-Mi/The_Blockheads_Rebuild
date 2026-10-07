@@ -817,3 +817,13 @@ if(NOT TARGET test_interaction_objects)
     target_compile_options(test_interaction_objects PRIVATE -UNDEBUG)
     add_test(NAME recovered_interaction_objects COMMAND test_interaction_objects)
 endif()
+
+# Sound-accumulator slice (E24/E42/E43): the ffffe5a4 accumulator with the
+# >= 1.0 exit gate and the play-at-position callback contract.
+target_sources(blockheads_recovered_view PRIVATE sound_accumulator.cpp)
+if(NOT TARGET test_sound_accumulator)
+    add_executable(test_sound_accumulator ../../tools/test_sound_accumulator.cpp)
+    target_link_libraries(test_sound_accumulator PRIVATE blockheads_recovered_view)
+    target_compile_options(test_sound_accumulator PRIVATE -UNDEBUG)
+    add_test(NAME recovered_sound_accumulator COMMAND test_sound_accumulator)
+endif()

@@ -347,3 +347,20 @@ both legs' removals. O0/O2 green (first run).
 
 Boundaries: the early-exit refusal shape is preserved as a refusal, not
 reinterpreted; cells opaque; the 9-arm lookup stays in family_probes.
+
+## Landed in batch E58
+
+### `sound_accumulator.{h,cpp}` (T2)
+
+The shared ffffe5a4 sound accumulator with its gate: a value **>= 1.0 exits**
+(the vcmpe/bpl take at 0x8de6a4; the threshold bit-checked as 0x3f800000) and
+below it the play callback runs with the position (the
+playTimeCrystalReceivedSoundAtPos: / openElevatorAtPos: player shape).
+Tests: `tools/test_sound_accumulator.cpp` — threshold bits, gate boundaries
+(0.999 allowed / 1.0 and 1.5 gated), the callback gating with forwarded
+positions and the accumulation to exactly 1.0. O0/O2 green (first run).
+
+Boundaries: finite-value domain only (vcmpe NaN/unordered behaviour NOT
+modelled - no evidence read); the bump amount stays caller-side; the 0xfff34074
+/ 0xfff34174 strings and ffe2af10/ffe232c8/ffe23480 cells are the player's
+opaque handles (E24/E42/E43).
