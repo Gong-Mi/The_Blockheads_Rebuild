@@ -2402,6 +2402,49 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "WORLD_NET.md",
+        [
+            "8016",
+            "2312",
+            "0xc350",
+            "0x7fffffff",
+            "0x3e7",
+        ],
+    )
+    require(
+        NATIVE / "world_net.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 2312',
+            "summaryNetDataForAdmin:",
+            "peersInterestedInMacroIndex:",
+        ],
+    )
+    for _wn_file, _wn_imp, _wn_end in (
+        ("disasm_worldtileloader_wn_00.txt", "implementation: 0x005536ec", "ARM.exidx end: 0x0055468c"),
+        ("disasm_worldtileloader_wn_01.txt", "implementation: 0x005547f8", "ARM.exidx end: 0x00554cfc"),
+        ("disasm_worldtileloader_wn_02.txt", "implementation: 0x00554cfc", "ARM.exidx end: 0x00554f04"),
+        ("disasm_worldtileloader_wn_03.txt", "implementation: 0x00554f04", "ARM.exidx end: 0x0055555c"),
+        ("disasm_worldtileloader_wn_04.txt", "implementation: 0x0055555c", "ARM.exidx end: 0x00555a84"),
+        ("disasm_worldtileloader_wn_05.txt", "implementation: 0x00557bd4", "ARM.exidx end: 0x00557c40"),
+        ("disasm_worldtileloader_wn_06.txt", "implementation: 0x0056b674", "ARM.exidx end: 0x0056da94"),
+        ("disasm_worldtileloader_wn_07.txt", "implementation: 0x0056dbd8", "ARM.exidx end: 0x0056dc8c"),
+        ("disasm_worldtileloader_wn_08.txt", "implementation: 0x0056dc8c", "ARM.exidx end: 0x0056dd38"),
+        ("disasm_worldtileloader_wn_09.txt", "implementation: 0x005b9e10", "ARM.exidx end: 0x005ba014"),
+        ("disasm_worldtileloader_wn_10.txt", "implementation: 0x005ba014", "ARM.exidx end: 0x005bb634"),
+        ("disasm_worldtileloader_wn_11.txt", "implementation: 0x005bfcb0", "ARM.exidx end: 0x005c01a4"),
+        ("disasm_worldtileloader_wn_12.txt", "implementation: 0x005c01a4", "ARM.exidx end: 0x005c0570"),
+        ("disasm_worldtileloader_wn_13.txt", "implementation: 0x005c0570", "ARM.exidx end: 0x005c0698"),
+        ("disasm_worldtileloader_wn_14.txt", "implementation: 0x005c0698", "ARM.exidx end: 0x005c07c0"),
+        ("disasm_worldtileloader_wn_15.txt", "implementation: 0x005c07c0", "ARM.exidx end: 0x005c0b4c"),
+        ("disasm_worldtileloader_wn_16.txt", "implementation: 0x005c0b4c", "ARM.exidx end: 0x005c0f54"),
+        ("disasm_worldtileloader_wn_17.txt", "implementation: 0x005c0f54", "ARM.exidx end: 0x005c1298"),
+        ("disasm_worldtileloader_wn_18.txt", "implementation: 0x005c1298", "ARM.exidx end: 0x005c15dc"),
+        ("disasm_worldtileloader_wn_19.txt", "implementation: 0x005c15dc", "ARM.exidx end: 0x005c1920"),
+        ("disasm_worldtileloader_wn_20.txt", "implementation: 0x005c1920", "ARM.exidx end: 0x005c19b4"),
+    ):
+        require(NATIVE / _wn_file, [_wn_imp, _wn_end])
+    require(
         NATIVE / "WORLD_RENDER.md",
         [
             "33840",
