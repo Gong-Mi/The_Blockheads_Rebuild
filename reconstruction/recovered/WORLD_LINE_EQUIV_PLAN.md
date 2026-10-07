@@ -412,3 +412,26 @@ green (first run).
 
 Boundaries: marker meanings (which content each byte denotes) unresolved;
 affected call sites stay out of scope.
+
+## Landed in batch E63
+
+### `tools/test_world_line_scenario.cpp` (interoperation contract)
+
+A cross-slice scenario test linking five slices (door_state,
+object_registry_pair, accessor_triplets, tile_markers, blockhead_selection):
+door lifecycle (marker gate -> triplet two-probe -> dual registry round trip
+-> state accessor -> shared-remover cell), tile dispatch (arm predicates vs
+the door marker's write gate), selection + removal (slot preserved while the
+resolver goes nil) and the triplet store round trip.
+
+**Third fidelity error caught by tests (RED->GREEN)**: `TripletStore::remove`
+returned `optional(0)` for the door/workbench entries (removeCell == 0),
+implying a "cell 0" removal ran - but those entries have NO single-cell
+remove leg (their removal rides the state family). The dispatcher now returns
+nullopt for removeCell == 0 and a dedicated case was added to
+`tools/test_accessor_triplets.cpp`. (The first two: the E23 gate-scope error
+and the E60 registry-face sync error.)
+
+Note: the scenario test is an INTEROPERATION contract - it proves the slices
+compose under their documented boundaries, NOT runtime equivalence with the
+original.

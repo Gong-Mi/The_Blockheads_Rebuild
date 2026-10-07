@@ -114,13 +114,18 @@ public:
     }
 
     // removeXAtPos:: the ffe23600 gate + the per-type remove cell.
-    // Returns the remove cell executed, or nullopt when nothing matched.
+    // Returns the remove cell executed, or nullopt when nothing matched or
+    // when the entry has no single-cell remove leg (removeCell == 0: door and
+    // workbench ride the state family instead).
     std::optional<std::int64_t> remove(int type, int x, int y) {
         for (auto it = objects_.begin(); it != objects_.end(); ++it) {
             if (it->type == type && it->x == x && it->y == y) {
                 const AccessorTriplet* t = tripletForType(type);
                 objects_.erase(it);
-                return t != nullptr ? std::optional<std::int64_t>(t->removeCell) : std::nullopt;
+                if (t == nullptr || t->removeCell == 0) {
+                    return std::nullopt;  // no single-cell remove leg (door/workbench)
+                }
+                return t->removeCell;
             }
         }
         return std::nullopt;

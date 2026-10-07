@@ -79,6 +79,18 @@ static void test_add_and_remove_round_trip() {
     assert(!store.remove(0x13, 1, 2).has_value());
 }
 
+static void test_no_cell_leg_returns_nothing() {
+    // door/workbench entries (removeCell == 0) have NO single-cell remove
+    // leg: the removal rides the state family (E38/E39). The dispatcher must
+    // return nullopt, not "cell 0".
+    TripletStore store;
+    store.add(0x14, 3, 3);
+    assert(!store.remove(0x14, 3, 3).has_value());
+    assert(store.size() == 0);
+    store.add(0x2d, 4, 4);
+    assert(!store.remove(0x2d, 4, 4).has_value());
+}
+
 static void test_remove_returns_type_specific_cell() {
     TripletStore store;
     store.add(0x37, 7, 7);
@@ -94,6 +106,7 @@ int main() {
     test_doors_and_workbenches_are_two_probe();
     test_two_probe_falls_through_to_y_minus_1();
     test_add_and_remove_round_trip();
+    test_no_cell_leg_returns_nothing();
     test_remove_returns_type_specific_cell();
     return 0;
 }

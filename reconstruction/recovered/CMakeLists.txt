@@ -857,3 +857,12 @@ if(NOT TARGET test_tile_markers)
     target_compile_options(test_tile_markers PRIVATE -UNDEBUG)
     add_test(NAME recovered_tile_markers COMMAND test_tile_markers)
 endif()
+
+# Cross-slice scenario test (E63): door lifecycle + tile dispatch + selection
+# + triplet round trip across five slices (interoperation contract).
+if(NOT TARGET test_world_line_scenario)
+    add_executable(test_world_line_scenario ../../tools/test_world_line_scenario.cpp)
+    target_link_libraries(test_world_line_scenario PRIVATE blockheads_recovered_view)
+    target_compile_options(test_world_line_scenario PRIVATE -UNDEBUG)
+    add_test(NAME recovered_world_line_scenario COMMAND test_world_line_scenario)
+endif()
