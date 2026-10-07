@@ -1754,6 +1754,42 @@ def main() -> None:
     ):
         require(NATIVE / _wu_file, [_wu_imp, _wu_end])
     require(
+        NATIVE / "OBJECT_LIFE.md",
+        [
+            "6108",
+            "0x00E4AA0C",
+            "0x00E4AA90",
+            "blockheadWillBeUnloaded:",
+            "objectTypeHasStaticPosition",
+            "itemTypeFromTileIsForegorund",
+            "tileIsWorkbench",
+            "vcvt.f32.f64",
+            "__tree insert_unique",
+        ],
+    )
+    require(
+        NATIVE / "object_life.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 1116',
+            "OBJC_IVAR_$_DynamicWorld.blockheads",
+            "doRepairForTileAtPos:",
+            "createFreeBlockAtPosition:ofType:dataA:dataB:subItems:dynamicObjectSaveDict:hovers:playSound:priorityBlockhead:",
+        ],
+    )
+    for _ol_file, _ol_imp, _ol_end in (
+        ("disasm_worldtileloader_dealloc_dynamicworld.txt", "# implementation: 0x008ad320", "# ARM.exidx end: 0x008ae490"),
+        ("disasm_worldtileloader_remoteremove_forobjectsoftype_fromclient.txt", "# implementation: 0x008c420c", "# ARM.exidx end: 0x008c4b74"),
+        ("disasm_worldtileloader_dorepairfortileatpos_.txt", "# implementation: 0x00905dd0", "# ARM.exidx end: 0x009067e0"),
+        ("disasm_worldtileloader_blockheadatpos_.txt", "# implementation: 0x008f45a4", "# ARM.exidx end: 0x008f4f88"),
+        ("disasm_worldtileloader_blockheadoccupiestileatpos_ignoreblockhe.txt", "# implementation: 0x008f3b80", "# ARM.exidx end: 0x008f45a4"),
+        ("disasm_worldtileloader_interactionobjectatpos_.txt", "# implementation: 0x008f0550", "# ARM.exidx end: 0x008f1048"),
+        ("disasm_worldtileloader_clientdisconnected_simulate_.txt", "# implementation: 0x008f85a0", "# ARM.exidx end: 0x008f8fcc"),
+        ("disasm_worldtileloader_createfreeblockatposition_forforegroundcontents_fortile_prio.txt", "# implementation: 0x008de880", "# ARM.exidx end: 0x008df004"),
+        ("disasm_worldtileloader_createfreeblockatposition_oftype_dataa_datab_subitems_dynami.txt", "# implementation: 0x008ddc78", "# ARM.exidx end: 0x008de650"),
+    ):
+        require(NATIVE / _ol_file, [_ol_imp, _ol_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
