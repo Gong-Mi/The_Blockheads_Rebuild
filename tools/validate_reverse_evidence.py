@@ -2402,6 +2402,43 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "PARTICLES.md",
+        [
+            "6662",
+            "ElectrictyParticlePathIndex",
+            "0x7fffffff",
+            "closestPointOnLineToPoint",
+            "dmb ish",
+        ],
+    )
+    require(
+        NATIVE / "particles.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 4099',
+            "addElectricityParticleWithPath:size:",
+            "doAddElectricityParticleWithPath:size:",
+        ],
+    )
+    for _pe_file, _pe_imp, _pe_end in (
+        ("disasm_worldtileloader_pe_init.txt", "implementation: 0x00d85f98", "ARM.exidx end: 0x00d86ddc"),
+        ("disasm_worldtileloader_pe_instance.txt", "implementation: 0x00d85ecc", "ARM.exidx end: 0x00d85f98"),
+        ("disasm_worldtileloader_pe_reset.txt", "implementation: 0x00d86e30", "ARM.exidx end: 0x00d87034"),
+        ("disasm_worldtileloader_pe_setworld.txt", "implementation: 0x00d86dec", "ARM.exidx end: 0x00d86e30"),
+        ("disasm_worldtileloader_pe_setworldwidth.txt", "implementation: 0x00d8ccf8", "ARM.exidx end: 0x00d8cd3c"),
+        ("disasm_worldtileloader_pe_worldwidth.txt", "implementation: 0x00d8ccbc", "ARM.exidx end: 0x00d8ccf8"),
+        ("disasm_worldtileloader_pe_setstopall.txt", "implementation: 0x00d8cc78", "ARM.exidx end: 0x00d8ccbc"),
+        ("disasm_worldtileloader_pe_stopall.txt", "implementation: 0x00d8cc3c", "ARM.exidx end: 0x00d8cc78"),
+        ("disasm_worldtileloader_pe_addparticle.txt", "implementation: 0x00d87034", "ARM.exidx end: 0x00d87268"),
+        ("disasm_worldtileloader_pe_addparticle_center.txt", "implementation: 0x00d87268", "ARM.exidx end: 0x00d8753c"),
+        ("disasm_worldtileloader_pe_addparticle_goal.txt", "implementation: 0x00d87b8c", "ARM.exidx end: 0x00d88284"),
+        ("disasm_worldtileloader_pe_addbonus.txt", "implementation: 0x00d88284", "ARM.exidx end: 0x00d88670"),
+        ("disasm_worldtileloader_pe_addelectricity.txt", "implementation: 0x00d8753c", "ARM.exidx end: 0x00d876b0"),
+        ("disasm_worldtileloader_pe_doelectricity.txt", "implementation: 0x00d876b0", "ARM.exidx end: 0x00d87b04"),
+        ("disasm_worldtileloader_pe_render.txt", "implementation: 0x00d88670", "ARM.exidx end: 0x00d8c67c"),
+    ):
+        require(NATIVE / _pe_file, [_pe_imp, _pe_end])
+    require(
         NATIVE / "TORCH.md",
         [
             "10130",
