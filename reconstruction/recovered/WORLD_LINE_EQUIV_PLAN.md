@@ -251,3 +251,20 @@ multi-door independence. O0/O2 green (first run).
 Boundaries: cells are opaque handles; the direction domain stays "an sxtb'd
 byte"; doorAtPos's y-1 probe lives in `accessor_triplets` and is not
 repeated.
+
+## Landed in batch E52
+
+### `client_registry.{h,cpp}` (T2)
+
+The client registry and flag slots: the ffffe51c server gate on all
+users/bans operations, the **selector quintet** (ffe237a8 mute / ffe237ac ban
+/ ffe237b0 query / ffe237b4 playersChanged / ffe237b8 owner name; E33), the
++0x270 client-slice offset constant, the **pole-taken dict** (ffffe564 with
+the pinned 0xfff34284 key, E30/E23) and the **workbench flag** ffffe558
+(E39 getter / E30 writer). Tests: `tools/test_client_registry.cpp` — the
+server gate refusals, mute/ban notifications with the exact cells, the ban
+query and owner-name accessors, the playersChanged fan-out and the
+pole/workbench pairs. O0/O2 green (first run).
+
+Boundaries: selector cells are opaque handles; the dict value domain is not
+resolved; the +0x270 slice identity is offset-pinned.

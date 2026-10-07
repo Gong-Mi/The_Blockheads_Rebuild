@@ -756,3 +756,14 @@ if(NOT TARGET test_door_state)
     target_compile_options(test_door_state PRIVATE -UNDEBUG)
     add_test(NAME recovered_door_state COMMAND test_door_state)
 endif()
+
+# Client-registry slice (E30/E33/E39): the ffffe51c server gate, the selector
+# quintet (ffe237a8/ac/b0/b4/b8), the pole-taken dict (ffffe564, key
+# 0xfff34284) and the workbench flag (ffffe558).
+target_sources(blockheads_recovered_view PRIVATE client_registry.cpp)
+if(NOT TARGET test_client_registry)
+    add_executable(test_client_registry ../../tools/test_client_registry.cpp)
+    target_link_libraries(test_client_registry PRIVATE blockheads_recovered_view)
+    target_compile_options(test_client_registry PRIVATE -UNDEBUG)
+    add_test(NAME recovered_client_registry COMMAND test_client_registry)
+endif()
