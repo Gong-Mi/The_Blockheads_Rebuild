@@ -2402,6 +2402,17 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "WORLD_LINE_CLOSURE.md",
+        [
+            "99.2%",
+            "51",
+            "209",
+            "compressBlocks",
+            ".cxx_construct",
+            "boundary",
+        ],
+    )
+    require(
         NATIVE / "DRAW_COMPOSITE.md",
         [
             "7203",
