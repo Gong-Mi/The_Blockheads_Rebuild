@@ -1,9 +1,12 @@
 // Contract tests for the recovered world-change queue slice (E21/E22/E23).
-// Run:
-//   c++ -std=c++17 -O2 -Wall -Wextra -Werror -ffp-contract=off \
-//     -Ireconstruction/recovered tools/test_world_change_queues.cpp \
-//     reconstruction/recovered/world_change_queues.cpp -o "$TMPDIR/t"
-//   "$TMPDIR/t"
+// Build (the CI recovered lane runs this loop for opt in 0 2):
+//   c++ -std=c++17 -O2 -Wall -Wextra -Werror -ffp-contract=off
+//       -Ireconstruction/recovered
+//       tools/test_world_change_queues.cpp
+//       reconstruction/recovered/world_change_queues.cpp -o /tmp/t
+//   /tmp/t
+// NOTE: keep this comment free of trailing backslashes - GCC -Wcomment treats
+// a line-continued // comment as multi-line and CI uses -Werror with g++.
 #include "world_change_queues.h"
 
 #include <cassert>
