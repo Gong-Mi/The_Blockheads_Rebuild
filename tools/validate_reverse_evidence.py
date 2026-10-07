@@ -2402,6 +2402,53 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "DONKEY.md",
+        [
+            "15785",
+            "sinf",
+            "glUniformMatrix4fv",
+            "nameForDonkeyBreed",
+            "0xde1",
+        ],
+    )
+    require(
+        NATIVE / "donkey.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 7321',
+            "setupMatrices:dt:",
+            "generateBreedForChild",
+        ],
+    )
+    for _dk_file, _dk_imp, _dk_end in (
+        ("disasm_worldtileloader_d_npctype.txt", "implementation: 0x006ba498", "ARM.exidx end: 0x006ba4b4"),
+        ("disasm_worldtileloader_d_maxage.txt", "implementation: 0x006ba4b4", "ARM.exidx end: 0x006ba518"),
+        ("disasm_worldtileloader_d_minfullness.txt", "implementation: 0x006ba4e4", "ARM.exidx end: 0x006ba518"),
+        ("disasm_worldtileloader_d_foodplanttype.txt", "implementation: 0x006ba518", "ARM.exidx end: 0x006ba570"),
+        ("disasm_worldtileloader_d_speciesname.txt", "implementation: 0x006ba570", "ARM.exidx end: 0x006ba5e0"),
+        ("disasm_worldtileloader_d_fooditemtype.txt", "implementation: 0x006ba5e0", "ARM.exidx end: 0x006ba6ac"),
+        ("disasm_worldtileloader_d_captureditemtype.txt", "implementation: 0x006ba638", "ARM.exidx end: 0x006ba6ac"),
+        ("disasm_worldtileloader_d_capturerequireditemtype.txt", "implementation: 0x006ba690", "ARM.exidx end: 0x006ba6ac"),
+        ("disasm_worldtileloader_d_getnamesarray.txt", "implementation: 0x006ba6ac", "ARM.exidx end: 0x006ba71c"),
+        ("disasm_worldtileloader_d_getnamesarraycount.txt", "implementation: 0x006ba71c", "ARM.exidx end: 0x006ba790"),
+        ("disasm_worldtileloader_d_creationdatastructsize.txt", "implementation: 0x006ba774", "ARM.exidx end: 0x006ba790"),
+        ("disasm_worldtileloader_d_loadderivedstuff.txt", "implementation: 0x006ba790", "ARM.exidx end: 0x006bc3ac"),
+        ("disasm_worldtileloader_d_dealloc.txt", "implementation: 0x006bc680", "ARM.exidx end: 0x006bc8f4"),
+        ("disasm_worldtileloader_d_maxhealth.txt", "implementation: 0x006bc8f4", "ARM.exidx end: 0x006bc9b0"),
+        ("disasm_worldtileloader_d_flies.txt", "implementation: 0x006bc910", "ARM.exidx end: 0x006bc9b0"),
+        ("disasm_worldtileloader_d_canjumpmultipletileswhilefly.txt", "implementation: 0x006bc960", "ARM.exidx end: 0x006bc9b0"),
+        ("disasm_worldtileloader_d_galloping.txt", "implementation: 0x006bc9b0", "ARM.exidx end: 0x006bca88"),
+        ("disasm_worldtileloader_d_maxvelocity.txt", "implementation: 0x006bca88", "ARM.exidx end: 0x006bcad8"),
+        ("disasm_worldtileloader_d_setupmatrices_dt_.txt", "implementation: 0x006bcad8", "ARM.exidx end: 0x006c3d3c"),
+        ("disasm_worldtileloader_d_drawsubclassstuff_projection.txt", "implementation: 0x006c4ba4", "ARM.exidx end: 0x006c9fe0"),
+        ("disasm_worldtileloader_d_createitemdropsfordeath.txt", "implementation: 0x006ca8a0", "ARM.exidx end: 0x006caf24"),
+        ("disasm_worldtileloader_d_generatebreedforchild.txt", "implementation: 0x006cad1c", "ARM.exidx end: 0x006caf24"),
+        ("disasm_worldtileloader_d_breedstring.txt", "implementation: 0x006caedc", "ARM.exidx end: 0x006caf24"),
+        ("disasm_worldtileloader_d_blockheadcanride_usingitem_.txt", "implementation: 0x006cb018", "ARM.exidx end: 0x006cb1f4"),
+        ("disasm_worldtileloader_d_cxx_construct.txt", "implementation: 0x006cb1f4", "ARM.exidx end: 0x006cb20c"),
+    ):
+        require(NATIVE / _dk_file, [_dk_imp, _dk_end])
+    require(
         NATIVE / "GEM_TREE.md",
         [
             "4471",
