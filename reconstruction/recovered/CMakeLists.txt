@@ -746,3 +746,13 @@ if(NOT TARGET test_tree_life_fraction)
     target_compile_options(test_tree_life_fraction PRIVATE -UNDEBUG)
     add_test(NAME recovered_tree_life_fraction COMMAND test_tree_life_fraction)
 endif()
+
+# Door-state slice (E38/E39): the 0x34/0xa4 -> 0x46 marker-write gate, the
+# door open/direction state and the fetch/check/set cell identities.
+target_sources(blockheads_recovered_view PRIVATE door_state.cpp)
+if(NOT TARGET test_door_state)
+    add_executable(test_door_state ../../tools/test_door_state.cpp)
+    target_link_libraries(test_door_state PRIVATE blockheads_recovered_view)
+    target_compile_options(test_door_state PRIVATE -UNDEBUG)
+    add_test(NAME recovered_door_state COMMAND test_door_state)
+endif()

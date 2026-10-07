@@ -234,3 +234,20 @@ clamping, product separability and the normalisation cases. O0/O2 green
 Boundaries: the radius ladder (2.0, x5, 10/50/250) is recorded as constants
 but not wired; the per-class weight table (0xE4AA60, 11 classes) stays
 opaque; the field summation is caller-side.
+
+## Landed in batch E51
+
+### `door_state.{h,cpp}` (T2)
+
+The door state family (E38/E39): the **marker-write gate** (tile byte 0x34
+'4' or 0xa4 -> write the 0x46 'F' marker, with the neighbour re-read as a
+callback), the **open/direction state** (ffe23650 fetch / ffe23658 check /
+ffe2366c set-fetch cells; missing keys read closed per the check path's
+0-store), and the usage/removal cell identities (ffe23654 / ffe232b0 /
+ffe23690). Tests: `tools/test_door_state.cpp` — the marker gate on all byte
+classes, the re-read callback gating, the open/direction round trip and
+multi-door independence. O0/O2 green (first run).
+
+Boundaries: cells are opaque handles; the direction domain stays "an sxtb'd
+byte"; doorAtPos's y-1 probe lives in `accessor_triplets` and is not
+repeated.
