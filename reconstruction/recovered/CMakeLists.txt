@@ -837,3 +837,13 @@ if(NOT TARGET test_net_sync_phases)
     target_compile_options(test_net_sync_phases PRIVATE -UNDEBUG)
     add_test(NAME recovered_net_sync_phases COMMAND test_net_sync_phases)
 endif()
+
+# Remote-receive bucket array slice (E32/E40): the ffffe544/ffffe53c 4-byte
+# slot arrays with lazy create-on-null and the pre-bucketing gates.
+target_sources(blockheads_recovered_view PRIVATE bucket_arrays.cpp)
+if(NOT TARGET test_bucket_arrays)
+    add_executable(test_bucket_arrays ../../tools/test_bucket_arrays.cpp)
+    target_link_libraries(test_bucket_arrays PRIVATE blockheads_recovered_view)
+    target_compile_options(test_bucket_arrays PRIVATE -UNDEBUG)
+    add_test(NAME recovered_bucket_arrays COMMAND test_bucket_arrays)
+endif()

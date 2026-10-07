@@ -381,3 +381,20 @@ green (first run).
 Boundaries (T3 as the plan graded): the wire marshalling, the 65-slot pair
 structure and the receiver buckets are out of scope; the phase queues carry
 typed records and a send callback consumes them.
+
+## Landed in batch E60
+
+### `bucket_arrays.{h,cpp}` (T2)
+
+The remote-receive slot arrays: the ffffe544 (creation-data, ffe2aeb0 class)
+and ffffe53c (remote-create, ffe2aeb4 class) **4-byte pointer arrays with
+lazy create-on-null** semantics, the objectType domain gate [0, 0x41) and the
+pre-bucketing predicates (remoteCreate skips 0xe; remoteUpdate takes 0x3c).
+Tests: `tools/test_bucket_arrays.cpp` — the gates, lazy create + same-slot
+reuse + per-index independence, gate refusals and the two arrays' mutual
+independence with their create tags. O0/O2 green (first run).
+
+Evidence correction recorded: E32's remoteUpdate walk reads ffffe51c, which
+E33/E35 later PROVED to be the server registry slot (setServer: writes it;
+isServer reads its nil-ness) — it is therefore deliberately NOT modelled as a
+third bucket array here.
