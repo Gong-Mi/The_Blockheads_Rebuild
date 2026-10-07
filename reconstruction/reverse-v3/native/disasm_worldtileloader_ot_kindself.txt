@@ -1,0 +1,44 @@
+# OrangeTree -[tileIsKindOfSelf:]
+# types: c12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8
+# implementation: 0x00a98df4
+# ARM.exidx end: 0x00a98e90
+
+            0x00a98df4      10d04de2       sub sp, sp, 0x10
+            0x00a98df8      013000e3       movw r3, 1
+            0x00a98dfc      0c008de5       str r0, [sp, 0xc]
+            0x00a98e00      08108de5       str r1, [sp, 8]
+            0x00a98e04      04208de5       str r2, [sp, 4]
+            0x00a98e08      04009de5       ldr r0, [sp, 4]
+            0x00a98e0c      0300d0e5       ldrb r0, [r0, 3]
+            0x00a98e10      120050e3       cmp r0, 0x12
+            0x00a98e14      00308de5       str r3, [sp]
+        ┌─< 0x00a98e18      1700000a       beq 0xa98e7c
+        │   0x00a98e1c      010000e3       movw r0, 1
+        │   0x00a98e20      04109de5       ldr r1, [sp, 4]
+        │   0x00a98e24      0310d1e5       ldrb r1, [r1, 3]
+        │   0x00a98e28      130051e3       cmp r1, 0x13
+        │   0x00a98e2c      00008de5       str r0, [sp]
+       ┌──< 0x00a98e30      1100000a       beq 0xa98e7c
+       ││   0x00a98e34      010000e3       movw r0, 1
+       ││   0x00a98e38      04109de5       ldr r1, [sp, 4]
+       ││   0x00a98e3c      0310d1e5       ldrb r1, [r1, 3]
+       ││   0x00a98e40      140051e3       cmp r1, 0x14
+       ││   0x00a98e44      00008de5       str r0, [sp]
+      ┌───< 0x00a98e48      0b00000a       beq 0xa98e7c
+      │││   0x00a98e4c      010000e3       movw r0, 1
+      │││   0x00a98e50      04109de5       ldr r1, [sp, 4]
+      │││   0x00a98e54      0310d1e5       ldrb r1, [r1, 3]
+      │││   0x00a98e58      260051e3       cmp r1, 0x26                ; '&'
+      │││   0x00a98e5c      00008de5       str r0, [sp]
+     ┌────< 0x00a98e60      0500000a       beq 0xa98e7c
+     ││││   0x00a98e64      04009de5       ldr r0, [sp, 4]
+     ││││   0x00a98e68      0300d0e5       ldrb r0, [r0, 3]
+     ││││   0x00a98e6c      250050e3       cmp r0, 0x25                ; '%'
+     ││││   0x00a98e70      000000e3       movw r0, 0
+     ││││   0x00a98e74      0100a003       moveq r0, 1
+     ││││   0x00a98e78      00008de5       str r0, [sp]
+     └└└└─> 0x00a98e7c      00009de5       ldr r0, [sp]
+            0x00a98e80      010000e2       and r0, r0, 1
+            0x00a98e84      7000afe6       sxtb r0, r0
+            0x00a98e88      10d08de2       add sp, sp, 0x10
+            0x00a98e8c      1eff2fe1       bx lr

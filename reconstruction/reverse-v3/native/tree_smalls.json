@@ -1,0 +1,1885 @@
+{
+  "batch": "Plants line opener (E85): the ten fruit trees smalls sweep - stage codes, type pins, makeTileDead, kindself, soils; 73 bodies",
+  "claim": "a static bounded-body map with per-instruction anchors; the wire-format markers, the NSLog key strings, the C++ container member layouts and the packet helper at 0x8b84c8 are outside these bodies",
+  "classes": [
+    {
+      "boundary": "ARM.exidx end 0x007de190 (listing bound); next ObjC IMP 0x007de174 CoffeeTree -[fruitItemType]",
+      "boundary_end": "0x007de190",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x007de158",
+      "ivars": {},
+      "method": "CoffeeTree -[objectType]",
+      "name": "cf_objecttype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CoffeeTree objectType] (imp 0x007de158, 14w): returns **0x4e (78)** - the CoffeeTree's dynamic-object type code.\n",
+      "types": "i8@0:4",
+      "verified_words": 14
+    },
+    {
+      "boundary": "ARM.exidx end 0x007de190 (listing bound); next ObjC IMP 0x007de190 CoffeeTree -[fruitShouldFallInSeason:]",
+      "boundary_end": "0x007de190",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x007de174",
+      "ivars": {},
+      "method": "CoffeeTree -[fruitItemType]",
+      "name": "cf_fruititem",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CoffeeTree fruitItemType] (imp 0x007de174, 7w): returns **0x4e (78)** - the fruit item type (== the object type here).\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x007de1c0 (listing bound); next ObjC IMP 0x007de1c0 CoffeeTree -[initWithWorld:dynamicWorld:atPosition:cache:maxHeight:growthRate:treeDensityNoiseFunction:seasonOffsetNoiseFunction:adultTree:adultMaxAge:]",
+      "boundary_end": "0x007de1c0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x007de190",
+      "ivars": {},
+      "method": "CoffeeTree -[fruitShouldFallInSeason:]",
+      "name": "cf_fruitseason",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CoffeeTree fruitShouldFallInSeason:] (imp 0x007de190, 12w): the season equality gate - `cmp r0, 3; moveq 1` (E85 read: the apple checks season 3); the patterned `cmp rN, k; movw r0, 0; moveq r0, 1; and; sxtb` shape returns the boolean.\n",
+      "types": "c12@0:4i8",
+      "verified_words": 12
+    },
+    {
+      "boundary": "ARM.exidx end 0x007deca0 (listing bound); next ObjC IMP 0x007deca0 CoffeeTree -[updateGrowth:]",
+      "boundary_end": "0x007deca0",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x007dec70"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x007dec20",
+      "ivars": {},
+      "method": "CoffeeTree -[getSaveDict]",
+      "name": "cf_getsavedict",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x007dec8c": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x007dec90": {
+          "selector": "getSaveDict",
+          "slot": "0x00e818f8"
+        },
+        "0x007dec94": {
+          "class": "OBJC_CLASS_$_CoffeeTree",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bd58"
+        }
+      },
+      "semantics": "[CoffeeTree getSaveDict] (imp 0x007dec20, 32w): the save-dict forwarder - ffffbca8 super + the class chain (ffe28998/ffe2c414 family) builds the dict from the tree state.\n",
+      "types": "@8@0:4",
+      "verified_words": 32
+    },
+    {
+      "boundary": "ARM.exidx end 0x007e0c8c (listing bound); next ObjC IMP 0x007e0c8c CoffeeTree -[update:accurateDT:isSimulation:]",
+      "boundary_end": "0x007e0c8c",
+      "branches": [
+        {
+          "address": "0x007e0c40",
+          "destination": "0x007e0c54",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x007e0c50",
+          "destination": "0x007e0c84",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x007e0c60",
+          "destination": "0x007e0c74",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x007e0c70",
+          "destination": "0x007e0c80",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x007e0c80",
+          "destination": "0x007e0c84",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x007e0c24",
+      "ivars": {},
+      "method": "CoffeeTree -[makeTileDead:]",
+      "name": "cf_makedead",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CoffeeTree makeTileDead:] (imp 0x007e0c24, 26w): the stage->dead-marker machine - reads the tile byte [r0+3] and for the LIVE stages (24/25/26) writes the DEAD markers (0x29/0x2a) via strb [r1, 3] (e.g. apple: stage 3 -> 0x1b, 4/5 -> 0x1c).\n",
+      "types": "v12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 26
+    },
+    {
+      "boundary": "ARM.exidx end 0x007e1384 (listing bound); next ObjC IMP 0x007e1384 CoffeeTree -[tileIsKindOfSelf:]",
+      "boundary_end": "0x007e1384",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x007e1368",
+      "ivars": {},
+      "method": "CoffeeTree -[treeType]",
+      "name": "cf_treetype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CoffeeTree treeType] (imp 0x007e1368, 7w): returns **0x4e** - the tree-type enumeration value.\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x007e1420 (listing bound); next ObjC IMP 0x007e1580 TipManager -[instance]",
+      "boundary_end": "0x007e1420",
+      "branches": [
+        {
+          "address": "0x007e13a8",
+          "destination": "0x007e140c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x007e13c0",
+          "destination": "0x007e140c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x007e13d8",
+          "destination": "0x007e140c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x007e13f0",
+          "destination": "0x007e140c",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x007e1384",
+      "ivars": {},
+      "method": "CoffeeTree -[tileIsKindOfSelf:]",
+      "name": "cf_kindself",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CoffeeTree tileIsKindOfSelf:] (imp 0x007e1384, 39w): the stage-set membership test over the tile byte [r0+3]/[r1+3] - accepts the class's live+dead stage codes (0x29/0x2a family) and the generic marker arm.\n",
+      "types": "c12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 39
+    },
+    {
+      "boundary": "ARM.exidx end 0x00809248 (listing bound); next ObjC IMP 0x0080922c LimeTree -[fruitItemType]",
+      "boundary_end": "0x00809248",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00809210",
+      "ivars": {},
+      "method": "LimeTree -[objectType]",
+      "name": "lt_objecttype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[LimeTree objectType] (imp 0x00809210, 14w): returns **0xa0 (160)** - the LimeTree's dynamic-object type code.\n",
+      "types": "i8@0:4",
+      "verified_words": 14
+    },
+    {
+      "boundary": "ARM.exidx end 0x00809248 (listing bound); next ObjC IMP 0x00809248 LimeTree -[fruitShouldFallInSeason:]",
+      "boundary_end": "0x00809248",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x0080922c",
+      "ivars": {},
+      "method": "LimeTree -[fruitItemType]",
+      "name": "lt_fruititem",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[LimeTree fruitItemType] (imp 0x0080922c, 7w): returns **0xa0 (160)** - the fruit item type (== the object type here).\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00809278 (listing bound); next ObjC IMP 0x00809278 LimeTree -[initWithWorld:dynamicWorld:atPosition:cache:maxHeight:growthRate:treeDensityNoiseFunction:seasonOffsetNoiseFunction:adultTree:adultMaxAge:]",
+      "boundary_end": "0x00809278",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00809248",
+      "ivars": {},
+      "method": "LimeTree -[fruitShouldFallInSeason:]",
+      "name": "lt_fruitseason",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[LimeTree fruitShouldFallInSeason:] (imp 0x00809248, 12w): the season equality gate - `cmp r0, 3; moveq 1` (E85 read: the apple checks season 3); the patterned `cmp rN, k; movw r0, 0; moveq r0, 1; and; sxtb` shape returns the boolean.\n",
+      "types": "c12@0:4i8",
+      "verified_words": 12
+    },
+    {
+      "boundary": "ARM.exidx end 0x00809db0 (listing bound); next ObjC IMP 0x00809db0 LimeTree -[updateGrowth:]",
+      "boundary_end": "0x00809db0",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00809d84"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00809d34",
+      "ivars": {},
+      "method": "LimeTree -[getSaveDict]",
+      "name": "lt_getsavedict",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00809da0": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x00809da4": {
+          "selector": "getSaveDict",
+          "slot": "0x00e81c5c"
+        },
+        "0x00809da8": {
+          "class": "OBJC_CLASS_$_LimeTree",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bd64"
+        }
+      },
+      "semantics": "[LimeTree getSaveDict] (imp 0x00809d34, 31w): the save-dict forwarder - ffffbca8 super + the class chain (ffe28998/ffe2c414 family) builds the dict from the tree state.\n",
+      "types": "@8@0:4",
+      "verified_words": 31
+    },
+    {
+      "boundary": "ARM.exidx end 0x0080c410 (listing bound); next ObjC IMP 0x0080c410 LimeTree -[treeType]",
+      "boundary_end": "0x0080c410",
+      "branches": [
+        {
+          "address": "0x0080c3c4",
+          "destination": "0x0080c3d8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0080c3d4",
+          "destination": "0x0080c408",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0080c3e4",
+          "destination": "0x0080c3f8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0080c3f4",
+          "destination": "0x0080c404",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0080c404",
+          "destination": "0x0080c408",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x0080c3a8",
+      "ivars": {},
+      "method": "LimeTree -[makeTileDead:]",
+      "name": "lt_makedead",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[LimeTree makeTileDead:] (imp 0x0080c3a8, 26w): the stage->dead-marker machine - reads the tile byte [r0+3] and for the LIVE stages (89/90/91) writes the DEAD markers (0x5c/0x5d) via strb [r1, 3] (e.g. apple: stage 3 -> 0x1b, 4/5 -> 0x1c).\n",
+      "types": "v12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 26
+    },
+    {
+      "boundary": "ARM.exidx end 0x0080c42c (listing bound); next ObjC IMP 0x0080c42c LimeTree -[tileIsKindOfSelf:]",
+      "boundary_end": "0x0080c42c",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x0080c410",
+      "ivars": {},
+      "method": "LimeTree -[treeType]",
+      "name": "lt_treetype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[LimeTree treeType] (imp 0x0080c410, 7w): returns **0xa** - the tree-type enumeration value.\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x0080c4c8 (listing bound); next ObjC IMP 0x0080c628 PetUI -[loadResources]",
+      "boundary_end": "0x0080c4c8",
+      "branches": [
+        {
+          "address": "0x0080c450",
+          "destination": "0x0080c4b4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0080c468",
+          "destination": "0x0080c4b4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0080c480",
+          "destination": "0x0080c4b4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0080c498",
+          "destination": "0x0080c4b4",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x0080c42c",
+      "ivars": {},
+      "method": "LimeTree -[tileIsKindOfSelf:]",
+      "name": "lt_kindself",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[LimeTree tileIsKindOfSelf:] (imp 0x0080c42c, 39w): the stage-set membership test over the tile byte [r0+3]/[r1+3] - accepts the class's live+dead stage codes (0x5c/0x5d family) and the generic marker arm.\n",
+      "types": "c12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 39
+    },
+    {
+      "boundary": "ARM.exidx end 0x009bc93c (listing bound); next ObjC IMP 0x009bc93c AppleTree -[setAvailableFood:]",
+      "boundary_end": "0x009bc93c",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x009bc8fc",
+      "ivars": {
+        "0x009bc934": {
+          "offset": 136,
+          "slot": "0x0105e58c",
+          "symbol": "OBJC_IVAR_$_AppleTree.availableFood"
+        }
+      },
+      "method": "AppleTree -[availableFood]",
+      "name": "at_availfood",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[AppleTree availableFood] (imp 0x009bc8fc, 16w): the float member read - vldr s0 from the ivar (ffffff ea98-family cell) and `vmov r0, s0`; the unclassified cell ffff ea98 is the float-ivar base.\n",
+      "types": "f8@0:4",
+      "verified_words": 16
+    },
+    {
+      "boundary": "ARM.exidx end 0x009bca08 (listing bound); next ObjC IMP 0x009bca08 AppleTree -[fruitItemType]",
+      "boundary_end": "0x009bca08",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009bc9c0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009bc9e4"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x009bc93c",
+      "ivars": {
+        "0x009bc9f0": {
+          "offset": 136,
+          "slot": "0x0105e58c",
+          "symbol": "OBJC_IVAR_$_AppleTree.availableFood"
+        },
+        "0x009bc9f8": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        },
+        "0x009bc9fc": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        }
+      },
+      "method": "AppleTree -[setAvailableFood:]",
+      "name": "at_setavailfood",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x009bca00": {
+          "selector": "objectType",
+          "slot": "0x00e84160"
+        },
+        "0x009bca04": {
+          "selector": "dynamicWorldChangedAtPos:objectType:",
+          "slot": "0x00e84164"
+        }
+      },
+      "semantics": "[AppleTree setAvailableFood:] (imp 0x009bc93c, 51w): the float member write (vstr) then the ffffc8b4/ffffc89c dirty chain + ffe2466c notify (@0x9bc9c0).\n",
+      "types": "v12@0:4f8",
+      "verified_words": 51
+    },
+    {
+      "boundary": "ARM.exidx end 0x009bca24 (listing bound); next ObjC IMP 0x009bca24 AppleTree -[fruitShouldFallInSeason:]",
+      "boundary_end": "0x009bca24",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x009bca08",
+      "ivars": {},
+      "method": "AppleTree -[fruitItemType]",
+      "name": "at_fruititem",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[AppleTree fruitItemType] (imp 0x009bca08, 7w): returns **0x15 (21)** - the fruit item type (== the object type here).\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x009bca54 (listing bound); next ObjC IMP 0x009bca54 AppleTree -[objectType]",
+      "boundary_end": "0x009bca54",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x009bca24",
+      "ivars": {},
+      "method": "AppleTree -[fruitShouldFallInSeason:]",
+      "name": "at_fruitseason",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[AppleTree fruitShouldFallInSeason:] (imp 0x009bca24, 12w): the season equality gate - `cmp r0, 3; moveq 1` (E85 read: the apple checks season 3); the patterned `cmp rN, k; movw r0, 0; moveq r0, 1; and; sxtb` shape returns the boolean.\n",
+      "types": "c12@0:4i8",
+      "verified_words": 12
+    },
+    {
+      "boundary": "ARM.exidx end 0x009bca70 (listing bound); next ObjC IMP 0x009bca70 AppleTree -[initWithWorld:dynamicWorld:atPosition:cache:maxHeight:growthRate:treeDensityNoiseFunction:seasonOffsetNoiseFunction:adultTree:adultMaxAge:]",
+      "boundary_end": "0x009bca70",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x009bca54",
+      "ivars": {},
+      "method": "AppleTree -[objectType]",
+      "name": "at_objecttype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[AppleTree objectType] (imp 0x009bca54, 7w): returns **0x1 (1)** - the AppleTree's dynamic-object type code.\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x009bf5f0 (listing bound); next ObjC IMP 0x009bf5f0 AppleTree -[update:accurateDT:isSimulation:]",
+      "boundary_end": "0x009bf5f0",
+      "branches": [
+        {
+          "address": "0x009bf5a4",
+          "destination": "0x009bf5b8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x009bf5b4",
+          "destination": "0x009bf5e8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x009bf5c4",
+          "destination": "0x009bf5d8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x009bf5d4",
+          "destination": "0x009bf5e4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x009bf5e4",
+          "destination": "0x009bf5e8",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x009bf588",
+      "ivars": {},
+      "method": "AppleTree -[makeTileDead:]",
+      "name": "at_makedead",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[AppleTree makeTileDead:] (imp 0x009bf588, 26w): the stage->dead-marker machine - reads the tile byte [r0+3] and for the LIVE stages (3/4/5) writes the DEAD markers (0x1b/0x1c) via strb [r1, 3] (e.g. apple: stage 3 -> 0x1b, 4/5 -> 0x1c).\n",
+      "types": "v12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 26
+    },
+    {
+      "boundary": "ARM.exidx end 0x009bff30 (listing bound); next ObjC IMP 0x009bff30 AppleTree -[tileIsKindOfSelf:]",
+      "boundary_end": "0x009bff30",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x009bff14",
+      "ivars": {},
+      "method": "AppleTree -[treeType]",
+      "name": "at_treetype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[AppleTree treeType] (imp 0x009bff14, 7w): returns **0x1** - the tree-type enumeration value.\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x009bffcc (listing bound); next ObjC IMP 0x009c012c ShareUI -[initWithWorld:windowInfo:cache:pauseUI:]",
+      "boundary_end": "0x009bffcc",
+      "branches": [
+        {
+          "address": "0x009bff54",
+          "destination": "0x009bffb8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x009bff6c",
+          "destination": "0x009bffb8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x009bff84",
+          "destination": "0x009bffb8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x009bff9c",
+          "destination": "0x009bffb8",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x009bff30",
+      "ivars": {},
+      "method": "AppleTree -[tileIsKindOfSelf:]",
+      "name": "at_kindself",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[AppleTree tileIsKindOfSelf:] (imp 0x009bff30, 39w): the stage-set membership test over the tile byte [r0+3]/[r1+3] - accepts the class's live+dead stage codes (0x1b/0x1c family) and the generic marker arm.\n",
+      "types": "c12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 39
+    },
+    {
+      "boundary": "ARM.exidx end 0x00a95c10 (listing bound); next ObjC IMP 0x00a95bf4 OrangeTree -[fruitItemType]",
+      "boundary_end": "0x00a95c10",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00a95bd8",
+      "ivars": {},
+      "method": "OrangeTree -[objectType]",
+      "name": "ot_objecttype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[OrangeTree objectType] (imp 0x00a95bd8, 14w): returns **0x3c (60)** - the OrangeTree's dynamic-object type code.\n",
+      "types": "i8@0:4",
+      "verified_words": 14
+    },
+    {
+      "boundary": "ARM.exidx end 0x00a95c10 (listing bound); next ObjC IMP 0x00a95c10 OrangeTree -[fruitShouldFallInSeason:]",
+      "boundary_end": "0x00a95c10",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00a95bf4",
+      "ivars": {},
+      "method": "OrangeTree -[fruitItemType]",
+      "name": "ot_fruititem",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[OrangeTree fruitItemType] (imp 0x00a95bf4, 7w): returns **0x3c (60)** - the fruit item type (== the object type here).\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00a95c40 (listing bound); next ObjC IMP 0x00a95c40 OrangeTree -[initWithWorld:dynamicWorld:atPosition:cache:maxHeight:growthRate:treeDensityNoiseFunction:seasonOffsetNoiseFunction:adultTree:adultMaxAge:]",
+      "boundary_end": "0x00a95c40",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00a95c10",
+      "ivars": {},
+      "method": "OrangeTree -[fruitShouldFallInSeason:]",
+      "name": "ot_fruitseason",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[OrangeTree fruitShouldFallInSeason:] (imp 0x00a95c10, 12w): the season equality gate - `cmp r0, 3; moveq 1` (E85 read: the apple checks season 3); the patterned `cmp rN, k; movw r0, 0; moveq r0, 1; and; sxtb` shape returns the boolean.\n",
+      "types": "c12@0:4i8",
+      "verified_words": 12
+    },
+    {
+      "boundary": "ARM.exidx end 0x00a96778 (listing bound); next ObjC IMP 0x00a96778 OrangeTree -[updateGrowth:]",
+      "boundary_end": "0x00a96778",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00a9674c"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00a966fc",
+      "ivars": {},
+      "method": "OrangeTree -[getSaveDict]",
+      "name": "ot_getsavedict",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00a96768": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x00a9676c": {
+          "selector": "getSaveDict",
+          "slot": "0x00e8553c"
+        },
+        "0x00a96770": {
+          "class": "OBJC_CLASS_$_OrangeTree",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8be4c"
+        }
+      },
+      "semantics": "[OrangeTree getSaveDict] (imp 0x00a966fc, 31w): the save-dict forwarder - ffffbca8 super + the class chain (ffe28998/ffe2c414 family) builds the dict from the tree state.\n",
+      "types": "@8@0:4",
+      "verified_words": 31
+    },
+    {
+      "boundary": "ARM.exidx end 0x00a98dd8 (listing bound); next ObjC IMP 0x00a98dd8 OrangeTree -[treeType]",
+      "boundary_end": "0x00a98dd8",
+      "branches": [
+        {
+          "address": "0x00a98d8c",
+          "destination": "0x00a98da0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00a98d9c",
+          "destination": "0x00a98dd0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00a98dac",
+          "destination": "0x00a98dc0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00a98dbc",
+          "destination": "0x00a98dcc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00a98dcc",
+          "destination": "0x00a98dd0",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00a98d70",
+      "ivars": {},
+      "method": "OrangeTree -[makeTileDead:]",
+      "name": "ot_makedead",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[OrangeTree makeTileDead:] (imp 0x00a98d70, 26w): the stage->dead-marker machine - reads the tile byte [r0+3] and for the LIVE stages (18/19/20) writes the DEAD markers (0x25/0x26) via strb [r1, 3] (e.g. apple: stage 3 -> 0x1b, 4/5 -> 0x1c).\n",
+      "types": "v12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 26
+    },
+    {
+      "boundary": "ARM.exidx end 0x00a98df4 (listing bound); next ObjC IMP 0x00a98df4 OrangeTree -[tileIsKindOfSelf:]",
+      "boundary_end": "0x00a98df4",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00a98dd8",
+      "ivars": {},
+      "method": "OrangeTree -[treeType]",
+      "name": "ot_treetype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[OrangeTree treeType] (imp 0x00a98dd8, 7w): returns **0x3c** - the tree-type enumeration value.\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00a98e90 (listing bound); next ObjC IMP 0x00a98ff0 CoconutTree -[objectType]",
+      "boundary_end": "0x00a98e90",
+      "branches": [
+        {
+          "address": "0x00a98e18",
+          "destination": "0x00a98e7c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00a98e30",
+          "destination": "0x00a98e7c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00a98e48",
+          "destination": "0x00a98e7c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00a98e60",
+          "destination": "0x00a98e7c",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00a98df4",
+      "ivars": {},
+      "method": "OrangeTree -[tileIsKindOfSelf:]",
+      "name": "ot_kindself",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[OrangeTree tileIsKindOfSelf:] (imp 0x00a98df4, 39w): the stage-set membership test over the tile byte [r0+3]/[r1+3] - accepts the class's live+dead stage codes (0x25/0x26 family) and the generic marker arm.\n",
+      "types": "c12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 39
+    },
+    {
+      "boundary": "ARM.exidx end 0x00a99028 (listing bound); next ObjC IMP 0x00a9900c CoconutTree -[fruitItemType]",
+      "boundary_end": "0x00a99028",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00a98ff0",
+      "ivars": {},
+      "method": "CoconutTree -[objectType]",
+      "name": "cn_objecttype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CoconutTree objectType] (imp 0x00a98ff0, 14w): returns **0x2e (46)** - the CoconutTree's dynamic-object type code.\n",
+      "types": "i8@0:4",
+      "verified_words": 14
+    },
+    {
+      "boundary": "ARM.exidx end 0x00a99028 (listing bound); next ObjC IMP 0x00a99028 CoconutTree -[fruitShouldFallInSeason:]",
+      "boundary_end": "0x00a99028",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00a9900c",
+      "ivars": {},
+      "method": "CoconutTree -[fruitItemType]",
+      "name": "cn_fruititem",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CoconutTree fruitItemType] (imp 0x00a9900c, 7w): returns **0x2e (46)** - the fruit item type (== the object type here).\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00a990a0 (listing bound); next ObjC IMP 0x00a990a0 CoconutTree -[initWithWorld:dynamicWorld:atPosition:cache:maxHeight:growthRate:treeDensityNoiseFunction:seasonOffsetNoiseFunction:adultTree:adultMaxAge:]",
+      "boundary_end": "0x00a990a0",
+      "branches": [
+        {
+          "address": "0x00a99048",
+          "destination": "0x00a99088",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00a9905c",
+          "destination": "0x00a99088",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00a99070",
+          "destination": "0x00a99088",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00a99028",
+      "ivars": {},
+      "method": "CoconutTree -[fruitShouldFallInSeason:]",
+      "name": "cn_fruitseason",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CoconutTree fruitShouldFallInSeason:] (imp 0x00a99028, 30w): the season equality gate - `cmp r0, 3; moveq 1` (E85 read: the apple checks season 3); the patterned `cmp rN, k; movw r0, 0; moveq r0, 1; and; sxtb` shape returns the boolean.\n",
+      "types": "c12@0:4i8",
+      "verified_words": 30
+    },
+    {
+      "boundary": "ARM.exidx end 0x00a99b30 (listing bound); next ObjC IMP 0x00a99b30 CoconutTree -[updateGrowth:]",
+      "boundary_end": "0x00a99b30",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00a99b04"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00a99ab4",
+      "ivars": {},
+      "method": "CoconutTree -[getSaveDict]",
+      "name": "cn_getsavedict",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00a99b20": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x00a99b24": {
+          "selector": "getSaveDict",
+          "slot": "0x00e8559c"
+        },
+        "0x00a99b28": {
+          "class": "OBJC_CLASS_$_CoconutTree",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8be50"
+        }
+      },
+      "semantics": "[CoconutTree getSaveDict] (imp 0x00a99ab4, 31w): the save-dict forwarder - ffffbca8 super + the class chain (ffe28998/ffe2c414 family) builds the dict from the tree state.\n",
+      "types": "@8@0:4",
+      "verified_words": 31
+    },
+    {
+      "boundary": "ARM.exidx end 0x00a9b2d0 (listing bound); next ObjC IMP 0x00a9b2d0 CoconutTree -[tileIsKindOfSelf:]",
+      "boundary_end": "0x00a9b2d0",
+      "branches": [
+        {
+          "address": "0x00a9b284",
+          "destination": "0x00a9b298",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00a9b294",
+          "destination": "0x00a9b2c8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00a9b2a4",
+          "destination": "0x00a9b2b8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00a9b2b4",
+          "destination": "0x00a9b2c4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00a9b2c4",
+          "destination": "0x00a9b2c8",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00a9b268",
+      "ivars": {},
+      "method": "CoconutTree -[makeTileDead:]",
+      "name": "cn_makedead",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CoconutTree makeTileDead:] (imp 0x00a9b268, 26w): the stage->dead-marker machine - reads the tile byte [r0+3] and for the LIVE stages (15/16/17) writes the DEAD markers (0x23/0x24) via strb [r1, 3] (e.g. apple: stage 3 -> 0x1b, 4/5 -> 0x1c).\n",
+      "types": "v12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 26
+    },
+    {
+      "boundary": "ARM.exidx end 0x00a9b36c (listing bound); next ObjC IMP 0x00a9b36c CoconutTree -[treeType]",
+      "boundary_end": "0x00a9b36c",
+      "branches": [
+        {
+          "address": "0x00a9b2f4",
+          "destination": "0x00a9b358",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00a9b30c",
+          "destination": "0x00a9b358",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00a9b324",
+          "destination": "0x00a9b358",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00a9b33c",
+          "destination": "0x00a9b358",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00a9b2d0",
+      "ivars": {},
+      "method": "CoconutTree -[tileIsKindOfSelf:]",
+      "name": "cn_kindself",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CoconutTree tileIsKindOfSelf:] (imp 0x00a9b2d0, 39w): the stage-set membership test over the tile byte [r0+3]/[r1+3] - accepts the class's live+dead stage codes (0x23/0x24 family) and the generic marker arm.\n",
+      "types": "c12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 39
+    },
+    {
+      "boundary": "ARM.exidx end 0x00a9b388 (listing bound); next ObjC IMP 0x00a9b388 CoconutTree -[isRequiredSoilType:]",
+      "boundary_end": "0x00a9b388",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00a9b36c",
+      "ivars": {},
+      "method": "CoconutTree -[treeType]",
+      "name": "cn_treetype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CoconutTree treeType] (imp 0x00a9b36c, 7w): returns **0x2e** - the tree-type enumeration value.\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00a9b424 (listing bound); next ObjC IMP 0x00a9b550 ScrollView -[layoutSubviews]",
+      "boundary_end": "0x00a9b424",
+      "branches": [
+        {
+          "address": "0x00a9b3a8",
+          "destination": "0x00a9b410",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00a9b3bc",
+          "destination": "0x00a9b410",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00a9b3d0",
+          "destination": "0x00a9b410",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00a9b3e4",
+          "destination": "0x00a9b410",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00a9b3f8",
+          "destination": "0x00a9b410",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00a9b388",
+      "ivars": {},
+      "method": "CoconutTree -[isRequiredSoilType:]",
+      "name": "cn_soiltype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CoconutTree isRequiredSoilType:] (imp 0x00a9b388, 114w): the accepted-tile set {0x6, 0x1b, 0x8, 0x3a, 0x30, 0x31} (`cmp r0, 6` + `cmp r1, 0x1b/8/0x3a/0x30/0x31` chain @0xa9b3a0-0xa9b408).\n",
+      "types": "c12@0:4i8",
+      "verified_words": 39
+    },
+    {
+      "boundary": "ARM.exidx end 0x00b5281c (listing bound); next ObjC IMP 0x00b52800 CactusTree -[fruitItemType]",
+      "boundary_end": "0x00b5281c",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00b527e4",
+      "ivars": {},
+      "method": "CactusTree -[objectType]",
+      "name": "ct_objecttype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CactusTree objectType] (imp 0x00b527e4, 14w): returns **0x18 (24)** - the CactusTree's dynamic-object type code.\n",
+      "types": "i8@0:4",
+      "verified_words": 14
+    },
+    {
+      "boundary": "ARM.exidx end 0x00b5281c (listing bound); next ObjC IMP 0x00b5281c CactusTree -[fruitShouldFallInSeason:]",
+      "boundary_end": "0x00b5281c",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00b52800",
+      "ivars": {},
+      "method": "CactusTree -[fruitItemType]",
+      "name": "ct_fruititem",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CactusTree fruitItemType] (imp 0x00b52800, 7w): returns **0x18 (24)** - the fruit item type (== the object type here).\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00b52850 (listing bound); next ObjC IMP 0x00b52850 CactusTree -[initWithWorld:dynamicWorld:atPosition:cache:maxHeight:growthRate:treeDensityNoiseFunction:seasonOffsetNoiseFunction:adultTree:adultMaxAge:]",
+      "boundary_end": "0x00b52850",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00b5281c",
+      "ivars": {},
+      "method": "CactusTree -[fruitShouldFallInSeason:]",
+      "name": "ct_fruitseason",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CactusTree fruitShouldFallInSeason:] (imp 0x00b5281c, 13w): the season equality gate - `cmp r0, 3; moveq 1` (E85 read: the apple checks season 3); the patterned `cmp rN, k; movw r0, 0; moveq r0, 1; and; sxtb` shape returns the boolean.\n",
+      "types": "c12@0:4i8",
+      "verified_words": 13
+    },
+    {
+      "boundary": "ARM.exidx end 0x00b55650 (listing bound); next ObjC IMP 0x00b55650 CactusTree -[tileIsKindOfSelf:]",
+      "boundary_end": "0x00b55650",
+      "branches": [
+        {
+          "address": "0x00b55638",
+          "destination": "0x00b55648",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00b5561c",
+      "ivars": {},
+      "method": "CactusTree -[makeTileDead:]",
+      "name": "ct_makedead",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CactusTree makeTileDead:] (imp 0x00b5561c, 13w): the stage->dead-marker machine - reads the tile byte [r0+3] and for the LIVE stages (43) writes the DEAD markers (0x2b/0x2c) via strb [r1, 3] (e.g. apple: stage 3 -> 0x1b, 4/5 -> 0x1c).\n",
+      "types": "v12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 13
+    },
+    {
+      "boundary": "ARM.exidx end 0x00b556a4 (listing bound); next ObjC IMP 0x00b556a4 CactusTree -[treeType]",
+      "boundary_end": "0x00b556a4",
+      "branches": [
+        {
+          "address": "0x00b55674",
+          "destination": "0x00b55690",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00b55650",
+      "ivars": {},
+      "method": "CactusTree -[tileIsKindOfSelf:]",
+      "name": "ct_kindself",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CactusTree tileIsKindOfSelf:] (imp 0x00b55650, 21w): the stage-set membership test over the tile byte [r0+3]/[r1+3] - accepts the class's live+dead stage codes (0x2b/0x2c family) and the generic marker arm.\n",
+      "types": "c12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 21
+    },
+    {
+      "boundary": "ARM.exidx end 0x00b556c0 (listing bound); next ObjC IMP 0x00b556c0 CactusTree -[isRequiredSoilType:]",
+      "boundary_end": "0x00b556c0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00b556a4",
+      "ivars": {},
+      "method": "CactusTree -[treeType]",
+      "name": "ct_treetype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CactusTree treeType] (imp 0x00b556a4, 7w): returns **0x5** - the tree-type enumeration value.\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00b5575c (listing bound); next ObjC IMP 0x00b5575c CactusTree -[availableFood]",
+      "boundary_end": "0x00b5575c",
+      "branches": [
+        {
+          "address": "0x00b556e0",
+          "destination": "0x00b55748",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00b556f4",
+          "destination": "0x00b55748",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00b55708",
+          "destination": "0x00b55748",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00b5571c",
+          "destination": "0x00b55748",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00b55730",
+          "destination": "0x00b55748",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00b556c0",
+      "ivars": {},
+      "method": "CactusTree -[isRequiredSoilType:]",
+      "name": "ct_soiltype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CactusTree isRequiredSoilType:] (imp 0x00b556c0, 39w): the soil-tile membership test - cmp against 0x3a/0x30/0x31/0x32 (the accepted soil codes; read: the compare chain).\n",
+      "types": "c12@0:4i8",
+      "verified_words": 39
+    },
+    {
+      "boundary": "ARM.exidx end 0x00b557f0 (listing bound); next ObjC IMP 0x00b557a4 CactusTree -[setAvailableFood:]",
+      "boundary_end": "0x00b557f0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00b5575c",
+      "ivars": {
+        "0x00b5579c": {
+          "offset": 148,
+          "slot": "0x0105ee5c",
+          "symbol": "OBJC_IVAR_$_CactusTree.availableFood"
+        },
+        "0x00b557e8": {
+          "offset": 148,
+          "slot": "0x0105ee5c",
+          "symbol": "OBJC_IVAR_$_CactusTree.availableFood"
+        }
+      },
+      "method": "CactusTree -[availableFood]",
+      "name": "ct_availfood",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[CactusTree availableFood] (imp 0x00b5575c, 18w): the **dmb ish-fenced float read** (fffff368 cell; vldr from the slot @0xb5578c) - the cactus food is SMP-mirrored.\n",
+      "types": "f8@0:4",
+      "verified_words": 37
+    },
+    {
+      "boundary": "ARM.exidx end 0x00b557f0 (listing bound); next ObjC IMP 0x00b55950 JetPackUI -[loadResources]",
+      "boundary_end": "0x00b557f0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00b557a4",
+      "ivars": {
+        "0x00b557e8": {
+          "offset": 148,
+          "slot": "0x0105ee5c",
+          "symbol": "OBJC_IVAR_$_CactusTree.availableFood"
+        }
+      },
+      "method": "CactusTree -[setAvailableFood:]",
+      "name": "ct_setavailfood",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[CactusTree setAvailableFood:] (imp 0x00b557a4, 107w): the **dmb ish-fenced float write** (str r2, [r0, r1] between the barriers @0xb557d8-0xb557dc).\n",
+      "types": "v12@0:4f8",
+      "verified_words": 19
+    },
+    {
+      "boundary": "ARM.exidx end 0x00b643d0 (listing bound); next ObjC IMP 0x00b64394 PineTree -[fruitItemType]",
+      "boundary_end": "0x00b643d0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00b64378",
+      "ivars": {},
+      "method": "PineTree -[objectType]",
+      "name": "pt_objecttype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[PineTree objectType] (imp 0x00b64378, 22w): returns **0x1b (27)** - the PineTree's dynamic-object type code.\n",
+      "types": "i8@0:4",
+      "verified_words": 22
+    },
+    {
+      "boundary": "ARM.exidx end 0x00b643d0 (listing bound); next ObjC IMP 0x00b643b0 PineTree -[shouldAddFallenFruits]",
+      "boundary_end": "0x00b643d0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00b64394",
+      "ivars": {},
+      "method": "PineTree -[fruitItemType]",
+      "name": "pt_fruititem",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[PineTree fruitItemType] (imp 0x00b64394, 15w): returns **0x1b (27)** - the fruit item type (== the object type here).\n",
+      "types": "i8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "ARM.exidx end 0x00b643d0 (listing bound); next ObjC IMP 0x00b643d0 PineTree -[initWithWorld:dynamicWorld:atPosition:cache:maxHeight:growthRate:treeDensityNoiseFunction:seasonOffsetNoiseFunction:adultTree:adultMaxAge:]",
+      "boundary_end": "0x00b643d0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00b643b0",
+      "ivars": {},
+      "method": "PineTree -[shouldAddFallenFruits]",
+      "name": "pt_fallen",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[PineTree shouldAddFallenFruits] (imp 0x00b643b0, 8w): returns **0** - the pine adds no fallen fruits.\n",
+      "types": "c8@0:4",
+      "verified_words": 8
+    },
+    {
+      "boundary": "ARM.exidx end 0x00b66fa8 (listing bound); next ObjC IMP 0x00b66fa8 PineTree -[update:accurateDT:isSimulation:]",
+      "boundary_end": "0x00b66fa8",
+      "branches": [
+        {
+          "address": "0x00b66f5c",
+          "destination": "0x00b66f70",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00b66f6c",
+          "destination": "0x00b66fa0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00b66f7c",
+          "destination": "0x00b66f90",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00b66f8c",
+          "destination": "0x00b66f9c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00b66f9c",
+          "destination": "0x00b66fa0",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00b66f40",
+      "ivars": {},
+      "method": "PineTree -[makeTileDead:]",
+      "name": "pt_makedead",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[PineTree makeTileDead:] (imp 0x00b66f40, 26w): the stage->dead-marker machine - reads the tile byte [r0+3] and for the LIVE stages (29/34) writes the DEAD markers (0x1d/0x22) via strb [r1, 3] (e.g. apple: stage 3 -> 0x1b, 4/5 -> 0x1c).\n",
+      "types": "v12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 26
+    },
+    {
+      "boundary": "ARM.exidx end 0x00b67a34 (listing bound); next ObjC IMP 0x00b67a34 PineTree -[tileIsKindOfSelf:]",
+      "boundary_end": "0x00b67a34",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00b67a18",
+      "ivars": {},
+      "method": "PineTree -[treeType]",
+      "name": "pt_treetype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[PineTree treeType] (imp 0x00b67a18, 7w): returns **0x4** - the tree-type enumeration value.\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00b67ad0 (listing bound); next ObjC IMP 0x00b67c30 CraftUI -[loadResources]",
+      "boundary_end": "0x00b67ad0",
+      "branches": [
+        {
+          "address": "0x00b67a58",
+          "destination": "0x00b67abc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00b67a70",
+          "destination": "0x00b67abc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00b67a88",
+          "destination": "0x00b67abc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00b67aa0",
+          "destination": "0x00b67abc",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00b67a34",
+      "ivars": {},
+      "method": "PineTree -[tileIsKindOfSelf:]",
+      "name": "pt_kindself",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[PineTree tileIsKindOfSelf:] (imp 0x00b67a34, 39w): the stage-set membership test over the tile byte [r0+3]/[r1+3] - accepts the class's live+dead stage codes (0x1d/0x22 family) and the generic marker arm.\n",
+      "types": "c12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 39
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d0d63c (listing bound); next ObjC IMP 0x00d0d620 CherryTree -[fruitItemType]",
+      "boundary_end": "0x00d0d63c",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d0d604",
+      "ivars": {},
+      "method": "CherryTree -[objectType]",
+      "name": "ch_objecttype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CherryTree objectType] (imp 0x00d0d604, 14w): returns **0x4d (77)** - the CherryTree's dynamic-object type code.\n",
+      "types": "i8@0:4",
+      "verified_words": 14
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d0d63c (listing bound); next ObjC IMP 0x00d0d63c CherryTree -[fruitShouldFallInSeason:]",
+      "boundary_end": "0x00d0d63c",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d0d620",
+      "ivars": {},
+      "method": "CherryTree -[fruitItemType]",
+      "name": "ch_fruititem",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CherryTree fruitItemType] (imp 0x00d0d620, 7w): returns **0x4d (77)** - the fruit item type (== the object type here).\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d0d670 (listing bound); next ObjC IMP 0x00d0d670 CherryTree -[initWithWorld:dynamicWorld:atPosition:cache:maxHeight:growthRate:treeDensityNoiseFunction:seasonOffsetNoiseFunction:adultTree:adultMaxAge:]",
+      "boundary_end": "0x00d0d670",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d0d63c",
+      "ivars": {},
+      "method": "CherryTree -[fruitShouldFallInSeason:]",
+      "name": "ch_fruitseason",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CherryTree fruitShouldFallInSeason:] (imp 0x00d0d63c, 13w): the season equality gate - `cmp r0, 3; moveq 1` (E85 read: the apple checks season 3); the patterned `cmp rN, k; movw r0, 0; moveq r0, 1; and; sxtb` shape returns the boolean.\n",
+      "types": "c12@0:4i8",
+      "verified_words": 13
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d0e0a0 (listing bound); next ObjC IMP 0x00d0e0a0 CherryTree -[updateGrowth:]",
+      "boundary_end": "0x00d0e0a0",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d0e074"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d0e024",
+      "ivars": {},
+      "method": "CherryTree -[getSaveDict]",
+      "name": "ch_getsavedict",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d0e090": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x00d0e094": {
+          "selector": "getSaveDict",
+          "slot": "0x00e8848c"
+        },
+        "0x00d0e098": {
+          "class": "OBJC_CLASS_$_CherryTree",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bf08"
+        }
+      },
+      "semantics": "[CherryTree getSaveDict] (imp 0x00d0e024, 31w): the save-dict forwarder - ffffbca8 super + the class chain (ffe28998/ffe2c414 family) builds the dict from the tree state.\n",
+      "types": "@8@0:4",
+      "verified_words": 31
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d0fdb4 (listing bound); next ObjC IMP 0x00d0fdb4 CherryTree -[update:accurateDT:isSimulation:]",
+      "boundary_end": "0x00d0fdb4",
+      "branches": [
+        {
+          "address": "0x00d0fd68",
+          "destination": "0x00d0fd7c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d0fd78",
+          "destination": "0x00d0fdac",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d0fd88",
+          "destination": "0x00d0fd9c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d0fd98",
+          "destination": "0x00d0fda8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d0fda8",
+          "destination": "0x00d0fdac",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d0fd4c",
+      "ivars": {},
+      "method": "CherryTree -[makeTileDead:]",
+      "name": "ch_makedead",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CherryTree makeTileDead:] (imp 0x00d0fd4c, 26w): the stage->dead-marker machine - reads the tile byte [r0+3] and for the LIVE stages (21/22/23) writes the DEAD markers (0x27/0x28) via strb [r1, 3] (e.g. apple: stage 3 -> 0x1b, 4/5 -> 0x1c).\n",
+      "types": "v12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 26
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d104a8 (listing bound); next ObjC IMP 0x00d104a8 CherryTree -[tileIsKindOfSelf:]",
+      "boundary_end": "0x00d104a8",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d1048c",
+      "ivars": {},
+      "method": "CherryTree -[treeType]",
+      "name": "ch_treetype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CherryTree treeType] (imp 0x00d1048c, 7w): returns **0x4d** - the tree-type enumeration value.\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d10544 (listing bound); next ObjC IMP 0x00d10640 MJButton -[createTitleWithColor:]",
+      "boundary_end": "0x00d10544",
+      "branches": [
+        {
+          "address": "0x00d104cc",
+          "destination": "0x00d10530",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d104e4",
+          "destination": "0x00d10530",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d104fc",
+          "destination": "0x00d10530",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d10514",
+          "destination": "0x00d10530",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d104a8",
+      "ivars": {},
+      "method": "CherryTree -[tileIsKindOfSelf:]",
+      "name": "ch_kindself",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[CherryTree tileIsKindOfSelf:] (imp 0x00d104a8, 39w): the stage-set membership test over the tile byte [r0+3]/[r1+3] - accepts the class's live+dead stage codes (0x27/0x28 family) and the generic marker arm.\n",
+      "types": "c12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 39
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d4ab08 (listing bound); next ObjC IMP 0x00d4aaec MangoTree -[fruitItemType]",
+      "boundary_end": "0x00d4ab08",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d4aad0",
+      "ivars": {},
+      "method": "MangoTree -[objectType]",
+      "name": "mg_objecttype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[MangoTree objectType] (imp 0x00d4aad0, 14w): returns **0x16 (22)** - the MangoTree's dynamic-object type code.\n",
+      "types": "i8@0:4",
+      "verified_words": 14
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d4ab08 (listing bound); next ObjC IMP 0x00d4ab08 MangoTree -[fruitShouldFallInSeason:]",
+      "boundary_end": "0x00d4ab08",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d4aaec",
+      "ivars": {},
+      "method": "MangoTree -[fruitItemType]",
+      "name": "mg_fruititem",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[MangoTree fruitItemType] (imp 0x00d4aaec, 7w): returns **0x16 (22)** - the fruit item type (== the object type here).\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d4ab38 (listing bound); next ObjC IMP 0x00d4ab38 MangoTree -[initWithWorld:dynamicWorld:atPosition:cache:maxHeight:growthRate:treeDensityNoiseFunction:seasonOffsetNoiseFunction:adultTree:adultMaxAge:]",
+      "boundary_end": "0x00d4ab38",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d4ab08",
+      "ivars": {},
+      "method": "MangoTree -[fruitShouldFallInSeason:]",
+      "name": "mg_fruitseason",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[MangoTree fruitShouldFallInSeason:] (imp 0x00d4ab08, 12w): the season equality gate - `cmp r0, 3; moveq 1` (E85 read: the apple checks season 3); the patterned `cmp rN, k; movw r0, 0; moveq r0, 1; and; sxtb` shape returns the boolean.\n",
+      "types": "c12@0:4i8",
+      "verified_words": 12
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d4b668 (listing bound); next ObjC IMP 0x00d4b668 MangoTree -[updateGrowth:]",
+      "boundary_end": "0x00d4b668",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d4b63c"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d4b5ec",
+      "ivars": {},
+      "method": "MangoTree -[getSaveDict]",
+      "name": "mg_getsavedict",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d4b658": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x00d4b65c": {
+          "selector": "getSaveDict",
+          "slot": "0x00e88a3c"
+        },
+        "0x00d4b660": {
+          "class": "OBJC_CLASS_$_MangoTree",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bf20"
+        }
+      },
+      "semantics": "[MangoTree getSaveDict] (imp 0x00d4b5ec, 31w): the save-dict forwarder - ffffbca8 super + the class chain (ffe28998/ffe2c414 family) builds the dict from the tree state.\n",
+      "types": "@8@0:4",
+      "verified_words": 31
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d4daa0 (listing bound); next ObjC IMP 0x00d4daa0 MangoTree -[treeType]",
+      "boundary_end": "0x00d4daa0",
+      "branches": [
+        {
+          "address": "0x00d4da54",
+          "destination": "0x00d4da68",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d4da64",
+          "destination": "0x00d4da98",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d4da74",
+          "destination": "0x00d4da88",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d4da84",
+          "destination": "0x00d4da94",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d4da94",
+          "destination": "0x00d4da98",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d4da38",
+      "ivars": {},
+      "method": "MangoTree -[makeTileDead:]",
+      "name": "mg_makedead",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[MangoTree makeTileDead:] (imp 0x00d4da38, 26w): the stage->dead-marker machine - reads the tile byte [r0+3] and for the LIVE stages (12/13/14) writes the DEAD markers (0x20/0x21) via strb [r1, 3] (e.g. apple: stage 3 -> 0x1b, 4/5 -> 0x1c).\n",
+      "types": "v12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 26
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d4dabc (listing bound); next ObjC IMP 0x00d4dabc MangoTree -[tileIsKindOfSelf:]",
+      "boundary_end": "0x00d4dabc",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d4daa0",
+      "ivars": {},
+      "method": "MangoTree -[treeType]",
+      "name": "mg_treetype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[MangoTree treeType] (imp 0x00d4daa0, 7w): returns **0x2** - the tree-type enumeration value.\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d4db58 (listing bound); next ObjC IMP 0x00d4dcb8 Egg -[initSubDerivedItems]",
+      "boundary_end": "0x00d4db58",
+      "branches": [
+        {
+          "address": "0x00d4dae0",
+          "destination": "0x00d4db44",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d4daf8",
+          "destination": "0x00d4db44",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d4db10",
+          "destination": "0x00d4db44",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d4db28",
+          "destination": "0x00d4db44",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d4dabc",
+      "ivars": {},
+      "method": "MangoTree -[tileIsKindOfSelf:]",
+      "name": "mg_kindself",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[MangoTree tileIsKindOfSelf:] (imp 0x00d4dabc, 39w): the stage-set membership test over the tile byte [r0+3]/[r1+3] - accepts the class's live+dead stage codes (0x20/0x21 family) and the generic marker arm.\n",
+      "types": "c12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 39
+    },
+    {
+      "boundary": "ARM.exidx end 0x00db56a0 (listing bound); next ObjC IMP 0x00db5684 MapleTree -[fruitItemType]",
+      "boundary_end": "0x00db56a0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00db5668",
+      "ivars": {},
+      "method": "MapleTree -[objectType]",
+      "name": "mp_objecttype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[MapleTree objectType] (imp 0x00db5668, 14w): returns **0x17 (23)** - the MapleTree's dynamic-object type code.\n",
+      "types": "i8@0:4",
+      "verified_words": 14
+    },
+    {
+      "boundary": "ARM.exidx end 0x00db56a0 (listing bound); next ObjC IMP 0x00db56a0 MapleTree -[fruitShouldFallInSeason:]",
+      "boundary_end": "0x00db56a0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00db5684",
+      "ivars": {},
+      "method": "MapleTree -[fruitItemType]",
+      "name": "mp_fruititem",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[MapleTree fruitItemType] (imp 0x00db5684, 7w): returns **0x17 (23)** - the fruit item type (== the object type here).\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00db56d0 (listing bound); next ObjC IMP 0x00db56d0 MapleTree -[initWithWorld:dynamicWorld:atPosition:cache:maxHeight:growthRate:treeDensityNoiseFunction:seasonOffsetNoiseFunction:adultTree:adultMaxAge:]",
+      "boundary_end": "0x00db56d0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00db56a0",
+      "ivars": {},
+      "method": "MapleTree -[fruitShouldFallInSeason:]",
+      "name": "mp_fruitseason",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[MapleTree fruitShouldFallInSeason:] (imp 0x00db56a0, 12w): the season equality gate - `cmp r0, 3; moveq 1` (E85 read: the apple checks season 3); the patterned `cmp rN, k; movw r0, 0; moveq r0, 1; and; sxtb` shape returns the boolean.\n",
+      "types": "c12@0:4i8",
+      "verified_words": 12
+    },
+    {
+      "boundary": "ARM.exidx end 0x00db6128 (listing bound); next ObjC IMP 0x00db6128 MapleTree -[updateGrowth:]",
+      "boundary_end": "0x00db6128",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00db60fc"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00db60ac",
+      "ivars": {},
+      "method": "MapleTree -[getSaveDict]",
+      "name": "mp_getsavedict",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00db6118": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x00db611c": {
+          "selector": "getSaveDict",
+          "slot": "0x00e88f74"
+        },
+        "0x00db6120": {
+          "class": "OBJC_CLASS_$_MapleTree",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bf50"
+        }
+      },
+      "semantics": "[MapleTree getSaveDict] (imp 0x00db60ac, 31w): the save-dict forwarder - ffffbca8 super + the class chain (ffe28998/ffe2c414 family) builds the dict from the tree state.\n",
+      "types": "@8@0:4",
+      "verified_words": 31
+    },
+    {
+      "boundary": "ARM.exidx end 0x00db8078 (listing bound); next ObjC IMP 0x00db8078 MapleTree -[update:accurateDT:isSimulation:]",
+      "boundary_end": "0x00db8078",
+      "branches": [
+        {
+          "address": "0x00db802c",
+          "destination": "0x00db8040",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00db803c",
+          "destination": "0x00db8070",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00db804c",
+          "destination": "0x00db8060",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00db805c",
+          "destination": "0x00db806c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00db806c",
+          "destination": "0x00db8070",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00db8010",
+      "ivars": {},
+      "method": "MapleTree -[makeTileDead:]",
+      "name": "mp_makedead",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[MapleTree makeTileDead:] (imp 0x00db8010, 26w): the stage->dead-marker machine - reads the tile byte [r0+3] and for the LIVE stages (10/11) writes the DEAD markers (0x1e/0x1f) via strb [r1, 3] (e.g. apple: stage 3 -> 0x1b, 4/5 -> 0x1c).\n",
+      "types": "v12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 26
+    },
+    {
+      "boundary": "ARM.exidx end 0x00db87b8 (listing bound); next ObjC IMP 0x00db87b8 MapleTree -[tileIsKindOfSelf:]",
+      "boundary_end": "0x00db87b8",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00db879c",
+      "ivars": {},
+      "method": "MapleTree -[treeType]",
+      "name": "mp_treetype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[MapleTree treeType] (imp 0x00db879c, 7w): returns **0x17** - the tree-type enumeration value.\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "last body",
+      "boundary_end": "0x00db8854",
+      "branches": [
+        {
+          "address": "0x00db87dc",
+          "destination": "0x00db8840",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00db87f4",
+          "destination": "0x00db8840",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00db880c",
+          "destination": "0x00db8840",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00db8824",
+          "destination": "0x00db8840",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00db87b8",
+      "ivars": {},
+      "method": "MapleTree -[tileIsKindOfSelf:]",
+      "name": "mp_kindself",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[MapleTree tileIsKindOfSelf:] (imp 0x00db87b8, 39w): the stage-set membership test over the tile byte [r0+3]/[r1+3] - accepts the class's live+dead stage codes (0x1e/0x1f family) and the generic marker arm.\n",
+      "types": "c12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8",
+      "verified_words": 39
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "schema": 1
+}

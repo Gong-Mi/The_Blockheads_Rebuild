@@ -1,0 +1,44 @@
+# CoffeeTree -[tileIsKindOfSelf:]
+# types: c12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8
+# implementation: 0x007e1384
+# ARM.exidx end: 0x007e1420
+
+            0x007e1384      10d04de2       sub sp, sp, 0x10
+            0x007e1388      013000e3       movw r3, 1
+            0x007e138c      0c008de5       str r0, [sp, 0xc]
+            0x007e1390      08108de5       str r1, [sp, 8]
+            0x007e1394      04208de5       str r2, [sp, 4]
+            0x007e1398      04009de5       ldr r0, [sp, 4]
+            0x007e139c      0300d0e5       ldrb r0, [r0, 3]
+            0x007e13a0      190050e3       cmp r0, 0x19
+            0x007e13a4      00308de5       str r3, [sp]
+        ┌─< 0x007e13a8      1700000a       beq 0x7e140c
+        │   0x007e13ac      010000e3       movw r0, 1
+        │   0x007e13b0      04109de5       ldr r1, [sp, 4]
+        │   0x007e13b4      0310d1e5       ldrb r1, [r1, 3]
+        │   0x007e13b8      180051e3       cmp r1, 0x18
+        │   0x007e13bc      00008de5       str r0, [sp]
+       ┌──< 0x007e13c0      1100000a       beq 0x7e140c
+       ││   0x007e13c4      010000e3       movw r0, 1
+       ││   0x007e13c8      04109de5       ldr r1, [sp, 4]
+       ││   0x007e13cc      0310d1e5       ldrb r1, [r1, 3]
+       ││   0x007e13d0      1a0051e3       cmp r1, 0x1a
+       ││   0x007e13d4      00008de5       str r0, [sp]
+      ┌───< 0x007e13d8      0b00000a       beq 0x7e140c
+      │││   0x007e13dc      010000e3       movw r0, 1
+      │││   0x007e13e0      04109de5       ldr r1, [sp, 4]
+      │││   0x007e13e4      0310d1e5       ldrb r1, [r1, 3]
+      │││   0x007e13e8      2a0051e3       cmp r1, 0x2a                ; '*'
+      │││   0x007e13ec      00008de5       str r0, [sp]
+     ┌────< 0x007e13f0      0500000a       beq 0x7e140c
+     ││││   0x007e13f4      04009de5       ldr r0, [sp, 4]
+     ││││   0x007e13f8      0300d0e5       ldrb r0, [r0, 3]
+     ││││   0x007e13fc      290050e3       cmp r0, 0x29                ; ')'
+     ││││   0x007e1400      000000e3       movw r0, 0
+     ││││   0x007e1404      0100a003       moveq r0, 1
+     ││││   0x007e1408      00008de5       str r0, [sp]
+     └└└└─> 0x007e140c      00009de5       ldr r0, [sp]
+            0x007e1410      010000e2       and r0, r0, 1
+            0x007e1414      7000afe6       sxtb r0, r0
+            0x007e1418      10d08de2       add sp, sp, 0x10
+            0x007e141c      1eff2fe1       bx lr

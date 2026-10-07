@@ -1,0 +1,26 @@
+# CactusTree -[tileIsKindOfSelf:]
+# types: c12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8
+# implementation: 0x00b55650
+# ARM.exidx end: 0x00b556a4
+
+            0x00b55650      10d04de2       sub sp, sp, 0x10
+            0x00b55654      013000e3       movw r3, 1
+            0x00b55658      0c008de5       str r0, [sp, 0xc]
+            0x00b5565c      08108de5       str r1, [sp, 8]
+            0x00b55660      04208de5       str r2, [sp, 4]
+            0x00b55664      04009de5       ldr r0, [sp, 4]
+            0x00b55668      0300d0e5       ldrb r0, [r0, 3]
+            0x00b5566c      2b0050e3       cmp r0, 0x2b                ; '+'
+            0x00b55670      00308de5       str r3, [sp]
+        ┌─< 0x00b55674      0500000a       beq 0xb55690
+        │   0x00b55678      04009de5       ldr r0, [sp, 4]
+        │   0x00b5567c      0300d0e5       ldrb r0, [r0, 3]
+        │   0x00b55680      2c0050e3       cmp r0, 0x2c                ; ','
+        │   0x00b55684      000000e3       movw r0, 0
+        │   0x00b55688      0100a003       moveq r0, 1
+        │   0x00b5568c      00008de5       str r0, [sp]
+        └─> 0x00b55690      00009de5       ldr r0, [sp]
+            0x00b55694      010000e2       and r0, r0, 1
+            0x00b55698      7000afe6       sxtb r0, r0
+            0x00b5569c      10d08de2       add sp, sp, 0x10
+            0x00b556a0      1eff2fe1       bx lr
