@@ -2282,6 +2282,40 @@ def main() -> None:
     ):
         require(NATIVE / _wb_file, [_wb_imp, _wb_end])
     require(
+        NATIVE / "SAVE_REMOTE_SIM.md",
+        [
+            "1297",
+            "0x2e (46)",
+            "0xe (14",
+            "objectTypeCanBeLoadedOnlyWhenClientOwnerOnline",
+            "0xfff33ef4",
+            "8.0",
+        ],
+    )
+    require(
+        NATIVE / "save_remote_sim.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 284',
+            "saveDynamicObjects",
+            "setServer:serverClients:",
+        ],
+    )
+    for _sc_file, _sc_imp, _sc_end in (
+        ("disasm_worldtileloader_savedynamicobjects.txt", "# implementation: 0x008b254c", "# ARM.exidx end: 0x008b29bc"),
+        ("disasm_worldtileloader_remotecreate_forobjectsoftype_clientid_.txt", "# implementation: 0x008c3c08", "# ARM.exidx end: 0x008c3e64"),
+        ("disasm_worldtileloader_loadclientowneddynamicobjectsforclient_p.txt", "# implementation: 0x008bd6bc", "# ARM.exidx end: 0x008bd9b8"),
+        ("disasm_worldtileloader_finishsimulating.txt", "# implementation: 0x008cbc8c", "# ARM.exidx end: 0x008cbf40"),
+        ("disasm_worldtileloader_removesavedinventoryforchest_.txt", "# implementation: 0x008b8dc0", "# ARM.exidx end: 0x008b8fc4"),
+        ("disasm_worldtileloader_saferemovefromdynamicobjectdatabase_.txt", "# implementation: 0x008b8c58", "# ARM.exidx end: 0x008b8dc0"),
+        ("disasm_worldtileloader_mainthreadremovedirfromconversionlist_.txt", "# implementation: 0x008ae490", "# ARM.exidx end: 0x008ae5b8"),
+        ("disasm_worldtileloader_removeportalfromlistatpos_.txt", "# implementation: 0x008b8b80", "# ARM.exidx end: 0x008b8c58"),
+        ("disasm_worldtileloader_simulate_.txt", "# implementation: 0x008c9740", "# ARM.exidx end: 0x008c98a0"),
+        ("disasm_worldtileloader_update_accuratedt_.txt", "# implementation: 0x008c9810", "# ARM.exidx end: 0x008c98a0"),
+        ("disasm_worldtileloader_setserver_serverclients_.txt", "# implementation: 0x008ad2b4", "# ARM.exidx end: 0x008ad320"),
+    ):
+        require(NATIVE / _sc_file, [_sc_imp, _sc_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
