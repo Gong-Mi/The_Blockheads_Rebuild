@@ -2402,6 +2402,42 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "WORKBENCH_LIFECYCLE.md",
+        [
+            "7590",
+            "reloadDrawBlockLightGlowQuadsForTile",
+            "reloadDrawBlockDynamicObjectStaticGeometryForTile",
+            "cmn r0, 1",
+            "__wrap_free",
+        ],
+    )
+    require(
+        NATIVE / "workbench_lifecycle.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 1670',
+            "upgradeToNextLevel",
+            "remoteBlockheadRemovedWithID:",
+        ],
+    )
+    for _wl_file, _wl_imp, _wl_end in (
+        ("disasm_worldtileloader_wl_getsavedict.txt", "implementation: 0x00ae81d0", "ARM.exidx end: 0x00ae9510"),
+        ("disasm_worldtileloader_wl_worldchanged.txt", "implementation: 0x00afcb38", "ARM.exidx end: 0x00afd4ac"),
+        ("disasm_worldtileloader_wl_remove.txt", "implementation: 0x00afd874", "ARM.exidx end: 0x00afdec4"),
+        ("disasm_worldtileloader_wl_ctor_save.txt", "implementation: 0x00ae4ed8", "ARM.exidx end: 0x00ae6490"),
+        ("disasm_worldtileloader_wl_ctor_net.txt", "implementation: 0x00ae6490", "ARM.exidx end: 0x00ae6c18"),
+        ("disasm_worldtileloader_wl_remoteupdate.txt", "implementation: 0x00aff768", "ARM.exidx end: 0x00b01180"),
+        ("disasm_worldtileloader_wl_bhloaded.txt", "implementation: 0x00ae6ed8", "ARM.exidx end: 0x00ae7248"),
+        ("disasm_worldtileloader_wl_updatenet.txt", "implementation: 0x00ae9510", "ARM.exidx end: 0x00ae99f0"),
+        ("disasm_worldtileloader_wl_dealloc.txt", "implementation: 0x00ae6c3c", "ARM.exidx end: 0x00ae6ed8"),
+        ("disasm_worldtileloader_wl_upgrade.txt", "implementation: 0x00afeae0", "ARM.exidx end: 0x00aff768"),
+        ("disasm_worldtileloader_wl_setneedsremoved.txt", "implementation: 0x00afe4c4", "ARM.exidx end: 0x00afe63c"),
+        ("disasm_worldtileloader_wl_setpaused.txt", "implementation: 0x00b02060", "ARM.exidx end: 0x00b02134"),
+        ("disasm_worldtileloader_wl_remotebhremoved.txt", "implementation: 0x00b01180", "ARM.exidx end: 0x00b01284"),
+        ("disasm_worldtileloader_wl_setlevel.txt", "implementation: 0x00afe968", "ARM.exidx end: 0x00afeae0"),
+    ):
+        require(NATIVE / _wl_file, [_wl_imp, _wl_end])
+    require(
         NATIVE / "WORKBENCH_FUEL.md",
         [
             "1684",
