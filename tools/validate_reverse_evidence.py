@@ -2402,6 +2402,44 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "ELECTRIC_LIGHTING.md",
+        [
+            "2390",
+            "ffffef20",
+            "reloadDrawBlockLightGlowQuadsForTile",
+            "map<int, int>",
+            "ffe259f8",
+        ],
+    )
+    require(
+        NATIVE / "electric_lighting.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 577',
+            "ArtificialLight",
+            "GlowBlock",
+        ],
+    )
+    for _el_file, _el_imp, _el_end in (
+        ("disasm_worldtileloader_al_ctor_color.txt", "# implementation: 0x00a93744", "# ARM.exidx end: 0x00a93bbc"),
+        ("disasm_worldtileloader_al_ctor_save.txt", "# implementation: 0x00a93c64", "# ARM.exidx end: 0x00a942d4"),
+        ("disasm_worldtileloader_al_dealloc.txt", "# implementation: 0x00a947ac", "# ARM.exidx end: 0x00a94898"),
+        ("disasm_worldtileloader_al_worldchanged.txt", "# implementation: 0x00a94898", "# ARM.exidx end: 0x00a9519c"),
+        ("disasm_worldtileloader_al_rmmacro.txt", "# implementation: 0x00a9519c", "# ARM.exidx end: 0x00a95248"),
+        ("disasm_worldtileloader_al_cxx_construct.txt", "# implementation: 0x00a958bc", "# ARM.exidx end: 0x00a958d4"),
+        ("disasm_worldtileloader_gb_initsubderived.txt", "# implementation: 0x00ca8304", "# ARM.exidx end: 0x00ca8334"),
+        ("disasm_worldtileloader_gb_ctor.txt", "# implementation: 0x00ca83d4", "# ARM.exidx end: 0x00ca8920"),
+        ("disasm_worldtileloader_gb_dealloc.txt", "# implementation: 0x00ca8e64", "# ARM.exidx end: 0x00ca8f4c"),
+        ("disasm_worldtileloader_gb_rmmacro.txt", "# implementation: 0x00ca8f4c", "# ARM.exidx end: 0x00ca90bc"),
+        ("disasm_worldtileloader_gb_worldchanged.txt", "# implementation: 0x00ca90bc", "# ARM.exidx end: 0x00ca93ac"),
+        ("disasm_worldtileloader_gb_setneedsremoved.txt", "# implementation: 0x00ca93ac", "# ARM.exidx end: 0x00ca9500"),
+        ("disasm_worldtileloader_gb_addlightcont.txt", "# implementation: 0x00ca960c", "# ARM.exidx end: 0x00ca9680"),
+        ("disasm_worldtileloader_wpc_cxx_destruct.txt", "# implementation: 0x00db5454", "# ARM.exidx end: 0x00db5604"),
+        ("disasm_worldtileloader_wpc_cxx_construct.txt", "# implementation: 0x00db549c", "# ARM.exidx end: 0x00db5604"),
+        ("disasm_worldtileloader_es_cxx_construct.txt", "# implementation: 0x00cb15a4", "# ARM.exidx end: 0x00cb15bc"),
+    ):
+        require(NATIVE / _el_file, [_el_imp, _el_end])
+    require(
         NATIVE / "CXX_CONSTRUCT.md",
         [
             "866",
