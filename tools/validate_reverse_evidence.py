@@ -2402,6 +2402,62 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "TORCH.md",
+        [
+            "10130",
+            "reloadDrawBlockDynamicObjectQuadsForTile",
+            "fillQuadBuffer",
+            "0x102",
+            "dmb ish",
+        ],
+    )
+    require(
+        NATIVE / "torch.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 4762',
+            "getLightRGB",
+            "worldContentsChanged:",
+        ],
+    )
+    for _t_file, _t_imp, _t_end in (
+        ("disasm_worldtileloader_t_initsubderived.txt", "implementation: 0x004b4a20", "ARM.exidx end: 0x004b4e98"),
+        ("disasm_worldtileloader_t_getlightrgb.txt", "implementation: 0x004b4e98", "ARM.exidx end: 0x004b52ac"),
+        ("disasm_worldtileloader_t_ctor_placed.txt", "implementation: 0x004b5300", "ARM.exidx end: 0x004b5c08"),
+        ("disasm_worldtileloader_t_objecttype.txt", "implementation: 0x004b5c1c", "ARM.exidx end: 0x004b5c74"),
+        ("disasm_worldtileloader_t_fbitemtype.txt", "implementation: 0x004b5c38", "ARM.exidx end: 0x004b5c74"),
+        ("disasm_worldtileloader_t_fbsavedict.txt", "implementation: 0x004b5c74", "ARM.exidx end: 0x004b5cc0"),
+        ("disasm_worldtileloader_t_fbdataa.txt", "implementation: 0x004b5cc0", "ARM.exidx end: 0x004b5d38"),
+        ("disasm_worldtileloader_t_fbdatab.txt", "implementation: 0x004b5cfc", "ARM.exidx end: 0x004b5d38"),
+        ("disasm_worldtileloader_t_ctor_save.txt", "implementation: 0x004b5d38", "ARM.exidx end: 0x004b6230"),
+        ("disasm_worldtileloader_t_ctor_net.txt", "implementation: 0x004b6230", "ARM.exidx end: 0x004b6594"),
+        ("disasm_worldtileloader_t_getsavedict.txt", "implementation: 0x004b65b8", "ARM.exidx end: 0x004b69e0"),
+        ("disasm_worldtileloader_t_updatenet.txt", "implementation: 0x004b69e0", "ARM.exidx end: 0x004b6a34"),
+        ("disasm_worldtileloader_t_creationdata.txt", "implementation: 0x004b6a34", "ARM.exidx end: 0x004b6d64"),
+        ("disasm_worldtileloader_t_dealloc.txt", "implementation: 0x004b6ed0", "ARM.exidx end: 0x004b6ff4"),
+        ("disasm_worldtileloader_t_rmmacro.txt", "implementation: 0x004b6ff4", "ARM.exidx end: 0x004b71d8"),
+        ("disasm_worldtileloader_t_draw.txt", "implementation: 0x004b71d8", "ARM.exidx end: 0x004b77d0"),
+        ("disasm_worldtileloader_t_remoteupdate.txt", "implementation: 0x004b77d0", "ARM.exidx end: 0x004b78bc"),
+        ("disasm_worldtileloader_t_waterchanged.txt", "implementation: 0x004b78bc", "ARM.exidx end: 0x004b7bd4"),
+        ("disasm_worldtileloader_t_worldcontents.txt", "implementation: 0x004b7bd4", "ARM.exidx end: 0x004b8b50"),
+        ("disasm_worldtileloader_t_worldchanged.txt", "implementation: 0x004b8b50", "ARM.exidx end: 0x004b8be8"),
+        ("disasm_worldtileloader_t_setneedsremoved.txt", "implementation: 0x004b8be8", "ARM.exidx end: 0x004b8cd0"),
+        ("disasm_worldtileloader_t_renderimageidx.txt", "implementation: 0x004b8cd0", "ARM.exidx end: 0x004b8fa8"),
+        ("disasm_worldtileloader_t_staticquadcount.txt", "implementation: 0x004b8fa8", "ARM.exidx end: 0x004b8fd0"),
+        ("disasm_worldtileloader_t_adddrawquad.txt", "implementation: 0x004b8fd0", "ARM.exidx end: 0x004bda38"),
+        ("disasm_worldtileloader_t_lightpos.txt", "implementation: 0x004be0d4", "ARM.exidx end: 0x004bed60"),
+        ("disasm_worldtileloader_t_glowquadcount.txt", "implementation: 0x004bed90", "ARM.exidx end: 0x004bedec"),
+        ("disasm_worldtileloader_t_isdownlight.txt", "implementation: 0x004bedec", "ARM.exidx end: 0x004beeac"),
+        ("disasm_worldtileloader_t_isuplight.txt", "implementation: 0x004bee3c", "ARM.exidx end: 0x004beeac"),
+        ("disasm_worldtileloader_t_occupiesfg.txt", "implementation: 0x004bee90", "ARM.exidx end: 0x004beeac"),
+        ("disasm_worldtileloader_t_addartistlightcont.txt", "implementation: 0x004beeac", "ARM.exidx end: 0x004bef20"),
+        ("disasm_worldtileloader_t_dataa.txt", "implementation: 0x004bef20", "ARM.exidx end: 0x004bef5c"),
+        ("disasm_worldtileloader_t_setdataa.txt", "implementation: 0x004bef5c", "ARM.exidx end: 0x004befa4"),
+        ("disasm_worldtileloader_t_datab.txt", "implementation: 0x004befa4", "ARM.exidx end: 0x004befe0"),
+        ("disasm_worldtileloader_t_setdatab.txt", "implementation: 0x004befe0", "ARM.exidx end: 0x004bf028"),
+    ):
+        require(NATIVE / _t_file, [_t_imp, _t_end])
+    require(
         NATIVE / "WINDOW_SMALLS.md",
         [
             "1185",
