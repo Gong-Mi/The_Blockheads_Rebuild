@@ -692,3 +692,14 @@ if(NOT TARGET test_object_registry_pair)
     target_compile_options(test_object_registry_pair PRIVATE -UNDEBUG)
     add_test(NAME recovered_object_registry_pair COMMAND test_object_registry_pair)
 endif()
+
+# Dynamic-world-changed recorder slice (E29/E30/E40): the ffffe578 producer
+# gate + /32 macro conversion + the 65-segment exact-pair dedup, and the
+# consumer's (end - start) / 8 pair-count idiom with its per-type skip triple.
+target_sources(blockheads_recovered_view PRIVATE dynamic_world_changed.cpp)
+if(NOT TARGET test_dynamic_world_changed)
+    add_executable(test_dynamic_world_changed ../../tools/test_dynamic_world_changed.cpp)
+    target_link_libraries(test_dynamic_world_changed PRIVATE blockheads_recovered_view)
+    target_compile_options(test_dynamic_world_changed PRIVATE -UNDEBUG)
+    add_test(NAME recovered_dynamic_world_changed COMMAND test_dynamic_world_changed)
+endif()

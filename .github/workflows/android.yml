@@ -516,6 +516,15 @@ jobs:
           /tmp/test_object_registry_pair
         done
 
+    - name: Test recovered dynamic world changed slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_dynamic_world_changed.cpp \
+            reconstruction/recovered/dynamic_world_changed.cpp -o /tmp/test_dynamic_world_changed
+          /tmp/test_dynamic_world_changed
+        done
+
     - name: Test recovered translation return numerical slice
       run: |
         for opt in 0 2; do

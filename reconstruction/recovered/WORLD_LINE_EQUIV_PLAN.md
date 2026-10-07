@@ -136,3 +136,28 @@ that the gate belongs to the object.
 Boundaries: the slice abstracts the per-type 65-segment indexing into a flat
 type dimension; registration/loader call sites and the ffe232a0 flag-1 call
 are not modelled; no runtime-equivalence claim (no differential oracle).
+
+## Landed in batch E46
+
+### `dynamic_world_changed.{h,cpp}` (T2)
+
+The ffffe578 recorder contract: the producer face
+(`dynamicWorldChangedAtPos:objectType:`, E30 0x008e1390) with its skip set
+{0x16,0x1d}, the type gate (>= 0x41), the /32 macro conversion and the
+**65-segment exact-pair dedup** (segment count from E29's destructor loop,
+0x30c/12); and the consumer idioms (E40 saveDynamicObjects): the
+`(end - start) / 8` pair-count, the per-type skip triple {0x2e,0x18} exposed
+as a predicate. Tests: `tools/test_dynamic_world_changed.cpp` (skip set, type
+gate, dedup across world positions mapping to the same macro pair, cross-
+segment non-dedup, the /8 idiom and the macro helper on negative signs).
+O0/O2 green.
+
+Boundaries: the 12-byte segment triple collapses to the observable dedup
+behaviour; the segment-addressing choice (`type % 65`) is a stable
+bookkeeping device, NOT the original mapping (which is opaque in the
+evidence) - callers must use `segmentAt(index)` and not depend on
+`segmentForType`; the consumer's client-side condition is caller-owned.
+
+Test-side note: the first test revision asserted the dedup case as a
+successful record (the recorder returns false on a dedup hit) - fixed as a
+test-expectation bug, not an implementation change.
