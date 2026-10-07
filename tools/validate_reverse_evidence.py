@@ -1591,6 +1591,33 @@ def main() -> None:
     ):
         require(NATIVE / _wc_file, [_wc_imp, _wc_end])
     require(
+        NATIVE / "DYN_OBJECT_LOAD.md",
+        [
+            "11207",
+            "dynamic-object",
+            "version ladder",
+            "tree-promise",
+            "gzipInflate",
+            "conversionThread",
+        ],
+    )
+    require(
+        NATIVE / "dyn_load.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 6196',
+            "OBJC_IVAR_$_DynamicWorld.currentlyLoadingMacroBlocks",
+            "OBJC_IVAR_$_DynamicWorld.dynamicObjects",
+            "currentlyAddingObjectIDs",
+        ],
+    )
+    for _dl_file, _dl_imp, _dl_end in (
+        ("disasm_worldtileloader_loaddynamicobjectsformacrotile_includesu.txt", "# implementation: 0x008bd9b8", "# ARM.exidx end: 0x008c3a88"),
+        ("disasm_worldtileloader_loaddynamicobjects_repositionblockheadlo.txt", "# implementation: 0x008aedac", "# ARM.exidx end: 0x008b1db0"),
+        ("disasm_worldtileloader_loaddynamicobjectsoftype_fromdata_physic.txt", "# implementation: 0x008baa54", "# ARM.exidx end: 0x008bc89c"),
+    ):
+        require(NATIVE / _dl_file, [_dl_imp, _dl_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
