@@ -2212,6 +2212,43 @@ def main() -> None:
     ):
         require(NATIVE / _a2_file, [_a2_imp, _a2_end])
     require(
+        NATIVE / "ACCESSOR_C.md",
+        [
+            "1307",
+            "0x1f (31)",
+            "0x14 (20)",
+            "0x180",
+            "0x00E4AA0C",
+            "ffe23664",
+        ],
+    )
+    require(
+        NATIVE / "accessor_c.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 149',
+            "addDoorAtPos:ofType:saveDict:placedByClient:",
+            "boatWithID:",
+        ],
+    )
+    for _a3_file, _a3_imp, _a3_end in (
+        ("disasm_worldtileloader_windowatpos_.txt", "# implementation: 0x008ed3a4", "# ARM.exidx end: 0x008ed414"),
+        ("disasm_worldtileloader_addwindowatpos_oftype_savedict_placedbyc.txt", "# implementation: 0x008ed414", "# ARM.exidx end: 0x008ed4b8"),
+        ("disasm_worldtileloader_removewindowatpos_.txt", "# implementation: 0x008ed4b8", "# ARM.exidx end: 0x008ed56c"),
+        ("disasm_worldtileloader_adddooratpos_oftype_savedict_placedbycli.txt", "# implementation: 0x008ed56c", "# ARM.exidx end: 0x008ed7c0"),
+        ("disasm_worldtileloader_dooratpos_.txt", "# implementation: 0x008ed7c0", "# ARM.exidx end: 0x008ed950"),
+        ("disasm_worldtileloader_doorcanbeusedbypathuser_atpos_.txt", "# implementation: 0x008ed950", "# ARM.exidx end: 0x008edb58"),
+        ("disasm_worldtileloader_doorisopenatpos_.txt", "# implementation: 0x008edb58", "# ARM.exidx end: 0x008edc38"),
+        ("disasm_worldtileloader_setdooratpos_toopen_direction_.txt", "# implementation: 0x008ef3c8", "# ARM.exidx end: 0x008ef488"),
+        ("disasm_worldtileloader_posofdoorsotherblockatpos_.txt", "# implementation: 0x008ef488", "# ARM.exidx end: 0x008ef618"),
+        ("disasm_worldtileloader_placeboatinwateratpos_savedict_placedbyc.txt", "# implementation: 0x008ee1f0", "# ARM.exidx end: 0x008ee3e8"),
+        ("disasm_worldtileloader_checkforboatundertap_.txt", "# implementation: 0x008ee3e8", "# ARM.exidx end: 0x008ee5e4"),
+        ("disasm_worldtileloader_boatwithid_.txt", "# implementation: 0x008ee5e4", "# ARM.exidx end: 0x008ee700"),
+        ("disasm_worldtileloader_checkfortraincarundertap_.txt", "# implementation: 0x008eef50", "# ARM.exidx end: 0x008ef18c"),
+        ("disasm_worldtileloader_traincarwithid_.txt", "# implementation: 0x008ef18c", "# ARM.exidx end: 0x008ef3c8"),
+    ):
+        require(NATIVE / _a3_file, [_a3_imp, _a3_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
