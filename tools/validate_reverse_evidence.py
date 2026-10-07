@@ -2108,6 +2108,42 @@ def main() -> None:
     ):
         require(NATIVE / _qa_file, [_qa_imp, _qa_end])
     require(
+        NATIVE / "BLOCK_LOAD_ACCESS.md",
+        [
+            "605",
+            "objectTypeIsInteractionObject",
+            "0x8b1db0",
+            "0x1a",
+            "ffffe518",
+            "ffffe51c",
+        ],
+    )
+    require(
+        NATIVE / "block_load_access.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 169',
+            "removeObjectDueToRepair:",
+            "connectionToServerLost",
+        ],
+    )
+    for _bl_file, _bl_imp, _bl_end in (
+        ("disasm_worldtileloader_removeobjectduetorepair_.txt", "# implementation: 0x00905b2c", "# ARM.exidx end: 0x00905dd0"),
+        ("disasm_worldtileloader_clientblockheadsrecievedforplayerid_data.txt", "# implementation: 0x008fb168", "# ARM.exidx end: 0x008fb288"),
+        ("disasm_worldtileloader_portalisbeingremovedatpos_.txt", "# implementation: 0x00902f3c", "# ARM.exidx end: 0x00903014"),
+        ("disasm_worldtileloader_loadedcountofobjectsoftype_.txt", "# implementation: 0x00903594", "# ARM.exidx end: 0x0090365c"),
+        ("disasm_worldtileloader_loadgatherblockatpos_.txt", "# implementation: 0x008f5530", "# ARM.exidx end: 0x008f55e8"),
+        ("disasm_worldtileloader_isclient.txt", "# implementation: 0x008f64c0", "# ARM.exidx end: 0x008f6568"),
+        ("disasm_worldtileloader_netblockheads.txt", "# implementation: 0x008f676c", "# ARM.exidx end: 0x008f67f8"),
+        ("disasm_worldtileloader_gatherblockatpos_.txt", "# implementation: 0x008f55e8", "# ARM.exidx end: 0x008f5658"),
+        ("disasm_worldtileloader_isserver.txt", "# implementation: 0x008f6514", "# ARM.exidx end: 0x008f6568"),
+        ("disasm_worldtileloader_allblockheadsincludingnet.txt", "# implementation: 0x008f6698", "# ARM.exidx end: 0x008f676c"),
+        ("disasm_worldtileloader_portalpositions.txt", "# implementation: 0x008fdeac", "# ARM.exidx end: 0x008fdee8"),
+        ("disasm_worldtileloader_blockheads.txt", "# implementation: 0x00902f00", "# ARM.exidx end: 0x00902f3c"),
+        ("disasm_worldtileloader_connectiontoserverlost.txt", "# implementation: 0x008f956c", "# ARM.exidx end: 0x008f9580"),
+    ):
+        require(NATIVE / _bl_file, [_bl_imp, _bl_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
