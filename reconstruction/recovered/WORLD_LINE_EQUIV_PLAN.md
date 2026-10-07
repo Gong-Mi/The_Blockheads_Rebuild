@@ -58,6 +58,15 @@ gates only the push, the macro section always runs — `bne 0x8dfac8`). Fixed in
 the slice; recorded here because the error class (gate scope) will recur across
 T2 slices.
 
+## Build pitfalls (CI recovered lane)
+
+- The lane compiles with `g++ -Werror`; a `//` comment line ending in a backslash
+  is `-Werror=comment` (multi-line comment) on GCC even though clang accepts it.
+  Never put trailing backslashes in comments of files compiled by the lane; keep
+  the build command one line per argument instead.
+- Tests must run with asserts active: the lane compiles the direct `c++` steps
+  without `-DNDEBUG`; CMake-registered tests use `-UNDEBUG`.
+
 ## Next slices (priority order)
 
 1. `world_change_queues` stage 2: wire `thirdMacroQueue` once its consumer is

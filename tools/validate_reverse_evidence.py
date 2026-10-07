@@ -1721,6 +1721,39 @@ def main() -> None:
     ):
         require(NATIVE / _ws_file, [_ws_imp, _ws_end])
     require(
+        NATIVE / "WORLD_UPDATE.md",
+        [
+            "6053",
+            "0x00E49A64",
+            "0x00E4AA3C",
+            "0x00E4AA60",
+            "reloadDrawBlockWaterForTile",
+            "tileIsAirWaterOrSnow",
+            "0x67 / 0x68",
+            "std::__tree_next",
+        ],
+    )
+    require(
+        NATIVE / "world_update.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 1292',
+            "OBJC_IVAR_$_DynamicWorld.worldChangedMacroPositions",
+            "checkAndRestorePoleItems:",
+            "elevatorMotorForShaftAtPos:",
+        ],
+    )
+    for _wu_file, _wu_imp, _wu_end in (
+        ("disasm_worldtileloader_lightchangedatmacropos_sendreliably_send.txt", "# implementation: 0x008e1f18", "# ARM.exidx end: 0x008e2bac"),
+        ("disasm_worldtileloader_waterchangedatpos_fullblock_.txt", "# implementation: 0x008e0ad0", "# ARM.exidx end: 0x008e1390"),
+        ("disasm_worldtileloader_sowtreenearparent_adult_adultmaxage_.txt", "# implementation: 0x008e2dc8", "# ARM.exidx end: 0x008e37c0"),
+        ("disasm_worldtileloader_sowplantnearparent_.txt", "# implementation: 0x008e3edc", "# ARM.exidx end: 0x008e49c8"),
+        ("disasm_worldtileloader_gettreelifefractionforpos_.txt", "# implementation: 0x008f9b70", "# ARM.exidx end: 0x008fad90"),
+        ("disasm_worldtileloader_checkandrestorepoleitems_.txt", "# implementation: 0x009039e8", "# ARM.exidx end: 0x00904e18"),
+        ("disasm_worldtileloader_elevatormotorforshaftatpos_.txt", "# implementation: 0x008ebf40", "# ARM.exidx end: 0x008ecd4c"),
+    ):
+        require(NATIVE / _wu_file, [_wu_imp, _wu_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
