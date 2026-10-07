@@ -1822,6 +1822,37 @@ def main() -> None:
     ):
         require(NATIVE / _dr_file, [_dr_imp, _dr_end])
     require(
+        NATIVE / "WORLD_MUTATE.md",
+        [
+            "2673",
+            "ffffe5c4",
+            "classForInteractionObjectType",
+            "recalculateDrawBlockLightingForTile",
+            "0x62",
+            "tileIsSolid",
+        ],
+    )
+    require(
+        NATIVE / "world_mutate.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 532',
+            "OBJC_IVAR_$_DynamicWorld.worldChangedMacroPositions",
+            "placeTrainCarAtPos:ofType:saveDict:placedByClient:",
+            "removeDynamicObjectsBelongingToClient:",
+        ],
+    )
+    for _mu_file, _mu_imp, _mu_end in (
+        ("disasm_worldtileloader_worldcontentschangedatpos_.txt", "# implementation: 0x008e046c", "# ARM.exidx end: 0x008e0ad0"),
+        ("disasm_worldtileloader_interactionobjectplacedatposition_withit.txt", "# implementation: 0x008e7a60", "# ARM.exidx end: 0x008e7ec4"),
+        ("disasm_worldtileloader_removestandardobject_.txt", "# implementation: 0x008e88fc", "# ARM.exidx end: 0x008e8fe8"),
+        ("disasm_worldtileloader_removedooratpos_.txt", "# implementation: 0x008edc38", "# ARM.exidx end: 0x008ee1f0"),
+        ("disasm_worldtileloader_createclientfreeblockswithdata_.txt", "# implementation: 0x008d0c90", "# ARM.exidx end: 0x008d11a8"),
+        ("disasm_worldtileloader_removedynamicobjectsbelongingtoclient_.txt", "# implementation: 0x00904e18", "# ARM.exidx end: 0x00905308"),
+        ("disasm_worldtileloader_placetraincaratpos_oftype_savedict_place.txt", "# implementation: 0x008ee700", "# ARM.exidx end: 0x008eef50"),
+    ):
+        require(NATIVE / _mu_file, [_mu_imp, _mu_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
