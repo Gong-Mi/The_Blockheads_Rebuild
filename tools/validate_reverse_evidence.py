@@ -2177,6 +2177,41 @@ def main() -> None:
     ):
         require(NATIVE / _a1_file, [_a1_imp, _a1_end])
     require(
+        NATIVE / "ACCESSOR_B.md",
+        [
+            "456",
+            "0x13 (19)",
+            "0x35 (53)",
+            "0x36 (54)",
+            "0x38 (56)",
+            "ffe23624",
+        ],
+    )
+    require(
+        NATIVE / "accessor_b.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 41',
+            "elevatorShaftAtPos:",
+            "removeElevatorShaftAtPos:",
+        ],
+    )
+    for _a2_file, _a2_imp, _a2_end in (
+        ("disasm_worldtileloader_ladderatpos_.txt", "# implementation: 0x008eb468", "# ARM.exidx end: 0x008eb4d8"),
+        ("disasm_worldtileloader_addladderatpos_oftype_savedict_placedbyc.txt", "# implementation: 0x008eb4d8", "# ARM.exidx end: 0x008eb57c"),
+        ("disasm_worldtileloader_removeladderatpos_.txt", "# implementation: 0x008eb57c", "# ARM.exidx end: 0x008eb630"),
+        ("disasm_worldtileloader_columnatpos_.txt", "# implementation: 0x008eb630", "# ARM.exidx end: 0x008eb6a0"),
+        ("disasm_worldtileloader_addcolumnatpos_oftype_savedict_placedbyc.txt", "# implementation: 0x008eb6a0", "# ARM.exidx end: 0x008eb744"),
+        ("disasm_worldtileloader_removecolumnatpos_.txt", "# implementation: 0x008eb744", "# ARM.exidx end: 0x008eb7f8"),
+        ("disasm_worldtileloader_stairsatpos_.txt", "# implementation: 0x008eb7f8", "# ARM.exidx end: 0x008eb868"),
+        ("disasm_worldtileloader_addstairsatpos_oftype_savedict_placedbyc.txt", "# implementation: 0x008eb868", "# ARM.exidx end: 0x008eb90c"),
+        ("disasm_worldtileloader_removestairsatpos_.txt", "# implementation: 0x008eb90c", "# ARM.exidx end: 0x008eb9c0"),
+        ("disasm_worldtileloader_elevatorshaftatpos_.txt", "# implementation: 0x008ebb88", "# ARM.exidx end: 0x008ebbf8"),
+        ("disasm_worldtileloader_addelevatorshaftatpos_oftype_savedict_pl.txt", "# implementation: 0x008ebbf8", "# ARM.exidx end: 0x008ebc9c"),
+        ("disasm_worldtileloader_removeelevatorshaftatpos_.txt", "# implementation: 0x008ebc9c", "# ARM.exidx end: 0x008ebd50"),
+    ):
+        require(NATIVE / _a2_file, [_a2_imp, _a2_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
