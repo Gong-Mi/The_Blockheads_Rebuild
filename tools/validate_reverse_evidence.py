@@ -1790,6 +1790,38 @@ def main() -> None:
     ):
         require(NATIVE / _ol_file, [_ol_imp, _ol_end])
     require(
+        NATIVE / "DRAW_RELOAD.md",
+        [
+            "5368",
+            "0x00E4AA1C",
+            "0x00E18134",
+            "__wrap_glEnable",
+            "__wrap_free",
+            "__wrap_malloc",
+            "__wrap_exit",
+            "ffe23540",
+        ],
+    )
+    require(
+        NATIVE / "draw_reload.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 1642',
+            "OBJC_IVAR_$_DynamicWorld.dynamicObjects",
+            "reloadDynamicObjectStaticGemometryForMacroTile:",
+            "drawBlockheadBoxes:projectionMatrix:modelViewMatrix:",
+        ],
+    )
+    for _dr_file, _dr_imp, _dr_end in (
+        ("disasm_worldtileloader_drawinfrontofblocksobjects_projectionmat.txt", "# implementation: 0x008d2db8", "# ARM.exidx end: 0x008d4760"),
+        ("disasm_worldtileloader_drawnames_projectionmatrix_modelviewmatr.txt", "# implementation: 0x008dc6b4", "# ARM.exidx end: 0x008ddc78"),
+        ("disasm_worldtileloader_reloaddynamicobjectquadsformacrotile_.txt", "# implementation: 0x008ff8bc", "# ARM.exidx end: 0x009007c0"),
+        ("disasm_worldtileloader_reloaddynamicobjectstaticcylindersformacrotile_.txt", "# implementation: 0x008fec40", "# ARM.exidx end: 0x008ff3dc"),
+        ("disasm_worldtileloader_reloaddynamicobjectstaticgemometryformacrotile_.txt", "# implementation: 0x008fe4a4", "# ARM.exidx end: 0x008fec40"),
+        ("disasm_worldtileloader_drawblockheadboxes_projectionmatrix_mode.txt", "# implementation: 0x008dc07c", "# ARM.exidx end: 0x008dc6b4"),
+    ):
+        require(NATIVE / _dr_file, [_dr_imp, _dr_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
