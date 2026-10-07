@@ -1950,6 +1950,38 @@ def main() -> None:
     ):
         require(NATIVE / _rt_file, [_rt_imp, _rt_end])
     require(
+        NATIVE / "PLACEMENT.md",
+        [
+            "1808",
+            "treeTypeForSeedItemType",
+            "classForDynamicObjectType",
+            "ffffe578",
+            "0xaa",
+            "ffffe558",
+        ],
+    )
+    require(
+        NATIVE / "placement.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 278',
+            "OBJC_IVAR_$_DynamicWorld.dynamicObjectsByWorldPosIndex",
+            "poleItemTaken:",
+            "workbenchPlacedAtPosition:ofType:saveDict:placedByClient:clientName:",
+        ],
+    )
+    for _pl_file, _pl_imp, _pl_end in (
+        ("disasm_worldtileloader_sowtreeorplantatposition_itemtype_maxhei.txt", "# implementation: 0x008e49c8", "# ARM.exidx end: 0x008e4b2c"),
+        ("disasm_worldtileloader_workbenchplacedatposition_oftype_savedic.txt", "# implementation: 0x008e7608", "# ARM.exidx end: 0x008e7a60"),
+        ("disasm_worldtileloader_dynamicworldchangedatpos_objecttype_.txt", "# implementation: 0x008e1390", "# ARM.exidx end: 0x008e17ac"),
+        ("disasm_worldtileloader_createbackgroundcontentfreeblockatpositi.txt", "# implementation: 0x008df3c4", "# ARM.exidx end: 0x008df7a4"),
+        ("disasm_worldtileloader_addrailatpos_oftype_ownedbystation_.txt", "# implementation: 0x008ecea4", "# ARM.exidx end: 0x008ed254"),
+        ("disasm_worldtileloader_addstandardobjectatpos_objecttype_itemty.txt", "# implementation: 0x008eb0c0", "# ARM.exidx end: 0x008eb468"),
+        ("disasm_worldtileloader_addpaintingatpos_oftype_savedict_placedb.txt", "# implementation: 0x008eac68", "# ARM.exidx end: 0x008eb00c"),
+        ("disasm_worldtileloader_poleitemtaken_.txt", "# implementation: 0x0090365c", "# ARM.exidx end: 0x009039e8"),
+    ):
+        require(NATIVE / _pl_file, [_pl_imp, _pl_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
