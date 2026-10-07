@@ -1687,6 +1687,40 @@ def main() -> None:
     ):
         require(NATIVE / _ns_file, [_ns_imp, _ns_end])
     require(
+        NATIVE / "WORLD_SAVE.md",
+        [
+            "7058",
+            "five-container dirty sweep",
+            "macroTileAtMacroPostion",
+            "savePhysicalBlockForMacroTile:",
+            "5000",
+            "worldIndexAtWorldPos",
+            "objectTypeCanBeLoadedOnlyWhenClientOwnerOnline",
+            "blockheadWillBeUnloaded:",
+            "makeIntpair",
+            "NSKeyedArchiver",
+        ],
+    )
+    require(
+        NATIVE / "world_save.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 2063',
+            "OBJC_IVAR_$_DynamicWorld.worldChangedMacroPositions",
+            "savePhysicalBlockForMacroTile:sendReliably:dontSend:onlySaveIfClientsNeedIt:",
+            "macroIndexAtMacroPosition",
+        ],
+    )
+    for _ws_file, _ws_imp, _ws_end in (
+        ("disasm_worldtileloader_savegamewithworlddata_signownershipdata_.txt", "# implementation: 0x008b29bc", "# ARM.exidx end: 0x008b49f8"),
+        ("disasm_worldtileloader_saveblockheads.txt", "# implementation: 0x008b6f0c", "# ARM.exidx end: 0x008b84c8"),
+        ("disasm_worldtileloader_savedynamicobjectsformacrotile_objecttyp.txt", "# implementation: 0x008b933c", "# ARM.exidx end: 0x008ba904"),
+        ("disasm_worldtileloader_removedynamicobjectsformacrotile_.txt", "# implementation: 0x008b5e54", "# ARM.exidx end: 0x008b68ac"),
+        ("disasm_worldtileloader_worldchangedatpos_sendreliably_.txt", "# implementation: 0x008df7a4", "# ARM.exidx end: 0x008e046c"),
+        ("disasm_worldtileloader_clientconnected_.txt", "# implementation: 0x008f7428", "# ARM.exidx end: 0x008f7f90"),
+    ):
+        require(NATIVE / _ws_file, [_ws_imp, _ws_end])
+    require(
         NATIVE / "CLIENTTILELOADER_GETINITIALROCKDIRT.md",
         [
             "0x00947af8",
