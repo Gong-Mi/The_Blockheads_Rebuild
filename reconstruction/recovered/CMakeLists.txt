@@ -827,3 +827,13 @@ if(NOT TARGET test_sound_accumulator)
     target_compile_options(test_sound_accumulator PRIVATE -UNDEBUG)
     add_test(NAME recovered_sound_accumulator COMMAND test_sound_accumulator)
 endif()
+
+# Net-sync phase slice (E21/E32/E40): the four ordered phases with per-phase
+# drain, the 8-byte ID / 24-byte record strides and the receiver gates.
+target_sources(blockheads_recovered_view PRIVATE net_sync_phases.cpp)
+if(NOT TARGET test_net_sync_phases)
+    add_executable(test_net_sync_phases ../../tools/test_net_sync_phases.cpp)
+    target_link_libraries(test_net_sync_phases PRIVATE blockheads_recovered_view)
+    target_compile_options(test_net_sync_phases PRIVATE -UNDEBUG)
+    add_test(NAME recovered_net_sync_phases COMMAND test_net_sync_phases)
+endif()

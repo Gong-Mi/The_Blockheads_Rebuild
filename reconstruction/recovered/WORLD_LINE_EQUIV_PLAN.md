@@ -364,3 +364,20 @@ Boundaries: finite-value domain only (vcmpe NaN/unordered behaviour NOT
 modelled - no evidence read); the bump amount stays caller-side; the 0xfff34074
 / 0xfff34174 strings and ffe2af10/ffe232c8/ffe23480 cells are the player's
 opaque handles (E24/E42/E43).
+
+## Landed in batch E59
+
+### `net_sync_phases.{h,cpp}` (T3)
+
+The updateNetObjects four-phase contract (E21): phases **A create/remove (65
+slots, 8-byte IDs) -> B creation-data (24-byte records) -> C update -> D
+remove (needsRemoved)**, each ending with the **removeAllObjects drain**; the
+receiver gates as predicates (remoteCreate skips 0xe FreeBlock per E40;
+remoteUpdate takes the 0x3c gate per E32). Tests:
+`tools/test_net_sync_phases.cpp` — the strides/constants, both gates, the
+phase order + per-phase counts, the drain (second pass sends nothing). O0/O2
+green (first run).
+
+Boundaries (T3 as the plan graded): the wire marshalling, the 65-slot pair
+structure and the receiver buckets are out of scope; the phase queues carry
+typed records and a send callback consumes them.
