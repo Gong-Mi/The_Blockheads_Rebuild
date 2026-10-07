@@ -2402,6 +2402,52 @@ def main() -> None:
     ):
         require(NATIVE / _ls2_file, [_ls2_imp, _ls2_end])
     require(
+        NATIVE / "VINE_PLANT.md",
+        [
+            "4102",
+            "currentTemperatureForTileAt",
+            "tileIsWater",
+            "fillArbitraryQuadBuffer",
+            "macroPosForWorldPos",
+        ],
+    )
+    require(
+        NATIVE / "vine_plant.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 758',
+            "dieOfOldAge",
+            "staticGeometryForegroundDrawQuadCountForMacroPos:",
+        ],
+    )
+    for _vp_file, _vp_imp, _vp_end in (
+        ("disasm_worldtileloader_v_objecttype.txt", "implementation: 0x004f58ec", "ARM.exidx end: 0x004f5908"),
+        ("disasm_worldtileloader_v_initsubderived.txt", "implementation: 0x004f5908", "ARM.exidx end: 0x004f5cb4"),
+        ("disasm_worldtileloader_v_ctor.txt", "implementation: 0x004f5cb4", "ARM.exidx end: 0x004f688c"),
+        ("disasm_worldtileloader_v_ctornet.txt", "implementation: 0x004f7344", "ARM.exidx end: 0x004f74c4"),
+        ("disasm_worldtileloader_v_remoteupdate.txt", "implementation: 0x004f7744", "ARM.exidx end: 0x004f7b20"),
+        ("disasm_worldtileloader_v_dealloc.txt", "implementation: 0x004f7b20", "ARM.exidx end: 0x004f7b8c"),
+        ("disasm_worldtileloader_v_creationdata.txt", "implementation: 0x004f7b8c", "ARM.exidx end: 0x004f7cf0"),
+        ("disasm_worldtileloader_v_compost.txt", "implementation: 0x004f7c18", "ARM.exidx end: 0x004f7cf0"),
+        ("disasm_worldtileloader_v_update.txt", "implementation: 0x004f7cf0", "ARM.exidx end: 0x004f86a8"),
+        ("disasm_worldtileloader_v_dieofoldage.txt", "implementation: 0x004f86a8", "ARM.exidx end: 0x004f8a6c"),
+        ("disasm_worldtileloader_v_kindself.txt", "implementation: 0x004f8a6c", "ARM.exidx end: 0x004f8aa0"),
+        ("disasm_worldtileloader_v_planttype.txt", "implementation: 0x004f8aa0", "ARM.exidx end: 0x004f8abc"),
+        ("disasm_worldtileloader_v_soiltype.txt", "implementation: 0x004f8abc", "ARM.exidx end: 0x004f8b58"),
+        ("disasm_worldtileloader_v_gatherprogress.txt", "implementation: 0x004f8b58", "ARM.exidx end: 0x004f8c64"),
+        ("disasm_worldtileloader_v_harvested.txt", "implementation: 0x004f8c64", "ARM.exidx end: 0x004f956c"),
+        ("disasm_worldtileloader_v_setgather.txt", "implementation: 0x004f956c", "ARM.exidx end: 0x004f96c0"),
+        ("disasm_worldtileloader_v_tilesbelow.txt", "implementation: 0x004f96c0", "ARM.exidx end: 0x004f96fc"),
+        ("disasm_worldtileloader_v_setneedsremoved.txt", "implementation: 0x004f96fc", "ARM.exidx end: 0x004f9788"),
+        ("disasm_worldtileloader_v_droppeditem.txt", "implementation: 0x004f9788", "ARM.exidx end: 0x004f97a4"),
+        ("disasm_worldtileloader_v_fgquadcount.txt", "implementation: 0x004f97a4", "ARM.exidx end: 0x004f9a78"),
+        ("disasm_worldtileloader_v_addfgquad.txt", "implementation: 0x004f9a78", "ARM.exidx end: 0x004fa2e8"),
+        ("disasm_worldtileloader_v_rmmacro.txt", "implementation: 0x004fa3d4", "ARM.exidx end: 0x004fa570"),
+        ("disasm_worldtileloader_v_availfood.txt", "implementation: 0x004fa570", "ARM.exidx end: 0x004fa604"),
+        ("disasm_worldtileloader_v_setavailfood.txt", "implementation: 0x004fa5b8", "ARM.exidx end: 0x004fa604"),
+    ):
+        require(NATIVE / _vp_file, [_vp_imp, _vp_end])
+    require(
         NATIVE / "CROP_SMALLS.md",
         [
             "1343",
