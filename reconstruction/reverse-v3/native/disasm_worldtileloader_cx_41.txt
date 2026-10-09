@@ -1,0 +1,39 @@
+# tileRequiresGlowBlock  [C function]
+# implementation: 0x00a14824
+# ARM.exidx end: 0x00a155dc
+
+            ;-- tileRequiresGlowBlock(Tile*):
+            0x00a14824      00482de9       push {fp, lr}               ; tileRequiresGlowBlock(Tile*)
+            0x00a14828      0db0a0e1       mov fp, sp
+            0x00a1482c      08d04de2       sub sp, sp, 8
+            0x00a14830      00008de5       str r0, [sp]
+            0x00a14834      00009de5       ldr r0, [sp]
+            0x00a14838      0000d0e5       ldrb r0, [r0]
+            0x00a1483c      100050e3       cmp r0, 0x10
+        ┌─< 0x00a14840      1100000a       beq 0xa1488c
+        │   0x00a14844      00009de5       ldr r0, [sp]
+        │   0x00a14848      0000d0e5       ldrb r0, [r0]
+        │   0x00a1484c      1a0050e3       cmp r0, 0x1a
+       ┌──< 0x00a14850      0d00000a       beq 0xa1488c
+       ││   0x00a14854      00009de5       ldr r0, [sp]
+       ││   0x00a14858      0000d0e5       ldrb r0, [r0]
+       ││   0x00a1485c      4d0050e3       cmp r0, 0x4d                ; 'M'
+      ┌───< 0x00a14860      0900000a       beq 0xa1488c
+      │││   0x00a14864      00009de5       ldr r0, [sp]
+      │││   0x00a14868      0000d0e5       ldrb r0, [r0]
+      │││   0x00a1486c      8af6ffeb       bl sym.tileTypeIsGemBlock_TileType_ ; tileTypeIsGemBlock(TileType)
+      │││   0x00a14870      7000afe6       sxtb r0, r0
+      │││   0x00a14874      000050e3       cmp r0, 0
+     ┌────< 0x00a14878      0300001a       bne 0xa1488c
+     ││││   0x00a1487c      00009de5       ldr r0, [sp]
+     ││││   0x00a14880      0300d0e5       ldrb r0, [r0, 3]
+     ││││   0x00a14884      4d0050e3       cmp r0, 0x4d                ; 'M'
+    ┌─────< 0x00a14888      0200001a       bne 0xa14898
+    │└└└└─> 0x00a1488c      010000e3       movw r0, 1
+    │       0x00a14890      01004be5       strb r0, [fp, -1]
+    │   ┌─< 0x00a14894      010000ea       b 0xa148a0
+    └─────> 0x00a14898      000000e3       movw r0, 0
+        │   0x00a1489c      01004be5       strb r0, [fp, -1]
+        └─> 0x00a148a0      d1005be1       ldrsb r0, [fp, -1]
+            0x00a148a4      0bd0a0e1       mov sp, fp
+            0x00a148a8      0088bde8       pop {fp, pc}

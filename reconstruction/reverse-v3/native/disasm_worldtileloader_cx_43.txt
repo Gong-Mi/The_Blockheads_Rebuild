@@ -1,0 +1,54 @@
+# backWallIsMutable  [C function]
+# implementation: 0x00a1234c
+# ARM.exidx end: 0x00a12410
+
+            ;-- backWallIsMutable(Tile*):
+            0x00a1234c      08d04de2       sub sp, sp, 8               ; backWallIsMutable(Tile*)
+            0x00a12350      001000e3       movw r1, 0
+            0x00a12354      002000e3       movw r2, 0
+            0x00a12358      04008de5       str r0, [sp, 4]
+            0x00a1235c      04009de5       ldr r0, [sp, 4]
+            0x00a12360      020050e1       cmp r0, r2
+            0x00a12364      00108de5       str r1, [sp]
+        ┌─< 0x00a12368      2300000a       beq 0xa123fc
+        │   0x00a1236c      000000e3       movw r0, 0
+        │   0x00a12370      04109de5       ldr r1, [sp, 4]
+        │   0x00a12374      0110d1e5       ldrb r1, [r1, 1]
+        │   0x00a12378      010051e3       cmp r1, 1
+        │   0x00a1237c      00008de5       str r0, [sp]
+       ┌──< 0x00a12380      1d00000a       beq 0xa123fc
+       ││   0x00a12384      000000e3       movw r0, 0
+       ││   0x00a12388      04109de5       ldr r1, [sp, 4]
+       ││   0x00a1238c      0110d1e5       ldrb r1, [r1, 1]
+       ││   0x00a12390      260051e3       cmp r1, 0x26                ; '&'
+       ││   0x00a12394      00008de5       str r0, [sp]
+      ┌───< 0x00a12398      1700000a       beq 0xa123fc
+      │││   0x00a1239c      000000e3       movw r0, 0
+      │││   0x00a123a0      04109de5       ldr r1, [sp, 4]
+      │││   0x00a123a4      0110d1e5       ldrb r1, [r1, 1]
+      │││   0x00a123a8      270051e3       cmp r1, 0x27                ; '\''
+      │││   0x00a123ac      00008de5       str r0, [sp]
+     ┌────< 0x00a123b0      1100000a       beq 0xa123fc
+     ││││   0x00a123b4      000000e3       movw r0, 0
+     ││││   0x00a123b8      04109de5       ldr r1, [sp, 4]
+     ││││   0x00a123bc      0110d1e5       ldrb r1, [r1, 1]
+     ││││   0x00a123c0      280051e3       cmp r1, 0x28                ; '('
+     ││││   0x00a123c4      00008de5       str r0, [sp]
+    ┌─────< 0x00a123c8      0b00000a       beq 0xa123fc
+    │││││   0x00a123cc      000000e3       movw r0, 0
+    │││││   0x00a123d0      04109de5       ldr r1, [sp, 4]
+    │││││   0x00a123d4      0110d1e5       ldrb r1, [r1, 1]
+    │││││   0x00a123d8      290051e3       cmp r1, 0x29                ; ')'
+    │││││   0x00a123dc      00008de5       str r0, [sp]
+   ┌──────< 0x00a123e0      0500000a       beq 0xa123fc
+   ││││││   0x00a123e4      04009de5       ldr r0, [sp, 4]
+   ││││││   0x00a123e8      0100d0e5       ldrb r0, [r0, 1]
+   ││││││   0x00a123ec      1f0050e3       cmp r0, 0x1f
+   ││││││   0x00a123f0      000000e3       movw r0, 0
+   ││││││   0x00a123f4      0100a013       movne r0, 1
+   ││││││   0x00a123f8      00008de5       str r0, [sp]
+   └└└└└└─> 0x00a123fc      00009de5       ldr r0, [sp]
+            0x00a12400      010000e2       and r0, r0, 1
+            0x00a12404      7000afe6       sxtb r0, r0
+            0x00a12408      08d08de2       add sp, sp, 8
+            0x00a1240c      1eff2fe1       bx lr

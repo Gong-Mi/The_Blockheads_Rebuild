@@ -1,0 +1,33 @@
+# tileIsNotUnminedBlockSoCanBeRemovedOnRepair  [C function]
+# implementation: 0x00a13778
+# ARM.exidx end: 0x00a137e8
+
+            ;-- tileIsNotUnminedBlockSoCanBeRemovedOnRepair(Tile*):
+            0x00a13778      00482de9       push {fp, lr}               ; tileIsNotUnminedBlockSoCanBeRemovedOnRepair(Tile*)
+            0x00a1377c      0db0a0e1       mov fp, sp
+            0x00a13780      08d04de2       sub sp, sp, 8
+            0x00a13784      001000e3       movw r1, 0
+            0x00a13788      00008de5       str r0, [sp]
+            0x00a1378c      00009de5       ldr r0, [sp]
+            0x00a13790      010050e1       cmp r0, r1
+        ┌─< 0x00a13794      0e00000a       beq 0xa137d4
+        │   0x00a13798      00009de5       ldr r0, [sp]
+        │   0x00a1379c      bcffffeb       bl sym.tileIsUnplacedBlockMinableWithPickaxe_Tile_ ; tileIsUnplacedBlockMinableWithPickaxe(Tile*)
+        │   0x00a137a0      7000afe6       sxtb r0, r0
+        │   0x00a137a4      000050e3       cmp r0, 0
+       ┌──< 0x00a137a8      0300001a       bne 0xa137bc
+       ││   0x00a137ac      00009de5       ldr r0, [sp]
+       ││   0x00a137b0      0000d0e5       ldrb r0, [r0]
+       ││   0x00a137b4      1f0050e3       cmp r0, 0x1f
+      ┌───< 0x00a137b8      0200001a       bne 0xa137c8
+      │└──> 0x00a137bc      000000e3       movw r0, 0
+      │ │   0x00a137c0      01004be5       strb r0, [fp, -1]
+      │┌──< 0x00a137c4      040000ea       b 0xa137dc
+      └───> 0x00a137c8      010000e3       movw r0, 1
+       ││   0x00a137cc      01004be5       strb r0, [fp, -1]
+      ┌───< 0x00a137d0      010000ea       b 0xa137dc
+      ││└─> 0x00a137d4      000000e3       movw r0, 0
+      ││    0x00a137d8      01004be5       strb r0, [fp, -1]
+      └└──> 0x00a137dc      d1005be1       ldrsb r0, [fp, -1]
+            0x00a137e0      0bd0a0e1       mov sp, fp
+            0x00a137e4      0088bde8       pop {fp, pc}
