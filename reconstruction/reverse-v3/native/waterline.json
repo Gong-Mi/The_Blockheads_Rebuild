@@ -5400,7 +5400,7 @@
           "slot": "0x00e82430"
         }
       },
-      "semantics": "[WorldTileLoader -[recursivelyFlowOutWaterFromTile:atPos:]] (imp 0x0085c214, 193w): the recursive flow-out - reads the tile above (y-1) and the two side tiles (x+/-1); each tile matching (byte0 == 2 && byte2 == 1) is rewritten (byte0 = 3, byte4 = 0xff, byte7 = 0) and notifies (sel ffe2293c) - the still->flowing water conversion with recursion.\n",
+      "semantics": "[WorldTileLoader -[recursivelyFlowOutWaterFromTile:atPos:]] (imp 0x0085c214, 193w): the underground flood-out (corrected post-E119) - reads the tile above (y-1) and the two side tiles (x+/-1); each AIR tile (byte0 == 2) carrying the underground zone tag (byte2 == 1; byte2 is the loader's zoneTypeIndex: 1 underground / 2 surface / 3 generation-time open water) is rewritten to full water (byte0 = 3, byte4 = 0xff, byte7 = 0) and the flood recurses through the same selector - the cave-flooding pass refineTerrain punches trigger; the zone gate confines it to underground air.\n",
       "types": "v20@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8{?=ii}12",
       "verified_words": 193
     },

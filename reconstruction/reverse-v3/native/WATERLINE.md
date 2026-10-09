@@ -60,8 +60,10 @@ The snow-surface + ice-melt line opens: SnowSurfaceBlock (19 bodies), the Column
   **-5**, corn **-10**, wheat **-15**, carrot/flax/normal **-20**. The NPC family:
   `suffersDamageAtHighTemperatures` = **1** for NPC, **0** for CaveTroll (the troll is heat-immune).
 - **windStrength = clamp((windMovement - 5) / 32, 0, 3)** - the wind audio mixer (aq_06) consumes it.
-- **The water flow quartet**: `recursivelyFlowOutWaterFromTile:` (still water `byte0 == 2 && byte2 == 1`
-  becomes flowing `byte0 = 3, byte4 = 0xff, byte7 = 0`, recursion via the notify), `waterMovedFrom:...`
+- **The water flow quartet**: `recursivelyFlowOutWaterFromTile:` (the underground flood: air
+  `byte0 == 2` with the underground zone tag `byte2 == 1` becomes full water
+  `byte0 = 3, byte4 = 0xff, byte7 = 0`, recursing through the zone gate - corrected post-E119,
+  see the corrections section), `waterMovedFrom:...`
   (the camera-culled splash particles, light-channel tint /1024, colour 0.808/0.854/0.886, count
   from the move amount), `removeWaterTileAtPos:` (the admin 0x18-byte network record +
   sendDataToServer:reliable:, tile rewrite byte0 = 2/byte4 = 0, attachment detach over the column)
@@ -78,7 +80,25 @@ The snow-surface + ice-melt line opens: SnowSurfaceBlock (19 bodies), the Column
 
 - The Weather render/construction giants (aq_00/aq_01/aq_04/aq_07/aq_08/aq_09) are census-grade;
   the other 37 read in full (the 7-word constant getters fully pinned).
-- The byte0 material codes around water (the 2/3 pair here, the 4 special in E118) are recorded as
-  observed transitions; the full per-code decode table stays outside this batch.
+- The byte0 material codes: 2 = air / 3 = water / 4 = ice / 5 = snow-cover are confirmed; the
+  glass/black-glass/gem family and the byte2 zone tag are pinned in the corrections section; the
+  remaining small codes (0x1b/0x1c etc.) stay observed-transitions-only.
 - The sandFractionForPos:highRes:/getX:Y:Z:octaves: internals and the sound system contracts are
   asserted at the selector level.
+
+## Corrections (post-E119 subagent research)
+
+- **aq_24 reread**: the `(byte0 == 2 && byte2 == 1)` rewrite is **underground cave flooding**, not a
+  still->flowing transition. `byte2` is the loader's `zoneTypeIndex` (DWARF name; 1 underground /
+  2 surface / 3 generation-time open water; written only during loading, untouched by gameplay) and the
+  flood is zone-gated, triggered by `refineTerrain` punches. See `TILE_BYTE2_ZONE.md` +
+  `tile_byte2_writers_readers.tsv`.
+- **0x422/0x423 named**: the two fill constants are server ItemTypes **1058 `ITEM_FREEZE_WATER`** and
+  **1059 `ITEM_MELT_WATER`** (DWARF symbols; the slots are repurposed legacy pickaxe/ingot entries) -
+  `original_item_types.tsv` rows 380-381.
+- **Material codes pinned**: `4 = ICE`; the semi-transparent solid family is
+  `{0x18 glass, 0x3b black glass, 4 ice, 0x47-0x4b gem blocks}` with four-layer evidence in
+  `TILE_SEMITRANSPARENT_CODES.md` + `tile_semitransparent_codes.json`; this matches the E118 ice branch
+  (`byte0 == 4 && byte9 > 0`).
+- Trap note: `0x18`/`0x3b` also appear in the object space (Blockhead/Tulip) and as torch-arm content
+  codes at `tile[0xb]`; do not cross-read the spaces.
