@@ -1,0 +1,79 @@
+# World -[activeBlockheadPos]
+# types: {?=ii}8@0:4
+# implementation: 0x005c60ac
+# ARM.exidx end: 0x005c61d4
+
+            0x005c60ac      30482de9       push {r4, r5, fp, lr}
+            0x005c60b0      08b08de2       add fp, sp, 8
+            0x005c60b4      28d04de2       sub sp, sp, 0x28
+            0x005c60b8      10319fe5       ldr r3, [0x005c61d0]        ; [0x5c61d0:4]=0xa99a30
+            0x005c60bc      03308fe0       add r3, pc, r3
+            0x005c60c0      00c000e3       movw ip, 0
+            0x005c60c4      f0e09fe5       ldr lr, [0x005c61bc]        ; [0x5c61bc:4]=0xffffbcac
+            0x005c60c8      03e09ee7       ldr lr, [lr, r3]
+            0x005c60cc      ec409fe5       ldr r4, [0x005c61c0]        ; [0x5c61c0:4]=0xffe1e628
+            0x005c60d0      034084e0       add r4, r4, r3
+            0x005c60d4      e8509fe5       ldr r5, [0x005c61c4]        ; [0x5c61c4:4]=0xffffcca8
+            0x005c60d8      035095e7       ldr r5, [r5, r3]
+            0x005c60dc      0c100be5       str r1, [fp, -0xc]
+            0x005c60e0      10200be5       str r2, [fp, -0x10]
+            0x005c60e4      0c101be5       ldr r1, [fp, -0xc]
+            0x005c60e8      002095e5       ldr r2, [r5]
+            0x005c60ec      021081e0       add r1, r1, r2
+            0x005c60f0      001091e5       ldr r1, [r1]
+            0x005c60f4      002094e5       ldr r2, [r4]
+            0x005c60f8      18008de5       str r0, [sp, 0x18]
+            0x005c60fc      0100a0e1       mov r0, r1
+            0x005c6100      0210a0e1       mov r1, r2
+            0x005c6104      14308de5       str r3, [sp, 0x14]
+            0x005c6108      10c08de5       str ip, [sp, 0x10]
+            0x005c610c      3eff2fe1       blx lr
+            0x005c6110      14000be5       str r0, [fp, -0x14]
+            0x005c6114      14001be5       ldr r0, [fp, -0x14]
+            0x005c6118      10109de5       ldr r1, [sp, 0x10]
+            0x005c611c      010050e1       cmp r0, r1
+        ┌─< 0x005c6120      0b00001a       bne 0x5c6154
+        │   0x005c6124      9c009fe5       ldr r0, [0x005c61c8]        ; [0x5c61c8:4]=0xffffcc54
+        │   0x005c6128      14109de5       ldr r1, [sp, 0x14]
+        │   0x005c612c      010090e7       ldr r0, [r0, r1]
+        │   0x005c6130      0c201be5       ldr r2, [fp, -0xc]
+        │   0x005c6134      000090e5       ldr r0, [r0]
+        │   0x005c6138      000082e0       add r0, r2, r0
+        │   0x005c613c      002090e5       ldr r2, [r0]
+        │   0x005c6140      18309de5       ldr r3, [sp, 0x18]
+        │   0x005c6144      002083e5       str r2, [r3]
+        │   0x005c6148      040090e5       ldr r0, [r0, 4]
+        │   0x005c614c      040083e5       str r0, [r3, 4]
+       ┌──< 0x005c6150      170000ea       b 0x5c61b4
+       │└─> 0x005c6154      000000e3       movw r0, 0
+       │    0x005c6158      6c109fe5       ldr r1, [0x005c61cc]        ; [0x5c61cc:4]=0xffe1ea9c
+       │    0x005c615c      14209de5       ldr r2, [sp, 0x14]
+       │    0x005c6160      021081e0       add r1, r1, r2
+       │    0x005c6164      14301be5       ldr r3, [fp, -0x14]
+       │    0x005c6168      002091e5       ldr r2, [r1]
+       │    0x005c616c      000053e1       cmp r3, r0
+       │    0x005c6170      0c308de5       str r3, [sp, 0xc]
+       │    0x005c6174      08208de5       str r2, [sp, 8]
+       │┌─< 0x005c6178      0400000a       beq 0x5c6190
+       ││   0x005c617c      18009de5       ldr r0, [sp, 0x18]
+       ││   0x005c6180      0c109de5       ldr r1, [sp, 0xc]
+       ││   0x005c6184      08209de5       ldr r2, [sp, 8]
+       ││   0x005c6188      e2f1efeb       bl loc.imp.objc_msgSend_stret
+      ┌───< 0x005c618c      070000ea       b 0x5c61b0
+      ││└─> 0x005c6190      000000e3       movw r0, 0
+      ││    0x005c6194      082000e3       movw r2, 8
+      ││    0x005c6198      18109de5       ldr r1, [sp, 0x18]
+      ││    0x005c619c      04008de5       str r0, [sp, 4]
+      ││    0x005c61a0      0100a0e1       mov r0, r1
+      ││    0x005c61a4      04109de5       ldr r1, [sp, 4]
+      ││    0x005c61a8      ff1001e2       and r1, r1, 0xff
+      ││    0x005c61ac      dcf1efeb       bl sym.imp.memset
+      └─┌─< 0x005c61b0      ffffffea       b 0x5c61b4
+       └└─> 0x005c61b4      08d04be2       sub sp, fp, 8
+            0x005c61b8      3088bde8       pop {r4, r5, fp, pc}
+            0x005c61bc      acbcffff       invalid
+            0x005c61c0      28e6e1ff       invalid
+            0x005c61c4      a8ccffff       invalid
+            0x005c61c8      54ccffff       invalid
+            0x005c61cc      9ceae1ff       invalid
+            0x005c61d0      309aa900       adceq sb, sb, r0, lsr sl

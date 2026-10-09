@@ -5723,6 +5723,41 @@ def main() -> None:
     ):
         require(NATIVE / _wl_file, [_wl_imp, _wl_end])
 
+
+    require(
+        NATIVE / "WORLD_ZOOM.md",
+        [
+            "2503",
+            "627",
+            "583",
+            "zoomToPos:pinchZoom:",
+            "tileIsLitForClient",
+            "calibrationMatrix",
+        ],
+    )
+    require(
+        NATIVE / "world_zoom.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 627',
+            '"verified_words": 583',
+            "zoomToActiveNetBlockheadForPlayer:",
+            "OBJC_IVAR_$_World.calibrationMatrix",
+        ],
+    )
+    for _wz_file, _wz_imp, _wz_end in (
+        ("disasm_worldtileloader_wz_00.txt", "implementation: 0x005c4c28", "ARM.exidx end: 0x005c55f4"),
+        ("disasm_worldtileloader_wz_01.txt", "implementation: 0x005c55f4", "ARM.exidx end: 0x005c5c0c"),
+        ("disasm_worldtileloader_wz_02.txt", "implementation: 0x005c8e98", "ARM.exidx end: 0x005c937c"),
+        ("disasm_worldtileloader_wz_03.txt", "implementation: 0x005c5c0c", "ARM.exidx end: 0x005c5ce0"),
+        ("disasm_worldtileloader_wz_04.txt", "implementation: 0x005c60ac", "ARM.exidx end: 0x005c61d4"),
+        ("disasm_worldtileloader_wz_05.txt", "implementation: 0x005be998", "ARM.exidx end: 0x005bf2b4"),
+        ("disasm_worldtileloader_wz_06.txt", "implementation: 0x005bf528", "ARM.exidx end: 0x005bf738"),
+        ("disasm_worldtileloader_wz_07.txt", "implementation: 0x005bf738", "ARM.exidx end: 0x005bf880"),
+        ("disasm_worldtileloader_wz_08.txt", "implementation: 0x005be378", "ARM.exidx end: 0x005be75c"),
+    ):
+        require(NATIVE / _wz_file, [_wz_imp, _wz_end])
+
     print("reverse-evidence-contract: PASS")
 
 
