@@ -5902,6 +5902,43 @@ def main() -> None:
     ):
         require(NATIVE / _wo_file, [_wo_imp, _wo_end])
 
+
+    require(
+        NATIVE / "WORLD_PVP.md",
+        [
+            "1782",
+            "321",
+            "305",
+            "sufferDamage:isSimulation:recoil:",
+            "TipManager",
+            "projectileManager",
+        ],
+    )
+    require(
+        NATIVE / "world_pvp.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 321',
+            '"verified_words": 305',
+            "remoteBlockheadDamageRequest:",
+            "OBJC_IVAR_$_World.projectileManager",
+        ],
+    )
+    for _wp_file, _wp_imp, _wp_end in (
+        ("disasm_worldtileloader_wp_00.txt", "implementation: 0x005c9b54", "ARM.exidx end: 0x005ca058"),
+        ("disasm_worldtileloader_wp_01.txt", "implementation: 0x005cb08c", "ARM.exidx end: 0x005cb550"),
+        ("disasm_worldtileloader_wp_02.txt", "implementation: 0x005cb550", "ARM.exidx end: 0x005cb930"),
+        ("disasm_worldtileloader_wp_03.txt", "implementation: 0x005c97dc", "ARM.exidx end: 0x005c9b54"),
+        ("disasm_worldtileloader_wp_04.txt", "implementation: 0x005c937c", "ARM.exidx end: 0x005c96f0"),
+        ("disasm_worldtileloader_wp_05.txt", "implementation: 0x005cba90", "ARM.exidx end: 0x005cbc30"),
+        ("disasm_worldtileloader_wp_06.txt", "implementation: 0x005cb930", "ARM.exidx end: 0x005cba90"),
+        ("disasm_worldtileloader_wp_07.txt", "implementation: 0x005c96f0", "ARM.exidx end: 0x005c97dc"),
+        ("disasm_worldtileloader_wp_08.txt", "implementation: 0x005c19b4", "ARM.exidx end: 0x005c1b58"),
+        ("disasm_worldtileloader_wp_09.txt", "implementation: 0x005c1b58", "ARM.exidx end: 0x005c1cd0"),
+        ("disasm_worldtileloader_wp_10.txt", "implementation: 0x005cf334", "ARM.exidx end: 0x005cf370"),
+    ):
+        require(NATIVE / _wp_file, [_wp_imp, _wp_end])
+
     print("reverse-evidence-contract: PASS")
 
 
