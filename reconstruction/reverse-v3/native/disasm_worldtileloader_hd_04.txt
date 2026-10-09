@@ -1,0 +1,21 @@
+# Blockhead -[death]
+# types: f8@0:4
+# implementation: 0x00b8c850
+# ARM.exidx end: 0x00b8c910
+
+            0x00b8c850      08d04de2       sub sp, sp, 8
+            0x00b8c854      04008de5       str r0, [sp, 4]
+            0x00b8c858      00108de5       str r1, [sp]
+            0x00b8c85c      04009de5       ldr r0, [sp, 4]
+            0x00b8c860      20109fe5       ldr r1, [0x00b8c888]        ; [0xb8c888:4]=0xfffff55c
+            0x00b8c864      20209fe5       ldr r2, [0x00b8c88c]        ; [0xb8c88c:4]=0x4d3284
+            0x00b8c868      02208fe0       add r2, pc, r2
+            0x00b8c86c      021091e7       ldr r1, [r1, r2]
+            0x00b8c870      001091e5       ldr r1, [r1]
+            0x00b8c874      010080e0       add r0, r0, r1
+            0x00b8c878      170a90ed       vldr s0, [r0, 0x5c]
+            0x00b8c87c      100a10ee       vmov r0, s0
+            0x00b8c880      08d08de2       add sp, sp, 8
+            0x00b8c884      1eff2fe1       bx lr
+            0x00b8c888      5cf5ffff       invalid
+            0x00b8c88c      84324d00       subeq r3, sp, r4, lsl 5
