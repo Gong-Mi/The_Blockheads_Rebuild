@@ -5647,6 +5647,42 @@ def main() -> None:
     ):
         require(NATIVE / _wi_file, [_wi_imp, _wi_end])
 
+
+    require(
+        NATIVE / "WORLD_CRAFT.md",
+        [
+            "5444",
+            "1583",
+            "1218",
+            "0xc350",
+            "CrystalManager",
+            "showUIForTappedWorkbench",
+        ],
+    )
+    require(
+        NATIVE / "world_craft.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 1583',
+            '"verified_words": 1218',
+            "warpInBlockhead:",
+            "OBJC_IVAR_$_World.unableToCraftBlockheadDueToWaitingForServer",
+        ],
+    )
+    for _wc_file, _wc_imp, _wc_end in (
+        ("disasm_worldtileloader_cb_00.txt", "implementation: 0x005bbdd0", "ARM.exidx end: 0x005bd68c"),
+        ("disasm_worldtileloader_cb_01.txt", "implementation: 0x005b6fa8", "ARM.exidx end: 0x005b82b0"),
+        ("disasm_worldtileloader_cb_02.txt", "implementation: 0x005b88f8", "ARM.exidx end: 0x005b902c"),
+        ("disasm_worldtileloader_cb_03.txt", "implementation: 0x005b83d0", "ARM.exidx end: 0x005b88f8"),
+        ("disasm_worldtileloader_cb_04.txt", "implementation: 0x005b82b0", "ARM.exidx end: 0x005b83d0"),
+        ("disasm_worldtileloader_cb_05.txt", "implementation: 0x005bb634", "ARM.exidx end: 0x005bbdd0"),
+        ("disasm_worldtileloader_cb_06.txt", "implementation: 0x005b9368", "ARM.exidx end: 0x005b9e10"),
+        ("disasm_worldtileloader_cb_07.txt", "implementation: 0x005bd68c", "ARM.exidx end: 0x005bdb14"),
+        ("disasm_worldtileloader_cb_08.txt", "implementation: 0x005bdb14", "ARM.exidx end: 0x005bdd70"),
+        ("disasm_worldtileloader_cb_09.txt", "implementation: 0x005b90c0", "ARM.exidx end: 0x005b9368"),
+    ):
+        require(NATIVE / _wc_file, [_wc_imp, _wc_end])
+
     print("reverse-evidence-contract: PASS")
 
 
