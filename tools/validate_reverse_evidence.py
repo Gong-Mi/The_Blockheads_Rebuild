@@ -5794,6 +5794,41 @@ def main() -> None:
     ):
         require(NATIVE / _wt_file, [_wt_imp, _wt_end])
 
+
+    require(
+        NATIVE / "WORLD_ADMIN.md",
+        [
+            "2575",
+            "440",
+            "353",
+            "customRulesChanged",
+            "BlockAlertView",
+            "mutedPlayers",
+        ],
+    )
+    require(
+        NATIVE / "world_admin.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 440',
+            '"verified_words": 353',
+            "verifyClientCustomRulesData:",
+            "OBJC_IVAR_$_World.mutedPlayers",
+        ],
+    )
+    for _wa_file, _wa_imp, _wa_end in (
+        ("disasm_worldtileloader_wa_00.txt", "implementation: 0x005d70b4", "ARM.exidx end: 0x005d7794"),
+        ("disasm_worldtileloader_wa_01.txt", "implementation: 0x005d5b10", "ARM.exidx end: 0x005d5f80"),
+        ("disasm_worldtileloader_wa_02.txt", "implementation: 0x005d5710", "ARM.exidx end: 0x005d5b10"),
+        ("disasm_worldtileloader_wa_03.txt", "implementation: 0x005d0410", "ARM.exidx end: 0x005d08cc"),
+        ("disasm_worldtileloader_wa_04.txt", "implementation: 0x005cfea4", "ARM.exidx end: 0x005d012c"),
+        ("disasm_worldtileloader_wa_05.txt", "implementation: 0x005cfa88", "ARM.exidx end: 0x005cfe00"),
+        ("disasm_worldtileloader_wa_06.txt", "implementation: 0x005d0e54", "ARM.exidx end: 0x005d13d8"),
+        ("disasm_worldtileloader_wa_07.txt", "implementation: 0x005d218c", "ARM.exidx end: 0x005d2548"),
+        ("disasm_worldtileloader_wa_08.txt", "implementation: 0x005d1aa4", "ARM.exidx end: 0x005d1f94"),
+    ):
+        require(NATIVE / _wa_file, [_wa_imp, _wa_end])
+
     print("reverse-evidence-contract: PASS")
 
 
