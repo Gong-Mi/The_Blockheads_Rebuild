@@ -447,3 +447,26 @@ torch, the arcs, the Workbench grid) feeds the same equivalence program:
   tables ({15, 20} generate / {21} storage / the 9-compare use-set).
 - `torch_placement_codes` (E72): the neighbour-classification ORDER (2/0/3/
   1/-1/else -2) and the pinned codes with the marker byte 0x64 ('d').
+
+## Interaction line slices (E108 / E117)
+
+The first C++ slices from the interaction evidence (the World trade / NPC
+batches) - both driven by store-access hooks, both O0/O2 green (first run):
+
+- `trade_price_response` (E108, from
+  updatePriceForItemBoughtOrSoldOfTypeKey:soldCount:): the epsilon gate
+  (|delta| < 0.01 returns; the +-0.01 boundaries are inclusive), the
+  multiplier law m' = m * pow(0.999, delta) with the 1.0 default on a
+  lookup miss, and the client-state gate that skips the multiplier block
+  when the ffffcc90 slot is non-nil; two f32 accumulator slots run
+  acc = delta + stored with the miss path leaving acc = delta. The two
+  pass-through read-modify-write slots (0x5cd9c8 / 0x5cda5c) stay
+  domain-boundary.
+- `npc_feed_response` (E117, from feedByBlockhead:): the can-feed gate, the
+  fullness law (+2700.0 f64 add, clamped strictly above 8100.0), the u16
+  hunger reduction field -= min(field, food/2) with the idiv truncation,
+  the ffffcacc state-byte payload path, the 675.0 (0x2a3) fill-slot replay
+  (old > 0 to the tail) and the tame count stage (read + 1, the
+  tameCountRequirementForNPCType gate with the predicate not consulted
+  below it, the max fold and the strict count > max set block). All
+  success paths converge on the tail.

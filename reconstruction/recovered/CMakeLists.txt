@@ -903,3 +903,25 @@ endif()
 # sentinel, the stop gate and the world-width band; plus the train traits
 # static_asserts in the same test.
 target_sources(blockheads_recovered_view PRIVATE particle_pool_slots.cpp)
+
+# Trade price response slice (E108): the epsilon gate (0.01 / -0.01,
+# boundary-inclusive), the pow(0.999, delta) multiplier law with the 1.0
+# default and the two f32 accumulator slots - all stores behind hooks.
+target_sources(blockheads_recovered_view PRIVATE trade_price_response.cpp)
+if(NOT TARGET test_trade_price_response)
+    add_executable(test_trade_price_response ../../tools/test_trade_price_response.cpp)
+    target_link_libraries(test_trade_price_response PRIVATE blockheads_recovered_view)
+    target_compile_options(test_trade_price_response PRIVATE -UNDEBUG)
+    add_test(NAME recovered_trade_price_response COMMAND test_trade_price_response)
+endif()
+
+# NPC feed response slice (E117): the gate, the fullness +2700/clamp 8100
+# law, the min(field, food/2) hunger reduction, the 675.0 fill-slot replay
+# and the tame count/requirement/max stage.
+target_sources(blockheads_recovered_view PRIVATE npc_feed_response.cpp)
+if(NOT TARGET test_npc_feed_response)
+    add_executable(test_npc_feed_response ../../tools/test_npc_feed_response.cpp)
+    target_link_libraries(test_npc_feed_response PRIVATE blockheads_recovered_view)
+    target_compile_options(test_npc_feed_response PRIVATE -UNDEBUG)
+    add_test(NAME recovered_npc_feed_response COMMAND test_npc_feed_response)
+endif()
