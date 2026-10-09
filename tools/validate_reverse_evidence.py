@@ -5758,6 +5758,42 @@ def main() -> None:
     ):
         require(NATIVE / _wz_file, [_wz_imp, _wz_end])
 
+
+    require(
+        NATIVE / "WORLD_TRADE.md",
+        [
+            "2219",
+            "707",
+            "453",
+            "NSPropertyListSerialization",
+            "unsentGlobalTradeTransactions",
+            "checkIfCanWarpInSecondBlockhead",
+        ],
+    )
+    require(
+        NATIVE / "world_trade.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 707',
+            '"verified_words": 453',
+            "updateTradePricesIfNeeded",
+            "OBJC_IVAR_$_World.unsentGlobalTradeTransactions",
+        ],
+    )
+    for _wt_file, _wt_imp, _wt_end in (
+        ("disasm_worldtileloader_wt_00.txt", "implementation: 0x005cbc30", "ARM.exidx end: 0x005cc73c"),
+        ("disasm_worldtileloader_wt_01.txt", "implementation: 0x005cd6a8", "ARM.exidx end: 0x005cddbc"),
+        ("disasm_worldtileloader_wt_02.txt", "implementation: 0x005ce260", "ARM.exidx end: 0x005ce918"),
+        ("disasm_worldtileloader_wt_03.txt", "implementation: 0x005c44a0", "ARM.exidx end: 0x005c47b8"),
+        ("disasm_worldtileloader_wt_04.txt", "implementation: 0x005ceb18", "ARM.exidx end: 0x005cedac"),
+        ("disasm_worldtileloader_wt_05.txt", "implementation: 0x005c4228", "ARM.exidx end: 0x005c44a0"),
+        ("disasm_worldtileloader_wt_06.txt", "implementation: 0x005d32ac", "ARM.exidx end: 0x005d3348"),
+        ("disasm_worldtileloader_wt_07.txt", "implementation: 0x005c2858", "ARM.exidx end: 0x005c28e4"),
+        ("disasm_worldtileloader_wt_08.txt", "implementation: 0x005da150", "ARM.exidx end: 0x005da194"),
+        ("disasm_worldtileloader_wt_09.txt", "implementation: 0x005da10c", "ARM.exidx end: 0x005da194"),
+    ):
+        require(NATIVE / _wt_file, [_wt_imp, _wt_end])
+
     print("reverse-evidence-contract: PASS")
 
 
