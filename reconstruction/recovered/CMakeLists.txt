@@ -950,3 +950,16 @@ if(NOT TARGET test_workbench_abort_immediate)
     target_compile_options(test_workbench_abort_immediate PRIVATE -UNDEBUG)
     add_test(NAME recovered_workbench_abort_immediate COMMAND test_workbench_abort_immediate)
 endif()
+
+# Craft completed slice (E75/E78 line): the [craftCompleted] first pass -
+# the nil/needsRemoved -> [self abortCraft] bail, the paid-slot skip, the
+# per-unit loop (the sourceItems[i].count > 0 predicate, the
+# preserveItemDataAInCraftedItem(f2[i], f0) gate, the build and the consume
+# on both preserve outcomes).
+target_sources(blockheads_recovered_view PRIVATE workbench_craft_completed.cpp)
+if(NOT TARGET test_workbench_craft_completed)
+    add_executable(test_workbench_craft_completed ../../tools/test_workbench_craft_completed.cpp)
+    target_link_libraries(test_workbench_craft_completed PRIVATE blockheads_recovered_view)
+    target_compile_options(test_workbench_craft_completed PRIVATE -UNDEBUG)
+    add_test(NAME recovered_workbench_craft_completed COMMAND test_workbench_craft_completed)
+endif()

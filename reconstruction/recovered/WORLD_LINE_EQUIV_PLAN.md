@@ -486,3 +486,12 @@ batches) - both driven by store-access hooks, both O0/O2 green (first run):
   plain arm that enumerates sourceItems[i] into the Inventory
   (`[currentBlockhead addItemToInventory:]` per sub-item, then release +
   nil) - the pair with the soft abort's free-block drop.
+- `workbench_craft_completed` (E75/E78 line, from craftCompleted): the
+  completion handler's first pass - the nil-blockhead / needsRemoved ->
+  `[self abortCraft]` bail (the nil gate skips the probe), the paid-slot
+  (f2[i] == 11) skip, and the per-unit loop: the
+  `[sourceItems[i] count] > 0` predicate (a zero abandons the slot's
+  remaining units), the `preserveItemDataAInCraftedItem(f2[i], f0)` gate
+  (build only on true) and the consume that runs on BOTH preserve
+  outcomes. The second loop set and the AD / achievement tail are the
+  finish boundary.
