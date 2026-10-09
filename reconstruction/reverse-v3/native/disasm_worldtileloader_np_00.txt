@@ -1,0 +1,23 @@
+# NPC -[setBreed:]
+# types: v12@0:4S8
+# implementation: 0x006513e4
+# ARM.exidx end: 0x0065142c
+
+            0x006513e4      0cd04de2       sub sp, sp, 0xc
+            0x006513e8      08008de5       str r0, [sp, 8]
+            0x006513ec      04108de5       str r1, [sp, 4]
+            0x006513f0      b220cde1       strh r2, [sp, 2]
+            0x006513f4      08009de5       ldr r0, [sp, 8]
+            0x006513f8      24109fe5       ldr r1, [0x00651424]        ; [0x651424:4]=0xffffd1bc
+            0x006513fc      24309fe5       ldr r3, [0x00651428]        ; [0x651428:4]=0xa0e6ec
+            0x00651400      03308fe0       add r3, pc, r3
+            0x00651404      031091e7       ldr r1, [r1, r3]
+            0x00651408      001091e5       ldr r1, [r1]
+            0x0065140c      010080e0       add r0, r0, r1
+            0x00651410      5bf07ff5       dmb ish
+            0x00651414      b020c0e1       strh r2, [r0]
+            0x00651418      5bf07ff5       dmb ish
+            0x0065141c      0cd08de2       add sp, sp, 0xc
+            0x00651420      1eff2fe1       bx lr
+            0x00651424      bcd1ffff       invalid
+            0x00651428      ece6a000       adceq lr, r0, ip, ror 13

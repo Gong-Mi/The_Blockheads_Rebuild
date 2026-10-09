@@ -6252,6 +6252,62 @@ def main() -> None:
     ):
         require(NATIVE / _dob_file, [_dob_imp, _dob_end])
 
+
+    require(
+        NATIVE / "NPC_CORE.md",
+        [
+            "11055",
+            "1832",
+            "1432",
+            "tameCountRequirementForNPCType",
+            "drawShaderQuadNoTexture",
+            "0x6445d8",
+        ],
+    )
+    require(
+        NATIVE / "npc_core.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 1832',
+            '"verified_words": 1432',
+            "remoteCreationDataUpdate:",
+            "OBJC_IVAR_$_NPC.tamedClientID",
+        ],
+    )
+    for _np_file, _np_imp, _np_end in (
+        ("disasm_worldtileloader_np_00.txt", "implementation: 0x006513e4", "ARM.exidx end: 0x0065142c"),
+        ("disasm_worldtileloader_np_01.txt", "implementation: 0x0064bf30", "ARM.exidx end: 0x0064dbd0"),
+        ("disasm_worldtileloader_np_02.txt", "implementation: 0x00647cf8", "ARM.exidx end: 0x00649358"),
+        ("disasm_worldtileloader_np_03.txt", "implementation: 0x006468d0", "ARM.exidx end: 0x00647c84"),
+        ("disasm_worldtileloader_np_04.txt", "implementation: 0x00645aac", "ARM.exidx end: 0x00646738"),
+        ("disasm_worldtileloader_np_05.txt", "implementation: 0x0064b398", "ARM.exidx end: 0x0064be74"),
+        ("disasm_worldtileloader_np_06.txt", "implementation: 0x00650b10", "ARM.exidx end: 0x00651314"),
+        ("disasm_worldtileloader_np_07.txt", "implementation: 0x00650218", "ARM.exidx end: 0x0065096c"),
+        ("disasm_worldtileloader_np_08.txt", "implementation: 0x00644e94", "ARM.exidx end: 0x006455d4"),
+        ("disasm_worldtileloader_np_09.txt", "implementation: 0x0064ad80", "ARM.exidx end: 0x0064b398"),
+        ("disasm_worldtileloader_np_10.txt", "implementation: 0x00649894", "ARM.exidx end: 0x00649e20"),
+        ("disasm_worldtileloader_np_11.txt", "implementation: 0x00644718", "ARM.exidx end: 0x00644b24"),
+        ("disasm_worldtileloader_np_12.txt", "implementation: 0x0064fd60", "ARM.exidx end: 0x006500c0"),
+        ("disasm_worldtileloader_np_13.txt", "implementation: 0x0064f124", "ARM.exidx end: 0x0064f444"),
+        ("disasm_worldtileloader_np_14.txt", "implementation: 0x0064a9f8", "ARM.exidx end: 0x0064acf8"),
+        ("disasm_worldtileloader_np_15.txt", "implementation: 0x0064f6c8", "ARM.exidx end: 0x0064f9a0"),
+        ("disasm_worldtileloader_np_16.txt", "implementation: 0x0064e8d8", "ARM.exidx end: 0x0064eb64"),
+        ("disasm_worldtileloader_np_17.txt", "implementation: 0x0064f444", "ARM.exidx end: 0x0064f6c8"),
+        ("disasm_worldtileloader_np_18.txt", "implementation: 0x0064f9a0", "ARM.exidx end: 0x0064fbf0"),
+        ("disasm_worldtileloader_np_19.txt", "implementation: 0x0064eb64", "ARM.exidx end: 0x0064ed9c"),
+        ("disasm_worldtileloader_np_20.txt", "implementation: 0x0064567c", "ARM.exidx end: 0x0064589c"),
+        ("disasm_worldtileloader_np_21.txt", "implementation: 0x00649fec", "ARM.exidx end: 0x0064a208"),
+        ("disasm_worldtileloader_np_22.txt", "implementation: 0x0064e604", "ARM.exidx end: 0x0064e81c"),
+        ("disasm_worldtileloader_np_23.txt", "implementation: 0x00649670", "ARM.exidx end: 0x00649880"),
+        ("disasm_worldtileloader_np_24.txt", "implementation: 0x0064ef20", "ARM.exidx end: 0x0064f124"),
+        ("disasm_worldtileloader_np_25.txt", "implementation: 0x00644ca0", "ARM.exidx end: 0x00644e94"),
+        ("disasm_worldtileloader_np_26.txt", "implementation: 0x0064a2f0", "ARM.exidx end: 0x0064a49c"),
+        ("disasm_worldtileloader_np_27.txt", "implementation: 0x00646738", "ARM.exidx end: 0x006468d0"),
+        ("disasm_worldtileloader_np_28.txt", "implementation: 0x0064448c", "ARM.exidx end: 0x00644704"),
+        ("disasm_worldtileloader_np_29.txt", "implementation: 0x0064589c", "ARM.exidx end: 0x006459c0"),
+    ):
+        require(NATIVE / _np_file, [_np_imp, _np_end])
+
     print("reverse-evidence-contract: PASS")
 
 
