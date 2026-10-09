@@ -1,0 +1,23 @@
+# Blockhead -[currentTemperature]
+# types: f8@0:4
+# implementation: 0x00c8a540
+# ARM.exidx end: 0x00c8a588
+
+            0x00c8a540      0cd04de2       sub sp, sp, 0xc
+            0x00c8a544      04008de5       str r0, [sp, 4]
+            0x00c8a548      00108de5       str r1, [sp]
+            0x00c8a54c      04009de5       ldr r0, [sp, 4]
+            0x00c8a550      28109fe5       ldr r1, [0x00c8a580]        ; [0xc8a580:4]=0xfffff798
+            0x00c8a554      28209fe5       ldr r2, [0x00c8a584]        ; [0xc8a584:4]=0x3d5594
+            0x00c8a558      02208fe0       add r2, pc, r2
+            0x00c8a55c      021091e7       ldr r1, [r1, r2]
+            0x00c8a560      001091e5       ldr r1, [r1]
+            0x00c8a564      010090e7       ldr r0, [r0, r1]
+            0x00c8a568      5bf07ff5       dmb ish
+            0x00c8a56c      08008de5       str r0, [sp, 8]
+            0x00c8a570      020a9ded       vldr s0, [sp, 8]
+            0x00c8a574      100a10ee       vmov r0, s0
+            0x00c8a578      0cd08de2       add sp, sp, 0xc
+            0x00c8a57c      1eff2fe1       bx lr
+            0x00c8a580      98f7ffff       invalid
+            0x00c8a584      94553d00       mlaseq sp, r4, r5, r5
