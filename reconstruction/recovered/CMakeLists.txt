@@ -925,3 +925,16 @@ if(NOT TARGET test_npc_feed_response)
     target_compile_options(test_npc_feed_response PRIVATE -UNDEBUG)
     add_test(NAME recovered_npc_feed_response COMMAND test_npc_feed_response)
 endif()
+
+# Workbench craft abort slice (E78): the [abortCraft] restore - the
+# needsRemoved/release head, the fractionComplete = 0 reset, the paid arm
+# (type 11, f3 x countLeft, the 50000 cap) and the per-unit drop arm,
+# feeding the craftAborted -> isInUse = 0 -> craftItemFinished ->
+# dynamicWorldChanged -> updateNeedsToBeSent = 1 -> countLeft = 0 finalize.
+target_sources(blockheads_recovered_view PRIVATE workbench_craft_abort.cpp)
+if(NOT TARGET test_workbench_craft_abort)
+    add_executable(test_workbench_craft_abort ../../tools/test_workbench_craft_abort.cpp)
+    target_link_libraries(test_workbench_craft_abort PRIVATE blockheads_recovered_view)
+    target_compile_options(test_workbench_craft_abort PRIVATE -UNDEBUG)
+    add_test(NAME recovered_workbench_craft_abort COMMAND test_workbench_craft_abort)
+endif()

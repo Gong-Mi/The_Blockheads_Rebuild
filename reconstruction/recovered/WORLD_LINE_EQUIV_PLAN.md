@@ -470,3 +470,12 @@ batches) - both driven by store-access hooks, both O0/O2 green (first run):
   tameCountRequirementForNPCType gate with the predicate not consulted
   below it, the max fold and the strict count > max set block). All
   success paths converge on the tail.
+- `workbench_craft_abort` (E78, from abortCraft): the soft abort - the
+  needsRemoved/release head, fractionComplete = 0, the paid arm
+  (f2[i] == 11: the client gate, the CrystalManager watcher reset,
+  units = f3[i] x countLeft, the 50000 cap with the strict > skip) and the
+  plain arm (sourceItems[i] ? the enumerated drop : f3[i] x countLeft
+  per-unit drops), then the finalize chain
+  craftAbortedForWorkbench:withBlockhead: -> isInUse = 0 ->
+  craftItemFinished:atWorkbench: -> dynamicWorldChangedAtPos:objectType: ->
+  updateNeedsToBeSent = 1 -> countLeft = 0.
