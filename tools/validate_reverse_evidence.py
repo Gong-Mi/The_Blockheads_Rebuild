@@ -5869,6 +5869,39 @@ def main() -> None:
     ):
         require(NATIVE / _wu_file, [_wu_imp, _wu_end])
 
+
+    require(
+        NATIVE / "WORLD_OWN.md",
+        [
+            "1542",
+            "527",
+            "373",
+            "ownershipSignPositions",
+            "OwnershipAreaRenderer",
+            "loadLightBlockForClientLightBlockIndex",
+        ],
+    )
+    require(
+        NATIVE / "world_own.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 527',
+            '"verified_words": 373',
+            "ownershipSignWasPlacedOrChangedAtPos:",
+            "OBJC_IVAR_$_World.ownershipSignPositions",
+        ],
+    )
+    for _wo_file, _wo_imp, _wo_end in (
+        ("disasm_worldtileloader_wo_00.txt", "implementation: 0x005d35cc", "ARM.exidx end: 0x005d3e08"),
+        ("disasm_worldtileloader_wo_01.txt", "implementation: 0x005d4144", "ARM.exidx end: 0x005d4718"),
+        ("disasm_worldtileloader_wo_02.txt", "implementation: 0x005d3e08", "ARM.exidx end: 0x005d4144"),
+        ("disasm_worldtileloader_wo_03.txt", "implementation: 0x005d53b0", "ARM.exidx end: 0x005d5534"),
+        ("disasm_worldtileloader_wo_04.txt", "implementation: 0x005d3538", "ARM.exidx end: 0x005d35cc"),
+        ("disasm_worldtileloader_wo_05.txt", "implementation: 0x005daa14", "ARM.exidx end: 0x005daa8c"),
+        ("disasm_worldtileloader_wo_06.txt", "implementation: 0x005c88b0", "ARM.exidx end: 0x005c8d28"),
+    ):
+        require(NATIVE / _wo_file, [_wo_imp, _wo_end])
+
     print("reverse-evidence-contract: PASS")
 
 
