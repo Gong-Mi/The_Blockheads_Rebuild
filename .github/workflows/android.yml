@@ -949,6 +949,15 @@ jobs:
           /tmp/test_workbench_craft_abort
         done
 
+    - name: Test recovered workbench hard abort slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_workbench_abort_immediate.cpp \
+            reconstruction/recovered/workbench_abort_immediate.cpp -o /tmp/test_workbench_abort_immediate
+          /tmp/test_workbench_abort_immediate
+        done
+
 
 
   # GameView lane A: the python contracts and the two NDEBUG negative controls.

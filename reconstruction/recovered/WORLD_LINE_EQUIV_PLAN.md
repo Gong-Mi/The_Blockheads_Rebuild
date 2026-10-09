@@ -479,3 +479,10 @@ batches) - both driven by store-access hooks, both O0/O2 green (first run):
   craftAbortedForWorkbench:withBlockhead: -> isInUse = 0 ->
   craftItemFinished:atWorkbench: -> dynamicWorldChangedAtPos:objectType: ->
   updateNeedsToBeSent = 1 -> countLeft = 0.
+- `workbench_abort_immediate` (E78, from
+  abortImmediatelyAndRestoreBlockheadItems): the hard abort - the
+  currentBlockhead == nil / !isInUse head (no fractionComplete reset on
+  this path), the same paid arm and finalize as the soft abort, and the
+  plain arm that enumerates sourceItems[i] into the Inventory
+  (`[currentBlockhead addItemToInventory:]` per sub-item, then release +
+  nil) - the pair with the soft abort's free-block drop.

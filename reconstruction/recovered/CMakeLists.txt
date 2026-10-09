@@ -938,3 +938,15 @@ if(NOT TARGET test_workbench_craft_abort)
     target_compile_options(test_workbench_craft_abort PRIVATE -UNDEBUG)
     add_test(NAME recovered_workbench_craft_abort COMMAND test_workbench_craft_abort)
 endif()
+
+# Workbench hard abort slice (E78): the
+# [abortImmediatelyAndRestoreBlockheadItems] restore - the
+# currentBlockhead/isInUse head, the same paid arm and the inventory-return
+# plain arm (addItemToInventory: per enumerated sub-item).
+target_sources(blockheads_recovered_view PRIVATE workbench_abort_immediate.cpp)
+if(NOT TARGET test_workbench_abort_immediate)
+    add_executable(test_workbench_abort_immediate ../../tools/test_workbench_abort_immediate.cpp)
+    target_link_libraries(test_workbench_abort_immediate PRIVATE blockheads_recovered_view)
+    target_compile_options(test_workbench_abort_immediate PRIVATE -UNDEBUG)
+    add_test(NAME recovered_workbench_abort_immediate COMMAND test_workbench_abort_immediate)
+endif()
