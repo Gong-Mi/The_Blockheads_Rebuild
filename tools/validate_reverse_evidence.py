@@ -5604,6 +5604,49 @@ def main() -> None:
             "123\tDiamondTreeTrunkLeaf\t606\t30\t18",
         ],
     )
+
+    require(
+        NATIVE / "WORLD_INPUT.md",
+        [
+            "7282",
+            "6150",
+            "makeIntpair",
+            "GLKMathUnproject",
+            "linearInterpolate",
+            "panBlockingUIDisplayed",
+        ],
+    )
+    require(
+        NATIVE / "world_input.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 6150',
+            '"verified_words": 309',
+            "tap:",
+            "OBJC_IVAR_$_World.touchStartTranslation",
+        ],
+    )
+    for _wi_file, _wi_imp, _wi_end in (
+        ("disasm_worldtileloader_wi_00.txt", "implementation: 0x005ac3a0", "ARM.exidx end: 0x005b23b8"),
+        ("disasm_worldtileloader_wi_01.txt", "implementation: 0x00552e28", "ARM.exidx end: 0x00552ec0"),
+        ("disasm_worldtileloader_wi_02.txt", "implementation: 0x00552ec0", "ARM.exidx end: 0x005531d0"),
+        ("disasm_worldtileloader_wi_03.txt", "implementation: 0x005531d0", "ARM.exidx end: 0x005536a4"),
+        ("disasm_worldtileloader_wi_04.txt", "implementation: 0x005536a4", "ARM.exidx end: 0x005536ec"),
+        ("disasm_worldtileloader_wi_05.txt", "implementation: 0x005b30c8", "ARM.exidx end: 0x005b31b8"),
+        ("disasm_worldtileloader_wi_06.txt", "implementation: 0x005b3278", "ARM.exidx end: 0x005b3308"),
+        ("disasm_worldtileloader_wi_07.txt", "implementation: 0x005b3308", "ARM.exidx end: 0x005b33ac"),
+        ("disasm_worldtileloader_wi_08.txt", "implementation: 0x005b33ac", "ARM.exidx end: 0x005b34b4"),
+        ("disasm_worldtileloader_wi_09.txt", "implementation: 0x005b3430", "ARM.exidx end: 0x005b34b4"),
+        ("disasm_worldtileloader_wi_10.txt", "implementation: 0x005b34b4", "ARM.exidx end: 0x005b3540"),
+        ("disasm_worldtileloader_wi_11.txt", "implementation: 0x005bf968", "ARM.exidx end: 0x005bf9f8"),
+        ("disasm_worldtileloader_wi_12.txt", "implementation: 0x005bf9f8", "ARM.exidx end: 0x005bfb5c"),
+        ("disasm_worldtileloader_wi_13.txt", "implementation: 0x005bf880", "ARM.exidx end: 0x005bf968"),
+        ("disasm_worldtileloader_wi_14.txt", "implementation: 0x005bfb5c", "ARM.exidx end: 0x005bfc14"),
+        ("disasm_worldtileloader_wi_15.txt", "implementation: 0x005bfc14", "ARM.exidx end: 0x005bfcb0"),
+        ("disasm_worldtileloader_wi_16.txt", "implementation: 0x005b3540", "ARM.exidx end: 0x005b3644"),
+    ):
+        require(NATIVE / _wi_file, [_wi_imp, _wi_end])
+
     print("reverse-evidence-contract: PASS")
 
 
