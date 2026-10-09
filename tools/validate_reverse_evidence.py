@@ -5939,6 +5939,34 @@ def main() -> None:
     ):
         require(NATIVE / _wp_file, [_wp_imp, _wp_end])
 
+
+    require(
+        NATIVE / "WORLD_CXX.md",
+        [
+            "1346",
+            "324",
+            "1022",
+            "macroTileAtMacroPostion",
+            "requestBlockFromServerAtPos",
+            "std::__1::__tree",
+        ],
+    )
+    require(
+        NATIVE / "world_cxx.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 324',
+            '"verified_words": 1022',
+            ".cxx_construct",
+            "OBJC_IVAR_$_World.usedPhysicalBlocks",
+        ],
+    )
+    for _wc2_file, _wc2_imp, _wc2_end in (
+        ("disasm_worldtileloader_wc_00.txt", "implementation: 0x005dab64", "ARM.exidx end: 0x005db074"),
+        ("disasm_worldtileloader_wc_01.txt", "implementation: 0x005b4a00", "ARM.exidx end: 0x005b59f8"),
+    ):
+        require(NATIVE / _wc2_file, [_wc2_imp, _wc2_end])
+
     print("reverse-evidence-contract: PASS")
 
 
