@@ -1,0 +1,66 @@
+# itemTypeIsStackable  [C function]
+# implementation: 0x004ea3cc
+# ARM.exidx end: 0x004ea4c0
+
+            ;-- itemTypeIsStackable(ItemType, unsigned short, unsigned short):
+            0x004ea3cc      00482de9       push {fp, lr}               ; itemTypeIsStackable(ItemType, unsigned short, unsigned short)
+            0x004ea3d0      0db0a0e1       mov fp, sp
+            0x004ea3d4      18d04de2       sub sp, sp, 0x18
+            0x004ea3d8      04000be5       str r0, [fp, -4]
+            0x004ea3dc      b6104be1       strh r1, [fp, -6]
+            0x004ea3e0      b8204be1       strh r2, [fp, -8]
+            0x004ea3e4      04001be5       ldr r0, [fp, -4]
+            0x004ea3e8      5c0500eb       bl sym.itemTypeSubItemsCanBeModifiedWhileCarried_ItemType_ ; itemTypeSubItemsCanBeModifiedWhileCarried(ItemType)
+            0x004ea3ec      001000e3       movw r1, 0
+            0x004ea3f0      7000afe6       sxtb r0, r0
+            0x004ea3f4      000050e3       cmp r0, 0
+            0x004ea3f8      0c108de5       str r1, [sp, 0xc]
+        ┌─< 0x004ea3fc      2a00001a       bne 0x4ea4ac
+        │   0x004ea400      010000e3       movw r0, 1
+        │   0x004ea404      b6105be1       ldrh r1, [fp, -6]
+        │   0x004ea408      b8205be1       ldrh r2, [fp, -8]
+        │   0x004ea40c      020051e1       cmp r1, r2
+        │   0x004ea410      08008de5       str r0, [sp, 8]
+       ┌──< 0x004ea414      2200000a       beq 0x4ea4a4
+       ││   0x004ea418      000000e3       movw r0, 0
+       ││   0x004ea41c      04101be5       ldr r1, [fp, -4]
+       ││   0x004ea420      670051e3       cmp r1, 0x67                ; 'g'
+       ││   0x004ea424      04008de5       str r0, [sp, 4]
+      ┌───< 0x004ea428      1b00000a       beq 0x4ea49c
+      │││   0x004ea42c      000000e3       movw r0, 0
+      │││   0x004ea430      04101be5       ldr r1, [fp, -4]
+      │││   0x004ea434      5b0051e3       cmp r1, 0x5b                ; '['
+      │││   0x004ea438      04008de5       str r0, [sp, 4]
+     ┌────< 0x004ea43c      1600000a       beq 0x4ea49c
+     ││││   0x004ea440      04001be5       ldr r0, [fp, -4]
+     ││││   0x004ea444      37afffeb       bl sym.itemTypeCanBeColored_ItemType_ ; itemTypeCanBeColored(ItemType)
+     ││││   0x004ea448      011000e3       movw r1, 1
+     ││││   0x004ea44c      7000afe6       sxtb r0, r0
+     ││││   0x004ea450      000050e3       cmp r0, 0
+     ││││   0x004ea454      00108de5       str r1, [sp]
+    ┌─────< 0x004ea458      0d00000a       beq 0x4ea494
+    │││││   0x004ea45c      b6005be1       ldrh r0, [fp, -6]
+    │││││   0x004ea460      000050e3       cmp r0, 0
+    │││││   0x004ea464      000000e3       movw r0, 0
+    │││││   0x004ea468      0100a013       movne r0, 1
+    │││││   0x004ea46c      010000e2       and r0, r0, 1
+    │││││   0x004ea470      b8105be1       ldrh r1, [fp, -8]
+    │││││   0x004ea474      000051e3       cmp r1, 0
+    │││││   0x004ea478      001000e3       movw r1, 0
+    │││││   0x004ea47c      0110a013       movne r1, 1
+    │││││   0x004ea480      011001e2       and r1, r1, 1
+    │││││   0x004ea484      010050e1       cmp r0, r1
+    │││││   0x004ea488      000000e3       movw r0, 0
+    │││││   0x004ea48c      0100a003       moveq r0, 1
+    │││││   0x004ea490      00008de5       str r0, [sp]
+    └─────> 0x004ea494      00009de5       ldr r0, [sp]
+     ││││   0x004ea498      04008de5       str r0, [sp, 4]
+     └└───> 0x004ea49c      04009de5       ldr r0, [sp, 4]
+       ││   0x004ea4a0      08008de5       str r0, [sp, 8]
+       └──> 0x004ea4a4      08009de5       ldr r0, [sp, 8]
+        │   0x004ea4a8      0c008de5       str r0, [sp, 0xc]
+        └─> 0x004ea4ac      0c009de5       ldr r0, [sp, 0xc]
+            0x004ea4b0      010000e2       and r0, r0, 1
+            0x004ea4b4      7000afe6       sxtb r0, r0
+            0x004ea4b8      0bd0a0e1       mov sp, fp
+            0x004ea4bc      0088bde8       pop {fp, pc}

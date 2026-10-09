@@ -1,0 +1,63 @@
+# texCoordsForItemType  [C function]
+# implementation: 0x004d6040
+# ARM.exidx end: 0x004d6128
+
+            ;-- texCoordsForItemType(ItemType):
+            0x004d6040      00482de9       push {fp, lr}               ; texCoordsForItemType(ItemType)
+            0x004d6044      0db0a0e1       mov fp, sp
+            0x004d6048      40d04de2       sub sp, sp, 0x40
+            0x004d604c      330a9fed       vldr s0, [0x004d6120]
+            0x004d6050      2c1b9fed       vldr d1, [0x004d6108]
+            0x004d6054      2d2b9fed       vldr d2, [0x004d6110]
+            0x004d6058      313a9fed       vldr s6, [0x004d6124]
+            0x004d605c      2d4b9fed       vldr d4, [0x004d6118]
+            0x004d6060      202000e3       movw r2, 0x20
+            0x004d6064      04100be5       str r1, [fp, -4]
+            0x004d6068      04101be5       ldr r1, [fp, -4]
+            0x004d606c      10000be5       str r0, [fp, -0x10]
+            0x004d6070      0100a0e1       mov r0, r1
+            0x004d6074      0210a0e1       mov r1, r2
+            0x004d6078      14200be5       str r2, [fp, -0x14]
+            0x004d607c      084b8ded       vstr d4, [sp, 0x20]
+            0x004d6080      070a8ded       vstr s0, [sp, 0x1c]
+            0x004d6084      041b8ded       vstr d1, [sp, 0x10]
+            0x004d6088      022b8ded       vstr d2, [sp, 8]
+            0x004d608c      013a8ded       vstr s6, [sp, 4]
+            0x004d6090      e2b3f3eb       bl sym.imp.__modsi3
+            0x004d6094      08000be5       str r0, [fp, -8]
+            0x004d6098      04001be5       ldr r0, [fp, -4]
+            0x004d609c      14101be5       ldr r1, [fp, -0x14]
+            0x004d60a0      a0b5f3eb       bl sym.imp.__aeabi_idiv
+            0x004d60a4      0c000be5       str r0, [fp, -0xc]
+            0x004d60a8      08001be5       ldr r0, [fp, -8]
+            0x004d60ac      100a00ee       vmov s0, r0
+            0x004d60b0      c01bb8ee       vcvt.f64.s32 d1, s0
+            0x004d60b4      082b9ded       vldr d2, [sp, 0x20]
+            0x004d60b8      011b22ee       vmul.f64 d1, d2, d1
+            0x004d60bc      044b9ded       vldr d4, [sp, 0x10]
+            0x004d60c0      041b31ee       vadd.f64 d1, d1, d4
+            0x004d60c4      c10bb7ee       vcvt.f32.f64 s0, d1
+            0x004d60c8      10001be5       ldr r0, [fp, -0x10]
+            0x004d60cc      000a80ed       vstr s0, [r0]
+            0x004d60d0      010a9ded       vldr s0, [sp, 4]
+            0x004d60d4      020a80ed       vstr s0, [r0, 8]
+            0x004d60d8      0c101be5       ldr r1, [fp, -0xc]
+            0x004d60dc      101a03ee       vmov s6, r1
+            0x004d60e0      c31bb8ee       vcvt.f64.s32 d1, s6
+            0x004d60e4      025b9ded       vldr d5, [sp, 8]
+            0x004d60e8      011b25ee       vmul.f64 d1, d5, d1
+            0x004d60ec      041b31ee       vadd.f64 d1, d1, d4
+            0x004d60f0      c13bb7ee       vcvt.f32.f64 s6, d1
+            0x004d60f4      013a80ed       vstr s6, [r0, 4]
+            0x004d60f8      073a9ded       vldr s6, [sp, 0x1c]
+            0x004d60fc      033a80ed       vstr s6, [r0, 0xc]
+            0x004d6100      0bd0a0e1       mov sp, fp
+            0x004d6104      0088bde8       pop {fp, pc}
+            0x004d6108      00000000       andeq r0, r0, r0
+            0x004d610c      0000403f       svclo 0x400000
+            0x004d6110      00000000       andeq r0, r0, r0
+            0x004d6114      0000b03f       svclo 0xb00000
+            0x004d6118      00000000       andeq r0, r0, r0
+            0x004d611c      0000a03f       svclo 0xa00000
+            0x004d6120      00007c3d       ldcllo p0, c0, [ip, -0]!
+            0x004d6124      0000f83c       ldcllo p0, c0, [r8], 0

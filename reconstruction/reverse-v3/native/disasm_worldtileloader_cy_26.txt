@@ -1,0 +1,57 @@
+# dynamicObjectTypeForNPCType  [C function]
+# implementation: 0x006495a0
+# ARM.exidx end: 0x00649670
+
+            ;-- dynamicObjectTypeForNPCType(NPCType):
+            0x006495a0      0cd04de2       sub sp, sp, 0xc             ; dynamicObjectTypeForNPCType(NPCType)
+            0x006495a4      04008de5       str r0, [sp, 4]
+            0x006495a8      0010a0e1       mov r1, r0
+            0x006495ac      080050e3       cmp r0, 8
+            0x006495b0      00108de5       str r1, [sp]
+        ┌─< 0x006495b4      2800008a       bhi 0x64965c
+        │   0x006495b8      00009de5       ldr r0, [sp]
+        │   0x006495bc      0011a0e1       lsl r1, r0, 2
+        │   0x006495c0      04208fe2       add r2, pc, 4
+        │   0x006495c4      021091e7       ldr r1, [r1, r2]
+        │   0x006495c8      02f081e0       add pc, r1, r2
+        │   0x006495cc      24000000       andeq r0, r0, r4, lsr 32
+        │   0x006495d0      30000000       andeq r0, r0, r0, lsr r0
+        │   0x006495d4      3c000000       andeq r0, r0, ip, lsr r0
+        │   0x006495d8      48000000       andeq r0, r0, r8, asr 32
+        │   0x006495dc      60000000       andeq r0, r0, r0, rrx
+        │   0x006495e0      6c000000       andeq r0, r0, ip, rrx
+        │   0x006495e4      78000000       andeq r0, r0, r8, ror r0
+        │   0x006495e8      84000000       andeq r0, r0, r4, lsl 1
+        │   0x006495ec      54000000       andeq r0, r0, r4, asr r0
+        │   0x006495f0      000000e3       movw r0, 0
+        │   0x006495f4      08008de5       str r0, [sp, 8]
+       ┌──< 0x006495f8      190000ea       b 0x649664
+       ││   0x006495fc      0d0000e3       movw r0, 0xd
+       ││   0x00649600      08008de5       str r0, [sp, 8]
+      ┌───< 0x00649604      160000ea       b 0x649664
+      │││   0x00649608      190000e3       movw r0, 0x19
+      │││   0x0064960c      08008de5       str r0, [sp, 8]
+     ┌────< 0x00649610      130000ea       b 0x649664
+     ││││   0x00649614      1c0000e3       movw r0, 0x1c
+     ││││   0x00649618      08008de5       str r0, [sp, 8]
+    ┌─────< 0x0064961c      100000ea       b 0x649664
+    │││││   0x00649620      3f0000e3       movw r0, 0x3f               ; '?'
+    │││││   0x00649624      08008de5       str r0, [sp, 8]
+   ┌──────< 0x00649628      0d0000ea       b 0x649664
+   ││││││   0x0064962c      230000e3       movw r0, 0x23               ; '#'
+   ││││││   0x00649630      08008de5       str r0, [sp, 8]
+  ┌───────< 0x00649634      0a0000ea       b 0x649664
+  │││││││   0x00649638      240000e3       movw r0, 0x24               ; '$'
+  │││││││   0x0064963c      08008de5       str r0, [sp, 8]
+  ────────< 0x00649640      070000ea       b 0x649664
+  │││││││   0x00649644      270000e3       movw r0, 0x27               ; '\''
+  │││││││   0x00649648      08008de5       str r0, [sp, 8]
+  ────────< 0x0064964c      040000ea       b 0x649664
+  │││││││   0x00649650      330000e3       movw r0, 0x33               ; '3'
+  │││││││   0x00649654      08008de5       str r0, [sp, 8]
+  ────────< 0x00649658      010000ea       b 0x649664
+  ││││││└─> 0x0064965c      000000e3       movw r0, 0
+  ││││││    0x00649660      08008de5       str r0, [sp, 8]
+  └└└└└└──> 0x00649664      08009de5       ldr r0, [sp, 8]
+            0x00649668      0cd08de2       add sp, sp, 0xc
+            0x0064966c      1eff2fe1       bx lr

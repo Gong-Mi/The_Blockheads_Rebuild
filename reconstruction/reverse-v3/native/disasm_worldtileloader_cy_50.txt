@@ -1,0 +1,30 @@
+# itemTypeIsLightEmittingBlock  [C function]
+# implementation: 0x00580f24
+# ARM.exidx end: 0x00580f88
+
+            ;-- itemTypeIsLightEmittingBlock(ItemType):
+            0x00580f24      00482de9       push {fp, lr}               ; itemTypeIsLightEmittingBlock(ItemType)
+            0x00580f28      0db0a0e1       mov fp, sp
+            0x00580f2c      08d04de2       sub sp, sp, 8
+            0x00580f30      00008de5       str r0, [sp]
+            0x00580f34      00009de5       ldr r0, [sp]
+            0x00580f38      f77901eb       bl sym.itemTypeIsGemBlock_ItemType_ ; itemTypeIsGemBlock(ItemType)
+            0x00580f3c      7000afe6       sxtb r0, r0
+            0x00580f40      000050e3       cmp r0, 0
+        ┌─< 0x00580f44      0700001a       bne 0x580f68
+        │   0x00580f48      510400e3       movw r0, 0x451
+        │   0x00580f4c      00109de5       ldr r1, [sp]
+        │   0x00580f50      000051e1       cmp r1, r0
+       ┌──< 0x00580f54      0300000a       beq 0x580f68
+       ││   0x00580f58      150400e3       movw r0, 0x415
+       ││   0x00580f5c      00109de5       ldr r1, [sp]
+       ││   0x00580f60      000051e1       cmp r1, r0
+      ┌───< 0x00580f64      0200001a       bne 0x580f74
+      │└└─> 0x00580f68      010000e3       movw r0, 1
+      │     0x00580f6c      01004be5       strb r0, [fp, -1]
+      │ ┌─< 0x00580f70      010000ea       b 0x580f7c
+      └───> 0x00580f74      000000e3       movw r0, 0
+        │   0x00580f78      01004be5       strb r0, [fp, -1]
+        └─> 0x00580f7c      d1005be1       ldrsb r0, [fp, -1]
+            0x00580f80      0bd0a0e1       mov sp, fp
+            0x00580f84      0088bde8       pop {fp, pc}

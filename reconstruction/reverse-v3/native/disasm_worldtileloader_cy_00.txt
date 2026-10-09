@@ -1,0 +1,153 @@
+# reloadDrawBlockGeometryForTile  [C function]
+# implementation: 0x00a1915c
+# ARM.exidx end: 0x00a19c0c
+
+            ;-- reloadDrawBlockGeometryForTile(int, int, MacroTile*, World*, signed char):
+; reloadDrawBlockGeometryForTile(int, int, MacroTile*, World*, signed
+; char)
+            0x00a1915c      00482de9       push {fp, lr}
+            0x00a19160      0db0a0e1       mov fp, sp
+            0x00a19164      30d04de2       sub sp, sp, 0x30
+            0x00a19168      08c09be5       ldr ip, [fp, 8]
+            0x00a1916c      04000be5       str r0, [fp, -4]
+            0x00a19170      08100be5       str r1, [fp, -8]
+            0x00a19174      0c200be5       str r2, [fp, -0xc]
+            0x00a19178      10300be5       str r3, [fp, -0x10]
+            0x00a1917c      11c04be5       strb ip, [fp, -0x11]
+            0x00a19180      04001be5       ldr r0, [fp, -4]
+            0x00a19184      08101be5       ldr r1, [fp, -8]
+            0x00a19188      0c201be5       ldr r2, [fp, -0xc]
+            0x00a1918c      10301be5       ldr r3, [fp, -0x10]
+            0x00a19190      17f8ffeb       bl sym.drawBlockAtWorldPostion_int__int__MacroTile__World_ ; drawBlockAtWorldPostion(int, int, MacroTile*, World*)
+            0x00a19194      001000e3       movw r1, 0
+            0x00a19198      18008de5       str r0, [sp, 0x18]
+            0x00a1919c      18009de5       ldr r0, [sp, 0x18]
+            0x00a191a0      010050e1       cmp r0, r1
+        ┌─< 0x00a191a4      0a00000a       beq 0xa191d4
+        │   0x00a191a8      d1015be1       ldrsb r0, [fp, -0x11]
+        │   0x00a191ac      000050e3       cmp r0, 0
+       ┌──< 0x00a191b0      0300000a       beq 0xa191c4
+       ││   0x00a191b4      010000e3       movw r0, 1
+       ││   0x00a191b8      18109de5       ldr r1, [sp, 0x18]
+       ││   0x00a191bc      7d01c1e5       strb r0, [r1, 0x17d]
+      ┌───< 0x00a191c0      020000ea       b 0xa191d0
+      │└──> 0x00a191c4      010000e3       movw r0, 1
+      │ │   0x00a191c8      18109de5       ldr r1, [sp, 0x18]
+      │ │   0x00a191cc      7e01c1e5       strb r0, [r1, 0x17e]
+      └┌──< 0x00a191d0      ffffffea       b 0xa191d4
+       └└─> 0x00a191d4      201000e3       movw r1, 0x20
+            0x00a191d8      04001be5       ldr r0, [fp, -4]
+            0x00a191dc      8fa7deeb       bl sym.imp.__modsi3
+            0x00a191e0      14008de5       str r0, [sp, 0x14]
+            0x00a191e4      14009de5       ldr r0, [sp, 0x14]
+            0x00a191e8      000050e3       cmp r0, 0
+        ┌─< 0x00a191ec      1600001a       bne 0xa1924c
+        │   0x00a191f0      04001be5       ldr r0, [fp, -4]
+        │   0x00a191f4      010040e2       sub r0, r0, 1
+        │   0x00a191f8      08101be5       ldr r1, [fp, -8]
+        │   0x00a191fc      0c201be5       ldr r2, [fp, -0xc]
+        │   0x00a19200      10301be5       ldr r3, [fp, -0x10]
+        │   0x00a19204      faf7ffeb       bl sym.drawBlockAtWorldPostion_int__int__MacroTile__World_ ; drawBlockAtWorldPostion(int, int, MacroTile*, World*)
+        │   0x00a19208      001000e3       movw r1, 0
+        │   0x00a1920c      10008de5       str r0, [sp, 0x10]
+        │   0x00a19210      10009de5       ldr r0, [sp, 0x10]
+        │   0x00a19214      010050e1       cmp r0, r1
+       ┌──< 0x00a19218      0a00000a       beq 0xa19248
+       ││   0x00a1921c      d1015be1       ldrsb r0, [fp, -0x11]
+       ││   0x00a19220      000050e3       cmp r0, 0
+      ┌───< 0x00a19224      0300000a       beq 0xa19238
+      │││   0x00a19228      010000e3       movw r0, 1
+      │││   0x00a1922c      10109de5       ldr r1, [sp, 0x10]
+      │││   0x00a19230      7d01c1e5       strb r0, [r1, 0x17d]
+     ┌────< 0x00a19234      020000ea       b 0xa19244
+     │└───> 0x00a19238      010000e3       movw r0, 1
+     │ ││   0x00a1923c      10109de5       ldr r1, [sp, 0x10]
+     │ ││   0x00a19240      7e01c1e5       strb r0, [r1, 0x17e]
+     └┌───< 0x00a19244      ffffffea       b 0xa19248
+     ┌└└──> 0x00a19248      1a0000ea       b 0xa192b8
+     │  └─> 0x00a1924c      14009de5       ldr r0, [sp, 0x14]
+     │      0x00a19250      1f0050e3       cmp r0, 0x1f
+     │  ┌─< 0x00a19254      1600001a       bne 0xa192b4
+     │  │   0x00a19258      04001be5       ldr r0, [fp, -4]
+     │  │   0x00a1925c      010080e2       add r0, r0, 1
+     │  │   0x00a19260      08101be5       ldr r1, [fp, -8]
+     │  │   0x00a19264      0c201be5       ldr r2, [fp, -0xc]
+     │  │   0x00a19268      10301be5       ldr r3, [fp, -0x10]
+     │  │   0x00a1926c      e0f7ffeb       bl sym.drawBlockAtWorldPostion_int__int__MacroTile__World_ ; drawBlockAtWorldPostion(int, int, MacroTile*, World*)
+     │  │   0x00a19270      001000e3       movw r1, 0
+     │  │   0x00a19274      0c008de5       str r0, [sp, 0xc]
+     │  │   0x00a19278      0c009de5       ldr r0, [sp, 0xc]
+     │  │   0x00a1927c      010050e1       cmp r0, r1
+     │ ┌──< 0x00a19280      0a00000a       beq 0xa192b0
+     │ ││   0x00a19284      d1015be1       ldrsb r0, [fp, -0x11]
+     │ ││   0x00a19288      000050e3       cmp r0, 0
+     │┌───< 0x00a1928c      0300000a       beq 0xa192a0
+     ││││   0x00a19290      010000e3       movw r0, 1
+     ││││   0x00a19294      0c109de5       ldr r1, [sp, 0xc]
+     ││││   0x00a19298      7d01c1e5       strb r0, [r1, 0x17d]
+    ┌─────< 0x00a1929c      020000ea       b 0xa192ac
+    ││└───> 0x00a192a0      010000e3       movw r0, 1
+    ││ ││   0x00a192a4      0c109de5       ldr r1, [sp, 0xc]
+    ││ ││   0x00a192a8      7e01c1e5       strb r0, [r1, 0x17e]
+    └─┌───< 0x00a192ac      ffffffea       b 0xa192b0
+    ┌─└└──> 0x00a192b0      ffffffea       b 0xa192b4
+    └──┌└─> 0x00a192b4      ffffffea       b 0xa192b8
+     └─└──> 0x00a192b8      201000e3       movw r1, 0x20
+            0x00a192bc      08001be5       ldr r0, [fp, -8]
+            0x00a192c0      56a7deeb       bl sym.imp.__modsi3
+            0x00a192c4      08008de5       str r0, [sp, 8]
+            0x00a192c8      08009de5       ldr r0, [sp, 8]
+            0x00a192cc      000050e3       cmp r0, 0
+        ┌─< 0x00a192d0      1600001a       bne 0xa19330
+        │   0x00a192d4      04001be5       ldr r0, [fp, -4]
+        │   0x00a192d8      08101be5       ldr r1, [fp, -8]
+        │   0x00a192dc      011041e2       sub r1, r1, 1
+        │   0x00a192e0      0c201be5       ldr r2, [fp, -0xc]
+        │   0x00a192e4      10301be5       ldr r3, [fp, -0x10]
+        │   0x00a192e8      c1f7ffeb       bl sym.drawBlockAtWorldPostion_int__int__MacroTile__World_ ; drawBlockAtWorldPostion(int, int, MacroTile*, World*)
+        │   0x00a192ec      001000e3       movw r1, 0
+        │   0x00a192f0      04008de5       str r0, [sp, 4]
+        │   0x00a192f4      04009de5       ldr r0, [sp, 4]
+        │   0x00a192f8      010050e1       cmp r0, r1
+       ┌──< 0x00a192fc      0a00000a       beq 0xa1932c
+       ││   0x00a19300      d1015be1       ldrsb r0, [fp, -0x11]
+       ││   0x00a19304      000050e3       cmp r0, 0
+      ┌───< 0x00a19308      0300000a       beq 0xa1931c
+      │││   0x00a1930c      010000e3       movw r0, 1
+      │││   0x00a19310      04109de5       ldr r1, [sp, 4]
+      │││   0x00a19314      7d01c1e5       strb r0, [r1, 0x17d]
+     ┌────< 0x00a19318      020000ea       b 0xa19328
+     │└───> 0x00a1931c      010000e3       movw r0, 1
+     │ ││   0x00a19320      04109de5       ldr r1, [sp, 4]
+     │ ││   0x00a19324      7e01c1e5       strb r0, [r1, 0x17e]
+     └┌───< 0x00a19328      ffffffea       b 0xa1932c
+     ┌└└──> 0x00a1932c      1a0000ea       b 0xa1939c
+     │  └─> 0x00a19330      08009de5       ldr r0, [sp, 8]
+     │      0x00a19334      1f0050e3       cmp r0, 0x1f
+     │  ┌─< 0x00a19338      1600001a       bne 0xa19398
+     │  │   0x00a1933c      04001be5       ldr r0, [fp, -4]
+     │  │   0x00a19340      08101be5       ldr r1, [fp, -8]
+     │  │   0x00a19344      011081e2       add r1, r1, 1
+     │  │   0x00a19348      0c201be5       ldr r2, [fp, -0xc]
+     │  │   0x00a1934c      10301be5       ldr r3, [fp, -0x10]
+     │  │   0x00a19350      a7f7ffeb       bl sym.drawBlockAtWorldPostion_int__int__MacroTile__World_ ; drawBlockAtWorldPostion(int, int, MacroTile*, World*)
+     │  │   0x00a19354      001000e3       movw r1, 0
+     │  │   0x00a19358      00008de5       str r0, [sp]
+     │  │   0x00a1935c      00009de5       ldr r0, [sp]
+     │  │   0x00a19360      010050e1       cmp r0, r1
+     │ ┌──< 0x00a19364      0a00000a       beq 0xa19394
+     │ ││   0x00a19368      d1015be1       ldrsb r0, [fp, -0x11]
+     │ ││   0x00a1936c      000050e3       cmp r0, 0
+     │┌───< 0x00a19370      0300000a       beq 0xa19384
+     ││││   0x00a19374      010000e3       movw r0, 1
+     ││││   0x00a19378      00109de5       ldr r1, [sp]
+     ││││   0x00a1937c      7d01c1e5       strb r0, [r1, 0x17d]
+    ┌─────< 0x00a19380      020000ea       b 0xa19390
+    ││└───> 0x00a19384      010000e3       movw r0, 1
+    ││ ││   0x00a19388      00109de5       ldr r1, [sp]
+    ││ ││   0x00a1938c      7e01c1e5       strb r0, [r1, 0x17e]
+    └─┌───< 0x00a19390      ffffffea       b 0xa19394
+    ┌─└└──> 0x00a19394      ffffffea       b 0xa19398
+    └──┌└─> 0x00a19398      ffffffea       b 0xa1939c
+     └─└──> 0x00a1939c      0bd0a0e1       mov sp, fp
+            0x00a193a0      0088bde8       pop {fp, pc}
