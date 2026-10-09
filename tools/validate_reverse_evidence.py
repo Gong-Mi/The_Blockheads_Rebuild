@@ -5683,6 +5683,46 @@ def main() -> None:
     ):
         require(NATIVE / _wc_file, [_wc_imp, _wc_end])
 
+
+    require(
+        NATIVE / "WORLD_LOAD.md",
+        [
+            "3266",
+            "1428",
+            "540",
+            "SFHFKeychainUtils",
+            "globalPrices",
+            "checkIfMacroTileCanBeDecommissioned",
+        ],
+    )
+    require(
+        NATIVE / "world_load.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 1428',
+            '"verified_words": 540',
+            '"verified_words": 627',
+            "initWithWindowInfo:",
+            "OBJC_IVAR_$_World.incrementalLoadCount",
+        ],
+    )
+    for _wl_file, _wl_imp, _wl_end in (
+        ("disasm_worldtileloader_wl_00.txt", "implementation: 0x00563604", "ARM.exidx end: 0x00564c54"),
+        ("disasm_worldtileloader_wl_01.txt", "implementation: 0x005b59f8", "ARM.exidx end: 0x005b5b54"),
+        ("disasm_worldtileloader_wl_02.txt", "implementation: 0x005ccc88", "ARM.exidx end: 0x005cd4f8"),
+        ("disasm_worldtileloader_wl_03.txt", "implementation: 0x005cc994", "ARM.exidx end: 0x005ccc88"),
+        ("disasm_worldtileloader_wl_04.txt", "implementation: 0x005cc864", "ARM.exidx end: 0x005cc994"),
+        ("disasm_worldtileloader_wl_05.txt", "implementation: 0x005cc73c", "ARM.exidx end: 0x005cc994"),
+        ("disasm_worldtileloader_wl_06.txt", "implementation: 0x005d0d2c", "ARM.exidx end: 0x005d0e54"),
+        ("disasm_worldtileloader_wl_07.txt", "implementation: 0x005d3158", "ARM.exidx end: 0x005d3248"),
+        ("disasm_worldtileloader_wl_08.txt", "implementation: 0x005c6ef8", "ARM.exidx end: 0x005c78c4"),
+        ("disasm_worldtileloader_wl_09.txt", "implementation: 0x005d9ca4", "ARM.exidx end: 0x005d9ce0"),
+        ("disasm_worldtileloader_wl_10.txt", "implementation: 0x005d8d3c", "ARM.exidx end: 0x005d8da4"),
+        ("disasm_worldtileloader_wl_11.txt", "implementation: 0x005d8da4", "ARM.exidx end: 0x005d8e58"),
+        ("disasm_worldtileloader_wl_12.txt", "implementation: 0x005d97c0", "ARM.exidx end: 0x005d9824"),
+    ):
+        require(NATIVE / _wl_file, [_wl_imp, _wl_end])
+
     print("reverse-evidence-contract: PASS")
 
 
