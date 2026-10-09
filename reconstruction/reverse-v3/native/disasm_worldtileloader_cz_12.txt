@@ -1,0 +1,183 @@
+# q_sort  [C function]
+# implementation: 0x0086915c
+# ARM.exidx end: 0x00869520
+
+            ;-- q_sort(float*, int, int, unsigned int*):
+            0x0086915c      00482de9       push {fp, lr}               ; q_sort(float*, int, int, unsigned int*)
+            0x00869160      0db0a0e1       mov fp, sp
+            0x00869164      40d04de2       sub sp, sp, 0x40
+            0x00869168      02c000e3       movw ip, 2
+            0x0086916c      04000be5       str r0, [fp, -4]
+            0x00869170      08100be5       str r1, [fp, -8]
+            0x00869174      0c200be5       str r2, [fp, -0xc]
+            0x00869178      10300be5       str r3, [fp, -0x10]
+            0x0086917c      08001be5       ldr r0, [fp, -8]
+            0x00869180      18000be5       str r0, [fp, -0x18]
+            0x00869184      0c001be5       ldr r0, [fp, -0xc]
+            0x00869188      1c000be5       str r0, [fp, -0x1c]
+            0x0086918c      08001be5       ldr r0, [fp, -8]
+            0x00869190      04101be5       ldr r1, [fp, -4]
+            0x00869194      000181e0       add r0, r1, r0, lsl 2
+            0x00869198      000a90ed       vldr s0, [r0]
+            0x0086919c      050a0bed       vstr s0, [fp, -0x14]
+            0x008691a0      08001be5       ldr r0, [fp, -8]
+            0x008691a4      10101be5       ldr r1, [fp, -0x10]
+            0x008691a8      000181e0       add r0, r1, r0, lsl 2
+            0x008691ac      000090e5       ldr r0, [r0]
+            0x008691b0      20008de5       str r0, [sp, 0x20]
+            0x008691b4      1cc08de5       str ip, [sp, 0x1c]
+        ┌─> 0x008691b8      08001be5       ldr r0, [fp, -8]
+        ╎   0x008691bc      0c101be5       ldr r1, [fp, -0xc]
+        ╎   0x008691c0      010050e1       cmp r0, r1
+       ┌──< 0x008691c4      620000aa       bge 0x869354
+      ┌───< 0x008691c8      ffffffea       b 0x8691cc
+     ┌└───> 0x008691cc      000000e3       movw r0, 0
+     ╎ │╎   0x008691d0      021000e3       movw r1, 2
+     ╎ │╎   0x008691d4      0c201be5       ldr r2, [fp, -0xc]
+     ╎ │╎   0x008691d8      04301be5       ldr r3, [fp, -4]
+     ╎ │╎   0x008691dc      022183e0       add r2, r3, r2, lsl 2
+     ╎ │╎   0x008691e0      000a92ed       vldr s0, [r2]
+     ╎ │╎   0x008691e4      051a1bed       vldr s2, [fp, -0x14]
+     ╎ │╎   0x008691e8      c10ab4ee       vcmpe.f32 s0, s2
+     ╎ │╎   0x008691ec      10faf1ee       vmrs apsr_nzcv, fpscr
+     ╎ │╎   0x008691f0      18108de5       str r1, [sp, 0x18]
+     ╎ │╎   0x008691f4      14008de5       str r0, [sp, 0x14]
+     ╎┌───< 0x008691f8      050000ba       blt 0x869214
+     ╎││╎   0x008691fc      08001be5       ldr r0, [fp, -8]
+     ╎││╎   0x00869200      0c101be5       ldr r1, [fp, -0xc]
+     ╎││╎   0x00869204      010050e1       cmp r0, r1
+     ╎││╎   0x00869208      000000e3       movw r0, 0
+     ╎││╎   0x0086920c      0100a0b3       movlt r0, 1
+     ╎││╎   0x00869210      14008de5       str r0, [sp, 0x14]
+     ╎└───> 0x00869214      14009de5       ldr r0, [sp, 0x14]
+     ╎ │╎   0x00869218      010010e3       tst r0, 1
+     ╎┌───< 0x0086921c      0400000a       beq 0x869234
+     ╎││╎   0x00869220      0000e0e3       mvn r0, 0
+     ╎││╎   0x00869224      0c101be5       ldr r1, [fp, -0xc]
+     ╎││╎   0x00869228      000081e0       add r0, r1, r0
+     ╎││╎   0x0086922c      0c000be5       str r0, [fp, -0xc]
+     └────< 0x00869230      e5ffffea       b 0x8691cc
+      └───> 0x00869234      08001be5       ldr r0, [fp, -8]
+       │╎   0x00869238      0c101be5       ldr r1, [fp, -0xc]
+       │╎   0x0086923c      010050e1       cmp r0, r1
+      ┌───< 0x00869240      1100000a       beq 0x86928c
+      ││╎   0x00869244      020000e3       movw r0, 2
+      ││╎   0x00869248      0c101be5       ldr r1, [fp, -0xc]
+      ││╎   0x0086924c      04201be5       ldr r2, [fp, -4]
+      ││╎   0x00869250      011182e0       add r1, r2, r1, lsl 2
+      ││╎   0x00869254      000a91ed       vldr s0, [r1]
+      ││╎   0x00869258      08101be5       ldr r1, [fp, -8]
+      ││╎   0x0086925c      011182e0       add r1, r2, r1, lsl 2
+      ││╎   0x00869260      000a81ed       vstr s0, [r1]
+      ││╎   0x00869264      0c101be5       ldr r1, [fp, -0xc]
+      ││╎   0x00869268      10201be5       ldr r2, [fp, -0x10]
+      ││╎   0x0086926c      011192e7       ldr r1, [r2, r1, lsl 2]
+      ││╎   0x00869270      08301be5       ldr r3, [fp, -8]
+      ││╎   0x00869274      032182e0       add r2, r2, r3, lsl 2
+      ││╎   0x00869278      001082e5       str r1, [r2]
+      ││╎   0x0086927c      08101be5       ldr r1, [fp, -8]
+      ││╎   0x00869280      011081e2       add r1, r1, 1
+      ││╎   0x00869284      08100be5       str r1, [fp, -8]
+      ││╎   0x00869288      10008de5       str r0, [sp, 0x10]
+     ┌└───> 0x0086928c      ffffffea       b 0x869290
+     └┌───> 0x00869290      000000e3       movw r0, 0
+      ╎│╎   0x00869294      021000e3       movw r1, 2
+      ╎│╎   0x00869298      08201be5       ldr r2, [fp, -8]
+      ╎│╎   0x0086929c      04301be5       ldr r3, [fp, -4]
+      ╎│╎   0x008692a0      022183e0       add r2, r3, r2, lsl 2
+      ╎│╎   0x008692a4      000a92ed       vldr s0, [r2]
+      ╎│╎   0x008692a8      051a1bed       vldr s2, [fp, -0x14]
+      ╎│╎   0x008692ac      c10ab4ee       vcmpe.f32 s0, s2
+      ╎│╎   0x008692b0      10faf1ee       vmrs apsr_nzcv, fpscr
+      ╎│╎   0x008692b4      0c108de5       str r1, [sp, 0xc]
+      ╎│╎   0x008692b8      08008de5       str r0, [sp, 8]
+     ┌────< 0x008692bc      0500008a       bhi 0x8692d8
+     │╎│╎   0x008692c0      08001be5       ldr r0, [fp, -8]
+     │╎│╎   0x008692c4      0c101be5       ldr r1, [fp, -0xc]
+     │╎│╎   0x008692c8      010050e1       cmp r0, r1
+     │╎│╎   0x008692cc      000000e3       movw r0, 0
+     │╎│╎   0x008692d0      0100a0b3       movlt r0, 1
+     │╎│╎   0x008692d4      08008de5       str r0, [sp, 8]
+     └────> 0x008692d8      08009de5       ldr r0, [sp, 8]
+      ╎│╎   0x008692dc      010010e3       tst r0, 1
+     ┌────< 0x008692e0      0300000a       beq 0x8692f4
+     │╎│╎   0x008692e4      08001be5       ldr r0, [fp, -8]
+     │╎│╎   0x008692e8      010080e2       add r0, r0, 1
+     │╎│╎   0x008692ec      08000be5       str r0, [fp, -8]
+     │└───< 0x008692f0      e6ffffea       b 0x869290
+     └────> 0x008692f4      08001be5       ldr r0, [fp, -8]
+       │╎   0x008692f8      0c101be5       ldr r1, [fp, -0xc]
+       │╎   0x008692fc      010050e1       cmp r0, r1
+      ┌───< 0x00869300      1200000a       beq 0x869350
+      ││╎   0x00869304      0000e0e3       mvn r0, 0
+      ││╎   0x00869308      021000e3       movw r1, 2
+      ││╎   0x0086930c      08201be5       ldr r2, [fp, -8]
+      ││╎   0x00869310      04301be5       ldr r3, [fp, -4]
+      ││╎   0x00869314      022183e0       add r2, r3, r2, lsl 2
+      ││╎   0x00869318      000a92ed       vldr s0, [r2]
+      ││╎   0x0086931c      0c201be5       ldr r2, [fp, -0xc]
+      ││╎   0x00869320      022183e0       add r2, r3, r2, lsl 2
+      ││╎   0x00869324      000a82ed       vstr s0, [r2]
+      ││╎   0x00869328      08201be5       ldr r2, [fp, -8]
+      ││╎   0x0086932c      10301be5       ldr r3, [fp, -0x10]
+      ││╎   0x00869330      022193e7       ldr r2, [r3, r2, lsl 2]
+      ││╎   0x00869334      0cc01be5       ldr ip, [fp, -0xc]
+      ││╎   0x00869338      0c3183e0       add r3, r3, ip, lsl 2
+      ││╎   0x0086933c      002083e5       str r2, [r3]
+      ││╎   0x00869340      0c201be5       ldr r2, [fp, -0xc]
+      ││╎   0x00869344      000082e0       add r0, r2, r0
+      ││╎   0x00869348      0c000be5       str r0, [fp, -0xc]
+      ││╎   0x0086934c      04108de5       str r1, [sp, 4]
+      └─└─< 0x00869350      98ffffea       b 0x8691b8
+       └──> 0x00869354      020000e3       movw r0, 2
+            0x00869358      050a1bed       vldr s0, [fp, -0x14]
+            0x0086935c      08101be5       ldr r1, [fp, -8]
+            0x00869360      04201be5       ldr r2, [fp, -4]
+            0x00869364      011182e0       add r1, r2, r1, lsl 2
+            0x00869368      000a81ed       vstr s0, [r1]
+            0x0086936c      20109de5       ldr r1, [sp, 0x20]
+            0x00869370      08201be5       ldr r2, [fp, -8]
+            0x00869374      10301be5       ldr r3, [fp, -0x10]
+            0x00869378      022183e0       add r2, r3, r2, lsl 2
+            0x0086937c      001082e5       str r1, [r2]
+            0x00869380      08101be5       ldr r1, [fp, -8]
+            0x00869384      101a00ee       vmov s0, r1
+            0x00869388      c00ab8ee       vcvt.f32.s32 s0, s0
+            0x0086938c      050a0bed       vstr s0, [fp, -0x14]
+            0x00869390      18101be5       ldr r1, [fp, -0x18]
+            0x00869394      08100be5       str r1, [fp, -8]
+            0x00869398      1c101be5       ldr r1, [fp, -0x1c]
+            0x0086939c      0c100be5       str r1, [fp, -0xc]
+            0x008693a0      08101be5       ldr r1, [fp, -8]
+            0x008693a4      101a00ee       vmov s0, r1
+            0x008693a8      c00ab8ee       vcvt.f32.s32 s0, s0
+            0x008693ac      051a1bed       vldr s2, [fp, -0x14]
+            0x008693b0      c10ab4ee       vcmpe.f32 s0, s2
+            0x008693b4      10faf1ee       vmrs apsr_nzcv, fpscr
+            0x008693b8      00008de5       str r0, [sp]
+        ┌─< 0x008693bc      0700005a       bpl 0x8693e0
+        │   0x008693c0      04001be5       ldr r0, [fp, -4]
+        │   0x008693c4      08101be5       ldr r1, [fp, -8]
+        │   0x008693c8      050a1bed       vldr s0, [fp, -0x14]
+        │   0x008693cc      c00abdee       vcvt.s32.f32 s0, s0
+        │   0x008693d0      102a10ee       vmov r2, s0
+        │   0x008693d4      012042e2       sub r2, r2, 1
+        │   0x008693d8      10301be5       ldr r3, [fp, -0x10]
+        │   0x008693dc      5effffeb       bl sym.q_sort_float__int__int__unsigned_int_ ; q_sort(float*, int, int, unsigned int*)
+        └─> 0x008693e0      0c001be5       ldr r0, [fp, -0xc]
+            0x008693e4      100a00ee       vmov s0, r0
+            0x008693e8      c00ab8ee       vcvt.f32.s32 s0, s0
+            0x008693ec      051a1bed       vldr s2, [fp, -0x14]
+            0x008693f0      c10ab4ee       vcmpe.f32 s0, s2
+            0x008693f4      10faf1ee       vmrs apsr_nzcv, fpscr
+        ┌─< 0x008693f8      070000da       ble 0x86941c
+        │   0x008693fc      04001be5       ldr r0, [fp, -4]
+        │   0x00869400      050a1bed       vldr s0, [fp, -0x14]
+        │   0x00869404      c00abdee       vcvt.s32.f32 s0, s0
+        │   0x00869408      101a10ee       vmov r1, s0
+        │   0x0086940c      011081e2       add r1, r1, 1
+        │   0x00869410      0c201be5       ldr r2, [fp, -0xc]
+        │   0x00869414      10301be5       ldr r3, [fp, -0x10]
+        │   0x00869418      4fffffeb       bl sym.q_sort_float__int__int__unsigned_int_ ; q_sort(float*, int, int, unsigned int*)
+        └─> 0x0086941c      0bd0a0e1       mov sp, fp
+            0x00869420      0088bde8       pop {fp, pc}

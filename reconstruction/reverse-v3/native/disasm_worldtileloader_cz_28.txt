@@ -1,0 +1,55 @@
+# genrand_real2  [C function]
+# implementation: 0x0096ac78
+# ARM.exidx end: 0x0096ae78
+
+            ;-- genrand_real2:
+            0x0096ac78      00482de9       push {fp, lr}
+            0x0096ac7c      0db0a0e1       mov fp, sp
+            0x0096ac80      08d04de2       sub sp, sp, 8
+            0x0096ac84      b0009fe5       ldr r0, [0x0096ad3c]        ; [0x96ad3c:4]=0x6f4e64
+            0x0096ac88      00008fe0       add r0, pc, r0
+            0x0096ac8c      9c109fe5       ldr r1, [0x0096ad30]        ; [0x96ad30:4]=0xffdeafd0
+            0x0096ac90      000081e0       add r0, r1, r0
+            0x0096ac94      0010e0e3       mvn r1, 0
+            0x0096ac98      002090e5       ldr r2, [r0]
+            0x0096ac9c      011082e0       add r1, r2, r1
+            0x0096aca0      001080e5       str r1, [r0]
+            0x0096aca4      000051e3       cmp r1, 0
+        ┌─< 0x0096aca8      0000001a       bne 0x96acb0
+        │   0x0096acac      dffeffeb       bl 0x96a830
+        └─> 0x0096acb0      7c009fe5       ldr r0, [0x0096ad34]        ; [0x96ad34:4]=0x4c0c
+            0x0096acb4      7c109fe5       ldr r1, [0x0096ad38]        ; [0x96ad38:4]=0x6f4e34
+            0x0096acb8      01108fe0       add r1, pc, r1
+            0x0096acbc      012090e7       ldr r2, [r0, r1]
+            0x0096acc0      043082e2       add r3, r2, 4
+            0x0096acc4      013080e7       str r3, [r0, r1]
+            0x0096acc8      000092e5       ldr r0, [r2]
+            0x0096accc      04008de5       str r0, [sp, 4]
+            0x0096acd0      a00520e0       eor r0, r0, r0, lsr 11
+            0x0096acd4      04008de5       str r0, [sp, 4]
+            0x0096acd8      801605e3       movw r1, 0x5680
+            0x0096acdc      2c1d49e3       movt r1, 0x9d2c
+            0x0096ace0      801301e0       and r1, r1, r0, lsl 7
+            0x0096ace4      010020e0       eor r0, r0, r1
+            0x0096ace8      04008de5       str r0, [sp, 4]
+            0x0096acec      001000e3       movw r1, 0
+            0x0096acf0      c61f4ee3       movt r1, 0xefc6
+            0x0096acf4      801701e0       and r1, r1, r0, lsl 15
+            0x0096acf8      010020e0       eor r0, r0, r1
+            0x0096acfc      04008de5       str r0, [sp, 4]
+            0x0096ad00      200920e0       eor r0, r0, r0, lsr 18
+            0x0096ad04      04008de5       str r0, [sp, 4]
+            0x0096ad08      100a00ee       vmov s0, r0
+            0x0096ad0c      401bb8ee       vcvt.f64.u32 d1, s0
+            0x0096ad10      042b9fed       vldr d2, [0x0096ad28]
+            0x0096ad14      021b21ee       vmul.f64 d1, d1, d2
+            0x0096ad18      110b51ec       vmov r0, r1, d1
+            0x0096ad1c      0bd0a0e1       mov sp, fp
+            0x0096ad20      0088bde8       pop {fp, pc}
+            0x0096ad24      00f020e3       nop
+            0x0096ad28      00000000       andeq r0, r0, r0
+            0x0096ad2c      0000f03d       ldcllo p0, c0, [r0, 0]!
+            0x0096ad30      d0afdeff       invalid
+            0x0096ad34      0c4c0000       andeq r4, r0, ip, lsl 24
+            0x0096ad38      344e6f00       rsbeq r4, pc, r4, lsr lr
+            0x0096ad3c      644e6f00       rsbeq r4, pc, r4, ror 28

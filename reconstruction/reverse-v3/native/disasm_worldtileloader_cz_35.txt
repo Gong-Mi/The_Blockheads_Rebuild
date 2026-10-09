@@ -1,0 +1,256 @@
+# clearLineOfSightBetweenTiles  [C function]
+# implementation: 0x00a19820
+# ARM.exidx end: 0x00a19c0c
+
+            ;-- clearLineOfSightBetweenTiles(intpair, intpair, World*):
+            0x00a19820      00482de9       push {fp, lr}               ; clearLineOfSightBetweenTiles(intpair, intpair, World*)
+            0x00a19824      0db0a0e1       mov fp, sp
+            0x00a19828      d0d04de2       sub sp, sp, 0xd0
+            0x00a1982c      08c09be5       ldr ip, [fp, 8]
+            0x00a19830      10000be5       str r0, [fp, -0x10]
+            0x00a19834      0c100be5       str r1, [fp, -0xc]
+            0x00a19838      14300be5       str r3, [fp, -0x14]
+            0x00a1983c      18200be5       str r2, [fp, -0x18]
+            0x00a19840      1cc00be5       str ip, [fp, -0x1c]
+            0x00a19844      10001be5       ldr r0, [fp, -0x10]
+            0x00a19848      18101be5       ldr r1, [fp, -0x18]
+            0x00a1984c      010050e1       cmp r0, r1
+        ┌─< 0x00a19850      0a00001a       bne 0xa19880
+        │   0x00a19854      0c001be5       ldr r0, [fp, -0xc]
+        │   0x00a19858      14101be5       ldr r1, [fp, -0x14]
+        │   0x00a1985c      010050e1       cmp r0, r1
+       ┌──< 0x00a19860      0600001a       bne 0xa19880
+       ││   0x00a19864      10001be5       ldr r0, [fp, -0x10]
+       ││   0x00a19868      0c101be5       ldr r1, [fp, -0xc]
+       ││   0x00a1986c      1c201be5       ldr r2, [fp, -0x1c]
+       ││   0x00a19870      abe5ffeb       bl sym.tileAtWorldPositionLoaded_int__int__World_ ; tileAtWorldPositionLoaded(int, int, World*)
+       ││   0x00a19874      98e3ffeb       bl sym.tileIsAirWaterOrSnow_Tile_ ; tileIsAirWaterOrSnow(Tile*)
+       ││   0x00a19878      01004be5       strb r0, [fp, -1]
+      ┌───< 0x00a1987c      df0000ea       b 0xa19c00
+      │└└─> 0x00a19880      10001be5       ldr r0, [fp, -0x10]
+      │     0x00a19884      18101be5       ldr r1, [fp, -0x18]
+      │     0x00a19888      010050e1       cmp r0, r1
+      │ ┌─< 0x00a1988c      6a00000a       beq 0xa19a3c
+      │ │   0x00a19890      10001be5       ldr r0, [fp, -0x10]
+      │ │   0x00a19894      28000be5       str r0, [fp, -0x28]
+      │ │   0x00a19898      0c001be5       ldr r0, [fp, -0xc]
+      │ │   0x00a1989c      24000be5       str r0, [fp, -0x24]
+      │ │   0x00a198a0      18001be5       ldr r0, [fp, -0x18]
+      │ │   0x00a198a4      30000be5       str r0, [fp, -0x30]
+      │ │   0x00a198a8      14001be5       ldr r0, [fp, -0x14]
+      │ │   0x00a198ac      2c000be5       str r0, [fp, -0x2c]
+      │ │   0x00a198b0      28001be5       ldr r0, [fp, -0x28]
+      │ │   0x00a198b4      30101be5       ldr r1, [fp, -0x30]
+      │ │   0x00a198b8      010050e1       cmp r0, r1
+      │┌──< 0x00a198bc      070000da       ble 0xa198e0
+      │││   0x00a198c0      18001be5       ldr r0, [fp, -0x18]
+      │││   0x00a198c4      28000be5       str r0, [fp, -0x28]
+      │││   0x00a198c8      14001be5       ldr r0, [fp, -0x14]
+      │││   0x00a198cc      24000be5       str r0, [fp, -0x24]
+      │││   0x00a198d0      10001be5       ldr r0, [fp, -0x10]
+      │││   0x00a198d4      30000be5       str r0, [fp, -0x30]
+      │││   0x00a198d8      0c001be5       ldr r0, [fp, -0xc]
+      │││   0x00a198dc      2c000be5       str r0, [fp, -0x2c]
+      │└──> 0x00a198e0      0a0a1bed       vldr s0, [fp, -0x28]
+      │ │   0x00a198e4      091a1bed       vldr s2, [fp, -0x24]
+      │ │   0x00a198e8      c00ab8ee       vcvt.f32.s32 s0, s0
+      │ │   0x00a198ec      c11ab8ee       vcvt.f32.s32 s2, s2
+      │ │   0x00a198f0      101a10ee       vmov r1, s0
+      │ │   0x00a198f4      102a11ee       vmov r2, s2
+      │ │   0x00a198f8      38004be2       sub r0, fp, 0x38
+      │ │   0x00a198fc      dfdaeaeb       bl method.Vector2.Vector2_float__float_ ; Vector2::Vector2(float, float)
+      │ │   0x00a19900      0c0a1bed       vldr s0, [fp, -0x30]
+      │ │   0x00a19904      0b1a1bed       vldr s2, [fp, -0x2c]
+      │ │   0x00a19908      c00ab8ee       vcvt.f32.s32 s0, s0
+      │ │   0x00a1990c      c11ab8ee       vcvt.f32.s32 s2, s2
+      │ │   0x00a19910      101a10ee       vmov r1, s0
+      │ │   0x00a19914      102a11ee       vmov r2, s2
+      │ │   0x00a19918      40004be2       sub r0, fp, 0x40
+      │ │   0x00a1991c      d7daeaeb       bl method.Vector2.Vector2_float__float_ ; Vector2::Vector2(float, float)
+      │ │   0x00a19920      38001be5       ldr r0, [fp, -0x38]
+      │ │   0x00a19924      34101be5       ldr r1, [fp, -0x34]         ; elf_phdr
+      │ │   0x00a19928      4c100be5       str r1, [fp, -0x4c]
+      │ │   0x00a1992c      50000be5       str r0, [fp, -0x50]
+      │ │   0x00a19930      50201be5       ldr r2, [fp, -0x50]
+      │ │   0x00a19934      4c301be5       ldr r3, [fp, -0x4c]
+      │ │   0x00a19938      58004be2       sub r0, fp, 0x58
+      │ │   0x00a1993c      40104be2       sub r1, fp, 0x40
+      │ │   0x00a19940      dbdaeaeb       bl method.Vector2.operator__Vector2_ ; Vector2::operator-(Vector2)
+      │ │   0x00a19944      48004be2       sub r0, fp, 0x48
+      │ │   0x00a19948      58104be2       sub r1, fp, 0x58
+      │ │   0x00a1994c      ed6dedeb       bl method.Vector2.normal__  ; Vector2::normal()
+      │ │   0x00a19950      48004be2       sub r0, fp, 0x48
+      │ │   0x00a19954      5490eaeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+      │ │   0x00a19958      48104be2       sub r1, fp, 0x48
+      │ │   0x00a1995c      012000e3       movw r2, 1
+      │ │   0x00a19960      002bb7ee       vmov.f64 d2, 1
+      │ │   0x00a19964      000a90ed       vldr s0, [r0]
+      │ │   0x00a19968      c03ab7ee       vcvt.f64.f32 d3, s0
+      │ │   0x00a1996c      032b82ee       vdiv.f64 d2, d2, d3
+      │ │   0x00a19970      0100a0e1       mov r0, r1
+      │ │   0x00a19974      1c208de5       str r2, [sp, 0x1c]
+      │ │   0x00a19978      042b8ded       vstr d2, [sp, 0x10]
+      │ │   0x00a1997c      4a90eaeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+      │ │   0x00a19980      001000e3       movw r1, 0
+      │ │   0x00a19984      010a90ed       vldr s0, [r0, 4]
+      │ │   0x00a19988      c02ab7ee       vcvt.f64.f32 d2, s0
+      │ │   0x00a1998c      043b9ded       vldr d3, [sp, 0x10]
+      │ │   0x00a19990      022b23ee       vmul.f64 d2, d3, d2
+      │ │   0x00a19994      c20bb7ee       vcvt.f32.f64 s0, d2
+      │ │   0x00a19998      170a0bed       vstr s0, [fp, -0x5c]
+      │ │   0x00a1999c      60100be5       str r1, [fp, -0x60]
+      │ │   0x00a199a0      28001be5       ldr r0, [fp, -0x28]
+      │ │   0x00a199a4      60000be5       str r0, [fp, -0x60]
+      │┌──> 0x00a199a8      60001be5       ldr r0, [fp, -0x60]
+      │╎│   0x00a199ac      30101be5       ldr r1, [fp, -0x30]
+      │╎│   0x00a199b0      010050e1       cmp r0, r1
+     ┌────< 0x00a199b4      1f0000aa       bge 0xa19a38
+     ││╎│   0x00a199b8      60101be5       ldr r1, [fp, -0x60]
+     ││╎│   0x00a199bc      24001be5       ldr r0, [fp, -0x24]
+     ││╎│   0x00a199c0      100a00ee       vmov s0, r0
+     ││╎│   0x00a199c4      c00ab8ee       vcvt.f32.s32 s0, s0
+     ││╎│   0x00a199c8      60001be5       ldr r0, [fp, -0x60]
+     ││╎│   0x00a199cc      28201be5       ldr r2, [fp, -0x28]
+     ││╎│   0x00a199d0      020040e0       sub r0, r0, r2
+     ││╎│   0x00a199d4      100a01ee       vmov s2, r0
+     ││╎│   0x00a199d8      c11ab8ee       vcvt.f32.s32 s2, s2
+     ││╎│   0x00a199dc      172a1bed       vldr s4, [fp, -0x5c]
+     ││╎│   0x00a199e0      021a21ee       vmul.f32 s2, s2, s4
+     ││╎│   0x00a199e4      010a30ee       vadd.f32 s0, s0, s2
+     ││╎│   0x00a199e8      c00abdee       vcvt.s32.f32 s0, s0
+     ││╎│   0x00a199ec      102a10ee       vmov r2, s0
+     ││╎│   0x00a199f0      68008de2       add r0, sp, 0x68
+     ││╎│   0x00a199f4      006ceaeb       bl sym.makeIntpair_int__int_ ; makeIntpair(int, int)
+     ││╎│   0x00a199f8      68009de5       ldr r0, [sp, 0x68]
+     ││╎│   0x00a199fc      6c109de5       ldr r1, [sp, 0x6c]
+     ││╎│   0x00a19a00      1c201be5       ldr r2, [fp, -0x1c]
+     ││╎│   0x00a19a04      46e5ffeb       bl sym.tileAtWorldPositionLoaded_int__int__World_ ; tileAtWorldPositionLoaded(int, int, World*)
+     ││╎│   0x00a19a08      33e3ffeb       bl sym.tileIsAirWaterOrSnow_Tile_ ; tileIsAirWaterOrSnow(Tile*)
+     ││╎│   0x00a19a0c      7000afe6       sxtb r0, r0
+     ││╎│   0x00a19a10      000050e3       cmp r0, 0
+    ┌─────< 0x00a19a14      0200001a       bne 0xa19a24
+    │││╎│   0x00a19a18      000000e3       movw r0, 0
+    │││╎│   0x00a19a1c      01004be5       strb r0, [fp, -1]
+   ┌──────< 0x00a19a20      760000ea       b 0xa19c00
+  ┌─└─────> 0x00a19a24      ffffffea       b 0xa19a28
+  └───────> 0x00a19a28      60001be5       ldr r0, [fp, -0x60]
+   │ ││╎│   0x00a19a2c      010080e2       add r0, r0, 1
+   │ ││╎│   0x00a19a30      60000be5       str r0, [fp, -0x60]
+   │ ││└──< 0x00a19a34      dbffffea       b 0xa199a8
+   │ └─┌──< 0x00a19a38      ffffffea       b 0xa19a3c
+   │  │└└─> 0x00a19a3c      0c001be5       ldr r0, [fp, -0xc]
+   │  │     0x00a19a40      14101be5       ldr r1, [fp, -0x14]
+   │  │     0x00a19a44      010050e1       cmp r0, r1
+   │  │ ┌─< 0x00a19a48      6a00000a       beq 0xa19bf8
+   │  │ │   0x00a19a4c      10001be5       ldr r0, [fp, -0x10]
+   │  │ │   0x00a19a50      60008de5       str r0, [sp, 0x60]
+   │  │ │   0x00a19a54      0c001be5       ldr r0, [fp, -0xc]
+   │  │ │   0x00a19a58      64008de5       str r0, [sp, 0x64]
+   │  │ │   0x00a19a5c      18001be5       ldr r0, [fp, -0x18]
+   │  │ │   0x00a19a60      58008de5       str r0, [sp, 0x58]
+   │  │ │   0x00a19a64      14001be5       ldr r0, [fp, -0x14]
+   │  │ │   0x00a19a68      5c008de5       str r0, [sp, 0x5c]
+   │  │ │   0x00a19a6c      64009de5       ldr r0, [sp, 0x64]
+   │  │ │   0x00a19a70      5c109de5       ldr r1, [sp, 0x5c]
+   │  │ │   0x00a19a74      010050e1       cmp r0, r1
+   │  │┌──< 0x00a19a78      070000da       ble 0xa19a9c
+   │  │││   0x00a19a7c      18001be5       ldr r0, [fp, -0x18]
+   │  │││   0x00a19a80      60008de5       str r0, [sp, 0x60]
+   │  │││   0x00a19a84      14001be5       ldr r0, [fp, -0x14]
+   │  │││   0x00a19a88      64008de5       str r0, [sp, 0x64]
+   │  │││   0x00a19a8c      10001be5       ldr r0, [fp, -0x10]
+   │  │││   0x00a19a90      58008de5       str r0, [sp, 0x58]
+   │  │││   0x00a19a94      0c001be5       ldr r0, [fp, -0xc]
+   │  │││   0x00a19a98      5c008de5       str r0, [sp, 0x5c]
+   │  │└──> 0x00a19a9c      180a9ded       vldr s0, [sp, 0x60]
+   │  │ │   0x00a19aa0      191a9ded       vldr s2, [sp, 0x64]
+   │  │ │   0x00a19aa4      c00ab8ee       vcvt.f32.s32 s0, s0
+   │  │ │   0x00a19aa8      c11ab8ee       vcvt.f32.s32 s2, s2
+   │  │ │   0x00a19aac      101a10ee       vmov r1, s0
+   │  │ │   0x00a19ab0      102a11ee       vmov r2, s2
+   │  │ │   0x00a19ab4      50008de2       add r0, sp, 0x50
+   │  │ │   0x00a19ab8      70daeaeb       bl method.Vector2.Vector2_float__float_ ; Vector2::Vector2(float, float)
+   │  │ │   0x00a19abc      160a9ded       vldr s0, [sp, 0x58]
+   │  │ │   0x00a19ac0      171a9ded       vldr s2, [sp, 0x5c]
+   │  │ │   0x00a19ac4      c00ab8ee       vcvt.f32.s32 s0, s0
+   │  │ │   0x00a19ac8      c11ab8ee       vcvt.f32.s32 s2, s2
+   │  │ │   0x00a19acc      101a10ee       vmov r1, s0
+   │  │ │   0x00a19ad0      102a11ee       vmov r2, s2
+   │  │ │   0x00a19ad4      48008de2       add r0, sp, 0x48
+   │  │ │   0x00a19ad8      68daeaeb       bl method.Vector2.Vector2_float__float_ ; Vector2::Vector2(float, float)
+   │  │ │   0x00a19adc      50009de5       ldr r0, [sp, 0x50]
+   │  │ │   0x00a19ae0      54109de5       ldr r1, [sp, 0x54]
+   │  │ │   0x00a19ae4      3c108de5       str r1, [sp, 0x3c]
+   │  │ │   0x00a19ae8      38008de5       str r0, [sp, 0x38]
+   │  │ │   0x00a19aec      38209de5       ldr r2, [sp, 0x38]
+   │  │ │   0x00a19af0      3c309de5       ldr r3, [sp, 0x3c]
+   │  │ │   0x00a19af4      30008de2       add r0, sp, 0x30
+   │  │ │   0x00a19af8      48108de2       add r1, sp, 0x48
+   │  │ │   0x00a19afc      6cdaeaeb       bl method.Vector2.operator__Vector2_ ; Vector2::operator-(Vector2)
+   │  │ │   0x00a19b00      40008de2       add r0, sp, 0x40
+   │  │ │   0x00a19b04      30108de2       add r1, sp, 0x30
+   │  │ │   0x00a19b08      7e6dedeb       bl method.Vector2.normal__  ; Vector2::normal()
+   │  │ │   0x00a19b0c      40008de2       add r0, sp, 0x40
+   │  │ │   0x00a19b10      e58feaeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+   │  │ │   0x00a19b14      40108de2       add r1, sp, 0x40
+   │  │ │   0x00a19b18      012000e3       movw r2, 1
+   │  │ │   0x00a19b1c      002bb7ee       vmov.f64 d2, 1
+   │  │ │   0x00a19b20      010a90ed       vldr s0, [r0, 4]
+   │  │ │   0x00a19b24      c03ab7ee       vcvt.f64.f32 d3, s0
+   │  │ │   0x00a19b28      032b82ee       vdiv.f64 d2, d2, d3
+   │  │ │   0x00a19b2c      0100a0e1       mov r0, r1
+   │  │ │   0x00a19b30      0c208de5       str r2, [sp, 0xc]
+   │  │ │   0x00a19b34      002b8ded       vstr d2, [sp]
+   │  │ │   0x00a19b38      db8feaeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+   │  │ │   0x00a19b3c      001000e3       movw r1, 0
+   │  │ │   0x00a19b40      000a90ed       vldr s0, [r0]
+   │  │ │   0x00a19b44      c02ab7ee       vcvt.f64.f32 d2, s0
+   │  │ │   0x00a19b48      003b9ded       vldr d3, [sp]
+   │  │ │   0x00a19b4c      022b23ee       vmul.f64 d2, d3, d2
+   │  │ │   0x00a19b50      c20bb7ee       vcvt.f32.f64 s0, d2
+   │  │ │   0x00a19b54      0b0a8ded       vstr s0, [sp, 0x2c]
+   │  │ │   0x00a19b58      28108de5       str r1, [sp, 0x28]
+   │  │ │   0x00a19b5c      64009de5       ldr r0, [sp, 0x64]
+   │  │ │   0x00a19b60      28008de5       str r0, [sp, 0x28]
+   │  │┌──> 0x00a19b64      28009de5       ldr r0, [sp, 0x28]
+   │  │╎│   0x00a19b68      5c109de5       ldr r1, [sp, 0x5c]
+   │  │╎│   0x00a19b6c      010050e1       cmp r0, r1
+   │ ┌────< 0x00a19b70      1f0000aa       bge 0xa19bf4
+   │ ││╎│   0x00a19b74      60009de5       ldr r0, [sp, 0x60]
+   │ ││╎│   0x00a19b78      100a00ee       vmov s0, r0
+   │ ││╎│   0x00a19b7c      c00ab8ee       vcvt.f32.s32 s0, s0
+   │ ││╎│   0x00a19b80      28009de5       ldr r0, [sp, 0x28]
+   │ ││╎│   0x00a19b84      64109de5       ldr r1, [sp, 0x64]
+   │ ││╎│   0x00a19b88      010040e0       sub r0, r0, r1
+   │ ││╎│   0x00a19b8c      100a01ee       vmov s2, r0
+   │ ││╎│   0x00a19b90      c11ab8ee       vcvt.f32.s32 s2, s2
+   │ ││╎│   0x00a19b94      0b2a9ded       vldr s4, [sp, 0x2c]
+   │ ││╎│   0x00a19b98      021a21ee       vmul.f32 s2, s2, s4
+   │ ││╎│   0x00a19b9c      010a30ee       vadd.f32 s0, s0, s2
+   │ ││╎│   0x00a19ba0      c00abdee       vcvt.s32.f32 s0, s0
+   │ ││╎│   0x00a19ba4      101a10ee       vmov r1, s0
+   │ ││╎│   0x00a19ba8      28209de5       ldr r2, [sp, 0x28]
+   │ ││╎│   0x00a19bac      20008de2       add r0, sp, 0x20
+   │ ││╎│   0x00a19bb0      916beaeb       bl sym.makeIntpair_int__int_ ; makeIntpair(int, int)
+   │ ││╎│   0x00a19bb4      20009de5       ldr r0, [sp, 0x20]
+   │ ││╎│   0x00a19bb8      24109de5       ldr r1, [sp, 0x24]
+   │ ││╎│   0x00a19bbc      1c201be5       ldr r2, [fp, -0x1c]
+   │ ││╎│   0x00a19bc0      d7e4ffeb       bl sym.tileAtWorldPositionLoaded_int__int__World_ ; tileAtWorldPositionLoaded(int, int, World*)
+   │ ││╎│   0x00a19bc4      c4e2ffeb       bl sym.tileIsAirWaterOrSnow_Tile_ ; tileIsAirWaterOrSnow(Tile*)
+   │ ││╎│   0x00a19bc8      7000afe6       sxtb r0, r0
+   │ ││╎│   0x00a19bcc      000050e3       cmp r0, 0
+   │┌─────< 0x00a19bd0      0200001a       bne 0xa19be0
+   ││││╎│   0x00a19bd4      000000e3       movw r0, 0
+   ││││╎│   0x00a19bd8      01004be5       strb r0, [fp, -1]
+  ┌───────< 0x00a19bdc      070000ea       b 0xa19c00
+  ──└─────> 0x00a19be0      ffffffea       b 0xa19be4
+  ────────> 0x00a19be4      28009de5       ldr r0, [sp, 0x28]
+  ││ ││╎│   0x00a19be8      010080e2       add r0, r0, 1
+  ││ ││╎│   0x00a19bec      28008de5       str r0, [sp, 0x28]
+  ││ ││└──< 0x00a19bf0      dbffffea       b 0xa19b64
+  ││ └─┌──< 0x00a19bf4      ffffffea       b 0xa19bf8
+  ││  │└└─> 0x00a19bf8      010000e3       movw r0, 1
+  ││  │     0x00a19bfc      01004be5       strb r0, [fp, -1]
+  └└──└───> 0x00a19c00      d1005be1       ldrsb r0, [fp, -1]
+            0x00a19c04      0bd0a0e1       mov sp, fp
+            0x00a19c08      0088bde8       pop {fp, pc}

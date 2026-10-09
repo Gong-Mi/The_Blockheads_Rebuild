@@ -1,0 +1,94 @@
+# randomMeditationBonus  [C function]
+# implementation: 0x00a178f8
+# ARM.exidx end: 0x00a17a70
+
+            ;-- randomMeditationBonus():
+            0x00a178f8      00482de9       push {fp, lr}               ; randomMeditationBonus()
+            0x00a178fc      0db0a0e1       mov fp, sp
+            0x00a17900      18d04de2       sub sp, sp, 0x18
+            0x00a17904      4c019fe5       ldr r0, [0x00a17a58]        ; [0xa17a58:4]=0x6481e4
+            0x00a17908      00008fe0       add r0, pc, r0
+            0x00a1790c      08008de5       str r0, [sp, 8]
+            0x00a17910      510000eb       bl 0xa17a5c
+            0x00a17914      490b9fed       vldr d0, [0x00a17a40]
+            0x00a17918      4a1a9fed       vldr s2, [0x00a17a48]
+            0x00a1791c      100a02ee       vmov s4, r0
+            0x00a17920      c22ab8ee       vcvt.f32.s32 s4, s4
+            0x00a17924      011a82ee       vdiv.f32 s2, s4, s2
+            0x00a17928      c13ab7ee       vcvt.f64.f32 d3, s2
+            0x00a1792c      c03bb4ee       vcmpe.f64 d3, d0
+            0x00a17930      10faf1ee       vmrs apsr_nzcv, fpscr
+        ┌─< 0x00a17934      280000da       ble 0xa179dc
+        │   0x00a17938      470000eb       bl 0xa17a5c
+        │   0x00a1793c      000ab6ee       vmov.f32 s0, 5
+        │   0x00a17940      401a9fed       vldr s2, [0x00a17a48]
+        │   0x00a17944      100a02ee       vmov s4, r0
+        │   0x00a17948      c22ab8ee       vcvt.f32.s32 s4, s4
+        │   0x00a1794c      011a82ee       vdiv.f32 s2, s4, s2
+        │   0x00a17950      021a0bed       vstr s2, [fp, -8]
+        │   0x00a17954      021a1bed       vldr s2, [fp, -8]
+        │   0x00a17958      c01ab4ee       vcmpe.f32 s2, s0
+        │   0x00a1795c      10faf1ee       vmrs apsr_nzcv, fpscr
+       ┌──< 0x00a17960      020000da       ble 0xa17970
+       ││   0x00a17964      570000e3       movw r0, 0x57               ; 'W'
+       ││   0x00a17968      04000be5       str r0, [fp, -4]
+      ┌───< 0x00a1796c      300000ea       b 0xa17a34
+      │└──> 0x00a17970      000ab5ee       vmov.f32 s0, 2
+      │ │   0x00a17974      021a1bed       vldr s2, [fp, -8]
+      │ │   0x00a17978      c01ab4ee       vcmpe.f32 s2, s0
+      │ │   0x00a1797c      10faf1ee       vmrs apsr_nzcv, fpscr
+      │┌──< 0x00a17980      020000da       ble 0xa17990
+      │││   0x00a17984      560000e3       movw r0, 0x56               ; 'V'
+      │││   0x00a17988      04000be5       str r0, [fp, -4]
+     ┌────< 0x00a1798c      280000ea       b 0xa17a34
+     ││└──> 0x00a17990      000ab4ee       vmov.f32 s0, 1
+     ││ │   0x00a17994      021a1bed       vldr s2, [fp, -8]
+     ││ │   0x00a17998      c01ab4ee       vcmpe.f32 s2, s0
+     ││ │   0x00a1799c      10faf1ee       vmrs apsr_nzcv, fpscr
+     ││┌──< 0x00a179a0      020000da       ble 0xa179b0
+     ││││   0x00a179a4      4c0000e3       movw r0, 0x4c               ; 'L'
+     ││││   0x00a179a8      04000be5       str r0, [fp, -4]
+    ┌─────< 0x00a179ac      200000ea       b 0xa17a34
+    │││└──> 0x00a179b0      270a9fed       vldr s0, [0x00a17a54]
+    │││ │   0x00a179b4      021a1bed       vldr s2, [fp, -8]
+    │││ │   0x00a179b8      c01ab4ee       vcmpe.f32 s2, s0
+    │││ │   0x00a179bc      10faf1ee       vmrs apsr_nzcv, fpscr
+    │││┌──< 0x00a179c0      020000da       ble 0xa179d0
+    │││││   0x00a179c4      4b0000e3       movw r0, 0x4b               ; 'K'
+    │││││   0x00a179c8      04000be5       str r0, [fp, -4]
+   ┌──────< 0x00a179cc      180000ea       b 0xa17a34
+   ││││└──> 0x00a179d0      580000e3       movw r0, 0x58               ; 'X'
+   ││││ │   0x00a179d4      04000be5       str r0, [fp, -4]
+   ││││┌──< 0x00a179d8      150000ea       b 0xa17a34
+   │││││└─> 0x00a179dc      68009fe5       ldr r0, [0x00a17a4c]        ; [0xa17a4c:4]=0xffdeafe8
+   │││││    0x00a179e0      08109de5       ldr r1, [sp, 8]
+   │││││    0x00a179e4      010080e0       add r0, r0, r1
+   │││││    0x00a179e8      022000e3       movw r2, 2
+   │││││    0x00a179ec      04008de5       str r0, [sp, 4]
+   │││││    0x00a179f0      00208de5       str r2, [sp]
+   │││││    0x00a179f4      180000eb       bl 0xa17a5c
+   │││││    0x00a179f8      0c008de5       str r0, [sp, 0xc]
+   │││││    0x00a179fc      4f1c0ee3       movw r1, 0xec4f
+   │││││    0x00a17a00      c41e44e3       movt r1, 0x4ec4
+   │││││    0x00a17a04      10f151e7       smmul r1, r0, r1
+   │││││    0x00a17a08      4122a0e1       asr r2, r1, 4
+   │││││    0x00a17a0c      a11f82e0       add r1, r2, r1, lsr 31
+   │││││    0x00a17a10      3420a0e3       mov r2, 0x34
+   │││││    0x00a17a14      910260e0       mls r0, r1, r2, r0
+   │││││    0x00a17a18      2c109fe5       ldr r1, [0x00a17a4c]        ; [0xa17a4c:4]=0xffdeafe8
+   │││││    0x00a17a1c      2c209fe5       ldr r2, [0x00a17a50]        ; [0xa17a50:4]=0x6480cc
+   │││││    0x00a17a20      02208fe0       add r2, pc, r2
+   │││││    0x00a17a24      021081e0       add r1, r1, r2
+   │││││    0x00a17a28      000181e0       add r0, r1, r0, lsl 2
+   │││││    0x00a17a2c      000090e5       ldr r0, [r0]
+   │││││    0x00a17a30      04000be5       str r0, [fp, -4]
+   └└└└└──> 0x00a17a34      04001be5       ldr r0, [fp, -4]
+            0x00a17a38      0bd0a0e1       mov sp, fp
+            0x00a17a3c      0088bde8       pop {fp, pc}
+            0x00a17a40      66666666       strbtvs r6, [r6], -r6, ror 12
+            0x00a17a44      6666ee3f       svclo 0xee6666
+            0x00a17a48      0000004f       svcmi 0
+            0x00a17a4c      e8afdeff       invalid
+            0x00a17a50      cc806400       rsbeq r8, r4, ip, asr 1
+            0x00a17a54      0ad7233d       stclo p7, c13, [r3, -0x28]!
+            0x00a17a58      e4816400       rsbeq r8, r4, r4, ror 3

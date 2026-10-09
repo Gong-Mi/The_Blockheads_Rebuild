@@ -6694,6 +6694,85 @@ def main() -> None:
     ):
         require(NATIVE / _sl_file, [_sl_imp, _sl_end])
 
+
+    require(
+        NATIVE / "CZERO.md",
+        [
+            "34140",
+            "blockheadNamesInit",
+            "checkCanEnterTile",
+            "999999",
+            "init_by_array",
+            "tileContainsUsableDoor",
+        ],
+    )
+    require(
+        NATIVE / "czero.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 17646',
+            '"verified_words": 6200',
+            "genrand_res53",
+            "clearLineOfSightBetweenTiles",
+        ],
+    )
+    for _sl_file, _sl_imp, _sl_end in (
+        ("disasm_worldtileloader_cz_00.txt", "implementation: 0x00cc7690", "ARM.exidx end: 0x00cd8a48"),
+        ("disasm_worldtileloader_cz_01.txt", "implementation: 0x00bde520", "ARM.exidx end: 0x00be4600"),
+        ("disasm_worldtileloader_cz_02.txt", "implementation: 0x00b2bba0", "ARM.exidx end: 0x00b2d808"),
+        ("disasm_worldtileloader_cz_03.txt", "implementation: 0x005f85a0", "ARM.exidx end: 0x005f9ae4"),
+        ("disasm_worldtileloader_cz_04.txt", "implementation: 0x00d92db0", "ARM.exidx end: 0x00d94218"),
+        ("disasm_worldtileloader_cz_05.txt", "implementation: 0x00be4600", "ARM.exidx end: 0x00be5420"),
+        ("disasm_worldtileloader_cz_06.txt", "implementation: 0x007c4860", "ARM.exidx end: 0x007c4e48"),
+        ("disasm_worldtileloader_cz_07.txt", "implementation: 0x00d94218", "ARM.exidx end: 0x00d94700"),
+        ("disasm_worldtileloader_cz_08.txt", "implementation: 0x007c4e48", "ARM.exidx end: 0x007c5238"),
+        ("disasm_worldtileloader_cz_09.txt", "implementation: 0x006a4b18", "ARM.exidx end: 0x006a4ef0"),
+        ("disasm_worldtileloader_cz_10.txt", "implementation: 0x007c3a6c", "ARM.exidx end: 0x007c3e00"),
+        ("disasm_worldtileloader_cz_11.txt", "implementation: 0x007c3f18", "ARM.exidx end: 0x007c4290"),
+        ("disasm_worldtileloader_cz_12.txt", "implementation: 0x0086915c", "ARM.exidx end: 0x00869520"),
+        ("disasm_worldtileloader_cz_13.txt", "implementation: 0x007c37dc", "ARM.exidx end: 0x007c3a6c"),
+        ("disasm_worldtileloader_cz_14.txt", "implementation: 0x0096a4e8", "ARM.exidx end: 0x0096a768"),
+        ("disasm_worldtileloader_cz_15.txt", "implementation: 0x00c37b58", "ARM.exidx end: 0x00c37d3c"),
+        ("disasm_worldtileloader_cz_16.txt", "implementation: 0x00a15a74", "ARM.exidx end: 0x00a15e28"),
+        ("disasm_worldtileloader_cz_17.txt", "implementation: 0x00a12434", "ARM.exidx end: 0x00a12608"),
+        ("disasm_worldtileloader_cz_18.txt", "implementation: 0x00a15c54", "ARM.exidx end: 0x00a15e28"),
+        ("disasm_worldtileloader_cz_19.txt", "implementation: 0x00a178f8", "ARM.exidx end: 0x00a17a70"),
+        ("disasm_worldtileloader_cz_20.txt", "implementation: 0x007c4290", "ARM.exidx end: 0x007c4554"),
+        ("disasm_worldtileloader_cz_21.txt", "implementation: 0x009176f8", "ARM.exidx end: 0x00917818"),
+        ("disasm_worldtileloader_cz_22.txt", "implementation: 0x007c3e00", "ARM.exidx end: 0x007c3f18"),
+        ("disasm_worldtileloader_cz_23.txt", "implementation: 0x00a137e8", "ARM.exidx end: 0x00a138fc"),
+        ("disasm_worldtileloader_cz_24.txt", "implementation: 0x0096ab6c", "ARM.exidx end: 0x0096ac78"),
+        ("disasm_worldtileloader_cz_25.txt", "implementation: 0x005effb8", "ARM.exidx end: 0x005f00c4"),
+        ("disasm_worldtileloader_cz_26.txt", "implementation: 0x0096aa6c", "ARM.exidx end: 0x0096ab6c"),
+        ("disasm_worldtileloader_cz_27.txt", "implementation: 0x0096ad40", "ARM.exidx end: 0x0096ae78"),
+        ("disasm_worldtileloader_cz_28.txt", "implementation: 0x0096ac78", "ARM.exidx end: 0x0096ae78"),
+        ("disasm_worldtileloader_cz_29.txt", "implementation: 0x00a7ffd0", "ARM.exidx end: 0x00a80178"),
+        ("disasm_worldtileloader_cz_30.txt", "implementation: 0x00a159c8", "ARM.exidx end: 0x00a15a74"),
+        ("disasm_worldtileloader_cz_31.txt", "implementation: 0x00a143d8", "ARM.exidx end: 0x00a146a0"),
+        ("disasm_worldtileloader_cz_32.txt", "implementation: 0x0096ae10", "ARM.exidx end: 0x0096ae78"),
+        ("disasm_worldtileloader_cz_33.txt", "implementation: 0x009fdf50", "ARM.exidx end: 0x009fdf68"),
+        ("disasm_worldtileloader_cz_34.txt", "implementation: 0x00663254", "ARM.exidx end: 0x0066326c"),
+        ("disasm_worldtileloader_cz_35.txt", "implementation: 0x00a19820", "ARM.exidx end: 0x00a19c0c"),
+        ("disasm_worldtileloader_cz_36.txt", "implementation: 0x00a30e68", "ARM.exidx end: 0x00a31308"),
+        ("disasm_worldtileloader_cz_37.txt", "implementation: 0x00a12bd8", "ARM.exidx end: 0x00a12f24"),
+        ("disasm_worldtileloader_cz_38.txt", "implementation: 0x007c4554", "ARM.exidx end: 0x007c4790"),
+        ("disasm_worldtileloader_cz_39.txt", "implementation: 0x00a1311c", "ARM.exidx end: 0x00a13694"),
+        ("disasm_worldtileloader_cz_40.txt", "implementation: 0x00a12b04", "ARM.exidx end: 0x00a12bd8"),
+        ("disasm_worldtileloader_cz_41.txt", "implementation: 0x00a31284", "ARM.exidx end: 0x00a31308"),
+        ("disasm_worldtileloader_cz_42.txt", "implementation: 0x00a19604", "ARM.exidx end: 0x00a19c0c"),
+        ("disasm_worldtileloader_cz_43.txt", "implementation: 0x00a19748", "ARM.exidx end: 0x00a19c0c"),
+        ("disasm_worldtileloader_cz_44.txt", "implementation: 0x00a196dc", "ARM.exidx end: 0x00a19c0c"),
+        ("disasm_worldtileloader_cz_45.txt", "implementation: 0x006689d0", "ARM.exidx end: 0x00668a34"),
+        ("disasm_worldtileloader_cz_46.txt", "implementation: 0x00bb4798", "ARM.exidx end: 0x00bb564c"),
+        ("disasm_worldtileloader_cz_47.txt", "implementation: 0x00a3124c", "ARM.exidx end: 0x00a31308"),
+        ("disasm_worldtileloader_cz_48.txt", "implementation: 0x00ce8dd8", "ARM.exidx end: 0x00ce8dec"),
+        ("disasm_worldtileloader_cz_49.txt", "implementation: 0x00a31b44", "ARM.exidx end: 0x00a31da4"),
+        ("disasm_worldtileloader_cz_50.txt", "implementation: 0x00a1295c", "ARM.exidx end: 0x00a12bd8"),
+        ("disasm_worldtileloader_cz_51.txt", "implementation: 0x00a12a30", "ARM.exidx end: 0x00a12bd8"),
+        ("disasm_worldtileloader_cz_52.txt", "implementation: 0x00a116dc", "ARM.exidx end: 0x00a1179c"),
+    ):
+        require(NATIVE / _sl_file, [_sl_imp, _sl_end])
+
     print("reverse-evidence-contract: PASS")
 
 
