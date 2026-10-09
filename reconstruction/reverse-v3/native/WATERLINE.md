@@ -102,3 +102,17 @@ The snow-surface + ice-melt line opens: SnowSurfaceBlock (19 bodies), the Column
   (`byte0 == 4 && byte9 > 0`).
 - Trap note: `0x18`/`0x3b` also appear in the object space (Blockhead/Tulip) and as torch-arm content
   codes at `tile[0xb]`; do not cross-read the spaces.
+
+### Second correction round (byte9 / field names)
+
+- **byte9 = `exploredFraction`** (first-party DWARF name; writes only in
+  `recalculateLighting...` (max-update) and the load init; read by the snow-surface ice
+  branch, `recursiveUpdateSunLight`, BlockheadAI `testTileAtPos` and ClientTileLoader).
+  The E118 `byte0 == 4 && byte9 > 0` branch is therefore **exploration-gated melt** -
+  only explored ice tiles simulate; the "frozen water volume memory" hypothesis is
+  refuted (no writer). Evidence: `TILE_BYTE9_EXPLORED.md`, `tile_byte9_hits.json`.
+- **Field names pinned from the server DWARF**: `byte4 = partialContentLeft`,
+  `byte6 = light`, `byte7 = sunLight` (the temperature coupler and the snow
+  accumulation gate), `+0x14 = artificialHeat` (the temperature local-heat term),
+  `+0x16 = onFire`, `byte0xb = foregroundContents`. Full 26-member table:
+  `TILE_FIELD_MAP.md`.

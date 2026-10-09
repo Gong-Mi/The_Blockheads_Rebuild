@@ -38,14 +38,14 @@ The snow-surface + ice-melt line opens: SnowSurfaceBlock (19 bodies), the Column
   0x423 tile-type constant when `currentTemperatureForTileAtWorldPos > 1.0` - the wiki's "melt
   into half a block of water" (the earlier research decode also showed the 0x7f half-water byte).
 - **The snow amount is a scaled fraction**: `partialContent` (a 0..1 float) maps to the tile
-  coverage byte as `(int)(v * 255.0)` (`updateSnowContent:tile:`, constant 255.0).
+  partial-content byte (`partialContentLeft`, +0x04) as `(int)(v * 255.0)` (`updateSnowContent:tile:`, constant 255.0).
 - **Freeze/thaw is server-side only**: both `updateGroundFrozen:tile:` and the tick gate on
   `[dynamicWorld isClient]`; the frozen pairs are 0x1b/0x1c and 0x31/0x32 (with the 27/28 and
   49/50 decimal reads), written into both fg and bg, and every flip fires
   `snowChangedAtMacroPos:` with the macro coordinates `x>>5, (y-1)>>5`.
 - **The melt/accumulation rates** (from the f64 chains): melt `-= ((0.02 + max(weather-0.2,
   0.001)*0.2) * (temp+1)) * 0.01 * 4`; accumulation `+= (weather-0.2) * 0.005 * ramp` with
-  `ramp = (coverage-240)` clamped to [0,1], cap 0.6, floor 0.002, coverage gate >239.
+  `ramp = (sunLight-240)` clamped to [0,1], cap 0.6, floor 0.002, sunLight gate >239 (open to the sky).
 - **Temperature is a derived field**: `SnowSurfaceBlock.temperature` is written every tick from
   `currentTemperatureForTileAtWorldPos(Tile*, intpair, ...)` fed by `getDayNightFractionForX:`
   / `getWeatherFractionForPos:` / `seasonForWorldX` / `worldTime`.
@@ -56,7 +56,7 @@ The snow-surface + ice-melt line opens: SnowSurfaceBlock (19 bodies), the Column
 - **objectType 29 = SnowSurfaceBlock** (sl_05) matches the rebuild's
   `dynamic_object_type_table.inc` entry `{29, "SnowSurfaceBlock"}`.
 - The precipitation visuals come from `ParticleEmitter.instance` `addParticleAtPos:...` loops
-  paced by `rainRandomTimer` (sl_10) and by the coverage count `(s16@0x14+4)/4` (sl_09).
+  paced by `rainRandomTimer` (sl_10) and by the `(s16@0x14+4)/4` count (sl_09; +0x14 = artificialHeat).
 
 ## Boundaries
 
