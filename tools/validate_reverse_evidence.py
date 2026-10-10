@@ -8000,6 +8000,30 @@ def main() -> None:
     ):
         require(NATIVE / _sl_file, [_sl_imp, _sl_end])
 
+
+    require(
+        NATIVE / "ITEM_DISPLAY_NAMES.md",
+        [
+            "0x004db268",
+            "0x004db2bc",
+            "0x004db840",
+            "0x004ddb8c",
+            "0x004ddb9c",
+            "UNKNOWN",
+            "425",
+        ],
+    )
+    require(
+        NATIVE / "item_display_names.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"item_type_count": 425',
+            '"entries": 343',
+            '"entries": 82',
+            '"name": "DIAMOND STAIRS"',
+        ],
+    )
+
     print("reverse-evidence-contract: PASS")
 
 

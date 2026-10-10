@@ -50,3 +50,13 @@ its own. Recorded as open rather than filled with a guess.
   excluded; some legitimate UI text that contains those characters is excluded too.
 - The replacement references no localization API at all today, so every row here
   is unwired.
+
+## Correction (E142, 2026-10-10)
+
+The "What is still open" note above is resolved: item display names are not
+produced by `displayName` methods and need no localization data - they are
+compiled-in constant CFStrings reached through the `nameForItemType` switch
+arms at `0x004db268` (full recovery: `ITEM_DISPLAY_NAMES.md`). The 42,357
+string count and the 413-sentence catalogue above remain correct as
+catalogues; the miss was in looking for single words among sentence-like
+candidates instead of following the lookup code.

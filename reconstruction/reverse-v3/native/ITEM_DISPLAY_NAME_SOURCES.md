@@ -71,3 +71,21 @@ choice is a product decision rather than a reverse-engineering one:
 - The class-name correspondence is a name match, not a proof that the class *is*
   the display label for that item id.
 - No device run and no server capture were performed.
+
+## Correction (E142, 2026-10-10)
+
+The conclusion above - "item display names are **not extractable from this
+APK**" - is superseded. The names are in the pinned client and have been
+recovered whole: `nameForItemType(int)` at `0x004db268` dispatches through two
+inline jump tables (343 entries for item ids 1..343 at `0x004db2bc`; 82
+entries for ids 1024..1105 at `0x004db840`) whose arms load constant CFString
+objects and return them; every other id returns the 'UNKNOWN' string. All 425
+ids were extracted - see `ITEM_DISPLAY_NAMES.md`, `item_display_names.json`
+and `tools/extract_item_display_names.py`.
+
+Why the token search was a false negative: the real display strings are
+UPPERCASE and space-separated ('GOLD NUGGET', not 'GoldNugget'), packed in
+the same string region as every other literal, and the names are not produced
+by `displayName` methods (the client has that selector only on
+GKPlayer/GKSession). The counts table above remains as the historical record
+of what that search found; this section is the correction of record.
