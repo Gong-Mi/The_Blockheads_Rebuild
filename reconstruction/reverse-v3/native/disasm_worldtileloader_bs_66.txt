@@ -1,0 +1,70 @@
+# BHServer -[updateCredit:]
+# types: v12@0:4f8
+# implementation: 0x00550154
+# ARM.exidx end: 0x00550258
+
+            0x00550154      30482de9       push {r4, r5, fp, lr}
+            0x00550158      08b08de2       add fp, sp, 8
+            0x0055015c      28d04de2       sub sp, sp, 0x28
+            0x00550160      ec309fe5       ldr r3, [0x00550254]        ; [0x550254:4]=0xb0f988
+            0x00550164      03308fe0       add r3, pc, r3
+            0x00550168      102a00ee       vmov s0, r2
+            0x0055016c      cc209fe5       ldr r2, [0x00550240]        ; [0x550240:4]=0xffffbcac
+            0x00550170      032092e7       ldr r2, [r2, r3]
+            0x00550174      c8c09fe5       ldr ip, [0x00550244]        ; [0x550244:4]=0xffe1df50
+            0x00550178      03c08ce0       add ip, ip, r3
+            0x0055017c      0c000be5       str r0, [fp, -0xc]
+            0x00550180      10100be5       str r1, [fp, -0x10]
+            0x00550184      050a0bed       vstr s0, [fp, -0x14]
+            0x00550188      0c001be5       ldr r0, [fp, -0xc]
+            0x0055018c      00109ce5       ldr r1, [ip]
+            0x00550190      14308de5       str r3, [sp, 0x14]
+            0x00550194      32ff2fe1       blx r2
+            0x00550198      7000afe6       sxtb r0, r0
+            0x0055019c      000050e3       cmp r0, 0
+        ┌─< 0x005501a0      2400000a       beq 0x550238
+        │   0x005501a4      94009fe5       ldr r0, [0x00550240]        ; [0x550240:4]=0xffffbcac
+        │   0x005501a8      14109de5       ldr r1, [sp, 0x14]
+        │   0x005501ac      010090e7       ldr r0, [r0, r1]
+        │   0x005501b0      0020a0e1       mov r2, r0
+        │   0x005501b4      8c309fe5       ldr r3, [0x00550248]        ; [0x550248:4]=0xffe1e1fc
+        │   0x005501b8      013083e0       add r3, r3, r1
+        │   0x005501bc      88c09fe5       ldr ip, [0x0055024c]        ; [0x55024c:4]=0xffffcbc8
+        │   0x005501c0      01c09ce7       ldr ip, [ip, r1]
+        │   0x005501c4      84e09fe5       ldr lr, [0x00550250]        ; [0x550250:4]=0xffe1e068
+        │   0x005501c8      01e08ee0       add lr, lr, r1
+        │   0x005501cc      0c401be5       ldr r4, [fp, -0xc]
+        │   0x005501d0      00509ce5       ldr r5, [ip]
+        │   0x005501d4      054084e0       add r4, r4, r5
+        │   0x005501d8      004094e5       ldr r4, [r4]
+        │   0x005501dc      00109ee5       ldr r1, [lr]
+        │   0x005501e0      10008de5       str r0, [sp, 0x10]
+        │   0x005501e4      0400a0e1       mov r0, r4
+        │   0x005501e8      10e09de5       ldr lr, [sp, 0x10]
+        │   0x005501ec      0c308de5       str r3, [sp, 0xc]
+        │   0x005501f0      08c08de5       str ip, [sp, 8]
+        │   0x005501f4      04208de5       str r2, [sp, 4]
+        │   0x005501f8      3eff2fe1       blx lr
+        │   0x005501fc      100a00ee       vmov s0, r0
+        │   0x00550200      051a1bed       vldr s2, [fp, -0x14]
+        │   0x00550204      410a30ee       vsub.f32 s0, s0, s2
+        │   0x00550208      060a8ded       vstr s0, [sp, 0x18]
+        │   0x0055020c      0c001be5       ldr r0, [fp, -0xc]
+        │   0x00550210      08109de5       ldr r1, [sp, 8]
+        │   0x00550214      002091e5       ldr r2, [r1]
+        │   0x00550218      020080e0       add r0, r0, r2
+        │   0x0055021c      000090e5       ldr r0, [r0]
+        │   0x00550220      060a9ded       vldr s0, [sp, 0x18]
+        │   0x00550224      0c209de5       ldr r2, [sp, 0xc]
+        │   0x00550228      001092e5       ldr r1, [r2]
+        │   0x0055022c      102a10ee       vmov r2, s0
+        │   0x00550230      04309de5       ldr r3, [sp, 4]
+        │   0x00550234      33ff2fe1       blx r3
+        └─> 0x00550238      08d04be2       sub sp, fp, 8
+            0x0055023c      3088bde8       pop {r4, r5, fp, pc}
+            0x00550240      acbcffff       invalid
+            0x00550244      50dfe1ff       invalid
+            0x00550248      fce1e1ff       invalid
+            0x0055024c      c8cbffff       invalid
+            0x00550250      68e0e1ff       invalid
+            0x00550254      88f9b000       adcseq pc, r0, r8, lsl 19

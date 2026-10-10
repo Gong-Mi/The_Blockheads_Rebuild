@@ -1,0 +1,31 @@
+# Vector::dotProduct(Vector)  [C function]
+# implementation: 0x006689d0
+# ARM.exidx end: 0x00668a34
+
+            ;-- method.Vector.dotProduct_Vector_:
+            ;-- Vector::dotProduct(Vector):
+            0x006689d0      20d04de2       sub sp, sp, 0x20            ; Vector::dotProduct(Vector)
+            0x006689d4      20c09de5       ldr ip, [sp, 0x20]
+            0x006689d8      10108de5       str r1, [sp, 0x10]
+            0x006689dc      14208de5       str r2, [sp, 0x14]
+            0x006689e0      18308de5       str r3, [sp, 0x18]
+            0x006689e4      1cc08de5       str ip, [sp, 0x1c]
+            0x006689e8      0c008de5       str r0, [sp, 0xc]
+            0x006689ec      08008de5       str r0, [sp, 8]
+            0x006689f0      10008de2       add r0, sp, 0x10
+            0x006689f4      04008de5       str r0, [sp, 4]
+            0x006689f8      08009de5       ldr r0, [sp, 8]
+            0x006689fc      000a90ed       vldr s0, [r0]
+            0x00668a00      011a90ed       vldr s2, [r0, 4]
+            0x00668a04      022a90ed       vldr s4, [r0, 8]
+            0x00668a08      043a9ded       vldr s6, [sp, 0x10]
+            0x00668a0c      054a9ded       vldr s8, [sp, 0x14]
+            0x00668a10      065a9ded       vldr s10, [sp, 0x18]
+            0x00668a14      030a20ee       vmul.f32 s0, s0, s6
+            0x00668a18      041a21ee       vmul.f32 s2, s2, s8
+            0x00668a1c      010a30ee       vadd.f32 s0, s0, s2
+            0x00668a20      051a22ee       vmul.f32 s2, s4, s10
+            0x00668a24      010a30ee       vadd.f32 s0, s0, s2
+            0x00668a28      100a10ee       vmov r0, s0
+            0x00668a2c      20d08de2       add sp, sp, 0x20
+            0x00668a30      1eff2fe1       bx lr

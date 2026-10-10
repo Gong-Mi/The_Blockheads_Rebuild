@@ -4,38 +4,20 @@ on:
   push:
     branches: [ main, master, rebuild-v2, reverse-v3 ]
   pull_request:
-    branches: [ main, master ]
+    # reverse-v3 is the reconstruction integration branch: every methods/*
+    # PR must pass the real Gradle build and packaged-APK contract here.
+    branches: [ main, master, reverse-v3 ]
   workflow_dispatch:
 
 jobs:
-  build:
+  # Fast evidence lane: artifact-only contract tests, seconds to run. The lane the loop lives on.
+  contracts:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
       with:
         submodules: true
         fetch-depth: 0
-
-    - name: set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-      with:
-        # Google removed the legacy `tools` package from the SDK repository;
-        # the action's default (`tools platform-tools`) now hard-fails the
-        # install. The image already ships cmdline-tools/platform-tools, and
-        # setup-java+AGP resolve the rest via licenses below.
-        packages: ""
-
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-      working-directory: .
-
     - name: Validate render contract
       run: python3 tools/validate_render_contract.py
       working-directory: .
@@ -44,12 +26,605 @@ jobs:
       run: python3 tools/validate_runtime_contract.py
       working-directory: .
 
+    - name: Load-time sound list is regenerated from its artifacts
+      run: |
+        python3 tools/gen_sound_preload_list.py --wiring reconstruction/reverse-v3/native/audio_wiring_map.json \
+          --coverage reconstruction/reverse-v3/native/audio_asset_coverage.json \
+          --out reconstruction/recovered/sound_preload_list.h --check
+      working-directory: .
+
     - name: Validate reverse evidence contract
       run: python3 tools/validate_reverse_evidence.py
       working-directory: .
 
+    - name: Test item id alignment evidence contract
+      run: python3 tools/test_item_id_alignment_evidence.py
+      working-directory: .
+
+    - name: Test tile content render map contract
+      run: python3 tools/test_tile_content_render_map.py
+      working-directory: .
+
+    - name: Test tile record header cross-check
+      run: python3 tools/test_tile_record_header_crosscheck.py
+      working-directory: .
+
+    - name: Test grp identifiers contract
+      run: python3 tools/test_grp_identifiers.py
+      working-directory: .
+
+    - name: Test live runtime ivars contract
+      run: python3 tools/test_live_runtime_ivars.py
+      working-directory: .
+
+    - name: Test live frame stack contract
+      run: python3 tools/test_live_frame_stack.py
+      working-directory: .
+
+    - name: Test blockhead clothing pipeline contract
+      run: python3 tools/test_blockhead_clothing_pipeline.py
+      working-directory: .
+
+    - name: Test ivar offset divergence contract
+      run: python3 tools/test_ivar_offset_divergence.py
+      working-directory: .
+
+    - name: Test selector senders contract
+      run: python3 tools/test_selector_senders.py
+      working-directory: .
+
+    - name: Test ObjC send-channel probe contract
+      run: python3 tools/test_objc_send_channel.py
+      working-directory: .
+
+    - name: Test audio API surface contract
+      run: python3 tools/test_audio_api_surface.py
+      working-directory: .
+
+    - name: Test item mapping contract
+      run: python3 tools/test_item_mapping_functions.py
+      working-directory: .
+
+    - name: Test item predicate matrix contract
+      run: python3 tools/test_item_predicates.py
+      working-directory: .
+
+    - name: Test craftable-item struct contract
+      run: python3 tools/test_craftable_item_struct.py
+      working-directory: .
+
+    - name: Test tile record save-data contract
+      run: python3 tools/test_tile_record_save_data.py
+      working-directory: .
+
+    - name: Test tile record layout contract
+      run: python3 tools/test_tile_record_layout.py
+      working-directory: .
+
+    - name: Test shared-body constants join contract
+      run: python3 tools/test_shared_body_constants.py
+      working-directory: .
+
+    - name: Test draw-value domains contract
+      run: python3 tools/test_draw_value_domains.py
+      working-directory: .
+
+    - name: Test tile shared-body structure contract
+      run: python3 tools/test_tile_shared_body_structure.py
+      working-directory: .
+
+    - name: Test item display-name source audit
+      run: python3 tools/test_item_display_name_sources.py
+      working-directory: .
+
+    - name: Run every contract test with a bounded timeout
+      run: python3 tools/run_contract_tests.py --timeout 300 --jobs 4
+      working-directory: .
+
+    - name: Check artifact consumers (no stale column reads)
+      run: |
+        python3 tools/check_artifact_consumers.py
+        python3 tools/test_check_artifact_consumers.py
+      working-directory: .
+
+    - name: Test text asset inventory contract
+      run: python3 tools/test_text_asset_inventory.py
+      working-directory: .
+
+    - name: Test sprite cell content contract
+      run: python3 tools/test_sprite_cell_content.py
+      working-directory: .
+
+    - name: Test atlas geometry contract
+      run: python3 tools/test_atlas_geometry_contract.py
+      working-directory: .
+
+    - name: Test shader declaration cross-check
+      run: python3 tools/test_shader_declaration_crosscheck.py
+      working-directory: .
+
+    - name: Test texture resolution sets contract
+      run: python3 tools/test_texture_resolution_sets.py
+      working-directory: .
+
+    - name: Test tile sprite domain contract
+      run: python3 tools/test_tile_sprite_domain.py
+      working-directory: .
+
+    - name: Lint evidence scanning (no raw-byte filename regex)
+      run: |
+        python3 tools/lint_evidence_scan.py
+        python3 tools/test_lint_evidence_scan.py
+      working-directory: .
+
+    - name: Test font glyph content contract
+      run: python3 tools/test_font_glyph_content.py
+      working-directory: .
+
+    - name: Test font glyph table contract
+      run: python3 tools/test_font_glyph_tables.py
+      working-directory: .
+
+    - name: Test shader asset coverage contract
+      run: python3 tools/test_shader_asset_coverage.py
+      working-directory: .
+
+    - name: Test audio asset coverage contract
+      run: python3 tools/test_audio_asset_coverage.py
+      working-directory: .
+
+    - name: Test tile content render map contract
+      run: python3 tools/test_tile_content_render_map.py
+      working-directory: .
+
+    - name: Test item sprite map contract
+      run: python3 tools/test_item_sprite_map.py
+      working-directory: .
+
+    - name: Test conditional TileType evidence contract
+      run: |
+        python3 tools/test_tile_conditional_evidence.py
+        python3 tools/gen_tile_conditional_table.py --check
+      working-directory: .
+
     - name: Test ClientTileLoader semantic evidence contract
       run: python3 tools/test_clienttileloader_semantics.py
+      working-directory: .
+
+    - name: Test WorldTileLoader column-height evidence contract
+      run: python3 tools/test_worldtileloader_column_heights_evidence.py
+      working-directory: .
+
+    - name: Test WorldHelper sunlight-pair evidence contract
+      run: python3 tools/test_worldhelper_sunlight_evidence.py
+      working-directory: .
+
+    - name: Test WorldHelper recursive-remove engine evidence contract
+      run: python3 tools/test_worldhelper_recursiveremove_evidence.py
+      working-directory: .
+
+    - name: Test WorldHelper recursive-update engine evidence contract
+      run: python3 tools/test_worldhelper_recursiveupdate_evidence.py
+      working-directory: .
+
+    - name: Test WorldHelper lighting-orchestrator evidence contract
+      run: python3 tools/test_worldhelper_recalculatelighting_evidence.py
+      working-directory: .
+
+    - name: Test ArtificialLight tiles register/unregister evidence contract
+      run: python3 tools/test_artificiallight_tiles_evidence.py
+      working-directory: .
+
+    - name: Test ArtificialLight physical-block-load evidence contract
+      run: python3 tools/test_artificiallight_blockload_evidence.py
+      working-directory: .
+
+    - name: Test ArtificialLight propagation-engine evidence contract
+      run: python3 tools/test_artificiallight_recursiveupdate_evidence.py
+      working-directory: .
+
+    - name: Test light-emission parameter trio evidence contract
+      run: python3 tools/test_lightemitters_evidence.py
+      working-directory: .
+
+    - name: Test electricity-domain core evidence contract
+      run: python3 tools/test_power_core_evidence.py
+      working-directory: .
+
+    - name: Test electricity power-flow search evidence contract
+      run: python3 tools/test_power_find_evidence.py
+      working-directory: .
+
+    - name: Test electricity net-sync pair evidence contract
+      run: python3 tools/test_power_sync_evidence.py
+      working-directory: .
+
+    - name: Test electricity consumers/producers closure evidence contract
+      run: python3 tools/test_power_workbench_evidence.py
+      working-directory: .
+
+    - name: Test wire class closure evidence contract
+      run: python3 tools/test_wire_closure_evidence.py
+      working-directory: .
+
+    - name: Test wire render trio evidence contract
+      run: python3 tools/test_wire_render_evidence.py
+      working-directory: .
+
+    - name: Test camera UI photo-mode evidence contract
+      run: python3 tools/test_camera_ui_evidence.py
+      working-directory: .
+
+    - name: Test elevator motor closure evidence contract
+      run: python3 tools/test_elevator_motor_evidence.py
+      working-directory: .
+
+    - name: Test elevator shaft closure evidence contract
+      run: python3 tools/test_elevator_shaft_evidence.py
+      working-directory: .
+
+    - name: Test trade portal structure evidence contract
+      run: python3 tools/test_trade_portal_evidence.py
+      working-directory: .
+
+    - name: Test trade portal economics evidence contract
+      run: python3 tools/test_trade_portal_econ_evidence.py
+      working-directory: .
+
+    - name: Test crystal manager closure evidence contract
+      run: python3 tools/test_crystalmanager_closure_evidence.py
+      working-directory: .
+
+    - name: Test portal chest manager closure evidence contract
+      run: python3 tools/test_portalchest_closure_evidence.py
+      working-directory: .
+
+    - name: Test terrain generation evidence contract
+      run: python3 tools/test_terrain_generation_evidence.py
+      working-directory: .
+
+    - name: Test light-block persistence evidence contract
+      run: python3 tools/test_lightblock_persistence_evidence.py
+      working-directory: .
+
+    - name: Test block save sync evidence contract
+      run: python3 tools/test_block_save_sync_evidence.py
+      working-directory: .
+
+    - name: Test block migration evidence contract
+      run: python3 tools/test_block_migration_evidence.py
+      working-directory: .
+
+    - name: Test block load evidence contract
+      run: python3 tools/test_block_load_evidence.py
+      working-directory: .
+
+    - name: Test world constructor evidence contract
+      run: python3 tools/test_wtl_initwithworld_evidence.py
+      working-directory: .
+
+    - name: Test world-class closure evidence contract
+      run: python3 tools/test_wtl_closure_evidence.py
+      working-directory: .
+
+    - name: Test dynamic-object load evidence contract
+      run: python3 tools/test_dyn_load_evidence.py
+      working-directory: .
+
+    - name: Test dynamic-object leaf evidence contract
+      run: python3 tools/test_dyn_leaf_evidence.py
+      working-directory: .
+
+    - name: Test net-sync cluster evidence contract
+      run: python3 tools/test_net_sync_evidence.py
+      working-directory: .
+
+    - name: Test world-save cluster evidence contract
+      run: python3 tools/test_world_save_evidence.py
+      working-directory: .
+
+    - name: Test world-change propagation evidence contract
+      run: python3 tools/test_world_update_evidence.py
+      working-directory: .
+
+    - name: Test object lifecycle evidence contract
+      run: python3 tools/test_object_life_evidence.py
+      working-directory: .
+
+    - name: Test draw/reload evidence contract
+      run: python3 tools/test_draw_reload_evidence.py
+      working-directory: .
+
+    - name: Test world-mutation evidence contract
+      run: python3 tools/test_world_mutate_evidence.py
+      working-directory: .
+
+    - name: Test breeding/NPC evidence contract
+      run: python3 tools/test_breed_npc_evidence.py
+      working-directory: .
+
+    - name: Test client session evidence contract
+      run: python3 tools/test_client_session_evidence.py
+      working-directory: .
+
+    - name: Test reload-tail evidence contract
+      run: python3 tools/test_reload_tail_evidence.py
+      working-directory: .
+
+    - name: Test placement evidence contract
+      run: python3 tools/test_placement_evidence.py
+      working-directory: .
+
+    - name: Test load-session evidence contract
+      run: python3 tools/test_load_session_evidence.py
+      working-directory: .
+
+    - name: Test remote-receive evidence contract
+      run: python3 tools/test_remote_receive_evidence.py
+      working-directory: .
+
+    - name: Test users-bans evidence contract
+      run: python3 tools/test_users_bans_evidence.py
+      working-directory: .
+
+    - name: Test query-access evidence contract
+      run: python3 tools/test_query_access_evidence.py
+      working-directory: .
+
+    - name: Test block-load-access evidence contract
+      run: python3 tools/test_block_load_access_evidence.py
+      working-directory: .
+
+    - name: Test accessor-A evidence contract
+      run: python3 tools/test_accessor_a_evidence.py
+      working-directory: .
+
+    - name: Test accessor-B evidence contract
+      run: python3 tools/test_accessor_b_evidence.py
+      working-directory: .
+
+    - name: Test accessor-C evidence contract
+      run: python3 tools/test_accessor_c_evidence.py
+      working-directory: .
+
+    - name: Test workbench-interaction evidence contract
+      run: python3 tools/test_workbench_interaction_evidence.py
+      working-directory: .
+
+    - name: Test save-remote-sim evidence contract
+      run: python3 tools/test_save_remote_sim_evidence.py
+      working-directory: .
+
+    - name: Test draw-pass evidence contract
+      run: python3 tools/test_draw_pass_evidence.py
+      working-directory: .
+
+    - name: Test final-smalls evidence contract
+      run: python3 tools/test_final_smalls_evidence.py
+      working-directory: .
+
+    - name: Test last-smalls evidence contract
+      run: python3 tools/test_last_smalls_evidence.py
+      working-directory: .
+
+    - name: Test draw-composite evidence contract
+      run: python3 tools/test_draw_composite_evidence.py
+      working-directory: .
+
+    - name: Test compress-stub evidence contract
+      run: python3 tools/test_compress_stub_evidence.py
+      working-directory: .
+
+    - name: Test cxx-construct evidence contract
+      run: python3 tools/test_cxx_construct_evidence.py
+      working-directory: .
+
+    - name: Test electric-lighting evidence contract
+      run: python3 tools/test_electric_lighting_evidence.py
+      working-directory: .
+
+    - name: Test steamtrain-core evidence contract
+      run: python3 tools/test_steamtrain_core_evidence.py
+      working-directory: .
+
+    - name: Test steam-riders evidence contract
+      run: python3 tools/test_steam_riders_evidence.py
+      working-directory: .
+
+    - name: Test winsmalls evidence contract
+      run: python3 tools/test_winsmalls_evidence.py
+      working-directory: .
+
+    - name: Test torch evidence contract
+      run: python3 tools/test_torch_evidence.py
+      working-directory: .
+
+    - name: Test particles evidence contract
+      run: python3 tools/test_particles_evidence.py
+      working-directory: .
+
+    - name: Test steamdraw evidence contract
+      run: python3 tools/test_steamdraw_evidence.py
+      working-directory: .
+
+    - name: Test wbelectric evidence contract
+      run: python3 tools/test_wbelectric_evidence.py
+      working-directory: .
+
+    - name: Test wbfuel evidence contract
+      run: python3 tools/test_wbfuel_evidence.py
+      working-directory: .
+
+    - name: Test wblife evidence contract
+      run: python3 tools/test_wblife_evidence.py
+      working-directory: .
+
+    - name: Test wbcraft evidence contract
+      run: python3 tools/test_wbcraft_evidence.py
+      working-directory: .
+
+    - name: Test wbsmalls evidence contract
+      run: python3 tools/test_wbsmalls_evidence.py
+      working-directory: .
+
+    - name: Test wbgiants evidence contract
+      run: python3 tools/test_wbgiants_evidence.py
+      working-directory: .
+
+    - name: Test wbtail evidence contract
+      run: python3 tools/test_wbtail_evidence.py
+      working-directory: .
+
+    - name: Test wbfinal evidence contract
+      run: python3 tools/test_wbfinal_evidence.py
+      working-directory: .
+
+    - name: Test treesmalls evidence contract
+      run: python3 tools/test_treesmalls_evidence.py
+      working-directory: .
+
+    - name: Test treectors evidence contract
+      run: python3 tools/test_treectors_evidence.py
+      working-directory: .
+
+    - name: Test treegrowth evidence contract
+      run: python3 tools/test_treegrowth_evidence.py
+      working-directory: .
+
+    - name: Test plantbase evidence contract
+      run: python3 tools/test_plantbase_evidence.py
+      working-directory: .
+
+    - name: Test treebase evidence contract
+      run: python3 tools/test_treebase_evidence.py
+      working-directory: .
+
+    - name: Test normalplant evidence contract
+      run: python3 tools/test_normalplant_evidence.py
+      working-directory: .
+
+    - name: Test cropsmalls evidence contract
+      run: python3 tools/test_cropsmalls_evidence.py
+      working-directory: .
+
+    - name: Test vineplant evidence contract
+      run: python3 tools/test_vineplant_evidence.py
+      working-directory: .
+
+    - name: Test kelpplant evidence contract
+      run: python3 tools/test_kelpplant_evidence.py
+      working-directory: .
+
+    - name: Test tulipplant evidence contract
+      run: python3 tools/test_tulipplant_evidence.py
+      working-directory: .
+
+    - name: Test gemtree evidence contract
+      run: python3 tools/test_gemtree_evidence.py
+      working-directory: .
+
+    - name: Test donkey evidence contract
+      run: python3 tools/test_donkey_evidence.py
+      working-directory: .
+
+    - name: Test donkeylike evidence contract
+      run: python3 tools/test_donkeylike_evidence.py
+      working-directory: .
+
+    - name: Test yak evidence contract
+      run: python3 tools/test_yak_evidence.py
+      working-directory: .
+
+    - name: Test traincar evidence contract
+      run: python3 tools/test_traincar_evidence.py
+      working-directory: .
+
+    - name: Test worldmut evidence contract
+      run: python3 tools/test_worldmut_evidence.py
+      working-directory: .
+
+    - name: Test worldsim evidence contract
+      run: python3 tools/test_worldsim_evidence.py
+      working-directory: .
+
+    - name: Test worldrender evidence contract
+      run: python3 tools/test_worldrender_evidence.py
+      working-directory: .
+
+    - name: Test worldnet evidence contract
+      run: python3 tools/test_worldnet_evidence.py
+    - name: Test worldinput evidence contract
+      run: python3 tools/test_worldinput_evidence.py
+    - name: Test worldcraft evidence contract
+      run: python3 tools/test_worldcraft_evidence.py
+    - name: Test worldload evidence contract
+      run: python3 tools/test_worldload_evidence.py
+    - name: Test worldzoom evidence contract
+      run: python3 tools/test_worldzoom_evidence.py
+    - name: Test worldtrade evidence contract
+      run: python3 tools/test_worldtrade_evidence.py
+    - name: Test worldadmin evidence contract
+      run: python3 tools/test_worldadmin_evidence.py
+    - name: Test worldui evidence contract
+      run: python3 tools/test_worldui_evidence.py
+    - name: Test worldown evidence contract
+      run: python3 tools/test_worldown_evidence.py
+    - name: Test worldpvp evidence contract
+      run: python3 tools/test_worldpvp_evidence.py
+    - name: Test worldcxx evidence contract
+      run: python3 tools/test_worldcxx_evidence.py
+    - name: Test worldclose1 evidence contract
+      run: python3 tools/test_worldclose1_evidence.py
+    - name: Test worldclose2 evidence contract
+      run: python3 tools/test_worldclose2_evidence.py
+    - name: Test dynobj evidence contract
+      run: python3 tools/test_dynobj_evidence.py
+    - name: Test npccore evidence contract
+      run: python3 tools/test_npccore_evidence.py
+    - name: Test blockhead evidence contract
+      run: python3 tools/test_blockhead_evidence.py
+    - name: Test blockhead2 evidence contract
+      run: python3 tools/test_blockhead2_evidence.py
+    - name: Test blockhead3 evidence contract
+      run: python3 tools/test_blockhead3_evidence.py
+    - name: Test blockhead4 evidence contract
+      run: python3 tools/test_blockhead4_evidence.py
+    - name: Test npc2 evidence contract
+      run: python3 tools/test_npc2_evidence.py
+    - name: Test cavetroll evidence contract
+      run: python3 tools/test_cavetroll_evidence.py
+    - name: Test gviewa evidence contract
+      run: python3 tools/test_gviewa_evidence.py
+    - name: Test gviewb evidence contract
+      run: python3 tools/test_gviewb_evidence.py
+    - name: Test uimanager evidence contract
+      run: python3 tools/test_uimanager_evidence.py
+    - name: Test bhserver evidence contract
+      run: python3 tools/test_bhserver_evidence.py
+    - name: Test mainmenu evidence contract
+      run: python3 tools/test_mainmenu_evidence.py
+    - name: Test worldui2 evidence contract
+      run: python3 tools/test_worldui2_evidence.py
+    - name: Test createworldui evidence contract
+      run: python3 tools/test_createworldui_evidence.py
+    - name: Test joinworldui evidence contract
+      run: python3 tools/test_joinworldui_evidence.py
+    - name: Test mjbutton evidence contract
+      run: python3 tools/test_mjbutton_evidence.py
+    - name: Test item display names evidence contract
+      run: python3 tools/test_item_display_names.py
+    - name: Test czero evidence contract
+      run: python3 tools/test_czero_evidence.py
+    - name: Test caux evidence contract
+      run: python3 tools/test_caux_evidence.py
+    - name: Test cbase evidence contract
+      run: python3 tools/test_cbase_evidence.py
+    - name: Test heatline evidence contract
+      run: python3 tools/test_heatline_evidence.py
+    - name: Test waterline evidence contract
+      run: python3 tools/test_waterline_evidence.py
+    - name: Test snowline evidence contract
+      run: python3 tools/test_snowline_evidence.py
       working-directory: .
 
     - name: Test reverse coverage ledger
@@ -60,12 +635,13 @@ jobs:
           reconstruction/reverse-v3/native/libApplication_objc_methods.tsv \
           --evidence-root reconstruction/reverse-v3/native \
           --implementation-records reconstruction/reverse-v3/native/implemented_methods.json \
+          --origin-runtime-records reconstruction/reverse-v3/native/origin_runtime_evidence.json \
           --json /tmp/reverse-coverage-ledger.json \
           --markdown /tmp/reverse-coverage-ledger.md
         grep -F "Methods: 10478" /tmp/reverse-coverage-ledger.md
-        grep -F "semantics | 45" /tmp/reverse-coverage-ledger.md
-        grep -F "implemented | 45" /tmp/reverse-coverage-ledger.md
-        grep -F "behavior-verified | 0" /tmp/reverse-coverage-ledger.md
+        grep -F "semantics | 71" /tmp/reverse-coverage-ledger.md
+        grep -F "implemented | 71" /tmp/reverse-coverage-ledger.md
+        grep -F "behavior-verified | 8" /tmp/reverse-coverage-ledger.md
       working-directory: .
 
     - name: Test ARM indirect call index
@@ -92,6 +668,16 @@ jobs:
         python3 tools/test_drawframe_slices.py
       working-directory: .
 
+
+
+  # Recovered-code lane: the recovered C++ numerical slices that are independent of the GameView chain.
+  recovered:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+        fetch-depth: 0
     - name: Test recovered scroll inertia numerical slice
       run: |
         for opt in 0 2; do
@@ -117,6 +703,219 @@ jobs:
             -Ireconstruction/recovered tools/test_pinch_inertia.cpp \
             reconstruction/recovered/pinch_inertia.cpp -o /tmp/test_pinch_inertia
           /tmp/test_pinch_inertia
+        done
+
+    - name: Test recovered world change queue slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_world_change_queues.cpp \
+            reconstruction/recovered/world_change_queues.cpp -o /tmp/test_world_change_queues
+          /tmp/test_world_change_queues
+        done
+
+    - name: Test recovered dynamic object type codes slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_dynamic_object_type_codes.cpp \
+            reconstruction/recovered/dynamic_object_type_codes.cpp -o /tmp/test_dynamic_object_type_codes
+          /tmp/test_dynamic_object_type_codes
+        done
+
+    - name: Test recovered object registry pair slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_object_registry_pair.cpp \
+            reconstruction/recovered/object_registry_pair.cpp -o /tmp/test_object_registry_pair
+          /tmp/test_object_registry_pair
+        done
+
+    - name: Test recovered dynamic world changed slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_dynamic_world_changed.cpp \
+            reconstruction/recovered/dynamic_world_changed.cpp -o /tmp/test_dynamic_world_changed
+          /tmp/test_dynamic_world_changed
+        done
+
+    - name: Test recovered accessor triplets slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_accessor_triplets.cpp \
+            reconstruction/recovered/accessor_triplets.cpp -o /tmp/test_accessor_triplets
+          /tmp/test_accessor_triplets
+        done
+
+    - name: Test recovered world collections slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_world_collections.cpp \
+            reconstruction/recovered/world_collections.cpp -o /tmp/test_world_collections
+          /tmp/test_world_collections
+        done
+
+    - name: Test recovered simulation step slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_simulation_step.cpp \
+            reconstruction/recovered/simulation_step.cpp -o /tmp/test_simulation_step
+          /tmp/test_simulation_step
+        done
+
+    - name: Test recovered tree life fraction slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_tree_life_fraction.cpp \
+            reconstruction/recovered/tree_life_fraction.cpp -o /tmp/test_tree_life_fraction
+          /tmp/test_tree_life_fraction
+        done
+
+    - name: Test recovered door state slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_door_state.cpp \
+            reconstruction/recovered/door_state.cpp -o /tmp/test_door_state
+          /tmp/test_door_state
+        done
+
+    - name: Test recovered client registry slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_client_registry.cpp \
+            reconstruction/recovered/client_registry.cpp -o /tmp/test_client_registry
+          /tmp/test_client_registry
+        done
+
+    - name: Test recovered light channels slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_light_channels.cpp \
+            reconstruction/recovered/light_channels.cpp -o /tmp/test_light_channels
+          /tmp/test_light_channels
+        done
+
+    - name: Test recovered save sweep slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_save_sweep.cpp \
+            reconstruction/recovered/save_sweep.cpp -o /tmp/test_save_sweep
+          /tmp/test_save_sweep
+        done
+
+    - name: Test recovered blockhead selection slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_blockhead_selection.cpp \
+            reconstruction/recovered/blockhead_selection.cpp -o /tmp/test_blockhead_selection
+          /tmp/test_blockhead_selection
+        done
+
+    - name: Test recovered family probes slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_family_probes.cpp \
+            reconstruction/recovered/family_probes.cpp -o /tmp/test_family_probes
+          /tmp/test_family_probes
+        done
+
+    - name: Test recovered interaction objects slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_interaction_objects.cpp \
+            reconstruction/recovered/interaction_objects.cpp -o /tmp/test_interaction_objects
+          /tmp/test_interaction_objects
+        done
+
+    - name: Test recovered sound accumulator slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_sound_accumulator.cpp \
+            reconstruction/recovered/sound_accumulator.cpp -o /tmp/test_sound_accumulator
+          /tmp/test_sound_accumulator
+        done
+
+    - name: Test recovered net sync phases slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_net_sync_phases.cpp \
+            reconstruction/recovered/net_sync_phases.cpp -o /tmp/test_net_sync_phases
+          /tmp/test_net_sync_phases
+        done
+
+    - name: Test recovered bucket arrays slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_bucket_arrays.cpp \
+            reconstruction/recovered/bucket_arrays.cpp -o /tmp/test_bucket_arrays
+          /tmp/test_bucket_arrays
+        done
+
+    - name: Test recovered electric charge store slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_electric_charge_store.cpp \
+            reconstruction/recovered/electric_charge_store.cpp -o /tmp/test_electric_charge_store
+          /tmp/test_electric_charge_store
+        done
+
+    - name: Test recovered torch placement codes slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_torch_placement_codes.cpp \
+            reconstruction/recovered/torch_placement_codes.cpp -o /tmp/test_torch_placement_codes
+          /tmp/test_torch_placement_codes
+        done
+
+    - name: Test recovered train traits + particle pool slices
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_particle_pool_slots.cpp \
+            reconstruction/recovered/particle_pool_slots.cpp \
+            reconstruction/recovered/train_type_traits.cpp -o /tmp/test_particle_pool_slots
+          /tmp/test_particle_pool_slots
+        done
+
+    - name: Test recovered tile markers slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_tile_markers.cpp \
+            reconstruction/recovered/tile_markers.cpp -o /tmp/test_tile_markers
+          /tmp/test_tile_markers
+        done
+
+    - name: Test recovered world line scenario
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_world_line_scenario.cpp \
+            reconstruction/recovered/door_state.cpp \
+            reconstruction/recovered/object_registry_pair.cpp \
+            reconstruction/recovered/accessor_triplets.cpp \
+            reconstruction/recovered/tile_markers.cpp \
+            reconstruction/recovered/blockhead_selection.cpp \
+            -o /tmp/test_world_line_scenario
+          /tmp/test_world_line_scenario
         done
 
     - name: Test recovered translation return numerical slice
@@ -157,7 +956,72 @@ jobs:
           /tmp/test_zoom_initial_cap
         done
 
-    - name: Test complete recovered GameView method batch
+    - name: Test original 1.7.6 save decoder
+      run: |
+        c++ -std=c++17 -Wall -Wextra -Werror \
+          -Iapp/src/main/cpp \
+          tools/test_original_save_format.cpp \
+          app/src/main/cpp/original_save_format.cpp \
+          -lz -o /tmp/test_original_save_format
+        /tmp/test_original_save_format
+      working-directory: .
+
+    - name: Test recovered trade price response slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_trade_price_response.cpp \
+            reconstruction/recovered/trade_price_response.cpp -o /tmp/test_trade_price_response
+          /tmp/test_trade_price_response
+        done
+
+    - name: Test recovered NPC feed response slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_npc_feed_response.cpp \
+            reconstruction/recovered/npc_feed_response.cpp -o /tmp/test_npc_feed_response
+          /tmp/test_npc_feed_response
+        done
+
+    - name: Test recovered workbench craft abort slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_workbench_craft_abort.cpp \
+            reconstruction/recovered/workbench_craft_abort.cpp -o /tmp/test_workbench_craft_abort
+          /tmp/test_workbench_craft_abort
+        done
+
+    - name: Test recovered workbench hard abort slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_workbench_abort_immediate.cpp \
+            reconstruction/recovered/workbench_abort_immediate.cpp -o /tmp/test_workbench_abort_immediate
+          /tmp/test_workbench_abort_immediate
+        done
+
+    - name: Test recovered workbench craft completed slice
+      run: |
+        for opt in 0 2; do
+          c++ -std=c++17 -O${opt} -Wall -Wextra -Werror -ffp-contract=off \
+            -Ireconstruction/recovered tools/test_workbench_craft_completed.cpp \
+            reconstruction/recovered/workbench_craft_completed.cpp -o /tmp/test_workbench_craft_completed
+          /tmp/test_workbench_craft_completed
+        done
+
+
+
+  # GameView lane A: the python contracts and the two NDEBUG negative controls.
+  gameview-contracts:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+        fetch-depth: 0
+    - name: Test recovered GameView python contracts and negative controls
       run: |
         export PYTHONDONTWRITEBYTECODE=1
         python3 tools/test_gameview_method_map.py
@@ -172,24 +1036,41 @@ jobs:
           -Ireconstruction/recovered tools/test_world_translation.cpp \
           -o /tmp/world-translation-negative
         python3 -c 'import subprocess; p=subprocess.run(["/tmp/world-translation-negative"],capture_output=True,text=True); print("setter negative control:",p.returncode,p.stderr); assert p.returncode != 0 and "s.accurateTranslation.x==expected" in p.stderr'
-        for opt in 0 2; do
-          build="/tmp/blockheads-methods-O${opt}"
-          cmake -S reconstruction/recovered -B "$build" \
-            -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE="-O${opt} -DNDEBUG"
-          cmake --build "$build" --parallel 2
-          ctest --test-dir "$build" --output-on-failure --verbose
-        done
-
-    - name: Test original 1.7.6 save decoder
-      run: |
-        c++ -std=c++17 -Wall -Wextra -Werror \
-          -Iapp/src/main/cpp \
-          tools/test_original_save_format.cpp \
-          app/src/main/cpp/original_save_format.cpp \
-          -lz -o /tmp/test_original_save_format
-        /tmp/test_original_save_format
       working-directory: .
 
+  # GameView lane B: the -O0 cmake build + ctest, split from -O2 so the two optimisation rounds stop queueing behind each other.
+  gameview-o0:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+        fetch-depth: 0
+    - name: Recovered GameView batch -O0 build and ctest
+      run: |
+        build="/tmp/blockheads-methods-O0"
+        cmake -S reconstruction/recovered -B "$build" \
+          -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE="-O0 -DNDEBUG"
+        cmake --build "$build" --parallel 2
+        ctest --test-dir "$build" --output-on-failure --verbose
+      working-directory: .
+
+  # GameView lane C: the -O2 round plus the inventory chain. /tmp/blockheads-methods-O2 is produced by the -O2 cmake step and consumed by the inventory steps and both uploads, so they travel together.
+  gameview-o2:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+        fetch-depth: 0
+    - name: Recovered GameView batch -O2 build and ctest
+      run: |
+        build="/tmp/blockheads-methods-O2"
+        cmake -S reconstruction/recovered -B "$build" \
+          -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE="-O2 -DNDEBUG"
+        cmake --build "$build" --parallel 2
+        ctest --test-dir "$build" --output-on-failure --verbose
+      working-directory: .
     - name: Generate native item data for unit tests
       run: |
         mkdir -p /tmp/blockheads-generated
@@ -212,14 +1093,6 @@ jobs:
           -Wl,--gc-sections \
           -o /tmp/test_inventory
         /tmp/test_inventory
-      working-directory: .
-
-    - name: Build with Gradle
-      run: ./gradlew assembleDebug
-      working-directory: .
-
-    - name: Validate packaged APK contract
-      run: python3 tools/validate_apk.py app/build/outputs/apk/debug/app-debug.apk
       working-directory: .
 
     - name: Upload recovered inventory host contracts
@@ -250,8 +1123,69 @@ jobs:
           /tmp/blockheads-methods-O2/test_gameview_secondarytouch
         if-no-files-found: error
 
+
+
+
+  # Packaging lane: JDK + SDK + Gradle + APK contract. The NDK, the Gradle caches and
+  # the AGP CMake tree (app/.cxx) are restored before the build, because the four
+  # per-ABI CMake *configure* rounds - not compilation - are what costs the time.
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+        fetch-depth: 0
+    - name: set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      with:
+        # Google removed the legacy `tools` package from the SDK repository;
+        # the action's default (`tools platform-tools`) now hard-fails the
+        # install. The image already ships cmdline-tools/platform-tools, and
+        # setup-java+AGP resolve the rest via licenses below.
+        packages: ""
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Cache CMake configure and build tree (app/.cxx)
+      uses: actions/cache@v4
+      with:
+        path: app/.cxx
+        key: cxx-${{ runner.os }}-${{ hashFiles('app/src/main/cpp/**', 'app/build.gradle') }}
+        restore-keys: |
+          cxx-${{ runner.os }}-
+    - name: Cache NDK
+      uses: actions/cache@v4
+      with:
+        path: /usr/local/lib/android/sdk/ndk/26.1.10909125
+        key: ndk-26.1.10909125-${{ runner.os }}
+    - name: Cache Gradle caches and wrapper
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', 'gradle/wrapper/gradle-wrapper.properties') }}
+        restore-keys: |
+          gradle-${{ runner.os }}-
+
+    - name: Build with Gradle
+      run: ./gradlew assembleDebug --build-cache
+      working-directory: .
+
+    - name: Validate packaged APK contract
+      run: python3 tools/validate_apk.py app/build/outputs/apk/debug/app-debug.apk
+      working-directory: .
+
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
         path: app/build/outputs/apk/debug/app-debug.apk
+

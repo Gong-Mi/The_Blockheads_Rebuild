@@ -1,0 +1,31 @@
+# BHServer -[isCloudMatch]
+# types: c8@0:4
+# implementation: 0x00550020
+# ARM.exidx end: 0x00550154
+
+            0x00550020      00482de9       push {fp, lr}
+            0x00550024      0db0a0e1       mov fp, sp
+            0x00550028      08d04de2       sub sp, sp, 8
+            0x0055002c      50209fe5       ldr r2, [0x00550084]        ; [0x550084:4]=0xb0fabc
+            0x00550030      02208fe0       add r2, pc, r2
+            0x00550034      3c309fe5       ldr r3, [0x00550078]        ; [0x550078:4]=0xffffbcac
+            0x00550038      023093e7       ldr r3, [r3, r2]
+            0x0055003c      38c09fe5       ldr ip, [0x0055007c]        ; [0x55007c:4]=0xffe1df50 ; "P\xdf\xe1\xff\xc8\xcb\xff\xff\xbc\xfa\xb0"
+            0x00550040      02c08ce0       add ip, ip, r2
+            0x00550044      34e09fe5       ldr lr, [0x00550080]        ; [0x550080:4]=0xffffcbc8
+            0x00550048      02209ee7       ldr r2, [lr, r2]
+            0x0055004c      04008de5       str r0, [sp, 4]
+            0x00550050      00108de5       str r1, [sp]
+            0x00550054      04009de5       ldr r0, [sp, 4]
+            0x00550058      001092e5       ldr r1, [r2]
+            0x0055005c      010080e0       add r0, r0, r1
+            0x00550060      000090e5       ldr r0, [r0]
+            0x00550064      00109ce5       ldr r1, [ip]
+            0x00550068      33ff2fe1       blx r3
+            0x0055006c      7000afe6       sxtb r0, r0
+            0x00550070      0bd0a0e1       mov sp, fp
+            0x00550074      0088bde8       pop {fp, pc}
+            0x00550078      acbcffff       invalid
+            0x0055007c      50dfe1ff       invalid
+            0x00550080      c8cbffff       invalid
+            0x00550084      bcfab000       ldrhteq pc, [r0], ip

@@ -1,0 +1,24 @@
+# tileIsWater  [C function]
+# implementation: 0x00a11690
+# ARM.exidx end: 0x00a116dc
+
+            ;-- tileIsWater(Tile*):
+            0x00a11690      08d04de2       sub sp, sp, 8               ; tileIsWater(Tile*)
+            0x00a11694      001000e3       movw r1, 0
+            0x00a11698      002000e3       movw r2, 0
+            0x00a1169c      04008de5       str r0, [sp, 4]
+            0x00a116a0      04009de5       ldr r0, [sp, 4]
+            0x00a116a4      020050e1       cmp r0, r2
+            0x00a116a8      00108de5       str r1, [sp]
+        ┌─< 0x00a116ac      0500000a       beq 0xa116c8
+        │   0x00a116b0      04009de5       ldr r0, [sp, 4]
+        │   0x00a116b4      0000d0e5       ldrb r0, [r0]
+        │   0x00a116b8      030050e3       cmp r0, 3
+        │   0x00a116bc      000000e3       movw r0, 0
+        │   0x00a116c0      0100a003       moveq r0, 1
+        │   0x00a116c4      00008de5       str r0, [sp]
+        └─> 0x00a116c8      00009de5       ldr r0, [sp]
+            0x00a116cc      010000e2       and r0, r0, 1
+            0x00a116d0      7000afe6       sxtb r0, r0
+            0x00a116d4      08d08de2       add sp, sp, 8
+            0x00a116d8      1eff2fe1       bx lr

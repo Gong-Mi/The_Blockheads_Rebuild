@@ -1,0 +1,20 @@
+# MainMenuUI -[currentMainMenuSelection]
+# types: i8@0:4
+# implementation: 0x00a10214
+# ARM.exidx end: 0x00a10250
+
+            0x00a10214      08d04de2       sub sp, sp, 8
+            0x00a10218      04008de5       str r0, [sp, 4]
+            0x00a1021c      00108de5       str r1, [sp]
+            0x00a10220      04009de5       ldr r0, [sp, 4]
+            0x00a10224      1c109fe5       ldr r1, [0x00a10248]        ; [0xa10248:4]=0xffffed00
+            0x00a10228      1c209fe5       ldr r2, [0x00a1024c]        ; [0xa1024c:4]=0x64f8c0
+            0x00a1022c      02208fe0       add r2, pc, r2
+            0x00a10230      021091e7       ldr r1, [r1, r2]
+            0x00a10234      001091e5       ldr r1, [r1]
+            0x00a10238      010090e7       ldr r0, [r0, r1]
+            0x00a1023c      5bf07ff5       dmb ish
+            0x00a10240      08d08de2       add sp, sp, 8
+            0x00a10244      1eff2fe1       bx lr
+            0x00a10248      00edffff       invalid
+            0x00a1024c      c0f86400       rsbeq pc, r4, r0, asr 17

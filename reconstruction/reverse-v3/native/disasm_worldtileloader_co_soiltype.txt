@@ -1,0 +1,44 @@
+# CornPlant -[isRequiredSoilType:]
+# types: c12@0:4i8
+# implementation: 0x00b502fc
+# ARM.exidx end: 0x00b50398
+
+            0x00b502fc      10d04de2       sub sp, sp, 0x10
+            0x00b50300      013000e3       movw r3, 1
+            0x00b50304      0c008de5       str r0, [sp, 0xc]
+            0x00b50308      08108de5       str r1, [sp, 8]
+            0x00b5030c      04208de5       str r2, [sp, 4]
+            0x00b50310      04009de5       ldr r0, [sp, 4]
+            0x00b50314      060050e3       cmp r0, 6
+            0x00b50318      00308de5       str r3, [sp]
+        ┌─< 0x00b5031c      1800000a       beq 0xb50384
+        │   0x00b50320      010000e3       movw r0, 1
+        │   0x00b50324      04109de5       ldr r1, [sp, 4]
+        │   0x00b50328      1b0051e3       cmp r1, 0x1b
+        │   0x00b5032c      00008de5       str r0, [sp]
+       ┌──< 0x00b50330      1300000a       beq 0xb50384
+       ││   0x00b50334      010000e3       movw r0, 1
+       ││   0x00b50338      04109de5       ldr r1, [sp, 4]
+       ││   0x00b5033c      1c0051e3       cmp r1, 0x1c
+       ││   0x00b50340      00008de5       str r0, [sp]
+      ┌───< 0x00b50344      0e00000a       beq 0xb50384
+      │││   0x00b50348      010000e3       movw r0, 1
+      │││   0x00b5034c      04109de5       ldr r1, [sp, 4]
+      │││   0x00b50350      300051e3       cmp r1, 0x30                ; '0'
+      │││   0x00b50354      00008de5       str r0, [sp]
+     ┌────< 0x00b50358      0900000a       beq 0xb50384
+     ││││   0x00b5035c      010000e3       movw r0, 1
+     ││││   0x00b50360      04109de5       ldr r1, [sp, 4]
+     ││││   0x00b50364      310051e3       cmp r1, 0x31                ; '1'
+     ││││   0x00b50368      00008de5       str r0, [sp]
+    ┌─────< 0x00b5036c      0400000a       beq 0xb50384
+    │││││   0x00b50370      04009de5       ldr r0, [sp, 4]
+    │││││   0x00b50374      320050e3       cmp r0, 0x32                ; '2'
+    │││││   0x00b50378      000000e3       movw r0, 0
+    │││││   0x00b5037c      0100a003       moveq r0, 1
+    │││││   0x00b50380      00008de5       str r0, [sp]
+    └└└└└─> 0x00b50384      00009de5       ldr r0, [sp]
+            0x00b50388      010000e2       and r0, r0, 1
+            0x00b5038c      7000afe6       sxtb r0, r0
+            0x00b50390      10d08de2       add sp, sp, 0x10
+            0x00b50394      1eff2fe1       bx lr

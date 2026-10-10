@@ -1,0 +1,224 @@
+#!/usr/bin/env python3
+"""Hash-gated bounded selector/ivar inventory for DynamicObject getSaveDict."""
+import argparse
+import hashlib
+import io
+import json
+from pathlib import Path
+
+from elftools.elf.elffile import ELFFile
+from trace_objc_dispatch import ELFMemory
+from recover_drawframe_slices import verify_disassembly
+
+ROOT=Path(__file__).resolve().parents[1]
+NATIVE=ROOT/'reconstruction/reverse-v3/native'
+SHA='733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7'
+START=0x0083A7AC; CODE_END=0x0083AA70; END=0x0083AABC
+BASE_ADD=0x0083A7BC; BASE_LITERAL=0x0083AAB8
+SELECTOR_CELLS={
+    0x0083AA88:'dictionary',
+    0x0083AA98:'numberWithFloat:',
+    0x0083AA9C:'arrayWithObjects:',
+    0x0083AA78:'setObject:forKey:',
+    0x0083AA7C:'numberWithUnsignedLong:',
+    0x0083AAA8:'numberWithInt:',
+}
+IVAR_CELLS={
+    0x0083AA94:('OBJC_IVAR_$_DynamicObject.floatPos',24),
+    0x0083AAA4:('OBJC_IVAR_$_DynamicObject.pos',16),
+    0x0083AAB4:('OBJC_IVAR_$_DynamicObject.uniqueID',40),
+}
+OBJC_MSGSEND_SITES=(0x0083A820,0x0083A888,0x0083A8CC,0x0083A8FC,0x0083A930,0x0083A974,0x0083A99C,0x0083A9D8,0x0083AA00)
+BLX_SITES=(0x0083AA3C,0x0083AA60)
+INDIRECT_TARGET_CELL=0x0083AA74
+KEY_PAIRINGS=(
+ ('floatPos',0x0083AAA0,0x00F571AF,0x0083A930,'OBJC_IVAR_$_DynamicObject.floatPos',24),
+ ('pos_x',0x0083AAAC,0x00F571A3,0x0083A99C,'OBJC_IVAR_$_DynamicObject.pos',16),
+ ('pos_y',0x0083AAB0,0x00F571A9,0x0083AA00,'OBJC_IVAR_$_DynamicObject.pos',20),
+ ('uniqueID',0x0083AA70,0x00F50DF3,0x0083AA60,'OBJC_IVAR_$_DynamicObject.uniqueID',40),
+)
+# Classref cells materialised by R_ARM_ABS32 relocations at load time.
+CLASSREF_LITERALS={
+ 0x0083AA80:(0x00E8A84C,'OBJC_CLASS_$_NSMutableDictionary'),
+ 0x0083AA8C:(0x00E8A850,'OBJC_CLASS_$_NSArray'),
+ 0x0083AA90:(0x00E8A854,'OBJC_CLASS_$_NSNumber'),
+}
+# Vector2::operator float*() is a real direct call, not objc dispatch.
+VECTOR2_IMP=0x004BDAAC; VECTOR2_SYMBOL='_ZN7Vector2cvPfEv'
+VECTOR2_CALLS=(0x0083A868,0x0083A8B4)
+# Register provenance words for the value-side chain (little-endian raw words).
+PROVENANCE_WORDS={
+ 0x0083A7E4:'0c000be5',  # str r0,[fp,-0xc]  self
+ 0x0083A804:'18100be5',  # str r1,[fp,-0x18] pic base
+ 0x0083A80C:'1cc00be5',  # str ip,[fp,-0x1c] GOT-dereferenced objc_msgSend
+ 0x0083A810:'20200be5',  # str r2,[fp,-0x20] numberWithUnsignedLong: selref cell (based)
+ 0x0083A814:'24e00be5',  # str lr,[fp,-0x24] GOT-dereferenced objc_msgSend
+ 0x0083A818:'28300be5',  # str r3,[fp,-0x28] @"uniqueID" constant string object
+ 0x0083A81C:'2c400be5',  # str r4,[fp,-0x2c] setObject:forKey: selref cell (based)
+ 0x0083A824:'14000be5',  # str r0,[fp,-0x14] NSMutableDictionary result
+ 0x0083A82C:'18201be5',  # ldr r2,[fp,-0x18] base for NSArray classref load
+ 0x0083A834:'54329fe5',0x0083A838:'02c093e7',  # NSNumber classref load -> ip
+ 0x0083A860:'3c300be5',  # str r3,[fp,-0x3c] raw NSNumber classref delta cell
+ 0x0083A864:'40c08de5',  # str ip,[sp,0x40]
+ 0x0083A878:'002090e5',  # ldr r2,[r0]       floatPos .x value
+ 0x0083A87C:'40009de5',  # ldr r0,[sp,0x40]  NSNumber receiver reload
+ 0x0083A8A8:'38008de5',  # str r0,[sp,0x38]  first numberWithFloat: result
+ 0x0083A8C4:'042090e5',  # ldr r2,[r0,4]     floatPos .y value
+ 0x0083A8E0:'00c0a0e3',0x0083A8E4:'00c083e5',  # mov ip,#0; str ip,[r3] nil terminator
+ 0x0083A8EC:'30008de5',  # str r0,[sp,0x30]  second numberWithFloat: result
+ 0x0083A9C0:'04209ce5',  # ldr r2,[ip,4]     pos.y = *(self+16+4)
+ 0x0083A940:'023091e7',0x0083A938:'3c101be5',  # NSNumber receiver reload
+ 0x0083A968:'0300a0e1',  # mov r0,r3         NSNumber receiver
+ 0x0083A9B0:'0cc01be5',  # ldr ip,[fp,-0xc]  self reload
+ 0x0083AA0C:'18201be5',0x0083AA10:'023091e7',  # NSNumber class = delta cell + base
+ 0x0083AA1C:'02e09ee7',0x0083AA20:'00e09ee5',0x0083AA24:'0e209ce7',  # *(self + uniqueID)
+ 0x0083AA28:'20c01be5',0x0083AA2C:'00109ce5',  # numberWithUnsignedLong: selref
+ 0x0083AA34:'0300a0e1',0x0083AA38:'1c301be5',  # r0=NSNumber, r3=msgSend
+ 0x0083AA40:'2c101be5',0x0083AA44:'001091e5',  # setObject:forKey: selref
+ 0x0083AA58:'28301be5',0x0083AA5C:'24c01be5',  # @"uniqueID" key, msgSend
+ 0x0083AA64:'14001be5',  # ldr r0,[fp,-0x14] return dict
+}
+
+def signed(v):return v-(1<<32) if v&0x80000000 else v
+
+def checked_word(m,a):
+ v=m.word(a)
+ if v is None:raise ValueError(f'missing word {a:#x}')
+ return int(v)
+
+def file_word(m,a):
+ off=m.offset(a,4)
+ if off is None:raise ValueError(f'no file bytes {a:#x}')
+ return int.from_bytes(m.data[off:off+4],'little')
+
+def cstring(m,address):
+ offset=m.offset(address,1)
+ if offset is None:raise ValueError(f'missing cstring {address:#x}')
+ end=m.data.find(b'\0',offset,offset+256)
+ if end<0:raise ValueError(f'unterminated cstring {address:#x}')
+ return m.data[offset:end].decode('utf-8')
+
+def recover(path):
+ raw=path.read_bytes()
+ if hashlib.sha256(raw).hexdigest()!=SHA:raise ValueError('original ELF SHA mismatch')
+ m=ELFMemory(path);text=(NATIVE/'disasm_dynamicobject_getsavedict.txt').read_text()
+ coverage=verify_disassembly(m,text,START,END)
+ base=(BASE_ADD+8+signed(checked_word(m,BASE_LITERAL)))&0xffffffff
+ if base!=0x0105FAF4:raise ValueError('PIC base drift')
+ indirect_target=(base+signed(checked_word(m,INDIRECT_TARGET_CELL)))&0xffffffff
+ if m.imports.get(indirect_target)!='objc_msgSend':
+  raise ValueError('indirect objc_msgSend target drift')
+ elf=ELFFile(io.BytesIO(raw));dynsym=elf.get_section_by_name('.dynsym')
+ if dynsym is None:raise ValueError('missing dynsym')
+ symbols={s['st_value']:s.name for s in getattr(dynsym,'iter_symbols')() if s['st_value']!=0}
+ selectors={}
+ for cell,name in SELECTOR_CELLS.items():
+  slot=(base+signed(checked_word(m,cell)))&0xffffffff;value=checked_word(m,slot)
+  if m.selectors.get(value)!=name:raise ValueError(f'selector drift {name}')
+  selectors[name]=f'0x{cell:08x}'
+ ivars={}
+ for cell,(name,expected) in IVAR_CELLS.items():
+  slot=(base+signed(checked_word(m,cell)))&0xffffffff;storage=checked_word(m,slot)
+  if symbols.get(storage)!=name or checked_word(m,storage)!=expected:raise ValueError(f'ivar drift {name}')
+  ivars[name]=expected
+ key_pairings=[]
+ for key,cell,cstring_address,call_site,ivar,offset in KEY_PAIRINGS:
+  string_object=(base+signed(checked_word(m,cell)))&0xffffffff
+  if checked_word(m,string_object+8)!=cstring_address or cstring(m,cstring_address)!=key:
+   raise ValueError(f'key drift {key}')
+  key_pairings.append({'key':key,'constant_string_object':f'0x{string_object:08x}','literal_cell':f'0x{cell:08x}','cstring':f'0x{cstring_address:08x}','set_object_site':f'0x{call_site:08x}','ivar':ivar,'ivar_offset':offset})
+ # value side: R_ARM_ABS32 class references (file word 0, linkmap-filled at load)
+ abs32={}
+ elf_sections=list(elf.iter_sections())
+ for section in elf_sections:
+  if section.__class__.__name__=='RelocationSection':
+   symbols_section=elf.get_section(section['sh_link'])
+   for rel in section.iter_relocations():
+    if rel['r_info_type']==2 and rel['r_info_sym']:
+     abs32[rel['r_offset']]=symbols_section.get_symbol(rel['r_info_sym']).name
+ classrefs={}
+ for literal,(cell,expected) in CLASSREF_LITERALS.items():
+  slot=(base+signed(checked_word(m,literal)))&0xffffffff
+  if slot!=cell or abs32.get(cell)!=expected or file_word(m,cell)!=0:
+   raise ValueError(f'classref drift {expected}')
+  classrefs[expected]=f'0x{cell:08x}'
+ # NSNumber receiver reload path: literal 0x0083AA90 is the PIC delta stored to
+ # [fp,-0x3c] at 0x0083A860 (str r3,[fp,-0x3c]) and re-based at 0x0083A88c/0x0083A938.
+ if checked_word(m,0x0083AA90)!=0xFFE2AD60 or (base+signed(0xFFE2AD60))&0xffffffff!=0x00E8A854:
+  raise ValueError('NSNumber class-delta literal drift')
+ # Vector2::operator float* direct calls
+ for site in VECTOR2_CALLS:
+  instr=checked_word(m,site)
+  if instr&0xFE000000!=0xEA000000:raise ValueError(f'not a bl at {site:#x}')
+  imm=instr&0x00FFFFFF
+  if imm&0x00800000:imm-=0x01000000
+  if (site+8+imm*4)&0xffffffff!=VECTOR2_IMP:raise ValueError(f'bl target drift at {site:#x}')
+ if symbols.get(VECTOR2_IMP)!=VECTOR2_SYMBOL:raise ValueError('Vector2 symbol drift')
+ # fp-slot provenance raw words (byte-order strings)
+ for addr,word_hex in PROVENANCE_WORDS.items():
+  raw_word=checked_word(m,addr)
+  if raw_word.to_bytes(4,'little').hex()!=word_hex:
+   raise ValueError(f'provenance word drift at {addr:#x}')
+ # indirect site runtime arguments fully bound via fp slots
+ sel_ul_cell=(base+signed(checked_word(m,0x0083AA7C)))&0xffffffff
+ sel_set_cell=(base+signed(checked_word(m,0x0083AA78)))&0xffffffff
+ if m.selectors.get(checked_word(m,sel_ul_cell))!='numberWithUnsignedLong:':raise ValueError('site1 selector drift')
+ if m.selectors.get(checked_word(m,sel_set_cell))!='setObject:forKey:':raise ValueError('site2 selector drift')
+ value_side=[
+  {'site':'0x0083aa3c','dispatch':'blx r3 <- [fp-0x1c] = objc_msgSend (GOT cell 0x0105b7a0)',
+   'receiver':f'NSNumber class via [fp-0x3c]+[fp-0x18] delta/base = {classrefs["OBJC_CLASS_$_NSNumber"]}',
+   'selector':'numberWithUnsignedLong: via [[fp-0x20]] = selref cell',
+   'argument':'uniqueID ivar double-deref: ldr lr,[0x0083aab4]; ldr lr,[lr,r2]; ldr lr,[lr]; ldr r2,[self+lr] -> self+40 value'},
+  {'site':'0x0083aa60','dispatch':'blx ip <- [fp-0x24] = objc_msgSend (same GOT cell)',
+   'receiver':'NSMutableDictionary from [fp-0x14] reloaded at 0x0083aa64 path',
+   'selector':'setObject:forKey: via [[fp-0x2c]] = selref cell',
+   'argument':'value=[fp+0x8] (site1 result), key=[fp-0x28] = @"uniqueID" constant string 0x00f920d8'},
+ ]
+ body_offset=m.offset(START,CODE_END-START)
+ if body_offset is None:raise ValueError('missing body')
+ body_offset=int(body_offset);body=m.data[body_offset:body_offset+CODE_END-START]
+ return {
+  'schema':1,'method':'DynamicObject -[getSaveDict]','types':'@8@0:4',
+  'elf_sha256':hashlib.sha256(raw).hexdigest(),'imp':f'0x{START:08x}',
+  'code_end':f'0x{CODE_END:08x}','boundary_end':f'0x{END:08x}',
+  'code_words':(CODE_END-START)//4,'coverage_words':coverage,
+  'body_sha256':hashlib.sha256(body).hexdigest(),'pic_base':f'0x{base:08x}',
+  'objc_msgsend_sites':[f'0x{x:08x}' for x in OBJC_MSGSEND_SITES],
+  'objc_msgsend_sites_unresolved':[],
+  'objc_msgsend_sites_unresolved_count':0,
+  'objc_msgsend_sites_known':{f'0x{x:08x}':name for x,name in [(0x83A820,'dictionary'),(0x83A888,'numberWithFloat:'),(0x83A8CC,'numberWithFloat:'),(0x83A8FC,'arrayWithObjects:'),(0x83A930,'setObject:forKey:'),(0x83A974,'numberWithInt:'),(0x83A99C,'setObject:forKey:'),(0x83A9D8,'numberWithInt:'),(0x83AA00,'setObject:forKey:')]},
+  'indirect_blx_sites':[f'0x{x:08x}' for x in BLX_SITES],
+  'indirect_blx_sites_known':{
+   '0x0083aa3c':'objc_msgSend',
+   '0x0083aa60':'objc_msgSend',
+  },
+  'indirect_call_contracts':{
+   '0x0083aa3c':{
+    'dispatch':'objc_msgSend',
+    'selector':'numberWithUnsignedLong:',
+    'value_source':'DynamicObject.uniqueID (self + 40)',
+   },
+   '0x0083aa60':{
+    'dispatch':'objc_msgSend',
+    'selector':'setObject:forKey:',
+    'value_source':'boxed uniqueID result from 0x0083aa3c',
+    'key':'uniqueID',
+   },
+  },
+  'indirect_blx_sites_unresolved_count':0,
+  'save_dict_key_pairings':key_pairings,
+  'classref_literals':classrefs,
+  'value_side_evidence':value_side,
+  'direct_calls':{'0x0083a868':'_ZN7Vector2cvPfEv','0x0083a8b4':'_ZN7Vector2cvPfEv'},
+  'known_selectors':selectors,'known_ivars':ivars,
+  'return_boundary':'result is reloaded from [fp-0x14] at 0x0083aa64 after dictionary assembly',
+  'claim':'bounded static selector/ivar inventory plus four key-to-setObject/ivar pairings; both indirect objc_msgSend sites bound with class/selector/value provenance; three load-time ABS32 classrefs and two Vector2::operator float* direct calls pinned; complete schema and dynamic-object construction remain unresolved',
+ }
+
+def main():
+ p=argparse.ArgumentParser();p.add_argument('elf',type=Path);p.add_argument('--check',action='store_true');p.add_argument('--output',type=Path,default=NATIVE/'dynamicobject_getsavedict.json');a=p.parse_args();r=recover(a.elf);text=json.dumps(r,indent=2,sort_keys=True)+'\n'
+ if a.check:
+  if a.output.read_text()!=text:raise SystemExit('stale dynamicobject_getsavedict.json')
+ else:a.output.write_text(text)
+ print('getSaveDict code_words=%d objc_msgSend=%d unresolved=%d'%(r['code_words'],len(r['objc_msgsend_sites']),r['objc_msgsend_sites_unresolved_count']))
+if __name__=='__main__':main()

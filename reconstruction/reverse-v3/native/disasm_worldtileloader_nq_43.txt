@@ -1,0 +1,47 @@
+# NPC -[npcUpdateNetDataForClient:]
+# types: {NPCUpdateNetData={DynamicObjectNetData=QIIC[7C]}}12@0:4@8
+# implementation: 0x006455d4
+# ARM.exidx end: 0x0064567c
+
+            0x006455d4      104c2de9       push {r4, sl, fp, lr}
+            0x006455d8      08b08de2       add fp, sp, 8
+            0x006455dc      40d04de2       sub sp, sp, 0x40
+            0x006455e0      90c09fe5       ldr ip, [0x00645678]        ; [0x645678:4]=0xa1a508
+            0x006455e4      0cc08fe0       add ip, pc, ip
+            0x006455e8      00e000e3       movw lr, 0
+            0x006455ec      80409fe5       ldr r4, [0x00645674]        ; [0x645674:4]=0xffe1f62c ; ",\xf6\xe1\xff\b\xa5\xa1"
+            0x006455f0      0cc084e0       add ip, r4, ip
+            0x006455f4      0c100be5       str r1, [fp, -0xc]
+            0x006455f8      10200be5       str r2, [fp, -0x10]
+            0x006455fc      14300be5       str r3, [fp, -0x14]
+            0x00645600      0c101be5       ldr r1, [fp, -0xc]
+            0x00645604      00209ce5       ldr r2, [ip]
+            0x00645608      0e0051e1       cmp r1, lr
+            0x0064560c      14108de5       str r1, [sp, 0x14]
+            0x00645610      10208de5       str r2, [sp, 0x10]
+            0x00645614      0c008de5       str r0, [sp, 0xc]
+        ┌─< 0x00645618      0400000a       beq 0x645630
+        │   0x0064561c      18008de2       add r0, sp, 0x18
+        │   0x00645620      14109de5       ldr r1, [sp, 0x14]
+        │   0x00645624      10209de5       ldr r2, [sp, 0x10]
+        │   0x00645628      baf4edeb       bl loc.imp.objc_msgSend_stret
+       ┌──< 0x0064562c      070000ea       b 0x645650
+       │└─> 0x00645630      000000e3       movw r0, 0
+       │    0x00645634      182000e3       movw r2, 0x18
+       │    0x00645638      18108de2       add r1, sp, 0x18
+       │    0x0064563c      08008de5       str r0, [sp, 8]
+       │    0x00645640      0100a0e1       mov r0, r1
+       │    0x00645644      08109de5       ldr r1, [sp, 8]
+       │    0x00645648      ff1001e2       and r1, r1, 0xff
+       │    0x0064564c      b4f4edeb       bl sym.imp.memset
+       └──> 0x00645650      182000e3       movw r2, 0x18
+            0x00645654      18008de2       add r0, sp, 0x18
+            0x00645658      0c109de5       ldr r1, [sp, 0xc]
+            0x0064565c      04008de5       str r0, [sp, 4]
+            0x00645660      0100a0e1       mov r0, r1
+            0x00645664      04109de5       ldr r1, [sp, 4]
+            0x00645668      89f4edeb       bl sym.imp.memcpy
+            0x0064566c      08d04be2       sub sp, fp, 8
+            0x00645670      108cbde8       pop {r4, sl, fp, pc}
+            0x00645674      2cf6e1ff       invalid
+            0x00645678      08a5a100       adceq sl, r1, r8, lsl 10

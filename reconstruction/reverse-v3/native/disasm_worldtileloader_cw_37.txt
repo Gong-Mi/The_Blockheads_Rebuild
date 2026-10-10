@@ -1,0 +1,48 @@
+# CaveTroll -[namePos]
+# types: {Vector2=[2f]}8@0:4
+# implementation: 0x00d849a0
+# ARM.exidx end: 0x00d84a4c
+
+            0x00d849a0      00482de9       push {fp, lr}
+            0x00d849a4      0db0a0e1       mov fp, sp
+            0x00d849a8      28d04de2       sub sp, sp, 0x28
+            0x00d849ac      94309fe5       ldr r3, [0x00d84a48]        ; [0xd84a48:4]=0x2db13c
+            0x00d849b0      03308fe0       add r3, pc, r3
+            0x00d849b4      00c000e3       movw ip, 0
+            0x00d849b8      84e09fe5       ldr lr, [0x00d84a44]        ; [0xd84a44:4]=0xffe291a0
+            0x00d849bc      03308ee0       add r3, lr, r3
+            0x00d849c0      04100be5       str r1, [fp, -4]
+            0x00d849c4      08200be5       str r2, [fp, -8]
+            0x00d849c8      04101be5       ldr r1, [fp, -4]
+            0x00d849cc      002093e5       ldr r2, [r3]
+            0x00d849d0      0c0051e1       cmp r1, ip
+            0x00d849d4      0c108de5       str r1, [sp, 0xc]
+            0x00d849d8      08208de5       str r2, [sp, 8]
+            0x00d849dc      04008de5       str r0, [sp, 4]
+        ┌─< 0x00d849e0      0400000a       beq 0xd849f8
+        │   0x00d849e4      10004be2       sub r0, fp, 0x10
+        │   0x00d849e8      0c109de5       ldr r1, [sp, 0xc]
+        │   0x00d849ec      08209de5       ldr r2, [sp, 8]
+        │   0x00d849f0      c8f7d0eb       bl loc.imp.objc_msgSend_stret
+       ┌──< 0x00d849f4      070000ea       b 0xd84a18
+       │└─> 0x00d849f8      000000e3       movw r0, 0
+       │    0x00d849fc      082000e3       movw r2, 8
+       │    0x00d84a00      10104be2       sub r1, fp, 0x10
+       │    0x00d84a04      00008de5       str r0, [sp]
+       │    0x00d84a08      0100a0e1       mov r0, r1
+       │    0x00d84a0c      00109de5       ldr r1, [sp]
+       │    0x00d84a10      ff1001e2       and r1, r1, 0xff
+       │    0x00d84a14      c2f7d0eb       bl sym.imp.memset
+       └──> 0x00d84a18      10008de2       add r0, sp, 0x10
+            0x00d84a1c      0010a0e3       mov r1, 0
+            0x00d84a20      ff25a0e3       mov r2, 0x3fc00000
+            0x00d84a24      952eddeb       bl method.Vector2.Vector2_float__float_ ; Vector2::Vector2(float, float)
+            0x00d84a28      10209de5       ldr r2, [sp, 0x10]
+            0x00d84a2c      14309de5       ldr r3, [sp, 0x14]
+            0x00d84a30      10104be2       sub r1, fp, 0x10
+            0x00d84a34      04009de5       ldr r0, [sp, 4]
+            0x00d84a38      762eddeb       bl method.Vector2.operator_Vector2_ ; Vector2::operator+(Vector2)
+            0x00d84a3c      0bd0a0e1       mov sp, fp
+            0x00d84a40      0088bde8       pop {fp, pc}
+            0x00d84a44      a091e2ff       invalid
+            0x00d84a48      3cb12d00       eoreq fp, sp, ip, lsr r1

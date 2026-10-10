@@ -1,0 +1,823 @@
+# Weather -[renderWithMatrix:pinchScale:withDayColor:rainFraction:snowFraction:snowLevel:]
+# types: v104@0:4(_GLKMatrix4={?=ffffffffffffffff}[16f])8f72{Vector=[4f]}76f92f96f100
+# implementation: 0x007ea820
+# ARM.exidx end: 0x007eb4e8
+
+            0x007ea820      f04d2de9       push {r4, r5, r6, r7, r8, sl, fp, lr}
+            0x007ea824      18b08de2       add fp, sp, 0x18
+            0x007ea828      0add4de2       sub sp, sp, 0x280
+            0x007ea82c      0fd0cde3       bic sp, sp, 0xf
+            0x007ea830      accc9fe5       ldr ip, [0x007eb4e4]        ; [0x7eb4e4:4]=0x8752b8
+            0x007ea834      0cc08fe0       add ip, pc, ip
+            0x007ea838      50e09be5       ldr lr, [fp, 0x50]
+            0x007ea83c      4c409be5       ldr r4, [fp, 0x4c]
+            0x007ea840      48509be5       ldr r5, [fp, 0x48]
+            0x007ea844      44609be5       ldr r6, [fp, 0x44]
+            0x007ea848      3c709be5       ldr r7, [fp, 0x3c]
+            0x007ea84c      38809be5       ldr r8, [fp, 0x38]
+            0x007ea850      34a09be5       ldr sl, [fp, 0x34]
+            0x007ea854      ac018de5       str r0, [sp, 0x1ac]
+            0x007ea858      30009be5       ldr r0, [fp, 0x30]
+            0x007ea85c      a8018de5       str r0, [sp, 0x1a8]
+            0x007ea860      2c009be5       ldr r0, [fp, 0x2c]
+            0x007ea864      a4018de5       str r0, [sp, 0x1a4]
+            0x007ea868      28009be5       ldr r0, [fp, 0x28]
+            0x007ea86c      a0018de5       str r0, [sp, 0x1a0]
+            0x007ea870      24009be5       ldr r0, [fp, 0x24]
+            0x007ea874      9c018de5       str r0, [sp, 0x19c]
+            0x007ea878      20009be5       ldr r0, [fp, 0x20]
+            0x007ea87c      98018de5       str r0, [sp, 0x198]
+            0x007ea880      1c009be5       ldr r0, [fp, 0x1c]
+            0x007ea884      94018de5       str r0, [sp, 0x194]
+            0x007ea888      18009be5       ldr r0, [fp, 0x18]
+            0x007ea88c      90018de5       str r0, [sp, 0x190]
+            0x007ea890      14009be5       ldr r0, [fp, 0x14]
+            0x007ea894      8c018de5       str r0, [sp, 0x18c]
+            0x007ea898      10009be5       ldr r0, [fp, 0x10]
+            0x007ea89c      88018de5       str r0, [sp, 0x188]
+            0x007ea8a0      0c009be5       ldr r0, [fp, 0xc]
+            0x007ea8a4      84018de5       str r0, [sp, 0x184]
+            0x007ea8a8      08009be5       ldr r0, [fp, 8]
+            0x007ea8ac      170a9bed       vldr s0, [fp, 0x5c]
+            0x007ea8b0      161a9bed       vldr s2, [fp, 0x58]
+            0x007ea8b4      152a9bed       vldr s4, [fp, 0x54]
+            0x007ea8b8      103a9bed       vldr s6, [fp, 0x40]
+            0x007ea8bc      80018de5       str r0, [sp, 0x180]
+            0x007ea8c0      ac019de5       ldr r0, [sp, 0x1ac]
+            0x007ea8c4      954a9fed       vldr s8, [0x007eab20]
+            0x007ea8c8      40228de5       str r2, [sp, 0x240]
+            0x007ea8cc      44328de5       str r3, [sp, 0x244]
+            0x007ea8d0      80219de5       ldr r2, [sp, 0x180]
+            0x007ea8d4      48228de5       str r2, [sp, 0x248]
+            0x007ea8d8      84319de5       ldr r3, [sp, 0x184]
+            0x007ea8dc      4c328de5       str r3, [sp, 0x24c]
+            0x007ea8e0      88219de5       ldr r2, [sp, 0x188]
+            0x007ea8e4      50228de5       str r2, [sp, 0x250]
+            0x007ea8e8      8c219de5       ldr r2, [sp, 0x18c]
+            0x007ea8ec      54228de5       str r2, [sp, 0x254]
+            0x007ea8f0      90219de5       ldr r2, [sp, 0x190]
+            0x007ea8f4      58228de5       str r2, [sp, 0x258]
+            0x007ea8f8      94219de5       ldr r2, [sp, 0x194]
+            0x007ea8fc      5c228de5       str r2, [sp, 0x25c]
+            0x007ea900      98219de5       ldr r2, [sp, 0x198]
+            0x007ea904      60228de5       str r2, [sp, 0x260]
+            0x007ea908      9c219de5       ldr r2, [sp, 0x19c]
+            0x007ea90c      64228de5       str r2, [sp, 0x264]
+            0x007ea910      a0219de5       ldr r2, [sp, 0x1a0]
+            0x007ea914      68228de5       str r2, [sp, 0x268]
+            0x007ea918      a4219de5       ldr r2, [sp, 0x1a4]
+            0x007ea91c      6c228de5       str r2, [sp, 0x26c]
+            0x007ea920      a8219de5       ldr r2, [sp, 0x1a8]
+            0x007ea924      70228de5       str r2, [sp, 0x270]
+            0x007ea928      74a28de5       str sl, [sp, 0x274]
+            0x007ea92c      78828de5       str r8, [sp, 0x278]
+            0x007ea930      7c728de5       str r7, [sp, 0x27c]
+            0x007ea934      3ce28de5       str lr, [sp, 0x23c]
+            0x007ea938      38428de5       str r4, [sp, 0x238]
+            0x007ea93c      34528de5       str r5, [sp, 0x234]
+            0x007ea940      30628de5       str r6, [sp, 0x230]
+            0x007ea944      2c028de5       str r0, [sp, 0x22c]
+            0x007ea948      28128de5       str r1, [sp, 0x228]
+            0x007ea94c      893a8ded       vstr s6, [sp, 0x224]
+            0x007ea950      882a8ded       vstr s4, [sp, 0x220]
+            0x007ea954      871a8ded       vstr s2, [sp, 0x21c]
+            0x007ea958      860a8ded       vstr s0, [sp, 0x218]
+            0x007ea95c      880a9ded       vldr s0, [sp, 0x220]
+            0x007ea960      c40ab4ee       vcmpe.f32 s0, s8
+            0x007ea964      10faf1ee       vmrs apsr_nzcv, fpscr
+            0x007ea968      7cc18de5       str ip, [sp, 0x17c]
+        ┌─< 0x007ea96c      8c0100da       ble 0x7eafa4
+        │   0x007ea970      010000e3       movw r0, 1
+        │   0x007ea974      000ab7ee       vmov.f32 s0, 1
+        │   0x007ea978      041000e3       movw r1, 4
+        │   0x007ea97c      001ab1ee       vmov.f32 s2, 4
+        │   0x007ea980      882a9ded       vldr s4, [sp, 0x220]
+        │   0x007ea984      011a22ee       vmul.f32 s2, s4, s2
+        │   0x007ea988      841a8ded       vstr s2, [sp, 0x210]
+        │   0x007ea98c      830a8ded       vstr s0, [sp, 0x20c]
+        │   0x007ea990      840a9ded       vldr s0, [sp, 0x210]
+        │   0x007ea994      831a9ded       vldr s2, [sp, 0x20c]
+        │   0x007ea998      c10ab4ee       vcmpe.f32 s0, s2
+        │   0x007ea99c      10faf1ee       vmrs apsr_nzcv, fpscr
+        │   0x007ea9a0      78018de5       str r0, [sp, 0x178]
+        │   0x007ea9a4      74118de5       str r1, [sp, 0x174]
+       ┌──< 0x007ea9a8      0200005a       bpl 0x7ea9b8
+       ││   0x007ea9ac      840a9ded       vldr s0, [sp, 0x210]
+       ││   0x007ea9b0      5c0a8ded       vstr s0, [sp, 0x170]
+      ┌───< 0x007ea9b4      010000ea       b 0x7ea9c0
+      │└──> 0x007ea9b8      830a9ded       vldr s0, [sp, 0x20c]
+      │ │   0x007ea9bc      5c0a8ded       vstr s0, [sp, 0x170]
+      └───> 0x007ea9c0      5c0a9ded       vldr s0, [sp, 0x170]
+        │   0x007ea9c4      7e0f8de2       add r0, sp, 0x1f8
+        │   0x007ea9c8      820a8ded       vstr s0, [sp, 0x208]
+        │   0x007ea9cc      820a9ded       vldr s0, [sp, 0x208]
+        │   0x007ea9d0      850a8ded       vstr s0, [sp, 0x214]
+        │   0x007ea9d4      30129de5       ldr r1, [sp, 0x230]
+        │   0x007ea9d8      f8118de5       str r1, [sp, 0x1f8]
+        │   0x007ea9dc      34129de5       ldr r1, [sp, 0x234]
+        │   0x007ea9e0      fc118de5       str r1, [sp, 0x1fc]
+        │   0x007ea9e4      38129de5       ldr r1, [sp, 0x238]
+        │   0x007ea9e8      00128de5       str r1, [sp, 0x200]
+        │   0x007ea9ec      3c129de5       ldr r1, [sp, 0x23c]
+        │   0x007ea9f0      04128de5       str r1, [sp, 0x204]
+        │   0x007ea9f4      832cf3eb       bl method.Vector.operator_float__ ; Vector::operator float*()
+        │   0x007ea9f8      000ab6ee       vmov.f32 s0, 5
+        │   0x007ea9fc      481a9fed       vldr s2, [0x007eab24]
+        │   0x007eaa00      002a90ed       vldr s4, [r0]
+        │   0x007eaa04      011a22ee       vmul.f32 s2, s4, s2
+        │   0x007eaa08      852a9ded       vldr s4, [sp, 0x214]
+        │   0x007eaa0c      021a21ee       vmul.f32 s2, s2, s4
+        │   0x007eaa10      7d1a8ded       vstr s2, [sp, 0x1f4]
+        │   0x007eaa14      7c0a8ded       vstr s0, [sp, 0x1f0]
+        │   0x007eaa18      7d0a9ded       vldr s0, [sp, 0x1f4]
+        │   0x007eaa1c      7c1a9ded       vldr s2, [sp, 0x1f0]
+        │   0x007eaa20      c10ab4ee       vcmpe.f32 s0, s2
+        │   0x007eaa24      10faf1ee       vmrs apsr_nzcv, fpscr
+       ┌──< 0x007eaa28      0200005a       bpl 0x7eaa38
+       ││   0x007eaa2c      7d0a9ded       vldr s0, [sp, 0x1f4]
+       ││   0x007eaa30      5b0a8ded       vstr s0, [sp, section..dynsym]
+      ┌───< 0x007eaa34      010000ea       b 0x7eaa40
+      │└──> 0x007eaa38      7c0a9ded       vldr s0, [sp, 0x1f0]
+      │ │   0x007eaa3c      5b0a8ded       vstr s0, [sp, section..dynsym]
+      └───> 0x007eaa40      5b0a9ded       vldr s0, [sp, section..dynsym]
+        │   0x007eaa44      7e0f8de2       add r0, sp, 0x1f8
+        │   0x007eaa48      7b0a8ded       vstr s0, [sp, 0x1ec]
+        │   0x007eaa4c      7b0a9ded       vldr s0, [sp, 0x1ec]
+        │   0x007eaa50      5a0a8ded       vstr s0, [sp, 0x168]
+        │   0x007eaa54      6b2cf3eb       bl method.Vector.operator_float__ ; Vector::operator float*()
+        │   0x007eaa58      7e1f8de2       add r1, sp, 0x1f8
+        │   0x007eaa5c      5a0a9ded       vldr s0, [sp, 0x168]
+        │   0x007eaa60      000a80ed       vstr s0, [r0]
+        │   0x007eaa64      0100a0e1       mov r0, r1
+        │   0x007eaa68      662cf3eb       bl method.Vector.operator_float__ ; Vector::operator float*()
+        │   0x007eaa6c      000ab6ee       vmov.f32 s0, 5
+        │   0x007eaa70      2b1a9fed       vldr s2, [0x007eab24]
+        │   0x007eaa74      012a90ed       vldr s4, [r0, 4]
+        │   0x007eaa78      011a22ee       vmul.f32 s2, s4, s2
+        │   0x007eaa7c      852a9ded       vldr s4, [sp, 0x214]
+        │   0x007eaa80      021a21ee       vmul.f32 s2, s2, s4
+        │   0x007eaa84      7a1a8ded       vstr s2, [sp, 0x1e8]
+        │   0x007eaa88      790a8ded       vstr s0, [sp, 0x1e4]
+        │   0x007eaa8c      7a0a9ded       vldr s0, [sp, 0x1e8]
+        │   0x007eaa90      791a9ded       vldr s2, [sp, 0x1e4]
+        │   0x007eaa94      c10ab4ee       vcmpe.f32 s0, s2
+        │   0x007eaa98      10faf1ee       vmrs apsr_nzcv, fpscr
+       ┌──< 0x007eaa9c      0200005a       bpl 0x7eaaac
+       ││   0x007eaaa0      7a0a9ded       vldr s0, [sp, 0x1e8]
+       ││   0x007eaaa4      590a8ded       vstr s0, [sp, 0x164]
+      ┌───< 0x007eaaa8      010000ea       b 0x7eaab4
+      │└──> 0x007eaaac      790a9ded       vldr s0, [sp, 0x1e4]
+      │ │   0x007eaab0      590a8ded       vstr s0, [sp, 0x164]
+      └───> 0x007eaab4      590a9ded       vldr s0, [sp, 0x164]
+        │   0x007eaab8      7e0f8de2       add r0, sp, 0x1f8
+        │   0x007eaabc      780a8ded       vstr s0, [sp, 0x1e0]
+        │   0x007eaac0      780a9ded       vldr s0, [sp, 0x1e0]
+        │   0x007eaac4      580a8ded       vstr s0, [sp, 0x160]
+        │   0x007eaac8      4e2cf3eb       bl method.Vector.operator_float__ ; Vector::operator float*()
+        │   0x007eaacc      7e1f8de2       add r1, sp, 0x1f8
+        │   0x007eaad0      580a9ded       vldr s0, [sp, 0x160]
+        │   0x007eaad4      010a80ed       vstr s0, [r0, 4]
+        │   0x007eaad8      0100a0e1       mov r0, r1
+        │   0x007eaadc      492cf3eb       bl method.Vector.operator_float__ ; Vector::operator float*()
+        │   0x007eaae0      000ab6ee       vmov.f32 s0, 5
+        │   0x007eaae4      0e1a9fed       vldr s2, [0x007eab24]
+        │   0x007eaae8      022a90ed       vldr s4, [r0, 8]
+        │   0x007eaaec      011a22ee       vmul.f32 s2, s4, s2
+        │   0x007eaaf0      852a9ded       vldr s4, [sp, 0x214]
+        │   0x007eaaf4      021a21ee       vmul.f32 s2, s2, s4
+        │   0x007eaaf8      771a8ded       vstr s2, [sp, 0x1dc]
+        │   0x007eaafc      760a8ded       vstr s0, [sp, 0x1d8]
+        │   0x007eab00      770a9ded       vldr s0, [sp, 0x1dc]
+        │   0x007eab04      761a9ded       vldr s2, [sp, 0x1d8]
+        │   0x007eab08      c10ab4ee       vcmpe.f32 s0, s2
+        │   0x007eab0c      10faf1ee       vmrs apsr_nzcv, fpscr
+       ┌──< 0x007eab10      0500005a       bpl 0x7eab2c
+       ││   0x007eab14      770a9ded       vldr s0, [sp, 0x1dc]
+       ││   0x007eab18      570a8ded       vstr s0, [sp, 0x15c]
+      ┌───< 0x007eab1c      040000ea       b 0x7eab34
+     ┌────< 0x007eab20      6f12833a       blo 0xfe8af4e4
+     ││││   0x007eab24      cdcc4c3f       svclo 0x4ccccd
+     ││││   0x007eab28      9a99193f       svclo 0x19999a
+     ││└──> 0x007eab2c      760a9ded       vldr s0, [sp, 0x1d8]
+     ││ │   0x007eab30      570a8ded       vstr s0, [sp, 0x15c]
+     │└───> 0x007eab34      570a9ded       vldr s0, [sp, 0x15c]
+     │  │   0x007eab38      7e0f8de2       add r0, sp, 0x1f8
+     │  │   0x007eab3c      750a8ded       vstr s0, [sp, 0x1d4]
+     │  │   0x007eab40      750a9ded       vldr s0, [sp, 0x1d4]
+     │  │   0x007eab44      560a8ded       vstr s0, [sp, 0x158]
+     │  │   0x007eab48      2e2cf3eb       bl method.Vector.operator_float__ ; Vector::operator float*()
+     │  │   0x007eab4c      6c199fe5       ldr r1, [0x007eb4c0]        ; [0x7eb4c0:4]=0xffffbcac
+     │  │   0x007eab50      7c219de5       ldr r2, [sp, 0x17c]
+     │  │   0x007eab54      021091e7       ldr r1, [r1, r2]
+     │  │   0x007eab58      74399fe5       ldr r3, [0x007eb4d4]        ; [0x7eb4d4:4]=0xffe21f50
+     │  │   0x007eab5c      023083e0       add r3, r3, r2
+     │  │   0x007eab60      68c99fe5       ldr ip, [0x007eb4d0]        ; [0x7eb4d0:4]=0xffffdf3c
+     │  │   0x007eab64      02c09ce7       ldr ip, [ip, r2]
+     │  │   0x007eab68      560a9ded       vldr s0, [sp, 0x158]
+     │  │   0x007eab6c      020a80ed       vstr s0, [r0, 8]
+     │  │   0x007eab70      2c029de5       ldr r0, [sp, 0x22c]
+     │  │   0x007eab74      00c09ce5       ldr ip, [ip]
+     │  │   0x007eab78      0c0080e0       add r0, r0, ip
+     │  │   0x007eab7c      000090e5       ldr r0, [r0]
+     │  │   0x007eab80      003093e5       ldr r3, [r3]
+     │  │   0x007eab84      54118de5       str r1, [sp, 0x154]
+     │  │   0x007eab88      0310a0e1       mov r1, r3
+     │  │   0x007eab8c      54319de5       ldr r3, [sp, 0x154]
+     │  │   0x007eab90      33ff2fe1       blx r3
+     │  │   0x007eab94      6760e7eb       bl sym.imp.__wrap_glUseProgram
+     │  │   0x007eab98      001000e3       movw r1, 0
+     │  │   0x007eab9c      1c099fe5       ldr r0, [0x007eb4c0]        ; [0x7eb4c0:4]=0xffffbcac
+     │  │   0x007eaba0      7c219de5       ldr r2, [sp, 0x17c]
+     │  │   0x007eaba4      020090e7       ldr r0, [r0, r2]
+     │  │   0x007eaba8      0030a0e1       mov r3, r0
+     │  │   0x007eabac      10c99fe5       ldr ip, [0x007eb4c4]        ; [0x7eb4c4:4]=0xffe21f5c
+     │  │   0x007eabb0      02c08ce0       add ip, ip, r2
+     │  │   0x007eabb4      012000e3       movw r2, 1
+     │  │   0x007eabb8      00e0a0e1       mov lr, r0
+     │  │   0x007eabbc      04499fe5       ldr r4, [0x007eb4c8]        ; [0x7eb4c8:4]=0xffe21f58
+     │  │   0x007eabc0      7c519de5       ldr r5, [sp, 0x17c]
+     │  │   0x007eabc4      054084e0       add r4, r4, r5
+     │  │   0x007eabc8      fc689fe5       ldr r6, [0x007eb4cc]        ; [0x7eb4cc:4]=0xffe21f54
+     │  │   0x007eabcc      056086e0       add r6, r6, r5
+     │  │   0x007eabd0      f8789fe5       ldr r7, [0x007eb4d0]        ; [0x7eb4d0:4]=0xffffdf3c
+     │  │   0x007eabd4      057097e7       ldr r7, [r7, r5]
+     │  │   0x007eabd8      2c829de5       ldr r8, [sp, 0x22c]
+     │  │   0x007eabdc      007097e5       ldr r7, [r7]
+     │  │   0x007eabe0      077088e0       add r7, r8, r7
+     │  │   0x007eabe4      007097e5       ldr r7, [r7]
+     │  │   0x007eabe8      006096e5       ldr r6, [r6]
+     │  │   0x007eabec      50018de5       str r0, [sp, 0x150]
+     │  │   0x007eabf0      0700a0e1       mov r0, r7
+     │  │   0x007eabf4      4c118de5       str r1, [sp, 0x14c]
+     │  │   0x007eabf8      0610a0e1       mov r1, r6
+     │  │   0x007eabfc      50619de5       ldr r6, [sp, 0x150]
+     │  │   0x007eac00      48218de5       str r2, [sp, segment.NOTE]
+     │  │   0x007eac04      44418de5       str r4, [sp, 0x144]
+     │  │   0x007eac08      40318de5       str r3, [sp, 0x140]
+     │  │   0x007eac0c      3cc18de5       str ip, [sp, 0x13c]
+     │  │   0x007eac10      38e18de5       str lr, [sp, 0x138]
+     │  │   0x007eac14      36ff2fe1       blx r6
+     │  │   0x007eac18      44119de5       ldr r1, [sp, 0x144]
+     │  │   0x007eac1c      001091e5       ldr r1, [r1]
+     │  │   0x007eac20      48219de5       ldr r2, [sp, segment.NOTE]
+     │  │   0x007eac24      38319de5       ldr r3, [sp, 0x138]
+     │  │   0x007eac28      33ff2fe1       blx r3
+     │  │   0x007eac2c      3c119de5       ldr r1, [sp, 0x13c]
+     │  │   0x007eac30      001091e5       ldr r1, [r1]
+     │  │   0x007eac34      40219de5       ldr r2, [sp, 0x140]
+     │  │   0x007eac38      32ff2fe1       blx r2
+     │  │   0x007eac3c      4c119de5       ldr r1, [sp, 0x14c]
+     │  │   0x007eac40      6660e7eb       bl sym.imp.__wrap_glUniform1i
+     │  │   0x007eac44      011000e3       movw r1, 1
+     │  │   0x007eac48      000000e3       movw r0, 0
+     │  │   0x007eac4c      092d8de2       add r2, sp, 0x240
+     │  │   0x007eac50      68389fe5       ldr r3, [0x007eb4c0]        ; [0x7eb4c0:4]=0xffffbcac
+     │  │   0x007eac54      7cc19de5       ldr ip, [sp, 0x17c]
+     │  │   0x007eac58      0c3093e7       ldr r3, [r3, ip]
+     │  │   0x007eac5c      03e0a0e1       mov lr, r3
+     │  │   0x007eac60      5c489fe5       ldr r4, [0x007eb4c4]        ; [0x7eb4c4:4]=0xffe21f5c
+     │  │   0x007eac64      0c4084e0       add r4, r4, ip
+     │  │   0x007eac68      005000e3       movw r5, 0
+     │  │   0x007eac6c      0360a0e1       mov r6, r3
+     │  │   0x007eac70      50789fe5       ldr r7, [0x007eb4c8]        ; [0x7eb4c8:4]=0xffe21f58
+     │  │   0x007eac74      0c7087e0       add r7, r7, ip
+     │  │   0x007eac78      4c889fe5       ldr r8, [0x007eb4cc]        ; [0x7eb4cc:4]=0xffe21f54
+     │  │   0x007eac7c      0c8088e0       add r8, r8, ip
+     │  │   0x007eac80      48a89fe5       ldr sl, [0x007eb4d0]        ; [0x7eb4d0:4]=0xffffdf3c
+     │  │   0x007eac84      0ca09ae7       ldr sl, [sl, ip]
+     │  │   0x007eac88      2cc29de5       ldr ip, [sp, 0x22c]
+     │  │   0x007eac8c      00a09ae5       ldr sl, [sl]
+     │  │   0x007eac90      0ac08ce0       add ip, ip, sl
+     │  │   0x007eac94      00c09ce5       ldr ip, [ip]
+     │  │   0x007eac98      008098e5       ldr r8, [r8]
+     │  │   0x007eac9c      34018de5       str r0, [sp, segment.INTERP]
+     │  │   0x007eaca0      0c00a0e1       mov r0, ip
+     │  │   0x007eaca4      30118de5       str r1, [sp, 0x130]
+     │  │   0x007eaca8      0810a0e1       mov r1, r8
+     │  │   0x007eacac      2c518de5       str r5, [sp, 0x12c]
+     │  │   0x007eacb0      28418de5       str r4, [sp, 0x128]
+     │  │   0x007eacb4      24218de5       str r2, [sp, 0x124]
+     │  │   0x007eacb8      20618de5       str r6, [sp, 0x120]
+     │  │   0x007eacbc      1c718de5       str r7, [sp, 0x11c]
+     │  │   0x007eacc0      18e18de5       str lr, [sp, 0x118]
+     │  │   0x007eacc4      33ff2fe1       blx r3
+     │  │   0x007eacc8      1c119de5       ldr r1, [sp, 0x11c]
+     │  │   0x007eaccc      001091e5       ldr r1, [r1]
+     │  │   0x007eacd0      2c219de5       ldr r2, [sp, 0x12c]
+     │  │   0x007eacd4      20319de5       ldr r3, [sp, 0x120]
+     │  │   0x007eacd8      33ff2fe1       blx r3
+     │  │   0x007eacdc      28119de5       ldr r1, [sp, 0x128]
+     │  │   0x007eace0      001091e5       ldr r1, [r1]
+     │  │   0x007eace4      18219de5       ldr r2, [sp, 0x118]
+     │  │   0x007eace8      32ff2fe1       blx r2
+     │  │   0x007eacec      24119de5       ldr r1, [sp, 0x124]
+     │  │   0x007eacf0      30219de5       ldr r2, [sp, 0x130]
+     │  │   0x007eacf4      14118de5       str r1, [sp, 0x114]
+     │  │   0x007eacf8      0210a0e1       mov r1, r2
+     │  │   0x007eacfc      34319de5       ldr r3, [sp, segment.INTERP]
+     │  │   0x007ead00      ff2003e2       and r2, r3, 0xff
+     │  │   0x007ead04      14319de5       ldr r3, [sp, 0x114]
+     │  │   0x007ead08      3160e7eb       bl sym.imp.__wrap_glUniformMatrix4fv
+     │  │   0x007ead0c      7e0f8de2       add r0, sp, 0x1f8
+     │  │   0x007ead10      a8179fe5       ldr r1, [0x007eb4c0]        ; [0x7eb4c0:4]=0xffffbcac
+     │  │   0x007ead14      7c219de5       ldr r2, [sp, 0x17c]
+     │  │   0x007ead18      021091e7       ldr r1, [r1, r2]
+     │  │   0x007ead1c      0130a0e1       mov r3, r1
+     │  │   0x007ead20      9cc79fe5       ldr ip, [0x007eb4c4]        ; [0x7eb4c4:4]=0xffe21f5c
+     │  │   0x007ead24      02c08ce0       add ip, ip, r2
+     │  │   0x007ead28      022000e3       movw r2, 2
+     │  │   0x007ead2c      01e0a0e1       mov lr, r1
+     │  │   0x007ead30      90479fe5       ldr r4, [0x007eb4c8]        ; [0x7eb4c8:4]=0xffe21f58
+     │  │   0x007ead34      7c519de5       ldr r5, [sp, 0x17c]
+     │  │   0x007ead38      054084e0       add r4, r4, r5
+     │  │   0x007ead3c      88679fe5       ldr r6, [0x007eb4cc]        ; [0x7eb4cc:4]=0xffe21f54
+     │  │   0x007ead40      056086e0       add r6, r6, r5
+     │  │   0x007ead44      84779fe5       ldr r7, [0x007eb4d0]        ; [0x7eb4d0:4]=0xffffdf3c
+     │  │   0x007ead48      057097e7       ldr r7, [r7, r5]
+     │  │   0x007ead4c      2c829de5       ldr r8, [sp, 0x22c]
+     │  │   0x007ead50      007097e5       ldr r7, [r7]
+     │  │   0x007ead54      077088e0       add r7, r8, r7
+     │  │   0x007ead58      007097e5       ldr r7, [r7]
+     │  │   0x007ead5c      006096e5       ldr r6, [r6]
+     │  │   0x007ead60      10018de5       str r0, [sp, 0x110]
+     │  │   0x007ead64      0700a0e1       mov r0, r7
+     │  │   0x007ead68      0c118de5       str r1, [sp, 0x10c]
+     │  │   0x007ead6c      0610a0e1       mov r1, r6
+     │  │   0x007ead70      0c619de5       ldr r6, [sp, 0x10c]
+     │  │   0x007ead74      08218de5       str r2, [sp, 0x108]
+     │  │   0x007ead78      04418de5       str r4, [sp, 0x104]
+     │  │   0x007ead7c      00318de5       str r3, [sp, 0x100]
+     │  │   0x007ead80      fcc08de5       str ip, [sp, 0xfc]
+     │  │   0x007ead84      f8e08de5       str lr, [sp, 0xf8]
+     │  │   0x007ead88      36ff2fe1       blx r6
+     │  │   0x007ead8c      04119de5       ldr r1, [sp, 0x104]
+     │  │   0x007ead90      001091e5       ldr r1, [r1]
+     │  │   0x007ead94      08219de5       ldr r2, [sp, 0x108]
+     │  │   0x007ead98      f8309de5       ldr r3, [sp, 0xf8]
+     │  │   0x007ead9c      33ff2fe1       blx r3
+     │  │   0x007eada0      fc109de5       ldr r1, [sp, 0xfc]
+     │  │   0x007eada4      001091e5       ldr r1, [r1]
+     │  │   0x007eada8      00219de5       ldr r2, [sp, 0x100]
+     │  │   0x007eadac      32ff2fe1       blx r2
+     │  │   0x007eadb0      10119de5       ldr r1, [sp, 0x110]
+     │  │   0x007eadb4      f4008de5       str r0, [sp, 0xf4]
+     │  │   0x007eadb8      0100a0e1       mov r0, r1
+     │  │   0x007eadbc      912bf3eb       bl method.Vector.operator_float__ ; Vector::operator float*()
+     │  │   0x007eadc0      7e1f8de2       add r1, sp, 0x1f8
+     │  │   0x007eadc4      000a90ed       vldr s0, [r0]
+     │  │   0x007eadc8      0100a0e1       mov r0, r1
+     │  │   0x007eadcc      3c0a8ded       vstr s0, [sp, 0xf0]
+     │  │   0x007eadd0      8c2bf3eb       bl method.Vector.operator_float__ ; Vector::operator float*()
+     │  │   0x007eadd4      7e1f8de2       add r1, sp, 0x1f8
+     │  │   0x007eadd8      010a90ed       vldr s0, [r0, 4]
+     │  │   0x007eaddc      0100a0e1       mov r0, r1
+     │  │   0x007eade0      3b0a8ded       vstr s0, [sp, 0xec]
+     │  │   0x007eade4      872bf3eb       bl method.Vector.operator_float__ ; Vector::operator float*()
+     │  │   0x007eade8      b20a1fed       vldr s0, [0x007eab28]
+     │  │   0x007eadec      021a90ed       vldr s2, [r0, 8]
+     │  │   0x007eadf0      852a9ded       vldr s4, [sp, 0x214]
+     │  │   0x007eadf4      020a20ee       vmul.f32 s0, s0, s4
+     │  │   0x007eadf8      f4009de5       ldr r0, [sp, 0xf4]
+     │  │   0x007eadfc      3c2a9ded       vldr s4, [sp, 0xf0]
+     │  │   0x007eae00      101a12ee       vmov r1, s4
+     │  │   0x007eae04      3b3a9ded       vldr s6, [sp, 0xec]
+     │  │   0x007eae08      102a13ee       vmov r2, s6
+     │  │   0x007eae0c      103a11ee       vmov r3, s2
+     │  │   0x007eae10      10ca10ee       vmov ip, s0
+     │  │   0x007eae14      00c08de5       str ip, [sp]
+     │  │   0x007eae18      d163e7eb       bl sym.imp.__wrap_glUniform4f
+     │  │   0x007eae1c      100000e3       movw r0, 0x10
+     │  │   0x007eae20      004bb3ee       vmov.f64 d4, 1
+     │  │   0x007eae24      94169fe5       ldr r1, [0x007eb4c0]        ; [0x7eb4c0:4]=0xffffbcac
+     │  │   0x007eae28      7c219de5       ldr r2, [sp, 0x17c]
+     │  │   0x007eae2c      021091e7       ldr r1, [r1, r2]
+     │  │   0x007eae30      0130a0e1       mov r3, r1
+     │  │   0x007eae34      88c69fe5       ldr ip, [0x007eb4c4]        ; [0x7eb4c4:4]=0xffe21f5c
+     │  │   0x007eae38      02c08ce0       add ip, ip, r2
+     │  │   0x007eae3c      032000e3       movw r2, 3
+     │  │   0x007eae40      01e0a0e1       mov lr, r1
+     │  │   0x007eae44      7c469fe5       ldr r4, [0x007eb4c8]        ; [0x7eb4c8:4]=0xffe21f58
+     │  │   0x007eae48      7c519de5       ldr r5, [sp, 0x17c]
+     │  │   0x007eae4c      054084e0       add r4, r4, r5
+     │  │   0x007eae50      74669fe5       ldr r6, [0x007eb4cc]        ; [0x7eb4cc:4]=0xffe21f54
+     │  │   0x007eae54      056086e0       add r6, r6, r5
+     │  │   0x007eae58      70769fe5       ldr r7, [0x007eb4d0]        ; [0x7eb4d0:4]=0xffffdf3c
+     │  │   0x007eae5c      057097e7       ldr r7, [r7, r5]
+     │  │   0x007eae60      2c829de5       ldr r8, [sp, 0x22c]
+     │  │   0x007eae64      007097e5       ldr r7, [r7]
+     │  │   0x007eae68      077088e0       add r7, r8, r7
+     │  │   0x007eae6c      007097e5       ldr r7, [r7]
+     │  │   0x007eae70      006096e5       ldr r6, [r6]
+     │  │   0x007eae74      e8008de5       str r0, [sp, 0xe8]
+     │  │   0x007eae78      0700a0e1       mov r0, r7
+     │  │   0x007eae7c      e4108de5       str r1, [sp, 0xe4]
+     │  │   0x007eae80      0610a0e1       mov r1, r6
+     │  │   0x007eae84      e4609de5       ldr r6, [sp, 0xe4]
+     │  │   0x007eae88      364b8ded       vstr d4, [sp, 0xd8]
+     │  │   0x007eae8c      d4208de5       str r2, [sp, 0xd4]
+     │  │   0x007eae90      d0408de5       str r4, [sp, 0xd0]
+     │  │   0x007eae94      cc308de5       str r3, [sp, 0xcc]
+     │  │   0x007eae98      c8c08de5       str ip, [sp, 0xc8]
+     │  │   0x007eae9c      c4e08de5       str lr, [sp, 0xc4]
+     │  │   0x007eaea0      36ff2fe1       blx r6
+     │  │   0x007eaea4      d0109de5       ldr r1, [sp, 0xd0]
+     │  │   0x007eaea8      001091e5       ldr r1, [r1]
+     │  │   0x007eaeac      d4209de5       ldr r2, [sp, 0xd4]
+     │  │   0x007eaeb0      c4309de5       ldr r3, [sp, 0xc4]
+     │  │   0x007eaeb4      33ff2fe1       blx r3
+     │  │   0x007eaeb8      c8109de5       ldr r1, [sp, 0xc8]
+     │  │   0x007eaebc      001091e5       ldr r1, [r1]
+     │  │   0x007eaec0      cc209de5       ldr r2, [sp, 0xcc]
+     │  │   0x007eaec4      32ff2fe1       blx r2
+     │  │   0x007eaec8      860a9ded       vldr s0, [sp, 0x218]
+     │  │   0x007eaecc      c04ab7ee       vcvt.f64.f32 d4, s0
+     │  │   0x007eaed0      365b9ded       vldr d5, [sp, 0xd8]
+     │  │   0x007eaed4      454b34ee       vsub.f64 d4, d4, d5
+     │  │   0x007eaed8      c40bb7ee       vcvt.f32.f64 s0, d4
+     │  │   0x007eaedc      101a10ee       vmov r1, s0
+     │  │   0x007eaee0      3264e7eb       bl sym.imp.__wrap_glUniform1f
+     │  │   0x007eaee4      010000e3       movw r0, 1
+     │  │   0x007eaee8      000ab7ee       vmov.f32 s0, 1
+     │  │   0x007eaeec      c8159fe5       ldr r1, [0x007eb4bc]        ; [0x7eb4bc:4]=0xffffc9bc
+     │  │   0x007eaef0      7c219de5       ldr r2, [sp, 0x17c]
+     │  │   0x007eaef4      021091e7       ldr r1, [r1, r2]
+     │  │   0x007eaef8      001a91ed       vldr s2, [r1]
+     │  │   0x007eaefc      011a20ee       vmul.f32 s2, s0, s2
+     │  │   0x007eaf00      882a9ded       vldr s4, [sp, 0x220]
+     │  │   0x007eaf04      020a30ee       vadd.f32 s0, s0, s4
+     │  │   0x007eaf08      000a21ee       vmul.f32 s0, s2, s0
+     │  │   0x007eaf0c      101a10ee       vmov r1, s0
+     │  │   0x007eaf10      c0008de5       str r0, [sp, 0xc0]
+     │  │   0x007eaf14      0100a0e1       mov r0, r1
+     │  │   0x007eaf18      fd63e7eb       bl sym.imp.__wrap_glLineWidth
+     │  │   0x007eaf1c      000000e3       movw r0, 0
+     │  │   0x007eaf20      031000e3       movw r1, 3
+     │  │   0x007eaf24      062401e3       movw r2, 0x1406
+     │  │   0x007eaf28      003000e3       movw r3, 0
+     │  │   0x007eaf2c      84c59fe5       ldr ip, [0x007eb4b8]        ; [0x7eb4b8:4]=0xffffdf70
+     │  │   0x007eaf30      7ce19de5       ldr lr, [sp, 0x17c]
+     │  │   0x007eaf34      0ec09ce7       ldr ip, [ip, lr]
+     │  │   0x007eaf38      2c429de5       ldr r4, [sp, 0x22c]
+     │  │   0x007eaf3c      00c09ce5       ldr ip, [ip]
+     │  │   0x007eaf40      0cc084e0       add ip, r4, ip
+     │  │   0x007eaf44      00c09ce5       ldr ip, [ip]
+     │  │   0x007eaf48      bc008de5       str r0, [sp, 0xbc]
+     │  │   0x007eaf4c      ff3003e2       and r3, r3, 0xff
+     │  │   0x007eaf50      bc409de5       ldr r4, [sp, 0xbc]
+     │  │   0x007eaf54      00408de5       str r4, [sp]
+     │  │   0x007eaf58      04c08de5       str ip, [sp, 4]
+     │  │   0x007eaf5c      a25fe7eb       bl sym.imp.__wrap_glVertexAttribPointer
+     │  │   0x007eaf60      010000e3       movw r0, 1
+     │  │   0x007eaf64      001000e3       movw r1, 0
+     │  │   0x007eaf68      c82000e3       movw r2, 0xc8
+     │  │   0x007eaf6c      090a9fed       vldr s0, [0x007eaf98]
+     │  │   0x007eaf70      881a9ded       vldr s2, [sp, 0x220]
+     │  │   0x007eaf74      010a20ee       vmul.f32 s0, s0, s2
+     │  │   0x007eaf78      881a9ded       vldr s2, [sp, 0x220]
+     │  │   0x007eaf7c      010a20ee       vmul.f32 s0, s0, s2
+     │  │   0x007eaf80      c00abdee       vcvt.s32.f32 s0, s0
+     │  │   0x007eaf84      103a10ee       vmov r3, s0
+     │  │   0x007eaf88      b8208de5       str r2, [sp, 0xb8]
+     │  │   0x007eaf8c      0320a0e1       mov r2, r3
+     │  │   0x007eaf90      4d5fe7eb       bl sym.imp.__wrap_glDrawArrays
+     │ ┌──< 0x007eaf94      020000ea       b 0x7eafa4
+     │ ││   0x007eaf98      00004843       movtmi r0, 0x8000
+     │┌───< 0x007eaf9c      6f12833a       blo 0xfe8af960
+     ││││   0x007eafa0      9a99993f       svclo 0x99999a
+     ││└└─> 0x007eafa4      040a1fed       vldr s0, [0x007eaf9c]
+     ││     0x007eafa8      871a9ded       vldr s2, [sp, 0x21c]
+     ││     0x007eafac      c01ab4ee       vcmpe.f32 s2, s0
+     ││     0x007eafb0      10faf1ee       vmrs apsr_nzcv, fpscr
+     ││ ┌─< 0x007eafb4      3d0100da       ble 0x7eb4b0
+     ││ │   0x007eafb8      0d00a0e1       mov r0, sp
+     ││ │   0x007eafbc      cd1c0ce3       movw r1, 0xcccd
+     ││ │   0x007eafc0      4c1d43e3       movt r1, 0x3d4c
+     ││ │   0x007eafc4      001080e5       str r1, [r0]
+     ││ │   0x007eafc8      1b0e8de2       add r0, sp, 0x1b0
+     ││ │   0x007eafcc      b4108de5       str r1, [sp, 0xb4]
+     ││ │   0x007eafd0      b4209de5       ldr r2, [sp, 0xb4]
+     ││ │   0x007eafd4      b4309de5       ldr r3, [sp, 0xb4]
+     ││ │   0x007eafd8      4a97f3eb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+     ││ │   0x007eafdc      b0219de5       ldr r2, [sp, 0x1b0]
+     ││ │   0x007eafe0      b4319de5       ldr r3, [sp, 0x1b4]
+     ││ │   0x007eafe4      b8019de5       ldr r0, [sp, 0x1b8]
+     ││ │   0x007eafe8      bc119de5       ldr r1, [sp, 0x1bc]
+     ││ │   0x007eafec      0dc0a0e1       mov ip, sp
+     ││ │   0x007eaff0      00008ce5       str r0, [ip]
+     ││ │   0x007eaff4      04108ce5       str r1, [ip, 4]
+     ││ │   0x007eaff8      070d8de2       add r0, sp, 0x1c0
+     ││ │   0x007eaffc      231e8de2       add r1, sp, 0x230
+     ││ │   0x007eb000      4cadf3eb       bl method.Vector.operator_Vector_ ; Vector::operator+(Vector)
+     ││ │   0x007eb004      070d8de2       add r0, sp, 0x1c0
+     ││ │   0x007eb008      fe2af3eb       bl method.Vector.operator_float__ ; Vector::operator float*()
+     ││ │   0x007eb00c      071d8de2       add r1, sp, 0x1c0
+     ││ │   0x007eb010      1e0a1fed       vldr s0, [0x007eafa0]
+     ││ │   0x007eb014      001a90ed       vldr s2, [r0]
+     ││ │   0x007eb018      000a21ee       vmul.f32 s0, s2, s0
+     ││ │   0x007eb01c      0100a0e1       mov r0, r1
+     ││ │   0x007eb020      2c0a8ded       vstr s0, [sp, 0xb0]
+     ││ │   0x007eb024      f72af3eb       bl method.Vector.operator_float__ ; Vector::operator float*()
+     ││ │   0x007eb028      071d8de2       add r1, sp, 0x1c0
+     ││ │   0x007eb02c      2c0a9ded       vldr s0, [sp, 0xb0]
+     ││ │   0x007eb030      000a80ed       vstr s0, [r0]
+     ││ │   0x007eb034      0100a0e1       mov r0, r1
+     ││ │   0x007eb038      f22af3eb       bl method.Vector.operator_float__ ; Vector::operator float*()
+     ││ │   0x007eb03c      071d8de2       add r1, sp, 0x1c0
+     ││ │   0x007eb040      2a0a1fed       vldr s0, [0x007eafa0]
+     ││ │   0x007eb044      011a90ed       vldr s2, [r0, 4]
+     ││ │   0x007eb048      000a21ee       vmul.f32 s0, s2, s0
+     ││ │   0x007eb04c      0100a0e1       mov r0, r1
+     ││ │   0x007eb050      2b0a8ded       vstr s0, [sp, 0xac]
+     ││ │   0x007eb054      eb2af3eb       bl method.Vector.operator_float__ ; Vector::operator float*()
+     ││ │   0x007eb058      071d8de2       add r1, sp, 0x1c0
+     ││ │   0x007eb05c      2b0a9ded       vldr s0, [sp, 0xac]
+     ││ │   0x007eb060      010a80ed       vstr s0, [r0, 4]
+     ││ │   0x007eb064      0100a0e1       mov r0, r1
+     ││ │   0x007eb068      e62af3eb       bl method.Vector.operator_float__ ; Vector::operator float*()
+     ││ │   0x007eb06c      071d8de2       add r1, sp, 0x1c0
+     ││ │   0x007eb070      360a1fed       vldr s0, [0x007eafa0]
+     ││ │   0x007eb074      021a90ed       vldr s2, [r0, 8]
+     ││ │   0x007eb078      000a21ee       vmul.f32 s0, s2, s0
+     ││ │   0x007eb07c      0100a0e1       mov r0, r1
+     ││ │   0x007eb080      2a0a8ded       vstr s0, [sp, 0xa8]
+     ││ │   0x007eb084      df2af3eb       bl method.Vector.operator_float__ ; Vector::operator float*()
+     ││ │   0x007eb088      30149fe5       ldr r1, [0x007eb4c0]        ; [0x7eb4c0:4]=0xffffbcac
+     ││ │   0x007eb08c      7c219de5       ldr r2, [sp, 0x17c]
+     ││ │   0x007eb090      021091e7       ldr r1, [r1, r2]
+     ││ │   0x007eb094      38349fe5       ldr r3, [0x007eb4d4]        ; [0x7eb4d4:4]=0xffe21f50
+     ││ │   0x007eb098      023083e0       add r3, r3, r2
+     ││ │   0x007eb09c      3cc49fe5       ldr ip, [0x007eb4e0]        ; [0x7eb4e0:4]=0xffffdf34
+     ││ │   0x007eb0a0      02c09ce7       ldr ip, [ip, r2]
+     ││ │   0x007eb0a4      2a0a9ded       vldr s0, [sp, 0xa8]
+     ││ │   0x007eb0a8      020a80ed       vstr s0, [r0, 8]
+     ││ │   0x007eb0ac      2c029de5       ldr r0, [sp, 0x22c]
+     ││ │   0x007eb0b0      00c09ce5       ldr ip, [ip]
+     ││ │   0x007eb0b4      0c0080e0       add r0, r0, ip
+     ││ │   0x007eb0b8      000090e5       ldr r0, [r0]
+     ││ │   0x007eb0bc      003093e5       ldr r3, [r3]
+     ││ │   0x007eb0c0      a4108de5       str r1, [sp, 0xa4]
+     ││ │   0x007eb0c4      0310a0e1       mov r1, r3
+     ││ │   0x007eb0c8      a4309de5       ldr r3, [sp, 0xa4]
+     ││ │   0x007eb0cc      33ff2fe1       blx r3
+     ││ │   0x007eb0d0      185fe7eb       bl sym.imp.__wrap_glUseProgram
+     ││ │   0x007eb0d4      001000e3       movw r1, 0
+     ││ │   0x007eb0d8      e0039fe5       ldr r0, [0x007eb4c0]        ; [0x7eb4c0:4]=0xffffbcac
+     ││ │   0x007eb0dc      7c219de5       ldr r2, [sp, 0x17c]
+     ││ │   0x007eb0e0      020090e7       ldr r0, [r0, r2]
+     ││ │   0x007eb0e4      0030a0e1       mov r3, r0
+     ││ │   0x007eb0e8      d4c39fe5       ldr ip, [0x007eb4c4]        ; [0x7eb4c4:4]=0xffe21f5c
+     ││ │   0x007eb0ec      02c08ce0       add ip, ip, r2
+     ││ │   0x007eb0f0      012000e3       movw r2, 1
+     ││ │   0x007eb0f4      00e0a0e1       mov lr, r0
+     ││ │   0x007eb0f8      c8439fe5       ldr r4, [0x007eb4c8]        ; [0x7eb4c8:4]=0xffe21f58
+     ││ │   0x007eb0fc      7c519de5       ldr r5, [sp, 0x17c]
+     ││ │   0x007eb100      054084e0       add r4, r4, r5
+     ││ │   0x007eb104      c0639fe5       ldr r6, [0x007eb4cc]        ; [0x7eb4cc:4]=0xffe21f54
+     ││ │   0x007eb108      056086e0       add r6, r6, r5
+     ││ │   0x007eb10c      cc739fe5       ldr r7, [0x007eb4e0]        ; [0x7eb4e0:4]=0xffffdf34
+     ││ │   0x007eb110      057097e7       ldr r7, [r7, r5]
+     ││ │   0x007eb114      2c829de5       ldr r8, [sp, 0x22c]
+     ││ │   0x007eb118      007097e5       ldr r7, [r7]
+     ││ │   0x007eb11c      077088e0       add r7, r8, r7
+     ││ │   0x007eb120      007097e5       ldr r7, [r7]
+     ││ │   0x007eb124      006096e5       ldr r6, [r6]
+     ││ │   0x007eb128      a0008de5       str r0, [sp, 0xa0]
+     ││ │   0x007eb12c      0700a0e1       mov r0, r7
+     ││ │   0x007eb130      9c108de5       str r1, [sp, 0x9c]
+     ││ │   0x007eb134      0610a0e1       mov r1, r6
+     ││ │   0x007eb138      a0609de5       ldr r6, [sp, 0xa0]
+     ││ │   0x007eb13c      98208de5       str r2, [sp, 0x98]
+     ││ │   0x007eb140      94408de5       str r4, [sp, 0x94]
+     ││ │   0x007eb144      90308de5       str r3, [sp, 0x90]
+     ││ │   0x007eb148      8cc08de5       str ip, [sp, 0x8c]
+     ││ │   0x007eb14c      88e08de5       str lr, [sp, 0x88]
+     ││ │   0x007eb150      36ff2fe1       blx r6
+     ││ │   0x007eb154      94109de5       ldr r1, [sp, 0x94]
+     ││ │   0x007eb158      001091e5       ldr r1, [r1]
+     ││ │   0x007eb15c      98209de5       ldr r2, [sp, 0x98]
+     ││ │   0x007eb160      88309de5       ldr r3, [sp, 0x88]
+     ││ │   0x007eb164      33ff2fe1       blx r3
+     ││ │   0x007eb168      8c109de5       ldr r1, [sp, 0x8c]
+     ││ │   0x007eb16c      001091e5       ldr r1, [r1]
+     ││ │   0x007eb170      90209de5       ldr r2, [sp, 0x90]
+     ││ │   0x007eb174      32ff2fe1       blx r2
+     ││ │   0x007eb178      9c109de5       ldr r1, [sp, 0x9c]
+     ││ │   0x007eb17c      175fe7eb       bl sym.imp.__wrap_glUniform1i
+     ││ │   0x007eb180      011000e3       movw r1, 1
+     ││ │   0x007eb184      000000e3       movw r0, 0
+     ││ │   0x007eb188      092d8de2       add r2, sp, 0x240
+     ││ │   0x007eb18c      2c339fe5       ldr r3, [0x007eb4c0]        ; [0x7eb4c0:4]=0xffffbcac
+     ││ │   0x007eb190      7cc19de5       ldr ip, [sp, 0x17c]
+     ││ │   0x007eb194      0c3093e7       ldr r3, [r3, ip]
+     ││ │   0x007eb198      03e0a0e1       mov lr, r3
+     ││ │   0x007eb19c      20439fe5       ldr r4, [0x007eb4c4]        ; [0x7eb4c4:4]=0xffe21f5c
+     ││ │   0x007eb1a0      0c4084e0       add r4, r4, ip
+     ││ │   0x007eb1a4      005000e3       movw r5, 0
+     ││ │   0x007eb1a8      0360a0e1       mov r6, r3
+     ││ │   0x007eb1ac      14739fe5       ldr r7, [0x007eb4c8]        ; [0x7eb4c8:4]=0xffe21f58
+     ││ │   0x007eb1b0      0c7087e0       add r7, r7, ip
+     ││ │   0x007eb1b4      10839fe5       ldr r8, [0x007eb4cc]        ; [0x7eb4cc:4]=0xffe21f54
+     ││ │   0x007eb1b8      0c8088e0       add r8, r8, ip
+     ││ │   0x007eb1bc      1ca39fe5       ldr sl, [0x007eb4e0]        ; [0x7eb4e0:4]=0xffffdf34
+     ││ │   0x007eb1c0      0ca09ae7       ldr sl, [sl, ip]
+     ││ │   0x007eb1c4      2cc29de5       ldr ip, [sp, 0x22c]
+     ││ │   0x007eb1c8      00a09ae5       ldr sl, [sl]
+     ││ │   0x007eb1cc      0ac08ce0       add ip, ip, sl
+     ││ │   0x007eb1d0      00c09ce5       ldr ip, [ip]
+     ││ │   0x007eb1d4      008098e5       ldr r8, [r8]
+     ││ │   0x007eb1d8      84008de5       str r0, [sp, 0x84]
+     ││ │   0x007eb1dc      0c00a0e1       mov r0, ip
+     ││ │   0x007eb1e0      80108de5       str r1, [sp, 0x80]
+     ││ │   0x007eb1e4      0810a0e1       mov r1, r8
+     ││ │   0x007eb1e8      7c508de5       str r5, [sp, 0x7c]
+     ││ │   0x007eb1ec      78408de5       str r4, [sp, 0x78]
+     ││ │   0x007eb1f0      74208de5       str r2, [sp, 0x74]
+     ││ │   0x007eb1f4      70608de5       str r6, [sp, 0x70]
+     ││ │   0x007eb1f8      6c708de5       str r7, [sp, 0x6c]
+     ││ │   0x007eb1fc      68e08de5       str lr, [sp, 0x68]
+     ││ │   0x007eb200      33ff2fe1       blx r3
+     ││ │   0x007eb204      6c109de5       ldr r1, [sp, 0x6c]
+     ││ │   0x007eb208      001091e5       ldr r1, [r1]
+     ││ │   0x007eb20c      7c209de5       ldr r2, [sp, 0x7c]
+     ││ │   0x007eb210      70309de5       ldr r3, [sp, 0x70]
+     ││ │   0x007eb214      33ff2fe1       blx r3
+     ││ │   0x007eb218      78109de5       ldr r1, [sp, 0x78]
+     ││ │   0x007eb21c      001091e5       ldr r1, [r1]
+     ││ │   0x007eb220      68209de5       ldr r2, [sp, 0x68]
+     ││ │   0x007eb224      32ff2fe1       blx r2
+     ││ │   0x007eb228      74109de5       ldr r1, [sp, 0x74]
+     ││ │   0x007eb22c      80209de5       ldr r2, [sp, 0x80]
+     ││ │   0x007eb230      64108de5       str r1, [sp, 0x64]
+     ││ │   0x007eb234      0210a0e1       mov r1, r2
+     ││ │   0x007eb238      84309de5       ldr r3, [sp, 0x84]
+     ││ │   0x007eb23c      ff2003e2       and r2, r3, 0xff
+     ││ │   0x007eb240      64309de5       ldr r3, [sp, 0x64]
+     ││ │   0x007eb244      e25ee7eb       bl sym.imp.__wrap_glUniformMatrix4fv
+     ││ │   0x007eb248      070d8de2       add r0, sp, 0x1c0
+     ││ │   0x007eb24c      6c129fe5       ldr r1, [0x007eb4c0]        ; [0x7eb4c0:4]=0xffffbcac
+     ││ │   0x007eb250      7c219de5       ldr r2, [sp, 0x17c]
+     ││ │   0x007eb254      021091e7       ldr r1, [r1, r2]
+     ││ │   0x007eb258      0130a0e1       mov r3, r1
+     ││ │   0x007eb25c      60c29fe5       ldr ip, [0x007eb4c4]        ; [0x7eb4c4:4]=0xffe21f5c
+     ││ │   0x007eb260      02c08ce0       add ip, ip, r2
+     ││ │   0x007eb264      022000e3       movw r2, 2
+     ││ │   0x007eb268      01e0a0e1       mov lr, r1
+     ││ │   0x007eb26c      54429fe5       ldr r4, [0x007eb4c8]        ; [0x7eb4c8:4]=0xffe21f58
+     ││ │   0x007eb270      7c519de5       ldr r5, [sp, 0x17c]
+     ││ │   0x007eb274      054084e0       add r4, r4, r5
+     ││ │   0x007eb278      4c629fe5       ldr r6, [0x007eb4cc]        ; [0x7eb4cc:4]=0xffe21f54
+     ││ │   0x007eb27c      056086e0       add r6, r6, r5
+     ││ │   0x007eb280      58729fe5       ldr r7, [0x007eb4e0]        ; [0x7eb4e0:4]=0xffffdf34
+     ││ │   0x007eb284      057097e7       ldr r7, [r7, r5]
+     ││ │   0x007eb288      2c829de5       ldr r8, [sp, 0x22c]
+     ││ │   0x007eb28c      007097e5       ldr r7, [r7]
+     ││ │   0x007eb290      077088e0       add r7, r8, r7
+     ││ │   0x007eb294      007097e5       ldr r7, [r7]
+     ││ │   0x007eb298      006096e5       ldr r6, [r6]
+     ││ │   0x007eb29c      60008de5       str r0, [sp, 0x60]
+     ││ │   0x007eb2a0      0700a0e1       mov r0, r7
+     ││ │   0x007eb2a4      5c108de5       str r1, [sp, 0x5c]
+     ││ │   0x007eb2a8      0610a0e1       mov r1, r6
+     ││ │   0x007eb2ac      5c609de5       ldr r6, [sp, 0x5c]
+     ││ │   0x007eb2b0      58208de5       str r2, [sp, 0x58]
+     ││ │   0x007eb2b4      54408de5       str r4, [sp, 0x54]
+     ││ │   0x007eb2b8      50308de5       str r3, [sp, 0x50]
+     ││ │   0x007eb2bc      4cc08de5       str ip, [sp, 0x4c]
+     ││ │   0x007eb2c0      48e08de5       str lr, [sp, 0x48]
+     ││ │   0x007eb2c4      36ff2fe1       blx r6
+     ││ │   0x007eb2c8      54109de5       ldr r1, [sp, 0x54]
+     ││ │   0x007eb2cc      001091e5       ldr r1, [r1]
+     ││ │   0x007eb2d0      58209de5       ldr r2, [sp, 0x58]
+     ││ │   0x007eb2d4      48309de5       ldr r3, [sp, 0x48]
+     ││ │   0x007eb2d8      33ff2fe1       blx r3
+     ││ │   0x007eb2dc      4c109de5       ldr r1, [sp, 0x4c]
+     ││ │   0x007eb2e0      001091e5       ldr r1, [r1]
+     ││ │   0x007eb2e4      50209de5       ldr r2, [sp, 0x50]
+     ││ │   0x007eb2e8      32ff2fe1       blx r2
+     ││ │   0x007eb2ec      60109de5       ldr r1, [sp, 0x60]
+     ││ │   0x007eb2f0      44008de5       str r0, [sp, 0x44]
+     ││ │   0x007eb2f4      0100a0e1       mov r0, r1
+     ││ │   0x007eb2f8      422af3eb       bl method.Vector.operator_float__ ; Vector::operator float*()
+     ││ │   0x007eb2fc      071d8de2       add r1, sp, 0x1c0
+     ││ │   0x007eb300      000a90ed       vldr s0, [r0]
+     ││ │   0x007eb304      0100a0e1       mov r0, r1
+     ││ │   0x007eb308      100a8ded       vstr s0, [sp, 0x40]
+     ││ │   0x007eb30c      3d2af3eb       bl method.Vector.operator_float__ ; Vector::operator float*()
+     ││ │   0x007eb310      071d8de2       add r1, sp, 0x1c0
+     ││ │   0x007eb314      010a90ed       vldr s0, [r0, 4]
+     ││ │   0x007eb318      0100a0e1       mov r0, r1
+     ││ │   0x007eb31c      0f0a8ded       vstr s0, [sp, 0x3c]
+     ││ │   0x007eb320      382af3eb       bl method.Vector.operator_float__ ; Vector::operator float*()
+     ││ │   0x007eb324      011000e3       movw r1, 1
+     ││ │   0x007eb328      000ab7ee       vmov.f32 s0, 1
+     ││ │   0x007eb32c      021a90ed       vldr s2, [r0, 8]
+     ││ │   0x007eb330      44009de5       ldr r0, [sp, 0x44]
+     ││ │   0x007eb334      102a9ded       vldr s4, [sp, 0x40]
+     ││ │   0x007eb338      102a12ee       vmov r2, s4
+     ││ │   0x007eb33c      38108de5       str r1, [sp, 0x38]
+     ││ │   0x007eb340      0210a0e1       mov r1, r2
+     ││ │   0x007eb344      0f3a9ded       vldr s6, [sp, 0x3c]
+     ││ │   0x007eb348      102a13ee       vmov r2, s6
+     ││ │   0x007eb34c      103a11ee       vmov r3, s2
+     ││ │   0x007eb350      10ca10ee       vmov ip, s0
+     ││ │   0x007eb354      00c08de5       str ip, [sp]
+     ││ │   0x007eb358      8162e7eb       bl sym.imp.__wrap_glUniform4f
+     ││ │   0x007eb35c      100000e3       movw r0, 0x10
+     ││ │   0x007eb360      000ab3ee       vmov.f32 s0, 1
+     ││ │   0x007eb364      50119fe5       ldr r1, [0x007eb4bc]        ; [0x7eb4bc:4]=0xffffc9bc
+     ││ │   0x007eb368      7c219de5       ldr r2, [sp, 0x17c]
+     ││ │   0x007eb36c      021091e7       ldr r1, [r1, r2]
+     ││ │   0x007eb370      48319fe5       ldr r3, [0x007eb4c0]        ; [0x7eb4c0:4]=0xffffbcac
+     ││ │   0x007eb374      023093e7       ldr r3, [r3, r2]
+     ││ │   0x007eb378      03c0a0e1       mov ip, r3
+     ││ │   0x007eb37c      40e19fe5       ldr lr, [0x007eb4c4]        ; [0x7eb4c4:4]=0xffe21f5c
+     ││ │   0x007eb380      02e08ee0       add lr, lr, r2
+     ││ │   0x007eb384      032000e3       movw r2, 3
+     ││ │   0x007eb388      0340a0e1       mov r4, r3
+     ││ │   0x007eb38c      34519fe5       ldr r5, [0x007eb4c8]        ; [0x7eb4c8:4]=0xffe21f58
+     ││ │   0x007eb390      7c619de5       ldr r6, [sp, 0x17c]
+     ││ │   0x007eb394      065085e0       add r5, r5, r6
+     ││ │   0x007eb398      2c719fe5       ldr r7, [0x007eb4cc]        ; [0x7eb4cc:4]=0xffe21f54
+     ││ │   0x007eb39c      067087e0       add r7, r7, r6
+     ││ │   0x007eb3a0      38819fe5       ldr r8, [0x007eb4e0]        ; [0x7eb4e0:4]=0xffffdf34
+     ││ │   0x007eb3a4      068098e7       ldr r8, [r8, r6]
+     ││ │   0x007eb3a8      2ca29de5       ldr sl, [sp, 0x22c]
+     ││ │   0x007eb3ac      008098e5       ldr r8, [r8]
+     ││ │   0x007eb3b0      08808ae0       add r8, sl, r8
+     ││ │   0x007eb3b4      008098e5       ldr r8, [r8]
+     ││ │   0x007eb3b8      007097e5       ldr r7, [r7]
+     ││ │   0x007eb3bc      34008de5       str r0, [sp, 0x34]
+     ││ │   0x007eb3c0      0800a0e1       mov r0, r8
+     ││ │   0x007eb3c4      30108de5       str r1, [sp, 0x30]
+     ││ │   0x007eb3c8      0710a0e1       mov r1, r7
+     ││ │   0x007eb3cc      2c408de5       str r4, [sp, 0x2c]
+     ││ │   0x007eb3d0      0a0a8ded       vstr s0, [sp, 0x28]
+     ││ │   0x007eb3d4      24208de5       str r2, [sp, 0x24]
+     ││ │   0x007eb3d8      20508de5       str r5, [sp, 0x20]
+     ││ │   0x007eb3dc      1cc08de5       str ip, [sp, 0x1c]
+     ││ │   0x007eb3e0      18e08de5       str lr, [sp, 0x18]
+     ││ │   0x007eb3e4      33ff2fe1       blx r3
+     ││ │   0x007eb3e8      20109de5       ldr r1, [sp, 0x20]
+     ││ │   0x007eb3ec      001091e5       ldr r1, [r1]
+     ││ │   0x007eb3f0      24209de5       ldr r2, [sp, 0x24]
+     ││ │   0x007eb3f4      2c309de5       ldr r3, [sp, 0x2c]
+     ││ │   0x007eb3f8      33ff2fe1       blx r3
+     ││ │   0x007eb3fc      18109de5       ldr r1, [sp, 0x18]
+     ││ │   0x007eb400      001091e5       ldr r1, [r1]
+     ││ │   0x007eb404      1c209de5       ldr r2, [sp, 0x1c]
+     ││ │   0x007eb408      32ff2fe1       blx r2
+     ││ │   0x007eb40c      30109de5       ldr r1, [sp, 0x30]
+     ││ │   0x007eb410      000a91ed       vldr s0, [r1]
+     ││ │   0x007eb414      871a9ded       vldr s2, [sp, 0x21c]
+     ││ │   0x007eb418      010a20ee       vmul.f32 s0, s0, s2
+     ││ │   0x007eb41c      891a9ded       vldr s2, [sp, 0x224]
+     ││ │   0x007eb420      010a80ee       vdiv.f32 s0, s0, s2
+     ││ │   0x007eb424      861a9ded       vldr s2, [sp, 0x218]
+     ││ │   0x007eb428      0a2a9ded       vldr s4, [sp, 0x28]
+     ││ │   0x007eb42c      421a31ee       vsub.f32 s2, s2, s4
+     ││ │   0x007eb430      101a10ee       vmov r1, s0
+     ││ │   0x007eb434      102a11ee       vmov r2, s2
+     ││ │   0x007eb438      4e63e7eb       bl sym.imp.__wrap_glUniform2f
+     ││ │   0x007eb43c      000000e3       movw r0, 0
+     ││ │   0x007eb440      031000e3       movw r1, 3
+     ││ │   0x007eb444      062401e3       movw r2, 0x1406
+     ││ │   0x007eb448      003000e3       movw r3, 0
+     ││ │   0x007eb44c      88c09fe5       ldr ip, [0x007eb4dc]        ; [0x7eb4dc:4]=0xffffdf48
+     ││ │   0x007eb450      7ce19de5       ldr lr, [sp, 0x17c]
+     ││ │   0x007eb454      0ec09ce7       ldr ip, [ip, lr]
+     ││ │   0x007eb458      2c429de5       ldr r4, [sp, 0x22c]
+     ││ │   0x007eb45c      00c09ce5       ldr ip, [ip]
+     ││ │   0x007eb460      0cc084e0       add ip, r4, ip
+     ││ │   0x007eb464      00c09ce5       ldr ip, [ip]
+     ││ │   0x007eb468      14008de5       str r0, [sp, 0x14]
+     ││ │   0x007eb46c      ff3003e2       and r3, r3, 0xff
+     ││ │   0x007eb470      14409de5       ldr r4, [sp, 0x14]
+     ││ │   0x007eb474      00408de5       str r4, [sp]
+     ││ │   0x007eb478      04c08de5       str ip, [sp, 4]
+     ││ │   0x007eb47c      5a5ee7eb       bl sym.imp.__wrap_glVertexAttribPointer
+     ││ │   0x007eb480      000000e3       movw r0, 0
+     ││ │   0x007eb484      001200e3       movw r1, 0x200
+     ││ │   0x007eb488      120a9fed       vldr s0, [0x007eb4d8]
+     ││ │   0x007eb48c      871a9ded       vldr s2, [sp, 0x21c]
+     ││ │   0x007eb490      010a20ee       vmul.f32 s0, s0, s2
+     ││ │   0x007eb494      c00abdee       vcvt.s32.f32 s0, s0
+     ││ │   0x007eb498      102a10ee       vmov r2, s0
+     ││ │   0x007eb49c      10008de5       str r0, [sp, 0x10]
+     ││ │   0x007eb4a0      10309de5       ldr r3, [sp, 0x10]
+     ││ │   0x007eb4a4      0c108de5       str r1, [sp, 0xc]
+     ││ │   0x007eb4a8      0310a0e1       mov r1, r3
+     ││ │   0x007eb4ac      065ee7eb       bl sym.imp.__wrap_glDrawArrays
+     ││ └─> 0x007eb4b0      18d04be2       sub sp, fp, 0x18
+     ││     0x007eb4b4      f08dbde8       pop {r4, r5, r6, r7, r8, sl, fp, pc}
+     ││     0x007eb4b8      70dfffff       invalid
+     ││     0x007eb4bc      bcc9ffff       invalid
+     ││     0x007eb4c0      acbcffff       invalid
+     ││     0x007eb4c4      5c1fe2ff       invalid
+     ││     0x007eb4c8      581fe2ff       invalid
+     ││     0x007eb4cc      541fe2ff       invalid
+     ││     0x007eb4d0      3cdfffff       invalid
+     ││     0x007eb4d4      501fe2ff       invalid
+     ││     0x007eb4d8      00000044       strmi r0, [r0], -0
+     ││     0x007eb4dc      48dfffff       invalid
+     ││     0x007eb4e0      34dfffff       invalid
+     ││     0x007eb4e4      b8528700       strheq r5, [r7], r8

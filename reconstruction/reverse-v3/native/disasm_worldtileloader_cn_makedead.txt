@@ -1,0 +1,31 @@
+# CoconutTree -[makeTileDead:]
+# types: v12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8
+# implementation: 0x00a9b268
+# ARM.exidx end: 0x00a9b2d0
+
+            0x00a9b268      0cd04de2       sub sp, sp, 0xc
+            0x00a9b26c      08008de5       str r0, [sp, 8]
+            0x00a9b270      04108de5       str r1, [sp, 4]
+            0x00a9b274      00208de5       str r2, [sp]
+            0x00a9b278      00009de5       ldr r0, [sp]
+            0x00a9b27c      0300d0e5       ldrb r0, [r0, 3]
+            0x00a9b280      0f0050e3       cmp r0, 0xf
+        ┌─< 0x00a9b284      0300001a       bne 0xa9b298
+        │   0x00a9b288      230000e3       movw r0, 0x23               ; '#'
+        │   0x00a9b28c      00109de5       ldr r1, [sp]
+        │   0x00a9b290      0300c1e5       strb r0, [r1, 3]
+       ┌──< 0x00a9b294      0b0000ea       b 0xa9b2c8
+       │└─> 0x00a9b298      00009de5       ldr r0, [sp]
+       │    0x00a9b29c      0300d0e5       ldrb r0, [r0, 3]
+       │    0x00a9b2a0      100050e3       cmp r0, 0x10
+       │┌─< 0x00a9b2a4      0300000a       beq 0xa9b2b8
+       ││   0x00a9b2a8      00009de5       ldr r0, [sp]
+       ││   0x00a9b2ac      0300d0e5       ldrb r0, [r0, 3]
+       ││   0x00a9b2b0      110050e3       cmp r0, 0x11
+      ┌───< 0x00a9b2b4      0200001a       bne 0xa9b2c4
+      ││└─> 0x00a9b2b8      240000e3       movw r0, 0x24               ; '$'
+      ││    0x00a9b2bc      00109de5       ldr r1, [sp]
+      ││    0x00a9b2c0      0300c1e5       strb r0, [r1, 3]
+      └─┌─< 0x00a9b2c4      ffffffea       b 0xa9b2c8
+       └└─> 0x00a9b2c8      0cd08de2       add sp, sp, 0xc
+            0x00a9b2cc      1eff2fe1       bx lr

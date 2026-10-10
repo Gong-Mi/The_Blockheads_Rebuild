@@ -1,0 +1,81 @@
+# Vector::normal()  [C function]
+# implementation: 0x005be75c
+# ARM.exidx end: 0x005be888
+
+            ;-- method.Vector.normal__:
+            ;-- Vector::normal():
+            0x005be75c      00482de9       push {fp, lr}               ; Vector::normal()
+            0x005be760      0db0a0e1       mov fp, sp
+            0x005be764      30d04de2       sub sp, sp, 0x30
+            0x005be768      04100be5       str r1, [fp, -4]
+            0x005be76c      04101be5       ldr r1, [fp, -4]
+            0x005be770      10000be5       str r0, [fp, -0x10]
+            0x005be774      0100a0e1       mov r0, r1
+            0x005be778      14100be5       str r1, [fp, -0x14]
+            0x005be77c      e48000eb       bl method.Vector.length___const ; Vector::length() const
+            0x005be780      100a00ee       vmov s0, r0
+            0x005be784      020a0bed       vstr s0, [fp, -8]
+            0x005be788      14001be5       ldr r0, [fp, -0x14]
+            0x005be78c      0c000be5       str r0, [fp, -0xc]
+            0x005be790      10001be5       ldr r0, [fp, -0x10]
+            0x005be794      7101fceb       bl method.Vector.Vector__   ; Vector::Vector()
+            0x005be798      020a1bed       vldr s0, [fp, -8]
+            0x005be79c      c00ab5ee       vcmpe.f32 s0, 0
+            0x005be7a0      10faf1ee       vmrs apsr_nzcv, fpscr
+            0x005be7a4      18008de5       str r0, [sp, 0x18]
+        ┌─< 0x005be7a8      0400000a       beq 0x5be7c0
+        │   0x005be7ac      330a9fed       vldr s0, [0x005be880]
+        │   0x005be7b0      021a1bed       vldr s2, [fp, -8]
+        │   0x005be7b4      c01ab4ee       vcmpe.f32 s2, s0
+        │   0x005be7b8      10faf1ee       vmrs apsr_nzcv, fpscr
+       ┌──< 0x005be7bc      1200001a       bne 0x5be80c
+       │└─> 0x005be7c0      10001be5       ldr r0, [fp, -0x10]
+       │    0x005be7c4      0fddfbeb       bl method.Vector.operator_float__ ; Vector::operator float*()
+       │    0x005be7c8      001000e3       movw r1, 0
+       │    0x005be7cc      2c0a9fed       vldr s0, [0x005be884]
+       │    0x005be7d0      000a80ed       vstr s0, [r0]
+       │    0x005be7d4      10001be5       ldr r0, [fp, -0x10]
+       │    0x005be7d8      14108de5       str r1, [sp, 0x14]
+       │    0x005be7dc      09ddfbeb       bl method.Vector.operator_float__ ; Vector::operator float*()
+       │    0x005be7e0      001000e3       movw r1, 0
+       │    0x005be7e4      260a9fed       vldr s0, [0x005be884]
+       │    0x005be7e8      010a80ed       vstr s0, [r0, 4]
+       │    0x005be7ec      10001be5       ldr r0, [fp, -0x10]
+       │    0x005be7f0      10108de5       str r1, [sp, 0x10]
+       │    0x005be7f4      03ddfbeb       bl method.Vector.operator_float__ ; Vector::operator float*()
+       │    0x005be7f8      001000e3       movw r1, 0
+       │    0x005be7fc      200a9fed       vldr s0, [0x005be884]
+       │    0x005be800      020a80ed       vstr s0, [r0, 8]
+       │    0x005be804      0c108de5       str r1, [sp, 0xc]
+       │┌─< 0x005be808      1a0000ea       b 0x5be878
+       └──> 0x005be80c      0c001be5       ldr r0, [fp, -0xc]
+        │   0x005be810      000a90ed       vldr s0, [r0]
+        │   0x005be814      021a1bed       vldr s2, [fp, -8]
+        │   0x005be818      010a80ee       vdiv.f32 s0, s0, s2
+        │   0x005be81c      10001be5       ldr r0, [fp, -0x10]
+        │   0x005be820      020a8ded       vstr s0, [sp, 8]
+        │   0x005be824      f7dcfbeb       bl method.Vector.operator_float__ ; Vector::operator float*()
+        │   0x005be828      020a9ded       vldr s0, [sp, 8]
+        │   0x005be82c      000a80ed       vstr s0, [r0]
+        │   0x005be830      0c001be5       ldr r0, [fp, -0xc]
+        │   0x005be834      011a90ed       vldr s2, [r0, 4]
+        │   0x005be838      022a1bed       vldr s4, [fp, -8]
+        │   0x005be83c      021a81ee       vdiv.f32 s2, s2, s4
+        │   0x005be840      10001be5       ldr r0, [fp, -0x10]
+        │   0x005be844      011a8ded       vstr s2, [sp, 4]
+        │   0x005be848      eedcfbeb       bl method.Vector.operator_float__ ; Vector::operator float*()
+        │   0x005be84c      010a9ded       vldr s0, [sp, 4]
+        │   0x005be850      010a80ed       vstr s0, [r0, 4]
+        │   0x005be854      0c001be5       ldr r0, [fp, -0xc]
+        │   0x005be858      021a90ed       vldr s2, [r0, 8]
+        │   0x005be85c      022a1bed       vldr s4, [fp, -8]
+        │   0x005be860      021a81ee       vdiv.f32 s2, s2, s4
+        │   0x005be864      10001be5       ldr r0, [fp, -0x10]
+        │   0x005be868      001a8ded       vstr s2, [sp]
+        │   0x005be86c      e5dcfbeb       bl method.Vector.operator_float__ ; Vector::operator float*()
+        │   0x005be870      000a9ded       vldr s0, [sp]
+        │   0x005be874      020a80ed       vstr s0, [r0, 8]
+        └─> 0x005be878      0bd0a0e1       mov sp, fp
+            0x005be87c      0088bde8       pop {fp, pc}
+            0x005be880      00000080       andhi r0, r0, r0
+            0x005be884      00000000       andeq r0, r0, r0

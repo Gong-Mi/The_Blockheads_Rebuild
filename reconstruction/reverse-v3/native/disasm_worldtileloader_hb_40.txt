@@ -1,0 +1,48 @@
+# Blockhead -[jetPackIsLowOnFuel]
+# types: c8@0:4
+# implementation: 0x00c837b8
+# ARM.exidx end: 0x00c83864
+
+            0x00c837b8      00482de9       push {fp, lr}
+            0x00c837bc      0db0a0e1       mov fp, sp
+            0x00c837c0      18d04de2       sub sp, sp, 0x18
+            0x00c837c4      94209fe5       ldr r2, [0x00c83860]        ; [0xc83860:4]=0x3dc324
+            0x00c837c8      02208fe0       add r2, pc, r2
+            0x00c837cc      163100e3       movw r3, 0x116
+            0x00c837d0      7cc09fe5       ldr ip, [0x00c83854]        ; [0xc83854:4]=0xfffff568
+            0x00c837d4      02c09ce7       ldr ip, [ip, r2]
+            0x00c837d8      08000be5       str r0, [fp, -8]
+            0x00c837dc      0c108de5       str r1, [sp, 0xc]
+            0x00c837e0      08001be5       ldr r0, [fp, -8]
+            0x00c837e4      00109ce5       ldr r1, [ip]
+            0x00c837e8      010080e0       add r0, r0, r1
+            0x00c837ec      b000d0e1       ldrh r0, [r0]
+            0x00c837f0      030050e1       cmp r0, r3
+            0x00c837f4      08208de5       str r2, [sp, 8]
+        ┌─< 0x00c837f8      1000001a       bne 0xc83840
+        │   0x00c837fc      54009fe5       ldr r0, [0x00c83858]        ; [0xc83858:4]=0xffffbcac
+        │   0x00c83800      08109de5       ldr r1, [sp, 8]
+        │   0x00c83804      010090e7       ldr r0, [r0, r1]
+        │   0x00c83808      4c209fe5       ldr r2, [0x00c8385c]        ; [0xc8385c:4]=0xffe27a78
+        │   0x00c8380c      012082e0       add r2, r2, r1
+        │   0x00c83810      08301be5       ldr r3, [fp, -8]
+        │   0x00c83814      001092e5       ldr r1, [r2]
+        │   0x00c83818      04008de5       str r0, [sp, 4]
+        │   0x00c8381c      0300a0e1       mov r0, r3
+        │   0x00c83820      04209de5       ldr r2, [sp, 4]
+        │   0x00c83824      32ff2fe1       blx r2
+        │   0x00c83828      010050e3       cmp r0, 1
+       ┌──< 0x00c8382c      020000ca       bgt 0xc8383c
+       ││   0x00c83830      010000e3       movw r0, 1
+       ││   0x00c83834      01004be5       strb r0, [fp, -1]
+      ┌───< 0x00c83838      020000ea       b 0xc83848
+     ┌─└──> 0x00c8383c      ffffffea       b 0xc83840
+     └──└─> 0x00c83840      000000e3       movw r0, 0
+      │     0x00c83844      01004be5       strb r0, [fp, -1]
+      └───> 0x00c83848      d1005be1       ldrsb r0, [fp, -1]
+            0x00c8384c      0bd0a0e1       mov sp, fp
+            0x00c83850      0088bde8       pop {fp, pc}
+            0x00c83854      68f5ffff       invalid
+            0x00c83858      acbcffff       invalid
+            0x00c8385c      787ae2ff       invalid
+            0x00c83860      24c33d00       eorseq ip, sp, r4, lsr 6

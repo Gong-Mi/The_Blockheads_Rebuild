@@ -1,0 +1,25 @@
+# absoluteSeasonFraction  [C function]
+# implementation: 0x00a149f8
+# ARM.exidx end: 0x00a155dc
+
+            ;-- absoluteSeasonFraction(double):
+            0x00a149f8      00482de9       push {fp, lr}               ; absoluteSeasonFraction(double)
+            0x00a149fc      0db0a0e1       mov fp, sp
+            0x00a14a00      08d04de2       sub sp, sp, 8
+            0x00a14a04      100b41ec       vmov d0, r0, r1
+            0x00a14a08      000b8ded       vstr d0, [sp]
+            0x00a14a0c      0b1b9fed       vldr d1, [0x00a14a40]
+            0x00a14a10      010b80ee       vdiv.f64 d0, d0, d1
+            0x00a14a14      001bb1ee       vmov.f64 d1, 4
+            0x00a14a18      010b80ee       vdiv.f64 d0, d0, d1
+            0x00a14a1c      100b51ec       vmov r0, r1, d0
+            0x00a14a20      000bb7ee       vmov.f64 d0, 1
+            0x00a14a24      102b53ec       vmov r2, r3, d0
+            0x00a14a28      57bddeeb       bl sym.imp.fmod
+            0x00a14a2c      100b41ec       vmov d0, r0, r1
+            0x00a14a30      c02bb7ee       vcvt.f32.f64 s4, d0
+            0x00a14a34      100a12ee       vmov r0, s4
+            0x00a14a38      0bd0a0e1       mov sp, fp
+            0x00a14a3c      0088bde8       pop {fp, pc}
+            0x00a14a40      00000000       andeq r0, r0, r0
+            0x00a14a44      00208c40       addmi r2, ip, r0

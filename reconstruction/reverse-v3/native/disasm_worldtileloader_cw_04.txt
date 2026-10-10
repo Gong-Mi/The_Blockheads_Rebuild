@@ -1,0 +1,40 @@
+# CaveTroll -[cameraPosForBlockhead:]
+# types: {Vector2=[2f]}12@0:4@8
+# implementation: 0x00d84ccc
+# ARM.exidx end: 0x00d84d58
+
+            0x00d84ccc      104c2de9       push {r4, sl, fp, lr}
+            0x00d84cd0      08b08de2       add fp, sp, 8
+            0x00d84cd4      20d04de2       sub sp, sp, 0x20
+            0x00d84cd8      74c09fe5       ldr ip, [0x00d84d54]        ; [0xd84d54:4]=0x2dae10
+            0x00d84cdc      0cc08fe0       add ip, pc, ip
+            0x00d84ce0      00e000e3       movw lr, 0
+            0x00d84ce4      64409fe5       ldr r4, [0x00d84d50]        ; [0xd84d50:4]=0xffe291a0
+            0x00d84ce8      0cc084e0       add ip, r4, ip
+            0x00d84cec      0c100be5       str r1, [fp, -0xc]
+            0x00d84cf0      10200be5       str r2, [fp, -0x10]
+            0x00d84cf4      14308de5       str r3, [sp, 0x14]
+            0x00d84cf8      0c101be5       ldr r1, [fp, -0xc]
+            0x00d84cfc      00209ce5       ldr r2, [ip]
+            0x00d84d00      0e0051e1       cmp r1, lr
+            0x00d84d04      10108de5       str r1, [sp, 0x10]
+            0x00d84d08      0c208de5       str r2, [sp, 0xc]
+            0x00d84d0c      08008de5       str r0, [sp, 8]
+        ┌─< 0x00d84d10      0400000a       beq 0xd84d28
+        │   0x00d84d14      08009de5       ldr r0, [sp, 8]
+        │   0x00d84d18      10109de5       ldr r1, [sp, 0x10]
+        │   0x00d84d1c      0c209de5       ldr r2, [sp, 0xc]
+        │   0x00d84d20      fcf6d0eb       bl loc.imp.objc_msgSend_stret
+       ┌──< 0x00d84d24      070000ea       b 0xd84d48
+       │└─> 0x00d84d28      000000e3       movw r0, 0
+       │    0x00d84d2c      082000e3       movw r2, 8
+       │    0x00d84d30      08109de5       ldr r1, [sp, 8]
+       │    0x00d84d34      04008de5       str r0, [sp, 4]
+       │    0x00d84d38      0100a0e1       mov r0, r1
+       │    0x00d84d3c      04109de5       ldr r1, [sp, 4]
+       │    0x00d84d40      ff1001e2       and r1, r1, 0xff
+       │    0x00d84d44      f6f6d0eb       bl sym.imp.memset
+       └──> 0x00d84d48      08d04be2       sub sp, fp, 8
+            0x00d84d4c      108cbde8       pop {r4, sl, fp, pc}
+            0x00d84d50      a091e2ff       invalid
+            0x00d84d54      10ae2d00       eoreq sl, sp, r0, lsl lr

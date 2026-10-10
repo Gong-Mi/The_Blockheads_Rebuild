@@ -1,0 +1,44 @@
+# CherryTree -[tileIsKindOfSelf:]
+# types: c12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8
+# implementation: 0x00d104a8
+# ARM.exidx end: 0x00d10544
+
+            0x00d104a8      10d04de2       sub sp, sp, 0x10
+            0x00d104ac      013000e3       movw r3, 1
+            0x00d104b0      0c008de5       str r0, [sp, 0xc]
+            0x00d104b4      08108de5       str r1, [sp, 8]
+            0x00d104b8      04208de5       str r2, [sp, 4]
+            0x00d104bc      04009de5       ldr r0, [sp, 4]
+            0x00d104c0      0300d0e5       ldrb r0, [r0, 3]
+            0x00d104c4      160050e3       cmp r0, 0x16
+            0x00d104c8      00308de5       str r3, [sp]
+        ┌─< 0x00d104cc      1700000a       beq 0xd10530
+        │   0x00d104d0      010000e3       movw r0, 1
+        │   0x00d104d4      04109de5       ldr r1, [sp, 4]
+        │   0x00d104d8      0310d1e5       ldrb r1, [r1, 3]
+        │   0x00d104dc      150051e3       cmp r1, 0x15
+        │   0x00d104e0      00008de5       str r0, [sp]
+       ┌──< 0x00d104e4      1100000a       beq 0xd10530
+       ││   0x00d104e8      010000e3       movw r0, 1
+       ││   0x00d104ec      04109de5       ldr r1, [sp, 4]
+       ││   0x00d104f0      0310d1e5       ldrb r1, [r1, 3]
+       ││   0x00d104f4      170051e3       cmp r1, 0x17
+       ││   0x00d104f8      00008de5       str r0, [sp]
+      ┌───< 0x00d104fc      0b00000a       beq 0xd10530
+      │││   0x00d10500      010000e3       movw r0, 1
+      │││   0x00d10504      04109de5       ldr r1, [sp, 4]
+      │││   0x00d10508      0310d1e5       ldrb r1, [r1, 3]
+      │││   0x00d1050c      280051e3       cmp r1, 0x28                ; '('
+      │││   0x00d10510      00008de5       str r0, [sp]
+     ┌────< 0x00d10514      0500000a       beq 0xd10530
+     ││││   0x00d10518      04009de5       ldr r0, [sp, 4]
+     ││││   0x00d1051c      0300d0e5       ldrb r0, [r0, 3]
+     ││││   0x00d10520      270050e3       cmp r0, 0x27                ; '\''
+     ││││   0x00d10524      000000e3       movw r0, 0
+     ││││   0x00d10528      0100a003       moveq r0, 1
+     ││││   0x00d1052c      00008de5       str r0, [sp]
+     └└└└─> 0x00d10530      00009de5       ldr r0, [sp]
+            0x00d10534      010000e2       and r0, r0, 1
+            0x00d10538      7000afe6       sxtb r0, r0
+            0x00d1053c      10d08de2       add sp, sp, 0x10
+            0x00d10540      1eff2fe1       bx lr

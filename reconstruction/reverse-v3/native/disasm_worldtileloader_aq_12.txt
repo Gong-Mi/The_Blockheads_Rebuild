@@ -1,0 +1,37 @@
+# Weather -[windStrength]
+# types: f8@0:4
+# implementation: 0x007ebee0
+# ARM.exidx end: 0x007ebf60
+
+            0x007ebee0      00482de9       push {fp, lr}
+            0x007ebee4      0db0a0e1       mov fp, sp
+            0x007ebee8      10d04de2       sub sp, sp, 0x10
+            0x007ebeec      04000be5       str r0, [fp, -4]
+            0x007ebef0      08108de5       str r1, [sp, 8]
+            0x007ebef4      04001be5       ldr r0, [fp, -4]
+            0x007ebef8      58109fe5       ldr r1, [0x007ebf58]        ; [0x7ebf58:4]=0xffffdfa4
+            0x007ebefc      58209fe5       ldr r2, [0x007ebf5c]        ; [0x7ebf5c:4]=0x873bec
+            0x007ebf00      02208fe0       add r2, pc, r2
+            0x007ebf04      021091e7       ldr r1, [r1, r2]
+            0x007ebf08      001091e5       ldr r1, [r1]
+            0x007ebf0c      010080e0       add r0, r0, r1
+            0x007ebf10      000a90ed       vldr s0, [r0]
+            0x007ebf14      c01ab7ee       vcvt.f64.f32 d1, s0
+            0x007ebf18      c11bb0ee       vabs.f64 d1, d1
+            0x007ebf1c      002bbeee       vmov.f64 d2, -5
+            0x007ebf20      021b31ee       vadd.f64 d1, d1, d2
+            0x007ebf24      092b9fed       vldr d2, [0x007ebf50]
+            0x007ebf28      021b81ee       vdiv.f64 d1, d1, d2
+            0x007ebf2c      c10bb7ee       vcvt.f32.f64 s0, d1
+            0x007ebf30      100a10ee       vmov r0, s0
+            0x007ebf34      0010a0e3       mov r1, 0
+            0x007ebf38      fe25a0e3       mov r2, 0x3f800000
+            0x007ebf3c      4948f3eb       bl sym.clamp_float__float__float_ ; clamp(float, float, float)
+            0x007ebf40      100a00ee       vmov s0, r0
+            0x007ebf44      010a8ded       vstr s0, [sp, 4]
+            0x007ebf48      0bd0a0e1       mov sp, fp
+            0x007ebf4c      0088bde8       pop {fp, pc}
+            0x007ebf50      00000000       andeq r0, r0, r0
+            0x007ebf54      00004040       submi r0, r0, r0
+            0x007ebf58      a4dfffff       invalid
+            0x007ebf5c      ec3b8700       addeq r3, r7, ip, ror 23

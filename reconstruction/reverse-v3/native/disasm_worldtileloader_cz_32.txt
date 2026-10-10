@@ -1,0 +1,31 @@
+# genrand_res53  [C function]
+# implementation: 0x0096ae10
+# ARM.exidx end: 0x0096ae78
+
+            ;-- genrand_res53:
+            0x0096ae10      00482de9       push {fp, lr}
+            0x0096ae14      0db0a0e1       mov fp, sp
+            0x0096ae18      08d04de2       sub sp, sp, 8
+            0x0096ae1c      12ffffeb       bl sym.genrand_int32
+            0x0096ae20      a002a0e1       lsr r0, r0, 5
+            0x0096ae24      04008de5       str r0, [sp, 4]
+            0x0096ae28      0fffffeb       bl sym.genrand_int32
+            0x0096ae2c      2003a0e1       lsr r0, r0, 6
+            0x0096ae30      00008de5       str r0, [sp]
+            0x0096ae34      010a9ded       vldr s0, [sp, 4]
+            0x0096ae38      401bb8ee       vcvt.f64.u32 d1, s0
+            0x0096ae3c      092b9fed       vldr d2, [0x0096ae68]
+            0x0096ae40      021b21ee       vmul.f64 d1, d1, d2
+            0x0096ae44      100a00ee       vmov s0, r0
+            0x0096ae48      402bb8ee       vcvt.f64.u32 d2, s0
+            0x0096ae4c      021b31ee       vadd.f64 d1, d1, d2
+            0x0096ae50      062b9fed       vldr d2, [0x0096ae70]
+            0x0096ae54      021b21ee       vmul.f64 d1, d1, d2
+            0x0096ae58      110b51ec       vmov r0, r1, d1
+            0x0096ae5c      0bd0a0e1       mov sp, fp
+            0x0096ae60      0088bde8       pop {fp, pc}
+            0x0096ae64      00f020e3       nop
+            0x0096ae68      00000000       andeq r0, r0, r0
+            0x0096ae6c      00009041       orrsmi r0, r0, r0
+            0x0096ae70      00000000       andeq r0, r0, r0
+            0x0096ae74      0000a03c       stclo p0, c0, [r0], 0

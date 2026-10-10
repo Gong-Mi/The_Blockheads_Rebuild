@@ -1,0 +1,30 @@
+role	kind	method	address	value	note
+writer	tile	WorldTileLoader -[loadPhysicalBlock:atXPos:yPos:createIfNotCreated:]	0x00860a94	2	all-tile clear loop default (byte2=2, byte10=0x7f, byte4=0xff)
+writer	tile	WorldTileLoader -[loadPhysicalBlock:atXPos:yPos:createIfNotCreated:]	0x0086235c	1	rock/lava/marker shared tail (with byte1=1)
+writer	tile	WorldTileLoader -[loadPhysicalBlock:atXPos:yPos:createIfNotCreated:]	0x008624b4	1	same family
+writer	tile	WorldTileLoader -[loadPhysicalBlock:atXPos:yPos:createIfNotCreated:]	0x008625a8	1	quarter-column marker (byte1=0x26)
+writer	tile	WorldTileLoader -[loadPhysicalBlock:atXPos:yPos:createIfNotCreated:]	0x00862654	1	quarter-column marker (byte1=0x29)
+writer	tile	WorldTileLoader -[loadPhysicalBlock:atXPos:yPos:createIfNotCreated:]	0x00862700	1	quarter-column marker (byte1=0x27)
+writer	tile	WorldTileLoader -[loadPhysicalBlock:atXPos:yPos:createIfNotCreated:]	0x008627c0	1	quarter-column marker (byte1=0x28)
+writer	tile	WorldTileLoader -[loadPhysicalBlock:atXPos:yPos:createIfNotCreated:]	0x00862c80	1	deep ore branch
+writer	tile	WorldTileLoader -[loadPhysicalBlock:atXPos:yPos:createIfNotCreated:]	0x00862e5c	3	lake row: byte0=3/byte2=3/byte4=0xff
+writer	tile	WorldTileLoader -[loadPhysicalBlock:atXPos:yPos:createIfNotCreated:]	0x00862fd8	1	marker repeat under depth window
+writer	tile	WorldTileLoader -[loadPhysicalBlock:atXPos:yPos:createIfNotCreated:]	0x00863164	1	marker repeat
+writer	tile	WorldTileLoader -[loadPhysicalBlock:atXPos:yPos:createIfNotCreated:]	0x008632dc	1	marker repeat
+writer	tile	WorldTileLoader -[loadPhysicalBlock:atXPos:yPos:createIfNotCreated:]	0x00863484	1	marker repeat
+writer	tile	WorldTileLoader -[updatePhysicalBlockToLatestVersion:]	0x008655a0	1	migration fixup (byte1=1, byte0=2; then chest/troll spawn)
+writer	tile	World -[saveAll] (inlined)	0x00562038	1	initial portal base: byte0=0x19(25)/byte3=0/byte2=1
+writer	tile	DynamicWorld -[loadDynamicObjectsForMacroTile:includeSurfaceBlocks:]	0x008beb64	1	same portal-base idiom (pointer from tileAtWorldPositionLoaded)
+writer	not-tile	World -[loadDynamicObjectsIfNotAlreadyLoadedForMacroTile:...]	0x005b3ed0	1	MacroTile struct byte2 (3rd arg), not Tile
+writer	not-tile	DynamicWorld -[removeDynamicObjectsForMacroTile:]	0x008b6840	n/a	MacroTile-like record (word@0xc + byte@2)
+writer	not-tile	WorldTileLoader -[loadPhysicalBlock:...] create section	0x0085f004	?	MacroTile header byte (stores PhysicalBlock* at +4)
+writer	not-tile	DynamicWorld -[loadGlowBlockIfNeededAtPos:tile:]	0x008bfb48/0x008bfba0/0x008c1da4/0x008c1dec	n/a	other object (float@0x18), strh
+writer	not-tile	DynamicWorld -[loadTreeAtPosition:...]	0x008e4e88	?	2x halfword struct, strh
+writer	not-tile	ArtificialLight/TulipPlant/FreeBlock/electricity/BlockheadDrawBoxes etc	0x00a925f8/0x009a0280/0x00633268/0x005ca5a8/0x00c836c0	n/a	class-specific small structs
+reader	tile	WorldTileLoader -[recursivelyFlowOutWaterFromTile:atPos:]	0x0085c2b4/0x0085c3a0/0x0085c48c	==1	flood gate: fills byte0==2 (AIR) && byte2==1 -> byte0=3, byte4=0xff, byte7=0, recurse
+reader	tile	WorldTileLoader -[recursivelyFlowOutDirtFromTile:atPos:]	0x0085c5e4/0x0085c7c0/0x0085c9bc/0x0085cb6c/0x0085cd68	==1	dirt redistribution gate (neighbour byte0 in {2,3} && byte2==1)
+reader	unresolved	DynamicWorld -[loadGlowBlockIfNeededAtPos:tile:]	0x008f5088	==0 (ldrsb)	pointer +4 read as int; likely not a Tile
+reader	unresolved	World -[decommisionBlock:blockToSavePhyscialBlock:]	0x005b3d38	==0 (ldrsb)	likely not a Tile
+reader	false-positive	Weather cloudColor / World dayColorForPosition / preRenderUpdate	0x007eb95c/0x00583830/0x0058719c	n/a	4-byte-stride array base+i*4+2
+reader	false-positive	DynamicWorld -[loadTreeAtPosition:...]	0x008e562c...	n/a	ldrh/strh on non-Tile
+noread	tile	SurfaceBlock -[takeAnyWaterFromTileAtPos:tile:] / -[subtractWater:fromOtherTile:atPos:] / -[removeIfFloatingAndEmptyOfWater]; World -[removeWaterTileAtPos:]; DynamicWorld -[waterChangedAtPos:fullBlock:]	-	0 hits	do not touch byte2 (they touch byte0/byte4)

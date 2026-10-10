@@ -1,0 +1,63 @@
+{
+ "schema": 1,
+ "scope": "the serialisation pair for the CraftableItem record",
+ "key": "craftableItem",
+ "cfstring_va": "0x00f9b7b8",
+ "record_bytes": 124,
+ "reader": {
+  "method": "CraftableItemObject -[initWithSaveDict:]",
+  "imp": "0x00ac7900",
+  "key_reference_site": "0x00ac79a8",
+  "evidence": "known from batch b3c: copies 124 bytes into ivar offset 4 via getBytes:length: at 0x00ac7a18"
+ },
+ "writer": {
+  "method": "CraftableItemObject -[getSaveDict]",
+  "imp": "0x00ac7a54",
+  "key_reference_site": "0x00ac7a68",
+  "evidence": "the body loads the same cfstring and materialises movw r5,#0x7c (124) into the argument list, then adds the record pointer to the ivar offset before the call - located by scanning .text for the cfstring literal, not guessed",
+  "grade": "static: the site, the constant and the address arithmetic are read; the selector NAMES at the two call sites are NOT resolved (these bodies use the blx-through-slot form, which the msgSend-trampoline tracer does not see and the 12-selector watchlist artifact does not cover)"
+ },
+ "references_in_binary": {
+  "count": 2,
+  "sites": [
+   "0x00ac79a8",
+   "0x00ac7a68"
+  ],
+  "method": "scanning .text for words equal to the cfstring VA or its PIC-relative form (cfstring - 0x105faf4)"
+ },
+ "next_target": "who FILLS the record's fields - that is where f0..f10 get their meaning; the serialisation pair only moves opaque bytes",
+ "dispatch_boundary": {
+  "selector": "initWithCraftableItem:imageData:outputImageData:",
+  "cstring_va": "0x00ee739d",
+  "cfstring_va": "0x00fec1f8",
+  "slot_candidate": "0x00146c10",
+  "measured_with": "tools/probe_objc_send_channel.py --selector <this>",
+  "facts": [
+   "string_section: __TEXT,__objc_methname,cstring_literals",
+   "selref_slots: EMPTY - there is no __objc_selrefs slot for this selector (contrast soundNamed:,",
+   "which has one)",
+   "msgrefs_unit_matches: EMPTY",
+   "holders_of_string_va: a single __objc_const entry at 0x00fec1f8, i.e. the selector's own method metadata rather than a call site",
+   "no .text pool word addresses the slot candidate PIC-relatively, so find_selector_senders.py reports 0 slots / 0 send sites as well"
+  ],
+  "reading": "within this image there is no static call site for this selector: no selref slot, no msgrefs entry, and the only holder is its own type metadata. The tool's own claim says an empty selref route is NOT proof that a send is unresolvable in general - the SEL could be built at run time, and this image is a Mach-O conversion whose selrefs may be materialised by the translator - so the supported statement is 'no static caller in this image', not 'never called'.",
+  "correction": "an earlier message of mine attributed this channel to tools/extract_class_indexed_sends.py; that file does not exist in this tree. The tool that does this measurement is tools/probe_objc_send_channel.py, and the reading above is its output.",
+  "why_it_matters": "the record's field semantics live in whoever builds it, and that code is not reachable as a static call site in this image - which is exactly the kind of boundary worth writing down instead of guessing past"
+ },
+ "callers": {
+  "method": "slot -> pool word (slot - 0x105faf4) -> ldr -> enclosing method, the same chain that works for cfstrings; both selectors resolve to exactly ONE loader each",
+  "initWithCraftableItem:": {
+   "selref_slot": "0x00e80abc",
+   "loader_site": "0x00741c6c",
+   "enclosing_method": "PaintingCraftableItemObject -[initWithCraftableItem:imageData:outputImageData:]",
+   "reading": "the subclass initialiser delegates to the base one; no external caller takes the by-value path in this image"
+  },
+  "setCraftableItem:": {
+   "selref_slot": "0x00e7f55c",
+   "loader_site": "0x0067390c",
+   "enclosing_method": "PaintMixUI -[craftButton:]",
+   "reading": "THE crafting entry point: the paint-mix UI's craft button is the single place in this image that hands a CraftableItem to an object. The record's field values are therefore built in or below this method, which is where f0..f10 get their meaning"
+  },
+  "next_step": "read PaintMixUI -[craftButton:] @0x00673388 and follow where the record's fields are computed - that is the semantics source this project has been missing"
+ }
+}

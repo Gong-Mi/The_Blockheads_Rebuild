@@ -1,0 +1,2907 @@
+{
+ "schema": 1,
+ "scope": "World instance methods: is a branch-free body implied by the clean verdict?",
+ "finding": "every unicorn-clean method is straight-line (0 conditional branches); all decision logic in this class lives in the needs-runtime set",
+ "counts": {
+  "clean": 81,
+  "clean_with_conditionals": 0,
+  "clean_mean_instructions": 14.2,
+  "live": 259,
+  "live_with_conditionals": 168,
+  "live_mean_instructions": 224.6,
+  "live_with_calls": 259
+ },
+ "clean_longest": [
+  {
+   "selector": "startPinchOrPan",
+   "imp": "0x552e28",
+   "verdict": "unicorn-clean",
+   "instructions": 34,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "setRepairMode:",
+   "imp": "0x5d971c",
+   "verdict": "unicorn-clean",
+   "instructions": 23,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "stopFollowingOrTranslatingToGoal",
+   "imp": "0x5bde3c",
+   "verdict": "unicorn-clean",
+   "instructions": 21,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "tutorialActive",
+   "imp": "0x5cedac",
+   "verdict": "unicorn-clean",
+   "instructions": 19,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "renderingTeaserFrames",
+   "imp": "0x5d5534",
+   "verdict": "unicorn-clean",
+   "instructions": 18,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "translation",
+   "imp": "0x5536a4",
+   "verdict": "unicorn-clean",
+   "instructions": 16,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "highestPoint",
+   "imp": "0x5c6eb0",
+   "verdict": "unicorn-clean",
+   "instructions": 16,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "macroTiles",
+   "imp": "0x5d989c",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  }
+ ],
+ "boundary": "counting `bx lr` as a branch would make almost every method look like it has logic; only conditional branches count here. The correlation (clean => straight-line) is observed on this class, not proven in general: a method could be branch-free and still call out, which is what the copy-stub class does.",
+ "methods": [
+  {
+   "selector": "connected",
+   "imp": "0x552d58",
+   "verdict": "needs-runtime",
+   "instructions": 45,
+   "conditional_branches": 0,
+   "calls": 3
+  },
+  {
+   "selector": "startPinchOrPan",
+   "imp": "0x552e28",
+   "verdict": "unicorn-clean",
+   "instructions": 34,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "updateTranslationDueToPinchOrPan:",
+   "imp": "0x552ec0",
+   "verdict": "needs-runtime",
+   "instructions": 184,
+   "conditional_branches": 2,
+   "calls": 14
+  },
+  {
+   "selector": "setTranslation:",
+   "imp": "0x5531d0",
+   "verdict": "needs-runtime",
+   "instructions": 294,
+   "conditional_branches": 5,
+   "calls": 18
+  },
+  {
+   "selector": "translation",
+   "imp": "0x5536a4",
+   "verdict": "unicorn-clean",
+   "instructions": 16,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "summaryNetDataForAdmin:mod:owner:cloudMode:",
+   "imp": "0x5536ec",
+   "verdict": "needs-runtime",
+   "instructions": 936,
+   "conditional_branches": 15,
+   "calls": 49
+  },
+  {
+   "selector": "heartbeatData",
+   "imp": "0x5547f8",
+   "verdict": "needs-runtime",
+   "instructions": 304,
+   "conditional_branches": 6,
+   "calls": 11
+  },
+  {
+   "selector": "sendHeartbeatData",
+   "imp": "0x554cfc",
+   "verdict": "needs-runtime",
+   "instructions": 119,
+   "conditional_branches": 3,
+   "calls": 5
+  },
+  {
+   "selector": "heartbeatDataRecieved:fromPeer:",
+   "imp": "0x554f04",
+   "verdict": "needs-runtime",
+   "instructions": 378,
+   "conditional_branches": 11,
+   "calls": 14
+  },
+  {
+   "selector": "worldInfoForiCloudSave",
+   "imp": "0x55555c",
+   "verdict": "needs-runtime",
+   "instructions": 308,
+   "conditional_branches": 4,
+   "calls": 15
+  },
+  {
+   "selector": "saveAll",
+   "imp": "0x555a84",
+   "verdict": "needs-runtime",
+   "instructions": 1028,
+   "conditional_branches": 12,
+   "calls": 94
+  },
+  {
+   "selector": "fileWriteFailed:",
+   "imp": "0x557bd4",
+   "verdict": "needs-runtime",
+   "instructions": 23,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "loadGame",
+   "imp": "0x557c40",
+   "verdict": "needs-runtime",
+   "instructions": 38,
+   "conditional_branches": 1,
+   "calls": 193
+  },
+  {
+   "selector": "loadDefaultGame",
+   "imp": "0x55b2e8",
+   "verdict": "needs-runtime",
+   "instructions": 213,
+   "conditional_branches": 5,
+   "calls": 9
+  },
+  {
+   "selector": "initializeDatabases",
+   "imp": "0x55b698",
+   "verdict": "needs-runtime",
+   "instructions": 247,
+   "conditional_branches": 2,
+   "calls": 15
+  },
+  {
+   "selector": "incrementalLoad",
+   "imp": "0x55bac8",
+   "verdict": "needs-runtime",
+   "instructions": 214,
+   "conditional_branches": 3,
+   "calls": 493
+  },
+  {
+   "selector": "initWithWindowInfo:cache:delegate:saveID:name:client:server:multiplayerWorldData:serverHostData:saveDelay:worldWidthMacro:customRules:expertMode:",
+   "imp": "0x563604",
+   "verdict": "needs-runtime",
+   "instructions": 850,
+   "conditional_branches": 14,
+   "calls": 67
+  },
+  {
+   "selector": "setServer:",
+   "imp": "0x564c64",
+   "verdict": "needs-runtime",
+   "instructions": 165,
+   "conditional_branches": 2,
+   "calls": 7
+  },
+  {
+   "selector": "deleteTimers",
+   "imp": "0x564f2c",
+   "verdict": "needs-runtime",
+   "instructions": 98,
+   "conditional_branches": 0,
+   "calls": 5
+  },
+  {
+   "selector": "dealloc",
+   "imp": "0x5650d8",
+   "verdict": "needs-runtime",
+   "instructions": 958,
+   "conditional_branches": 23,
+   "calls": 96
+  },
+  {
+   "selector": "startObservingMotionEvents",
+   "imp": "0x566948",
+   "verdict": "needs-runtime",
+   "instructions": 166,
+   "conditional_branches": 2,
+   "calls": 6
+  },
+  {
+   "selector": "stopObservingMotionEvents",
+   "imp": "0x566c14",
+   "verdict": "needs-runtime",
+   "instructions": 138,
+   "conditional_branches": 2,
+   "calls": 6
+  },
+  {
+   "selector": "startSimulatingIfNeeded",
+   "imp": "0x566e64",
+   "verdict": "needs-runtime",
+   "instructions": 587,
+   "conditional_branches": 16,
+   "calls": 26
+  },
+  {
+   "selector": "isSimulating",
+   "imp": "0x56783c",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "addSimulationEventOfType:forBlockhead:extraData:",
+   "imp": "0x567878",
+   "verdict": "needs-runtime",
+   "instructions": 907,
+   "conditional_branches": 16,
+   "calls": 58
+  },
+  {
+   "selector": "continueSimulate",
+   "imp": "0x56884c",
+   "verdict": "needs-runtime",
+   "instructions": 772,
+   "conditional_branches": 34,
+   "calls": 121
+  },
+  {
+   "selector": "finishSimulating",
+   "imp": "0x56b278",
+   "verdict": "needs-runtime",
+   "instructions": 232,
+   "conditional_branches": 0,
+   "calls": 12
+  },
+  {
+   "selector": "welcomeBackMessageForInfoDict:",
+   "imp": "0x56b674",
+   "verdict": "needs-runtime",
+   "instructions": 1018,
+   "conditional_branches": 36,
+   "calls": 106
+  },
+  {
+   "selector": "welcomeBackEventsMessageForClientID:",
+   "imp": "0x56dbd8",
+   "verdict": "needs-runtime",
+   "instructions": 40,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "setNetEventsMessageToDisplayOnceLoaded:",
+   "imp": "0x56dc8c",
+   "verdict": "needs-runtime",
+   "instructions": 38,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "simulationProgress",
+   "imp": "0x56dd38",
+   "verdict": "unicorn-with-abstraction",
+   "instructions": 14,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "update:accurateDT:pinchScale:dragInProgress:",
+   "imp": "0x56dd78",
+   "verdict": "needs-runtime",
+   "instructions": 755,
+   "conditional_branches": 20,
+   "calls": 356
+  },
+  {
+   "selector": "decommisionAllBlocksBlockToSavePhyscialBlock:",
+   "imp": "0x5751f8",
+   "verdict": "needs-runtime",
+   "instructions": 477,
+   "conditional_branches": 4,
+   "calls": 9
+  },
+  {
+   "selector": "removeAnyBackgroundContentsForTile:atPos:removeBlockhead:",
+   "imp": "0x5759bc",
+   "verdict": "needs-runtime",
+   "instructions": 63,
+   "conditional_branches": 1,
+   "calls": 2
+  },
+  {
+   "selector": "remoteRemoveBackWallRequest:fromClient:",
+   "imp": "0x575ac8",
+   "verdict": "needs-runtime",
+   "instructions": 146,
+   "conditional_branches": 4,
+   "calls": 6
+  },
+  {
+   "selector": "remoteRemoveRequest:fromClient:",
+   "imp": "0x575d44",
+   "verdict": "needs-runtime",
+   "instructions": 228,
+   "conditional_branches": 7,
+   "calls": 11
+  },
+  {
+   "selector": "removeTileAtWorldX:worldY:createContentsFreeblockCount:createForegroundContentsFreeblockCount:removeBlockhead:",
+   "imp": "0x576120",
+   "verdict": "needs-runtime",
+   "instructions": 45,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "removeTileAtWorldX:worldY:createContentsFreeblockCount:createForegroundContentsFreeblockCount:removeBlockhead:onlyRemoveCOntents:onlyRemoveForegroundContents:",
+   "imp": "0x5761e0",
+   "verdict": "needs-runtime",
+   "instructions": 55,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "shouldBeCrystalBlockAtPos:",
+   "imp": "0x5762c8",
+   "verdict": "needs-runtime",
+   "instructions": 137,
+   "conditional_branches": 6,
+   "calls": 3
+  },
+  {
+   "selector": "removeBackWallAtPos:removeBlockhead:",
+   "imp": "0x576518",
+   "verdict": "needs-runtime",
+   "instructions": 201,
+   "conditional_branches": 3,
+   "calls": 9
+  },
+  {
+   "selector": "removeTileAtWorldX:worldY:createContentsFreeblockCount:createForegroundContentsFreeblockCount:removeBlockhead:onlyRemoveCOntents:onlyRemoveForegroundContents:sendWorldChangedNotifcation:dontRemoveContents:",
+   "imp": "0x576878",
+   "verdict": "needs-runtime",
+   "instructions": 1016,
+   "conditional_branches": 26,
+   "calls": 98
+  },
+  {
+   "selector": "removeWaterTileAtPos:",
+   "imp": "0x578430",
+   "verdict": "needs-runtime",
+   "instructions": 359,
+   "conditional_branches": 17,
+   "calls": 22
+  },
+  {
+   "selector": "updateTileGraphicForWorkbenchOfType:atPos:level:",
+   "imp": "0x578a20",
+   "verdict": "needs-runtime",
+   "instructions": 148,
+   "conditional_branches": 14,
+   "calls": 5
+  },
+  {
+   "selector": "remotePlaceWorkbenchRequest:fromPeer:",
+   "imp": "0x578c94",
+   "verdict": "needs-runtime",
+   "instructions": 226,
+   "conditional_branches": 4,
+   "calls": 16
+  },
+  {
+   "selector": "placeWorkbenchOfType:atPos:saveDict:placedByClient:placedByBlockhead:placedByClientName:",
+   "imp": "0x579074",
+   "verdict": "needs-runtime",
+   "instructions": 585,
+   "conditional_branches": 20,
+   "calls": 37
+  },
+  {
+   "selector": "remotePlaceInteractionObjectRequest:fromPeer:",
+   "imp": "0x579d58",
+   "verdict": "needs-runtime",
+   "instructions": 336,
+   "conditional_branches": 8,
+   "calls": 22
+  },
+  {
+   "selector": "placeInteractionObjectWithItem:atPos:saveDict:placedByClient:placedByBlockhead:placedByClientName:",
+   "imp": "0x57a30c",
+   "verdict": "needs-runtime",
+   "instructions": 836,
+   "conditional_branches": 45,
+   "calls": 83
+  },
+  {
+   "selector": "remoteFillRequest:placedByClient:",
+   "imp": "0x57b700",
+   "verdict": "needs-runtime",
+   "instructions": 364,
+   "conditional_branches": 10,
+   "calls": 22
+  },
+  {
+   "selector": "remotePaintRequest:fromClient:",
+   "imp": "0x57bd70",
+   "verdict": "needs-runtime",
+   "instructions": 125,
+   "conditional_branches": 4,
+   "calls": 7
+  },
+  {
+   "selector": "fillTile:atPos:withType:",
+   "imp": "0x57bf90",
+   "verdict": "needs-runtime",
+   "instructions": 39,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "fillTile:atPos:withType:dataA:dataB:placedByClient:saveDict:placedByClientName:",
+   "imp": "0x57c034",
+   "verdict": "needs-runtime",
+   "instructions": 56,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "fillTile:atPos:withType:dataA:dataB:placedByClient:saveDict:placedByBlockhead:placedByClientName:",
+   "imp": "0x57c11c",
+   "verdict": "needs-runtime",
+   "instructions": 1041,
+   "conditional_branches": 85,
+   "calls": 163
+  },
+  {
+   "selector": "sendGatherNotificationForTile:atPos:",
+   "imp": "0x580f88",
+   "verdict": "needs-runtime",
+   "instructions": 158,
+   "conditional_branches": 4,
+   "calls": 5
+  },
+  {
+   "selector": "remoteGatherRequest:",
+   "imp": "0x58122c",
+   "verdict": "needs-runtime",
+   "instructions": 458,
+   "conditional_branches": 12,
+   "calls": 32
+  },
+  {
+   "selector": "paintTile:atPos:colorIndex:faceIndex:paintBlockhead:",
+   "imp": "0x581a38",
+   "verdict": "needs-runtime",
+   "instructions": 561,
+   "conditional_branches": 25,
+   "calls": 25
+  },
+  {
+   "selector": "removePaintAtTile:atPos:faceIndex:paintBlockhead:",
+   "imp": "0x582364",
+   "verdict": "needs-runtime",
+   "instructions": 39,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "getWeatherFractionForPos:atWorldTime:",
+   "imp": "0x582408",
+   "verdict": "needs-runtime",
+   "instructions": 30,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "getWeatherFractionForPos:atWorldTime:ignoreSandFraction:",
+   "imp": "0x582488",
+   "verdict": "needs-runtime",
+   "instructions": 232,
+   "conditional_branches": 7,
+   "calls": 8
+  },
+  {
+   "selector": "getWeatherFractionForPos:",
+   "imp": "0x582a50",
+   "verdict": "needs-runtime",
+   "instructions": 31,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "getDayNightFractionForX:atWorldTime:",
+   "imp": "0x582ad8",
+   "verdict": "needs-runtime",
+   "instructions": 680,
+   "conditional_branches": 0,
+   "calls": 33
+  },
+  {
+   "selector": "dayColorForPosition:",
+   "imp": "0x583578",
+   "verdict": "needs-runtime",
+   "instructions": 422,
+   "conditional_branches": 4,
+   "calls": 25
+  },
+  {
+   "selector": "preRenderUpdate:fastSlowDT:cameraZ:projectionMatrix:",
+   "imp": "0x583c50",
+   "verdict": "needs-runtime",
+   "instructions": 709,
+   "conditional_branches": 1,
+   "calls": 255
+  },
+  {
+   "selector": "lightPositionTop",
+   "imp": "0x58c350",
+   "verdict": "needs-runtime",
+   "instructions": 44,
+   "conditional_branches": 0,
+   "calls": 3
+  },
+  {
+   "selector": "lightPositionFront",
+   "imp": "0x58c408",
+   "verdict": "needs-runtime",
+   "instructions": 79,
+   "conditional_branches": 0,
+   "calls": 3
+  },
+  {
+   "selector": "lightPositionRight",
+   "imp": "0x58c558",
+   "verdict": "needs-runtime",
+   "instructions": 83,
+   "conditional_branches": 0,
+   "calls": 3
+  },
+  {
+   "selector": "lightPositionLeft",
+   "imp": "0x58c6b8",
+   "verdict": "needs-runtime",
+   "instructions": 75,
+   "conditional_branches": 0,
+   "calls": 3
+  },
+  {
+   "selector": "render:cameraZ:projectionMatrix:pinchScale:",
+   "imp": "0x58c7f8",
+   "verdict": "needs-runtime",
+   "instructions": 899,
+   "conditional_branches": 15,
+   "calls": 281
+  },
+  {
+   "selector": "zoomUIToOnscreen:dimensions:",
+   "imp": "0x5aa5c8",
+   "verdict": "needs-runtime",
+   "instructions": 738,
+   "conditional_branches": 13,
+   "calls": 43
+  },
+  {
+   "selector": "cancelAllActionsAtPos:orWithInteractionObjectID:",
+   "imp": "0x5ab1ac",
+   "verdict": "needs-runtime",
+   "instructions": 46,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "queueBlockheadAIActionToTile:atPos:forBlockhead:",
+   "imp": "0x5ab274",
+   "verdict": "needs-runtime",
+   "instructions": 156,
+   "conditional_branches": 3,
+   "calls": 7
+  },
+  {
+   "selector": "scrollToTap:",
+   "imp": "0x5ab5bc",
+   "verdict": "needs-runtime",
+   "instructions": 714,
+   "conditional_branches": 5,
+   "calls": 16
+  },
+  {
+   "selector": "pauseUpdates",
+   "imp": "0x5ac1a4",
+   "verdict": "needs-runtime",
+   "instructions": 97,
+   "conditional_branches": 3,
+   "calls": 4
+  },
+  {
+   "selector": "resetPauseIdleTimer",
+   "imp": "0x5ac350",
+   "verdict": "unicorn-with-abstraction",
+   "instructions": 17,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "tap:",
+   "imp": "0x5ac3a0",
+   "verdict": "needs-runtime",
+   "instructions": 998,
+   "conditional_branches": 15,
+   "calls": 358
+  },
+  {
+   "selector": "touchIsInUI:",
+   "imp": "0x5b30c8",
+   "verdict": "needs-runtime",
+   "instructions": 54,
+   "conditional_branches": 2,
+   "calls": 2
+  },
+  {
+   "selector": "startTouch:tapCount:index:",
+   "imp": "0x5b31b8",
+   "verdict": "needs-runtime",
+   "instructions": 44,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "moveTouch:index:",
+   "imp": "0x5b3278",
+   "verdict": "needs-runtime",
+   "instructions": 33,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "doEndTouch:wasCancelled:index:",
+   "imp": "0x5b3308",
+   "verdict": "needs-runtime",
+   "instructions": 38,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "cancelTouch:index:",
+   "imp": "0x5b33ac",
+   "verdict": "needs-runtime",
+   "instructions": 31,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "endTouch:index:",
+   "imp": "0x5b3430",
+   "verdict": "needs-runtime",
+   "instructions": 31,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "swipeGesture",
+   "imp": "0x5b34b4",
+   "verdict": "needs-runtime",
+   "instructions": 30,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "unmodifiedGroundLevelForX:",
+   "imp": "0x5b3540",
+   "verdict": "needs-runtime",
+   "instructions": 60,
+   "conditional_branches": 1,
+   "calls": 2
+  },
+  {
+   "selector": "savePhysicalBlockForMacroTile:sendReliably:dontSend:onlySaveIfClientsNeedIt:",
+   "imp": "0x5b3644",
+   "verdict": "needs-runtime",
+   "instructions": 315,
+   "conditional_branches": 12,
+   "calls": 12
+  },
+  {
+   "selector": "decommisionBlock:blockToSavePhyscialBlock:",
+   "imp": "0x5b3b70",
+   "verdict": "needs-runtime",
+   "instructions": 183,
+   "conditional_branches": 5,
+   "calls": 5
+  },
+  {
+   "selector": "loadDynamicObjectsIfNotAlreadyLoadedForMacroTile:includeSurfaceBlocks:",
+   "imp": "0x5b3e78",
+   "verdict": "needs-runtime",
+   "instructions": 71,
+   "conditional_branches": 3,
+   "calls": 3
+  },
+  {
+   "selector": "loadLightBlockForClientLightBlockIndex:intoPhysicalBlock:",
+   "imp": "0x5b3fb0",
+   "verdict": "needs-runtime",
+   "instructions": 204,
+   "conditional_branches": 9,
+   "calls": 7
+  },
+  {
+   "selector": "saveLightBlockForClientLightBlockIndex:physicalBlock:sendNow:",
+   "imp": "0x5b4304",
+   "verdict": "needs-runtime",
+   "instructions": 209,
+   "conditional_branches": 9,
+   "calls": 7
+  },
+  {
+   "selector": "physicalBlockToLoadByClientTileLoaderForMacroTile:",
+   "imp": "0x5b466c",
+   "verdict": "needs-runtime",
+   "instructions": 221,
+   "conditional_branches": 4,
+   "calls": 6
+  },
+  {
+   "selector": "loadPhysicalBlockForMacroTile:atX:y:loadSurroundingBlocks:createIfNotCreated:",
+   "imp": "0x5b4a00",
+   "verdict": "needs-runtime",
+   "instructions": 1000,
+   "conditional_branches": 36,
+   "calls": 36
+  },
+  {
+   "selector": "setWindowInfo:",
+   "imp": "0x5b59f8",
+   "verdict": "needs-runtime",
+   "instructions": 80,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "timeCrystalButtonTapped",
+   "imp": "0x5b5b54",
+   "verdict": "needs-runtime",
+   "instructions": 487,
+   "conditional_branches": 8,
+   "calls": 25
+  },
+  {
+   "selector": "pauseButtonTapped",
+   "imp": "0x5b6368",
+   "verdict": "needs-runtime",
+   "instructions": 37,
+   "conditional_branches": 1,
+   "calls": 2
+  },
+  {
+   "selector": "pauseResumeButtonTapped",
+   "imp": "0x5b6410",
+   "verdict": "needs-runtime",
+   "instructions": 96,
+   "conditional_branches": 2,
+   "calls": 4
+  },
+  {
+   "selector": "pauseExitToMenuButtonTapped",
+   "imp": "0x5b65bc",
+   "verdict": "needs-runtime",
+   "instructions": 48,
+   "conditional_branches": 0,
+   "calls": 3
+  },
+  {
+   "selector": "fullyLoadAndUpdateIfNeededForMacroBlock:includingPos:clientLightBlockIndex:forBlockhead:",
+   "imp": "0x5b6698",
+   "verdict": "needs-runtime",
+   "instructions": 92,
+   "conditional_branches": 4,
+   "calls": 3
+  },
+  {
+   "selector": "fullyLoadIfNeededAroundPos:clientLightBlockIndex:forBlockhead:",
+   "imp": "0x5b6820",
+   "verdict": "needs-runtime",
+   "instructions": 473,
+   "conditional_branches": 20,
+   "calls": 29
+  },
+  {
+   "selector": "craftItemFinished:atWorkbench:allFinished:blockhead:",
+   "imp": "0x5b6fa8",
+   "verdict": "needs-runtime",
+   "instructions": 965,
+   "conditional_branches": 30,
+   "calls": 61
+  },
+  {
+   "selector": "craftAbortedForWorkbench:withBlockhead:",
+   "imp": "0x5b82b0",
+   "verdict": "needs-runtime",
+   "instructions": 65,
+   "conditional_branches": 2,
+   "calls": 3
+  },
+  {
+   "selector": "craftItem:atWorkbench:withBlockhead:count:",
+   "imp": "0x5b83d0",
+   "verdict": "needs-runtime",
+   "instructions": 310,
+   "conditional_branches": 7,
+   "calls": 20
+  },
+  {
+   "selector": "craftOrConfigureItem:atWorkbench:withBlockhead:count:",
+   "imp": "0x5b88f8",
+   "verdict": "needs-runtime",
+   "instructions": 447,
+   "conditional_branches": 17,
+   "calls": 33
+  },
+  {
+   "selector": "blockheadReachedInteractionObjectDestination:pathExtraData:",
+   "imp": "0x5b90c0",
+   "verdict": "needs-runtime",
+   "instructions": 156,
+   "conditional_branches": 6,
+   "calls": 9
+  },
+  {
+   "selector": "useDynamicObjectTappedAtDynamicObject:selectedOption:",
+   "imp": "0x5b9368",
+   "verdict": "needs-runtime",
+   "instructions": 655,
+   "conditional_branches": 12,
+   "calls": 43
+  },
+  {
+   "selector": "requestUniqueIDFromServerWithDict:",
+   "imp": "0x5b9e10",
+   "verdict": "needs-runtime",
+   "instructions": 118,
+   "conditional_branches": 1,
+   "calls": 5
+  },
+  {
+   "selector": "uniqueIDReturnedFromServer:",
+   "imp": "0x5ba014",
+   "verdict": "needs-runtime",
+   "instructions": 1024,
+   "conditional_branches": 24,
+   "calls": 85
+  },
+  {
+   "selector": "teleportToWorkbench:withBlockhead:craftableItemObject:",
+   "imp": "0x5bb634",
+   "verdict": "needs-runtime",
+   "instructions": 463,
+   "conditional_branches": 9,
+   "calls": 31
+  },
+  {
+   "selector": "warpInBlockhead:atWorkbench:withBlockhead:",
+   "imp": "0x5bbdd0",
+   "verdict": "needs-runtime",
+   "instructions": 933,
+   "conditional_branches": 22,
+   "calls": 91
+  },
+  {
+   "selector": "removeDynamicObjectTappedAtDynamicObject:withBlockhead:",
+   "imp": "0x5bd68c",
+   "verdict": "needs-runtime",
+   "instructions": 273,
+   "conditional_branches": 6,
+   "calls": 16
+  },
+  {
+   "selector": "addFuelTappedAtInteractionObject:withBlockhead:",
+   "imp": "0x5bdb14",
+   "verdict": "needs-runtime",
+   "instructions": 137,
+   "conditional_branches": 2,
+   "calls": 9
+  },
+  {
+   "selector": "distanceOrderedFoodTypes",
+   "imp": "0x5bdd70",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "worldUIDragging",
+   "imp": "0x5bddac",
+   "verdict": "needs-runtime",
+   "instructions": 31,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "stopFollowingOrTranslatingToGoal",
+   "imp": "0x5bde3c",
+   "verdict": "unicorn-clean",
+   "instructions": 21,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "updateIdleTimerDisabled",
+   "imp": "0x5bde9c",
+   "verdict": "needs-runtime",
+   "instructions": 252,
+   "conditional_branches": 9,
+   "calls": 10
+  },
+  {
+   "selector": "saveSunlightChangedAtPos:",
+   "imp": "0x5be2cc",
+   "verdict": "needs-runtime",
+   "instructions": 40,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "endCalibration",
+   "imp": "0x5be378",
+   "verdict": "needs-runtime",
+   "instructions": 243,
+   "conditional_branches": 2,
+   "calls": 29
+  },
+  {
+   "selector": "acceleration:",
+   "imp": "0x5be998",
+   "verdict": "needs-runtime",
+   "instructions": 559,
+   "conditional_branches": 14,
+   "calls": 36
+  },
+  {
+   "selector": "motionUpdatePingAccelerometer",
+   "imp": "0x5bf528",
+   "verdict": "needs-runtime",
+   "instructions": 125,
+   "conditional_branches": 3,
+   "calls": 9
+  },
+  {
+   "selector": "motionUpdatePingDeviceMotion",
+   "imp": "0x5bf738",
+   "verdict": "needs-runtime",
+   "instructions": 75,
+   "conditional_branches": 1,
+   "calls": 5
+  },
+  {
+   "selector": "allowsRotation",
+   "imp": "0x5bf880",
+   "verdict": "needs-runtime",
+   "instructions": 52,
+   "conditional_branches": 1,
+   "calls": 2
+  },
+  {
+   "selector": "requiresSwipeEvents",
+   "imp": "0x5bf968",
+   "verdict": "needs-runtime",
+   "instructions": 31,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "allowsPanning",
+   "imp": "0x5bf9f8",
+   "verdict": "needs-runtime",
+   "instructions": 83,
+   "conditional_branches": 2,
+   "calls": 4
+  },
+  {
+   "selector": "requiresDirectionalSwipes",
+   "imp": "0x5bfb5c",
+   "verdict": "needs-runtime",
+   "instructions": 40,
+   "conditional_branches": 0,
+   "calls": 3
+  },
+  {
+   "selector": "directionalSwipe:",
+   "imp": "0x5bfc14",
+   "verdict": "needs-runtime",
+   "instructions": 34,
+   "conditional_branches": 0,
+   "calls": 3
+  },
+  {
+   "selector": "clientConnected:",
+   "imp": "0x5bfcb0",
+   "verdict": "needs-runtime",
+   "instructions": 290,
+   "conditional_branches": 3,
+   "calls": 20
+  },
+  {
+   "selector": "clientDisconnected:wasKick:",
+   "imp": "0x5c01a4",
+   "verdict": "needs-runtime",
+   "instructions": 227,
+   "conditional_branches": 5,
+   "calls": 11
+  },
+  {
+   "selector": "requestForBlock:fromClient:",
+   "imp": "0x5c0570",
+   "verdict": "needs-runtime",
+   "instructions": 67,
+   "conditional_branches": 1,
+   "calls": 4
+  },
+  {
+   "selector": "remoteBlockRemoved:byClient:",
+   "imp": "0x5c0698",
+   "verdict": "needs-runtime",
+   "instructions": 68,
+   "conditional_branches": 1,
+   "calls": 4
+  },
+  {
+   "selector": "peersInterestedInMacroIndex:",
+   "imp": "0x5c07c0",
+   "verdict": "needs-runtime",
+   "instructions": 216,
+   "conditional_branches": 6,
+   "calls": 10
+  },
+  {
+   "selector": "remoteCreate:forObjectsOfType:clientID:",
+   "imp": "0x5c0b4c",
+   "verdict": "needs-runtime",
+   "instructions": 242,
+   "conditional_branches": 4,
+   "calls": 12
+  },
+  {
+   "selector": "remoteUpdate:forObjectsOfType:fromClient:",
+   "imp": "0x5c0f54",
+   "verdict": "needs-runtime",
+   "instructions": 194,
+   "conditional_branches": 3,
+   "calls": 9
+  },
+  {
+   "selector": "remoteCreationDataUpdate:forObjectsOfType:fromClient:",
+   "imp": "0x5c1298",
+   "verdict": "needs-runtime",
+   "instructions": 194,
+   "conditional_branches": 3,
+   "calls": 9
+  },
+  {
+   "selector": "remoteRemove:forObjectsOfType:fromClient:",
+   "imp": "0x5c15dc",
+   "verdict": "needs-runtime",
+   "instructions": 194,
+   "conditional_branches": 3,
+   "calls": 9
+  },
+  {
+   "selector": "connectionToServerLost",
+   "imp": "0x5c1920",
+   "verdict": "needs-runtime",
+   "instructions": 32,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "currentTipText",
+   "imp": "0x5c19b4",
+   "verdict": "needs-runtime",
+   "instructions": 95,
+   "conditional_branches": 3,
+   "calls": 4
+  },
+  {
+   "selector": "currentTipColor",
+   "imp": "0x5c1b58",
+   "verdict": "needs-runtime",
+   "instructions": 88,
+   "conditional_branches": 2,
+   "calls": 6
+  },
+  {
+   "selector": "abortInProgressPathIfForBlockhead:",
+   "imp": "0x5c1cd0",
+   "verdict": "needs-runtime",
+   "instructions": 61,
+   "conditional_branches": 2,
+   "calls": 3
+  },
+  {
+   "selector": "waterMovedFrom:fromTile:to:toTile:amount:",
+   "imp": "0x5c1ddc",
+   "verdict": "needs-runtime",
+   "instructions": 605,
+   "conditional_branches": 13,
+   "calls": 31
+  },
+  {
+   "selector": "iapStarted",
+   "imp": "0x5c2790",
+   "verdict": "needs-runtime",
+   "instructions": 21,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "startIncentivizedVideo",
+   "imp": "0x5c27f4",
+   "verdict": "needs-runtime",
+   "instructions": 21,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "doubleTimePurchaseTapped",
+   "imp": "0x5c2858",
+   "verdict": "needs-runtime",
+   "instructions": 30,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "doubleTimeRestoreTapped",
+   "imp": "0x5c28e4",
+   "verdict": "needs-runtime",
+   "instructions": 42,
+   "conditional_branches": 0,
+   "calls": 3
+  },
+  {
+   "selector": "doPortalScreenshot",
+   "imp": "0x5c29c0",
+   "verdict": "needs-runtime",
+   "instructions": 540,
+   "conditional_branches": 7,
+   "calls": 19
+  },
+  {
+   "selector": "doCameraScreenshot",
+   "imp": "0x5c3278",
+   "verdict": "needs-runtime",
+   "instructions": 327,
+   "conditional_branches": 2,
+   "calls": 23
+  },
+  {
+   "selector": "exportCurrentFrame",
+   "imp": "0x5c3800",
+   "verdict": "needs-runtime",
+   "instructions": 308,
+   "conditional_branches": 1,
+   "calls": 21
+  },
+  {
+   "selector": "startUsingCamera",
+   "imp": "0x5c3d24",
+   "verdict": "needs-runtime",
+   "instructions": 52,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "takePhotoButtonTapped",
+   "imp": "0x5c3e10",
+   "verdict": "needs-runtime",
+   "instructions": 37,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "cancelTakePhotoButtonTapped",
+   "imp": "0x5c3ebc",
+   "verdict": "needs-runtime",
+   "instructions": 84,
+   "conditional_branches": 0,
+   "calls": 4
+  },
+  {
+   "selector": "takingPhoto",
+   "imp": "0x5c4030",
+   "verdict": "needs-runtime",
+   "instructions": 29,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "sharePhotoFinished",
+   "imp": "0x5c40b4",
+   "verdict": "needs-runtime",
+   "instructions": 84,
+   "conditional_branches": 0,
+   "calls": 4
+  },
+  {
+   "selector": "purchaseDoubleTime",
+   "imp": "0x5c4228",
+   "verdict": "needs-runtime",
+   "instructions": 144,
+   "conditional_branches": 1,
+   "calls": 7
+  },
+  {
+   "selector": "crystalsPurchased",
+   "imp": "0x5c44a0",
+   "verdict": "needs-runtime",
+   "instructions": 188,
+   "conditional_branches": 5,
+   "calls": 10
+  },
+  {
+   "selector": "reportAchievementWithIdentifier:",
+   "imp": "0x5c47b8",
+   "verdict": "needs-runtime",
+   "instructions": 192,
+   "conditional_branches": 1,
+   "calls": 12
+  },
+  {
+   "selector": "achievementsButtonTapped",
+   "imp": "0x5c4b60",
+   "verdict": "needs-runtime",
+   "instructions": 21,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "instructionsButtonTapped",
+   "imp": "0x5c4bc4",
+   "verdict": "needs-runtime",
+   "instructions": 21,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "zoomToActiveNetBlockheadForPlayer:",
+   "imp": "0x5c4c28",
+   "verdict": "needs-runtime",
+   "instructions": 591,
+   "conditional_branches": 15,
+   "calls": 33
+  },
+  {
+   "selector": "getBlockheadZoomPosForClient:requesterClient:cycleIndex:",
+   "imp": "0x5c55f4",
+   "verdict": "needs-runtime",
+   "instructions": 373,
+   "conditional_branches": 12,
+   "calls": 23
+  },
+  {
+   "selector": "remoteZoomRequestReturnedWithSuccess:point:",
+   "imp": "0x5c5c0c",
+   "verdict": "needs-runtime",
+   "instructions": 49,
+   "conditional_branches": 2,
+   "calls": 1
+  },
+  {
+   "selector": "zoomToPoint:",
+   "imp": "0x5c5ce0",
+   "verdict": "needs-runtime",
+   "instructions": 168,
+   "conditional_branches": 2,
+   "calls": 8
+  },
+  {
+   "selector": "zoomToPos:pinchZoom:",
+   "imp": "0x5c5fa8",
+   "verdict": "needs-runtime",
+   "instructions": 59,
+   "conditional_branches": 1,
+   "calls": 3
+  },
+  {
+   "selector": "activeBlockheadPos",
+   "imp": "0x5c60ac",
+   "verdict": "needs-runtime",
+   "instructions": 68,
+   "conditional_branches": 2,
+   "calls": 3
+  },
+  {
+   "selector": "serverFillReply:",
+   "imp": "0x5c61d4",
+   "verdict": "needs-runtime",
+   "instructions": 138,
+   "conditional_branches": 3,
+   "calls": 6
+  },
+  {
+   "selector": "markCircumNavigateX:",
+   "imp": "0x5c6414",
+   "verdict": "needs-runtime",
+   "instructions": 274,
+   "conditional_branches": 8,
+   "calls": 11
+  },
+  {
+   "selector": "showDoubleTimePromptIfGoodTime",
+   "imp": "0x5c6898",
+   "verdict": "needs-runtime",
+   "instructions": 366,
+   "conditional_branches": 14,
+   "calls": 23
+  },
+  {
+   "selector": "highestPoint",
+   "imp": "0x5c6eb0",
+   "verdict": "unicorn-clean",
+   "instructions": 16,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "decommissionOldBlocks",
+   "imp": "0x5c6ef8",
+   "verdict": "needs-runtime",
+   "instructions": 618,
+   "conditional_branches": 7,
+   "calls": 12
+  },
+  {
+   "selector": "preUpdate:",
+   "imp": "0x5c78c4",
+   "verdict": "needs-runtime",
+   "instructions": 471,
+   "conditional_branches": 11,
+   "calls": 22
+  },
+  {
+   "selector": "showBlockheadAvailablePrompt:forBlockhead:",
+   "imp": "0x5c8094",
+   "verdict": "needs-runtime",
+   "instructions": 114,
+   "conditional_branches": 2,
+   "calls": 4
+  },
+  {
+   "selector": "blockheadAvailablePromptDismissedWithToThePortal",
+   "imp": "0x5c8284",
+   "verdict": "needs-runtime",
+   "instructions": 204,
+   "conditional_branches": 2,
+   "calls": 10
+  },
+  {
+   "selector": "chatButton",
+   "imp": "0x5c85fc",
+   "verdict": "needs-runtime",
+   "instructions": 21,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "currentTotalBlockheadCountIncludingNet",
+   "imp": "0x5c8660",
+   "verdict": "needs-runtime",
+   "instructions": 30,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "isControllingBlockheadsForClientPlayer:",
+   "imp": "0x5c86ec",
+   "verdict": "needs-runtime",
+   "instructions": 24,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "playersChanged",
+   "imp": "0x5c875c",
+   "verdict": "needs-runtime",
+   "instructions": 51,
+   "conditional_branches": 0,
+   "calls": 3
+  },
+  {
+   "selector": "updatePhysicalBlockToLatestVersion:",
+   "imp": "0x5c8844",
+   "verdict": "needs-runtime",
+   "instructions": 23,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "tileIsLitForClient:atPos:tile:",
+   "imp": "0x5c88b0",
+   "verdict": "needs-runtime",
+   "instructions": 272,
+   "conditional_branches": 11,
+   "calls": 10
+  },
+  {
+   "selector": "mapVisible",
+   "imp": "0x5c8d28",
+   "verdict": "needs-runtime",
+   "instructions": 22,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "incentivizedVideoViewComplete:",
+   "imp": "0x5c8d90",
+   "verdict": "needs-runtime",
+   "instructions": 60,
+   "conditional_branches": 0,
+   "calls": 4
+  },
+  {
+   "selector": "zoomToPortalAtPosition:",
+   "imp": "0x5c8e98",
+   "verdict": "needs-runtime",
+   "instructions": 295,
+   "conditional_branches": 3,
+   "calls": 18
+  },
+  {
+   "selector": "fireProjectileFrom:to:at:fireItemType:firer:",
+   "imp": "0x5c937c",
+   "verdict": "needs-runtime",
+   "instructions": 209,
+   "conditional_branches": 3,
+   "calls": 9
+  },
+  {
+   "selector": "remoteProjectileRequest:",
+   "imp": "0x5c96f0",
+   "verdict": "needs-runtime",
+   "instructions": 55,
+   "conditional_branches": 0,
+   "calls": 4
+  },
+  {
+   "selector": "sendDamage:forNetBlockhead:recoil:",
+   "imp": "0x5c97dc",
+   "verdict": "needs-runtime",
+   "instructions": 208,
+   "conditional_branches": 4,
+   "calls": 7
+  },
+  {
+   "selector": "remoteBlockheadDamageRequest:requestedByClientName:",
+   "imp": "0x5c9b54",
+   "verdict": "needs-runtime",
+   "instructions": 304,
+   "conditional_branches": 9,
+   "calls": 14
+  },
+  {
+   "selector": "sendNetDataForElectricityParticlePathIfRequired:size:ignoreClient:",
+   "imp": "0x5ca058",
+   "verdict": "needs-runtime",
+   "instructions": 579,
+   "conditional_branches": 15,
+   "calls": 24
+  },
+  {
+   "selector": "electricityPathDataRecieved:fromClient:",
+   "imp": "0x5ca9c4",
+   "verdict": "needs-runtime",
+   "instructions": 318,
+   "conditional_branches": 5,
+   "calls": 25
+  },
+  {
+   "selector": "sendAndDisplayAirTimeTipWithDistance:",
+   "imp": "0x5cb08c",
+   "verdict": "needs-runtime",
+   "instructions": 285,
+   "conditional_branches": 4,
+   "calls": 12
+  },
+  {
+   "selector": "setPVPEnabled:displayNotifciation:",
+   "imp": "0x5cb550",
+   "verdict": "needs-runtime",
+   "instructions": 231,
+   "conditional_branches": 5,
+   "calls": 8
+  },
+  {
+   "selector": "sendSetPVPEnabledToServer:",
+   "imp": "0x5cb930",
+   "verdict": "needs-runtime",
+   "instructions": 80,
+   "conditional_branches": 2,
+   "calls": 2
+  },
+  {
+   "selector": "remoteTipNotification:",
+   "imp": "0x5cba90",
+   "verdict": "needs-runtime",
+   "instructions": 93,
+   "conditional_branches": 0,
+   "calls": 9
+  },
+  {
+   "selector": "updateTradePricesIfNeeded",
+   "imp": "0x5cbc30",
+   "verdict": "needs-runtime",
+   "instructions": 662,
+   "conditional_branches": 13,
+   "calls": 34
+  },
+  {
+   "selector": "connection:didReceiveResponse:",
+   "imp": "0x5cc73c",
+   "verdict": "needs-runtime",
+   "instructions": 67,
+   "conditional_branches": 2,
+   "calls": 2
+  },
+  {
+   "selector": "connection:didReceiveData:",
+   "imp": "0x5cc864",
+   "verdict": "needs-runtime",
+   "instructions": 69,
+   "conditional_branches": 2,
+   "calls": 2
+  },
+  {
+   "selector": "connection:didFailWithError:",
+   "imp": "0x5cc994",
+   "verdict": "needs-runtime",
+   "instructions": 177,
+   "conditional_branches": 2,
+   "calls": 10
+  },
+  {
+   "selector": "connectionDidFinishLoading:",
+   "imp": "0x5ccc88",
+   "verdict": "needs-runtime",
+   "instructions": 506,
+   "conditional_branches": 10,
+   "calls": 30
+  },
+  {
+   "selector": "updatePriceForItemBoughtOrSoldOfTypeKey:soldCount:",
+   "imp": "0x5cd6a8",
+   "verdict": "needs-runtime",
+   "instructions": 24,
+   "conditional_branches": 2,
+   "calls": 25
+  },
+  {
+   "selector": "tutorialAlertDismissedWithContinue:",
+   "imp": "0x5cdfbc",
+   "verdict": "needs-runtime",
+   "instructions": 101,
+   "conditional_branches": 2,
+   "calls": 5
+  },
+  {
+   "selector": "showTutorialPopupWithTitle:message:",
+   "imp": "0x5ce174",
+   "verdict": "needs-runtime",
+   "instructions": 53,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "transactionDataRecieved:fromClient:",
+   "imp": "0x5ce260",
+   "verdict": "needs-runtime",
+   "instructions": 124,
+   "conditional_branches": 3,
+   "calls": 27
+  },
+  {
+   "selector": "worldPriceOffsetsRecievedFromServer:",
+   "imp": "0x5ceb18",
+   "verdict": "needs-runtime",
+   "instructions": 158,
+   "conditional_branches": 4,
+   "calls": 8
+  },
+  {
+   "selector": "tutorialActive",
+   "imp": "0x5cedac",
+   "verdict": "unicorn-clean",
+   "instructions": 19,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "showDieConfirmationForBlockhead:",
+   "imp": "0x5cee00",
+   "verdict": "needs-runtime",
+   "instructions": 23,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "dieConfirmationConfirmed:",
+   "imp": "0x5cee6c",
+   "verdict": "needs-runtime",
+   "instructions": 17,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "startImagePickerWithDelegate:forRect:cropSize:",
+   "imp": "0x5ceebc",
+   "verdict": "needs-runtime",
+   "instructions": 78,
+   "conditional_branches": 0,
+   "calls": 3
+  },
+  {
+   "selector": "imagePickerFinishedWithImage:",
+   "imp": "0x5cf010",
+   "verdict": "needs-runtime",
+   "instructions": 96,
+   "conditional_branches": 0,
+   "calls": 5
+  },
+  {
+   "selector": "appendDebugLog:",
+   "imp": "0x5cf1b8",
+   "verdict": "needs-runtime",
+   "instructions": 86,
+   "conditional_branches": 0,
+   "calls": 3
+  },
+  {
+   "selector": "pvpEnabled",
+   "imp": "0x5cf334",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "welcomeMessageDictRecieved:fromClient:",
+   "imp": "0x5cf370",
+   "verdict": "needs-runtime",
+   "instructions": 57,
+   "conditional_branches": 0,
+   "calls": 3
+  },
+  {
+   "selector": "viewOrEditWelcomeMessage",
+   "imp": "0x5cf470",
+   "verdict": "needs-runtime",
+   "instructions": 146,
+   "conditional_branches": 2,
+   "calls": 5
+  },
+  {
+   "selector": "setNewWelcomeMessage:",
+   "imp": "0x5cf6f0",
+   "verdict": "needs-runtime",
+   "instructions": 82,
+   "conditional_branches": 2,
+   "calls": 3
+  },
+  {
+   "selector": "welcomeMessageRecievedFromServer:",
+   "imp": "0x5cf858",
+   "verdict": "needs-runtime",
+   "instructions": 113,
+   "conditional_branches": 1,
+   "calls": 5
+  },
+  {
+   "selector": "welcomeMessage",
+   "imp": "0x5cfa4c",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "initMuteList",
+   "imp": "0x5cfa88",
+   "verdict": "needs-runtime",
+   "instructions": 205,
+   "conditional_branches": 5,
+   "calls": 10
+  },
+  {
+   "selector": "playerIsMuted:",
+   "imp": "0x5cfe00",
+   "verdict": "needs-runtime",
+   "instructions": 36,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "setPlayerMuted:withID:",
+   "imp": "0x5cfea4",
+   "verdict": "needs-runtime",
+   "instructions": 147,
+   "conditional_branches": 2,
+   "calls": 14
+  },
+  {
+   "selector": "kickOrBanPlayerFromButtonIsBan:withName:",
+   "imp": "0x5d0410",
+   "verdict": "needs-runtime",
+   "instructions": 278,
+   "conditional_branches": 1,
+   "calls": 24
+  },
+  {
+   "selector": "banPlayerWithNameFromPlayerButton:",
+   "imp": "0x5d0c5c",
+   "verdict": "needs-runtime",
+   "instructions": 23,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "kickPlayerWithNameFromPlayerButton:",
+   "imp": "0x5d0cc4",
+   "verdict": "needs-runtime",
+   "instructions": 23,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "isCloudGame",
+   "imp": "0x5d0d2c",
+   "verdict": "needs-runtime",
+   "instructions": 69,
+   "conditional_branches": 2,
+   "calls": 2
+  },
+  {
+   "selector": "reportUserWithName:reporterName:reporterMessage:reportedAvatarImagePath:",
+   "imp": "0x5d0e54",
+   "verdict": "needs-runtime",
+   "instructions": 326,
+   "conditional_branches": 8,
+   "calls": 16
+  },
+  {
+   "selector": "newServerPasswordSet:",
+   "imp": "0x5d13d8",
+   "verdict": "needs-runtime",
+   "instructions": 38,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "sendNewPasswordToServer:",
+   "imp": "0x5d1484",
+   "verdict": "needs-runtime",
+   "instructions": 153,
+   "conditional_branches": 3,
+   "calls": 8
+  },
+  {
+   "selector": "serverPassword",
+   "imp": "0x5d1724",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "clientPassword",
+   "imp": "0x5d1760",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "sendNewPrivacySettingToServer:",
+   "imp": "0x5d179c",
+   "verdict": "needs-runtime",
+   "instructions": 162,
+   "conditional_branches": 4,
+   "calls": 7
+  },
+  {
+   "selector": "serverPrivacySetting",
+   "imp": "0x5d1a68",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "alertView:didDismissWithButtonIndex:",
+   "imp": "0x5d1aa4",
+   "verdict": "needs-runtime",
+   "instructions": 292,
+   "conditional_branches": 3,
+   "calls": 15
+  },
+  {
+   "selector": "textFieldShouldReturn:",
+   "imp": "0x5d2098",
+   "verdict": "needs-runtime",
+   "instructions": 56,
+   "conditional_branches": 1,
+   "calls": 2
+  },
+  {
+   "selector": "reportButtonTappedForPlayer:",
+   "imp": "0x5d218c",
+   "verdict": "needs-runtime",
+   "instructions": 216,
+   "conditional_branches": 1,
+   "calls": 24
+  },
+  {
+   "selector": "canAddWorldCredit",
+   "imp": "0x5d2ab8",
+   "verdict": "needs-runtime",
+   "instructions": 47,
+   "conditional_branches": 1,
+   "calls": 1
+  },
+  {
+   "selector": "showWorldCreditUI",
+   "imp": "0x5d2b90",
+   "verdict": "needs-runtime",
+   "instructions": 53,
+   "conditional_branches": 0,
+   "calls": 3
+  },
+  {
+   "selector": "getCurrentCreditTimeString",
+   "imp": "0x5d2c7c",
+   "verdict": "needs-runtime",
+   "instructions": 17,
+   "conditional_branches": 0,
+   "calls": 6
+  },
+  {
+   "selector": "cloudTopupSucceeded:",
+   "imp": "0x5d3158",
+   "verdict": "needs-runtime",
+   "instructions": 53,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "cloudTopupFailed:",
+   "imp": "0x5d3248",
+   "verdict": "unicorn-clean",
+   "instructions": 6,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "startCloudTopup",
+   "imp": "0x5d3260",
+   "verdict": "needs-runtime",
+   "instructions": 16,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "IAPForWorldTopupSucceeeded:transactionID:",
+   "imp": "0x5d32ac",
+   "verdict": "needs-runtime",
+   "instructions": 34,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "shareURL:message:fromRect:",
+   "imp": "0x5d3348",
+   "verdict": "needs-runtime",
+   "instructions": 47,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "worldUI",
+   "imp": "0x5d3410",
+   "verdict": "needs-runtime",
+   "instructions": 21,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "openOwnerPortal",
+   "imp": "0x5d3474",
+   "verdict": "needs-runtime",
+   "instructions": 43,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "signOwnershipPlayerListRecievedFromServer:",
+   "imp": "0x5d3538",
+   "verdict": "needs-runtime",
+   "instructions": 32,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "updateLocalOwnershipSignsDueToSignPlacedOrChangedAtPos:withLandOwner:widthRadius:heightRadius:wasRemoved:",
+   "imp": "0x5d35cc",
+   "verdict": "needs-runtime",
+   "instructions": 498,
+   "conditional_branches": 11,
+   "calls": 28
+  },
+  {
+   "selector": "signOwnershipModificationRecievedFromServer:",
+   "imp": "0x5d3e08",
+   "verdict": "needs-runtime",
+   "instructions": 194,
+   "conditional_branches": 2,
+   "calls": 14
+  },
+  {
+   "selector": "ownershipSignWasPlacedOrChangedAtPos:withLandOwner:widthRadius:heightRadius:wasRemoved:",
+   "imp": "0x5d4144",
+   "verdict": "needs-runtime",
+   "instructions": 349,
+   "conditional_branches": 6,
+   "calls": 18
+  },
+  {
+   "selector": "tileIsProtectedAtPos:againstClient:",
+   "imp": "0x5d4718",
+   "verdict": "needs-runtime",
+   "instructions": 738,
+   "conditional_branches": 32,
+   "calls": 28
+  },
+  {
+   "selector": "tileIsProtectedAtPos:againstBlockhead:",
+   "imp": "0x5d5308",
+   "verdict": "needs-runtime",
+   "instructions": 39,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "displayOwnershipAreas",
+   "imp": "0x5d53b0",
+   "verdict": "needs-runtime",
+   "instructions": 87,
+   "conditional_branches": 2,
+   "calls": 4
+  },
+  {
+   "selector": "renderingTeaserFrames",
+   "imp": "0x5d5534",
+   "verdict": "unicorn-clean",
+   "instructions": 18,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "customRules",
+   "imp": "0x5d5584",
+   "verdict": "needs-runtime",
+   "instructions": 17,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "customRulesDict",
+   "imp": "0x5d55d0",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "customRuleForOptionNamed:",
+   "imp": "0x5d560c",
+   "verdict": "needs-runtime",
+   "instructions": 26,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "customRulesChanged",
+   "imp": "0x5d5684",
+   "verdict": "needs-runtime",
+   "instructions": 30,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "setCustomRule:forOptionNamed:",
+   "imp": "0x5d5710",
+   "verdict": "needs-runtime",
+   "instructions": 237,
+   "conditional_branches": 5,
+   "calls": 11
+  },
+  {
+   "selector": "customRuleDictRecievedFromNet:",
+   "imp": "0x5d5b10",
+   "verdict": "needs-runtime",
+   "instructions": 270,
+   "conditional_branches": 5,
+   "calls": 14
+  },
+  {
+   "selector": "setCustomSlotAtIndex:toItemType:count:",
+   "imp": "0x5d5f80",
+   "verdict": "needs-runtime",
+   "instructions": 366,
+   "conditional_branches": 5,
+   "calls": 19
+  },
+  {
+   "selector": "setSunColorRule:",
+   "imp": "0x5d6590",
+   "verdict": "needs-runtime",
+   "instructions": 209,
+   "conditional_branches": 1,
+   "calls": 13
+  },
+  {
+   "selector": "sendUpdatedSunColor",
+   "imp": "0x5d6910",
+   "verdict": "needs-runtime",
+   "instructions": 215,
+   "conditional_branches": 5,
+   "calls": 9
+  },
+  {
+   "selector": "sendUpdatedCustomSlots",
+   "imp": "0x5d6cb8",
+   "verdict": "needs-runtime",
+   "instructions": 180,
+   "conditional_branches": 2,
+   "calls": 7
+  },
+  {
+   "selector": "sandFractionForPos:",
+   "imp": "0x5d6fc8",
+   "verdict": "needs-runtime",
+   "instructions": 30,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "hasRewardedVideoAvailable",
+   "imp": "0x5d704c",
+   "verdict": "needs-runtime",
+   "instructions": 22,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "verifyClientCustomRulesData:",
+   "imp": "0x5d70b4",
+   "verdict": "needs-runtime",
+   "instructions": 431,
+   "conditional_branches": 26,
+   "calls": 6
+  },
+  {
+   "selector": "timeCrystalCloseButtonTapped",
+   "imp": "0x5d790c",
+   "verdict": "needs-runtime",
+   "instructions": 21,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "windStrength",
+   "imp": "0x5d7970",
+   "verdict": "needs-runtime",
+   "instructions": 19,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "setDpadControl:",
+   "imp": "0x5d79c8",
+   "verdict": "needs-runtime",
+   "instructions": 93,
+   "conditional_branches": 2,
+   "calls": 4
+  },
+  {
+   "selector": "dpadControl",
+   "imp": "0x5d7b60",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "setDpadDirectControlDisabled:",
+   "imp": "0x5d7b9c",
+   "verdict": "needs-runtime",
+   "instructions": 61,
+   "conditional_branches": 1,
+   "calls": 2
+  },
+  {
+   "selector": "dpadDirectControlDisabled",
+   "imp": "0x5d7cac",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "addItemsFromServerFoundItemsList:",
+   "imp": "0x5d7ce8",
+   "verdict": "needs-runtime",
+   "instructions": 23,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "sendUpdatedFoundItemsListToServer",
+   "imp": "0x5d7d54",
+   "verdict": "needs-runtime",
+   "instructions": 108,
+   "conditional_branches": 1,
+   "calls": 4
+  },
+  {
+   "selector": "privateAddItemToFoundList:addBasketContents:",
+   "imp": "0x5d7f2c",
+   "verdict": "needs-runtime",
+   "instructions": 330,
+   "conditional_branches": 10,
+   "calls": 16
+  },
+  {
+   "selector": "addItemToFoundList:",
+   "imp": "0x5d848c",
+   "verdict": "needs-runtime",
+   "instructions": 47,
+   "conditional_branches": 2,
+   "calls": 1
+  },
+  {
+   "selector": "addChestItemsToFoundList:",
+   "imp": "0x5d855c",
+   "verdict": "needs-runtime",
+   "instructions": 256,
+   "conditional_branches": 9,
+   "calls": 9
+  },
+  {
+   "selector": "addDodoEggToFoundListWithBreed:",
+   "imp": "0x5d8974",
+   "verdict": "needs-runtime",
+   "instructions": 26,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "foundListContainsEggWithDodoBreed:",
+   "imp": "0x5d89ec",
+   "verdict": "needs-runtime",
+   "instructions": 27,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "hideChatView",
+   "imp": "0x5d8a68",
+   "verdict": "needs-runtime",
+   "instructions": 21,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "blockheadFilesReturnedFromServer:",
+   "imp": "0x5d8acc",
+   "verdict": "needs-runtime",
+   "instructions": 149,
+   "conditional_branches": 3,
+   "calls": 7
+  },
+  {
+   "selector": "startBulkDatabaseUpdate",
+   "imp": "0x5d8d3c",
+   "verdict": "needs-runtime",
+   "instructions": 22,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "finishBulkDatabaseUpdate",
+   "imp": "0x5d8da4",
+   "verdict": "needs-runtime",
+   "instructions": 39,
+   "conditional_branches": 0,
+   "calls": 2
+  },
+  {
+   "selector": "usedPhysicalBlocks",
+   "imp": "0x5d8e58",
+   "verdict": "unicorn-clean",
+   "instructions": 12,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "doPortalShotNextFrame",
+   "imp": "0x5d8e90",
+   "verdict": "unicorn-clean",
+   "instructions": 14,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "hasFinishedDatabaseMigrationTo17",
+   "imp": "0x5d8ed0",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "archiveLightBlocksForClient:",
+   "imp": "0x5d8f0c",
+   "verdict": "needs-runtime",
+   "instructions": 23,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "doRepairForTileAtPos:",
+   "imp": "0x5d8f78",
+   "verdict": "needs-runtime",
+   "instructions": 467,
+   "conditional_branches": 24,
+   "calls": 24
+  },
+  {
+   "selector": "setRepairMode:",
+   "imp": "0x5d971c",
+   "verdict": "unicorn-clean",
+   "instructions": 23,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "repairMode",
+   "imp": "0x5d9784",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "appDatabase",
+   "imp": "0x5d97c0",
+   "verdict": "needs-runtime",
+   "instructions": 21,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "worldWidthMacro",
+   "imp": "0x5d9824",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "expertMode",
+   "imp": "0x5d9860",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "macroTiles",
+   "imp": "0x5d989c",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "dynamicWorld",
+   "imp": "0x5d98e0",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "saveID",
+   "imp": "0x5d9924",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "randomSeed",
+   "imp": "0x5d9968",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "worldTime",
+   "imp": "0x5d99a4",
+   "verdict": "unicorn-with-abstraction",
+   "instructions": 23,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "sunDirection",
+   "imp": "0x5d9a08",
+   "verdict": "unicorn-with-abstraction",
+   "instructions": 22,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "timeOfDayFraction",
+   "imp": "0x5d9a68",
+   "verdict": "unicorn-with-abstraction",
+   "instructions": 16,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "weatherFraction",
+   "imp": "0x5d9ab0",
+   "verdict": "unicorn-with-abstraction",
+   "instructions": 16,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "rainFraction",
+   "imp": "0x5d9af8",
+   "verdict": "unicorn-with-abstraction",
+   "instructions": 16,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "rainFractionNotIncludingSnow",
+   "imp": "0x5d9b40",
+   "verdict": "unicorn-with-abstraction",
+   "instructions": 16,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "dayColor",
+   "imp": "0x5d9b88",
+   "verdict": "unicorn-with-abstraction",
+   "instructions": 22,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "translatingToGoal",
+   "imp": "0x5d9be8",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "setTranslatingToGoal:",
+   "imp": "0x5d9c24",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "loadComplete",
+   "imp": "0x5d9c68",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "incrementalLoadCount",
+   "imp": "0x5d9ca4",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "windowInfo",
+   "imp": "0x5d9ce0",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "startPortalPos",
+   "imp": "0x5d9d24",
+   "verdict": "unicorn-with-abstraction",
+   "instructions": 22,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "serverClients",
+   "imp": "0x5d9d84",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "server",
+   "imp": "0x5d9dc8",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "client",
+   "imp": "0x5d9e0c",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "fastForward",
+   "imp": "0x5d9e50",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "doubleTimeUnlocked",
+   "imp": "0x5d9e8c",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "worldName",
+   "imp": "0x5d9ec8",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "isAdmin",
+   "imp": "0x5d9f0c",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "setIsAdmin:",
+   "imp": "0x5d9f48",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "isMod",
+   "imp": "0x5d9f8c",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "setIsMod:",
+   "imp": "0x5d9fc8",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "isOwner",
+   "imp": "0x5da00c",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "setIsOwner:",
+   "imp": "0x5da048",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "cloudMode",
+   "imp": "0x5da08c",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "setCloudMode:",
+   "imp": "0x5da0c8",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "globalPrices",
+   "imp": "0x5da10c",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "worldPriceMultipliers",
+   "imp": "0x5da150",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "serverMinorVersion",
+   "imp": "0x5da194",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "portalChestManager",
+   "imp": "0x5da1d0",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "followingBlockhead",
+   "imp": "0x5da214",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "setFollowingBlockhead:",
+   "imp": "0x5da250",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "tutorial",
+   "imp": "0x5da294",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "pinchScale",
+   "imp": "0x5da2d8",
+   "verdict": "unicorn-with-abstraction",
+   "instructions": 23,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "setPinchScale:",
+   "imp": "0x5da33c",
+   "verdict": "unicorn-with-abstraction",
+   "instructions": 25,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "dragInProgress",
+   "imp": "0x5da3a8",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "roundedTranslation",
+   "imp": "0x5da3e4",
+   "verdict": "unicorn-with-abstraction",
+   "instructions": 22,
+   "conditional_branches": 0,
+   "calls": 1
+  },
+  {
+   "selector": "isHeadingTowardsMIdday",
+   "imp": "0x5da444",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "cloudInterface",
+   "imp": "0x5da480",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "setCloudInterface:",
+   "imp": "0x5da4c4",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "saveDisabled",
+   "imp": "0x5da508",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "setSaveDisabled:",
+   "imp": "0x5da544",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "slowAnimationIndex",
+   "imp": "0x5da588",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "waterAnimationIndex",
+   "imp": "0x5da5c4",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "hasJustTakenPhoto",
+   "imp": "0x5da600",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "uiManager",
+   "imp": "0x5da63c",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "foundItemsList",
+   "imp": "0x5da680",
+   "verdict": "unicorn-clean",
+   "instructions": 15,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "delegate",
+   "imp": "0x5da6c4",
+   "verdict": "unicorn-clean",
+   "instructions": 14,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "setDelegate:",
+   "imp": "0x5da704",
+   "verdict": "unicorn-clean",
+   "instructions": 14,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "workbenchChoiceUIDisplayed",
+   "imp": "0x5da744",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "newBlockheadUIDisplayed",
+   "imp": "0x5da780",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "paintMixUIDisplayed",
+   "imp": "0x5da7bc",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "addFuelUIDisplayed",
+   "imp": "0x5da7f8",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "jetPackUIDisplayed",
+   "imp": "0x5da834",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "sleepProgressUIDisplayed",
+   "imp": "0x5da870",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "regenerateUIDisplayed",
+   "imp": "0x5da8ac",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "hungerUIDisplayed",
+   "imp": "0x5da8e8",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "wearUIDisplayed",
+   "imp": "0x5da924",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "popUpUIDisplayed",
+   "imp": "0x5da960",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "tradingPostSellUIDisplayed",
+   "imp": "0x5da99c",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "tradingPostBuyUIDisplayed",
+   "imp": "0x5da9d8",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "ownershipSignUIDisplayed",
+   "imp": "0x5daa14",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": "workbenchProgressBarUIDisplayed",
+   "imp": "0x5daa50",
+   "verdict": "unicorn-clean",
+   "instructions": 13,
+   "conditional_branches": 0,
+   "calls": 0
+  },
+  {
+   "selector": ".cxx_destruct",
+   "imp": "0x5daa8c",
+   "verdict": "needs-runtime",
+   "instructions": 38,
+   "conditional_branches": 0,
+   "calls": 4
+  },
+  {
+   "selector": ".cxx_construct",
+   "imp": "0x5dab64",
+   "verdict": "needs-runtime",
+   "instructions": 311,
+   "conditional_branches": 0,
+   "calls": 77
+  }
+ ]
+}

@@ -1,0 +1,70 @@
+{
+ "schema": 1,
+ "title": "World.worldTime / World.fastForward: no writer is statically reachable in libApplication",
+ "question": "the live original advances World.worldTime at 20 units per real second while World.fastForward reads 1 (LIVE_WORLD_CLOCK.md), yet the library appears to contain no code that writes either field. This artifact records every mechanism excluded, how, and what is left open.",
+ "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+ "live_premise_recheck": {
+  "why": "the project has seen 79 __objc_ivar cells rewritten at runtime, which would invalidate every offset-based reading. Re-read live before drawing conclusions.",
+  "cells_file_equals_live": {
+   "worldTime": 648,
+   "fastForward": 934,
+   "lastUpdateTime": 3112,
+   "timeOfDayFraction": 880
+  },
+  "worldTime_read_back": 361752.29218517244,
+  "fastForward_read_back": 1,
+  "verdict": "premise holds - the readings are valid"
+ },
+ "exclusions": [
+  {
+   "mechanism": "cell-based ivar store (the normal path)",
+   "how": "tools/extract_ivar_cell_references.py --self-check over 27155 add-sites (20593 resolved)",
+   "result": "World.worldTime: 3 references all READS. World.fastForward: 1 reference, the ldrsb read in its own getter. 0 writes."
+  },
+  {
+   "mechanism": "literal-immediate store (str/vstr/strd with #0x288 / #0x3a6)",
+   "how": "sweep of store-shaped words over the whole code window, capstone-confirmed",
+   "result": "440 hits, every one a stack slot ([sp, #0x648] / [sp, #0x3a4]) or a draw-buffer offset (dozens of -draw: methods write a vertex buffer at 0x648). None is a World field."
+  },
+  {
+   "mechanism": "offset materialised into a register first (movw rX,#648 ; add rX,rBase,rX ; str)",
+   "how": "330874 immediate-materialisation candidates, then add+store lookahead",
+   "result": "1 hit, verified FALSE POSITIVE: the base was already object+offset, so the address was (DynamicWorld.dynamicObjects element)+0x288, and the sequence stores a pointer (str) while worldTime is a double."
+  },
+  {
+   "mechanism": "another library in the APK",
+   "how": "all 25 .so in the lib dir grepped for the two names",
+   "result": "only libApplication.so names either field"
+  },
+  {
+   "mechanism": "a setter / property write",
+   "how": "method table + property table",
+   "result": "no -setWorldTime: and no -setFastForward: exist. fastForward is a DECLARED READONLY PROPERTY ('Tc,R,VfastForward'), which is why the one-line getters share a body."
+  },
+  {
+   "mechanism": "a KVC / runtime name literal",
+   "how": "the property-name cstring 0xf4fff7 and its attribute cstring",
+   "result": "the name is referenced exactly once - by its own property_t. It is not used as a key literal anywhere."
+  },
+  {
+   "mechanism": "a bulk copy into the object (memcpy-family)",
+   "how": "the trampolines were first identified (0x1c2888 / 0x1c2924 / 0x1c2948 are 3-instruction PLT entries all funnelling to 0x1c27c0, a dst/src/len routine), then 4043 call sites classified by destination and immediate length",
+   "result": "immediate lengths are 8 (916), 16 (642), 64 (417), 24, 124 (51)...; copies of length >= 0x100 into a non-stack destination: 21 sites, ZERO in World-family methods. No copy into a World object can reach +648."
+  },
+  {
+   "mechanism": "the Java / DEX side via the Apportable bridge",
+   "how": "grepped all four DEX files in the APK",
+   "result": "classes2.dex has 3 'fastForward' strings, and all three are Android platform media API text ('Dead object in fastForward.', 'TRANSACTION_fastForward', an AIDL transaction name in the string table). This was announced as a hit and then corrected: a name match is not an attribution."
+  }
+ ],
+ "incidental_cross_check": {
+  "observed": "copy-size histogram from the same sweep: 64 bytes at 417 call sites, 124 bytes at 51",
+  "meaning": "independently corroborates two facts pinned by other means: the 64-byte tile record and the 124-byte CraftableItem (the savedict evidence getBytes:length:124)."
+ },
+ "still_open": [
+  "a runtime-resolved offset (setValue:forKey: with a key read from data, or object_setIvar with the ivar fetched by name) - invisible to every static sweep by construction",
+  "a mechanism outside libApplication that does not name the field (so it does not appear in the string greps)",
+  "the scan resolves 20593 of 27155 add-sites and 0 of the trampoline-indirect calls; that residue is not claimed covered"
+ ],
+ "consequence_for_the_replacement": "game_engine.cpp maps its sleep state onto fastForward; the STATE and the 20.0 factor are measured, the trigger is not. That mapping stays labelled an inference."
+}

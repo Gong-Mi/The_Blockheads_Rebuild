@@ -1,0 +1,42 @@
+# itemTypeIsPainting  [C function]
+# implementation: 0x005b902c
+# ARM.exidx end: 0x005b90c0
+
+            ;-- itemTypeIsPainting(ItemType):
+            0x005b902c      08d04de2       sub sp, sp, 8               ; itemTypeIsPainting(ItemType)
+            0x005b9030      00008de5       str r0, [sp]
+            0x005b9034      00009de5       ldr r0, [sp]
+            0x005b9038      db0050e3       cmp r0, 0xdb
+        ┌─< 0x005b903c      1700000a       beq 0x5b90a0
+        │   0x005b9040      00009de5       ldr r0, [sp]
+        │   0x005b9044      dc0050e3       cmp r0, 0xdc
+       ┌──< 0x005b9048      1400000a       beq 0x5b90a0
+       ││   0x005b904c      00009de5       ldr r0, [sp]
+       ││   0x005b9050      da0050e3       cmp r0, 0xda
+      ┌───< 0x005b9054      1100000a       beq 0x5b90a0
+      │││   0x005b9058      00009de5       ldr r0, [sp]
+      │││   0x005b905c      d80050e3       cmp r0, 0xd8
+     ┌────< 0x005b9060      0e00000a       beq 0x5b90a0
+     ││││   0x005b9064      00009de5       ldr r0, [sp]
+     ││││   0x005b9068      d90050e3       cmp r0, 0xd9
+    ┌─────< 0x005b906c      0b00000a       beq 0x5b90a0
+    │││││   0x005b9070      00009de5       ldr r0, [sp]
+    │││││   0x005b9074      d70050e3       cmp r0, 0xd7
+   ┌──────< 0x005b9078      0800000a       beq 0x5b90a0
+   ││││││   0x005b907c      00009de5       ldr r0, [sp]
+   ││││││   0x005b9080      d50050e3       cmp r0, 0xd5
+  ┌───────< 0x005b9084      0500000a       beq 0x5b90a0
+  │││││││   0x005b9088      00009de5       ldr r0, [sp]
+  │││││││   0x005b908c      d60050e3       cmp r0, 0xd6
+  ────────< 0x005b9090      0200000a       beq 0x5b90a0
+  │││││││   0x005b9094      00009de5       ldr r0, [sp]
+  │││││││   0x005b9098      d40050e3       cmp r0, 0xd4
+  ────────< 0x005b909c      0200001a       bne 0x5b90ac
+  └└└└└└└─> 0x005b90a0      010000e3       movw r0, 1
+            0x005b90a4      0700cde5       strb r0, [sp, 7]
+        ┌─< 0x005b90a8      010000ea       b 0x5b90b4
+  ────────> 0x005b90ac      000000e3       movw r0, 0
+        │   0x005b90b0      0700cde5       strb r0, [sp, 7]
+        └─> 0x005b90b4      d700dde1       ldrsb r0, [sp, 7]
+            0x005b90b8      08d08de2       add sp, sp, 8
+            0x005b90bc      1eff2fe1       bx lr

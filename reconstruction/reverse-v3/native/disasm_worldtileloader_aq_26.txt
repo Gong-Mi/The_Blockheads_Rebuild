@@ -1,0 +1,46 @@
+# SurfaceBlock -[subtractWater:fromOtherTile:atPos:]
+# types: v24@0:4i8^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}12{?=ii}16
+# implementation: 0x00812184
+# ARM.exidx end: 0x00812228
+
+            0x00812184      00482de9       push {fp, lr}
+            0x00812188      0db0a0e1       mov fp, sp
+            0x0081218c      20d04de2       sub sp, sp, 0x20
+            0x00812190      0cc09be5       ldr ip, [fp, 0xc]
+            0x00812194      08e09be5       ldr lr, [fp, 8]
+            0x00812198      08e00be5       str lr, [fp, -8]
+            0x0081219c      04c00be5       str ip, [fp, -4]
+            0x008121a0      0c000be5       str r0, [fp, -0xc]
+            0x008121a4      10108de5       str r1, [sp, 0x10]
+            0x008121a8      0c208de5       str r2, [sp, 0xc]
+            0x008121ac      08308de5       str r3, [sp, 8]
+            0x008121b0      0c009de5       ldr r0, [sp, 0xc]
+            0x008121b4      000050e3       cmp r0, 0
+        ┌─< 0x008121b8      0000001a       bne 0x8121c0
+       ┌──< 0x008121bc      140000ea       b 0x812214
+       │└─> 0x008121c0      0c009de5       ldr r0, [sp, 0xc]
+       │    0x008121c4      08109de5       ldr r1, [sp, 8]
+       │    0x008121c8      0420d1e5       ldrb r2, [r1, 4]
+       │    0x008121cc      000042e0       sub r0, r2, r0
+       │    0x008121d0      0400c1e5       strb r0, [r1, 4]
+       │    0x008121d4      0c001be5       ldr r0, [fp, -0xc]
+       │    0x008121d8      3c109fe5       ldr r1, [0x0081221c]        ; [0x81221c:4]=0xffffc8b4
+       │    0x008121dc      3c209fe5       ldr r2, [0x00812220]        ; [0x812220:4]=0x84d90c
+       │    0x008121e0      02208fe0       add r2, pc, r2
+       │    0x008121e4      021091e7       ldr r1, [r1, r2]
+       │    0x008121e8      001091e5       ldr r1, [r1]
+       │    0x008121ec      010090e7       ldr r0, [r0, r1]
+       │    0x008121f0      08101be5       ldr r1, [fp, -8]
+       │    0x008121f4      04301be5       ldr r3, [fp, -4]
+       │    0x008121f8      04308de5       str r3, [sp, 4]
+       │    0x008121fc      00108de5       str r1, [sp]
+       │    0x00812200      1c109fe5       ldr r1, [0x00812224]        ; [0x812224:4]=0xffe222c4
+       │    0x00812204      021091e7       ldr r1, [r1, r2]
+       │    0x00812208      00209de5       ldr r2, [sp]
+       │    0x0081220c      04309de5       ldr r3, [sp, 4]
+       │    0x00812210      81c1e6eb       bl loc.imp.objc_msgSend
+       └──> 0x00812214      0bd0a0e1       mov sp, fp
+            0x00812218      0088bde8       pop {fp, pc}
+            0x0081221c      b4c8ffff       invalid
+            0x00812220      0cd98400       addeq sp, r4, ip, lsl 18
+            0x00812224      c422e2ff       invalid

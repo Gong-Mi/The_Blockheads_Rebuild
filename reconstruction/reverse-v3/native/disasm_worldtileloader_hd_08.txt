@@ -1,0 +1,47 @@
+# Blockhead -[energy]
+# types: f8@0:4
+# implementation: 0x00b8c910
+# ARM.exidx end: 0x00b8c9b8
+
+            0x00b8c910      30d04de2       sub sp, sp, 0x30
+            0x00b8c914      98209fe5       ldr r2, [0x00b8c9b4]        ; [0xb8c9b4:4]=0x4d31d4
+            0x00b8c918      02208fe0       add r2, pc, r2
+            0x00b8c91c      003000e3       movw r3, 0
+            0x00b8c920      210a9fed       vldr s0, [0x00b8c9ac]
+            0x00b8c924      081bb6ee       vmov.f64 d1, 7
+            0x00b8c928      002bb5ee       vmov.f64 d2, 2
+            0x00b8c92c      7cc09fe5       ldr ip, [0x00b8c9b0]        ; [0xb8c9b0:4]=0xfffff55c
+            0x00b8c930      02209ce7       ldr r2, [ip, r2]
+            0x00b8c934      2c008de5       str r0, [sp, 0x2c]
+            0x00b8c938      28108de5       str r1, [sp, 0x28]
+            0x00b8c93c      2c009de5       ldr r0, [sp, 0x2c]
+            0x00b8c940      001092e5       ldr r1, [r2]
+            0x00b8c944      010080e0       add r0, r0, r1
+            0x00b8c948      0b3a90ed       vldr s6, [r0, 0x2c]
+            0x00b8c94c      c34ab7ee       vcvt.f64.f32 d4, s6
+            0x00b8c950      422b34ee       vsub.f64 d2, d4, d2
+            0x00b8c954      011b82ee       vdiv.f64 d1, d2, d1
+            0x00b8c958      081b8ded       vstr d1, [sp, 0x20]
+            0x00b8c95c      070a8ded       vstr s0, [sp, 0x1c]
+            0x00b8c960      081b9ded       vldr d1, [sp, 0x20]
+            0x00b8c964      070a9ded       vldr s0, [sp, 0x1c]
+            0x00b8c968      c02ab7ee       vcvt.f64.f32 d2, s0
+            0x00b8c96c      c21bb4ee       vcmpe.f64 d1, d2
+            0x00b8c970      10faf1ee       vmrs apsr_nzcv, fpscr
+            0x00b8c974      0c308de5       str r3, [sp, 0xc]
+        ┌─< 0x00b8c978      0300005a       bpl 0xb8c98c
+        │   0x00b8c97c      070a9ded       vldr s0, [sp, 0x1c]
+        │   0x00b8c980      c01ab7ee       vcvt.f64.f32 d1, s0
+        │   0x00b8c984      001b8ded       vstr d1, [sp]
+       ┌──< 0x00b8c988      010000ea       b 0xb8c994
+       │└─> 0x00b8c98c      080b9ded       vldr d0, [sp, 0x20]
+       │    0x00b8c990      000b8ded       vstr d0, [sp]
+       └──> 0x00b8c994      000b9ded       vldr d0, [sp]
+            0x00b8c998      040b8ded       vstr d0, [sp, 0x10]
+            0x00b8c99c      c01bb7ee       vcvt.f32.f64 s2, d0
+            0x00b8c9a0      100a11ee       vmov r0, s2
+            0x00b8c9a4      30d08de2       add sp, sp, 0x30
+            0x00b8c9a8      1eff2fe1       bx lr
+            0x00b8c9ac      00000000       andeq r0, r0, r0
+            0x00b8c9b0      5cf5ffff       invalid
+            0x00b8c9b4      d4314d00       ldrdeq r3, r4, [sp], -0x14

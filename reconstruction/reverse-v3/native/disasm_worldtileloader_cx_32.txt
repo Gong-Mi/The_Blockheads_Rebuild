@@ -1,0 +1,89 @@
+# tileIsDeadTree  [C function]
+# implementation: 0x00a138fc
+# ARM.exidx end: 0x00a13a4c
+
+            ;-- tileIsDeadTree(Tile*):
+            0x00a138fc      00482de9       push {fp, lr}               ; tileIsDeadTree(Tile*)
+            0x00a13900      0db0a0e1       mov fp, sp
+            0x00a13904      10d04de2       sub sp, sp, 0x10
+            0x00a13908      001000e3       movw r1, 0
+            0x00a1390c      002000e3       movw r2, 0
+            0x00a13910      04000be5       str r0, [fp, -4]
+            0x00a13914      04001be5       ldr r0, [fp, -4]
+            0x00a13918      020050e1       cmp r0, r2
+            0x00a1391c      08108de5       str r1, [sp, 8]
+        ┌─< 0x00a13920      4400000a       beq 0xa13a38
+        │   0x00a13924      04001be5       ldr r0, [fp, -4]
+        │   0x00a13928      aeffffeb       bl sym.tileIsDeadTreeTrunk_Tile_ ; tileIsDeadTreeTrunk(Tile*)
+        │   0x00a1392c      011000e3       movw r1, 1
+        │   0x00a13930      7000afe6       sxtb r0, r0
+        │   0x00a13934      000050e3       cmp r0, 0
+        │   0x00a13938      04108de5       str r1, [sp, 4]
+       ┌──< 0x00a1393c      3b00001a       bne 0xa13a30
+       ││   0x00a13940      010000e3       movw r0, 1
+       ││   0x00a13944      04101be5       ldr r1, [fp, -4]
+       ││   0x00a13948      0310d1e5       ldrb r1, [r1, 3]
+       ││   0x00a1394c      1b0051e3       cmp r1, 0x1b
+       ││   0x00a13950      04008de5       str r0, [sp, 4]
+      ┌───< 0x00a13954      3500000a       beq 0xa13a30
+      │││   0x00a13958      010000e3       movw r0, 1
+      │││   0x00a1395c      04101be5       ldr r1, [fp, -4]
+      │││   0x00a13960      0310d1e5       ldrb r1, [r1, 3]
+      │││   0x00a13964      1e0051e3       cmp r1, 0x1e
+      │││   0x00a13968      04008de5       str r0, [sp, 4]
+     ┌────< 0x00a1396c      2f00000a       beq 0xa13a30
+     ││││   0x00a13970      010000e3       movw r0, 1
+     ││││   0x00a13974      04101be5       ldr r1, [fp, -4]
+     ││││   0x00a13978      0310d1e5       ldrb r1, [r1, 3]
+     ││││   0x00a1397c      200051e3       cmp r1, 0x20
+     ││││   0x00a13980      04008de5       str r0, [sp, 4]
+    ┌─────< 0x00a13984      2900000a       beq 0xa13a30
+    │││││   0x00a13988      010000e3       movw r0, 1
+    │││││   0x00a1398c      04101be5       ldr r1, [fp, -4]
+    │││││   0x00a13990      0310d1e5       ldrb r1, [r1, 3]
+    │││││   0x00a13994      220051e3       cmp r1, 0x22                ; '\"'
+    │││││   0x00a13998      04008de5       str r0, [sp, 4]
+   ┌──────< 0x00a1399c      2300000a       beq 0xa13a30
+   ││││││   0x00a139a0      010000e3       movw r0, 1
+   ││││││   0x00a139a4      04101be5       ldr r1, [fp, -4]
+   ││││││   0x00a139a8      0310d1e5       ldrb r1, [r1, 3]
+   ││││││   0x00a139ac      2c0051e3       cmp r1, 0x2c                ; ','
+   ││││││   0x00a139b0      04008de5       str r0, [sp, 4]
+  ┌───────< 0x00a139b4      1d00000a       beq 0xa13a30
+  │││││││   0x00a139b8      010000e3       movw r0, 1
+  │││││││   0x00a139bc      04101be5       ldr r1, [fp, -4]
+  │││││││   0x00a139c0      0310d1e5       ldrb r1, [r1, 3]
+  │││││││   0x00a139c4      230051e3       cmp r1, 0x23                ; '#'
+  │││││││   0x00a139c8      04008de5       str r0, [sp, 4]
+  ────────< 0x00a139cc      1700000a       beq 0xa13a30
+  │││││││   0x00a139d0      010000e3       movw r0, 1
+  │││││││   0x00a139d4      04101be5       ldr r1, [fp, -4]
+  │││││││   0x00a139d8      0310d1e5       ldrb r1, [r1, 3]
+  │││││││   0x00a139dc      250051e3       cmp r1, 0x25                ; '%'
+  │││││││   0x00a139e0      04008de5       str r0, [sp, 4]
+  ────────< 0x00a139e4      1100000a       beq 0xa13a30
+  │││││││   0x00a139e8      010000e3       movw r0, 1
+  │││││││   0x00a139ec      04101be5       ldr r1, [fp, -4]
+  │││││││   0x00a139f0      0310d1e5       ldrb r1, [r1, 3]
+  │││││││   0x00a139f4      5c0051e3       cmp r1, 0x5c                ; '\\'
+  │││││││   0x00a139f8      04008de5       str r0, [sp, 4]
+  ────────< 0x00a139fc      0b00000a       beq 0xa13a30
+  │││││││   0x00a13a00      010000e3       movw r0, 1
+  │││││││   0x00a13a04      04101be5       ldr r1, [fp, -4]
+  │││││││   0x00a13a08      0310d1e5       ldrb r1, [r1, 3]
+  │││││││   0x00a13a0c      270051e3       cmp r1, 0x27                ; '\''
+  │││││││   0x00a13a10      04008de5       str r0, [sp, 4]
+  ────────< 0x00a13a14      0500000a       beq 0xa13a30
+  │││││││   0x00a13a18      04001be5       ldr r0, [fp, -4]
+  │││││││   0x00a13a1c      0300d0e5       ldrb r0, [r0, 3]
+  │││││││   0x00a13a20      290050e3       cmp r0, 0x29                ; ')'
+  │││││││   0x00a13a24      000000e3       movw r0, 0
+  │││││││   0x00a13a28      0100a003       moveq r0, 1
+  │││││││   0x00a13a2c      04008de5       str r0, [sp, 4]
+  └└└└└└──> 0x00a13a30      04009de5       ldr r0, [sp, 4]
+        │   0x00a13a34      08008de5       str r0, [sp, 8]
+        └─> 0x00a13a38      08009de5       ldr r0, [sp, 8]
+            0x00a13a3c      010000e2       and r0, r0, 1
+            0x00a13a40      7000afe6       sxtb r0, r0
+            0x00a13a44      0bd0a0e1       mov sp, fp
+            0x00a13a48      0088bde8       pop {fp, pc}

@@ -82,24 +82,46 @@ def main() -> int:
     tree_catalog = tree_assets(args.assets) if args.assets else None
     catalog = apk_catalog or tree_catalog or {}
     refs = references(args.repo)
-    missing = [name for name in refs if name not in catalog]
+    # refs are exactly as the renderer writes them: bare names ("ItemNormals.png")
+    # or GameResources-relative paths ("HDTex/TileMap.png"). Satisfy either form.
+    missing = [name for name in refs
+               if name not in catalog and name.rsplit("/", 1)[-1] not in catalog]
     dimension_mismatches = []
     if apk_catalog is not None and tree_catalog is not None:
-        for name in sorted(set(apk_catalog) & set(tree_catalog)):
-            # Renderer references are relative to assets/GameResources. Prefer
-            # that APK copy over the HDTex copy with the same basename.
-            apk_row = next((r for r in apk_catalog[name] if r.get("apk_path") == f"assets/GameResources/{name}"), apk_catalog[name][0])
-            tree_row = next((r for r in tree_catalog[name] if r.get("path") == name), tree_catalog[name][0])
+        # Pair by FULL path: the APK's assets/GameResources/<rel> must equal the
+        # tree's <rel>. Basename pairing was wrong: the APK (and the tree) carry
+        # SD and HD copies of the same texture under parallel directories
+        # (skins/ vs HDTex/skins/), and pairing basename-first silently mixed
+        # the two domains - reporting 22 false "dimension mismatches" whose
+        # real meaning was "same name exists at two resolutions, compare
+        # apples to apples".
+        apk_by_rel: dict[str, dict] = {}
+        for rows in apk_catalog.values():
+            for row in rows:
+                rel = row["apk_path"]
+                if rel.startswith("assets/GameResources/"):
+                    rel = rel[len("assets/GameResources/"):]
+                    apk_by_rel[rel] = row
+        tree_by_rel = {
+            row["path"]: row
+            for rows in tree_catalog.values()
+            for row in rows
+        }
+        for rel in sorted(set(apk_by_rel) & set(tree_by_rel)):
+            apk_row, tree_row = apk_by_rel[rel], tree_by_rel[rel]
             apk_size = (apk_row.get("width"), apk_row.get("height"))
             tree_size = (tree_row.get("width"), tree_row.get("height"))
             if apk_size != (None, None) and tree_size != (None, None) and apk_size != tree_size:
-                dimension_mismatches.append({"name": name, "apk": apk_size, "tree": tree_size})
+                dimension_mismatches.append({"path": rel, "apk": apk_size, "tree": tree_size})
+        # tree copies missing for an APK path (under GameResources/)
+        result_missing_paths = sorted(set(apk_by_rel) - set(tree_by_rel))
     result = {
         "source": str(args.apk or args.assets),
         "comparison": str(args.assets) if args.apk and args.assets else None,
         "reference_count": len(refs),
         "asset_count": len(catalog),
         "missing_references": missing,
+        "missing_tree_paths": result_missing_paths if apk_catalog is not None and tree_catalog is not None else [],
         "dimension_mismatches": dimension_mismatches,
         "assets": catalog,
     }
@@ -111,9 +133,14 @@ def main() -> int:
     print(f"references={len(refs)} assets={len(catalog)} missing={len(missing)} dimension_mismatches={len(dimension_mismatches)}")
     for name in missing:
         print(f"MISSING {name}")
+    if apk_catalog is not None and tree_catalog is not None:
+        for rel in result_missing_paths:
+            print(f"TREE-PATH MISSING {rel}")
     for row in dimension_mismatches:
-        print(f"DIMENSION {row['name']} apk={row['apk'][0]}x{row['apk'][1]} tree={row['tree'][0]}x{row['tree'][1]}")
-    return 1 if missing or dimension_mismatches else 0
+        print(f"DIMENSION {row['path']} apk={row['apk'][0]}x{row['apk'][1]} tree={row['tree'][0]}x{row['tree'][1]}")
+    return 1 if missing or dimension_mismatches or (
+        apk_catalog is not None and tree_catalog is not None and result_missing_paths
+    ) else 0
 
 
 if __name__ == "__main__":

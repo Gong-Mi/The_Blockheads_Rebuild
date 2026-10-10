@@ -1,0 +1,568 @@
+{
+  "batch": "b3b",
+  "claim": "Plant/GemTree/CactusTree/CoconutTree -[loadSaveDictValues:] read their save keys back through objectForKey: + int/float/bool/doubleValue into word/byte/halfword/float ivar stores; the two Tree subclasses and CoconutTree forward to Tree through objc_msgSendSuper2 (GemTree: own keys then super; CactusTree: super then own keys; CoconutTree: super only); Plant reads saveTime (doubleValue) purely to reset hasFloweredThisSeason when worldTime - saveTime > 1800.0 and clamps both gene halfwords through local helper 0x004c0b70 to [1,255]; save-only stamps (Plant maxAge/growthRate, Tree saveTime) are proven absent by exact CFString pool set equality; static level-A only, runtime roundtrip unresolved",
+  "classes": [
+    {
+      "boundary": "0x009559d0",
+      "class": "Plant",
+      "code_words": 332,
+      "gene_clamp": {
+        "applied": [
+          {
+            "call_site": "0x009557fc",
+            "ivar": "OBJC_IVAR_$_Plant.maxAgeGene",
+            "store_site": "0x00955828"
+          },
+          {
+            "call_site": "0x0095583c",
+            "ivar": "OBJC_IVAR_$_Plant.growthRateGene",
+            "store_site": "0x00955894"
+          }
+        ],
+        "bounds": [
+          1,
+          255
+        ],
+        "bounds_arg_order": "arg1=low, arg2=high (call sites pass movw #1 / movw #0xff)",
+        "helper": "0x004c0b70"
+      },
+      "imp": "0x009554a0",
+      "keys": [
+        {
+          "cfstring_object": "0x00f954f8",
+          "conversion": "intValue",
+          "conversion_site": "0x00955620",
+          "ivar": "OBJC_IVAR_$_Plant.seasonOffset",
+          "ivar_offset": 68,
+          "key": "seasonOffset",
+          "objectforkey_site": "0x00955610",
+          "store_kind": "word_store",
+          "store_site": "0x00955634"
+        },
+        {
+          "cfstring_object": "0x00f95508",
+          "conversion": "floatValue",
+          "conversion_site": "0x0095565c",
+          "ivar": "OBJC_IVAR_$_Plant.age",
+          "ivar_offset": 72,
+          "key": "age",
+          "objectforkey_site": "0x0095564c",
+          "store_kind": "float_store",
+          "store_site": "0x00955674"
+        },
+        {
+          "cfstring_object": "0x00f95518",
+          "conversion": "intValue",
+          "conversion_site": "0x0095569c",
+          "ivar": "OBJC_IVAR_$_Plant.gatherProgress",
+          "ivar_offset": 80,
+          "key": "gatherProgress",
+          "objectforkey_site": "0x0095568c",
+          "store_kind": "word_store",
+          "store_site": "0x009556b0"
+        },
+        {
+          "cfstring_object": "0x00f95528",
+          "conversion": "boolValue",
+          "conversion_site": "0x009556d8",
+          "ivar": "OBJC_IVAR_$_Plant.hasFloweredThisSeason",
+          "ivar_offset": 84,
+          "key": "hasFloweredThisSeason",
+          "objectforkey_site": "0x009556c8",
+          "store_kind": "byte_store",
+          "store_site": "0x009556ec"
+        },
+        {
+          "cfstring_object": "0x00f95538",
+          "conversion": "boolValue",
+          "conversion_site": "0x00955714",
+          "ivar": "OBJC_IVAR_$_Plant.flowering",
+          "ivar_offset": 85,
+          "key": "flowering",
+          "objectforkey_site": "0x00955704",
+          "store_kind": "byte_store",
+          "store_site": "0x00955728"
+        },
+        {
+          "cfstring_object": "0x00f95548",
+          "conversion": "boolValue",
+          "conversion_site": "0x00955750",
+          "ivar": "OBJC_IVAR_$_Plant.frozen",
+          "ivar_offset": 76,
+          "key": "frozen",
+          "objectforkey_site": "0x00955740",
+          "store_kind": "byte_store",
+          "store_site": "0x00955764"
+        },
+        {
+          "cfstring_object": "0x00f95558",
+          "conversion": "intValue",
+          "conversion_site": "0x0095578c",
+          "ivar": "OBJC_IVAR_$_Plant.maxAgeGene",
+          "ivar_offset": 54,
+          "key": "maxAgeGene",
+          "objectforkey_site": "0x0095577c",
+          "store_kind": "halfword_store",
+          "store_site": "0x009557a0"
+        },
+        {
+          "cfstring_object": "0x00f95568",
+          "conversion": "intValue",
+          "conversion_site": "0x009557c8",
+          "ivar": "OBJC_IVAR_$_Plant.growthRateGene",
+          "ivar_offset": 56,
+          "key": "growthRateGene",
+          "objectforkey_site": "0x009557b8",
+          "store_kind": "halfword_store",
+          "store_site": "0x009557dc"
+        }
+      ],
+      "own_keys_order": "own_keys_no_super",
+      "pool_key_cells": {
+        "age": "0x00f95508",
+        "flowering": "0x00f95538",
+        "frozen": "0x00f95548",
+        "gatherProgress": "0x00f95518",
+        "growthRateGene": "0x00f95568",
+        "hasFloweredThisSeason": "0x00f95528",
+        "maxAgeGene": "0x00f95558",
+        "saveTime": "0x00f95578",
+        "seasonOffset": "0x00f954f8"
+      },
+      "pool_keys": [
+        "age",
+        "flowering",
+        "frozen",
+        "gatherProgress",
+        "growthRateGene",
+        "hasFloweredThisSeason",
+        "maxAgeGene",
+        "saveTime",
+        "seasonOffset"
+      ],
+      "save_side": {
+        "keys": [
+          "age",
+          "flowering",
+          "frozen",
+          "gatherProgress",
+          "growthRate",
+          "growthRateGene",
+          "hasFloweredThisSeason",
+          "maxAge",
+          "maxAgeGene",
+          "saveTime",
+          "seasonOffset"
+        ],
+        "read_only": [],
+        "shared_cfstring_objects": [
+          "age",
+          "flowering",
+          "frozen",
+          "gatherProgress",
+          "growthRateGene",
+          "hasFloweredThisSeason",
+          "maxAgeGene",
+          "saveTime",
+          "seasonOffset"
+        ],
+        "source": "subclass_savedict_keys_b2l.json",
+        "style": "super_plus_own_keys",
+        "write_only": [
+          "growthRate",
+          "maxAge"
+        ]
+      },
+      "save_time_read_back": true,
+      "save_time_reset": {
+        "branch_site": "0x00955930",
+        "compare_site": "0x00955928",
+        "conversion": "doubleValue",
+        "conversion_site": "0x009558d8",
+        "key": "saveTime",
+        "objectforkey_site": "0x009558c8",
+        "reset_ivar": "OBJC_IVAR_$_Plant.hasFloweredThisSeason",
+        "reset_store_site": "0x00955950",
+        "reset_value": 0,
+        "semantics": "if (world.worldTime - saveTime > 1800.0) hasFloweredThisSeason = 0",
+        "skip_branch_target": "0x00955954",
+        "subtract_site": "0x00955918",
+        "threshold_double": 1800.0,
+        "threshold_words": [
+          "0x00955960:0x00000000",
+          "0x00955964:0x409c2000"
+        ],
+        "world_ivar": "OBJC_IVAR_$_DynamicObject.world",
+        "world_ivar_offset": 4,
+        "world_time_call_site": "0x00955904",
+        "world_time_selector": "worldTime"
+      },
+      "selector": "loadSaveDictValues:",
+      "site_gates": [
+        "bound_lo_movw_1@0x009554b4",
+        "bound_hi_movw_ff@0x009554b8",
+        "clamp_maxagegene_call@0x009557fc",
+        "clamp_maxagegene_store@0x00955828",
+        "clamp_growthrategene_call@0x0095583c",
+        "clamp_growthrategene_store@0x00955894",
+        "savetime_objectforkey@0x009558c8",
+        "savetime_conv@0x009558d8",
+        "world_receiver_add@0x009558f0",
+        "worldtime_call@0x00955904",
+        "vsub_f64@0x00955918",
+        "vcmpe_f64@0x00955928",
+        "ble_gate@0x00955930",
+        "reset_hfts_store@0x00955950"
+      ],
+      "style": "own_keys_no_super",
+      "super_class": "DynamicObject",
+      "super_forward": null
+    },
+    {
+      "boundary": "0x00529578",
+      "class": "GemTree",
+      "code_words": 99,
+      "imp": "0x005293ec",
+      "keys": [
+        {
+          "cfstring_object": "0x00f79468",
+          "conversion": "intValue",
+          "conversion_site": "0x005294c4",
+          "ivar": "OBJC_IVAR_$_GemTree.gemTreeType",
+          "ivar_offset": 136,
+          "key": "gemTreeType",
+          "objectforkey_site": "0x005294b4",
+          "store_kind": "word_store",
+          "store_site": "0x005294d8"
+        },
+        {
+          "cfstring_object": "0x00f79478",
+          "conversion": "intValue",
+          "conversion_site": "0x00529500",
+          "ivar": "OBJC_IVAR_$_GemTree.fruitYear",
+          "ivar_offset": 140,
+          "key": "fruitYear",
+          "objectforkey_site": "0x005294f0",
+          "store_kind": "word_store",
+          "store_site": "0x00529514"
+        }
+      ],
+      "own_keys_order": "own_then_super",
+      "pool_key_cells": {
+        "fruitYear": "0x00f79478",
+        "gemTreeType": "0x00f79468"
+      },
+      "pool_keys": [
+        "fruitYear",
+        "gemTreeType"
+      ],
+      "save_side": {
+        "keys": [
+          "fruitYear",
+          "gemTreeType"
+        ],
+        "read_only": [],
+        "shared_cfstring_objects": [
+          "fruitYear",
+          "gemTreeType"
+        ],
+        "source": "tree_savedict_keys.json",
+        "style": "super_plus_own_keys",
+        "write_only": []
+      },
+      "selector": "loadSaveDictValues:",
+      "site_gates": [],
+      "style": "own_keys_then_super",
+      "super_class": "Tree",
+      "super_forward": {
+        "call_site": "0x00529540",
+        "class_object": "OBJC_CLASS_$_GemTree",
+        "class_store_site": "0x0052952c",
+        "dispatch": "objc_msgSendSuper2",
+        "got_slot": "0x0105b79c",
+        "receiver_store_site": "0x00529520",
+        "runtime_superclass": "Tree",
+        "selector": "loadSaveDictValues:",
+        "selector_cell": "0x00e7d988",
+        "superref_slot": "0x00e8bc54"
+      }
+    },
+    {
+      "boundary": "0x00b53728",
+      "class": "CactusTree",
+      "code_words": 157,
+      "imp": "0x00b534b4",
+      "keys": [
+        {
+          "cfstring_object": "0x00f9d988",
+          "conversion": "intValue",
+          "conversion_site": "0x00b5360c",
+          "ivar": "OBJC_IVAR_$_CactusTree.splitHeightA",
+          "ivar_offset": 136,
+          "key": "splitHeightA",
+          "objectforkey_site": "0x00b535fc",
+          "store_kind": "word_store",
+          "store_site": "0x00b53620"
+        },
+        {
+          "cfstring_object": "0x00f9d998",
+          "conversion": "intValue",
+          "conversion_site": "0x00b53648",
+          "ivar": "OBJC_IVAR_$_CactusTree.splitHeightB",
+          "ivar_offset": 140,
+          "key": "splitHeightB",
+          "objectforkey_site": "0x00b53638",
+          "store_kind": "word_store",
+          "store_site": "0x00b5365c"
+        },
+        {
+          "cfstring_object": "0x00f9d9a8",
+          "conversion": "boolValue",
+          "conversion_site": "0x00b53684",
+          "ivar": "OBJC_IVAR_$_CactusTree.splitDirection",
+          "ivar_offset": 144,
+          "key": "splitDirection",
+          "objectforkey_site": "0x00b53674",
+          "store_kind": "byte_store",
+          "store_site": "0x00b53698"
+        },
+        {
+          "cfstring_object": "0x00f9d9b8",
+          "conversion": "floatValue",
+          "conversion_site": "0x00b536c0",
+          "ivar": "OBJC_IVAR_$_CactusTree.availableFood",
+          "ivar_offset": 148,
+          "key": "availableFood",
+          "objectforkey_site": "0x00b536b0",
+          "store_kind": "float_store",
+          "store_site": "0x00b536d8"
+        }
+      ],
+      "own_keys_order": "super_then_own",
+      "pool_key_cells": {
+        "availableFood": "0x00f9d9b8",
+        "splitDirection": "0x00f9d9a8",
+        "splitHeightA": "0x00f9d988",
+        "splitHeightB": "0x00f9d998"
+      },
+      "pool_keys": [
+        "availableFood",
+        "splitDirection",
+        "splitHeightA",
+        "splitHeightB"
+      ],
+      "save_side": {
+        "keys": [
+          "availableFood",
+          "splitDirection",
+          "splitHeightA",
+          "splitHeightB"
+        ],
+        "read_only": [],
+        "shared_cfstring_objects": [
+          "availableFood",
+          "splitDirection",
+          "splitHeightA",
+          "splitHeightB"
+        ],
+        "source": "subclass_savedict_keys_b2h.json",
+        "style": "super_plus_own_keys",
+        "write_only": []
+      },
+      "selector": "loadSaveDictValues:",
+      "site_gates": [],
+      "style": "super_then_own_keys",
+      "super_class": "Tree",
+      "super_forward": {
+        "call_site": "0x00b53510",
+        "class_object": "OBJC_CLASS_$_CactusTree",
+        "class_store_site": "0x00b53500",
+        "dispatch": "objc_msgSendSuper2",
+        "got_slot": "0x0105b79c",
+        "receiver_store_site": "0x00b534f8",
+        "runtime_superclass": "Tree",
+        "selector": "loadSaveDictValues:",
+        "selector_cell": "0x00e86a14",
+        "superref_slot": "0x00e8bea8"
+      }
+    },
+    {
+      "boundary": "0x00a99ab4",
+      "class": "CoconutTree",
+      "code_words": 29,
+      "imp": "0x00a99a40",
+      "keys": [],
+      "own_keys_order": "super_only",
+      "pool_key_cells": {},
+      "pool_keys": [],
+      "save_side": {
+        "keys": [],
+        "read_only": [],
+        "shared_cfstring_objects": [],
+        "source": "subclass_savedict_inventory.json",
+        "style": "super_forward",
+        "write_only": []
+      },
+      "selector": "loadSaveDictValues:",
+      "site_gates": [],
+      "style": "super_forward_only",
+      "super_class": "Tree",
+      "super_forward": {
+        "call_site": "0x00a99a98",
+        "class_object": "OBJC_CLASS_$_CoconutTree",
+        "class_store_site": "0x00a99a8c",
+        "dispatch": "objc_msgSendSuper2",
+        "got_slot": "0x0105b79c",
+        "receiver_store_site": "0x00a99a84",
+        "runtime_superclass": "Tree",
+        "selector": "loadSaveDictValues:",
+        "selector_cell": "0x00e85598",
+        "superref_slot": "0x00e8be50"
+      }
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "family": {
+    "asymmetries": [
+      {
+        "class": "Plant",
+        "write_only": [
+          "growthRate",
+          "maxAge"
+        ]
+      },
+      {
+        "class": "Tree",
+        "write_only": [
+          "saveTime"
+        ]
+      },
+      {
+        "class": "Tree",
+        "note": "b3a read set; saveTime is the write-only world-clock stamp",
+        "read_source": "tree_loadsavedictvalues.json"
+      }
+    ],
+    "class_hierarchy": {
+      "CactusTree": "Tree",
+      "CoconutTree": "Tree",
+      "GemTree": "Tree",
+      "Plant": "DynamicObject",
+      "Tree": "DynamicObject"
+    },
+    "per_class_read_write": {
+      "CactusTree": {
+        "read": [
+          "availableFood",
+          "splitDirection",
+          "splitHeightA",
+          "splitHeightB"
+        ],
+        "read_only": [],
+        "symmetric": true,
+        "write": [
+          "availableFood",
+          "splitDirection",
+          "splitHeightA",
+          "splitHeightB"
+        ],
+        "write_only": []
+      },
+      "CoconutTree": {
+        "read": [],
+        "read_only": [],
+        "symmetric": true,
+        "write": [],
+        "write_only": []
+      },
+      "GemTree": {
+        "read": [
+          "fruitYear",
+          "gemTreeType"
+        ],
+        "read_only": [],
+        "symmetric": true,
+        "write": [
+          "fruitYear",
+          "gemTreeType"
+        ],
+        "write_only": []
+      },
+      "Plant": {
+        "read": [
+          "age",
+          "flowering",
+          "frozen",
+          "gatherProgress",
+          "growthRateGene",
+          "hasFloweredThisSeason",
+          "maxAgeGene",
+          "saveTime",
+          "seasonOffset"
+        ],
+        "read_only": [],
+        "symmetric": false,
+        "write": [
+          "age",
+          "flowering",
+          "frozen",
+          "gatherProgress",
+          "growthRate",
+          "growthRateGene",
+          "hasFloweredThisSeason",
+          "maxAge",
+          "maxAgeGene",
+          "saveTime",
+          "seasonOffset"
+        ],
+        "write_only": [
+          "growthRate",
+          "maxAge"
+        ]
+      },
+      "Tree": {
+        "read": [
+          "age",
+          "dead",
+          "growthCounter",
+          "growthRate",
+          "growthRateGene",
+          "height",
+          "maxAge",
+          "maxHeight",
+          "maxHeightGene",
+          "maxHeightReached",
+          "removeCheckCount",
+          "timeDied",
+          "treeFruit",
+          "treeSeasonOffset"
+        ],
+        "read_only": [],
+        "symmetric": false,
+        "write": [
+          "age",
+          "dead",
+          "growthCounter",
+          "growthRate",
+          "growthRateGene",
+          "height",
+          "maxAge",
+          "maxHeight",
+          "maxHeightGene",
+          "maxHeightReached",
+          "removeCheckCount",
+          "saveTime",
+          "timeDied",
+          "treeFruit",
+          "treeSeasonOffset"
+        ],
+        "write_only": [
+          "saveTime"
+        ]
+      }
+    }
+  },
+  "method": "tree-family loadSaveDictValues: read-back evidence (batch b3b)",
+  "pic_base": "0x0105faf4",
+  "schema": 1
+}

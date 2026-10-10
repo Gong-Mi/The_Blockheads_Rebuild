@@ -1,0 +1,47 @@
+# World -[pauseButtonTapped]
+# types: v8@0:4
+# implementation: 0x005b6368
+# ARM.exidx end: 0x005b6410
+
+            0x005b6368      00482de9       push {fp, lr}
+            0x005b636c      0db0a0e1       mov fp, sp
+            0x005b6370      18d04de2       sub sp, sp, 0x18
+            0x005b6374      90209fe5       ldr r2, [0x005b640c]        ; [0x5b640c:4]=0xaa9774
+            0x005b6378      02208fe0       add r2, pc, r2
+            0x005b637c      78309fe5       ldr r3, [0x005b63fc]        ; [0x5b63fc:4]=0xffffbcac
+            0x005b6380      023093e7       ldr r3, [r3, r2]
+            0x005b6384      74c09fe5       ldr ip, [0x005b6400]        ; [0x5b6400:4]=0xffe1ea7c ; "|\xea\xe1\xff\x80\xcc\xff\xff\x80\xea\xe1\xfft\x97\xaa"
+            0x005b6388      02c08ce0       add ip, ip, r2
+            0x005b638c      70e09fe5       ldr lr, [0x005b6404]        ; [0x5b6404:4]=0xffffcc80
+            0x005b6390      02e09ee7       ldr lr, [lr, r2]
+            0x005b6394      04000be5       str r0, [fp, -4]
+            0x005b6398      08100be5       str r1, [fp, -8]
+            0x005b639c      04001be5       ldr r0, [fp, -4]
+            0x005b63a0      00109ee5       ldr r1, [lr]
+            0x005b63a4      010080e0       add r0, r0, r1
+            0x005b63a8      000090e5       ldr r0, [r0]
+            0x005b63ac      00109ce5       ldr r1, [ip]
+            0x005b63b0      08208de5       str r2, [sp, 8]
+            0x005b63b4      33ff2fe1       blx r3
+            0x005b63b8      09004be5       strb r0, [fp, -9]
+            0x005b63bc      d9005be1       ldrsb r0, [fp, -9]
+            0x005b63c0      000050e3       cmp r0, 0
+        ┌─< 0x005b63c4      0a00000a       beq 0x5b63f4
+        │   0x005b63c8      2c009fe5       ldr r0, [0x005b63fc]        ; [0x5b63fc:4]=0xffffbcac
+        │   0x005b63cc      08109de5       ldr r1, [sp, 8]
+        │   0x005b63d0      010090e7       ldr r0, [r0, r1]
+        │   0x005b63d4      2c209fe5       ldr r2, [0x005b6408]        ; [0x5b6408:4]=0xffe1ea80
+        │   0x005b63d8      012082e0       add r2, r2, r1
+        │   0x005b63dc      04301be5       ldr r3, [fp, -4]
+        │   0x005b63e0      001092e5       ldr r1, [r2]
+        │   0x005b63e4      04008de5       str r0, [sp, 4]
+        │   0x005b63e8      0300a0e1       mov r0, r3
+        │   0x005b63ec      04209de5       ldr r2, [sp, 4]
+        │   0x005b63f0      32ff2fe1       blx r2
+        └─> 0x005b63f4      0bd0a0e1       mov sp, fp
+            0x005b63f8      0088bde8       pop {fp, pc}
+            0x005b63fc      acbcffff       invalid
+            0x005b6400      7ceae1ff       invalid
+            0x005b6404      80ccffff       invalid
+            0x005b6408      80eae1ff       invalid
+            0x005b640c      7497aa00       adceq sb, sl, r4, ror r7

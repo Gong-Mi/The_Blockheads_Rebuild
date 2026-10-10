@@ -51,6 +51,9 @@ public:
     Player();
     // Returns how many items were actually accepted; callers retain the rest.
     int addItem(int type, int count);
+    // ID/count-only bridge. Does not import dataA/dataB or nested original InventoryItem state.
+    int addOriginalItem(int originalType, int count);
+    int originalItemType(int slot) const;
     bool checkCollision(float newX, float newY, GameWorld* world);
     void update(float gravity, GameWorld* world);
 };

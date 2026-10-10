@@ -1,0 +1,265 @@
+# SurfaceBlock -[removeIfFloatingAndEmptyOfWater]
+# types: v8@0:4
+# implementation: 0x008144a8
+# ARM.exidx end: 0x008148b8
+
+            0x008144a8      30482de9       push {r4, r5, fp, lr}
+            0x008144ac      08b08de2       add fp, sp, 8
+            0x008144b0      38d04de2       sub sp, sp, 0x38
+            0x008144b4      f8239fe5       ldr r2, [0x008148b4]        ; [0x8148b4:4]=0x84b634
+            0x008144b8      02208fe0       add r2, pc, r2
+            0x008144bc      cc339fe5       ldr r3, [0x00814890]        ; [0x814890:4]=0xffffc8a0
+            0x008144c0      023093e7       ldr r3, [r3, r2]
+            0x008144c4      c8c39fe5       ldr ip, [0x00814894]        ; [0x814894:4]=0xffffc89c
+            0x008144c8      02c09ce7       ldr ip, [ip, r2]
+            0x008144cc      0c000be5       str r0, [fp, -0xc]
+            0x008144d0      10100be5       str r1, [fp, -0x10]
+            0x008144d4      0c001be5       ldr r0, [fp, -0xc]
+            0x008144d8      00109ce5       ldr r1, [ip]
+            0x008144dc      010080e0       add r0, r0, r1
+            0x008144e0      000090e5       ldr r0, [r0]
+            0x008144e4      0c101be5       ldr r1, [fp, -0xc]
+            0x008144e8      00c09ce5       ldr ip, [ip]
+            0x008144ec      0c1081e0       add r1, r1, ip
+            0x008144f0      041091e5       ldr r1, [r1, 4]
+            0x008144f4      0cc01be5       ldr ip, [fp, -0xc]
+            0x008144f8      003093e5       ldr r3, [r3]
+            0x008144fc      03308ce0       add r3, ip, r3
+            0x00814500      003093e5       ldr r3, [r3]
+            0x00814504      14208de5       str r2, [sp, 0x14]
+            0x00814508      0320a0e1       mov r2, r3
+            0x0081450c      84fa07eb       bl sym.tileAtWorldPositionLoaded_int__int__World_ ; tileAtWorldPositionLoaded(int, int, World*)
+            0x00814510      14000be5       str r0, [fp, -0x14]
+            0x00814514      14001be5       ldr r0, [fp, -0x14]
+            0x00814518      5cf407eb       bl sym.tileIsWater_Tile_    ; tileIsWater(Tile*)
+            0x0081451c      7000afe6       sxtb r0, r0
+            0x00814520      000050e3       cmp r0, 0
+        ┌─< 0x00814524      0300000a       beq 0x814538
+        │   0x00814528      14001be5       ldr r0, [fp, -0x14]
+        │   0x0081452c      0400d0e5       ldrb r0, [r0, 4]
+        │   0x00814530      000050e3       cmp r0, 0
+       ┌──< 0x00814534      cb00001a       bne 0x814868
+       │└─> 0x00814538      50039fe5       ldr r0, [0x00814890]        ; [0x814890:4]=0xffffc8a0
+       │    0x0081453c      14109de5       ldr r1, [sp, 0x14]
+       │    0x00814540      010090e7       ldr r0, [r0, r1]
+       │    0x00814544      48239fe5       ldr r2, [0x00814894]        ; [0x814894:4]=0xffffc89c
+       │    0x00814548      012092e7       ldr r2, [r2, r1]
+       │    0x0081454c      0c301be5       ldr r3, [fp, -0xc]
+       │    0x00814550      00c092e5       ldr ip, [r2]
+       │    0x00814554      0c3083e0       add r3, r3, ip
+       │    0x00814558      003093e5       ldr r3, [r3]
+       │    0x0081455c      0cc01be5       ldr ip, [fp, -0xc]
+       │    0x00814560      002092e5       ldr r2, [r2]
+       │    0x00814564      02208ce0       add r2, ip, r2
+       │    0x00814568      042092e5       ldr r2, [r2, 4]
+       │    0x0081456c      011082e2       add r1, r2, 1
+       │    0x00814570      0c201be5       ldr r2, [fp, -0xc]
+       │    0x00814574      000090e5       ldr r0, [r0]
+       │    0x00814578      000082e0       add r0, r2, r0
+       │    0x0081457c      002090e5       ldr r2, [r0]
+       │    0x00814580      0300a0e1       mov r0, r3
+       │    0x00814584      66fa07eb       bl sym.tileAtWorldPositionLoaded_int__int__World_ ; tileAtWorldPositionLoaded(int, int, World*)
+       │    0x00814588      001000e3       movw r1, 0
+       │    0x0081458c      18000be5       str r0, [fp, -0x18]
+       │    0x00814590      18001be5       ldr r0, [fp, -0x18]
+       │    0x00814594      010050e1       cmp r0, r1
+       │┌─< 0x00814598      a900000a       beq 0x814844
+       ││   0x0081459c      18001be5       ldr r0, [fp, -0x18]
+       ││   0x008145a0      3af407eb       bl sym.tileIsWater_Tile_    ; tileIsWater(Tile*)
+       ││   0x008145a4      7000afe6       sxtb r0, r0
+       ││   0x008145a8      000050e3       cmp r0, 0
+      ┌───< 0x008145ac      0300000a       beq 0x8145c0
+      │││   0x008145b0      18001be5       ldr r0, [fp, -0x18]
+      │││   0x008145b4      0400d0e5       ldrb r0, [r0, 4]
+      │││   0x008145b8      000050e3       cmp r0, 0
+     ┌────< 0x008145bc      a000001a       bne 0x814844
+     │└───> 0x008145c0      c8029fe5       ldr r0, [0x00814890]        ; [0x814890:4]=0xffffc8a0
+     │ ││   0x008145c4      14109de5       ldr r1, [sp, 0x14]
+     │ ││   0x008145c8      010090e7       ldr r0, [r0, r1]
+     │ ││   0x008145cc      c0229fe5       ldr r2, [0x00814894]        ; [0x814894:4]=0xffffc89c
+     │ ││   0x008145d0      012092e7       ldr r2, [r2, r1]
+     │ ││   0x008145d4      0c301be5       ldr r3, [fp, -0xc]
+     │ ││   0x008145d8      00c092e5       ldr ip, [r2]
+     │ ││   0x008145dc      0c3083e0       add r3, r3, ip
+     │ ││   0x008145e0      003093e5       ldr r3, [r3]
+     │ ││   0x008145e4      013043e2       sub r3, r3, 1
+     │ ││   0x008145e8      0cc01be5       ldr ip, [fp, -0xc]
+     │ ││   0x008145ec      002092e5       ldr r2, [r2]
+     │ ││   0x008145f0      02208ce0       add r2, ip, r2
+     │ ││   0x008145f4      041092e5       ldr r1, [r2, 4]
+     │ ││   0x008145f8      0c201be5       ldr r2, [fp, -0xc]
+     │ ││   0x008145fc      000090e5       ldr r0, [r0]
+     │ ││   0x00814600      000082e0       add r0, r2, r0
+     │ ││   0x00814604      002090e5       ldr r2, [r0]
+     │ ││   0x00814608      0300a0e1       mov r0, r3
+     │ ││   0x0081460c      44fa07eb       bl sym.tileAtWorldPositionLoaded_int__int__World_ ; tileAtWorldPositionLoaded(int, int, World*)
+     │ ││   0x00814610      001000e3       movw r1, 0
+     │ ││   0x00814614      1c000be5       str r0, [fp, -0x1c]
+     │ ││   0x00814618      1c001be5       ldr r0, [fp, -0x1c]
+     │ ││   0x0081461c      010050e1       cmp r0, r1
+     │┌───< 0x00814620      7e00000a       beq 0x814820
+     ││││   0x00814624      1c001be5       ldr r0, [fp, -0x1c]
+     ││││   0x00814628      18f407eb       bl sym.tileIsWater_Tile_    ; tileIsWater(Tile*)
+     ││││   0x0081462c      7000afe6       sxtb r0, r0
+     ││││   0x00814630      000050e3       cmp r0, 0
+    ┌─────< 0x00814634      0300000a       beq 0x814648
+    │││││   0x00814638      1c001be5       ldr r0, [fp, -0x1c]
+    │││││   0x0081463c      0400d0e5       ldrb r0, [r0, 4]
+    │││││   0x00814640      010050e3       cmp r0, 1
+   ┌──────< 0x00814644      750000ca       bgt 0x814820
+   │└─────> 0x00814648      40029fe5       ldr r0, [0x00814890]        ; [0x814890:4]=0xffffc8a0
+   │ ││││   0x0081464c      14109de5       ldr r1, [sp, 0x14]
+   │ ││││   0x00814650      010090e7       ldr r0, [r0, r1]
+   │ ││││   0x00814654      38229fe5       ldr r2, [0x00814894]        ; [0x814894:4]=0xffffc89c
+   │ ││││   0x00814658      012092e7       ldr r2, [r2, r1]
+   │ ││││   0x0081465c      0c301be5       ldr r3, [fp, -0xc]
+   │ ││││   0x00814660      00c092e5       ldr ip, [r2]
+   │ ││││   0x00814664      0c3083e0       add r3, r3, ip
+   │ ││││   0x00814668      003093e5       ldr r3, [r3]
+   │ ││││   0x0081466c      013083e2       add r3, r3, 1
+   │ ││││   0x00814670      0cc01be5       ldr ip, [fp, -0xc]
+   │ ││││   0x00814674      002092e5       ldr r2, [r2]
+   │ ││││   0x00814678      02208ce0       add r2, ip, r2
+   │ ││││   0x0081467c      041092e5       ldr r1, [r2, 4]
+   │ ││││   0x00814680      0c201be5       ldr r2, [fp, -0xc]
+   │ ││││   0x00814684      000090e5       ldr r0, [r0]
+   │ ││││   0x00814688      000082e0       add r0, r2, r0
+   │ ││││   0x0081468c      002090e5       ldr r2, [r0]
+   │ ││││   0x00814690      0300a0e1       mov r0, r3
+   │ ││││   0x00814694      22fa07eb       bl sym.tileAtWorldPositionLoaded_int__int__World_ ; tileAtWorldPositionLoaded(int, int, World*)
+   │ ││││   0x00814698      001000e3       movw r1, 0
+   │ ││││   0x0081469c      20008de5       str r0, [sp, 0x20]
+   │ ││││   0x008146a0      20009de5       ldr r0, [sp, 0x20]
+   │ ││││   0x008146a4      010050e1       cmp r0, r1
+   │┌─────< 0x008146a8      5300000a       beq 0x8147fc
+   ││││││   0x008146ac      20009de5       ldr r0, [sp, 0x20]
+   ││││││   0x008146b0      f6f307eb       bl sym.tileIsWater_Tile_    ; tileIsWater(Tile*)
+   ││││││   0x008146b4      7000afe6       sxtb r0, r0
+   ││││││   0x008146b8      000050e3       cmp r0, 0
+  ┌───────< 0x008146bc      0300000a       beq 0x8146d0
+  │││││││   0x008146c0      20009de5       ldr r0, [sp, 0x20]
+  │││││││   0x008146c4      0400d0e5       ldrb r0, [r0, 4]
+  │││││││   0x008146c8      010050e3       cmp r0, 1
+  ────────< 0x008146cc      4a0000ca       bgt 0x8147fc
+  └───────> 0x008146d0      c0019fe5       ldr r0, [0x00814898]        ; [0x814898:4]=0xffffe0c0
+   ││││││   0x008146d4      14109de5       ldr r1, [sp, 0x14]
+   ││││││   0x008146d8      010090e7       ldr r0, [r0, r1]
+   ││││││   0x008146dc      0c201be5       ldr r2, [fp, -0xc]
+   ││││││   0x008146e0      000090e5       ldr r0, [r0]
+   ││││││   0x008146e4      000082e0       add r0, r2, r0
+   ││││││   0x008146e8      d000d0e1       ldrsb r0, [r0]
+   ││││││   0x008146ec      000050e3       cmp r0, 0
+  ┌───────< 0x008146f0      3800000a       beq 0x8147d8
+  │││││││   0x008146f4      a0019fe5       ldr r0, [0x0081489c]        ; [0x81489c:4]=0xffffbcac
+  │││││││   0x008146f8      14109de5       ldr r1, [sp, 0x14]
+  │││││││   0x008146fc      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00814700      0020a0e1       mov r2, r0
+  │││││││   0x00814704      94319fe5       ldr r3, [0x008148a0]        ; [0x8148a0:4]=0xffe222fc
+  │││││││   0x00814708      013083e0       add r3, r3, r1
+  │││││││   0x0081470c      90c19fe5       ldr ip, [0x008148a4]        ; [0x8148a4:4]=0xffffc8b4
+  │││││││   0x00814710      01c09ce7       ldr ip, [ip, r1]
+  │││││││   0x00814714      01e000e3       movw lr, 1
+  │││││││   0x00814718      88419fe5       ldr r4, [0x008148a8]        ; [0x8148a8:4]=0xffe222e0
+  │││││││   0x0081471c      014084e0       add r4, r4, r1
+  │││││││   0x00814720      0c501be5       ldr r5, [fp, -0xc]
+  │││││││   0x00814724      001094e5       ldr r1, [r4]
+  │││││││   0x00814728      10008de5       str r0, [sp, 0x10]
+  │││││││   0x0081472c      0500a0e1       mov r0, r5
+  │││││││   0x00814730      7ee0afe6       sxtb lr, lr
+  │││││││   0x00814734      0c208de5       str r2, [sp, 0xc]
+  │││││││   0x00814738      0e20a0e1       mov r2, lr
+  │││││││   0x0081473c      10e09de5       ldr lr, [sp, 0x10]
+  │││││││   0x00814740      08c08de5       str ip, [sp, 8]
+  │││││││   0x00814744      04308de5       str r3, [sp, 4]
+  │││││││   0x00814748      3eff2fe1       blx lr
+  │││││││   0x0081474c      0c001be5       ldr r0, [fp, -0xc]
+  │││││││   0x00814750      08109de5       ldr r1, [sp, 8]
+  │││││││   0x00814754      002091e5       ldr r2, [r1]
+  │││││││   0x00814758      020080e0       add r0, r0, r2
+  │││││││   0x0081475c      000090e5       ldr r0, [r0]
+  │││││││   0x00814760      04209de5       ldr r2, [sp, 4]
+  │││││││   0x00814764      001092e5       ldr r1, [r2]
+  │││││││   0x00814768      0c309de5       ldr r3, [sp, 0xc]
+  │││││││   0x0081476c      33ff2fe1       blx r3
+  │││││││   0x00814770      7000afe6       sxtb r0, r0
+  │││││││   0x00814774      000050e3       cmp r0, 0
+  ────────< 0x00814778      1500001a       bne 0x8147d4
+  │││││││   0x0081477c      0c001be5       ldr r0, [fp, -0xc]
+  │││││││   0x00814780      08119fe5       ldr r1, [0x00814890]        ; [0x814890:4]=0xffffc8a0
+  │││││││   0x00814784      20219fe5       ldr r2, [0x008148ac]        ; [0x8148ac:4]=0x84b364
+  │││││││   0x00814788      02208fe0       add r2, pc, r2
+  │││││││   0x0081478c      021091e7       ldr r1, [r1, r2]
+  │││││││   0x00814790      001091e5       ldr r1, [r1]
+  │││││││   0x00814794      011090e7       ldr r1, [r0, r1]
+  │││││││   0x00814798      f4309fe5       ldr r3, [0x00814894]        ; [0x814894:4]=0xffffc89c
+  │││││││   0x0081479c      023093e7       ldr r3, [r3, r2]
+  │││││││   0x008147a0      003093e5       ldr r3, [r3]
+  │││││││   0x008147a4      0330b0e7       ldr r3, [r0, r3]!
+  │││││││   0x008147a8      18308de5       str r3, [sp, 0x18]
+  │││││││   0x008147ac      040090e5       ldr r0, [r0, 4]
+  │││││││   0x008147b0      1c008de5       str r0, [sp, 0x1c]
+  │││││││   0x008147b4      f4009fe5       ldr r0, [0x008148b0]        ; [0x8148b0:4]=0xffe22300
+  │││││││   0x008147b8      020090e7       ldr r0, [r0, r2]
+  │││││││   0x008147bc      18209de5       ldr r2, [sp, 0x18]
+  │││││││   0x008147c0      1c309de5       ldr r3, [sp, 0x1c]
+  │││││││   0x008147c4      00008de5       str r0, [sp]
+  │││││││   0x008147c8      0100a0e1       mov r0, r1
+  │││││││   0x008147cc      00109de5       ldr r1, [sp]
+  │││││││   0x008147d0      11b8e6eb       bl loc.imp.objc_msgSend
+  ────────> 0x008147d4      070000ea       b 0x8147f8
+  └───────> 0x008147d8      010000e3       movw r0, 1
+   ││││││   0x008147dc      b4109fe5       ldr r1, [0x00814898]        ; [0x814898:4]=0xffffe0c0
+   ││││││   0x008147e0      14209de5       ldr r2, [sp, 0x14]
+   ││││││   0x008147e4      021091e7       ldr r1, [r1, r2]
+   ││││││   0x008147e8      0c301be5       ldr r3, [fp, -0xc]
+   ││││││   0x008147ec      001091e5       ldr r1, [r1]
+   ││││││   0x008147f0      011083e0       add r1, r3, r1
+   ││││││   0x008147f4      0000c1e5       strb r0, [r1]
+  ┌───────< 0x008147f8      070000ea       b 0x81481c
+  ──└─────> 0x008147fc      000000e3       movw r0, 0
+  ││ ││││   0x00814800      90109fe5       ldr r1, [0x00814898]        ; [0x814898:4]=0xffffe0c0
+  ││ ││││   0x00814804      14209de5       ldr r2, [sp, 0x14]
+  ││ ││││   0x00814808      021091e7       ldr r1, [r1, r2]
+  ││ ││││   0x0081480c      0c301be5       ldr r3, [fp, -0xc]
+  ││ ││││   0x00814810      001091e5       ldr r1, [r1]
+  ││ ││││   0x00814814      011083e0       add r1, r3, r1
+  ││ ││││   0x00814818      0000c1e5       strb r0, [r1]
+  └─┌─────< 0x0081481c      070000ea       b 0x814840
+   └──└───> 0x00814820      000000e3       movw r0, 0
+    ││ ││   0x00814824      6c109fe5       ldr r1, [0x00814898]        ; [0x814898:4]=0xffffe0c0
+    ││ ││   0x00814828      14209de5       ldr r2, [sp, 0x14]
+    ││ ││   0x0081482c      021091e7       ldr r1, [r1, r2]
+    ││ ││   0x00814830      0c301be5       ldr r3, [fp, -0xc]
+    ││ ││   0x00814834      001091e5       ldr r1, [r1]
+    ││ ││   0x00814838      011083e0       add r1, r3, r1
+    ││ ││   0x0081483c      0000c1e5       strb r0, [r1]
+    └─┌───< 0x00814840      070000ea       b 0x814864
+     └──└─> 0x00814844      000000e3       movw r0, 0
+      ││    0x00814848      48109fe5       ldr r1, [0x00814898]        ; [0x814898:4]=0xffffe0c0
+      ││    0x0081484c      14209de5       ldr r2, [sp, 0x14]
+      ││    0x00814850      021091e7       ldr r1, [r1, r2]
+      ││    0x00814854      0c301be5       ldr r3, [fp, -0xc]
+      ││    0x00814858      001091e5       ldr r1, [r1]
+      ││    0x0081485c      011083e0       add r1, r3, r1
+      ││    0x00814860      0000c1e5       strb r0, [r1]
+      └─┌─< 0x00814864      070000ea       b 0x814888
+       └──> 0x00814868      000000e3       movw r0, 0
+        │   0x0081486c      24109fe5       ldr r1, [0x00814898]        ; [0x814898:4]=0xffffe0c0
+        │   0x00814870      14209de5       ldr r2, [sp, 0x14]
+        │   0x00814874      021091e7       ldr r1, [r1, r2]
+        │   0x00814878      0c301be5       ldr r3, [fp, -0xc]
+        │   0x0081487c      001091e5       ldr r1, [r1]
+        │   0x00814880      011083e0       add r1, r3, r1
+        │   0x00814884      0000c1e5       strb r0, [r1]
+        └─> 0x00814888      08d04be2       sub sp, fp, 8
+            0x0081488c      3088bde8       pop {r4, r5, fp, pc}
+            0x00814890      a0c8ffff       invalid
+            0x00814894      9cc8ffff       invalid
+            0x00814898      c0e0ffff       invalid
+            0x0081489c      acbcffff       invalid
+            0x008148a0      fc22e2ff       invalid
+            0x008148a4      b4c8ffff       invalid
+            0x008148a8      e022e2ff       invalid
+            0x008148ac      64b38400       addeq fp, r4, r4, ror 6
+            0x008148b0      0023e2ff       invalid
+            0x008148b4      34b68400       addeq fp, r4, r4, lsr r6

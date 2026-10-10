@@ -1,0 +1,70 @@
+# NPC -[fullnessFraction]
+# types: f8@0:4
+# implementation: 0x00649428
+# ARM.exidx end: 0x0064952c
+
+            0x00649428      00482de9       push {fp, lr}
+            0x0064942c      0db0a0e1       mov fp, sp
+            0x00649430      28d04de2       sub sp, sp, 0x28
+            0x00649434      ec209fe5       ldr r2, [0x00649528]        ; [0x649528:4]=0xa166b4
+            0x00649438      02208fe0       add r2, pc, r2
+            0x0064943c      d4309fe5       ldr r3, [0x00649518]        ; [0x649518:4]=0xffffbcac
+            0x00649440      023093e7       ldr r3, [r3, r2]
+            0x00649444      d0c09fe5       ldr ip, [0x0064951c]        ; [0x64951c:4]=0xffe1f69c
+            0x00649448      02c08ce0       add ip, ip, r2
+            0x0064944c      08000be5       str r0, [fp, -8]
+            0x00649450      0c100be5       str r1, [fp, -0xc]
+            0x00649454      08001be5       ldr r0, [fp, -8]
+            0x00649458      00109ce5       ldr r1, [ip]
+            0x0064945c      14208de5       str r2, [sp, 0x14]
+            0x00649460      33ff2fe1       blx r3
+            0x00649464      7000afe6       sxtb r0, r0
+            0x00649468      000050e3       cmp r0, 0
+        ┌─< 0x0064946c      0400001a       bne 0x649484
+        │   0x00649470      010000e3       movw r0, 1
+        │   0x00649474      000ab7ee       vmov.f32 s0, 1
+        │   0x00649478      010a0bed       vstr s0, [fp, -4]
+        │   0x0064947c      10008de5       str r0, [sp, 0x10]
+       ┌──< 0x00649480      1d0000ea       b 0x6494fc
+       │└─> 0x00649484      000000e3       movw r0, 0
+       │    0x00649488      240a9fed       vldr s0, [0x00649520]
+       │    0x0064948c      011000e3       movw r1, 1
+       │    0x00649490      001ab7ee       vmov.f32 s2, 1
+       │    0x00649494      182501e3       movw r2, 0x1518             ; '\x18\x15'
+       │    0x00649498      1c2b9fed       vldr d2, [0x00649510]
+       │    0x0064949c      80309fe5       ldr r3, [0x00649524]        ; [0x649524:4]=0xffffd1a0
+       │    0x006494a0      14c09de5       ldr ip, [sp, 0x14]
+       │    0x006494a4      0c3093e7       ldr r3, [r3, ip]
+       │    0x006494a8      08e01be5       ldr lr, [fp, -8]
+       │    0x006494ac      003093e5       ldr r3, [r3]
+       │    0x006494b0      03308ee0       add r3, lr, r3
+       │    0x006494b4      003a93ed       vldr s6, [r3]
+       │    0x006494b8      c34ab7ee       vcvt.f64.f32 d4, s6
+       │    0x006494bc      022b84ee       vdiv.f64 d2, d4, d2
+       │    0x006494c0      c23bb7ee       vcvt.f32.f64 s6, d2
+       │    0x006494c4      043a0bed       vstr s6, [fp, -0x10]
+       │    0x006494c8      043a1bed       vldr s6, [fp, -0x10]
+       │    0x006494cc      103a13ee       vmov r3, s6
+       │    0x006494d0      0c008de5       str r0, [sp, 0xc]
+       │    0x006494d4      0300a0e1       mov r0, r3
+       │    0x006494d8      103a10ee       vmov r3, s0
+       │    0x006494dc      08108de5       str r1, [sp, 8]
+       │    0x006494e0      0310a0e1       mov r1, r3
+       │    0x006494e4      103a11ee       vmov r3, s2
+       │    0x006494e8      04208de5       str r2, [sp, 4]
+       │    0x006494ec      0320a0e1       mov r2, r3
+       │    0x006494f0      dcd2f9eb       bl sym.clamp_float__float__float_ ; clamp(float, float, float)
+       │    0x006494f4      100a00ee       vmov s0, r0
+       │    0x006494f8      010a0bed       vstr s0, [fp, -4]
+       └──> 0x006494fc      010a1bed       vldr s0, [fp, -4]
+            0x00649500      100a10ee       vmov r0, s0
+            0x00649504      0bd0a0e1       mov sp, fp
+            0x00649508      0088bde8       pop {fp, pc}
+            0x0064950c      00f020e3       nop
+            0x00649510      00000000       andeq r0, r0, r0
+            0x00649514      0018b540       adcsmi r1, r5, r0, lsl 16
+            0x00649518      acbcffff       invalid
+            0x0064951c      9cf6e1ff       invalid
+            0x00649520      00000000       andeq r0, r0, r0
+            0x00649524      a0d1ffff       invalid
+            0x00649528      b466a100       invalid

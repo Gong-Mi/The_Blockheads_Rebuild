@@ -1,0 +1,5071 @@
+{
+  "batch": "Torch class (E72): the primitive artificial light - the full 34-body class incl. getLightRGB, worldContentsChanged solver, addDrawQuadData emitter and lightPos; 34 bodies",
+  "claim": "a static bounded-body map with per-instruction anchors; the wire-format markers, the NSLog key strings, the C++ container member layouts and the packet helper at 0x8b84c8 are outside these bodies",
+  "classes": [
+    {
+      "boundary": "ARM.exidx end 0x004b4e98 (listing bound); next ObjC IMP 0x004b4e98 Torch -[getLightRGB]",
+      "boundary_end": "0x004b4e98",
+      "branches": [
+        {
+          "address": "0x004b4a64",
+          "destination": "0x004b4b18",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b4a90",
+          "destination": "0x004b4b18",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b4abc",
+          "destination": "0x004b4b18",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b4ae8",
+          "destination": "0x004b4b18",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b4b58",
+          "destination": "0x004b4cc0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b4b84",
+          "destination": "0x004b4cc0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b4bb0",
+          "destination": "0x004b4cc0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b4bdc",
+          "destination": "0x004b4cc0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b4c08",
+          "destination": "0x004b4cc0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b4c34",
+          "destination": "0x004b4cc0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b4c60",
+          "destination": "0x004b4cc0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b4c8c",
+          "destination": "0x004b4cc0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b4d00",
+          "destination": "0x004b4d60",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b4d2c",
+          "destination": "0x004b4d60",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b4dd4"
+        },
+        {
+          "callee": "0x00a19670",
+          "route": "bl sym.reloadDrawBlockDynamicObjectQuadsForTile_intpair__MacroTile__World_",
+          "site": "0x004b4e00"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b4e3c"
+        },
+        {
+          "callee": "0x00a197b4",
+          "route": "bl sym.reloadDrawBlockLightGlowQuadsForTile_intpair__MacroTile__World_",
+          "site": "0x004b4e68"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b4a20",
+      "ivars": {
+        "0x004b4e74": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        },
+        "0x004b4e78": {
+          "offset": 78,
+          "slot": "0x0105c384",
+          "symbol": "OBJC_IVAR_$_Torch.chandelier"
+        },
+        "0x004b4e7c": {
+          "offset": 76,
+          "slot": "0x0105c388",
+          "symbol": "OBJC_IVAR_$_Torch.animates"
+        },
+        "0x004b4e80": {
+          "offset": 77,
+          "slot": "0x0105c38c",
+          "symbol": "OBJC_IVAR_$_Torch.flatOnSideAndBottom"
+        },
+        "0x004b4e88": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x004b4e8c": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        }
+      },
+      "method": "Torch -[initSubDerivedItems]",
+      "name": "t_initsubderived",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x004b4e90": {
+          "selector": "macroTiles",
+          "slot": "0x00e7d160"
+        }
+      },
+      "semantics": "[Torch initSubDerivedItems] (imp 0x004b4a20, 286w): derives the torch's sub-state from the **block type it sits on**: the block byte (ffffc88c chain) is compared against **0x94/0x93/0x92/0x91 (148..145)** (beq arms @0x4b4a64-0x4b4ae8), the 0x95 (149) arm booleanizes (`moveq 1` @0x4b4b10), then a second chain across **0x4b ('K') / 0x4c ('L') / ...** block codes; the derived flag is strored via strb (ffffc890 cell @0x4b4b3c). The 0x91..0x95 family is the torch-flame block set of the world format.\n",
+      "types": "v8@0:4",
+      "verified_words": 286
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b52ac (listing bound); next ObjC IMP 0x004b5300 Torch -[initWithWorld:dynamicWorld:atPosition:cache:type:dataA:dataB:saveDict:placedByClient:]",
+      "boundary_end": "0x004b52ac",
+      "branches": [
+        {
+          "address": "0x004b4ef0",
+          "destination": "0x004b4f0c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b4f08",
+          "destination": "0x004b5260",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b4f2c",
+          "destination": "0x004b4f4c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b4f48",
+          "destination": "0x004b525c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b4f6c",
+          "destination": "0x004b4fbc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b4f90",
+          "destination": "0x004b4fbc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b4fb8",
+          "destination": "0x004b4fd4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b4fd0",
+          "destination": "0x004b5258",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b4ff4",
+          "destination": "0x004b5010",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b500c",
+          "destination": "0x004b5254",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5030",
+          "destination": "0x004b504c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b5048",
+          "destination": "0x004b5250",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b506c",
+          "destination": "0x004b5088",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b5084",
+          "destination": "0x004b524c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b50a8",
+          "destination": "0x004b50c8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b50c4",
+          "destination": "0x004b5248",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b50e8",
+          "destination": "0x004b5104",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b5100",
+          "destination": "0x004b5244",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5124",
+          "destination": "0x004b5140",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b513c",
+          "destination": "0x004b5240",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5160",
+          "destination": "0x004b517c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b5178",
+          "destination": "0x004b523c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b519c",
+          "destination": "0x004b51b8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b51b4",
+          "destination": "0x004b5238",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b51d8",
+          "destination": "0x004b51f8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b51f4",
+          "destination": "0x004b5234",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5218",
+          "destination": "0x004b5230",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b5230",
+          "destination": "0x004b5234",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5234",
+          "destination": "0x004b5238",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5238",
+          "destination": "0x004b523c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b523c",
+          "destination": "0x004b5240",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5240",
+          "destination": "0x004b5244",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5244",
+          "destination": "0x004b5248",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5248",
+          "destination": "0x004b524c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b524c",
+          "destination": "0x004b5250",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5250",
+          "destination": "0x004b5254",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5254",
+          "destination": "0x004b5258",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5258",
+          "destination": "0x004b525c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b525c",
+          "destination": "0x004b5260",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x004b5294"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b4e98",
+      "ivars": {
+        "0x004b52a4": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        }
+      },
+      "method": "Torch -[getLightRGB]",
+      "name": "t_getlightrgb",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Torch getLightRGB] (imp 0x004b4e98, 261w): the **light color table by block type**: block 0x2f ('/') \u2192 **(0x7f, 0xff, 0x37-const)** (@0x4b4ef4: 127/255 + the 0x37 stored at [sp,0xc]); block **0xb7 (183) \u2192 (0xdc, 0x64, 0xc) = (220, 100, 12)** the orange flame (@0x4b4f30); block **0x96 (150) / 0xfe (254) / 0x102 (258)** \u2192 (0xaa, 0x12c, ..) (@0x4b4fbc); the returns are packed RGB bytes via the {Vector=[4f]} return type. The block-type universe 0x2f/0xb7/0x96/0xfe/0x102 matches the fire/torch block family seen in t_worldcontents.\n",
+      "types": "{Vector=[4f]}8@0:4",
+      "verified_words": 261
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b5c08 (listing bound); next ObjC IMP 0x004b5c1c Torch -[objectType]",
+      "boundary_end": "0x004b5c08",
+      "branches": [
+        {
+          "address": "0x004b540c",
+          "destination": "0x004b541c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b5418",
+          "destination": "0x004b5b98",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5480",
+          "destination": "0x004b54cc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b54c8",
+          "destination": "0x004b5598",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5514",
+          "destination": "0x004b5594",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b5594",
+          "destination": "0x004b5598",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b55bc",
+          "destination": "0x004b55d4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b55d0",
+          "destination": "0x004b55f4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5674",
+          "destination": "0x004b5684",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b5680",
+          "destination": "0x004b5934",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b56a4",
+          "destination": "0x004b56bc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b56b8",
+          "destination": "0x004b5930",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b56dc",
+          "destination": "0x004b572c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b5700",
+          "destination": "0x004b572c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b5728",
+          "destination": "0x004b5738",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b5734",
+          "destination": "0x004b592c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5758",
+          "destination": "0x004b5770",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b576c",
+          "destination": "0x004b5928",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5790",
+          "destination": "0x004b57a8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b57a4",
+          "destination": "0x004b5924",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b57c8",
+          "destination": "0x004b57e0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b57dc",
+          "destination": "0x004b5920",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5800",
+          "destination": "0x004b5818",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b5814",
+          "destination": "0x004b591c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5838",
+          "destination": "0x004b5850",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b584c",
+          "destination": "0x004b5918",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5870",
+          "destination": "0x004b5904",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b5894",
+          "destination": "0x004b5904",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b58b8",
+          "destination": "0x004b5904",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b58dc",
+          "destination": "0x004b5904",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b5900",
+          "destination": "0x004b5914",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b5914",
+          "destination": "0x004b5918",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5918",
+          "destination": "0x004b591c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b591c",
+          "destination": "0x004b5920",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5920",
+          "destination": "0x004b5924",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5924",
+          "destination": "0x004b5928",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5928",
+          "destination": "0x004b592c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b592c",
+          "destination": "0x004b5930",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5930",
+          "destination": "0x004b5934",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5954",
+          "destination": "0x004b5ae8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b5980",
+          "destination": "0x004b5990",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b598c",
+          "destination": "0x004b59c4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b59b4",
+          "destination": "0x004b59c0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b59c0",
+          "destination": "0x004b59c4",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c29fc",
+          "route": "bl loc.imp.objc_msgSendSuper2",
+          "site": "0x004b53f0"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x004b54b0"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x004b5508"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x004b556c"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x004b557c"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x004b55cc"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x004b55f0"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004b55f8"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004b5614"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004b5630"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b59f4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b5ad0"
+        },
+        {
+          "callee": "0x004b4444",
+          "route": "bl sym.torchConnectionTypeForPos_intpair__World__ItemType_",
+          "site": "0x004b5b48"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x004b5b8c"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b5300",
+      "ivars": {
+        "0x004b5bb0": {
+          "offset": 82,
+          "slot": "0x0105c398",
+          "symbol": "OBJC_IVAR_$_Torch.dataB"
+        },
+        "0x004b5bb4": {
+          "offset": 80,
+          "slot": "0x0105c39c",
+          "symbol": "OBJC_IVAR_$_Torch.dataA"
+        },
+        "0x004b5bb8": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        },
+        "0x004b5bc8": {
+          "offset": 36,
+          "slot": "0x0105c3a0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.ownerID"
+        },
+        "0x004b5bd4": {
+          "offset": 56,
+          "slot": "0x0105c3a4",
+          "symbol": "OBJC_IVAR_$_Torch.light"
+        },
+        "0x004b5be4": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x004b5be8": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        },
+        "0x004b5bec": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x004b5bf0": {
+          "offset": 32,
+          "slot": "0x0105c3ac",
+          "symbol": "OBJC_IVAR_$_DynamicObject.cache"
+        },
+        "0x004b5bfc": {
+          "offset": 60,
+          "slot": "0x0105c3b0",
+          "symbol": "OBJC_IVAR_$_Torch.connectionType"
+        }
+      },
+      "method": "Torch -[initWithWorld:dynamicWorld:atPosition:cache:type:dataA:dataB:saveDict:placedByClient:]",
+      "name": "t_ctor_placed",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x004b5ba4": {
+          "class": "OBJC_CLASS_$_Torch",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bc2c"
+        },
+        "0x004b5bac": {
+          "selector": "initWithWorld:dynamicWorld:atPosition:cache:",
+          "slot": "0x00e7d164"
+        },
+        "0x004b5bbc": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f73478"
+        },
+        "0x004b5bc0": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x004b5bc4": {
+          "selector": "objectForKey:",
+          "slot": "0x00e7d16c"
+        },
+        "0x004b5bcc": {
+          "selector": "retain",
+          "slot": "0x00e7d168"
+        },
+        "0x004b5bd0": {
+          "selector": "getLightRGB",
+          "slot": "0x00e7d170"
+        },
+        "0x004b5bd8": {
+          "class": "OBJC_CLASS_$_ArtificialLight",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e89e90"
+        },
+        "0x004b5be0": {
+          "selector": "alloc",
+          "slot": "0x00e7d174"
+        },
+        "0x004b5bf4": {
+          "selector": "initWithWorld:dynamicWorld:atPosition:cache:parentObject:colorR:colorG:colorB:heat:radius:lightDirection:",
+          "slot": "0x00e7d178"
+        },
+        "0x004b5bf8": {
+          "selector": "initSubDerivedItems",
+          "slot": "0x00e7d17c"
+        }
+      },
+      "semantics": "[Torch initWithWorld:...type:dataA:dataB:saveDict:placedByClient:] (imp 0x004b5300, 578w): super2 (@0x4b53f0) + nil gate (@0x4b5408); the dataA/dataB **halfwords** (strh r8/r7 @0x4b5370-0x4b5374) are saved through the ffffc8a4/c8a8 ivar cells (`strh ip [r3]` = dataB @0x4b5460, `strh r3 [r1]` = dataA @0x4b5474), the type/value through ffffc88c (`str lr [ip]` @0x4b544c); then the ffffc8ac/bcac + ffe1d674 cache-insert callback (@0x4b54b0). The save-dict decode chain runs the ffe2c138/ffe1d670 pulls.\n",
+      "types": "@48@0:4@8@12{?=ii}16@24i28S32S36@40@44",
+      "verified_words": 578
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b5c74 (listing bound); next ObjC IMP 0x004b5c38 Torch -[freeblockCreationItemType]",
+      "boundary_end": "0x004b5c74",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b5c1c",
+      "ivars": {
+        "0x004b5c6c": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        }
+      },
+      "method": "Torch -[objectType]",
+      "name": "t_objecttype",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Torch objectType] (imp 0x004b5c1c, 22w): returns **0x11 (17)** - the torch's dynamic-object type code, matching the pinned torch=17 of the accessor family.\n",
+      "types": "i8@0:4",
+      "verified_words": 22
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b5c74 (listing bound); next ObjC IMP 0x004b5c74 Torch -[freeBlockCreationSaveDict]",
+      "boundary_end": "0x004b5c74",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b5c38",
+      "ivars": {
+        "0x004b5c6c": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        }
+      },
+      "method": "Torch -[freeblockCreationItemType]",
+      "name": "t_fbitemtype",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Torch freeblockCreationItemType] (imp 0x004b5c38, 15w): reads an ivar through the ffffc88c cell (the torch's creation item type).\n",
+      "types": "i8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b5cc0 (listing bound); next ObjC IMP 0x004b5cc0 Torch -[freeBlockCreationDataA]",
+      "boundary_end": "0x004b5cc0",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x004b5ca8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b5c74",
+      "ivars": {},
+      "method": "Torch -[freeBlockCreationSaveDict]",
+      "name": "t_fbsavedict",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x004b5cb4": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x004b5cb8": {
+          "selector": "getSaveDict",
+          "slot": "0x00e7d180"
+        }
+      },
+      "semantics": "[Torch freeBlockCreationSaveDict] (imp 0x004b5c74, 19w): thin forwarder via ffffbcac + ffe1d68c.\n",
+      "types": "@8@0:4",
+      "verified_words": 19
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b5d38 (listing bound); next ObjC IMP 0x004b5cfc Torch -[freeBlockCreationDataB]",
+      "boundary_end": "0x004b5d38",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b5cc0",
+      "ivars": {
+        "0x004b5cf4": {
+          "offset": 80,
+          "slot": "0x0105c39c",
+          "symbol": "OBJC_IVAR_$_Torch.dataA"
+        },
+        "0x004b5d30": {
+          "offset": 82,
+          "slot": "0x0105c398",
+          "symbol": "OBJC_IVAR_$_Torch.dataB"
+        }
+      },
+      "method": "Torch -[freeBlockCreationDataA]",
+      "name": "t_fbdataa",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Torch freeBlockCreationDataA] (imp 0x004b5cc0, 30w): **halfword** read (ldrh) through the ffffc8a8 cell - the torch stores dataA as a u16.\n",
+      "types": "S8@0:4",
+      "verified_words": 30
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b5d38 (listing bound); next ObjC IMP 0x004b5d38 Torch -[initWithWorld:dynamicWorld:saveDict:cache:]",
+      "boundary_end": "0x004b5d38",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b5cfc",
+      "ivars": {
+        "0x004b5d30": {
+          "offset": 82,
+          "slot": "0x0105c398",
+          "symbol": "OBJC_IVAR_$_Torch.dataB"
+        }
+      },
+      "method": "Torch -[freeBlockCreationDataB]",
+      "name": "t_fbdatab",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Torch freeBlockCreationDataB] (imp 0x004b5cfc, 15w): halfword read through the ffffc8a4 cell.\n",
+      "types": "S8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b6230 (listing bound); next ObjC IMP 0x004b6230 Torch -[initWithWorld:dynamicWorld:cache:netData:]",
+      "boundary_end": "0x004b6230",
+      "branches": [
+        {
+          "address": "0x004b5dec",
+          "destination": "0x004b5dfc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b5df8",
+          "destination": "0x004b61b8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b6018",
+          "destination": "0x004b6184",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r6",
+          "site": "0x004b5dd0"
+        },
+        {
+          "callee": null,
+          "route": "blx r5",
+          "site": "0x004b5ee8"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x004b5ef8"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x004b5f24"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x004b5f34"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x004b5f60"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x004b5f70"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x004b5f9c"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x004b5fac"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x004b5fd8"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x004b5fe8"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x004b60b0"
+        },
+        {
+          "callee": null,
+          "route": "blx r4",
+          "site": "0x004b6108"
+        },
+        {
+          "callee": null,
+          "route": "blx r7",
+          "site": "0x004b616c"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x004b61ac"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b5d38",
+      "ivars": {
+        "0x004b61d0": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        },
+        "0x004b61d4": {
+          "offset": 36,
+          "slot": "0x0105c3a0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.ownerID"
+        },
+        "0x004b61e8": {
+          "offset": 82,
+          "slot": "0x0105c398",
+          "symbol": "OBJC_IVAR_$_Torch.dataB"
+        },
+        "0x004b61f4": {
+          "offset": 80,
+          "slot": "0x0105c39c",
+          "symbol": "OBJC_IVAR_$_Torch.dataA"
+        },
+        "0x004b6200": {
+          "offset": 60,
+          "slot": "0x0105c3b0",
+          "symbol": "OBJC_IVAR_$_Torch.connectionType"
+        },
+        "0x004b6208": {
+          "offset": 56,
+          "slot": "0x0105c3a4",
+          "symbol": "OBJC_IVAR_$_Torch.light"
+        },
+        "0x004b6210": {
+          "offset": 32,
+          "slot": "0x0105c3ac",
+          "symbol": "OBJC_IVAR_$_DynamicObject.cache"
+        },
+        "0x004b6218": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        },
+        "0x004b621c": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        }
+      },
+      "method": "Torch -[initWithWorld:dynamicWorld:saveDict:cache:]",
+      "name": "t_ctor_save",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x004b61c4": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x004b61c8": {
+          "selector": "initWithWorld:dynamicWorld:saveDict:cache:",
+          "slot": "0x00e7d184"
+        },
+        "0x004b61cc": {
+          "class": "OBJC_CLASS_$_Torch",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bc2c"
+        },
+        "0x004b61d8": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x004b61dc": {
+          "selector": "retain",
+          "slot": "0x00e7d168"
+        },
+        "0x004b61e0": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f73478"
+        },
+        "0x004b61e4": {
+          "selector": "objectForKey:",
+          "slot": "0x00e7d16c"
+        },
+        "0x004b61ec": {
+          "selector": "intValue",
+          "slot": "0x00e7d188"
+        },
+        "0x004b61f0": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f734b8"
+        },
+        "0x004b61f8": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f734a8"
+        },
+        "0x004b61fc": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f73498"
+        },
+        "0x004b6204": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f73488"
+        },
+        "0x004b620c": {
+          "selector": "initWithWorld:dynamicWorld:saveDict:cache:parentObject:",
+          "slot": "0x00e7d18c"
+        },
+        "0x004b6214": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f734c8"
+        },
+        "0x004b6220": {
+          "selector": "alloc",
+          "slot": "0x00e7d174"
+        },
+        "0x004b6224": {
+          "class": "OBJC_CLASS_$_ArtificialLight",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e89e90"
+        },
+        "0x004b6228": {
+          "selector": "initSubDerivedItems",
+          "slot": "0x00e7d17c"
+        }
+      },
+      "semantics": "[Torch initWithWorld:dynamicWorld:saveDict:cache:] (imp 0x004b5d38, 318w): the save-dict ctor - super2-shaped blx (@0x4b5dd0) + nil gate (@0x4b5dec); binds the **save-key pool fff13984/f13994/f139a4/f139b4/f139c4** (the torch's save-dict keys @0x4b5e24-0x4b5e6c) around the ffffc88c/c8ac/a4/a8/c8bc ivar cells + ffffbca8/bcac + ffe1d670/d678/d690/d694; the decode chain fills dataA/dataB/type from the dict.\n",
+      "types": "@24@0:4@8@12@16@20",
+      "verified_words": 318
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b6594 (listing bound); next ObjC IMP 0x004b65b8 Torch -[getSaveDict]",
+      "boundary_end": "0x004b6594",
+      "branches": [
+        {
+          "address": "0x004b62e4",
+          "destination": "0x004b62f4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b62f0",
+          "destination": "0x004b653c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b63ec",
+          "destination": "0x004b6508",
+          "mnemonic": "bls"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r6",
+          "site": "0x004b62c8"
+        },
+        {
+          "callee": null,
+          "route": "blx r6",
+          "site": "0x004b6370"
+        },
+        {
+          "callee": null,
+          "route": "blx r4",
+          "site": "0x004b63e4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b642c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b6470"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x004b6488"
+        },
+        {
+          "callee": "0x004b6594",
+          "route": "bl 0x4b6594",
+          "site": "0x004b648c"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x004b64e0"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x004b64f0"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x004b6530"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b6230",
+      "ivars": {
+        "0x004b655c": {
+          "offset": 82,
+          "slot": "0x0105c398",
+          "symbol": "OBJC_IVAR_$_Torch.dataB"
+        },
+        "0x004b6560": {
+          "offset": 80,
+          "slot": "0x0105c39c",
+          "symbol": "OBJC_IVAR_$_Torch.dataA"
+        },
+        "0x004b6564": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        },
+        "0x004b6568": {
+          "offset": 60,
+          "slot": "0x0105c3b0",
+          "symbol": "OBJC_IVAR_$_Torch.connectionType"
+        },
+        "0x004b6570": {
+          "offset": 36,
+          "slot": "0x0105c3a0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.ownerID"
+        }
+      },
+      "method": "Torch -[initWithWorld:dynamicWorld:cache:netData:]",
+      "name": "t_ctor_net",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x004b6548": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x004b654c": {
+          "selector": "initWithWorld:dynamicWorld:cache:netData:",
+          "slot": "0x00e7d190"
+        },
+        "0x004b6550": {
+          "class": "OBJC_CLASS_$_Torch",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bc2c"
+        },
+        "0x004b6554": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x004b6558": {
+          "selector": "length",
+          "slot": "0x00e7d198"
+        },
+        "0x004b656c": {
+          "selector": "getBytes:length:",
+          "slot": "0x00e7d194"
+        },
+        "0x004b6574": {
+          "selector": "retain",
+          "slot": "0x00e7d168"
+        },
+        "0x004b6578": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f73478"
+        },
+        "0x004b657c": {
+          "selector": "objectForKey:",
+          "slot": "0x00e7d16c"
+        },
+        "0x004b6580": {
+          "selector": "gzipInflate",
+          "slot": "0x00e7d1a0"
+        },
+        "0x004b6588": {
+          "selector": "subdataWithRange:",
+          "slot": "0x00e7d19c"
+        },
+        "0x004b658c": {
+          "selector": "initSubDerivedItems",
+          "slot": "0x00e7d17c"
+        }
+      },
+      "semantics": "[Torch initWithWorld:dynamicWorld:cache:netData:] (imp 0x004b6230, 217w): the net ctor - blx via ffffbca8 (@0x4b62c8) + nil gate; reads a **0x20 (32)-byte record** (`movw r6, 0x20` @0x4b632c) into the fp frame then fills the ffffc8a4/c8a8/c88c/c8bc ivars + ffe1d69c/d6a0/d6a4.\n",
+      "types": "@24@0:4@8@12@16@20",
+      "verified_words": 217
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b69e0 (listing bound); next ObjC IMP 0x004b69e0 Torch -[updateNetDataForClient:]",
+      "boundary_end": "0x004b69e0",
+      "branches": [
+        {
+          "address": "0x004b68bc",
+          "destination": "0x004b6904",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b6928",
+          "destination": "0x004b6984",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x004b660c"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x004b6740"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x004b6764"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x004b67a0"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x004b67c4"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x004b6800"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x004b6824"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x004b6860"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x004b6884"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x004b68a8"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x004b6900"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x004b6980"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b65b8",
+      "ivars": {
+        "0x004b69a0": {
+          "offset": 56,
+          "slot": "0x0105c3a4",
+          "symbol": "OBJC_IVAR_$_Torch.light"
+        },
+        "0x004b69b0": {
+          "offset": 60,
+          "slot": "0x0105c3b0",
+          "symbol": "OBJC_IVAR_$_Torch.connectionType"
+        },
+        "0x004b69bc": {
+          "offset": 82,
+          "slot": "0x0105c398",
+          "symbol": "OBJC_IVAR_$_Torch.dataB"
+        },
+        "0x004b69c4": {
+          "offset": 80,
+          "slot": "0x0105c39c",
+          "symbol": "OBJC_IVAR_$_Torch.dataA"
+        },
+        "0x004b69cc": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        },
+        "0x004b69d4": {
+          "offset": 36,
+          "slot": "0x0105c3a0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.ownerID"
+        }
+      },
+      "method": "Torch -[getSaveDict]",
+      "name": "t_getsavedict",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x004b6990": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x004b6994": {
+          "selector": "getSaveDict",
+          "slot": "0x00e7d180"
+        },
+        "0x004b6998": {
+          "class": "OBJC_CLASS_$_Torch",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bc2c"
+        },
+        "0x004b699c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x004b69a4": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f73488"
+        },
+        "0x004b69a8": {
+          "selector": "setObject:forKey:",
+          "slot": "0x00e7d1a8"
+        },
+        "0x004b69ac": {
+          "selector": "numberWithInt:",
+          "slot": "0x00e7d1a4"
+        },
+        "0x004b69b4": {
+          "class": "OBJC_CLASS_$_NSNumber",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e89e94"
+        },
+        "0x004b69b8": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f734b8"
+        },
+        "0x004b69c0": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f734a8"
+        },
+        "0x004b69c8": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f73498"
+        },
+        "0x004b69d0": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f734c8"
+        },
+        "0x004b69d8": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f73478"
+        }
+      },
+      "semantics": "[Torch getSaveDict] (imp 0x004b65b8, 266w): the reverse save chain - super call via ffffbca8 (@0x4b660c), then the key-pool stores **fff13994/f139c4/f139b4/f139a4** (@0x4b6638-0x4b66b0) wrap the ffffc8b0/c8bc/c8a4/c8a8/c88c ivar reads into the returned dict; the ffe1d68c/83a0/8bb4 call chain builds the dict.\n",
+      "types": "@8@0:4",
+      "verified_words": 266
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b6a34 (listing bound); next ObjC IMP 0x004b6a34 Torch -[creationNetDataForClient:]",
+      "boundary_end": "0x004b6a34",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x004b6a1c"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b69e0",
+      "ivars": {},
+      "method": "Torch -[updateNetDataForClient:]",
+      "name": "t_updatenet",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x004b6a28": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x004b6a2c": {
+          "selector": "creationNetDataForClient:",
+          "slot": "0x00e7d1ac"
+        }
+      },
+      "semantics": "[Torch updateNetDataForClient:] (imp 0x004b69e0, 21w): thin forwarder via ffffbcac + ffe1d6b8.\n",
+      "types": "@12@0:4@8",
+      "verified_words": 21
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b6d64 (listing bound); next ObjC IMP 0x004b6ed0 Torch -[dealloc]",
+      "boundary_end": "0x004b6d64",
+      "branches": [
+        {
+          "address": "0x004b6a80",
+          "destination": "0x004b6a98",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b6a94",
+          "destination": "0x004b6ab8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b6c5c",
+          "destination": "0x004b6cb8",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x004b6a90"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x004b6ab4"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004b6b8c"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x004b6c14"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x004b6c38"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x004b6cb4"
+        },
+        {
+          "callee": "0x004b6d64",
+          "route": "bl 0x4b6d64",
+          "site": "0x004b6cbc"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x004b6cf8"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x004b6d14"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b6a34",
+      "ivars": {
+        "0x004b6d28": {
+          "offset": 36,
+          "slot": "0x0105c3a0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.ownerID"
+        },
+        "0x004b6d40": {
+          "offset": 82,
+          "slot": "0x0105c398",
+          "symbol": "OBJC_IVAR_$_Torch.dataB"
+        },
+        "0x004b6d44": {
+          "offset": 80,
+          "slot": "0x0105c39c",
+          "symbol": "OBJC_IVAR_$_Torch.dataA"
+        },
+        "0x004b6d48": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        },
+        "0x004b6d4c": {
+          "offset": 60,
+          "slot": "0x0105c3b0",
+          "symbol": "OBJC_IVAR_$_Torch.connectionType"
+        }
+      },
+      "method": "Torch -[creationNetDataForClient:]",
+      "name": "t_creationdata",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x004b6d24": {
+          "selector": "dynamicObjectNetData",
+          "slot": "0x00e7d1b0"
+        },
+        "0x004b6d2c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x004b6d30": {
+          "selector": "dictionary",
+          "slot": "0x00e7d1b8"
+        },
+        "0x004b6d34": {
+          "class": "OBJC_CLASS_$_NSMutableDictionary",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e89e9c"
+        },
+        "0x004b6d38": {
+          "selector": "dataWithBytes:length:",
+          "slot": "0x00e7d1b4"
+        },
+        "0x004b6d3c": {
+          "class": "OBJC_CLASS_$_NSMutableData",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e89e98"
+        },
+        "0x004b6d50": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f73478"
+        },
+        "0x004b6d54": {
+          "selector": "setObject:forKey:",
+          "slot": "0x00e7d1a8"
+        },
+        "0x004b6d58": {
+          "selector": "appendData:",
+          "slot": "0x00e7d1c0"
+        },
+        "0x004b6d5c": {
+          "selector": "gzipDeflate",
+          "slot": "0x00e7d1bc"
+        }
+      },
+      "semantics": "[Torch creationNetDataForClient:] (imp 0x004b6a34, 204w): nil path zero-fills a **0x18 (24)-byte stret** (memset @0x4b6ab4); the live path reads the ffffc8ac/bcac/c8a4/c8a8 ivars and packs the **0x20-byte record** (`movw r5, 0x20` @0x4b6ae4) through ffe2a3a4/a3a8 + ffe1d6c0/c4.\n",
+      "types": "@12@0:4@8",
+      "verified_words": 204
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b6ff4 (listing bound); next ObjC IMP 0x004b6ff4 Torch -[removeFromMacroBlock]",
+      "boundary_end": "0x004b6ff4",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r5",
+          "site": "0x004b6f64"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x004b6fa0"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x004b6fc8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b6ed0",
+      "ivars": {
+        "0x004b6fe8": {
+          "offset": 36,
+          "slot": "0x0105c3a0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.ownerID"
+        },
+        "0x004b6fec": {
+          "offset": 56,
+          "slot": "0x0105c3a4",
+          "symbol": "OBJC_IVAR_$_Torch.light"
+        }
+      },
+      "method": "Torch -[dealloc]",
+      "name": "t_dealloc",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x004b6fd4": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x004b6fd8": {
+          "selector": "dealloc",
+          "slot": "0x00e7d1c8"
+        },
+        "0x004b6fdc": {
+          "class": "OBJC_CLASS_$_Torch",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bc2c"
+        },
+        "0x004b6fe0": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x004b6fe4": {
+          "selector": "release",
+          "slot": "0x00e7d1c4"
+        }
+      },
+      "semantics": "[Torch dealloc] (imp 0x004b6ed0, 73w): the teardown chain - ffffbca8/bcac/c8ac/c8b0 + ffe1d6d0/d6d4, super dealloc (@0x4b6fc8).\n",
+      "types": "v8@0:4",
+      "verified_words": 73
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b71d8 (listing bound); next ObjC IMP 0x004b71d8 Torch -[draw:projectionMatrix:modelViewMatrix:cameraMinXWorld:cameraMaxXWorld:cameraMinYWorld:cameraMaxYWorld:]",
+      "boundary_end": "0x004b71d8",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b7044"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b7064"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b70c8"
+        },
+        {
+          "callee": "0x00a19670",
+          "route": "bl sym.reloadDrawBlockDynamicObjectQuadsForTile_intpair__MacroTile__World_",
+          "site": "0x004b70f4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b7130"
+        },
+        {
+          "callee": "0x00a197b4",
+          "route": "bl sym.reloadDrawBlockLightGlowQuadsForTile_intpair__MacroTile__World_",
+          "site": "0x004b715c"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x004b71a0"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b6ff4",
+      "ivars": {
+        "0x004b71b8": {
+          "offset": 56,
+          "slot": "0x0105c3a4",
+          "symbol": "OBJC_IVAR_$_Torch.light"
+        },
+        "0x004b71c4": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x004b71c8": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        }
+      },
+      "method": "Torch -[removeFromMacroBlock]",
+      "name": "t_rmmacro",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x004b71ac": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x004b71b0": {
+          "selector": "removeFromMacroBlock",
+          "slot": "0x00e7d1cc"
+        },
+        "0x004b71b4": {
+          "class": "OBJC_CLASS_$_Torch",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bc2c"
+        },
+        "0x004b71c0": {
+          "selector": "release",
+          "slot": "0x00e7d1c4"
+        },
+        "0x004b71cc": {
+          "selector": "macroTiles",
+          "slot": "0x00e7d160"
+        }
+      },
+      "semantics": "[Torch removeFromMacroBlock] (imp 0x004b6ff4, 121w): the removal path calls **`reloadDrawBlockDynamicObjectQuadsForTile(intpair, MacroTile*, World*)`** (@0x4b70f4) - the dynamic-object quad reload; the same C-symbol family as the GlowBlock's `reloadDrawBlockLightGlowQuadsForTile` (E68): removing the torch invalidates its tile's dynamic-object quads. The ffffc89c/c8a0 cells + ffe1d6d0/d6d8 chains locate the tile; a zero store clears the ivar (@0x4b7078).\n",
+      "types": "v8@0:4",
+      "verified_words": 121
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b77d0 (listing bound); next ObjC IMP 0x004b77d0 Torch -[remoteUpdate:]",
+      "boundary_end": "0x004b77d0",
+      "branches": [
+        {
+          "address": "0x004b7430",
+          "destination": "0x004b7784",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b7458",
+          "destination": "0x004b7784",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b7484",
+          "destination": "0x004b7760",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b74c8",
+          "destination": "0x004b7760",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b750c",
+          "destination": "0x004b7760",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x004b7568",
+          "destination": "0x004b75fc",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x004b75d0",
+          "destination": "0x004b75f8",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x004b75f8",
+          "destination": "0x004b7540",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b7604",
+          "destination": "0x004b775c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b775c",
+          "destination": "0x004b7780",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b7780",
+          "destination": "0x004b7784",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x004b7660"
+        },
+        {
+          "callee": "0x001c3020",
+          "route": "bl sym.imp.__modsi3",
+          "site": "0x004b7670"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x004b7680"
+        },
+        {
+          "callee": "0x00d91b30",
+          "route": "bl sym.updateQuadBufferTexCoords_float__int__float__float__float__float_",
+          "site": "0x004b7758"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b71d8",
+      "ivars": {
+        "0x004b77a8": {
+          "offset": 76,
+          "slot": "0x0105c388",
+          "symbol": "OBJC_IVAR_$_Torch.animates"
+        },
+        "0x004b77ac": {
+          "offset": 84,
+          "slot": "0x0105c3b4",
+          "symbol": "OBJC_IVAR_$_Torch.savedDrawBuffer"
+        },
+        "0x004b77b0": {
+          "offset": 12,
+          "slot": "0x0105c3b8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.macroTileOwner"
+        },
+        "0x004b77b4": {
+          "offset": 88,
+          "slot": "0x0105c3bc",
+          "symbol": "OBJC_IVAR_$_Torch.savedDrawBufferIndex"
+        },
+        "0x004b77b8": {
+          "offset": 72,
+          "slot": "0x0105c3c0",
+          "symbol": "OBJC_IVAR_$_Torch.animationLoopTimer"
+        },
+        "0x004b77c8": {
+          "offset": 68,
+          "slot": "0x0105c3c4",
+          "symbol": "OBJC_IVAR_$_Torch.animationLoopIndex"
+        }
+      },
+      "method": "Torch -[draw:projectionMatrix:modelViewMatrix:cameraMinXWorld:cameraMaxXWorld:cameraMinYWorld:cameraMaxYWorld:]",
+      "name": "t_draw",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x004b77c0": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x004b77c4": {
+          "selector": "renderImageIndex",
+          "slot": "0x00e7d1d0"
+        }
+      },
+      "semantics": "[Torch draw:...] (imp 0x004b71d8, 382w): the 16-byte-aligned marshalling frame (`bic sp, sp, 0xf` @0x4b71e4) + the visibility gates: the ffffc894 flag (`ldrsb; cmp 0; beq` @0x4b7424 exits) then the ffffc8c0/c8c4 ivar chains and the **field+0x1a4** read (`ldr r2, [r2, 0x1a4]` @0x4b74b0) compared against the cell value (@0x4b74c4) decide the draw; the branches pass the fp-marshalled camera/matrix args to the draw emit. Same visibility structure as the E25/E41 draw passes.\n",
+      "types": "v156@0:4f8(_GLKMatrix4={?=ffffffffffffffff}[16f])12(_GLKMatrix4={?=ffffffffffffffff}[16f])76i140i144i148i152",
+      "verified_words": 382
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b78bc (listing bound); next ObjC IMP 0x004b78bc Torch -[waterContentChanged:]",
+      "boundary_end": "0x004b78bc",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r8",
+          "site": "0x004b7850"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x004b7894"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b77d0",
+      "ivars": {
+        "0x004b78ac": {
+          "offset": 60,
+          "slot": "0x0105c3b0",
+          "symbol": "OBJC_IVAR_$_Torch.connectionType"
+        }
+      },
+      "method": "Torch -[remoteUpdate:]",
+      "name": "t_remoteupdate",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x004b78a0": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x004b78a4": {
+          "selector": "remoteUpdate:",
+          "slot": "0x00e7d1d4"
+        },
+        "0x004b78a8": {
+          "class": "OBJC_CLASS_$_Torch",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bc2c"
+        },
+        "0x004b78b0": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x004b78b4": {
+          "selector": "getBytes:length:",
+          "slot": "0x00e7d194"
+        }
+      },
+      "semantics": "[Torch remoteUpdate:] (imp 0x004b77d0, 59w): the ffffc8bc/bcac cells + the **0x20-record decode** (`movw r7, 0x20` @0x4b7808, blx r8 @0x4b7850) then `ldrsb [sp, 0x3e]` reads the decoded flag into the ivar (@0x4b7854-0x4b7868); ffe1d6a0/d6e0.\n",
+      "types": "v12@0:4@8",
+      "verified_words": 59
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b7bd4 (listing bound); next ObjC IMP 0x004b7bd4 Torch -[worldContentsChanged:]",
+      "boundary_end": "0x004b7bd4",
+      "branches": [
+        {
+          "address": "0x004b78fc",
+          "destination": "0x004b7b90",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b7920",
+          "destination": "0x004b7b90",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b7944",
+          "destination": "0x004b7b90",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b796c",
+          "destination": "0x004b7b90",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b7a08",
+          "destination": "0x004b7b8c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b7a1c",
+          "destination": "0x004b7b8c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b7a40",
+          "destination": "0x004b7b88",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b7b88",
+          "destination": "0x004b7b90",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b7b8c",
+          "destination": "0x004b7b90",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x004b79b8"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x004b79fc"
+        },
+        {
+          "callee": "0x00a11690",
+          "route": "bl sym.tileIsWater_Tile_",
+          "site": "0x004b7a10"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b7b00"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b7b5c"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x004b7b84"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b78bc",
+      "ivars": {
+        "0x004b7b98": {
+          "offset": 77,
+          "slot": "0x0105c38c",
+          "symbol": "OBJC_IVAR_$_Torch.flatOnSideAndBottom"
+        },
+        "0x004b7b9c": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        },
+        "0x004b7ba8": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        },
+        "0x004b7bac": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x004b7bb0": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x004b7bb4": {
+          "offset": 48,
+          "slot": "0x0105c3c8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.needsRemoved"
+        },
+        "0x004b7bc0": {
+          "offset": 80,
+          "slot": "0x0105c39c",
+          "symbol": "OBJC_IVAR_$_Torch.dataA"
+        },
+        "0x004b7bc4": {
+          "offset": 82,
+          "slot": "0x0105c398",
+          "symbol": "OBJC_IVAR_$_Torch.dataB"
+        }
+      },
+      "method": "Torch -[waterContentChanged:]",
+      "name": "t_waterchanged",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x004b7ba0": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x004b7ba4": {
+          "selector": "isClient",
+          "slot": "0x00e7d1d8"
+        },
+        "0x004b7bb8": {
+          "selector": "removeStandardObject:",
+          "slot": "0x00e7d1e0"
+        },
+        "0x004b7bc8": {
+          "selector": "getSaveDict",
+          "slot": "0x00e7d180"
+        },
+        "0x004b7bcc": {
+          "selector": "createFreeBlockAtPosition:ofType:dataA:dataB:subItems:dynamicObjectSaveDict:hovers:playSound:priorityBlockhead:",
+          "slot": "0x00e7d1dc"
+        }
+      },
+      "semantics": "[Torch waterContentChanged:] (imp 0x004b78bc, 198w): the water reaction - the ffffc898 submerged flag gate (`ldrsb; cmp 0; bne` @0x4b78f4: already wet exits); then the block-type chain **0x96 / 0xfe / 0x102** (same fire-family constants as getLightRGB) exits for those types (@0x4b7920-0x4b796c); otherwise it locates the tile via ffffc8a0/c89c + **tileAtWorldPositionLoaded** (@0x4b79b8) and runs the ffffbcac/c8b4 + ffe1d6e4 reaction chain - the torch's block reacts to water (the fire family is quenched).\n",
+      "types": "v12@0:4^{vector<intpair, std::__1::allocator<intpair> >=^{?}^{?}{__compressed_pair<intpair *, std::__1::allocator<intpair> >=^{?}}}8",
+      "verified_words": 198
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b8b50 (listing bound); next ObjC IMP 0x004b8b50 Torch -[worldChanged:]",
+      "boundary_end": "0x004b8b50",
+      "branches": [
+        {
+          "address": "0x004b7d00",
+          "destination": "0x004b8948",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b7d4c",
+          "destination": "0x004b8908",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x004b7d78",
+          "destination": "0x004b8908",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x004b7da4",
+          "destination": "0x004b7dd4",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x004b7dd0",
+          "destination": "0x004b7e20",
+          "mnemonic": "bgt"
+        },
+        {
+          "address": "0x004b7df8",
+          "destination": "0x004b8908",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x004b7e1c",
+          "destination": "0x004b8908",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b7e40",
+          "destination": "0x004b83a4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b7ea0",
+          "destination": "0x004b7ee8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b7eb0",
+          "destination": "0x004b7ee8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b7ec0",
+          "destination": "0x004b7ee8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b7ee4",
+          "destination": "0x004b83a0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b7ef4",
+          "destination": "0x004b7f94",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b7f6c",
+          "destination": "0x004b7f94",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b7f90",
+          "destination": "0x004b839c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b7ff4",
+          "destination": "0x004b8030",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b8008",
+          "destination": "0x004b8030",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b802c",
+          "destination": "0x004b8398",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b803c",
+          "destination": "0x004b8074",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b804c",
+          "destination": "0x004b8074",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b8070",
+          "destination": "0x004b8394",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b80d4",
+          "destination": "0x004b8124",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b80e8",
+          "destination": "0x004b8124",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b80fc",
+          "destination": "0x004b8124",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b8120",
+          "destination": "0x004b8390",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8184",
+          "destination": "0x004b81d4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b8198",
+          "destination": "0x004b81d4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b81ac",
+          "destination": "0x004b81d4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b81d0",
+          "destination": "0x004b838c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b821c",
+          "destination": "0x004b8388",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b8240",
+          "destination": "0x004b8388",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b8388",
+          "destination": "0x004b838c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b838c",
+          "destination": "0x004b8390",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8390",
+          "destination": "0x004b8394",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8394",
+          "destination": "0x004b8398",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8398",
+          "destination": "0x004b839c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b839c",
+          "destination": "0x004b83a0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b83a0",
+          "destination": "0x004b8904",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8404",
+          "destination": "0x004b8440",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b8418",
+          "destination": "0x004b8440",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b843c",
+          "destination": "0x004b8900",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b844c",
+          "destination": "0x004b8484",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b845c",
+          "destination": "0x004b8484",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b8480",
+          "destination": "0x004b88fc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b84e0",
+          "destination": "0x004b8580",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b8558",
+          "destination": "0x004b8580",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b857c",
+          "destination": "0x004b88f8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b85e0",
+          "destination": "0x004b8630",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b85f4",
+          "destination": "0x004b8630",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b8608",
+          "destination": "0x004b8630",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b862c",
+          "destination": "0x004b88f4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8690",
+          "destination": "0x004b86e0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b86a4",
+          "destination": "0x004b86e0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b86b8",
+          "destination": "0x004b86e0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b86dc",
+          "destination": "0x004b88f0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b86ec",
+          "destination": "0x004b8734",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b86fc",
+          "destination": "0x004b8734",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b870c",
+          "destination": "0x004b8734",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b8730",
+          "destination": "0x004b88ec",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b877c",
+          "destination": "0x004b88e8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b87a0",
+          "destination": "0x004b88e8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b88e8",
+          "destination": "0x004b88ec",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b88ec",
+          "destination": "0x004b88f0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b88f0",
+          "destination": "0x004b88f4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b88f4",
+          "destination": "0x004b88f8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b88f8",
+          "destination": "0x004b88fc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b88fc",
+          "destination": "0x004b8900",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8900",
+          "destination": "0x004b8904",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8904",
+          "destination": "0x004b8948",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8908",
+          "destination": "0x004b890c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8944",
+          "destination": "0x004b7c68",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b896c",
+          "destination": "0x004b8ae8",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x004b7e8c"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x004b7f4c"
+        },
+        {
+          "callee": "0x00a14450",
+          "route": "bl sym.tileIsHalfDepth_Tile__World__intpair_",
+          "site": "0x004b7f60"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x004b7fe0"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x004b7ffc"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x004b80c0"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x004b80dc"
+        },
+        {
+          "callee": "0x00a12818",
+          "route": "bl sym.tileContainsDoor_Tile_",
+          "site": "0x004b80f0"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x004b8170"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x004b818c"
+        },
+        {
+          "callee": "0x00a12818",
+          "route": "bl sym.tileContainsDoor_Tile_",
+          "site": "0x004b81a0"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x004b8210"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b8300"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b835c"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x004b8384"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x004b83f0"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x004b840c"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x004b84cc"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x004b8538"
+        },
+        {
+          "callee": "0x00a14450",
+          "route": "bl sym.tileIsHalfDepth_Tile__World__intpair_",
+          "site": "0x004b854c"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x004b85cc"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x004b85e8"
+        },
+        {
+          "callee": "0x00a12818",
+          "route": "bl sym.tileContainsDoor_Tile_",
+          "site": "0x004b85fc"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x004b867c"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x004b8698"
+        },
+        {
+          "callee": "0x00a12818",
+          "route": "bl sym.tileContainsDoor_Tile_",
+          "site": "0x004b86ac"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x004b8770"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b8860"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b88bc"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x004b88e4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b89c4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b89e8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b8a30"
+        },
+        {
+          "callee": "0x00a19670",
+          "route": "bl sym.reloadDrawBlockDynamicObjectQuadsForTile_intpair__MacroTile__World_",
+          "site": "0x004b8a5c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x004b8a98"
+        },
+        {
+          "callee": "0x00a197b4",
+          "route": "bl sym.reloadDrawBlockLightGlowQuadsForTile_intpair__MacroTile__World_",
+          "site": "0x004b8ac4"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b7bd4",
+      "ivars": {
+        "0x004b8af0": {
+          "offset": 60,
+          "slot": "0x0105c3b0",
+          "symbol": "OBJC_IVAR_$_Torch.connectionType"
+        },
+        "0x004b8af4": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x004b8af8": {
+          "offset": 77,
+          "slot": "0x0105c38c",
+          "symbol": "OBJC_IVAR_$_Torch.flatOnSideAndBottom"
+        },
+        "0x004b8afc": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x004b8b0c": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        },
+        "0x004b8b10": {
+          "offset": 48,
+          "slot": "0x0105c3c8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.needsRemoved"
+        },
+        "0x004b8b1c": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        },
+        "0x004b8b20": {
+          "offset": 80,
+          "slot": "0x0105c39c",
+          "symbol": "OBJC_IVAR_$_Torch.dataA"
+        },
+        "0x004b8b24": {
+          "offset": 82,
+          "slot": "0x0105c398",
+          "symbol": "OBJC_IVAR_$_Torch.dataB"
+        },
+        "0x004b8b38": {
+          "offset": 49,
+          "slot": "0x0105c3cc",
+          "symbol": "OBJC_IVAR_$_DynamicObject.updateNeedsToBeSent"
+        }
+      },
+      "method": "Torch -[worldContentsChanged:]",
+      "name": "t_worldcontents",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x004b8b04": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x004b8b08": {
+          "selector": "isClient",
+          "slot": "0x00e7d1d8"
+        },
+        "0x004b8b14": {
+          "selector": "removeStandardObject:",
+          "slot": "0x00e7d1e0"
+        },
+        "0x004b8b28": {
+          "selector": "getSaveDict",
+          "slot": "0x00e7d180"
+        },
+        "0x004b8b2c": {
+          "selector": "createFreeBlockAtPosition:ofType:dataA:dataB:subItems:dynamicObjectSaveDict:hovers:playSound:priorityBlockhead:",
+          "slot": "0x00e7d1dc"
+        },
+        "0x004b8b40": {
+          "selector": "objectType",
+          "slot": "0x00e7d1e4"
+        },
+        "0x004b8b44": {
+          "selector": "dynamicWorldChangedAtPos:objectType:",
+          "slot": "0x00e7d1e8"
+        },
+        "0x004b8b48": {
+          "selector": "macroTiles",
+          "slot": "0x00e7d160"
+        }
+      },
+      "semantics": "[Torch worldContentsChanged:] (imp 0x004b7bd4, 991w): the **light-placement solver**. The \u00b12 neighbourhood scan (`add r0, r0, 2` / `sub r0, r0, 2` / `cmn r0, 2` @0x4b7d44-0x4b7e1c) checks the neighbours; the ffffc898 water flag gates (@0x4b7e3c); then **tileAtWorldPositionLoaded** probes (@0x4b7e8c) classify the tiles and store a placement/orientation code through the ffffc8bc cell: **-2** (`mvn r0, 1` @0x4b7ec4: none), **2** (`tileIsHalfDepth` @0x4b7f60), **0** (`tileIsSolid` at y-1 @0x4b7ffc), **3** (tile byte **+0xb == 0x64 ('d')** @0x4b8048), **1** (solid + `tileContainsDoor` @0x4b80f0), **-1** (`mvn r0, 0` @0x4b81b0: the x-1 solid+door arm). If all arms fail the tail runs the objc bool gate (@0x4b8210) + the ffffc8d4 flag (`ldrsb` @0x4b8238) then the **torch-creation** call with the big frame (uxth dataA/dataB + record fields @0x4b833c-0x4b835c) - if no valid position exists the torch makes a new one (the spreading/relight).\n",
+      "types": "v12@0:4^{vector<intpair, std::__1::allocator<intpair> >=^{?}^{?}{__compressed_pair<intpair *, std::__1::allocator<intpair> >=^{?}}}8",
+      "verified_words": 991
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b8be8 (listing bound); next ObjC IMP 0x004b8be8 Torch -[setNeedsRemoved:]",
+      "boundary_end": "0x004b8be8",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x004b8bb0"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x004b8bc8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b8b50",
+      "ivars": {
+        "0x004b8be0": {
+          "offset": 56,
+          "slot": "0x0105c3a4",
+          "symbol": "OBJC_IVAR_$_Torch.light"
+        }
+      },
+      "method": "Torch -[worldChanged:]",
+      "name": "t_worldchanged",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x004b8bd4": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x004b8bd8": {
+          "selector": "worldContentsChanged:",
+          "slot": "0x00e7d1f0"
+        },
+        "0x004b8bdc": {
+          "selector": "worldChanged:",
+          "slot": "0x00e7d1ec"
+        }
+      },
+      "semantics": "[Torch worldChanged:] (imp 0x004b8b50, 38w): forwarder via ffffbcac/c8b0 + ffe1d6f8/f6fc (`blx ip` @0x4b8bb0).\n",
+      "types": "v12@0:4^{vector<intpair, std::__1::allocator<intpair> >=^{?}^{?}{__compressed_pair<intpair *, std::__1::allocator<intpair> >=^{?}}}8",
+      "verified_words": 38
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b8cd0 (listing bound); next ObjC IMP 0x004b8cd0 Torch -[renderImageIndex]",
+      "boundary_end": "0x004b8cd0",
+      "branches": [
+        {
+          "address": "0x004b8c68",
+          "destination": "0x004b8cac",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x004b8c5c"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x004b8ca8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b8be8",
+      "ivars": {
+        "0x004b8cc8": {
+          "offset": 56,
+          "slot": "0x0105c3a4",
+          "symbol": "OBJC_IVAR_$_Torch.light"
+        }
+      },
+      "method": "Torch -[setNeedsRemoved:]",
+      "name": "t_setneedsremoved",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x004b8cb4": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x004b8cb8": {
+          "selector": "setNeedsRemoved:",
+          "slot": "0x00e7d1f4"
+        },
+        "0x004b8cbc": {
+          "class": "OBJC_CLASS_$_Torch",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bc2c"
+        },
+        "0x004b8cc0": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x004b8cc4": {
+          "selector": "removeFromTiles",
+          "slot": "0x00e7d1f8"
+        }
+      },
+      "semantics": "[Torch setNeedsRemoved:] (imp 0x004b8be8, 58w): sxtb flag gate (@0x4b8c64) then the ffffbcac/c8b0 + ffe1d700/d704 chain (`blx r2` @0x4b8ca8).\n",
+      "types": "v12@0:4c8",
+      "verified_words": 58
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b8fa8 (listing bound); next ObjC IMP 0x004b8fa8 Torch -[staticGeometryDrawQuadCountForMacroPos:]",
+      "boundary_end": "0x004b8fa8",
+      "branches": [
+        {
+          "address": "0x004b8d14",
+          "destination": "0x004b8d2c",
+          "mnemonic": "bgt"
+        },
+        {
+          "address": "0x004b8d18",
+          "destination": "0x004b8d1c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8d24",
+          "destination": "0x004b8ef0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b8d28",
+          "destination": "0x004b8f38",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8d34",
+          "destination": "0x004b8d4c",
+          "mnemonic": "bgt"
+        },
+        {
+          "address": "0x004b8d38",
+          "destination": "0x004b8d3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8d44",
+          "destination": "0x004b8efc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b8d48",
+          "destination": "0x004b8f38",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8d54",
+          "destination": "0x004b8d7c",
+          "mnemonic": "bgt"
+        },
+        {
+          "address": "0x004b8d58",
+          "destination": "0x004b8d5c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8d64",
+          "destination": "0x004b8ed8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b8d68",
+          "destination": "0x004b8d6c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8d74",
+          "destination": "0x004b8ecc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b8d78",
+          "destination": "0x004b8f38",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8d84",
+          "destination": "0x004b8dbc",
+          "mnemonic": "bgt"
+        },
+        {
+          "address": "0x004b8d88",
+          "destination": "0x004b8d8c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8d94",
+          "destination": "0x004b8ec0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b8d98",
+          "destination": "0x004b8d9c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8da4",
+          "destination": "0x004b8eb4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b8da8",
+          "destination": "0x004b8dac",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8db4",
+          "destination": "0x004b8ee4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b8db8",
+          "destination": "0x004b8f38",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8dc4",
+          "destination": "0x004b8e48",
+          "mnemonic": "bgt"
+        },
+        {
+          "address": "0x004b8dc8",
+          "destination": "0x004b8dcc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8dd4",
+          "destination": "0x004b8e38",
+          "mnemonic": "bgt"
+        },
+        {
+          "address": "0x004b8dd8",
+          "destination": "0x004b8ddc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8dec",
+          "destination": "0x004b8f38",
+          "mnemonic": "bhi"
+        },
+        {
+          "address": "0x004b8e40",
+          "destination": "0x004b8f2c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b8e44",
+          "destination": "0x004b8f38",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8e50",
+          "destination": "0x004b8f14",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b8e54",
+          "destination": "0x004b8e58",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8e64",
+          "destination": "0x004b8f20",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b8e68",
+          "destination": "0x004b8f38",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8e74",
+          "destination": "0x004b8f3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8e80",
+          "destination": "0x004b8f3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8e8c",
+          "destination": "0x004b8f3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8e98",
+          "destination": "0x004b8f3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8ea4",
+          "destination": "0x004b8f3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8eb0",
+          "destination": "0x004b8f3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8ebc",
+          "destination": "0x004b8f3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8ec8",
+          "destination": "0x004b8f3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8ed4",
+          "destination": "0x004b8f3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8ee0",
+          "destination": "0x004b8f3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8eec",
+          "destination": "0x004b8f3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8ef8",
+          "destination": "0x004b8f3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8f04",
+          "destination": "0x004b8f3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8f10",
+          "destination": "0x004b8f3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8f1c",
+          "destination": "0x004b8f3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8f28",
+          "destination": "0x004b8f3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8f34",
+          "destination": "0x004b8f3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8f38",
+          "destination": "0x004b8f3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b8f5c",
+          "destination": "0x004b8f88",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b8cd0",
+      "ivars": {
+        "0x004b8f94": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        },
+        "0x004b8f9c": {
+          "offset": 76,
+          "slot": "0x0105c388",
+          "symbol": "OBJC_IVAR_$_Torch.animates"
+        },
+        "0x004b8fa0": {
+          "offset": 68,
+          "slot": "0x0105c3c4",
+          "symbol": "OBJC_IVAR_$_Torch.animationLoopIndex"
+        }
+      },
+      "method": "Torch -[renderImageIndex]",
+      "name": "t_renderimageidx",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Torch renderImageIndex] (imp 0x004b8cd0, 182w): the block-type \u2192 sprite-index map as a **binary-compare cascade + 12-entry jump table**: compares 0x2e/0x11/0x4a/0x2f/0x55/'K'(0x4b)/'L'(0x4c)/0x90/'V'(0x56)/'W'(0x57)/'X'(0x58)/0xfd/0xb6 then `sub r1, r0, 0x91; cmp r1, 0xc; bhi` (@0x4b8de4-0x4b8dec) indexes the **12-word table at 0x4b8e04** - the render image for block types 0x91..0x9d (the torch-flame block family 145..157, matching the 0x9d glow-exception of lightGlowQuadCount).\n",
+      "types": "i8@0:4",
+      "verified_words": 182
+    },
+    {
+      "boundary": "ARM.exidx end 0x004b8fd0 (listing bound); next ObjC IMP 0x004b8fd0 Torch -[addDrawQuadData:fromIndex:forMacroPos:]",
+      "boundary_end": "0x004b8fd0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b8fa8",
+      "ivars": {},
+      "method": "Torch -[staticGeometryDrawQuadCountForMacroPos:]",
+      "name": "t_staticquadcount",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[Torch staticGeometryDrawQuadCountForMacroPos:] (imp 0x004b8fa8, 10w): returns **1** (movw ip, 1) - one static quad per macro pos.\n",
+      "types": "i16@0:4{?=ii}8",
+      "verified_words": 10
+    },
+    {
+      "boundary": "ARM.exidx end 0x004bda38 (listing bound); next ObjC IMP 0x004be0d4 Torch -[lightPos]",
+      "boundary_end": "0x004bda38",
+      "branches": [
+        {
+          "address": "0x004b90c0",
+          "destination": "0x004b90ec",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b90e8",
+          "destination": "0x004b92ac",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b9110",
+          "destination": "0x004b92a8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b92a8",
+          "destination": "0x004bd1f8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b92d0",
+          "destination": "0x004ba58c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b92f8",
+          "destination": "0x004b9694",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b9690",
+          "destination": "0x004ba588",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b96b8",
+          "destination": "0x004b9a50",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b9a4c",
+          "destination": "0x004ba584",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b9a74",
+          "destination": "0x004b9e30",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b9e18",
+          "destination": "0x004ba580",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b9e54",
+          "destination": "0x004ba200",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004ba1f8",
+          "destination": "0x004ba57c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004ba224",
+          "destination": "0x004ba3b8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004ba3b4",
+          "destination": "0x004ba578",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004ba3dc",
+          "destination": "0x004ba574",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004ba574",
+          "destination": "0x004ba578",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004ba578",
+          "destination": "0x004ba57c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004ba57c",
+          "destination": "0x004ba580",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004ba580",
+          "destination": "0x004ba584",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004ba584",
+          "destination": "0x004ba588",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004ba588",
+          "destination": "0x004bd1f4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004ba5b0",
+          "destination": "0x004bb668",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004ba5d8",
+          "destination": "0x004ba770",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004ba76c",
+          "destination": "0x004bb664",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004ba794",
+          "destination": "0x004bab2c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bab28",
+          "destination": "0x004bb660",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bab50",
+          "destination": "0x004baee8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004baee4",
+          "destination": "0x004bb65c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004baf0c",
+          "destination": "0x004bb2a0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bb29c",
+          "destination": "0x004bb658",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bb2c4",
+          "destination": "0x004bb654",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bb654",
+          "destination": "0x004bb658",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bb658",
+          "destination": "0x004bb65c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bb65c",
+          "destination": "0x004bb660",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bb660",
+          "destination": "0x004bb664",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bb664",
+          "destination": "0x004bd1f0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bb68c",
+          "destination": "0x004bb6bc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004bb6b8",
+          "destination": "0x004bc150",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bb6e0",
+          "destination": "0x004bb884",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bb880",
+          "destination": "0x004bc14c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bb8a8",
+          "destination": "0x004bba40",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bba3c",
+          "destination": "0x004bc148",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bba64",
+          "destination": "0x004bbc00",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bbbfc",
+          "destination": "0x004bc144",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bbc24",
+          "destination": "0x004bbdc4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bbdbc",
+          "destination": "0x004bc140",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bbde8",
+          "destination": "0x004bbf7c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bbf78",
+          "destination": "0x004bc13c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bbfa0",
+          "destination": "0x004bc138",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bc138",
+          "destination": "0x004bc13c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bc13c",
+          "destination": "0x004bc140",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bc140",
+          "destination": "0x004bc144",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bc144",
+          "destination": "0x004bc148",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bc148",
+          "destination": "0x004bc14c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bc14c",
+          "destination": "0x004bd1ec",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bc174",
+          "destination": "0x004bc308",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bc300",
+          "destination": "0x004bd1e8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bc32c",
+          "destination": "0x004bc6b4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bc6b0",
+          "destination": "0x004bd1e4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bc6d8",
+          "destination": "0x004bca64",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bca60",
+          "destination": "0x004bd1e0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bca88",
+          "destination": "0x004bce24",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bce20",
+          "destination": "0x004bd1dc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bce48",
+          "destination": "0x004bd1d8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bd1d8",
+          "destination": "0x004bd1dc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bd1dc",
+          "destination": "0x004bd1e0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bd1e0",
+          "destination": "0x004bd1e4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bd1e4",
+          "destination": "0x004bd1e8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bd1e8",
+          "destination": "0x004bd1ec",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bd1ec",
+          "destination": "0x004bd1f0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bd1f0",
+          "destination": "0x004bd1f4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bd1f4",
+          "destination": "0x004bd1f8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bd25c",
+          "destination": "0x004bd288",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bd284",
+          "destination": "0x004bd6c8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bd3c8",
+          "destination": "0x004bd494",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bd3cc",
+          "destination": "0x004bd3f8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bd6bc",
+          "destination": "0x004bd9cc",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004b9054"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004b9070"
+        },
+        {
+          "callee": "0x004bda38",
+          "route": "bl 0x4bda38",
+          "site": "0x004b9098"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004b9280"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004b92a4"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004b9474"
+        },
+        {
+          "callee": "0x004bdca8",
+          "route": "bl 0x4bdca8",
+          "site": "0x004b9668"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004b968c"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004b982c"
+        },
+        {
+          "callee": "0x004bdca8",
+          "route": "bl 0x4bdca8",
+          "site": "0x004b9a24"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004b9a48"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004b9be4"
+        },
+        {
+          "callee": "0x004bdca8",
+          "route": "bl 0x4bdca8",
+          "site": "0x004b9df0"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004b9e14"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004b9fc4"
+        },
+        {
+          "callee": "0x004bdca8",
+          "route": "bl 0x4bdca8",
+          "site": "0x004ba1d0"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004ba1f4"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004ba38c"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004ba3b0"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004ba54c"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004ba570"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004ba744"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004ba768"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004ba904"
+        },
+        {
+          "callee": "0x004bdca8",
+          "route": "bl 0x4bdca8",
+          "site": "0x004bab00"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004bab24"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004bacc8"
+        },
+        {
+          "callee": "0x004bdca8",
+          "route": "bl 0x4bdca8",
+          "site": "0x004baec0"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004baee0"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004bb080"
+        },
+        {
+          "callee": "0x004bdca8",
+          "route": "bl 0x4bdca8",
+          "site": "0x004bb278"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004bb298"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004bb438"
+        },
+        {
+          "callee": "0x004bdca8",
+          "route": "bl 0x4bdca8",
+          "site": "0x004bb630"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004bb650"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004bb85c"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004bb87c"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004bba18"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004bba38"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004bbbd8"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004bbbf8"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004bbd98"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004bbdb8"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004bbf54"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004bbf74"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004bc114"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004bc134"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004bc2dc"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004bc2fc"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004bc494"
+        },
+        {
+          "callee": "0x004bdca8",
+          "route": "bl 0x4bdca8",
+          "site": "0x004bc68c"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004bc6ac"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004bc844"
+        },
+        {
+          "callee": "0x004bdca8",
+          "route": "bl 0x4bdca8",
+          "site": "0x004bca3c"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004bca5c"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004bcc04"
+        },
+        {
+          "callee": "0x004bdca8",
+          "route": "bl 0x4bdca8",
+          "site": "0x004bcdfc"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004bce1c"
+        },
+        {
+          "callee": "0x004bdac0",
+          "route": "bl 0x4bdac0",
+          "site": "0x004bcfbc"
+        },
+        {
+          "callee": "0x004bdca8",
+          "route": "bl 0x4bdca8",
+          "site": "0x004bd1b4"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x004bd1d4"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x004bd234"
+        },
+        {
+          "callee": "0x001c3020",
+          "route": "bl sym.imp.__modsi3",
+          "site": "0x004bd2f0"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x004bd304"
+        },
+        {
+          "callee": "0x004be068",
+          "route": "bl sym.clamp_float__float__float_",
+          "site": "0x004bd46c"
+        },
+        {
+          "callee": "0x00d948fc",
+          "route": "bl sym.fillQuadBuffer_float__int___GLKMatrix4__float__float__float__float__float__float__float__float__float__int__int_",
+          "site": "0x004bd6b8"
+        },
+        {
+          "callee": "0x00d948fc",
+          "route": "bl sym.fillQuadBuffer_float__int___GLKMatrix4__float__float__float__float__float__float__float__float__float__int__int_",
+          "site": "0x004bd988"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004b8fd0",
+      "ivars": {
+        "0x004b9e20": {
+          "offset": 24,
+          "slot": "0x0105c3d0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.floatPos"
+        },
+        "0x004b9e24": {
+          "offset": 78,
+          "slot": "0x0105c384",
+          "symbol": "OBJC_IVAR_$_Torch.chandelier"
+        },
+        "0x004b9e28": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        },
+        "0x004b9e2c": {
+          "offset": 60,
+          "slot": "0x0105c3b0",
+          "symbol": "OBJC_IVAR_$_Torch.connectionType"
+        },
+        "0x004ba1fc": {
+          "offset": 77,
+          "slot": "0x0105c38c",
+          "symbol": "OBJC_IVAR_$_Torch.flatOnSideAndBottom"
+        },
+        "0x004bbdc0": {
+          "offset": 60,
+          "slot": "0x0105c3b0",
+          "symbol": "OBJC_IVAR_$_Torch.connectionType"
+        },
+        "0x004bc304": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        },
+        "0x004bda08": {
+          "offset": 78,
+          "slot": "0x0105c384",
+          "symbol": "OBJC_IVAR_$_Torch.chandelier"
+        },
+        "0x004bda0c": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        },
+        "0x004bda10": {
+          "offset": 60,
+          "slot": "0x0105c3b0",
+          "symbol": "OBJC_IVAR_$_Torch.connectionType"
+        },
+        "0x004bda1c": {
+          "offset": 88,
+          "slot": "0x0105c3bc",
+          "symbol": "OBJC_IVAR_$_Torch.savedDrawBufferIndex"
+        },
+        "0x004bda20": {
+          "offset": 84,
+          "slot": "0x0105c3b4",
+          "symbol": "OBJC_IVAR_$_Torch.savedDrawBuffer"
+        },
+        "0x004bda24": {
+          "offset": 76,
+          "slot": "0x0105c388",
+          "symbol": "OBJC_IVAR_$_Torch.animates"
+        },
+        "0x004bda2c": {
+          "offset": 12,
+          "slot": "0x0105c3b8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.macroTileOwner"
+        },
+        "0x004bda30": {
+          "offset": 82,
+          "slot": "0x0105c398",
+          "symbol": "OBJC_IVAR_$_Torch.dataB"
+        }
+      },
+      "method": "Torch -[addDrawQuadData:fromIndex:forMacroPos:]",
+      "name": "t_adddrawquad",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x004bda14": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x004bda18": {
+          "selector": "renderImageIndex",
+          "slot": "0x00e7d1d0"
+        }
+      },
+      "semantics": "[Torch addDrawQuadData:fromIndex:forMacroPos:] (imp 0x004b8fd0, 4762w): the torch's **quad emitter** - a 0x1800-byte 16-byte-aligned frame (`sub sp, 0x1800; bic sp, sp, 0xf` @0x4b8fd8) with working areas at +0x400/+0x1000; the Vector2::operator float*() marshalling; the **-0.9f (0xbf666666)** and **-0.05f (0xbd4ccccd)** constants; the placement-code gates (==3 @0x4b9110, ==0 @0x4b92f4, the water flag @0x4b92d0) pick arms; each arm builds a 64-byte quad record (helper `bl 0x4bdac0` then **memcpy 0x40** into the buffer). Structural census: **23\u00d7 bl 0x4bdac0 + 23\u00d7 memcpy** (the quad arms), **12\u00d7 bl 0x4bdca8** (the second helper), and **2\u00d7 `fillQuadBuffer(float*, int, _GLKMatrix4*, float\u00d78, int, int)`** (@the emit tail - the same fillQuadBuffer family of the E41/E44 draw passes); `clamp_float(float, float, float)`, `__modsi3`, `__aeabi_idiv` for the frame/edge math; float constants **-1.4125f (0xbfb4f4ab), \u00b10.48f (0x3ef5c28f/bef5c28f), \u00b10.1f, \u00b10.3f, \u00b10.4f, -0.7f (0xbf333333)** - the torch flame geometry. The double-buffer record swap (0x1e8..0x1f8 \u2192 0x178.., 0x200.. \u2192 0x180.., 0x218.. \u2192 0x198.. @0x4b9118-0x4b9194) alternates the two emit states.\n",
+      "types": "i24@0:4^f8i12{?=ii}16",
+      "verified_words": 4762
+    },
+    {
+      "boundary": "ARM.exidx end 0x004bed60 (listing bound); next ObjC IMP 0x004bed90 Torch -[lightGlowQuadCount]",
+      "boundary_end": "0x004bed60",
+      "branches": [
+        {
+          "address": "0x004be1ac",
+          "destination": "0x004be200",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004be1fc",
+          "destination": "0x004bed30",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be220",
+          "destination": "0x004be440",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004be244",
+          "destination": "0x004be290",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be28c",
+          "destination": "0x004be43c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be2b0",
+          "destination": "0x004be2fc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be2f8",
+          "destination": "0x004be438",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be31c",
+          "destination": "0x004be360",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be35c",
+          "destination": "0x004be434",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be380",
+          "destination": "0x004be3c4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be3c0",
+          "destination": "0x004be430",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be3e4",
+          "destination": "0x004be3ec",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be3e8",
+          "destination": "0x004be42c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be40c",
+          "destination": "0x004be428",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be428",
+          "destination": "0x004be42c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be42c",
+          "destination": "0x004be430",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be430",
+          "destination": "0x004be434",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be434",
+          "destination": "0x004be438",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be438",
+          "destination": "0x004be43c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be43c",
+          "destination": "0x004bed2c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be460",
+          "destination": "0x004be61c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be4c0",
+          "destination": "0x004be4d8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be4d4",
+          "destination": "0x004be618",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be4f8",
+          "destination": "0x004be53c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be538",
+          "destination": "0x004be614",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be55c",
+          "destination": "0x004be5a0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be59c",
+          "destination": "0x004be610",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be5c0",
+          "destination": "0x004be5cc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be5c4",
+          "destination": "0x004be60c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be5ec",
+          "destination": "0x004be608",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be608",
+          "destination": "0x004be60c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be60c",
+          "destination": "0x004be610",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be610",
+          "destination": "0x004be614",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be614",
+          "destination": "0x004be618",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be618",
+          "destination": "0x004bed28",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be63c",
+          "destination": "0x004be668",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004be664",
+          "destination": "0x004be828",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be6c4",
+          "destination": "0x004be6e4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be6d8",
+          "destination": "0x004be820",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be704",
+          "destination": "0x004be748",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be744",
+          "destination": "0x004be81c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be768",
+          "destination": "0x004be7ac",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be7a8",
+          "destination": "0x004be818",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be7cc",
+          "destination": "0x004be7d4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be7d0",
+          "destination": "0x004be814",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be7f4",
+          "destination": "0x004be810",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be810",
+          "destination": "0x004be814",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be814",
+          "destination": "0x004be818",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be818",
+          "destination": "0x004be81c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be81c",
+          "destination": "0x004be820",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be820",
+          "destination": "0x004bed24",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be848",
+          "destination": "0x004bea78",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be8a8",
+          "destination": "0x004be8c0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be8bc",
+          "destination": "0x004bea74",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be8e0",
+          "destination": "0x004be960",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be95c",
+          "destination": "0x004bea70",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be980",
+          "destination": "0x004bea00",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be9fc",
+          "destination": "0x004bea6c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bea20",
+          "destination": "0x004bea28",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bea24",
+          "destination": "0x004bea68",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bea48",
+          "destination": "0x004bea64",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bea64",
+          "destination": "0x004bea68",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bea68",
+          "destination": "0x004bea6c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bea6c",
+          "destination": "0x004bea70",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bea70",
+          "destination": "0x004bea74",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bea74",
+          "destination": "0x004bed20",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bead4",
+          "destination": "0x004beaec",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004beae8",
+          "destination": "0x004bed1c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004beb0c",
+          "destination": "0x004beb8c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004beb88",
+          "destination": "0x004bed18",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bebac",
+          "destination": "0x004bec2c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bec28",
+          "destination": "0x004bed14",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bec4c",
+          "destination": "0x004bec94",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bec8c",
+          "destination": "0x004bed10",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004becb4",
+          "destination": "0x004bed0c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bed0c",
+          "destination": "0x004bed10",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bed10",
+          "destination": "0x004bed14",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bed14",
+          "destination": "0x004bed18",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bed18",
+          "destination": "0x004bed1c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bed1c",
+          "destination": "0x004bed20",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bed20",
+          "destination": "0x004bed24",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bed24",
+          "destination": "0x004bed28",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bed28",
+          "destination": "0x004bed2c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bed2c",
+          "destination": "0x004bed30",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x004bed60",
+          "route": "bl method.Vector.Vector__",
+          "site": "0x004be0f8"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be11c"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be12c"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be150"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be168"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be178"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be1c8"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be1e0"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be1f0"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be260"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be270"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be280"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be2cc"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be2dc"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be2ec"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be338"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be350"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be39c"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be3b4"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be414"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be47c"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be494"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be4c8"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be514"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be52c"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be578"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be590"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be5f4"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be680"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be698"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be6cc"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be720"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be738"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be784"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be79c"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be7fc"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be864"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be87c"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be8b0"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be8fc"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be914"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be938"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be950"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be99c"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be9b4"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be9d8"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be9f0"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004bea50"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004bea90"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004beaa8"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004beadc"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004beb28"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004beb40"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004beb64"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004beb7c"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004bebc8"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004bebe0"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004bec04"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004bec1c"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004bec68"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004bec80"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004becd0"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004bece8"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004becf8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004be0d4",
+      "ivars": {
+        "0x004bed38": {
+          "offset": 78,
+          "slot": "0x0105c384",
+          "symbol": "OBJC_IVAR_$_Torch.chandelier"
+        },
+        "0x004bed3c": {
+          "offset": 24,
+          "slot": "0x0105c3d0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.floatPos"
+        },
+        "0x004bed40": {
+          "offset": 77,
+          "slot": "0x0105c38c",
+          "symbol": "OBJC_IVAR_$_Torch.flatOnSideAndBottom"
+        },
+        "0x004bed44": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        },
+        "0x004bed48": {
+          "offset": 60,
+          "slot": "0x0105c3b0",
+          "symbol": "OBJC_IVAR_$_Torch.connectionType"
+        }
+      },
+      "method": "Torch -[lightPos]",
+      "name": "t_lightpos",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Torch lightPos] (imp 0x004be0d4, 803w): the **per-code light position selector** - `Vector::Vector()` + `Vector2::operator float*()` + vadd/vsub chains build the light's world position from the macro position (ffffc8dc) + a code-dependent offset: the ffffc890 flag arm (@0x4be1a4, the `mvn r3, 0` -1 initial), the ffffc898 water gate (@0x4be21c), then the placement-code cascade via ffffc8bc: code **0** (@0x4be244), **3** (@0x4be2b0), **1** (@0x4be31c, vadd arm), and the rest of the -2..3 family (@0x4be360+) each adding its own Vector offset (64 calls of the Vector/Vector2 ops).\n",
+      "types": "{Vector=[4f]}8@0:4",
+      "verified_words": 803
+    },
+    {
+      "boundary": "ARM.exidx end 0x004bedec (listing bound); next ObjC IMP 0x004bedec Torch -[isDownlight]",
+      "boundary_end": "0x004bedec",
+      "branches": [
+        {
+          "address": "0x004bedc0",
+          "destination": "0x004bedd0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bedcc",
+          "destination": "0x004bedd8",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x004bed90",
+      "ivars": {
+        "0x004bede4": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        }
+      },
+      "method": "Torch -[lightGlowQuadCount]",
+      "name": "t_glowquadcount",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Torch lightGlowQuadCount] (imp 0x004bed90, 23w): **block type 0x9d (157) \u2192 0, else 1** (`cmp r0, 0x9d; bne` @0x4bedc0: the 0x9d block gets no light-glow quads - the glow-exception type).\n",
+      "types": "i8@0:4",
+      "verified_words": 23
+    },
+    {
+      "boundary": "ARM.exidx end 0x004beeac (listing bound); next ObjC IMP 0x004bee3c Torch -[isUplight]",
+      "boundary_end": "0x004beeac",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x004bedec",
+      "ivars": {
+        "0x004bee34": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        },
+        "0x004bee88": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        }
+      },
+      "method": "Torch -[isDownlight]",
+      "name": "t_isdownlight",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Torch isDownlight] (imp 0x004bedec, 48w): **block type == 0xfe (254) \u2192 1** (`cmp 0xfe; moveq 1` @0x4bee18).\n",
+      "types": "c8@0:4",
+      "verified_words": 48
+    },
+    {
+      "boundary": "ARM.exidx end 0x004beeac (listing bound); next ObjC IMP 0x004bee90 Torch -[occupiesForegroundContents]",
+      "boundary_end": "0x004beeac",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x004bee3c",
+      "ivars": {
+        "0x004bee88": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        }
+      },
+      "method": "Torch -[isUplight]",
+      "name": "t_isuplight",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Torch isUplight] (imp 0x004bee3c, 28w): **block type == 0x102 (258) \u2192 1** (@0x4bee6c).\n",
+      "types": "c8@0:4",
+      "verified_words": 28
+    },
+    {
+      "boundary": "ARM.exidx end 0x004beeac (listing bound); next ObjC IMP 0x004beeac Torch -[addArtificialLightContributionForPhysicalBlockLoadedAtXPos:yPos:]",
+      "boundary_end": "0x004beeac",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x004bee90",
+      "ivars": {},
+      "method": "Torch -[occupiesForegroundContents]",
+      "name": "t_occupiesfg",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[Torch occupiesForegroundContents] (imp 0x004bee90, 7w): returns **1**.\n",
+      "types": "c8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x004bef20 (listing bound); next ObjC IMP 0x004bef20 Torch -[dataA]",
+      "boundary_end": "0x004bef20",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x004bef04"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x004beeac",
+      "ivars": {
+        "0x004bef18": {
+          "offset": 56,
+          "slot": "0x0105c3a4",
+          "symbol": "OBJC_IVAR_$_Torch.light"
+        }
+      },
+      "method": "Torch -[addArtificialLightContributionForPhysicalBlockLoadedAtXPos:yPos:]",
+      "name": "t_addartistlightcont",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x004bef10": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x004bef14": {
+          "selector": "addContributionForPhysicalBlockLoadedAtXPos:yPos:",
+          "slot": "0x00e7d1fc"
+        }
+      },
+      "semantics": "[Torch addArtificialLightContributionForPhysicalBlockLoadedAtXPos:yPos:] (imp 0x004beeac, 29w): thin via ffffbcac/c8b0 + ffe1d708 (`blx lr` @0x4bef04) - the torch registers its artificial-light contribution (the E68 ArtificialLight consumer).\n",
+      "types": "v16@0:4i8i12",
+      "verified_words": 29
+    },
+    {
+      "boundary": "ARM.exidx end 0x004bef5c (listing bound); next ObjC IMP 0x004bef5c Torch -[setDataA:]",
+      "boundary_end": "0x004bef5c",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x004bef20",
+      "ivars": {
+        "0x004bef54": {
+          "offset": 80,
+          "slot": "0x0105c39c",
+          "symbol": "OBJC_IVAR_$_Torch.dataA"
+        }
+      },
+      "method": "Torch -[dataA]",
+      "name": "t_dataa",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Torch dataA] (imp 0x004bef20, 15w): **halfword read** (ldrh) via the ffffc8a8 cell.\n",
+      "types": "S8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "ARM.exidx end 0x004befa4 (listing bound); next ObjC IMP 0x004befa4 Torch -[dataB]",
+      "boundary_end": "0x004befa4",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x004bef5c",
+      "ivars": {
+        "0x004bef9c": {
+          "offset": 80,
+          "slot": "0x0105c39c",
+          "symbol": "OBJC_IVAR_$_Torch.dataA"
+        }
+      },
+      "method": "Torch -[setDataA:]",
+      "name": "t_setdataa",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Torch setDataA:] (imp 0x004bef5c, 18w): the **`dmb ish`-fenced halfword store** - `strh r2, [sp, 2]` + `dmb ish; strh r2, [r0]; dmb ish` (@0x4bef88-0x4bef90): dataA is written atomically under SMP barriers (the same idiom as st3_setneedschoice).\n",
+      "types": "v12@0:4S8",
+      "verified_words": 18
+    },
+    {
+      "boundary": "ARM.exidx end 0x004befe0 (listing bound); next ObjC IMP 0x004befe0 Torch -[setDataB:]",
+      "boundary_end": "0x004befe0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x004befa4",
+      "ivars": {
+        "0x004befd8": {
+          "offset": 82,
+          "slot": "0x0105c398",
+          "symbol": "OBJC_IVAR_$_Torch.dataB"
+        }
+      },
+      "method": "Torch -[dataB]",
+      "name": "t_datab",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Torch dataB] (imp 0x004befa4, 15w): halfword read via the ffffc8a4 cell.\n",
+      "types": "S8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "ARM.exidx end 0x004bf028 (listing bound); next ObjC IMP 0x004c0320 Tree -[removeFromMacroBlock]",
+      "boundary_end": "0x004bf028",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x004befe0",
+      "ivars": {
+        "0x004bf020": {
+          "offset": 82,
+          "slot": "0x0105c398",
+          "symbol": "OBJC_IVAR_$_Torch.dataB"
+        }
+      },
+      "method": "Torch -[setDataB:]",
+      "name": "t_setdatab",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Torch setDataB:] (imp 0x004befe0, 18w): the `dmb ish`-fenced halfword store via the ffffc8a4 cell (@0x4bf00c-0x4bf014).\n",
+      "types": "v12@0:4S8",
+      "verified_words": 18
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "schema": 1
+}

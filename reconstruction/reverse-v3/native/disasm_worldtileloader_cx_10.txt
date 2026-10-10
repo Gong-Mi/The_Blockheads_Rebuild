@@ -1,0 +1,26 @@
+# clamp(int,int,int,int)  [C function]
+# implementation: 0x004c0b70
+# ARM.exidx end: 0x004c0bc4
+
+            ;-- clampi(int, int, int):
+            0x004c0b70      10d04de2       sub sp, sp, 0x10            ; clampi(int, int, int)
+            0x004c0b74      0c008de5       str r0, [sp, 0xc]
+            0x004c0b78      08108de5       str r1, [sp, 8]
+            0x004c0b7c      04208de5       str r2, [sp, 4]
+            0x004c0b80      0c009de5       ldr r0, [sp, 0xc]
+            0x004c0b84      00008de5       str r0, [sp]
+            0x004c0b88      0c009de5       ldr r0, [sp, 0xc]
+            0x004c0b8c      04109de5       ldr r1, [sp, 4]
+            0x004c0b90      010050e1       cmp r0, r1
+        ┌─< 0x004c0b94      010000da       ble 0x4c0ba0
+        │   0x004c0b98      04009de5       ldr r0, [sp, 4]
+        │   0x004c0b9c      00008de5       str r0, [sp]
+        └─> 0x004c0ba0      0c009de5       ldr r0, [sp, 0xc]
+            0x004c0ba4      08109de5       ldr r1, [sp, 8]
+            0x004c0ba8      010050e1       cmp r0, r1
+        ┌─< 0x004c0bac      010000aa       bge 0x4c0bb8
+        │   0x004c0bb0      08009de5       ldr r0, [sp, 8]
+        │   0x004c0bb4      00008de5       str r0, [sp]
+        └─> 0x004c0bb8      00009de5       ldr r0, [sp]
+            0x004c0bbc      10d08de2       add sp, sp, 0x10
+            0x004c0bc0      1eff2fe1       bx lr

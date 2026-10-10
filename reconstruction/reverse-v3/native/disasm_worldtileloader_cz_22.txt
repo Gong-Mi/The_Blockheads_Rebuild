@@ -1,0 +1,75 @@
+# cpPerspective  [C function]
+# implementation: 0x007c3e00
+# ARM.exidx end: 0x007c3f18
+
+            ;-- cpPerspective:
+            0x007c3e00      00482de9       push {fp, lr}
+            0x007c3e04      0db0a0e1       mov fp, sp
+            0x007c3e08      088b2ded       vpush {d8, d9, d10, d11}
+            0x007c3e0c      58d04de2       sub sp, sp, 0x58
+            0x007c3e10      102b43ec       vmov d0, r2, r3
+            0x007c3e14      110b41ec       vmov d1, r0, r1
+            0x007c3e18      042b9bed       vldr d2, [fp, 0x10]
+            0x007c3e1c      023b9bed       vldr d3, [fp, 8]
+            0x007c3e20      020000e3       movw r0, 2
+            0x007c3e24      004bb0ee       vmov.f64 d4, 2
+            0x007c3e28      365b9fed       vldr d5, [0x007c3f08]
+            0x007c3e2c      b41000e3       movw r1, 0xb4
+            0x007c3e30      366b9fed       vldr d6, [0x007c3f10]
+            0x007c3e34      0a1b0bed       vstr d1, [fp, -0x28]
+            0x007c3e38      0c0b0bed       vstr d0, [fp, -0x30]
+            0x007c3e3c      0e3b0bed       vstr d3, [fp, -0x38]
+            0x007c3e40      0e2b8ded       vstr d2, [sp, 0x38]
+            0x007c3e44      0e0b1bed       vldr d0, [fp, -0x38]
+            0x007c3e48      0a1b1bed       vldr d1, [fp, -0x28]
+            0x007c3e4c      061b81ee       vdiv.f64 d1, d1, d6
+            0x007c3e50      051b21ee       vmul.f64 d1, d1, d5
+            0x007c3e54      041b81ee       vdiv.f64 d1, d1, d4
+            0x007c3e58      14008de5       str r0, [sp, 0x14]
+            0x007c3e5c      10108de5       str r1, [sp, 0x10]
+            0x007c3e60      110b51ec       vmov r0, r1, d1
+            0x007c3e64      020b8ded       vstr d0, [sp, 8]
+            0x007c3e68      b0fae7eb       bl sym.imp.tan
+            0x007c3e6c      100b41ec       vmov d0, r0, r1
+            0x007c3e70      021b9ded       vldr d1, [sp, 8]
+            0x007c3e74      000b21ee       vmul.f64 d0, d1, d0
+            0x007c3e78      060b8ded       vstr d0, [sp, 0x18]
+            0x007c3e7c      060b9ded       vldr d0, [sp, 0x18]
+            0x007c3e80      400bb1ee       vneg.f64 d0, d0
+            0x007c3e84      080b8ded       vstr d0, [sp, 0x20]
+            0x007c3e88      080b9ded       vldr d0, [sp, 0x20]
+            0x007c3e8c      0c1b1bed       vldr d1, [fp, -0x30]
+            0x007c3e90      010b20ee       vmul.f64 d0, d0, d1
+            0x007c3e94      0c0b8ded       vstr d0, [sp, 0x30]
+            0x007c3e98      060b9ded       vldr d0, [sp, 0x18]
+            0x007c3e9c      0c1b1bed       vldr d1, [fp, -0x30]
+            0x007c3ea0      010b20ee       vmul.f64 d0, d0, d1
+            0x007c3ea4      0a0b8ded       vstr d0, [sp, 0x28]
+            0x007c3ea8      0c0b9ded       vldr d0, [sp, 0x30]
+            0x007c3eac      c07bb7ee       vcvt.f32.f64 s14, d0
+            0x007c3eb0      0a0b9ded       vldr d0, [sp, 0x28]
+            0x007c3eb4      c07bf7ee       vcvt.f32.f64 s15, d0
+            0x007c3eb8      080b9ded       vldr d0, [sp, 0x20]
+            0x007c3ebc      c08bb7ee       vcvt.f32.f64 s16, d0
+            0x007c3ec0      060b9ded       vldr d0, [sp, 0x18]
+            0x007c3ec4      c09bb7ee       vcvt.f32.f64 s18, d0
+            0x007c3ec8      0e0b1bed       vldr d0, [fp, -0x38]
+            0x007c3ecc      c0abb7ee       vcvt.f32.f64 s20, d0
+            0x007c3ed0      0e0b9ded       vldr d0, [sp, 0x38]
+            0x007c3ed4      c0bbb7ee       vcvt.f32.f64 s22, d0
+            0x007c3ed8      100a17ee       vmov r0, s14
+            0x007c3edc      901a17ee       vmov r1, s15
+            0x007c3ee0      102a18ee       vmov r2, s16
+            0x007c3ee4      103a19ee       vmov r3, s18
+            0x007c3ee8      10ca1aee       vmov ip, s20
+            0x007c3eec      00c08de5       str ip, [sp]
+            0x007c3ef0      10ca1bee       vmov ip, s22
+            0x007c3ef4      04c08de5       str ip, [sp, 4]
+            0x007c3ef8      8c00e8eb       bl sym.imp.glFrustumf
+            0x007c3efc      20d04be2       sub sp, fp, 0x20
+            0x007c3f00      088bbdec       vpop {d8, d9, d10, d11}
+            0x007c3f04      0088bde8       pop {fp, pc}
+            0x007c3f08      182d4454       strbpl r2, [r4], -0xd18
+            0x007c3f0c      fb210940       strdmi r2, r3, [sb], -fp
+            0x007c3f10      00000000       andeq r0, r0, r0
+            0x007c3f14      00806640       rsbmi r8, r6, r0

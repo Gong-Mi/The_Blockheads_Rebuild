@@ -1,0 +1,97 @@
+{
+ "schema": 1,
+ "scope": "the struct-returning World getters",
+ "method": "provenance is the source address of the field read: the access that lands on self+offset (inline shape) or the copy helper called with src == self+offset and length == width (copy shape). Widths are parsed from the type encoding and checked against the observed copy length.",
+ "counts": {
+  "attempted": 3,
+  "executed": 3
+ },
+ "results": [
+  {
+   "field": "translation",
+   "imp": "0x5536a4",
+   "types": "{Vector2=[2f]}8@0:4",
+   "width_from_type": 8,
+   "slot": "0x105c714",
+   "cell": "0xf328d4",
+   "offset": 624,
+   "shape": "inline-load",
+   "symbol_cell_agrees": null,
+   "symbol_note": "no OBJC_IVAR_$_World.translation in .dynsym, so the symbol cross-check is unavailable for this field",
+   "cross_control": {
+    "control_kind": "same-width-value",
+    "cell_rewritten_to": "highestPoint",
+    "offset": 3164,
+    "returned_matches": true,
+    "decoy_at_original": "030a11181f262d34"
+   },
+   "positive": {
+    "planted": "030a11181f262d34",
+    "returned": "030a11181f262d34",
+    "bit_exact": true,
+    "source": "0x30000270",
+    "expected_source": "0x30000270",
+    "how": "inline-load"
+   },
+   "status": "executed"
+  },
+  {
+   "field": "highestPoint",
+   "imp": "0x5c6eb0",
+   "types": "{?=ii}8@0:4",
+   "width_from_type": 8,
+   "slot": "0x105c744",
+   "cell": "0xf32904",
+   "offset": 3164,
+   "shape": "inline-load",
+   "symbol_cell_agrees": true,
+   "symbol_note": "cell == symbol value",
+   "cross_control": {
+    "control_kind": "same-width-value",
+    "cell_rewritten_to": "translation",
+    "offset": 624,
+    "returned_matches": true,
+    "decoy_at_original": "030a11181f262d34"
+   },
+   "positive": {
+    "planted": "030a11181f262d34",
+    "returned": "030a11181f262d34",
+    "bit_exact": true,
+    "source": "0x30000c5c",
+    "expected_source": "0x30000c5c",
+    "how": "inline-load"
+   },
+   "status": "executed"
+  },
+  {
+   "field": "sunDirection",
+   "imp": "0x5d9a08",
+   "types": "{Vector=[4f]}8@0:4",
+   "width_from_type": 16,
+   "slot": "0x105c9ac",
+   "cell": "0xf32b6c",
+   "offset": 660,
+   "shape": "copy-stub",
+   "symbol_cell_agrees": true,
+   "symbol_note": "cell == symbol value",
+   "cross_control": {
+    "control_kind": "source-address-follows-cell",
+    "cell_rewritten_to": "translation",
+    "offset": 624,
+    "source_seen": "0x30000270",
+    "source_followed": true,
+    "why": "only one field of this width exists, so there is no same-width partner to compare values against"
+   },
+   "positive": {
+    "planted": "030a11181f262d343b424950575e656c",
+    "returned": "030a11181f262d343b424950575e656c",
+    "bit_exact": true,
+    "source": "0x30000294",
+    "expected_source": "0x30000294",
+    "how": "copy-stub"
+   },
+   "status": "executed"
+  }
+ ],
+ "passed": true
+}

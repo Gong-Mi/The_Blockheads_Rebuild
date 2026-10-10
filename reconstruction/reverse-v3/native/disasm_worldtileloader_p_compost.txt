@@ -1,0 +1,60 @@
+# Plant -[isGrowingInCompost]
+# types: c8@0:4
+# implementation: 0x00956e1c
+# ARM.exidx end: 0x00956ef8
+
+            0x00956e1c      00482de9       push {fp, lr}
+            0x00956e20      0db0a0e1       mov fp, sp
+            0x00956e24      10d04de2       sub sp, sp, 0x10
+            0x00956e28      c0209fe5       ldr r2, [0x00956ef0]        ; [0x956ef0:4]=0x708cc0
+            0x00956e2c      02208fe0       add r2, pc, r2
+            0x00956e30      b0309fe5       ldr r3, [0x00956ee8]        ; [0x956ee8:4]=0xffffc8a0
+            0x00956e34      023093e7       ldr r3, [r3, r2]
+            0x00956e38      acc09fe5       ldr ip, [0x00956eec]        ; [0x956eec:4]=0xffffc89c
+            0x00956e3c      02209ce7       ldr r2, [ip, r2]
+            0x00956e40      08008de5       str r0, [sp, 8]
+            0x00956e44      04108de5       str r1, [sp, 4]
+            0x00956e48      08009de5       ldr r0, [sp, 8]
+            0x00956e4c      001092e5       ldr r1, [r2]
+            0x00956e50      010080e0       add r0, r0, r1
+            0x00956e54      000090e5       ldr r0, [r0]
+            0x00956e58      08109de5       ldr r1, [sp, 8]
+            0x00956e5c      002092e5       ldr r2, [r2]
+            0x00956e60      021081e0       add r1, r1, r2
+            0x00956e64      041091e5       ldr r1, [r1, 4]
+            0x00956e68      011041e2       sub r1, r1, 1
+            0x00956e6c      08209de5       ldr r2, [sp, 8]
+            0x00956e70      003093e5       ldr r3, [r3]
+            0x00956e74      032082e0       add r2, r2, r3
+            0x00956e78      002092e5       ldr r2, [r2]
+            0x00956e7c      28f002eb       bl sym.tileAtWorldPositionLoaded_int__int__World_ ; tileAtWorldPositionLoaded(int, int, World*)
+            0x00956e80      001000e3       movw r1, 0
+            0x00956e84      00008de5       str r0, [sp]
+            0x00956e88      00009de5       ldr r0, [sp]
+            0x00956e8c      010050e1       cmp r0, r1
+        ┌─< 0x00956e90      0f00000a       beq 0x956ed4
+        │   0x00956e94      00009de5       ldr r0, [sp]
+        │   0x00956e98      0000d0e5       ldrb r0, [r0]
+        │   0x00956e9c      300050e3       cmp r0, 0x30                ; '0'
+       ┌──< 0x00956ea0      0700000a       beq 0x956ec4
+       ││   0x00956ea4      00009de5       ldr r0, [sp]
+       ││   0x00956ea8      0000d0e5       ldrb r0, [r0]
+       ││   0x00956eac      310050e3       cmp r0, 0x31                ; '1'
+      ┌───< 0x00956eb0      0300000a       beq 0x956ec4
+      │││   0x00956eb4      00009de5       ldr r0, [sp]
+      │││   0x00956eb8      0000d0e5       ldrb r0, [r0]
+      │││   0x00956ebc      320050e3       cmp r0, 0x32                ; '2'
+     ┌────< 0x00956ec0      0200001a       bne 0x956ed0
+     │└└──> 0x00956ec4      010000e3       movw r0, 1
+     │  │   0x00956ec8      01004be5       strb r0, [fp, -1]
+     │ ┌──< 0x00956ecc      020000ea       b 0x956edc
+     └┌───< 0x00956ed0      ffffffea       b 0x956ed4
+      └─└─> 0x00956ed4      000000e3       movw r0, 0
+       │    0x00956ed8      01004be5       strb r0, [fp, -1]
+       └──> 0x00956edc      d1005be1       ldrsb r0, [fp, -1]
+            0x00956ee0      0bd0a0e1       mov sp, fp
+            0x00956ee4      0088bde8       pop {fp, pc}
+            0x00956ee8      a0c8ffff       invalid
+            0x00956eec      9cc8ffff       invalid
+            0x00956ef0      c08c7000       rsbseq r8, r0, r0, asr 25
+            0x00956ef4      00000000       andeq r0, r0, r0

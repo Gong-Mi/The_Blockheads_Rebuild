@@ -1,0 +1,24 @@
+# tileIsAir  [C function]
+# implementation: 0x00a12300
+# ARM.exidx end: 0x00a12410
+
+            ;-- tileIsAir(Tile*):
+            0x00a12300      08d04de2       sub sp, sp, 8               ; tileIsAir(Tile*)
+            0x00a12304      001000e3       movw r1, 0
+            0x00a12308      002000e3       movw r2, 0
+            0x00a1230c      04008de5       str r0, [sp, 4]
+            0x00a12310      04009de5       ldr r0, [sp, 4]
+            0x00a12314      020050e1       cmp r0, r2
+            0x00a12318      00108de5       str r1, [sp]
+        ┌─< 0x00a1231c      0500000a       beq 0xa12338
+        │   0x00a12320      04009de5       ldr r0, [sp, 4]
+        │   0x00a12324      0000d0e5       ldrb r0, [r0]
+        │   0x00a12328      020050e3       cmp r0, 2
+        │   0x00a1232c      000000e3       movw r0, 0
+        │   0x00a12330      0100a003       moveq r0, 1
+        │   0x00a12334      00008de5       str r0, [sp]
+        └─> 0x00a12338      00009de5       ldr r0, [sp]
+            0x00a1233c      010000e2       and r0, r0, 1
+            0x00a12340      7000afe6       sxtb r0, r0
+            0x00a12344      08d08de2       add sp, sp, 8
+            0x00a12348      1eff2fe1       bx lr

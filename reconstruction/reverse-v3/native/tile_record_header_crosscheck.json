@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "claim": "extracted drawing-path record fields joined with the repository's own tile record header: overlaps named, undocumented fields surfaced",
+  "header": {
+    "path": "original_save_format.h",
+    "sha256": "a62733697ed2b9807c44efef0cddc58b6a36851e131381f531bf84d8a9616d53",
+    "documented_offsets": {
+      "0": "type",
+      "1": "backWallType",
+      "3": "contentsType",
+      "7": "temperatureScaleByte"
+    },
+    "declared_size": 64,
+    "struct_named_tile": true,
+    "asserts_size": true
+  },
+  "counts": {
+    "extracted_offsets": 4,
+    "documented_offsets": 4,
+    "agreeing_offsets": 2,
+    "undocumented_extracted": 2,
+    "documented_but_not_read_by_drawing_path": 2,
+    "record_stride_extracted": 64,
+    "record_size_declared": 64,
+    "size_agrees": true
+  },
+  "rows": [
+    {
+      "offset": 1,
+      "header_name": "backWallType",
+      "documented": true,
+      "read_sites": [
+        "0x00a22ea8"
+      ],
+      "windows": [
+        "shared body"
+      ],
+      "path_purpose": "jump-table index (compared <= 0x4c after subtracting one, 77 entries)"
+    },
+    {
+      "offset": 3,
+      "header_name": "contentsType",
+      "documented": true,
+      "read_sites": [
+        "0x00a23500"
+      ],
+      "windows": [
+        "tail"
+      ],
+      "path_purpose": "tested against zero (a boolean-ish field)"
+    },
+    {
+      "offset": 8,
+      "header_name": "",
+      "documented": false,
+      "read_sites": [
+        "0x00a22e00"
+      ],
+      "windows": [
+        "shared body"
+      ],
+      "path_purpose": "fed into the arithmetic (byte - 127) * constant + [fp,-0x19c]"
+    },
+    {
+      "offset": 12,
+      "header_name": "",
+      "documented": false,
+      "read_sites": [
+        "0x00a234e4"
+      ],
+      "windows": [
+        "tail"
+      ],
+      "path_purpose": "compared against 0x45 in the tail"
+    }
+  ],
+  "documented_but_unread": [
+    {
+      "offset": 0,
+      "name": "type"
+    },
+    {
+      "offset": 7,
+      "name": "temperatureScaleByte"
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+ "schema": 1,
+ "title": "Every reference to every Objective-C ivar offset cell in the pinned ELF",
+ "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+ "tool": "tools/extract_ivar_cell_references.py (--self-check enforced)",
+ "mechanism": "ivar offset cell reached via a .got entry whose file contents are the cell VA",
+ "method": "OBJC_IVAR_$_C.i denotes a 4-byte cell in __objc_ivar; code reaches it through a two-word PIC idiom whose middle address is a .got entry, and *that entry's file contents are the cell VA*. A reference exists exactly when *(wA + v) is a known cell VA, v being the PIC base 0x105faf4.",
+ "self_check": {
+  "positive_control": {
+   "method_imp": 6134180,
+   "ivar": "World.worldTime",
+   "within": [
+    6134176,
+    6134224
+   ]
+  },
+  "passed": true
+ },
+ "stats": {
+  "window": [
+   "0x1c4500",
+   "0xdb8aa8"
+  ],
+  "add_sites": 27155,
+  "slots_checked": 20593,
+  "pairs_resolved": 20593,
+  "instr_stream_hits": 7193,
+  "pic_base_seen": 7193
+ },
+ "counts": {
+  "ivar_symbols": 3793,
+  "ivars_with_references": 2003,
+  "sites": 7193,
+  "by_access": {
+   "read": 1517,
+   "pointer-or-unknown": 5479,
+   "write": 197
+  },
+  "by_attribution": {
+   "unique": 6265,
+   "ambiguous": 803,
+   "none": 125
+  },
+  "bias_window_instructions": 240,
+  "note": "a 24-instruction bias window resolves only 13430/27155 add sites and understated every number here by ~34%; 240 resolves 20593 and changed neither field's site list"
+ },
+ "findings": {
+  "World.worldTime": {
+   "cell": "0xf328f4",
+   "offset": 648,
+   "encoding": "d",
+   "property": "not present in the property table; getter -[World worldTime] only, NO setter in the method table",
+   "references": [
+    {
+     "add_site": "0x582a8c",
+     "access": "read",
+     "site_instruction": "vldr d0, [r1]",
+     "method": "World -[getWeatherFractionForPos:]",
+     "attribution": "unique"
+    },
+    {
+     "add_site": "0x5a1ff0",
+     "access": "read",
+     "site_instruction": "vldr d0, [r3]",
+     "method": "World -[render:cameraZ:projectionMatrix:pinchScale:]",
+     "attribution": "unique"
+    },
+    {
+     "add_site": "0x5d99c4",
+     "access": "pointer-or-unknown",
+     "site_instruction": null,
+     "method": "World -[worldTime]",
+     "attribution": "unique"
+    }
+   ],
+   "conclusion": "three references, ALL reads (weather getter, World render:, own getter) - the 20-units-per-second clock is not advanced by any ivar store in this library"
+  },
+  "World.fastForward": {
+   "cell": "0xf32930",
+   "offset": 934,
+   "encoding": "c",
+   "property": "DECLARED READONLY PROPERTY: attributes 'Tc,R,VfastForward' in the property table; no setter exists",
+   "references": [
+    {
+     "add_site": "0x5d9e94",
+     "access": "read",
+     "site_instruction": "ldrsb r0, [r0]",
+     "attribution": "ambiguous",
+     "in_range": [
+      "World -[startPortalPos]",
+      "World -[serverClients]",
+      "World -[server]",
+      "World -[client]",
+      "World -[fastForward]",
+      "World -[doubleTimeUnlocked]"
+     ]
+    }
+   ],
+   "conclusion": "exactly one reference, the byte read in its own getter. No writer, no setter (readonly property), and no overlapping neighbour: 934 is a standalone char between 933 idleTimerDisabled and 936 saveCount. Nothing outside libApplication names the field either - no other .so in the APK contains the string"
+  },
+  "literal_offset_half": {
+   "what": "the complement sweep: stores with a literal offset #0x288 (648) / #0x3a6 (934) in the code window",
+   "prefiltered_words": 1858453,
+   "hits": 440,
+   "result": "no World-object field store: the hits are stack slots ([sp, #0x648] / [sp, #0x3a4]) or draw-buffer offsets - dozens of -draw: methods write a vertex buffer at 0x648, which is why a naive literal sweep looks alarming and means nothing",
+   "conclusion": "neither field is written by a cell-based OR a literal-offset store"
+  }
+ },
+ "boundary": [
+  "The access classification is heuristic: it reads the instruction sequence after the site. It was hand-verified against four known sites (the worldTime getter, two worldTime reads, the fastForward getter) and four earlier classification bugs were found by the self-check.",
+  "The scan resolves 20593 of 27155 add-sites; the ~6500 unresolved ones are not claimed covered.",
+  "Absence of a write is a statement about this library. A runtime-resolved offset (KVC setValue:forKey: / object_setIvar with the ivar fetched by name), a table-indexed offset write, or a bulk copy into the object are all still open.",
+  "Method attribution is reported with its basis: unique / ambiguous / none, plus every method-table entry in [fn_start, site]. The fastForward site is 'ambiguous' on purpose - it sits in a run of one-line getters sharing one body.",
+  "Regenerate with: python3 tools/extract_ivar_cell_references.py <libApplication.so> --methods reconstruction/reverse-v3/native/libApplication_objc_methods.tsv --self-check --json OUT",
+  "Method naming is weaker than the cell fact for the shared one-line-getter body (the tool reports attribution 'ambiguous' there): read fastForward's single row as one cell-resolving site inside that body, not as 'its own getter'.",
+  "SUPERSEDED COUNTS: the by_access totals in this file predate the fused-store fix in the classifier (tools/extract_ivar_cell_references.py). With fused register-offset stores recognised, reads/writes are 4898/464 and 1831 remain unclassified - see IVAR_ACCESS_CLASSIFIER_FIX.md. The per-ivar site lists are unchanged; only the labels moved."
+ ]
+}

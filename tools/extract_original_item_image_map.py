@@ -3,12 +3,24 @@
 
 The input is the ARMv7 libApplication.so from the owned APK.  The output is
 text evidence only; the binary is never copied into the repository.
+
+The columns named `*_from_image` are **derived, not extracted**: the function
+returns an image id, and the cell is computed from that id with `id % 32` /
+`id // 32`. The earlier column names (`col_dataA0` / `row_dataA0`) read like
+descriptor fields recovered from the binary, which they are not - a consumer that
+treated them as extracted coordinates would inherit an assumption. The
+`derivation` column states the formula for every row.
+
+The grid is the repository's own claim for this domain
+(`original_item_types.tsv` -> `atlas_domain=TileMap:32x32`, image ids < 1024, so
+`id // 32 <= 31`): 32 columns by 32 rows.
 """
 
 from __future__ import annotations
 
 import argparse
 import struct
+import sys
 from pathlib import Path
 
 FUNCTION_VA = 0x004D71DC
@@ -84,6 +96,7 @@ def decode_target(elf: Elf32Arm, target: int) -> tuple[int, int]:
 
 
 def atlas_cell(image: int) -> tuple[int, int]:
+    """Derived cell for an image id - not a field read out of the binary."""
     return image % 32, image // 32
 
 
@@ -108,25 +121,37 @@ def extract(path: Path) -> list[tuple[int, int, int, int]]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("libapplication", type=Path)
-    parser.add_argument("--output", type=Path)
+    parser.add_argument(
+        "--output", type=Path,
+        default=Path("reconstruction/reverse-v3/native/original_item_image_map.tsv"))
+    parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
 
+    derivation = "col=image%32,row=image//32 (derived; TileMap:32x32)"
     lines = [
-        "item_type\timage_dataA0\tcol_dataA0\trow_dataA0\t"
-        "image_dataA1\tcol_dataA1\trow_dataA1\tcase_target"
+        "item_type\timage_dataA0\tcol_from_image_a0\trow_from_image_a0\t"
+        "image_dataA1\tcol_from_image_a1\trow_from_image_a1\tcase_target\tderivation"
     ]
     for item, zero, nonzero, target in extract(args.libapplication):
         c0, r0 = atlas_cell(zero)
         c1, r1 = atlas_cell(nonzero)
         lines.append(
             f"{item}\t{zero}\t{c0}\t{r0}\t{nonzero}\t{c1}\t{r1}\t0x{target:08x}"
+            f"\t{derivation}"
         )
     text = "\n".join(lines) + "\n"
-    if args.output:
-        args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(text, encoding="utf-8")
-    else:
-        print(text, end="")
+    if args.check:
+        if not args.output.exists():
+            print(f"CHECK FAILED: {args.output} is missing", file=sys.stderr)
+            return 1
+        if args.output.read_text(encoding="utf-8") != text:
+            print(f"CHECK FAILED: {args.output} is stale", file=sys.stderr)
+            return 1
+        print(f"check ok: {len(lines) - 1} rows")
+        return 0
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(text, encoding="utf-8")
+    return 0
 
 
 if __name__ == "__main__":

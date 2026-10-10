@@ -1,0 +1,73 @@
+# preserveItemDataAInCraftedItem  [C function]
+# implementation: 0x00aed208
+# ARM.exidx end: 0x00aed318
+
+            ;-- preserveItemDataAInCraftedItem(ItemType, ItemType):
+            0x00aed208      18d04de2       sub sp, sp, 0x18            ; preserveItemDataAInCraftedItem(ItemType, ItemType)
+            0x00aed20c      10008de5       str r0, [sp, 0x10]
+            0x00aed210      0c108de5       str r1, [sp, 0xc]
+            0x00aed214      10009de5       ldr r0, [sp, 0x10]
+            0x00aed218      720050e3       cmp r0, 0x72                ; 'r'
+            0x00aed21c      08008de5       str r0, [sp, 8]
+        ┌─< 0x00aed220      050000ca       bgt 0xaed23c
+       ┌──< 0x00aed224      ffffffea       b 0xaed228
+       └──> 0x00aed228      08009de5       ldr r0, [sp, 8]
+        │   0x00aed22c      541040e2       sub r1, r0, 0x54
+        │   0x00aed230      020051e3       cmp r1, 2
+       ┌──< 0x00aed234      2e00003a       blo 0xaed2f4
+      ┌───< 0x00aed238      300000ea       b 0xaed300
+      ││└─> 0x00aed23c      150100e3       movw r0, 0x115
+      ││    0x00aed240      08109de5       ldr r1, [sp, 8]
+      ││    0x00aed244      000051e1       cmp r1, r0
+      ││┌─< 0x00aed248      1c0000ca       bgt 0xaed2c0
+     ┌────< 0x00aed24c      ffffffea       b 0xaed250
+     └────> 0x00aed250      08009de5       ldr r0, [sp, 8]
+      │││   0x00aed254      ba0050e3       cmp r0, 0xba
+     ┌────< 0x00aed258      130000ca       bgt 0xaed2ac
+    ┌─────< 0x00aed25c      ffffffea       b 0xaed260
+    └─────> 0x00aed260      08009de5       ldr r0, [sp, 8]
+     ││││   0x00aed264      990050e3       cmp r0, 0x99
+    ┌─────< 0x00aed268      0b0000ca       bgt 0xaed29c
+   ┌──────< 0x00aed26c      ffffffea       b 0xaed270
+   └──────> 0x00aed270      08009de5       ldr r0, [sp, 8]
+    │││││   0x00aed274      731040e2       sub r1, r0, 0x73
+    │││││   0x00aed278      0f0051e3       cmp r1, 0xf
+    │││││   0x00aed27c      04108de5       str r1, [sp, 4]
+   ┌──────< 0x00aed280      1e00008a       bhi 0xaed300
+   ││││││   0x00aed284      0100a0e3       mov r0, 1
+   ││││││   0x00aed288      851a09e3       movw r1, 0x9a85
+   ││││││   0x00aed28c      04209de5       ldr r2, [sp, 4]
+   ││││││   0x00aed290      100211e1       tst r1, r0, lsl r2
+  ┌───────< 0x00aed294      1600001a       bne 0xaed2f4
+  ────────< 0x00aed298      180000ea       b 0xaed300
+  ││└─────> 0x00aed29c      08009de5       ldr r0, [sp, 8]
+  ││ ││││   0x00aed2a0      9a0050e3       cmp r0, 0x9a
+  ││┌─────< 0x00aed2a4      1200000a       beq 0xaed2f4
+  ────────< 0x00aed2a8      140000ea       b 0xaed300
+  │││└────> 0x00aed2ac      08009de5       ldr r0, [sp, 8]
+  │││ │││   0x00aed2b0      bb1040e2       sub r1, r0, 0xbb
+  │││ │││   0x00aed2b4      0c0051e3       cmp r1, 0xc
+  │││┌────< 0x00aed2b8      0d00003a       blo 0xaed2f4
+  ────────< 0x00aed2bc      0f0000ea       b 0xaed300
+  ││││││└─> 0x00aed2c0      160100e3       movw r0, 0x116
+  ││││││    0x00aed2c4      08109de5       ldr r1, [sp, 8]
+  ││││││    0x00aed2c8      000041e0       sub r0, r1, r0
+  ││││││    0x00aed2cc      100050e3       cmp r0, 0x10
+  ││││││    0x00aed2d0      00008de5       str r0, [sp]
+  ││││││┌─< 0x00aed2d4      0900008a       bhi 0xaed300
+  │││││││   0x00aed2d8      0100a0e3       mov r0, 1
+  │││││││   0x00aed2dc      011e0fe3       movw r1, 0xfe01
+  │││││││   0x00aed2e0      011040e3       movt r1, 1
+  │││││││   0x00aed2e4      00209de5       ldr r2, [sp]
+  │││││││   0x00aed2e8      100211e1       tst r1, r0, lsl r2
+  ────────< 0x00aed2ec      0000001a       bne 0xaed2f4
+  ────────< 0x00aed2f0      020000ea       b 0xaed300
+  └─└└─└──> 0x00aed2f4      010000e3       movw r0, 1
+   │  │ │   0x00aed2f8      1700cde5       strb r0, [sp, 0x17]
+   │  │┌──< 0x00aed2fc      020000ea       b 0xaed30c
+  ─└─┌└─└─> 0x00aed300      ffffffea       b 0xaed304
+     └────> 0x00aed304      000000e3       movw r0, 0
+       │    0x00aed308      1700cde5       strb r0, [sp, 0x17]
+       └──> 0x00aed30c      d701dde1       ldrsb r0, [sp, 0x17]
+            0x00aed310      18d08de2       add sp, sp, 0x18
+            0x00aed314      1eff2fe1       bx lr

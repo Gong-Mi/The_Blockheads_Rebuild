@@ -1,0 +1,44 @@
+# MangoTree -[tileIsKindOfSelf:]
+# types: c12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8
+# implementation: 0x00d4dabc
+# ARM.exidx end: 0x00d4db58
+
+            0x00d4dabc      10d04de2       sub sp, sp, 0x10
+            0x00d4dac0      013000e3       movw r3, 1
+            0x00d4dac4      0c008de5       str r0, [sp, 0xc]
+            0x00d4dac8      08108de5       str r1, [sp, 8]
+            0x00d4dacc      04208de5       str r2, [sp, 4]
+            0x00d4dad0      04009de5       ldr r0, [sp, 4]
+            0x00d4dad4      0300d0e5       ldrb r0, [r0, 3]
+            0x00d4dad8      0d0050e3       cmp r0, 0xd
+            0x00d4dadc      00308de5       str r3, [sp]
+        ┌─< 0x00d4dae0      1700000a       beq 0xd4db44
+        │   0x00d4dae4      010000e3       movw r0, 1
+        │   0x00d4dae8      04109de5       ldr r1, [sp, 4]
+        │   0x00d4daec      0310d1e5       ldrb r1, [r1, 3]
+        │   0x00d4daf0      0c0051e3       cmp r1, 0xc
+        │   0x00d4daf4      00008de5       str r0, [sp]
+       ┌──< 0x00d4daf8      1100000a       beq 0xd4db44
+       ││   0x00d4dafc      010000e3       movw r0, 1
+       ││   0x00d4db00      04109de5       ldr r1, [sp, 4]
+       ││   0x00d4db04      0310d1e5       ldrb r1, [r1, 3]
+       ││   0x00d4db08      0e0051e3       cmp r1, 0xe
+       ││   0x00d4db0c      00008de5       str r0, [sp]
+      ┌───< 0x00d4db10      0b00000a       beq 0xd4db44
+      │││   0x00d4db14      010000e3       movw r0, 1
+      │││   0x00d4db18      04109de5       ldr r1, [sp, 4]
+      │││   0x00d4db1c      0310d1e5       ldrb r1, [r1, 3]
+      │││   0x00d4db20      210051e3       cmp r1, 0x21                ; '!'
+      │││   0x00d4db24      00008de5       str r0, [sp]
+     ┌────< 0x00d4db28      0500000a       beq 0xd4db44
+     ││││   0x00d4db2c      04009de5       ldr r0, [sp, 4]
+     ││││   0x00d4db30      0300d0e5       ldrb r0, [r0, 3]
+     ││││   0x00d4db34      200050e3       cmp r0, 0x20
+     ││││   0x00d4db38      000000e3       movw r0, 0
+     ││││   0x00d4db3c      0100a003       moveq r0, 1
+     ││││   0x00d4db40      00008de5       str r0, [sp]
+     └└└└─> 0x00d4db44      00009de5       ldr r0, [sp]
+            0x00d4db48      010000e2       and r0, r0, 1
+            0x00d4db4c      7000afe6       sxtb r0, r0
+            0x00d4db50      10d08de2       add sp, sp, 0x10
+            0x00d4db54      1eff2fe1       bx lr

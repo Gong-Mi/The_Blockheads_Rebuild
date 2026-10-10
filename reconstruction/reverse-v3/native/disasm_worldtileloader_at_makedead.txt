@@ -1,0 +1,31 @@
+# AppleTree -[makeTileDead:]
+# types: v12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8
+# implementation: 0x009bf588
+# ARM.exidx end: 0x009bf5f0
+
+            0x009bf588      0cd04de2       sub sp, sp, 0xc
+            0x009bf58c      08008de5       str r0, [sp, 8]
+            0x009bf590      04108de5       str r1, [sp, 4]
+            0x009bf594      00208de5       str r2, [sp]
+            0x009bf598      00009de5       ldr r0, [sp]
+            0x009bf59c      0300d0e5       ldrb r0, [r0, 3]
+            0x009bf5a0      030050e3       cmp r0, 3
+        ┌─< 0x009bf5a4      0300001a       bne 0x9bf5b8
+        │   0x009bf5a8      1b0000e3       movw r0, 0x1b
+        │   0x009bf5ac      00109de5       ldr r1, [sp]
+        │   0x009bf5b0      0300c1e5       strb r0, [r1, 3]
+       ┌──< 0x009bf5b4      0b0000ea       b 0x9bf5e8
+       │└─> 0x009bf5b8      00009de5       ldr r0, [sp]
+       │    0x009bf5bc      0300d0e5       ldrb r0, [r0, 3]
+       │    0x009bf5c0      040050e3       cmp r0, 4
+       │┌─< 0x009bf5c4      0300000a       beq 0x9bf5d8
+       ││   0x009bf5c8      00009de5       ldr r0, [sp]
+       ││   0x009bf5cc      0300d0e5       ldrb r0, [r0, 3]
+       ││   0x009bf5d0      050050e3       cmp r0, 5
+      ┌───< 0x009bf5d4      0200001a       bne 0x9bf5e4
+      ││└─> 0x009bf5d8      1c0000e3       movw r0, 0x1c
+      ││    0x009bf5dc      00109de5       ldr r1, [sp]
+      ││    0x009bf5e0      0300c1e5       strb r0, [r1, 3]
+      └─┌─< 0x009bf5e4      ffffffea       b 0x9bf5e8
+       └└─> 0x009bf5e8      0cd08de2       add sp, sp, 0xc
+            0x009bf5ec      1eff2fe1       bx lr

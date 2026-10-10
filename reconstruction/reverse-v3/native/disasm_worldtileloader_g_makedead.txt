@@ -1,0 +1,79 @@
+# GemTree -[makeTileDead:]
+# types: v12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8
+# implementation: 0x005297b8
+# ARM.exidx end: 0x005298e0
+
+            0x005297b8      00482de9       push {fp, lr}
+            0x005297bc      0db0a0e1       mov fp, sp
+            0x005297c0      28d04de2       sub sp, sp, 0x28
+            0x005297c4      0c319fe5       ldr r3, [0x005298d8]        ; [0x5298d8:4]=0xb36324
+            0x005297c8      03308fe0       add r3, pc, r3
+            0x005297cc      f4c09fe5       ldr ip, [0x005298c8]        ; [0x5298c8:4]=0xffffbcac
+            0x005297d0      03c09ce7       ldr ip, [ip, r3]
+            0x005297d4      f0e09fe5       ldr lr, [0x005298cc]        ; [0x5298cc:4]=0xffe1de64
+            0x005297d8      03e08ee0       add lr, lr, r3
+            0x005297dc      04000be5       str r0, [fp, -4]
+            0x005297e0      08100be5       str r1, [fp, -8]
+            0x005297e4      0c200be5       str r2, [fp, -0xc]
+            0x005297e8      0c001be5       ldr r0, [fp, -0xc]
+            0x005297ec      0300d0e5       ldrb r0, [r0, 3]
+            0x005297f0      04101be5       ldr r1, [fp, -4]
+            0x005297f4      00209ee5       ldr r2, [lr]
+            0x005297f8      10000be5       str r0, [fp, -0x10]
+            0x005297fc      0100a0e1       mov r0, r1
+            0x00529800      0210a0e1       mov r1, r2
+            0x00529804      14308de5       str r3, [sp, 0x14]
+            0x00529808      3cff2fe1       blx ip
+            0x0052980c      10101be5       ldr r1, [fp, -0x10]
+            0x00529810      000051e1       cmp r1, r0
+        ┌─< 0x00529814      1000000a       beq 0x52985c
+        │   0x00529818      a8009fe5       ldr r0, [0x005298c8]        ; [0x5298c8:4]=0xffffbcac
+        │   0x0052981c      14109de5       ldr r1, [sp, 0x14]
+        │   0x00529820      010090e7       ldr r0, [r0, r1]
+        │   0x00529824      a4209fe5       ldr r2, [0x005298d0]        ; [0x5298d0:4]=0xffe1de70
+        │   0x00529828      012082e0       add r2, r2, r1
+        │   0x0052982c      0c301be5       ldr r3, [fp, -0xc]
+        │   0x00529830      0330d3e5       ldrb r3, [r3, 3]
+        │   0x00529834      04c01be5       ldr ip, [fp, -4]
+        │   0x00529838      001092e5       ldr r1, [r2]
+        │   0x0052983c      10008de5       str r0, [sp, 0x10]
+        │   0x00529840      0c00a0e1       mov r0, ip
+        │   0x00529844      10209de5       ldr r2, [sp, 0x10]
+        │   0x00529848      0c308de5       str r3, [sp, 0xc]
+        │   0x0052984c      32ff2fe1       blx r2
+        │   0x00529850      0c109de5       ldr r1, [sp, 0xc]
+        │   0x00529854      000051e1       cmp r1, r0
+       ┌──< 0x00529858      0300001a       bne 0x52986c
+       │└─> 0x0052985c      1d0000e3       movw r0, 0x1d
+       │    0x00529860      0c101be5       ldr r1, [fp, -0xc]
+       │    0x00529864      0300c1e5       strb r0, [r1, 3]
+       │┌─< 0x00529868      140000ea       b 0x5298c0
+       └──> 0x0052986c      54009fe5       ldr r0, [0x005298c8]        ; [0x5298c8:4]=0xffffbcac
+        │   0x00529870      14109de5       ldr r1, [sp, 0x14]
+        │   0x00529874      010090e7       ldr r0, [r0, r1]
+        │   0x00529878      54209fe5       ldr r2, [0x005298d4]        ; [0x5298d4:4]=0xffe1de74
+        │   0x0052987c      012082e0       add r2, r2, r1
+        │   0x00529880      0c301be5       ldr r3, [fp, -0xc]
+        │   0x00529884      0330d3e5       ldrb r3, [r3, 3]
+        │   0x00529888      04c01be5       ldr ip, [fp, -4]
+        │   0x0052988c      001092e5       ldr r1, [r2]
+        │   0x00529890      08008de5       str r0, [sp, 8]
+        │   0x00529894      0c00a0e1       mov r0, ip
+        │   0x00529898      08209de5       ldr r2, [sp, 8]
+        │   0x0052989c      04308de5       str r3, [sp, 4]
+        │   0x005298a0      32ff2fe1       blx r2
+        │   0x005298a4      04109de5       ldr r1, [sp, 4]
+        │   0x005298a8      000051e1       cmp r1, r0
+       ┌──< 0x005298ac      0200001a       bne 0x5298bc
+       ││   0x005298b0      220000e3       movw r0, 0x22               ; '\"'
+       ││   0x005298b4      0c101be5       ldr r1, [fp, -0xc]
+       ││   0x005298b8      0300c1e5       strb r0, [r1, 3]
+      ┌└──> 0x005298bc      ffffffea       b 0x5298c0
+      └─└─> 0x005298c0      0bd0a0e1       mov sp, fp
+            0x005298c4      0088bde8       pop {fp, pc}
+            0x005298c8      acbcffff       invalid
+            0x005298cc      64dee1ff       invalid
+            0x005298d0      70dee1ff       invalid
+            0x005298d4      74dee1ff       invalid
+            0x005298d8      2463b300       adcseq r6, r3, r4, lsr 6
+            0x005298dc      00000000       andeq r0, r0, r0

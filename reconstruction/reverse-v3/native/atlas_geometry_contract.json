@@ -1,0 +1,197 @@
+{
+  "schema": 1,
+  "assets_root": "/data/data/com.termux/files/home/blockheads-work/extracted/assets",
+  "claim": "pixel rectangle of every recorded sprite cell recomputed and checked against the shipped atlas dimensions; a cell that cannot be placed is a violation, not an inherited assumption",
+  "counts": {
+    "item_formula_rows": 344,
+    "item_formula_violations": 0,
+    "item_image_id_rows": 82,
+    "item_image_id_violations": 0,
+    "tile_rows": 68,
+    "tile_violations": 0,
+    "fonts": 5,
+    "font_glyphs": 500,
+    "font_glyphs_outside_canvas": 0
+  },
+  "items_png_hd": {
+    "path": "GameResources/HDTex/Items.png",
+    "exists": true,
+    "size": [
+      2048,
+      1024
+    ]
+  },
+  "tilemap_png_hd": {
+    "path": "GameResources/HDTex/TileMap.png",
+    "exists": true,
+    "size": [
+      2048,
+      2048
+    ]
+  },
+  "checks": {
+    "items": {
+      "files": [
+        {
+          "path": "GameResources/Items.png",
+          "exists": true,
+          "size": [
+            512,
+            256
+          ]
+        },
+        {
+          "path": "GameResources/HDTex/Items.png",
+          "exists": true,
+          "size": [
+            2048,
+            1024
+          ]
+        }
+      ],
+      "formula_domain": {
+        "rows": 344,
+        "cell_px": 64,
+        "atlas": [
+          2048,
+          1024
+        ],
+        "violations": 0,
+        "examples": []
+      },
+      "image_id_domain": {
+        "rows": 82,
+        "cell_px": 64,
+        "atlas": [
+          2048,
+          2048
+        ],
+        "violations": 0,
+        "examples": []
+      },
+      "atlas_attribution": {
+        "formula": {
+          "atlas": "Items.png",
+          "grid": "32 cols x 16 rows x 64 px",
+          "evidence": "texCoordsForItemType pool constants (u step 1/32, v step 1/16)"
+        },
+        "image-id": {
+          "atlas": "TileMap.png",
+          "grid": "32 cols x 32 rows x 64 px",
+          "evidence": "original_item_types.tsv atlas_domain=TileMap:32x32 and image ids < 1024 enforced there, so id//32 <= 31"
+        }
+      },
+      "note": "each item domain is checked against its own atlas. An earlier revision of this tool checked the image-id domain against Items.png (32x16) and reported 11 violations - that was a wrong attribution in the check, not a contradiction in the data: the image-id cells are derived from the image id and belong to the 32x32 domain, where all of them fit (row 31 -> y+64 = 2048)"
+    },
+    "tiles": {
+      "files": [
+        {
+          "path": "GameResources/TileMap.png",
+          "exists": true,
+          "size": [
+            512,
+            512
+          ]
+        },
+        {
+          "path": "GameResources/HDTex/TileMap.png",
+          "exists": true,
+          "size": [
+            2048,
+            2048
+          ]
+        }
+      ],
+      "cells": {
+        "rows": 68,
+        "cell_px": 64,
+        "atlas": [
+          2048,
+          2048
+        ],
+        "violations": 0,
+        "examples": []
+      },
+      "note": "cell size inherited from the item convention (64 px); the tile tables themselves record only col/row"
+    },
+    "fonts": {
+      "checks": [
+        {
+          "font": "04b03_16.fnt",
+          "declared": [
+            256,
+            128
+          ],
+          "actual_png": [
+            2048,
+            1024
+          ],
+          "glyphs": 100,
+          "inside_declared_canvas": 100,
+          "exceeding_declared_canvas": 0,
+          "duplicate_rects": 0
+        },
+        {
+          "font": "04b03black_16.fnt",
+          "declared": [
+            256,
+            128
+          ],
+          "actual_png": [
+            256,
+            128
+          ],
+          "glyphs": 100,
+          "inside_declared_canvas": 100,
+          "exceeding_declared_canvas": 0,
+          "duplicate_rects": 0
+        },
+        {
+          "font": "04b03embossed_16.fnt",
+          "declared": [
+            256,
+            128
+          ],
+          "actual_png": [
+            256,
+            128
+          ],
+          "glyphs": 100,
+          "inside_declared_canvas": 100,
+          "exceeding_declared_canvas": 0,
+          "duplicate_rects": 0
+        },
+        {
+          "font": "Blockheads_64.fnt",
+          "declared": [
+            512,
+            512
+          ],
+          "actual_png": [
+            512,
+            512
+          ],
+          "glyphs": 100,
+          "inside_declared_canvas": 100,
+          "exceeding_declared_canvas": 0,
+          "duplicate_rects": 0
+        },
+        {
+          "font": "Blockheadsblack_64.fnt",
+          "declared": [
+            512,
+            512
+          ],
+          "actual_png": [
+            512,
+            512
+          ],
+          "glyphs": 100,
+          "inside_declared_canvas": 100,
+          "exceeding_declared_canvas": 0,
+          "duplicate_rects": 0
+        }
+      ]
+    }
+  }
+}

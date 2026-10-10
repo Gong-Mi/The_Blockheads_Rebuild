@@ -1,0 +1,71 @@
+# Blockhead -[tileIsLitForSelf:atPos:]
+# types: c20@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8{?=ii}12
+# implementation: 0x00ba0ed8
+# ARM.exidx end: 0x00ba0fe0
+
+            0x00ba0ed8      104c2de9       push {r4, sl, fp, lr}
+            0x00ba0edc      08b08de2       add fp, sp, 8
+            0x00ba0ee0      38d04de2       sub sp, sp, 0x38
+            0x00ba0ee4      f0c09fe5       ldr ip, [0x00ba0fdc]        ; [0xba0fdc:4]=0x4bec04
+            0x00ba0ee8      0cc08fe0       add ip, pc, ip
+            0x00ba0eec      08e09be5       ldr lr, [fp, 8]
+            0x00ba0ef0      d0409fe5       ldr r4, [0x00ba0fc8]        ; [0xba0fc8:4]=0xfffff658
+            0x00ba0ef4      0cc094e7       ldr ip, [r4, ip]
+            0x00ba0ef8      18300be5       str r3, [fp, -0x18]
+            0x00ba0efc      14e00be5       str lr, [fp, -0x14]
+            0x00ba0f00      1c000be5       str r0, [fp, -0x1c]
+            0x00ba0f04      20108de5       str r1, [sp, 0x20]
+            0x00ba0f08      1c208de5       str r2, [sp, 0x1c]
+            0x00ba0f0c      1c001be5       ldr r0, [fp, -0x1c]
+            0x00ba0f10      00109ce5       ldr r1, [ip]
+            0x00ba0f14      010080e0       add r0, r0, r1
+            0x00ba0f18      d000d0e1       ldrsb r0, [r0]
+            0x00ba0f1c      000050e3       cmp r0, 0
+        ┌─< 0x00ba0f20      1e00000a       beq 0xba0fa0
+        │   0x00ba0f24      1c001be5       ldr r0, [fp, -0x1c]
+        │   0x00ba0f28      9c109fe5       ldr r1, [0x00ba0fcc]        ; [0xba0fcc:4]=0xffffc8a0
+        │   0x00ba0f2c      9c209fe5       ldr r2, [0x00ba0fd0]        ; [0xba0fd0:4]=0x4bebbc
+        │   0x00ba0f30      02208fe0       add r2, pc, r2
+        │   0x00ba0f34      021091e7       ldr r1, [r1, r2]
+        │   0x00ba0f38      001091e5       ldr r1, [r1]
+        │   0x00ba0f3c      011090e7       ldr r1, [r0, r1]
+        │   0x00ba0f40      8c309fe5       ldr r3, [0x00ba0fd4]        ; [0xba0fd4:4]=0xfffff6b0
+        │   0x00ba0f44      023093e7       ldr r3, [r3, r2]
+        │   0x00ba0f48      003093e5       ldr r3, [r3]
+        │   0x00ba0f4c      030090e7       ldr r0, [r0, r3]
+        │   0x00ba0f50      18301be5       ldr r3, [fp, -0x18]
+        │   0x00ba0f54      14c01be5       ldr ip, [fp, -0x14]
+        │   0x00ba0f58      14c08de5       str ip, [sp, 0x14]
+        │   0x00ba0f5c      10308de5       str r3, [sp, 0x10]
+        │   0x00ba0f60      1c309de5       ldr r3, [sp, 0x1c]
+        │   0x00ba0f64      6cc09fe5       ldr ip, [0x00ba0fd8]        ; [0xba0fd8:4]=0xffe276b8
+        │   0x00ba0f68      02209ce7       ldr r2, [ip, r2]
+        │   0x00ba0f6c      10c09de5       ldr ip, [sp, 0x10]
+        │   0x00ba0f70      14e09de5       ldr lr, [sp, 0x14]
+        │   0x00ba0f74      0d40a0e1       mov r4, sp
+        │   0x00ba0f78      043084e5       str r3, [r4, 4]
+        │   0x00ba0f7c      00e084e5       str lr, [r4]
+        │   0x00ba0f80      0c008de5       str r0, [sp, 0xc]
+        │   0x00ba0f84      0100a0e1       mov r0, r1
+        │   0x00ba0f88      0210a0e1       mov r1, r2
+        │   0x00ba0f8c      0c209de5       ldr r2, [sp, 0xc]
+        │   0x00ba0f90      0c30a0e1       mov r3, ip
+        │   0x00ba0f94      2086d8eb       bl loc.imp.objc_msgSend
+        │   0x00ba0f98      09004be5       strb r0, [fp, -9]
+       ┌──< 0x00ba0f9c      060000ea       b 0xba0fbc
+       │└─> 0x00ba0fa0      1c009de5       ldr r0, [sp, 0x1c]
+       │    0x00ba0fa4      0600d0e5       ldrb r0, [r0, 6]
+       │    0x00ba0fa8      000050e3       cmp r0, 0
+       │    0x00ba0fac      000000e3       movw r0, 0
+       │    0x00ba0fb0      0100a0c3       movgt r0, 1
+       │    0x00ba0fb4      010000e2       and r0, r0, 1
+       │    0x00ba0fb8      09004be5       strb r0, [fp, -9]
+       └──> 0x00ba0fbc      d9005be1       ldrsb r0, [fp, -9]
+            0x00ba0fc0      08d04be2       sub sp, fp, 8
+            0x00ba0fc4      108cbde8       pop {r4, sl, fp, pc}
+            0x00ba0fc8      58f6ffff       invalid
+            0x00ba0fcc      a0c8ffff       invalid
+            0x00ba0fd0      bceb4b00       strheq lr, [fp], -0xbc
+            0x00ba0fd4      b0f6ffff       invalid
+            0x00ba0fd8      b876e2ff       invalid
+            0x00ba0fdc      04ec4b00       subeq lr, fp, r4, lsl 24

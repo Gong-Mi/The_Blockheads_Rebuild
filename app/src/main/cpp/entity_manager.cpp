@@ -1,5 +1,6 @@
 #include "entity_manager.h"
 #include <algorithm>
+#include "item_manager.h"
 
 Player::Player() : x(0), y(0), vx(0), vy(0), grounded(false), selectedSlot(0) {
     for(int i=0; i<INVENTORY_SIZE; i++) { slots[i] = 0; counts[i] = 0; }
@@ -28,6 +29,17 @@ int Player::addItem(int type, int count) {
         }
     }
     return requested - count;
+}
+
+int Player::addOriginalItem(int originalType, int count) {
+    const int rebuildId = ItemManager::getInstance().fromOriginalType(originalType);
+    if (rebuildId <= 0) return 0;
+    return addItem(rebuildId, count);
+}
+
+int Player::originalItemType(int slot) const {
+    if (slot < 0 || slot >= INVENTORY_SIZE) return -1;
+    return ItemManager::getInstance().toOriginalType(slots[slot]);
 }
 
 bool Player::checkCollision(float newX, float newY, GameWorld* world) {

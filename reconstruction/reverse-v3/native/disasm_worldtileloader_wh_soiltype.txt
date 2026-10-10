@@ -1,0 +1,44 @@
+# WheatPlant -[isRequiredSoilType:]
+# types: c12@0:4i8
+# implementation: 0x006d14f0
+# ARM.exidx end: 0x006d158c
+
+            0x006d14f0      10d04de2       sub sp, sp, 0x10
+            0x006d14f4      013000e3       movw r3, 1
+            0x006d14f8      0c008de5       str r0, [sp, 0xc]
+            0x006d14fc      08108de5       str r1, [sp, 8]
+            0x006d1500      04208de5       str r2, [sp, 4]
+            0x006d1504      04009de5       ldr r0, [sp, 4]
+            0x006d1508      060050e3       cmp r0, 6
+            0x006d150c      00308de5       str r3, [sp]
+        ┌─< 0x006d1510      1800000a       beq 0x6d1578
+        │   0x006d1514      010000e3       movw r0, 1
+        │   0x006d1518      04109de5       ldr r1, [sp, 4]
+        │   0x006d151c      1b0051e3       cmp r1, 0x1b
+        │   0x006d1520      00008de5       str r0, [sp]
+       ┌──< 0x006d1524      1300000a       beq 0x6d1578
+       ││   0x006d1528      010000e3       movw r0, 1
+       ││   0x006d152c      04109de5       ldr r1, [sp, 4]
+       ││   0x006d1530      1c0051e3       cmp r1, 0x1c
+       ││   0x006d1534      00008de5       str r0, [sp]
+      ┌───< 0x006d1538      0e00000a       beq 0x6d1578
+      │││   0x006d153c      010000e3       movw r0, 1
+      │││   0x006d1540      04109de5       ldr r1, [sp, 4]
+      │││   0x006d1544      300051e3       cmp r1, 0x30                ; '0'
+      │││   0x006d1548      00008de5       str r0, [sp]
+     ┌────< 0x006d154c      0900000a       beq 0x6d1578
+     ││││   0x006d1550      010000e3       movw r0, 1
+     ││││   0x006d1554      04109de5       ldr r1, [sp, 4]
+     ││││   0x006d1558      310051e3       cmp r1, 0x31                ; '1'
+     ││││   0x006d155c      00008de5       str r0, [sp]
+    ┌─────< 0x006d1560      0400000a       beq 0x6d1578
+    │││││   0x006d1564      04009de5       ldr r0, [sp, 4]
+    │││││   0x006d1568      320050e3       cmp r0, 0x32                ; '2'
+    │││││   0x006d156c      000000e3       movw r0, 0
+    │││││   0x006d1570      0100a003       moveq r0, 1
+    │││││   0x006d1574      00008de5       str r0, [sp]
+    └└└└└─> 0x006d1578      00009de5       ldr r0, [sp]
+            0x006d157c      010000e2       and r0, r0, 1
+            0x006d1580      7000afe6       sxtb r0, r0
+            0x006d1584      10d08de2       add sp, sp, 0x10
+            0x006d1588      1eff2fe1       bx lr

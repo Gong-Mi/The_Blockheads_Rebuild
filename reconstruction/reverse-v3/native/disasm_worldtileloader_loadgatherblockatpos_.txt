@@ -1,0 +1,51 @@
+# DynamicWorld -[loadGatherBlockAtPos:]
+# types: v16@0:4{?=ii}8
+# implementation: 0x008f5530
+# ARM.exidx end: 0x008f55e8
+
+            0x008f5530      104c2de9       push {r4, sl, fp, lr}
+            0x008f5534      08b08de2       add fp, sp, 8
+            0x008f5538      28d04de2       sub sp, sp, 0x28
+            0x008f553c      a0c09fe5       ldr ip, [0x008f55e4]        ; [0x8f55e4:4]=0x76a5ac
+            0x008f5540      0cc08fe0       add ip, pc, ip
+            0x008f5544      00e000e3       movw lr, 0
+            0x008f5548      88409fe5       ldr r4, [0x008f55d8]        ; [0x8f55d8:4]=0xffffe518
+            0x008f554c      0cc094e7       ldr ip, [r4, ip]
+            0x008f5550      10200be5       str r2, [fp, -0x10]
+            0x008f5554      0c300be5       str r3, [fp, -0xc]
+            0x008f5558      14000be5       str r0, [fp, -0x14]
+            0x008f555c      18108de5       str r1, [sp, 0x18]
+            0x008f5560      14001be5       ldr r0, [fp, -0x14]
+            0x008f5564      00109ce5       ldr r1, [ip]
+            0x008f5568      010080e0       add r0, r0, r1
+            0x008f556c      000090e5       ldr r0, [r0]
+            0x008f5570      0e0050e1       cmp r0, lr
+        ┌─< 0x008f5574      0000000a       beq 0x8f557c
+       ┌──< 0x008f5578      140000ea       b 0x8f55d0
+       │└─> 0x008f557c      1a0000e3       movw r0, 0x1a
+       │    0x008f5580      14101be5       ldr r1, [fp, -0x14]
+       │    0x008f5584      10201be5       ldr r2, [fp, -0x10]
+       │    0x008f5588      0c301be5       ldr r3, [fp, -0xc]
+       │    0x008f558c      14308de5       str r3, [sp, 0x14]
+       │    0x008f5590      10208de5       str r2, [sp, 0x10]
+       │    0x008f5594      40209fe5       ldr r2, [0x008f55dc]        ; [0x8f55dc:4]=0xffe235b0
+       │    0x008f5598      40309fe5       ldr r3, [0x008f55e0]        ; [0x8f55e0:4]=0x76a550
+       │    0x008f559c      03308fe0       add r3, pc, r3
+       │    0x008f55a0      032092e7       ldr r2, [r2, r3]
+       │    0x008f55a4      10309de5       ldr r3, [sp, 0x10]
+       │    0x008f55a8      14c09de5       ldr ip, [sp, 0x14]
+       │    0x008f55ac      0de0a0e1       mov lr, sp
+       │    0x008f55b0      00c08ee5       str ip, [lr]
+       │    0x008f55b4      1ac0a0e3       mov ip, 0x1a
+       │    0x008f55b8      0c008de5       str r0, [sp, 0xc]
+       │    0x008f55bc      0100a0e1       mov r0, r1
+       │    0x008f55c0      0210a0e1       mov r1, r2
+       │    0x008f55c4      0c20a0e1       mov r2, ip
+       │    0x008f55c8      9334e3eb       bl loc.imp.objc_msgSend
+       │    0x008f55cc      08008de5       str r0, [sp, 8]
+       └──> 0x008f55d0      08d04be2       sub sp, fp, 8
+            0x008f55d4      108cbde8       pop {r4, sl, fp, pc}
+            0x008f55d8      18e5ffff       invalid
+            0x008f55dc      b035e2ff       invalid
+            0x008f55e0      50a57600       rsbseq sl, r6, r0, asr r5
+            0x008f55e4      aca57600       rsbseq sl, r6, ip, lsr 11

@@ -1,0 +1,56 @@
+# tileConductsElectricity  [C function]
+# implementation: 0x00a11818
+# ARM.exidx end: 0x00a118e4
+
+            ;-- tileConductsElectricity(Tile*):
+            0x00a11818      08d04de2       sub sp, sp, 8               ; tileConductsElectricity(Tile*)
+            0x00a1181c      001000e3       movw r1, 0
+            0x00a11820      00008de5       str r0, [sp]
+            0x00a11824      00009de5       ldr r0, [sp]
+            0x00a11828      010050e1       cmp r0, r1
+        ┌─< 0x00a1182c      2700000a       beq 0xa118d0
+        │   0x00a11830      00009de5       ldr r0, [sp]
+        │   0x00a11834      0300d0e5       ldrb r0, [r0, 3]
+        │   0x00a11838      600050e3       cmp r0, 0x60                ; '`'
+       ┌──< 0x00a1183c      1f00000a       beq 0xa118c0
+       ││   0x00a11840      00009de5       ldr r0, [sp]
+       ││   0x00a11844      0b00d0e5       ldrb r0, [r0, 0xb]
+       ││   0x00a11848      600050e3       cmp r0, 0x60                ; '`'
+      ┌───< 0x00a1184c      1b00000a       beq 0xa118c0
+      │││   0x00a11850      00009de5       ldr r0, [sp]
+      │││   0x00a11854      0000d0e5       ldrb r0, [r0]
+      │││   0x00a11858      350050e3       cmp r0, 0x35                ; '5'
+     ┌────< 0x00a1185c      1700000a       beq 0xa118c0
+     ││││   0x00a11860      00009de5       ldr r0, [sp]
+     ││││   0x00a11864      0000d0e5       ldrb r0, [r0]
+     ││││   0x00a11868      360050e3       cmp r0, 0x36                ; '6'
+    ┌─────< 0x00a1186c      1300000a       beq 0xa118c0
+    │││││   0x00a11870      00009de5       ldr r0, [sp]
+    │││││   0x00a11874      0000d0e5       ldrb r0, [r0]
+    │││││   0x00a11878      380050e3       cmp r0, 0x38                ; '8'
+   ┌──────< 0x00a1187c      0f00000a       beq 0xa118c0
+   ││││││   0x00a11880      00009de5       ldr r0, [sp]
+   ││││││   0x00a11884      0000d0e5       ldrb r0, [r0]
+   ││││││   0x00a11888      390050e3       cmp r0, 0x39                ; '9'
+  ┌───────< 0x00a1188c      0b00000a       beq 0xa118c0
+  │││││││   0x00a11890      00009de5       ldr r0, [sp]
+  │││││││   0x00a11894      0000d0e5       ldrb r0, [r0]
+  │││││││   0x00a11898      1a0050e3       cmp r0, 0x1a
+  ────────< 0x00a1189c      0700000a       beq 0xa118c0
+  │││││││   0x00a118a0      00009de5       ldr r0, [sp]
+  │││││││   0x00a118a4      0000d0e5       ldrb r0, [r0]
+  │││││││   0x00a118a8      430050e3       cmp r0, 0x43                ; 'C'
+  ────────< 0x00a118ac      0300000a       beq 0xa118c0
+  │││││││   0x00a118b0      00009de5       ldr r0, [sp]
+  │││││││   0x00a118b4      0000d0e5       ldrb r0, [r0]
+  │││││││   0x00a118b8      440050e3       cmp r0, 0x44                ; 'D'
+  ────────< 0x00a118bc      0200001a       bne 0xa118cc
+  └└└└└└──> 0x00a118c0      010000e3       movw r0, 1
+        │   0x00a118c4      0700cde5       strb r0, [sp, 7]
+       ┌──< 0x00a118c8      020000ea       b 0xa118d8
+  ────┌───< 0x00a118cc      ffffffea       b 0xa118d0
+      └─└─> 0x00a118d0      000000e3       movw r0, 0
+       │    0x00a118d4      0700cde5       strb r0, [sp, 7]
+       └──> 0x00a118d8      d700dde1       ldrsb r0, [sp, 7]
+            0x00a118dc      08d08de2       add sp, sp, 8
+            0x00a118e0      1eff2fe1       bx lr

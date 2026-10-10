@@ -1,0 +1,20 @@
+# World -[incrementalLoadCount]
+# types: i8@0:4
+# implementation: 0x005d9ca4
+# ARM.exidx end: 0x005d9ce0
+
+            0x005d9ca4      08d04de2       sub sp, sp, 8
+            0x005d9ca8      04008de5       str r0, [sp, 4]
+            0x005d9cac      00108de5       str r1, [sp]
+            0x005d9cb0      04009de5       ldr r0, [sp, 4]
+            0x005d9cb4      1c109fe5       ldr r1, [0x005d9cd8]        ; [0x5d9cd8:4]=0xffffcd00
+            0x005d9cb8      1c209fe5       ldr r2, [0x005d9cdc]        ; [0x5d9cdc:4]=0xa85e30
+            0x005d9cbc      02208fe0       add r2, pc, r2
+            0x005d9cc0      021091e7       ldr r1, [r1, r2]
+            0x005d9cc4      001091e5       ldr r1, [r1]
+            0x005d9cc8      010090e7       ldr r0, [r0, r1]
+            0x005d9ccc      5bf07ff5       dmb ish
+            0x005d9cd0      08d08de2       add sp, sp, 8
+            0x005d9cd4      1eff2fe1       bx lr
+            0x005d9cd8      00cdffff       invalid
+            0x005d9cdc      305ea800       adceq r5, r8, r0, lsr lr

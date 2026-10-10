@@ -1,11 +1,16 @@
 import json
 import sys
 import os
+from align_rebuild_items import ALIGNMENT, parse_items, validate_items
 
 def generate_code(items_json_path, recipes_json_path, item_header_path, item_source_path, recipe_header_path, recipe_source_path):
     # --- Process Items ---
     with open(items_json_path, 'r') as f:
-        items = json.load(f)
+        items = parse_items(f.read())
+    domain = {decision[0]: None for decision in ALIGNMENT.values() if decision[0] is not None}
+    errors = validate_items(items, domain)
+    if errors:
+        raise ValueError('; '.join(errors))  # reject before writing any output
 
     # 1. Sort items by ID to find the max ID for array sizing
     max_id = 0
@@ -35,6 +40,13 @@ def generate_code(items_json_path, recipes_json_path, item_header_path, item_sou
             
         h.write(f"    ITEM_COUNT_MAX = {array_size}\n")
         h.write("\n};\n")
+        h.write("\n// Original inventory namespace; never pass directly as a legacy id.\n")
+        h.write("enum OriginalItemType {\n    ORIGINAL_UNMAPPED = -1,\n")
+        for item in items:
+            value = item['original_type']
+            if value is not None:
+                h.write(f"    ORIGINAL_{item['string_id']} = {value},\n")
+        h.write("};\n")
         h.write("#endif // GAME_ITEM_IDS_H\n")
 
     # 3. Generate Item Source (Data Array)
@@ -53,7 +65,7 @@ def generate_code(items_json_path, recipes_json_path, item_header_path, item_sou
         for i in range(array_size):
             item = full_list[i]
             if item is None:
-                c.write(f"    {{ {i}, \"Unknown\", 0, 0, false, false, 0.0f, 0, 0 }},\n")
+                c.write(f"    {{ {i}, \"Unknown\", 0, 0, false, false, 0.0f, 0, 0, -1 }},\n")
             else:
                 is_block = "true" if item.get('isBlock', False) else "false"
                 is_food = "true" if item.get('isFood', False) else "false"
@@ -61,7 +73,8 @@ def generate_code(items_json_path, recipes_json_path, item_header_path, item_sou
                 tool_power = item.get('tool', 0)
                 render_type = item.get('renderType', 0)
                 c.write(f"    {{ {item['id']}, \"{item['name']}\", {item['texRow']}, {item['texCol']}, ")
-                c.write(f"{is_block}, {is_food}, {hunger}f, {tool_power}, {render_type} }},\n")
+                original_type = item['original_type'] if item['original_type'] is not None else -1
+                c.write(f"{is_block}, {is_food}, {hunger}f, {tool_power}, {render_type}, {original_type} }},\n")
             
         c.write("};\n")
 

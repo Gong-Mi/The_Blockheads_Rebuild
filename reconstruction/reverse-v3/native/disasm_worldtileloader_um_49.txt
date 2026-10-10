@@ -1,0 +1,78 @@
+# UIManager -[inventoryIsOnRightOfScreen]
+# types: c8@0:4
+# implementation: 0x00add6c8
+# ARM.exidx end: 0x00add7ec
+
+            0x00add6c8      00482de9       push {fp, lr}
+            0x00add6cc      20d04de2       sub sp, sp, 0x20
+            0x00add6d0      10219fe5       ldr r2, [0x00add7e8]        ; [0xadd7e8:4]=0x582418
+            0x00add6d4      02208fe0       add r2, pc, r2
+            0x00add6d8      013000e3       movw r3, 1
+            0x00add6dc      9fc100e3       movw ip, 0x19f
+            0x00add6e0      3e0a9fed       vldr s0, [0x00add7e0]
+            0x00add6e4      f8e09fe5       ldr lr, [0x00add7e4]        ; [0xadd7e4:4]=0xfffff048
+            0x00add6e8      02e09ee7       ldr lr, [lr, r2]
+            0x00add6ec      1c008de5       str r0, [sp, 0x1c]
+            0x00add6f0      18108de5       str r1, [sp, 0x18]
+            0x00add6f4      1c009de5       ldr r0, [sp, 0x1c]
+            0x00add6f8      00109ee5       ldr r1, [lr]
+            0x00add6fc      010080e0       add r0, r0, r1
+            0x00add700      000090e5       ldr r0, [r0]
+            0x00add704      001a90ed       vldr s2, [r0]
+            0x00add708      c01ab4ee       vcmpe.f32 s2, s0
+            0x00add70c      10faf1ee       vmrs apsr_nzcv, fpscr
+            0x00add710      10208de5       str r2, [sp, 0x10]
+            0x00add714      0cc08de5       str ip, [sp, 0xc]
+            0x00add718      08308de5       str r3, [sp, 8]
+        ┌─< 0x00add71c      0f00004a       bmi 0xadd760
+        │   0x00add720      9f0100e3       movw r0, 0x19f
+        │   0x00add724      2d0a9fed       vldr s0, [0x00add7e0]
+        │   0x00add728      b4109fe5       ldr r1, [0x00add7e4]        ; [0xadd7e4:4]=0xfffff048
+        │   0x00add72c      10209de5       ldr r2, [sp, 0x10]
+        │   0x00add730      021091e7       ldr r1, [r1, r2]
+        │   0x00add734      1c309de5       ldr r3, [sp, 0x1c]
+        │   0x00add738      001091e5       ldr r1, [r1]
+        │   0x00add73c      011083e0       add r1, r3, r1
+        │   0x00add740      001091e5       ldr r1, [r1]
+        │   0x00add744      011a91ed       vldr s2, [r1, 4]
+        │   0x00add748      c01ab4ee       vcmpe.f32 s2, s0
+        │   0x00add74c      10faf1ee       vmrs apsr_nzcv, fpscr
+        │   0x00add750      001000e3       movw r1, 0
+        │   0x00add754      0110a043       movmi r1, 1
+        │   0x00add758      04008de5       str r0, [sp, 4]
+        │   0x00add75c      08108de5       str r1, [sp, 8]
+        └─> 0x00add760      08009de5       ldr r0, [sp, 8]
+            0x00add764      011000e3       movw r1, 1
+            0x00add768      010000e2       and r0, r0, 1
+            0x00add76c      1700cde5       strb r0, [sp, 0x17]
+            0x00add770      d701dde1       ldrsb r0, [sp, 0x17]
+            0x00add774      000050e3       cmp r0, 0
+            0x00add778      00108de5       str r1, [sp]
+        ┌─< 0x00add77c      1100000a       beq 0xadd7c8
+        │   0x00add780      5c009fe5       ldr r0, [0x00add7e4]        ; [0xadd7e4:4]=0xfffff048
+        │   0x00add784      10109de5       ldr r1, [sp, 0x10]
+        │   0x00add788      010090e7       ldr r0, [r0, r1]
+        │   0x00add78c      1c209de5       ldr r2, [sp, 0x1c]
+        │   0x00add790      003090e5       ldr r3, [r0]
+        │   0x00add794      032082e0       add r2, r2, r3
+        │   0x00add798      002092e5       ldr r2, [r2]
+        │   0x00add79c      020a92ed       vldr s0, [r2, 8]
+        │   0x00add7a0      1c209de5       ldr r2, [sp, 0x1c]
+        │   0x00add7a4      000090e5       ldr r0, [r0]
+        │   0x00add7a8      000082e0       add r0, r2, r0
+        │   0x00add7ac      000090e5       ldr r0, [r0]
+        │   0x00add7b0      031a90ed       vldr s2, [r0, 0xc]
+        │   0x00add7b4      c10ab4ee       vcmpe.f32 s0, s2
+        │   0x00add7b8      10faf1ee       vmrs apsr_nzcv, fpscr
+        │   0x00add7bc      000000e3       movw r0, 0
+        │   0x00add7c0      0100a0c3       movgt r0, 1
+        │   0x00add7c4      00008de5       str r0, [sp]
+        └─> 0x00add7c8      00009de5       ldr r0, [sp]
+            0x00add7cc      010000e2       and r0, r0, 1
+            0x00add7d0      1600cde5       strb r0, [sp, 0x16]
+            0x00add7d4      d601dde1       ldrsb r0, [sp, 0x16]
+            0x00add7d8      20d08de2       add sp, sp, 0x20
+            0x00add7dc      0088bde8       pop {fp, pc}
+            0x00add7e0      0080cf43       bicmi r8, pc, 0
+            0x00add7e4      48f0ffff       invalid
+            0x00add7e8      18245800       subseq r2, r8, r8, lsl r4

@@ -1,0 +1,63 @@
+# Blockhead -[getCurrentCraftProgress]
+# types: f8@0:4
+# implementation: 0x00bac194
+# ARM.exidx end: 0x00bac27c
+
+            0x00bac194      00482de9       push {fp, lr}
+            0x00bac198      0db0a0e1       mov fp, sp
+            0x00bac19c      18d04de2       sub sp, sp, 0x18
+            0x00bac1a0      d0209fe5       ldr r2, [0x00bac278]        ; [0xbac278:4]=0x4b3948
+            0x00bac1a4      02208fe0       add r2, pc, r2
+            0x00bac1a8      b8309fe5       ldr r3, [0x00bac268]        ; [0xbac268:4]=0xfffff55c
+            0x00bac1ac      023093e7       ldr r3, [r3, r2]
+            0x00bac1b0      08000be5       str r0, [fp, -8]
+            0x00bac1b4      0c108de5       str r1, [sp, 0xc]
+            0x00bac1b8      08001be5       ldr r0, [fp, -8]
+            0x00bac1bc      001093e5       ldr r1, [r3]
+            0x00bac1c0      010080e0       add r0, r0, r1
+            0x00bac1c4      040090e5       ldr r0, [r0, 4]
+            0x00bac1c8      040050e3       cmp r0, 4
+            0x00bac1cc      08208de5       str r2, [sp, 8]
+        ┌─< 0x00bac1d0      1c00001a       bne 0xbac248
+        │   0x00bac1d4      000000e3       movw r0, 0
+        │   0x00bac1d8      8c109fe5       ldr r1, [0x00bac26c]        ; [0xbac26c:4]=0xfffff6e8
+        │   0x00bac1dc      08209de5       ldr r2, [sp, 8]
+        │   0x00bac1e0      021091e7       ldr r1, [r1, r2]
+        │   0x00bac1e4      08301be5       ldr r3, [fp, -8]
+        │   0x00bac1e8      001091e5       ldr r1, [r1]
+        │   0x00bac1ec      011083e0       add r1, r3, r1
+        │   0x00bac1f0      001091e5       ldr r1, [r1]
+        │   0x00bac1f4      000051e1       cmp r1, r0
+       ┌──< 0x00bac1f8      1200000a       beq 0xbac248
+       ││   0x00bac1fc      6c009fe5       ldr r0, [0x00bac270]        ; [0xbac270:4]=0xffffbcac
+       ││   0x00bac200      08109de5       ldr r1, [sp, 8]
+       ││   0x00bac204      010090e7       ldr r0, [r0, r1]
+       ││   0x00bac208      64209fe5       ldr r2, [0x00bac274]        ; [0xbac274:4]=0xffe27794
+       ││   0x00bac20c      012082e0       add r2, r2, r1
+       ││   0x00bac210      54309fe5       ldr r3, [0x00bac26c]        ; [0xbac26c:4]=0xfffff6e8
+       ││   0x00bac214      013093e7       ldr r3, [r3, r1]
+       ││   0x00bac218      08c01be5       ldr ip, [fp, -8]
+       ││   0x00bac21c      003093e5       ldr r3, [r3]
+       ││   0x00bac220      03308ce0       add r3, ip, r3
+       ││   0x00bac224      003093e5       ldr r3, [r3]
+       ││   0x00bac228      001092e5       ldr r1, [r2]
+       ││   0x00bac22c      04008de5       str r0, [sp, 4]
+       ││   0x00bac230      0300a0e1       mov r0, r3
+       ││   0x00bac234      04209de5       ldr r2, [sp, 4]
+       ││   0x00bac238      32ff2fe1       blx r2
+       ││   0x00bac23c      100a00ee       vmov s0, r0
+       ││   0x00bac240      010a0bed       vstr s0, [fp, -4]
+      ┌───< 0x00bac244      030000ea       b 0xbac258
+      │└└─> 0x00bac248      0000e0e3       mvn r0, 0
+      │     0x00bac24c      000abfee       vmov.f32 s0, -1
+      │     0x00bac250      010a0bed       vstr s0, [fp, -4]
+      │     0x00bac254      00008de5       str r0, [sp]
+      └───> 0x00bac258      010a1bed       vldr s0, [fp, -4]
+            0x00bac25c      100a10ee       vmov r0, s0
+            0x00bac260      0bd0a0e1       mov sp, fp
+            0x00bac264      0088bde8       pop {fp, pc}
+            0x00bac268      5cf5ffff       invalid
+            0x00bac26c      e8f6ffff       invalid
+            0x00bac270      acbcffff       invalid
+            0x00bac274      9477e2ff       invalid
+            0x00bac278      48394b00       subeq r3, fp, r8, asr 18

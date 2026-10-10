@@ -1,0 +1,137 @@
+{
+ "schema": 1,
+ "scope": "how much a trace depends on how the receiver was fabricated",
+ "method": "same method, two fabricated receivers: (a) all zeroes, (b) every pointer-sized slot pointing at its own zeroed page. Counts are tool output.",
+ "runs": {
+  "World:incrementalLoad": {
+   "all-zero receiver": {
+    "counts": {
+     "sends": 0,
+     "vfp_skipped": 0,
+     "skipped_unsupported": 27,
+     "zero_pages_invented": 1,
+     "call_outs": 21,
+     "distinct_selectors": 0,
+     "distinct_call_sites": 0,
+     "instructions": 445,
+     "unresolved_selectors": 0
+    },
+    "stopped_by": null,
+    "receiver": "all-zero receiver"
+   },
+   "flat object graph": {
+    "counts": {
+     "sends": 0,
+     "vfp_skipped": 0,
+     "skipped_unsupported": 0,
+     "zero_pages_invented": 1,
+     "call_outs": 0,
+     "distinct_selectors": 0,
+     "distinct_call_sites": 0,
+     "instructions": 90,
+     "unresolved_selectors": 0
+    },
+    "stopped_by": null,
+    "receiver": "flat object graph: every 4-byte slot points at its own zeroed page"
+   }
+  },
+  "DynamicWorld:simulate:": {
+   "all-zero receiver": {
+    "counts": {
+     "sends": 0,
+     "vfp_skipped": 38,
+     "skipped_unsupported": 0,
+     "zero_pages_invented": 0,
+     "call_outs": 8,
+     "distinct_selectors": 0,
+     "distinct_call_sites": 0,
+     "instructions": 249,
+     "unresolved_selectors": 0
+    },
+    "stopped_by": null,
+    "receiver": "all-zero receiver"
+   },
+   "flat object graph": {
+    "counts": {
+     "sends": 0,
+     "vfp_skipped": 38,
+     "skipped_unsupported": 0,
+     "zero_pages_invented": 0,
+     "call_outs": 8,
+     "distinct_selectors": 0,
+     "distinct_call_sites": 0,
+     "instructions": 249,
+     "unresolved_selectors": 0
+    },
+    "stopped_by": null,
+    "receiver": "flat object graph: every 4-byte slot points at its own zeroed page"
+   }
+  },
+  "DynamicWorld:update:accurateDT:": {
+   "all-zero receiver": {
+    "counts": {
+     "sends": 0,
+     "vfp_skipped": 8,
+     "skipped_unsupported": 0,
+     "zero_pages_invented": 0,
+     "call_outs": 1,
+     "distinct_selectors": 0,
+     "distinct_call_sites": 0,
+     "instructions": 34,
+     "unresolved_selectors": 0
+    },
+    "stopped_by": null,
+    "receiver": "all-zero receiver"
+   },
+   "flat object graph": {
+    "counts": {
+     "sends": 0,
+     "vfp_skipped": 8,
+     "skipped_unsupported": 0,
+     "zero_pages_invented": 0,
+     "call_outs": 1,
+     "distinct_selectors": 0,
+     "distinct_call_sites": 0,
+     "instructions": 34,
+     "unresolved_selectors": 0
+    },
+    "stopped_by": null,
+    "receiver": "flat object graph: every 4-byte slot points at its own zeroed page"
+   }
+  },
+  "World:update:accurateDT:pinchScale:dragInProgress:": {
+   "all-zero receiver": {
+    "counts": {
+     "sends": 1,
+     "vfp_skipped": 230,
+     "skipped_unsupported": 0,
+     "zero_pages_invented": 2,
+     "call_outs": 38,
+     "distinct_selectors": 1,
+     "distinct_call_sites": 1,
+     "instructions": 1527,
+     "unresolved_selectors": 0
+    },
+    "stopped_by": null,
+    "receiver": "all-zero receiver"
+   },
+   "flat object graph": {
+    "counts": {
+     "sends": 0,
+     "vfp_skipped": 20,
+     "skipped_unsupported": 0,
+     "zero_pages_invented": 2,
+     "call_outs": 15,
+     "distinct_selectors": 0,
+     "distinct_call_sites": 0,
+     "instructions": 372,
+     "unresolved_selectors": 0
+    },
+    "stopped_by": null,
+    "receiver": "flat object graph: every 4-byte slot points at its own zeroed page"
+   }
+  }
+ },
+ "finding": "the receiver is not a detail: World:incrementalLoad executes 445 instructions and makes 21 call-outs with a zeroed receiver but 90 instructions and no call-outs with the pointer-filled one, and both runs COMPLETE normally. A structural claim read off one fabricated receiver is conditional on that fabrication.",
+ "boundary": "neither receiver is the real object graph. The experiment does not say which one is closer to the truth, and it does not produce a single send for these targets - it falsifies the hope that a better guess would. Real structure needs a receiver taken from live state, not a better fabrication."
+}

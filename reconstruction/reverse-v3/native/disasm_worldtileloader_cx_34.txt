@@ -1,0 +1,24 @@
+# tileContainsGate  [C function]
+# implementation: 0x00a127cc
+# ARM.exidx end: 0x00a128b0
+
+            ;-- tileContainsGate(Tile*):
+            0x00a127cc      08d04de2       sub sp, sp, 8               ; tileContainsGate(Tile*)
+            0x00a127d0      001000e3       movw r1, 0
+            0x00a127d4      002000e3       movw r2, 0
+            0x00a127d8      04008de5       str r0, [sp, 4]
+            0x00a127dc      04009de5       ldr r0, [sp, 4]
+            0x00a127e0      020050e1       cmp r0, r2
+            0x00a127e4      00108de5       str r1, [sp]
+        ┌─< 0x00a127e8      0500000a       beq 0xa12804
+        │   0x00a127ec      04009de5       ldr r0, [sp, 4]
+        │   0x00a127f0      0300d0e5       ldrb r0, [r0, 3]
+        │   0x00a127f4      920050e3       cmp r0, 0x92
+        │   0x00a127f8      000000e3       movw r0, 0
+        │   0x00a127fc      0100a003       moveq r0, 1
+        │   0x00a12800      00008de5       str r0, [sp]
+        └─> 0x00a12804      00009de5       ldr r0, [sp]
+            0x00a12808      010000e2       and r0, r0, 1
+            0x00a1280c      7000afe6       sxtb r0, r0
+            0x00a12810      08d08de2       add sp, sp, 8
+            0x00a12814      1eff2fe1       bx lr

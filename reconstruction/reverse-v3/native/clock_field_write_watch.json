@@ -1,0 +1,55 @@
+{
+ "schema": 2,
+ "scope": "who writes the clock/geometry fields (offsets [624, 648, 660, 934, 3072, 3136, 3140, 3264]) - executed watch",
+ "method": "a write hook on the receiver watches these offsets while the method body runs; a hit would name the instruction that writes the field",
+ "watched_offsets": [
+  624,
+  648,
+  660,
+  934,
+  3072,
+  3136,
+  3140,
+  3264
+ ],
+ "runs": {
+  "DynamicWorld:update:accurateDT:isSimulation:": {
+   "instructions": 1999,
+   "field_writes": [],
+   "invented_pages": 3
+  },
+  "World:update:accurateDT:pinchScale:dragInProgress:": {
+   "instructions": 1527,
+   "field_writes": [],
+   "invented_pages": 2
+  },
+  "World:incrementalLoad": {
+   "instructions": 445,
+   "field_writes": [],
+   "invented_pages": 1
+  },
+  "DynamicWorld:simulate:": {
+   "instructions": 249,
+   "field_writes": [],
+   "invented_pages": 0
+  }
+ },
+ "result": "zero writes to any watched offset in all five methods, including 1999 instructions of DynamicWorld -[update:accurateDT:isSimulation:]",
+ "reading_both_ways": [
+  "(a) the writes happen inside callees that this run STUBS (r0 = 0), so an executed watch on the body cannot see them - not excluded by this experiment",
+  "(b) the fabricated receiver sends the body down its empty path, so it never reaches a write - also not excluded",
+  "what IS excluded: these five bodies do not write these fields directly in their own instructions"
+ ],
+ "boundary": "no field writes is a statement about this run's receiver and this stubbing, not about the original. It does not contradict the static result (no writer through the cell idiom) - it agrees with it and shows the negative is not an artifact of the static method alone.",
+ "watch_extended": "writes are now also recorded when they land INSIDE one of the zero pages this run invented for a NULL pointer field, with the offset inside that object - because watching only 'offset relative to the receiver' misses `otherObject->field`, which is exactly the indirection a fabricated receiver creates. Still zero.",
+ "chain_that_explains_the_negative": {
+  "steps": [
+   "executed: World -[update:accurateDT:pinchScale:dragInProgress:] sends setTranslation: (site 0x573548)",
+   "static: World -[setTranslation:] @0x5531d0 writes cell 0xf328d4 - the only write site for `translation`, at 0x553204, reported as a write only after the fused-store fix",
+   "field: cell 0xf328d4 is World.translation at offset 624",
+   "executed: the pinch body itself writes offset 624 zero times"
+  ],
+  "conclusion": "the negative is explained rather than mysterious: the write lives in a CALLEE, and this run stubs callees with r0 = 0. The chain executed-trace -> selector -> static setter -> write site -> field offset is complete and cross-checked."
+ },
+ "open_item": "the corrected site scan reports 0 sites for cell 0xf32b6c (World.sunDirection) even though its own getter materialises it, so the scan's pattern or window misses that one shape; the value-level tools derive it fine. Recorded, not chased."
+}

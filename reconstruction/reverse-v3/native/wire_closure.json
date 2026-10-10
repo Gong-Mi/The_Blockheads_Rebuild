@@ -1,0 +1,1531 @@
+{
+  "batch": "Wire class closure (non-render): init/save/net pairs, remoteUpdate, dealloc, getSaveDict, sub-derived reload, freeblock creation constants, worldChanged adjacency refresh, occupancy predicates (18 bodies)",
+  "claim": "static bounded-body maps with per-instruction anchors; runtime values and the render consumers are outside these bodies",
+  "classes": [
+    {
+      "boundary": "consecutive IMPs: [objectType] follows at 0x0094fd48",
+      "boundary_end": "0x0094fd48",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0094fd00"
+        },
+        {
+          "callee": "0x00a19598",
+          "route": "bl sym.reloadDrawBlockDynamicObjectStaticGeometryForTile_intpair__MacroTile__World_",
+          "site": "0x0094fd2c"
+        }
+      ],
+      "imp": "0x0094fca0",
+      "ivars": {
+        "0x0094fd38": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x0094fd40": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        }
+      },
+      "method": "Wire -[initSubDerivedItems]",
+      "name": "w_subderived",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x0094fd44": {
+          "selector": "macroTiles",
+          "slot": "0x00e839f8"
+        }
+      },
+      "semantics": "Reload the wire's static geometry: reads the pos {x,y} pair (DynamicObject.pos@16 writeback pair) and the owning world@4; one objc_msgSend for 'macroTiles'; then reloadDrawBlockDynamicObjectStaticGeometryForTile(posPair, macroTiles, world).",
+      "types": "v8@0:4",
+      "verified_words": 42
+    },
+    {
+      "boundary": "consecutive IMPs: [initWithWorld:dynamicWorld:atPosition:cache:type:saveDict:placedByClient:] follows at 0x0094fd64",
+      "boundary_end": "0x0094fd64",
+      "branches": [],
+      "calls": [],
+      "imp": "0x0094fd48",
+      "ivars": {},
+      "method": "Wire -[objectType]",
+      "name": "w_objtype",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "return 0x26 - the wire dynamic-object type tag (same tag used by DynamicWorld wireAtPos: / addWireAtPos: in the electricity net-sync batch).",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "consecutive IMPs: [initWithWorld:dynamicWorld:saveDict:cache:] follows at 0x0095002c",
+      "boundary_end": "0x0095002c",
+      "branches": [
+        {
+          "address": "0x0094fe48",
+          "destination": "0x0094fe58",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0094fe54",
+          "destination": "0x0094fff0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0094fe84",
+          "destination": "0x0094fed0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0094fecc",
+          "destination": "0x0094ff9c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0094ff18",
+          "destination": "0x0094ff98",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0094ff98",
+          "destination": "0x0094ff9c",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c29fc",
+          "route": "bl loc.imp.objc_msgSendSuper2",
+          "site": "0x0094fe2c"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x0094feb4"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x0094ff0c"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x0094ff70"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x0094ff80"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x0094ffd0"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x0094ffe4"
+        }
+      ],
+      "imp": "0x0094fd64",
+      "ivars": {
+        "0x00950008": {
+          "offset": 56,
+          "slot": "0x0105e300",
+          "symbol": "OBJC_IVAR_$_Wire.itemType"
+        },
+        "0x00950018": {
+          "offset": 36,
+          "slot": "0x0105c3a0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.ownerID"
+        }
+      },
+      "method": "Wire -[initWithWorld:dynamicWorld:atPosition:cache:type:saveDict:placedByClient:]",
+      "name": "w_initpos",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x0094fffc": {
+          "class": "OBJC_CLASS_$_Wire",
+          "slot": "0x00e8bdc0"
+        },
+        "0x00950004": {
+          "selector": "initWithWorld:dynamicWorld:atPosition:cache:",
+          "slot": "0x00e839fc"
+        },
+        "0x00950010": {
+          "import": "objc_msgSend",
+          "slot": "0x0105b7a0"
+        },
+        "0x00950014": {
+          "selector": "objectForKey:",
+          "slot": "0x00e83a04"
+        },
+        "0x0095001c": {
+          "selector": "retain",
+          "slot": "0x00e83a00"
+        },
+        "0x00950020": {
+          "selector": "initSubDerivedItems",
+          "slot": "0x00e83a0c"
+        },
+        "0x00950024": {
+          "selector": "updateWireConfiguration",
+          "slot": "0x00e83a08"
+        }
+      },
+      "semantics": "Full wire init: objc_msgSendSuper2(super, 'initWithWorld:dynamicWorld:atPosition:cache:'); nil -> nil; Wire.itemType@56 = type arg; saveDict branch (retain / objectForKey: pair) vs no-saveDict branch; finishing calls [self initSubDerivedItems] + [self updateWireConfiguration]; return self.",
+      "types": "@40@0:4@8@12{?=ii}16@24i28@32@36",
+      "verified_words": 178
+    },
+    {
+      "boundary": "consecutive IMPs: [initWithWorld:dynamicWorld:cache:netData:] follows at 0x0095034c",
+      "boundary_end": "0x0095034c",
+      "branches": [
+        {
+          "address": "0x009500e0",
+          "destination": "0x009500f0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x009500ec",
+          "destination": "0x009502fc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0095022c",
+          "destination": "0x00950250",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r6",
+          "site": "0x009500c4"
+        },
+        {
+          "callee": null,
+          "route": "blx r8",
+          "site": "0x00950178"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00950188"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x009501b4"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x009501c4"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x009501f0"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00950200"
+        },
+        {
+          "callee": null,
+          "route": "blx r5",
+          "site": "0x009502b8"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x009502c8"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x009502f0"
+        }
+      ],
+      "imp": "0x0095002c",
+      "ivars": {
+        "0x00950314": {
+          "offset": 64,
+          "slot": "0x0105e2fc",
+          "symbol": "OBJC_IVAR_$_Wire.currentSolidConfiguration"
+        },
+        "0x00950328": {
+          "offset": 60,
+          "slot": "0x0105e2f8",
+          "symbol": "OBJC_IVAR_$_Wire.currentConfiguration"
+        },
+        "0x00950330": {
+          "offset": 56,
+          "slot": "0x0105e300",
+          "symbol": "OBJC_IVAR_$_Wire.itemType"
+        },
+        "0x0095033c": {
+          "offset": 36,
+          "slot": "0x0105c3a0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.ownerID"
+        }
+      },
+      "method": "Wire -[initWithWorld:dynamicWorld:saveDict:cache:]",
+      "name": "w_initsave",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00950308": {
+          "import": "objc_msgSendSuper2",
+          "slot": "0x0105b79c"
+        },
+        "0x0095030c": {
+          "selector": "initWithWorld:dynamicWorld:saveDict:cache:",
+          "slot": "0x00e83a10"
+        },
+        "0x00950310": {
+          "class": "OBJC_CLASS_$_Wire",
+          "slot": "0x00e8bdc0"
+        },
+        "0x00950318": {
+          "import": "objc_msgSend",
+          "slot": "0x0105b7a0"
+        },
+        "0x0095031c": {
+          "selector": "intValue",
+          "slot": "0x00e83a14"
+        },
+        "0x00950324": {
+          "selector": "objectForKey:",
+          "slot": "0x00e83a04"
+        },
+        "0x00950338": {
+          "selector": "initSubDerivedItems",
+          "slot": "0x00e83a0c"
+        },
+        "0x00950340": {
+          "selector": "retain",
+          "slot": "0x00e83a00"
+        }
+      },
+      "semantics": "Save-load init: objc_msgSendSuper2(super, 'initWithWorld:dynamicWorld:saveDict:cache:'); nil -> nil; restores Wire.itemType@56 / currentConfiguration@60 / currentSolidConfiguration@64 from the save dict (objectForKey: + intValue + retain chains); a field reading 0 is forced to 1; [self initSubDerivedItems]; return self.",
+      "types": "@24@0:4@8@12@16@20",
+      "verified_words": 200
+    },
+    {
+      "boundary": "body 0x0095034c..0x00950688; private helper 0x00950688..0x009506ac (IMP gap) excluded",
+      "boundary_end": "0x00950688",
+      "branches": [
+        {
+          "address": "0x00950400",
+          "destination": "0x00950410",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0095040c",
+          "destination": "0x00950634",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x009504e4",
+          "destination": "0x00950600",
+          "mnemonic": "bls"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r6",
+          "site": "0x009503e4"
+        },
+        {
+          "callee": null,
+          "route": "blx r5",
+          "site": "0x00950480"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x009504dc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00950524"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00950568"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00950580"
+        },
+        {
+          "callee": "0x00950688",
+          "route": "bl 0x950688",
+          "site": "0x00950584"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x009505d8"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x009505e8"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00950628"
+        }
+      ],
+      "imp": "0x0095034c",
+      "ivars": {
+        "0x00950654": {
+          "offset": 64,
+          "slot": "0x0105e2fc",
+          "symbol": "OBJC_IVAR_$_Wire.currentSolidConfiguration"
+        },
+        "0x00950658": {
+          "offset": 60,
+          "slot": "0x0105e2f8",
+          "symbol": "OBJC_IVAR_$_Wire.currentConfiguration"
+        },
+        "0x0095065c": {
+          "offset": 56,
+          "slot": "0x0105e300",
+          "symbol": "OBJC_IVAR_$_Wire.itemType"
+        },
+        "0x00950664": {
+          "offset": 36,
+          "slot": "0x0105c3a0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.ownerID"
+        }
+      },
+      "method": "Wire -[initWithWorld:dynamicWorld:cache:netData:]",
+      "name": "w_initnet",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00950640": {
+          "import": "objc_msgSendSuper2",
+          "slot": "0x0105b79c"
+        },
+        "0x00950644": {
+          "selector": "initWithWorld:dynamicWorld:cache:netData:",
+          "slot": "0x00e83a18"
+        },
+        "0x00950648": {
+          "class": "OBJC_CLASS_$_Wire",
+          "slot": "0x00e8bdc0"
+        },
+        "0x0095064c": {
+          "import": "objc_msgSend",
+          "slot": "0x0105b7a0"
+        },
+        "0x00950650": {
+          "selector": "length",
+          "slot": "0x00e83a20"
+        },
+        "0x00950660": {
+          "selector": "getBytes:length:",
+          "slot": "0x00e83a1c"
+        },
+        "0x00950668": {
+          "selector": "retain",
+          "slot": "0x00e83a00"
+        },
+        "0x00950670": {
+          "selector": "objectForKey:",
+          "slot": "0x00e83a04"
+        },
+        "0x00950674": {
+          "selector": "gzipInflate",
+          "slot": "0x00e83a28"
+        },
+        "0x0095067c": {
+          "selector": "subdataWithRange:",
+          "slot": "0x00e83a24"
+        },
+        "0x00950680": {
+          "selector": "initSubDerivedItems",
+          "slot": "0x00e83a0c"
+        }
+      },
+      "semantics": "Net init: objc_msgSendSuper2(super, 'initWithWorld:dynamicWorld:cache:netData:'); nil -> nil; gzipInflate -> subdataWithRange: -> length / getBytes:length: -> unpack {uint16 itemType@56, u8 currentConfiguration@60, u8 currentSolidConfiguration@64}; segments beyond 0x20 go through the private helper 0x950688 (IMP gap, out of body); [self initSubDerivedItems]; return self.",
+      "types": "@24@0:4@8@12@16@20",
+      "verified_words": 207
+    },
+    {
+      "boundary": "consecutive IMPs: [getSaveDict] follows at 0x00950770",
+      "boundary_end": "0x00950770",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r5",
+          "site": "0x00950720"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00950748"
+        }
+      ],
+      "imp": "0x009506ac",
+      "ivars": {
+        "0x00950768": {
+          "offset": 36,
+          "slot": "0x0105c3a0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.ownerID"
+        }
+      },
+      "method": "Wire -[dealloc]",
+      "name": "w_dealloc",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00950754": {
+          "import": "objc_msgSendSuper2",
+          "slot": "0x0105b79c"
+        },
+        "0x00950758": {
+          "selector": "dealloc",
+          "slot": "0x00e83a30"
+        },
+        "0x0095075c": {
+          "class": "OBJC_CLASS_$_Wire",
+          "slot": "0x00e8bdc0"
+        },
+        "0x00950760": {
+          "import": "objc_msgSend",
+          "slot": "0x0105b7a0"
+        },
+        "0x00950764": {
+          "selector": "release",
+          "slot": "0x00e83a2c"
+        }
+      },
+      "semantics": "[self.ownerID@36 release]; objc_msgSendSuper2(super, dealloc).",
+      "types": "v8@0:4",
+      "verified_words": 49
+    },
+    {
+      "boundary": "consecutive IMPs: [updateNetDataForClient:] follows at 0x00950a64",
+      "boundary_end": "0x00950a64",
+      "branches": [
+        {
+          "address": "0x009509bc",
+          "destination": "0x00950a18",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x009507c4"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x009508b8"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x009508dc"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00950918"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x0095093c"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00950978"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x0095099c"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00950a14"
+        }
+      ],
+      "imp": "0x00950770",
+      "ivars": {
+        "0x00950a30": {
+          "offset": 36,
+          "slot": "0x0105c3a0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.ownerID"
+        },
+        "0x00950a44": {
+          "offset": 64,
+          "slot": "0x0105e2fc",
+          "symbol": "OBJC_IVAR_$_Wire.currentSolidConfiguration"
+        },
+        "0x00950a50": {
+          "offset": 60,
+          "slot": "0x0105e2f8",
+          "symbol": "OBJC_IVAR_$_Wire.currentConfiguration"
+        },
+        "0x00950a58": {
+          "offset": 56,
+          "slot": "0x0105e300",
+          "symbol": "OBJC_IVAR_$_Wire.itemType"
+        }
+      },
+      "method": "Wire -[getSaveDict]",
+      "name": "w_getsave",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00950a24": {
+          "import": "objc_msgSendSuper2",
+          "slot": "0x0105b79c"
+        },
+        "0x00950a28": {
+          "selector": "getSaveDict",
+          "slot": "0x00e83a34"
+        },
+        "0x00950a2c": {
+          "class": "OBJC_CLASS_$_Wire",
+          "slot": "0x00e8bdc0"
+        },
+        "0x00950a38": {
+          "import": "objc_msgSend",
+          "slot": "0x0105b7a0"
+        },
+        "0x00950a3c": {
+          "selector": "setObject:forKey:",
+          "slot": "0x00e83a3c"
+        },
+        "0x00950a40": {
+          "selector": "numberWithInt:",
+          "slot": "0x00e83a38"
+        }
+      },
+      "semantics": "dict = [super getSaveDict] (stret); [dict setObject:[NSNumber numberWithInt:itemType@56] forKey:] plus currentConfiguration@60 / currentSolidConfiguration@64; when ownerID@36 non-nil an extra setObject:forKey:; return dict.",
+      "types": "@8@0:4",
+      "verified_words": 189
+    },
+    {
+      "boundary": "consecutive IMPs: [creationNetDataForClient:] follows at 0x00950ab8",
+      "boundary_end": "0x00950ab8",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00950aa0"
+        }
+      ],
+      "imp": "0x00950a64",
+      "ivars": {},
+      "method": "Wire -[updateNetDataForClient:]",
+      "name": "w_updnet",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00950aac": {
+          "import": "objc_msgSend",
+          "slot": "0x0105b7a0"
+        },
+        "0x00950ab0": {
+          "selector": "creationNetDataForClient:",
+          "slot": "0x00e83a40"
+        }
+      },
+      "semantics": "Forwarder: updateNetDataForClient: = [self creationNetDataForClient:client] (single objc_msgSend).",
+      "types": "@12@0:4@8",
+      "verified_words": 21
+    },
+    {
+      "boundary": "body 0x00950ab8..0x00950dbc; private helper 0x00950dbc..0x00950f28 (IMP gap) excluded",
+      "boundary_end": "0x00950dbc",
+      "branches": [
+        {
+          "address": "0x00950b04",
+          "destination": "0x00950b1c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00950b18",
+          "destination": "0x00950b3c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00950cb8",
+          "destination": "0x00950d14",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x00950b14"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x00950b38"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x00950c00"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00950c70"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00950c94"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00950d10"
+        },
+        {
+          "callee": "0x00950dbc",
+          "route": "bl 0x950dbc",
+          "site": "0x00950d18"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00950d54"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00950d70"
+        }
+      ],
+      "imp": "0x00950ab8",
+      "ivars": {
+        "0x00950d84": {
+          "offset": 36,
+          "slot": "0x0105c3a0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.ownerID"
+        },
+        "0x00950d9c": {
+          "offset": 64,
+          "slot": "0x0105e2fc",
+          "symbol": "OBJC_IVAR_$_Wire.currentSolidConfiguration"
+        },
+        "0x00950da0": {
+          "offset": 60,
+          "slot": "0x0105e2f8",
+          "symbol": "OBJC_IVAR_$_Wire.currentConfiguration"
+        },
+        "0x00950da4": {
+          "offset": 56,
+          "slot": "0x0105e300",
+          "symbol": "OBJC_IVAR_$_Wire.itemType"
+        }
+      },
+      "method": "Wire -[creationNetDataForClient:]",
+      "name": "w_creationnet",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00950d80": {
+          "selector": "dynamicObjectNetData",
+          "slot": "0x00e83a44"
+        },
+        "0x00950d88": {
+          "import": "objc_msgSend",
+          "slot": "0x0105b7a0"
+        },
+        "0x00950d8c": {
+          "selector": "dictionary",
+          "slot": "0x00e83a4c"
+        },
+        "0x00950d94": {
+          "selector": "dataWithBytes:length:",
+          "slot": "0x00e83a48"
+        },
+        "0x00950dac": {
+          "selector": "setObject:forKey:",
+          "slot": "0x00e83a3c"
+        },
+        "0x00950db0": {
+          "selector": "appendData:",
+          "slot": "0x00e83a54"
+        },
+        "0x00950db4": {
+          "selector": "gzipDeflate",
+          "slot": "0x00e83a50"
+        }
+      },
+      "semantics": "Net data builder: reads the client's 'dynamicObjectNetData' blob (0x18 bytes via objc_msgSend_stret; memset 0 when client is nil); fills {uint16 itemType@56, u8 currentConfiguration@60, u8 currentSolidConfiguration@64}; wraps via dataWithBytes:length: / appendData: + gzipDeflate into the dictionary record; non-zero field -> extra setObject:forKey:; private helper 0x950dbc (IMP gap, out of body); returns the assembled dict.",
+      "types": "@12@0:4@8",
+      "verified_words": 193
+    },
+    {
+      "boundary": "consecutive IMPs: [draw:projectionMatrix:...] follows at 0x009510f8",
+      "boundary_end": "0x009510f8",
+      "branches": [
+        {
+          "address": "0x00950fe8",
+          "destination": "0x00951014",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00951010",
+          "destination": "0x009510c0",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00950f84"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00950fc8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00951090"
+        },
+        {
+          "callee": "0x00a19598",
+          "route": "bl sym.reloadDrawBlockDynamicObjectStaticGeometryForTile_intpair__MacroTile__World_",
+          "site": "0x009510bc"
+        }
+      ],
+      "imp": "0x00950f28",
+      "ivars": {
+        "0x009510d4": {
+          "offset": 60,
+          "slot": "0x0105e2f8",
+          "symbol": "OBJC_IVAR_$_Wire.currentConfiguration"
+        },
+        "0x009510e0": {
+          "offset": 64,
+          "slot": "0x0105e2fc",
+          "symbol": "OBJC_IVAR_$_Wire.currentSolidConfiguration"
+        },
+        "0x009510e8": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x009510ec": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        }
+      },
+      "method": "Wire -[remoteUpdate:]",
+      "name": "w_remoteupd",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x009510c8": {
+          "import": "objc_msgSendSuper2",
+          "slot": "0x0105b79c"
+        },
+        "0x009510cc": {
+          "selector": "remoteUpdate:",
+          "slot": "0x00e83a58"
+        },
+        "0x009510d0": {
+          "class": "OBJC_CLASS_$_Wire",
+          "slot": "0x00e8bdc0"
+        },
+        "0x009510d8": {
+          "import": "objc_msgSend",
+          "slot": "0x0105b7a0"
+        },
+        "0x009510dc": {
+          "selector": "getBytes:length:",
+          "slot": "0x00e83a1c"
+        },
+        "0x009510f0": {
+          "selector": "macroTiles",
+          "slot": "0x00e839f8"
+        }
+      },
+      "semantics": "[super remoteUpdate:data]; [data getBytes:buf length:0x20]; when buf {cfg,solid} != currentConfiguration@60 / currentSolidConfiguration@64 -> write both + rebuild static geometry (macroTiles + reloadDrawBlockDynamicObjectStaticGeometryForTile on the pos pair); unchanged -> no-op.",
+      "types": "v12@0:4@8",
+      "verified_words": 116
+    },
+    {
+      "boundary": "consecutive IMPs: [freeBlockCreationSaveDict] follows at 0x0095135c",
+      "boundary_end": "0x0095135c",
+      "branches": [],
+      "calls": [],
+      "imp": "0x00951320",
+      "ivars": {
+        "0x00951354": {
+          "offset": 56,
+          "slot": "0x0105e300",
+          "symbol": "OBJC_IVAR_$_Wire.itemType"
+        }
+      },
+      "method": "Wire -[freeblockCreationItemType]",
+      "name": "w_fbitem",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "return *(int *)(self + 56) - Wire.itemType@56 leaf getter.",
+      "types": "i8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "consecutive IMPs: [freeBlockCreationDataA] follows at 0x00951378",
+      "boundary_end": "0x00951378",
+      "branches": [],
+      "calls": [],
+      "imp": "0x0095135c",
+      "ivars": {},
+      "method": "Wire -[freeBlockCreationSaveDict]",
+      "name": "w_fbsave",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "return nil (no free-block save dict for wires).",
+      "types": "@8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "consecutive IMPs: [freeBlockCreationDataB] follows at 0x00951394",
+      "boundary_end": "0x00951394",
+      "branches": [],
+      "calls": [],
+      "imp": "0x00951378",
+      "ivars": {},
+      "method": "Wire -[freeBlockCreationDataA]",
+      "name": "w_fba",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "return 0 (uxth) - freeBlockCreationDataA constant.",
+      "types": "S8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "consecutive IMPs: [worldChanged:] follows at 0x009513b0",
+      "boundary_end": "0x009513b0",
+      "branches": [],
+      "calls": [],
+      "imp": "0x00951394",
+      "ivars": {},
+      "method": "Wire -[freeBlockCreationDataB]",
+      "name": "w_fbb",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "return 0 (uxth) - freeBlockCreationDataB constant.",
+      "types": "S8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "body 0x009513b0..0x00951ef0; helper 0x00951ef0..0x00951f2c (IMP gap) excluded",
+      "boundary_end": "0x00951ef0",
+      "branches": [
+        {
+          "address": "0x009513f0",
+          "destination": "0x00951e9c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x009514e0",
+          "destination": "0x00951e98",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00951528",
+          "destination": "0x00951718",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00951550",
+          "destination": "0x00951718",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x009515b4",
+          "destination": "0x00951714",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00951600",
+          "destination": "0x00951710",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00951624",
+          "destination": "0x00951710",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00951710",
+          "destination": "0x00951e9c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00951714",
+          "destination": "0x00951718",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00951794",
+          "destination": "0x00951808",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x00951804",
+          "destination": "0x00951920",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0095187c",
+          "destination": "0x009518f0",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x009518ec",
+          "destination": "0x00951918",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0095192c",
+          "destination": "0x00951e58",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00951954",
+          "destination": "0x00951980",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0095197c",
+          "destination": "0x009519d8",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x009519a8",
+          "destination": "0x00951e58",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x009519d4",
+          "destination": "0x00951e58",
+          "mnemonic": "bgt"
+        },
+        {
+          "address": "0x00951a20",
+          "destination": "0x00951e54",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00951a80",
+          "destination": "0x00951e50",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00951ae4",
+          "destination": "0x00951e4c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00951af8",
+          "destination": "0x00951e4c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00951b08",
+          "destination": "0x00951e4c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00951b18",
+          "destination": "0x00951e4c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00951b7c",
+          "destination": "0x00951e48",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00951b90",
+          "destination": "0x00951e48",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00951ba0",
+          "destination": "0x00951e48",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00951bb0",
+          "destination": "0x00951e48",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00951c14",
+          "destination": "0x00951e44",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00951c28",
+          "destination": "0x00951e44",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00951c38",
+          "destination": "0x00951e44",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00951c48",
+          "destination": "0x00951e44",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00951cac",
+          "destination": "0x00951e40",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00951cc0",
+          "destination": "0x00951e40",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00951cd0",
+          "destination": "0x00951e40",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00951ce0",
+          "destination": "0x00951e40",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00951d2c",
+          "destination": "0x00951e3c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00951d50",
+          "destination": "0x00951e3c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00951e3c",
+          "destination": "0x00951e9c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00951e40",
+          "destination": "0x00951e44",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00951e44",
+          "destination": "0x00951e48",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00951e48",
+          "destination": "0x00951e4c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00951e4c",
+          "destination": "0x00951e50",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00951e50",
+          "destination": "0x00951e54",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00951e54",
+          "destination": "0x00951e58",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00951e58",
+          "destination": "0x00951e5c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00951e94",
+          "destination": "0x00951448",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00951e98",
+          "destination": "0x00951e9c",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x0095159c"
+        },
+        {
+          "callee": "0x00a11690",
+          "route": "bl sym.tileIsWater_Tile_",
+          "site": "0x009515a8"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x009515f4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009516e4"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x0095170c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00951770"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x00951788"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009517e8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00951860"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x00951870"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x009518d0"
+        },
+        {
+          "callee": "0x00951ef0",
+          "route": "bl 0x951ef0",
+          "site": "0x00951924"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00951a04"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00951a6c"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00951ad0"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x00951aec"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00951b68"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x00951b84"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00951c00"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x00951c1c"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00951c98"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x00951cb4"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00951d20"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00951e10"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00951e38"
+        }
+      ],
+      "imp": "0x009513b0",
+      "ivars": {
+        "0x00951ea4": {
+          "offset": 56,
+          "slot": "0x0105e300",
+          "symbol": "OBJC_IVAR_$_Wire.itemType"
+        },
+        "0x00951ea8": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x00951eac": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x00951ec4": {
+          "offset": 60,
+          "slot": "0x0105e2f8",
+          "symbol": "OBJC_IVAR_$_Wire.currentConfiguration"
+        },
+        "0x00951ed4": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        },
+        "0x00951ed8": {
+          "offset": 48,
+          "slot": "0x0105c3c8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.needsRemoved"
+        }
+      },
+      "method": "Wire -[worldChanged:]",
+      "name": "w_worldchanged",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00951eb4": {
+          "selector": "worldWidthMacro",
+          "slot": "0x00e83a68"
+        },
+        "0x00951ec8": {
+          "import": "objc_msgSend",
+          "slot": "0x0105b7a0"
+        },
+        "0x00951ecc": {
+          "selector": "updateWireConfiguration",
+          "slot": "0x00e83a08"
+        },
+        "0x00951ed0": {
+          "selector": "isClient",
+          "slot": "0x00e83a5c"
+        },
+        "0x00951edc": {
+          "selector": "removeStandardObject:",
+          "slot": "0x00e83a64"
+        },
+        "0x00951ee4": {
+          "selector": "createFreeBlockAtPosition:ofType:dataA:dataB:subItems:dynamicObjectSaveDict:hovers:playSound:priorityBlockhead:",
+          "slot": "0x00e83a60"
+        }
+      },
+      "semantics": "Gate: itemType@56 != 0xb2 -> return. Loop over the changed {x,y} vector (8-byte stride) with wrap-aware distance normalization ((macro-size value << 5)/2 via __aeabi_idiv; helper 0x951ef0 in the IMP tail, out of body). Own-cell case (x,y == pos@16): tileAtWorldPositionLoaded + tileIsWater + workbench gate -> createFreeBlockAtPosition:ofType:dataA:dataB:subItems:dynamicObjectSaveDict:hovers:playSound:priorityBlockhead: + removeStandardObject: (needsRemoved@48; isClient via dynamicWorld@8). Neighbor case: four probes around (x,y) with tile[1]==2 / non-nil / !tileIsSolid / tile[3]!=0x60 / tile[3]!=0x2e screens -> [self updateWireConfiguration].",
+      "types": "v12@0:4^{vector<intpair, std::__1::allocator<intpair> >=^{?}^{?}{__compressed_pair<intpair *, std::__1::allocator<intpair> >=^{?}}}8",
+      "verified_words": 720
+    },
+    {
+      "boundary": "body trimmed to next IMP [occupiesForegroundContents] 0x00954b34 (exidx over-covered 0x00954c74)",
+      "boundary_end": "0x00954b34",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00954a98"
+        },
+        {
+          "callee": "0x00a19598",
+          "route": "bl sym.reloadDrawBlockDynamicObjectStaticGeometryForTile_intpair__MacroTile__World_",
+          "site": "0x00954ac4"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00954b08"
+        }
+      ],
+      "imp": "0x00954a2c",
+      "ivars": {
+        "0x00954b20": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x00954b28": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        }
+      },
+      "method": "Wire -[removeFromMacroBlock]",
+      "name": "w_rmmacro",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00954b14": {
+          "import": "objc_msgSendSuper2",
+          "slot": "0x0105b79c"
+        },
+        "0x00954b18": {
+          "selector": "removeFromMacroBlock",
+          "slot": "0x00e83a70"
+        },
+        "0x00954b1c": {
+          "class": "OBJC_CLASS_$_Wire",
+          "slot": "0x00e8bdc0"
+        },
+        "0x00954b2c": {
+          "selector": "macroTiles",
+          "slot": "0x00e839f8"
+        }
+      },
+      "semantics": "Teardown: reads the pos pair + 'macroTiles' msgSend + reloadDrawBlockDynamicObjectStaticGeometryForTile(posPair, macroTiles, world); then objc_msgSendSuper2(super, 'removeFromMacroBlock').",
+      "types": "v8@0:4",
+      "verified_words": 66
+    },
+    {
+      "boundary": "consecutive IMPs: [occupiesNormalContents] follows at 0x00954bd4",
+      "boundary_end": "0x00954bd4",
+      "branches": [
+        {
+          "address": "0x00954ba4",
+          "destination": "0x00954bb4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00954bb0",
+          "destination": "0x00954bbc",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00954b90"
+        }
+      ],
+      "imp": "0x00954b34",
+      "ivars": {
+        "0x00954bc8": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x00954bcc": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        }
+      },
+      "method": "Wire -[occupiesForegroundContents]",
+      "name": "w_occfg",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "tile = tileAtWorldPositionLoaded(pos.x, pos.y, world); return tile[0xb] == 0x60 (foreground contents occupied by the wire block id).",
+      "types": "c8@0:4",
+      "verified_words": 40
+    },
+    {
+      "boundary": "ARM.exidx bound 0x00954c74 (next class Plant at 0x00954f40)",
+      "boundary_end": "0x00954c74",
+      "branches": [
+        {
+          "address": "0x00954c44",
+          "destination": "0x00954c54",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00954c50",
+          "destination": "0x00954c5c",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00954c30"
+        }
+      ],
+      "imp": "0x00954bd4",
+      "ivars": {
+        "0x00954c68": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x00954c6c": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        }
+      },
+      "method": "Wire -[occupiesNormalContents]",
+      "name": "w_occnormal",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "tile = tileAtWorldPositionLoaded(pos.x, pos.y, world); return tile[3] == 0x60 (normal contents occupied by the wire block id).",
+      "types": "c8@0:4",
+      "verified_words": 40
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "schema": 1
+}

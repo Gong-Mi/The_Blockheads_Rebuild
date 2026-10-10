@@ -1,0 +1,155 @@
+{
+  "task": "decode tileIsSemiTransparentSolidBlock byte0 codes to materials",
+  "binary": {
+    "path": "~/blockheads-work/extracted/lib/armeabi-v7a/libApplication.so",
+    "sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+    "version": "1.7.6 armeabi-v7a"
+  },
+  "function": {
+    "name": "tileIsSemiTransparentSolidBlock(Tile*)",
+    "va": "0x00a128b0",
+    "size_bytes": 172,
+    "structure": "if(!tile) false; b0==0x18 || b0==0x3b || b0==4 || tileTypeIsGemBlock(b0)",
+    "tail_branch": "call tileTypeIsGemBlock @0xa1229c (NOT more literal compares)"
+  },
+  "gem_predicate": {
+    "name": "tileTypeIsGemBlock(TileType)",
+    "va": "0x00a1229c",
+    "true_for": ["0x47", "0x48", "0x49", "0x4a", "0x4b"]
+  },
+  "codes": [
+    {
+      "code": "0x18",
+      "decimal": 24,
+      "name": "TILE_GLASS",
+      "zh": "玻璃",
+      "confidence": "decisive",
+      "evidence": [
+        "DWARF TileType enum (server_types.json): TILE_GLASS=24",
+        "client tile->item map (itemTypeFromTileIsForegorund @0xa18044): tile 24 -> ItemType 1042 ITEM_GLASS",
+        "literal in tileIsSemiTransparentSolidBlock @0xa128e4",
+        "tileIsPaintable fg chain @0xa11a08, bg chain @0xa11e44 (paintable)",
+        "itemIndexWithGoodInteractionTypeForTile @0xc67bb0 (group with rock/tool logic)",
+        "Blockhead updateGatherSpeedAndAnimation @0xbaf2dc (constant-4 path)",
+        "light engines: 14 call sites, attenuation tier 0x10 (semi-transparent)"
+      ],
+      "not": "窗口(window) is DynamicObjectType 31=0x1f, unrelated"
+    },
+    {
+      "code": "0x3b",
+      "decimal": 59,
+      "name": "TILE_BLACK_GLASS",
+      "zh": "黑玻璃",
+      "confidence": "decisive",
+      "evidence": [
+        "DWARF TileType enum: TILE_BLACK_GLASS=59",
+        "client tile->item map: tile 59 -> ItemType 1076 ITEM_BLACK_GLASS",
+        "literal in tileIsSemiTransparentSolidBlock @0xa128fc",
+        "tileIsPaintable @0xa11a18 (fg), @0xa11e54 (bg, last compare before true)",
+        "itemIndex... @0xc67bc8 and @0xc67c4c (2 inline copies)",
+        "updateGatherSpeedAndAnimation @0xbaf304",
+        "World fillTile: case arm writes 0x3b @0x57e968 (tile-local); also tile[0xb]=0x3b @0x57de84 (content space, not material)",
+        "light engines attenuation tier 0x10"
+      ]
+    },
+    {
+      "code": "4",
+      "decimal": 4,
+      "name": "TILE_ICE",
+      "zh": "冰",
+      "confidence": "decisive",
+      "evidence": [
+        "DWARF TileType enum: TILE_ICE=4",
+        "client tile->item map: tile 4 -> ItemType 1060 ITEM_ICE",
+        "literal in tileIsSemiTransparentSolidBlock @0xa12914",
+        "SnowSurfaceBlock update: tile[0]==4 && tile[9]>0 melt chapter @0xd8ea18/0xd8ea24; more ice checks @0xd8f56c, @0xd8f624",
+        "SnowSurfaceBlock updateSnowContent:/removeAllSnow/worldChanged:/updateInTimeSinceSaved @0xd90ec4, @0xd912a0, @0xd91788, @0xd8dc7c",
+        "KelpPlant update: x4 @0x8174d8/0x817538/0x81765c/0x8176fc",
+        "fillTile: tile[0]==4 checks @0x57ff28, @0x580598, @0x580a10",
+        "light engines attenuation tier 0x10",
+        "NOT in tileIsPaintable set (unlike glass/black glass)"
+      ]
+    },
+    {
+      "code": "0x47",
+      "decimal": 71,
+      "name": "TILE_AMETHYST_BLOCK",
+      "zh": "紫水晶块",
+      "confidence": "decisive",
+      "evidence": ["DWARF enum", "tile->item 1098 ITEM_AMETHYST_BLOCK", "tileTypeIsGemBlock", "tileRequiresGlowBlock @0xa1486c", "tileTypeIsRock @0xa134b8", "tileIsPaintable @0xa11960/@0xa11bfc"]
+    },
+    {
+      "code": "0x48",
+      "decimal": 72,
+      "name": "TILE_SAPPHIRE_BLOCK",
+      "zh": "蓝宝石块",
+      "confidence": "decisive",
+      "evidence": ["DWARF enum", "tile->item 1099 ITEM_SAPPHIRE_BLOCK", "tileTypeIsGemBlock", "glow/rock/paint as above"]
+    },
+    {
+      "code": "0x49",
+      "decimal": 73,
+      "name": "TILE_EMERALD_BLOCK",
+      "zh": "绿宝石块",
+      "confidence": "decisive",
+      "evidence": ["DWARF enum", "tile->item 1100 ITEM_EMERALD_BLOCK", "tileTypeIsGemBlock", "glow/rock/paint as above"]
+    },
+    {
+      "code": "0x4a",
+      "decimal": 74,
+      "name": "TILE_RUBY_BLOCK",
+      "zh": "红宝石块",
+      "confidence": "decisive",
+      "evidence": ["DWARF enum", "tile->item 1101 ITEM_RUBY_BLOCK", "tileTypeIsGemBlock", "glow/rock/paint as above"]
+    },
+    {
+      "code": "0x4b",
+      "decimal": 75,
+      "name": "TILE_DIAMOND_BLOCK",
+      "zh": "钻石块",
+      "confidence": "decisive",
+      "evidence": ["DWARF enum", "tile->item 1102 ITEM_DIAMOND_BLOCK", "tileTypeIsGemBlock", "glow/rock/paint as above"]
+    }
+  ],
+  "call_sites_full_binary": {
+    "tileIsSemiTransparentSolidBlock": {
+      "count": 14,
+      "sunlight_engine": ["0xa1a520", "0xa1a664", "0xa1a784", "0xa1a8a4", "0xa1a9c8", "0xa1aaf4"],
+      "artificial_light_engine": ["0xa8f864", "0xa8fbe0", "0xa8ff80", "0xa903e4", "0xa9084c", "0xa90bf8", "0xa90fa4", "0xa91350"]
+    },
+    "tileTypeIsGemBlock": {
+      "count": 6,
+      "sites": {
+        "0xa11960": "tileIsPaintable (fg chain, byte0)",
+        "0xa11bfc": "tileIsPaintable (bg chain, byte1)",
+        "0xa12928": "tileIsSemiTransparentSolidBlock (ours)",
+        "0xa134b8": "tileTypeIsRock",
+        "0xa1486c": "tileRequiresGlowBlock",
+        "0xbd0084": "unlocated (inside Blockhead update: bucket 0xbb9238-0xbe5854)"
+      }
+    }
+  },
+  "cross_validation": {
+    "client_vs_dwarf_alignment": [
+      "tileIsAir: byte0==2 == TILE_AIR=2",
+      "tileIsWater: byte0==3 == TILE_WATER=3",
+      "tileTypeIsPortalBaseStone {0x19,0x21-0x25,0x2A-0x2F,0x3C-0x41} == INITIAL/PLACED/TRADE portal base stones (25,33-37,42-47,60-65)",
+      "tileTypeIsRock set == stone/metal names",
+      "object space: Tulip=0x3b, Blockhead=0x18, Carrot=0x1b, FreeBlock=0xe, Chest=0x2e, Sunflower=0xb"
+    ]
+  },
+  "traps": {
+    "object_space": {"0x18": "Blockhead", "0x3b": "TulipPlant", "0x1b": "Carrot", "0xe": "FreeBlock", "0x2e": "Chest"},
+    "tile_0xb_content_codes": ["0x33", "0x35", "0x37", "0x39", "0x3b"],
+    "tile_3_contents_codes": {"CoffeeTree_states": ["0x18", "0x19", "0x1a", "0x29", "0x2a"], "treasure_markers": ["0x5e", "0x90", "0x91"]},
+    "window_is_dynamic_object": "DYNAMIC_OBJECT_TYPE_WINDOW=31(0x1f)",
+    "e118_note": "SNOWLINE fillTile constants 0x422/0x423 are ITEM_FREEZE_WATER(1058)/ITEM_MELT_WATER(1059) in ItemType space, not tile types"
+  },
+  "boundaries": [
+    "static analysis only, no runtime measurement",
+    "fillTile: switch dispatcher for the 0x15/0x16/0x17/0x18/0x3b/4 arms not pinned",
+    "0xbd0084 gem call site not localized to a body",
+    "BL scan in ARM state over .text; no thumb-body assumption"
+  ],
+  "artifacts_dir": "~/blockheads-work/bh-work/bh-waterline/sub_glasscodes/"
+}

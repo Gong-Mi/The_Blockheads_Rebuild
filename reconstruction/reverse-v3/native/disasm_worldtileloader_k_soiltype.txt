@@ -1,0 +1,39 @@
+# KelpPlant -[isRequiredSoilType:]
+# types: c12@0:4i8
+# implementation: 0x00818dec
+# ARM.exidx end: 0x00818e74
+
+            0x00818dec      10d04de2       sub sp, sp, 0x10
+            0x00818df0      003000e3       movw r3, 0
+            0x00818df4      0c008de5       str r0, [sp, 0xc]
+            0x00818df8      08108de5       str r1, [sp, 8]
+            0x00818dfc      04208de5       str r2, [sp, 4]
+            0x00818e00      04009de5       ldr r0, [sp, 4]
+            0x00818e04      020050e3       cmp r0, 2
+            0x00818e08      00308de5       str r3, [sp]
+        ┌─< 0x00818e0c      1300000a       beq 0x818e60
+        │   0x00818e10      000000e3       movw r0, 0
+        │   0x00818e14      04109de5       ldr r1, [sp, 4]
+        │   0x00818e18      030051e3       cmp r1, 3
+        │   0x00818e1c      00008de5       str r0, [sp]
+       ┌──< 0x00818e20      0e00000a       beq 0x818e60
+       ││   0x00818e24      000000e3       movw r0, 0
+       ││   0x00818e28      04109de5       ldr r1, [sp, 4]
+       ││   0x00818e2c      050051e3       cmp r1, 5
+       ││   0x00818e30      00008de5       str r0, [sp]
+      ┌───< 0x00818e34      0900000a       beq 0x818e60
+      │││   0x00818e38      000000e3       movw r0, 0
+      │││   0x00818e3c      04109de5       ldr r1, [sp, 4]
+      │││   0x00818e40      1f0051e3       cmp r1, 0x1f
+      │││   0x00818e44      00008de5       str r0, [sp]
+     ┌────< 0x00818e48      0400000a       beq 0x818e60
+     ││││   0x00818e4c      04009de5       ldr r0, [sp, 4]
+     ││││   0x00818e50      040050e3       cmp r0, 4
+     ││││   0x00818e54      000000e3       movw r0, 0
+     ││││   0x00818e58      0100a013       movne r0, 1
+     ││││   0x00818e5c      00008de5       str r0, [sp]
+     └└└└─> 0x00818e60      00009de5       ldr r0, [sp]
+            0x00818e64      010000e2       and r0, r0, 1
+            0x00818e68      7000afe6       sxtb r0, r0
+            0x00818e6c      10d08de2       add sp, sp, 0x10
+            0x00818e70      1eff2fe1       bx lr
