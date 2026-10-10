@@ -1,0 +1,33 @@
+# Blockhead -[setSelectedToolIndex:]
+# types: v12@0:4i8
+# implementation: 0x00c75364
+# ARM.exidx end: 0x00c753d4
+
+            0x00c75364      10d04de2       sub sp, sp, 0x10
+            0x00c75368      60309fe5       ldr r3, [0x00c753d0]        ; [0xc753d0:4]=0x3ea780
+            0x00c7536c      03308fe0       add r3, pc, r3
+            0x00c75370      54c09fe5       ldr ip, [0x00c753cc]        ; [0xc753cc:4]=0xfffff63c
+            0x00c75374      03c09ce7       ldr ip, [ip, r3]
+            0x00c75378      0c008de5       str r0, [sp, 0xc]
+            0x00c7537c      08108de5       str r1, [sp, 8]
+            0x00c75380      04208de5       str r2, [sp, 4]
+            0x00c75384      04009de5       ldr r0, [sp, 4]
+            0x00c75388      0c109de5       ldr r1, [sp, 0xc]
+            0x00c7538c      00209ce5       ldr r2, [ip]
+            0x00c75390      021081e0       add r1, r1, r2
+            0x00c75394      001091e5       ldr r1, [r1]
+            0x00c75398      010050e1       cmp r0, r1
+            0x00c7539c      00308de5       str r3, [sp]
+        ┌─< 0x00c753a0      0700000a       beq 0xc753c4
+        │   0x00c753a4      20009fe5       ldr r0, [0x00c753cc]        ; [0xc753cc:4]=0xfffff63c
+        │   0x00c753a8      00109de5       ldr r1, [sp]
+        │   0x00c753ac      010090e7       ldr r0, [r0, r1]
+        │   0x00c753b0      04209de5       ldr r2, [sp, 4]
+        │   0x00c753b4      0c309de5       ldr r3, [sp, 0xc]
+        │   0x00c753b8      000090e5       ldr r0, [r0]
+        │   0x00c753bc      000083e0       add r0, r3, r0
+        │   0x00c753c0      002080e5       str r2, [r0]
+        └─> 0x00c753c4      10d08de2       add sp, sp, 0x10
+            0x00c753c8      1eff2fe1       bx lr
+            0x00c753cc      3cf6ffff       invalid
+            0x00c753d0      80a73e00       eorseq sl, lr, r0, lsl 15

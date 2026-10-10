@@ -1,0 +1,39 @@
+# CaveTroll -[crouching]
+# types: c8@0:4
+# implementation: 0x00d83ae0
+# ARM.exidx end: 0x00d83b68
+
+            0x00d83ae0      10d04de2       sub sp, sp, 0x10
+            0x00d83ae4      78209fe5       ldr r2, [0x00d83b64]        ; [0xd83b64:4]=0x2dc004
+            0x00d83ae8      02208fe0       add r2, pc, r2
+            0x00d83aec      013000e3       movw r3, 1
+            0x00d83af0      68c09fe5       ldr ip, [0x00d83b60]        ; [0xd83b60:4]=0xfffffdc0
+            0x00d83af4      02c09ce7       ldr ip, [ip, r2]
+            0x00d83af8      0c008de5       str r0, [sp, 0xc]
+            0x00d83afc      08108de5       str r1, [sp, 8]
+            0x00d83b00      0c009de5       ldr r0, [sp, 0xc]
+            0x00d83b04      00109ce5       ldr r1, [ip]
+            0x00d83b08      010080e0       add r0, r0, r1
+            0x00d83b0c      1c0090e5       ldr r0, [r0, 0x1c]
+            0x00d83b10      170050e3       cmp r0, 0x17
+            0x00d83b14      04208de5       str r2, [sp, 4]
+            0x00d83b18      00308de5       str r3, [sp]
+        ┌─< 0x00d83b1c      0a00000a       beq 0xd83b4c
+        │   0x00d83b20      38009fe5       ldr r0, [0x00d83b60]        ; [0xd83b60:4]=0xfffffdc0
+        │   0x00d83b24      04109de5       ldr r1, [sp, 4]
+        │   0x00d83b28      010090e7       ldr r0, [r0, r1]
+        │   0x00d83b2c      0c209de5       ldr r2, [sp, 0xc]
+        │   0x00d83b30      000090e5       ldr r0, [r0]
+        │   0x00d83b34      000082e0       add r0, r2, r0
+        │   0x00d83b38      1c0090e5       ldr r0, [r0, 0x1c]
+        │   0x00d83b3c      060050e3       cmp r0, 6
+        │   0x00d83b40      000000e3       movw r0, 0
+        │   0x00d83b44      0100a003       moveq r0, 1
+        │   0x00d83b48      00008de5       str r0, [sp]
+        └─> 0x00d83b4c      00009de5       ldr r0, [sp]
+            0x00d83b50      010000e2       and r0, r0, 1
+            0x00d83b54      7000afe6       sxtb r0, r0
+            0x00d83b58      10d08de2       add sp, sp, 0x10
+            0x00d83b5c      1eff2fe1       bx lr
+            0x00d83b60      c0fdffff       invalid
+            0x00d83b64      04c02d00       eoreq ip, sp, r4

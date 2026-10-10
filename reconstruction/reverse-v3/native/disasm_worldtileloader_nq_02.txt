@@ -1,0 +1,23 @@
+# NPC -[age]
+# types: f8@0:4
+# implementation: 0x00651314
+# ARM.exidx end: 0x006513a8
+
+            0x00651314      0cd04de2       sub sp, sp, 0xc
+            0x00651318      04008de5       str r0, [sp, 4]
+            0x0065131c      00108de5       str r1, [sp]
+            0x00651320      04009de5       ldr r0, [sp, 4]
+            0x00651324      28109fe5       ldr r1, [0x00651354]        ; [0x651354:4]=0xffffd194
+            0x00651328      28209fe5       ldr r2, [0x00651358]        ; [0x651358:4]=0xa0e7c0
+            0x0065132c      02208fe0       add r2, pc, r2
+            0x00651330      021091e7       ldr r1, [r1, r2]
+            0x00651334      001091e5       ldr r1, [r1]
+            0x00651338      010090e7       ldr r0, [r0, r1]
+            0x0065133c      5bf07ff5       dmb ish
+            0x00651340      08008de5       str r0, [sp, 8]
+            0x00651344      020a9ded       vldr s0, [sp, 8]
+            0x00651348      100a10ee       vmov r0, s0
+            0x0065134c      0cd08de2       add sp, sp, 0xc
+            0x00651350      1eff2fe1       bx lr
+            0x00651354      94d1ffff       invalid
+            0x00651358      c0e7a000       adceq lr, r0, r0, asr 15
