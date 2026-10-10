@@ -9,8 +9,8 @@ ELF sha256 `733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7`. G
 
 | lens | methods | words | % of .text words |
 |---|---:|---:|---:|
-| level-A annotated listings | 2242 | 944209 | 30.13% |
-| level-A batch evidence (recover_*.py jsons) | 2156 | 888966 | 28.37% |
+| level-A annotated listings | 2707 | 1106226 | 35.30% |
+| level-A batch evidence (recover_*.py jsons) | 2621 | 1050983 | 33.54% |
 | executed under Unicorn (ARM harnesses) | 220 | 38381 | 1.22% |
 | ledger semantics | 71 | 18319 | 0.58% |
 | ledger implemented | 71 | 18319 | 0.58% |
@@ -22,13 +22,13 @@ The ledger stages are the repo's ORIGINAL pipeline; listing-level decodes do not
 | subsystem | methods | words | of which executed | of which listings |
 |---|---:|---:|---:|---:|
 | 动态对象/存档装配 | 856 | 433571 | 74 | 835 |
-| 世界/主域 | 396 | 173408 | 0 | 396 |
-| 其余（未入口） | 467 | 153229 | 110 | 393 |
+| 世界/主域 | 465 | 208404 | 0 | 465 |
+| 其余（未入口） | 571 | 175897 | 110 | 497 |
 | NPC/动物 | 295 | 116696 | 13 | 293 |
+| 渲染/输入/UI | 236 | 77957 | 4 | 236 |
 | 树/植物 | 309 | 69143 | 19 | 309 |
-| 渲染/输入/UI | 16 | 10085 | 4 | 14 |
-| 网络 | 2 | 774 | 0 | 2 |
-| **covered total (deduped rows)** | 2341 | 956906 | 220 | 2242 |
-| 其余（未入口：渲染/模拟/UI/网络/音频/脚本…） | 8137 | 2147858 | 0 | 0 |
+| 网络 | 72 | 36616 | 0 | 72 |
+| **covered total (deduped rows)** | 2804 | 1118284 | 220 | 2707 |
+| 其余（未入口：渲染/模拟/UI/网络/音频/脚本…） | 7674 | 1986480 | 0 | 0 |
 
-Covered slice: **30.54% of .text words**, 22.34% of methods — dominated by the persistence/save-assembly front.
+Covered slice: **35.69% of .text words**, 26.76% of methods — dominated by the persistence/save-assembly front.

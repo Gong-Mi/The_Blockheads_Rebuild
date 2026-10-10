@@ -1,0 +1,59 @@
+# UIManager -[signTextUI]
+# types: @8@0:4
+# implementation: 0x00adec1c
+# ARM.exidx end: 0x00adecf4
+
+            0x00adec1c      0cd04de2       sub sp, sp, 0xc
+            0x00adec20      04008de5       str r0, [sp, 4]
+            0x00adec24      00108de5       str r1, [sp]
+            0x00adec28      04009de5       ldr r0, [sp, 4]
+            0x00adec2c      24109fe5       ldr r1, [0x00adec58]        ; [0xadec58:4]=0xfffff0b8
+            0x00adec30      24209fe5       ldr r2, [0x00adec5c]        ; [0xadec5c:4]=0x580eb8
+            0x00adec34      02208fe0       add r2, pc, r2
+            0x00adec38      021091e7       ldr r1, [r1, r2]
+            0x00adec3c      001091e5       ldr r1, [r1]
+            0x00adec40      010090e7       ldr r0, [r0, r1]
+            0x00adec44      5bf07ff5       dmb ish
+            0x00adec48      08008de5       str r0, [sp, 8]
+            0x00adec4c      08009de5       ldr r0, [sp, 8]
+            0x00adec50      0cd08de2       add sp, sp, 0xc
+            0x00adec54      1eff2fe1       bx lr
+            0x00adec58      b8f0ffff       invalid
+            0x00adec5c      b80e5800       ldrheq r0, [r8], -0xe8
+            0x00adec60      0cd04de2       sub sp, sp, 0xc
+            0x00adec64      04008de5       str r0, [sp, 4]
+            0x00adec68      00108de5       str r1, [sp]
+            0x00adec6c      04009de5       ldr r0, [sp, 4]
+            0x00adec70      030050e3       cmp r0, 3
+        ┌─< 0x00adec74      0200000a       beq 0xadec84
+        │   0x00adec78      04009de5       ldr r0, [sp, 4]
+        │   0x00adec7c      1f0050e3       cmp r0, 0x1f
+       ┌──< 0x00adec80      0200001a       bne 0xadec90
+       │└─> 0x00adec84      030000e3       movw r0, 3
+       │    0x00adec88      08008de5       str r0, [sp, 8]
+       │┌─< 0x00adec8c      150000ea       b 0xadece8
+       └──> 0x00adec90      04009de5       ldr r0, [sp, 4]
+        │   0x00adec94      080050e3       cmp r0, 8
+       ┌──< 0x00adec98      0200001a       bne 0xadeca8
+       ││   0x00adec9c      030000e3       movw r0, 3
+       ││   0x00adeca0      08008de5       str r0, [sp, 8]
+      ┌───< 0x00adeca4      0f0000ea       b 0xadece8
+      │└──> 0x00adeca8      04009de5       ldr r0, [sp, 4]
+      │ │   0x00adecac      090050e3       cmp r0, 9
+      │┌──< 0x00adecb0      0500000a       beq 0xadeccc
+      │││   0x00adecb4      04009de5       ldr r0, [sp, 4]
+      │││   0x00adecb8      0e0050e3       cmp r0, 0xe
+     ┌────< 0x00adecbc      0200000a       beq 0xadeccc
+     ││││   0x00adecc0      04009de5       ldr r0, [sp, 4]
+     ││││   0x00adecc4      0f0050e3       cmp r0, 0xf
+    ┌─────< 0x00adecc8      0200001a       bne 0xadecd8
+    │└─└──> 0x00adeccc      030000e3       movw r0, 3
+    │ │ │   0x00adecd0      08008de5       str r0, [sp, 8]
+    │ │┌──< 0x00adecd4      030000ea       b 0xadece8
+    └┌────< 0x00adecd8      ffffffea       b 0xadecdc
+    ┌└────> 0x00adecdc      ffffffea       b 0xadece0
+    └─────> 0x00adece0      000000e3       movw r0, 0
+      │││   0x00adece4      08008de5       str r0, [sp, 8]
+      └└└─> 0x00adece8      08009de5       ldr r0, [sp, 8]
+            0x00adecec      0cd08de2       add sp, sp, 0xc
+            0x00adecf0      1eff2fe1       bx lr
