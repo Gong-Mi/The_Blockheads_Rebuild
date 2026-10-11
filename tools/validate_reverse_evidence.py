@@ -8449,6 +8449,64 @@ def main() -> None:
     ):
         require(NATIVE / _sl_file, [_sl_imp, _sl_end])
 
+
+    require(
+        NATIVE / "CLOWNFISH.md",
+        [
+            "9587",
+            'ClownFish',
+            'update',
+            'queue',
+        ],
+    )
+    require(
+        NATIVE / "clownfish.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 6419',
+            '"verified_words": 64',
+            '0x79c14c',
+            '"clf_12"',
+        ],
+    )
+    for _sl_file, _sl_imp, _sl_end in (
+        ("disasm_worldtileloader_clf_00.txt", "implementation: 0x0079c14c", "ARM.exidx end: 0x0079c164"),
+        ("disasm_worldtileloader_clf_01.txt", "implementation: 0x0079be1c", "ARM.exidx end: 0x0079befc"),
+        ("disasm_worldtileloader_clf_02.txt", "implementation: 0x0078dc38", "ARM.exidx end: 0x0078dd18"),
+        ("disasm_worldtileloader_clf_03.txt", "implementation: 0x0078dd18", "ARM.exidx end: 0x0078df00"),
+        ("disasm_worldtileloader_clf_04.txt", "implementation: 0x0078d42c", "ARM.exidx end: 0x0078d448"),
+        ("disasm_worldtileloader_clf_05.txt", "implementation: 0x0078d410", "ARM.exidx end: 0x0078d448"),
+        ("disasm_worldtileloader_clf_06.txt", "implementation: 0x0078e7e8", "ARM.exidx end: 0x0078e94c"),
+        ("disasm_worldtileloader_clf_07.txt", "implementation: 0x0078f5b8", "ARM.exidx end: 0x0078f5d8"),
+        ("disasm_worldtileloader_clf_08.txt", "implementation: 0x0078e94c", "ARM.exidx end: 0x0078eb58"),
+        ("disasm_worldtileloader_clf_09.txt", "implementation: 0x0078ec44", "ARM.exidx end: 0x0078ee20"),
+        ("disasm_worldtileloader_clf_10.txt", "implementation: 0x00796ff8", "ARM.exidx end: 0x00797300"),
+        ("disasm_worldtileloader_clf_11.txt", "implementation: 0x0078ee20", "ARM.exidx end: 0x0078f118"),
+        ("disasm_worldtileloader_clf_12.txt", "implementation: 0x0078f5d8", "ARM.exidx end: 0x00795a24"),
+        ("disasm_worldtileloader_clf_13.txt", "implementation: 0x0078d3a8", "ARM.exidx end: 0x0078d448"),
+        ("disasm_worldtileloader_clf_14.txt", "implementation: 0x0078d3c4", "ARM.exidx end: 0x0078d448"),
+        ("disasm_worldtileloader_clf_15.txt", "implementation: 0x0078d3f4", "ARM.exidx end: 0x0078d448"),
+        ("disasm_worldtileloader_clf_16.txt", "implementation: 0x0079b96c", "ARM.exidx end: 0x0079baf8"),
+        ("disasm_worldtileloader_clf_17.txt", "implementation: 0x0078df00", "ARM.exidx end: 0x0078e420"),
+        ("disasm_worldtileloader_clf_18.txt", "implementation: 0x0078e548", "ARM.exidx end: 0x0078e76c"),
+        ("disasm_worldtileloader_clf_19.txt", "implementation: 0x0078d448", "ARM.exidx end: 0x0078dc28"),
+        ("disasm_worldtileloader_clf_20.txt", "implementation: 0x0078d348", "ARM.exidx end: 0x0078d378"),
+        ("disasm_worldtileloader_clf_21.txt", "implementation: 0x0079b3e4", "ARM.exidx end: 0x0079b400"),
+        ("disasm_worldtileloader_clf_22.txt", "implementation: 0x0078d32c", "ARM.exidx end: 0x0078d348"),
+        ("disasm_worldtileloader_clf_23.txt", "implementation: 0x0079bf18", "ARM.exidx end: 0x0079c14c"),
+        ("disasm_worldtileloader_clf_24.txt", "implementation: 0x0079b83c", "ARM.exidx end: 0x0079b96c"),
+        ("disasm_worldtileloader_clf_25.txt", "implementation: 0x0079bc7c", "ARM.exidx end: 0x0079be1c"),
+        ("disasm_worldtileloader_clf_26.txt", "implementation: 0x0078f368", "ARM.exidx end: 0x0078f5b8"),
+        ("disasm_worldtileloader_clf_27.txt", "implementation: 0x0078f118", "ARM.exidx end: 0x0078f368"),
+        ("disasm_worldtileloader_clf_28.txt", "implementation: 0x0079baf8", "ARM.exidx end: 0x0079bb7c"),
+        ("disasm_worldtileloader_clf_29.txt", "implementation: 0x0079befc", "ARM.exidx end: 0x0079bf18"),
+        ("disasm_worldtileloader_clf_30.txt", "implementation: 0x0079bb7c", "ARM.exidx end: 0x0079bc7c"),
+        ("disasm_worldtileloader_clf_31.txt", "implementation: 0x0078d378", "ARM.exidx end: 0x0078d448"),
+        ("disasm_worldtileloader_clf_32.txt", "implementation: 0x0079b400", "ARM.exidx end: 0x0079b96c"),
+        ("disasm_worldtileloader_clf_33.txt", "implementation: 0x0078eb58", "ARM.exidx end: 0x0078ec44"),
+    ):
+        require(NATIVE / _sl_file, [_sl_imp, _sl_end])
+
     print("reverse-evidence-contract: PASS")
 
 
