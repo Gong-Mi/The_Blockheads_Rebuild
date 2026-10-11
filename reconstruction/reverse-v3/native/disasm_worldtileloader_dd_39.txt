@@ -1,0 +1,66 @@
+# Dodo -[riderPosForBlockhead:]
+# types: {Vector=[4f]}12@0:4@8
+# implementation: 0x00a802e0
+# ARM.exidx end: 0x00a803d4
+
+            0x00a802e0      104c2de9       push {r4, sl, fp, lr}
+            0x00a802e4      08b08de2       add fp, sp, 8
+            0x00a802e8      40d04de2       sub sp, sp, 0x40
+            0x00a802ec      dcc09fe5       ldr ip, [0x00a803d0]        ; [0xa803d0:4]=0x5df7fc
+            0x00a802f0      0cc08fe0       add ip, pc, ip
+            0x00a802f4      00e000e3       movw lr, 0
+            0x00a802f8      cc409fe5       ldr r4, [0x00a803cc]        ; [0xa803cc:4]=0xffe25840
+            0x00a802fc      0cc084e0       add ip, r4, ip
+            0x00a80300      0c100be5       str r1, [fp, -0xc]
+            0x00a80304      10200be5       str r2, [fp, -0x10]
+            0x00a80308      14300be5       str r3, [fp, -0x14]
+            0x00a8030c      0c101be5       ldr r1, [fp, -0xc]
+            0x00a80310      00209ce5       ldr r2, [ip]
+            0x00a80314      0e0051e1       cmp r1, lr
+            0x00a80318      14108de5       str r1, [sp, 0x14]
+            0x00a8031c      10208de5       str r2, [sp, 0x10]
+            0x00a80320      0c008de5       str r0, [sp, 0xc]
+        ┌─< 0x00a80324      0400000a       beq 0xa8033c
+        │   0x00a80328      20008de2       add r0, sp, 0x20
+        │   0x00a8032c      14109de5       ldr r1, [sp, 0x14]
+        │   0x00a80330      10209de5       ldr r2, [sp, 0x10]
+        │   0x00a80334      7709ddeb       bl loc.imp.objc_msgSend_stret
+       ┌──< 0x00a80338      070000ea       b 0xa8035c
+       │└─> 0x00a8033c      000000e3       movw r0, 0
+       │    0x00a80340      082000e3       movw r2, 8
+       │    0x00a80344      20108de2       add r1, sp, 0x20
+       │    0x00a80348      08008de5       str r0, [sp, 8]
+       │    0x00a8034c      0100a0e1       mov r0, r1
+       │    0x00a80350      08109de5       ldr r1, [sp, 8]
+       │    0x00a80354      ff1001e2       and r1, r1, 0xff
+       │    0x00a80358      7109ddeb       bl sym.imp.memset
+       └──> 0x00a8035c      18008de2       add r0, sp, 0x18
+            0x00a80360      0010a0e3       mov r1, 0
+            0x00a80364      cd2c0ce3       movw r2, 0xcccd
+            0x00a80368      cc2d43e3       movt r2, 0x3dcc
+            0x00a8036c      4340e9eb       bl method.Vector2.Vector2_float__float_ ; Vector2::Vector2(float, float)
+            0x00a80370      18209de5       ldr r2, [sp, 0x18]
+            0x00a80374      1c309de5       ldr r3, [sp, 0x1c]
+            0x00a80378      20004be2       sub r0, fp, 0x20
+            0x00a8037c      20108de2       add r1, sp, 0x20
+            0x00a80380      2440e9eb       bl method.Vector2.operator_Vector2_ ; Vector2::operator+(Vector2)
+            0x00a80384      20004be2       sub r0, fp, 0x20
+            0x00a80388      c7f5e8eb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+            0x00a8038c      20104be2       sub r1, fp, 0x20
+            0x00a80390      000a90ed       vldr s0, [r0]
+            0x00a80394      0100a0e1       mov r0, r1
+            0x00a80398      010a8ded       vstr s0, [sp, 4]
+            0x00a8039c      c2f5e8eb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+            0x00a803a0      080abeee       vmov.f32 s0, -7
+            0x00a803a4      011a90ed       vldr s2, [r0, 4]
+            0x00a803a8      0c009de5       ldr r0, [sp, 0xc]
+            0x00a803ac      012a9ded       vldr s4, [sp, 4]
+            0x00a803b0      101a12ee       vmov r1, s4
+            0x00a803b4      102a11ee       vmov r2, s2
+            0x00a803b8      103a10ee       vmov r3, s0
+            0x00a803bc      bad3e8eb       bl method.Vector.Vector_float__float__float_ ; Vector::Vector(float, float, float)
+            0x00a803c0      00008de5       str r0, [sp]
+            0x00a803c4      08d04be2       sub sp, fp, 8
+            0x00a803c8      108cbde8       pop {r4, sl, fp, pc}
+            0x00a803cc      4058e2ff       invalid
+            0x00a803d0      fcf75d00       ldrsheq pc, [sp], -0x7c
