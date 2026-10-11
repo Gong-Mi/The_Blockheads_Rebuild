@@ -1,0 +1,22 @@
+# ServerClient -[clientID]
+# types: @8@0:4
+# implementation: 0x00d0b804
+# ARM.exidx end: 0x00d0b848
+
+            0x00d0b804      0cd04de2       sub sp, sp, 0xc
+            0x00d0b808      04008de5       str r0, [sp, 4]
+            0x00d0b80c      00108de5       str r1, [sp]
+            0x00d0b810      04009de5       ldr r0, [sp, 4]
+            0x00d0b814      24109fe5       ldr r1, [0x00d0b840]        ; [0xd0b840:4]=0xfffffbf8
+            0x00d0b818      24209fe5       ldr r2, [0x00d0b844]        ; [0xd0b844:4]=0x3542d0
+            0x00d0b81c      02208fe0       add r2, pc, r2
+            0x00d0b820      021091e7       ldr r1, [r1, r2]
+            0x00d0b824      001091e5       ldr r1, [r1]
+            0x00d0b828      010090e7       ldr r0, [r0, r1]
+            0x00d0b82c      5bf07ff5       dmb ish
+            0x00d0b830      08008de5       str r0, [sp, 8]
+            0x00d0b834      08009de5       ldr r0, [sp, 8]
+            0x00d0b838      0cd08de2       add sp, sp, 0xc
+            0x00d0b83c      1eff2fe1       bx lr
+            0x00d0b840      f8fbffff       invalid
+            0x00d0b844      d0423500       ldrsbteq r4, [r5], -r0
