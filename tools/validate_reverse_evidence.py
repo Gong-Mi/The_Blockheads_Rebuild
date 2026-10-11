@@ -8927,6 +8927,61 @@ def main() -> None:
     ):
         require(NATIVE / _sl_file, [_sl_imp, _sl_end])
 
+
+    require(
+        NATIVE / "FREEBLOCK.md",
+        [
+            "5938",
+            'FreeBlock',
+            'hovers',
+            'light',
+        ],
+    )
+    require(
+        NATIVE / "freeblock.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 1789',
+            '"verified_words": 19',
+            '0x62a6f0',
+            '"fb_06"',
+        ],
+    )
+    for _sl_file, _sl_imp, _sl_end in (
+        ("disasm_worldtileloader_fb_00.txt", "implementation: 0x0062a6f0", "ARM.exidx end: 0x0062b0f4"),
+        ("disasm_worldtileloader_fb_01.txt", "implementation: 0x0062b260", "ARM.exidx end: 0x0062ba94"),
+        ("disasm_worldtileloader_fb_02.txt", "implementation: 0x00634914", "ARM.exidx end: 0x006349a8"),
+        ("disasm_worldtileloader_fb_03.txt", "implementation: 0x006346c0", "ARM.exidx end: 0x006346fc"),
+        ("disasm_worldtileloader_fb_04.txt", "implementation: 0x00634744", "ARM.exidx end: 0x00634780"),
+        ("disasm_worldtileloader_fb_05.txt", "implementation: 0x00629500", "ARM.exidx end: 0x00629670"),
+        ("disasm_worldtileloader_fb_06.txt", "implementation: 0x0062f868", "ARM.exidx end: 0x0063145c"),
+        ("disasm_worldtileloader_fb_07.txt", "implementation: 0x00634850", "ARM.exidx end: 0x00634894"),
+        ("disasm_worldtileloader_fb_08.txt", "implementation: 0x006343f4", "ARM.exidx end: 0x0063451c"),
+        ("disasm_worldtileloader_fb_09.txt", "implementation: 0x0062bcd8", "ARM.exidx end: 0x0062bfe8"),
+        ("disasm_worldtileloader_fb_10.txt", "implementation: 0x00634894", "ARM.exidx end: 0x006348d0"),
+        ("disasm_worldtileloader_fb_11.txt", "implementation: 0x00625c90", "ARM.exidx end: 0x00625fd8"),
+        ("disasm_worldtileloader_fb_12.txt", "implementation: 0x00626004", "ARM.exidx end: 0x00626940"),
+        ("disasm_worldtileloader_fb_13.txt", "implementation: 0x00627f74", "ARM.exidx end: 0x00628094"),
+        ("disasm_worldtileloader_fb_14.txt", "implementation: 0x006280cc", "ARM.exidx end: 0x00628fdc"),
+        ("disasm_worldtileloader_fb_15.txt", "implementation: 0x00634640", "ARM.exidx end: 0x0063467c"),
+        ("disasm_worldtileloader_fb_16.txt", "implementation: 0x0063480c", "ARM.exidx end: 0x00634894"),
+        ("disasm_worldtileloader_fb_17.txt", "implementation: 0x0063451c", "ARM.exidx end: 0x00634624"),
+        ("disasm_worldtileloader_fb_18.txt", "implementation: 0x0062ba94", "ARM.exidx end: 0x0062bcd8"),
+        ("disasm_worldtileloader_fb_19.txt", "implementation: 0x00629670", "ARM.exidx end: 0x00629804"),
+        ("disasm_worldtileloader_fb_20.txt", "implementation: 0x0063495c", "ARM.exidx end: 0x006349a8"),
+        ("disasm_worldtileloader_fb_21.txt", "implementation: 0x006346fc", "ARM.exidx end: 0x00634744"),
+        ("disasm_worldtileloader_fb_22.txt", "implementation: 0x00634780", "ARM.exidx end: 0x00634894"),
+        ("disasm_worldtileloader_fb_23.txt", "implementation: 0x006348d0", "ARM.exidx end: 0x006349a8"),
+        ("disasm_worldtileloader_fb_24.txt", "implementation: 0x0063467c", "ARM.exidx end: 0x006346c0"),
+        ("disasm_worldtileloader_fb_25.txt", "implementation: 0x006349e4", "ARM.exidx end: 0x00634a28"),
+        ("disasm_worldtileloader_fb_26.txt", "implementation: 0x00634624", "ARM.exidx end: 0x0063467c"),
+        ("disasm_worldtileloader_fb_27.txt", "implementation: 0x006349a8", "ARM.exidx end: 0x006349e4"),
+        ("disasm_worldtileloader_fb_28.txt", "implementation: 0x006347c8", "ARM.exidx end: 0x00634894"),
+        ("disasm_worldtileloader_fb_29.txt", "implementation: 0x0062a4bc", "ARM.exidx end: 0x0062a6f0"),
+        ("disasm_worldtileloader_fb_30.txt", "implementation: 0x00626940", "ARM.exidx end: 0x00626a68"),
+    ):
+        require(NATIVE / _sl_file, [_sl_imp, _sl_end])
+
     print("reverse-evidence-contract: PASS")
 
 

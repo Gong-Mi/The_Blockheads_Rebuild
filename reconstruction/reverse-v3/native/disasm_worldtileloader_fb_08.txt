@@ -1,0 +1,79 @@
+# FreeBlock -[falling]
+# types: c8@0:4
+# implementation: 0x006343f4
+# ARM.exidx end: 0x0063451c
+
+            0x006343f4      104c2de9       push {r4, sl, fp, lr}
+            0x006343f8      08b08de2       add fp, sp, 8
+            0x006343fc      28d04de2       sub sp, sp, 0x28
+            0x00634400      10219fe5       ldr r2, [0x00634518]        ; [0x634518:4]=0xa2b6e8
+            0x00634404      02208fe0       add r2, pc, r2
+            0x00634408      f4309fe5       ldr r3, [0x00634504]        ; [0x634504:4]=0xffffd0dc
+            0x0063440c      023093e7       ldr r3, [r3, r2]
+            0x00634410      10000be5       str r0, [fp, -0x10]
+            0x00634414      14100be5       str r1, [fp, -0x14]
+            0x00634418      10001be5       ldr r0, [fp, -0x10]
+            0x0063441c      001093e5       ldr r1, [r3]
+            0x00634420      010080e0       add r0, r0, r1
+            0x00634424      d000d0e1       ldrsb r0, [r0]
+            0x00634428      000050e3       cmp r0, 0
+            0x0063442c      10208de5       str r2, [sp, 0x10]
+        ┌─< 0x00634430      2e00001a       bne 0x6344f0
+        │   0x00634434      cc009fe5       ldr r0, [0x00634508]        ; [0x634508:4]=0xffffc8a0
+        │   0x00634438      10109de5       ldr r1, [sp, 0x10]
+        │   0x0063443c      010090e7       ldr r0, [r0, r1]
+        │   0x00634440      c4209fe5       ldr r2, [0x0063450c]        ; [0x63450c:4]=0xffffbcac
+        │   0x00634444      012092e7       ldr r2, [r2, r1]
+        │   0x00634448      c0309fe5       ldr r3, [0x00634510]        ; [0x634510:4]=0xffe1f438
+        │   0x0063444c      013083e0       add r3, r3, r1
+        │   0x00634450      bcc09fe5       ldr ip, [0x00634514]        ; [0x634514:4]=0xffffc89c
+        │   0x00634454      01c09ce7       ldr ip, [ip, r1]
+        │   0x00634458      10e01be5       ldr lr, [fp, -0x10]
+        │   0x0063445c      00409ce5       ldr r4, [ip]
+        │   0x00634460      04e08ee0       add lr, lr, r4
+        │   0x00634464      00e09ee5       ldr lr, [lr]
+        │   0x00634468      10401be5       ldr r4, [fp, -0x10]
+        │   0x0063446c      00c09ce5       ldr ip, [ip]
+        │   0x00634470      0cc084e0       add ip, r4, ip
+        │   0x00634474      04c09ce5       ldr ip, [ip, 4]
+        │   0x00634478      01104ce2       sub r1, ip, 1
+        │   0x0063447c      10c01be5       ldr ip, [fp, -0x10]
+        │   0x00634480      004090e5       ldr r4, [r0]
+        │   0x00634484      04c08ce0       add ip, ip, r4
+        │   0x00634488      00c09ce5       ldr ip, [ip]
+        │   0x0063448c      003093e5       ldr r3, [r3]
+        │   0x00634490      0c008de5       str r0, [sp, 0xc]
+        │   0x00634494      0c00a0e1       mov r0, ip
+        │   0x00634498      08108de5       str r1, [sp, 8]
+        │   0x0063449c      0310a0e1       mov r1, r3
+        │   0x006344a0      04e08de5       str lr, [sp, 4]
+        │   0x006344a4      32ff2fe1       blx r2
+        │   0x006344a8      10101be5       ldr r1, [fp, -0x10]
+        │   0x006344ac      0c209de5       ldr r2, [sp, 0xc]
+        │   0x006344b0      003092e5       ldr r3, [r2]
+        │   0x006344b4      031081e0       add r1, r1, r3
+        │   0x006344b8      003091e5       ldr r3, [r1]
+        │   0x006344bc      04109de5       ldr r1, [sp, 4]
+        │   0x006344c0      00008de5       str r0, [sp]
+        │   0x006344c4      0100a0e1       mov r0, r1
+        │   0x006344c8      08109de5       ldr r1, [sp, 8]
+        │   0x006344cc      00209de5       ldr r2, [sp]
+        │   0x006344d0      648a0feb       bl sym.tileAtWorldPosition_int__int__MacroTile__World_ ; tileAtWorldPosition(int, int, MacroTile*, World*)
+        │   0x006344d4      18008de5       str r0, [sp, 0x18]
+        │   0x006344d8      18009de5       ldr r0, [sp, 0x18]
+        │   0x006344dc      9f780feb       bl sym.tileIsAirOrSnow_Tile_ ; tileIsAirOrSnow(Tile*)
+        │   0x006344e0      1700cde5       strb r0, [sp, 0x17]
+        │   0x006344e4      1700dde5       ldrb r0, [sp, 0x17]
+        │   0x006344e8      09004be5       strb r0, [fp, -9]
+       ┌──< 0x006344ec      010000ea       b 0x6344f8
+       │└─> 0x006344f0      000000e3       movw r0, 0
+       │    0x006344f4      09004be5       strb r0, [fp, -9]
+       └──> 0x006344f8      d9005be1       ldrsb r0, [fp, -9]
+            0x006344fc      08d04be2       sub sp, fp, 8
+            0x00634500      108cbde8       pop {r4, sl, fp, pc}
+            0x00634504      dcd0ffff       invalid
+            0x00634508      a0c8ffff       invalid
+            0x0063450c      acbcffff       invalid
+            0x00634510      38f4e1ff       invalid
+            0x00634514      9cc8ffff       invalid
+            0x00634518      e8b6a200       adceq fp, r2, r8, ror 13

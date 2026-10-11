@@ -1,0 +1,23 @@
+# FreeBlock -[setDataB:]
+# types: v12@0:4S8
+# implementation: 0x00634780
+# ARM.exidx end: 0x00634894
+
+            0x00634780      0cd04de2       sub sp, sp, 0xc
+            0x00634784      08008de5       str r0, [sp, 8]
+            0x00634788      04108de5       str r1, [sp, 4]
+            0x0063478c      b220cde1       strh r2, [sp, 2]
+            0x00634790      08009de5       ldr r0, [sp, 8]
+            0x00634794      24109fe5       ldr r1, [0x006347c0]        ; [0x6347c0:4]=0xffffd0e0
+            0x00634798      24309fe5       ldr r3, [0x006347c4]        ; [0x6347c4:4]=0xa2b350
+            0x0063479c      03308fe0       add r3, pc, r3
+            0x006347a0      031091e7       ldr r1, [r1, r3]
+            0x006347a4      001091e5       ldr r1, [r1]
+            0x006347a8      010080e0       add r0, r0, r1
+            0x006347ac      5bf07ff5       dmb ish
+            0x006347b0      b020c0e1       strh r2, [r0]
+            0x006347b4      5bf07ff5       dmb ish
+            0x006347b8      0cd08de2       add sp, sp, 0xc
+            0x006347bc      1eff2fe1       bx lr
+            0x006347c0      e0d0ffff       invalid
+            0x006347c4      50b3a200       adceq fp, r2, r0, asr r3

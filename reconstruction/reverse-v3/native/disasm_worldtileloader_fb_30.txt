@@ -1,0 +1,79 @@
+# FreeBlock -[updatePosition:]
+# types: v16@0:4{?=ii}8
+# implementation: 0x00626940
+# ARM.exidx end: 0x00626a68
+
+            0x00626940      00482de9       push {fp, lr}
+            0x00626944      0db0a0e1       mov fp, sp
+            0x00626948      40d04de2       sub sp, sp, 0x40
+            0x0062694c      18c08de2       add ip, sp, 0x18
+            0x00626950      08200be5       str r2, [fp, -8]
+            0x00626954      04300be5       str r3, [fp, -4]
+            0x00626958      0c000be5       str r0, [fp, -0xc]
+            0x0062695c      10100be5       str r1, [fp, -0x10]
+            0x00626960      0c001be5       ldr r0, [fp, -0xc]
+            0x00626964      dc109fe5       ldr r1, [0x00626a48]        ; [0x626a48:4]=0xffffc89c
+            0x00626968      dc209fe5       ldr r2, [0x00626a4c]        ; [0x626a4c:4]=0xa39180
+            0x0062696c      02208fe0       add r2, pc, r2
+            0x00626970      021091e7       ldr r1, [r1, r2]
+            0x00626974      001091e5       ldr r1, [r1]
+            0x00626978      0110b0e7       ldr r1, [r0, r1]!
+            0x0062697c      18100be5       str r1, [fp, -0x18]
+            0x00626980      040090e5       ldr r0, [r0, 4]
+            0x00626984      14000be5       str r0, [fp, -0x14]
+            0x00626988      0c001be5       ldr r0, [fp, -0xc]
+            0x0062698c      08101be5       ldr r1, [fp, -8]
+            0x00626990      04301be5       ldr r3, [fp, -4]
+            0x00626994      24308de5       str r3, [sp, 0x24]
+            0x00626998      20108de5       str r1, [sp, 0x20]
+            0x0062699c      18008de5       str r0, [sp, 0x18]
+            0x006269a0      a8009fe5       ldr r0, [0x00626a50]        ; [0x626a50:4]=0xffe2c184
+            0x006269a4      020090e7       ldr r0, [r0, r2]
+            0x006269a8      1c008de5       str r0, [sp, 0x1c]
+            0x006269ac      a0009fe5       ldr r0, [0x00626a54]        ; [0x626a54:4]=0xffe1f388
+            0x006269b0      021090e7       ldr r1, [r0, r2]
+            0x006269b4      20209de5       ldr r2, [sp, 0x20]
+            0x006269b8      24309de5       ldr r3, [sp, 0x24]
+            0x006269bc      18008de2       add r0, sp, 0x18
+            0x006269c0      0cc08de5       str ip, [sp, 0xc]
+            0x006269c4      0c70eeeb       bl loc.imp.objc_msgSendSuper2
+            0x006269c8      14001be5       ldr r0, [fp, -0x14]
+            0x006269cc      04101be5       ldr r1, [fp, -4]
+            0x006269d0      010050e1       cmp r0, r1
+        ┌─< 0x006269d4      0300001a       bne 0x6269e8
+        │   0x006269d8      18001be5       ldr r0, [fp, -0x18]
+        │   0x006269dc      08101be5       ldr r1, [fp, -8]
+        │   0x006269e0      010050e1       cmp r0, r1
+       ┌──< 0x006269e4      1500000a       beq 0x626a40
+       │└─> 0x006269e8      0c001be5       ldr r0, [fp, -0xc]
+       │    0x006269ec      64109fe5       ldr r1, [0x00626a58]        ; [0x626a58:4]=0xffffc8b4
+       │    0x006269f0      64209fe5       ldr r2, [0x00626a5c]        ; [0x626a5c:4]=0xa390f8
+       │    0x006269f4      02208fe0       add r2, pc, r2
+       │    0x006269f8      021091e7       ldr r1, [r1, r2]
+       │    0x006269fc      001091e5       ldr r1, [r1]
+       │    0x00626a00      011090e7       ldr r1, [r0, r1]
+       │    0x00626a04      18301be5       ldr r3, [fp, -0x18]
+       │    0x00626a08      14c01be5       ldr ip, [fp, -0x14]
+       │    0x00626a0c      14c08de5       str ip, [sp, 0x14]
+       │    0x00626a10      10308de5       str r3, [sp, 0x10]
+       │    0x00626a14      44309fe5       ldr r3, [0x00626a60]        ; [0x626a60:4]=0xffe1f38c
+       │    0x00626a18      022093e7       ldr r2, [r3, r2]
+       │    0x00626a1c      10309de5       ldr r3, [sp, 0x10]
+       │    0x00626a20      14c09de5       ldr ip, [sp, 0x14]
+       │    0x00626a24      0de0a0e1       mov lr, sp
+       │    0x00626a28      00c08ee5       str ip, [lr]
+       │    0x00626a2c      08008de5       str r0, [sp, 8]
+       │    0x00626a30      0100a0e1       mov r0, r1
+       │    0x00626a34      0210a0e1       mov r1, r2
+       │    0x00626a38      08209de5       ldr r2, [sp, 8]
+       │    0x00626a3c      766feeeb       bl loc.imp.objc_msgSend
+       └──> 0x00626a40      0bd0a0e1       mov sp, fp
+            0x00626a44      0088bde8       pop {fp, pc}
+            0x00626a48      9cc8ffff       invalid
+            0x00626a4c      8091a300       adceq sb, r3, r0, lsl 3
+            0x00626a50      84c1e2ff       invalid
+            0x00626a54      88f3e1ff       invalid
+            0x00626a58      b4c8ffff       invalid
+            0x00626a5c      f890a300       invalid
+            0x00626a60      8cf3e1ff       invalid
+            0x00626a64      00000000       andeq r0, r0, r0
