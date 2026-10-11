@@ -1,0 +1,47 @@
+# Scorpion -[canBeCapturedByBlockhead:withItemType:]
+# types: c16@0:4@8i12
+# implementation: 0x008abb20
+# ARM.exidx end: 0x008abbc8
+
+            0x008abb20      00482de9       push {fp, lr}
+            0x008abb24      0db0a0e1       mov fp, sp
+            0x008abb28      20d04de2       sub sp, sp, 0x20
+            0x008abb2c      90c09fe5       ldr ip, [0x008abbc4]        ; [0x8abbc4:4]=0x7b3fbc
+            0x008abb30      0cc08fe0       add ip, pc, ip
+            0x008abb34      2ee100e3       movw lr, 0x12e
+            0x008abb38      08000be5       str r0, [fp, -8]
+            0x008abb3c      0c100be5       str r1, [fp, -0xc]
+            0x008abb40      10208de5       str r2, [sp, 0x10]
+            0x008abb44      0c308de5       str r3, [sp, 0xc]
+            0x008abb48      0c009de5       ldr r0, [sp, 0xc]
+            0x008abb4c      0e0050e1       cmp r0, lr
+            0x008abb50      08c08de5       str ip, [sp, 8]
+        ┌─< 0x008abb54      1300001a       bne 0x8abba8
+        │   0x008abb58      5c009fe5       ldr r0, [0x008abbbc]        ; [0x8abbbc:4]=0xffffbcac
+        │   0x008abb5c      08109de5       ldr r1, [sp, 8]
+        │   0x008abb60      010090e7       ldr r0, [r0, r1]
+        │   0x008abb64      54209fe5       ldr r2, [0x008abbc0]        ; [0x8abbc0:4]=0xffe2319c
+        │   0x008abb68      012082e0       add r2, r2, r1
+        │   0x008abb6c      08301be5       ldr r3, [fp, -8]
+        │   0x008abb70      10c09de5       ldr ip, [sp, 0x10]
+        │   0x008abb74      001092e5       ldr r1, [r2]
+        │   0x008abb78      04008de5       str r0, [sp, 4]
+        │   0x008abb7c      0300a0e1       mov r0, r3
+        │   0x008abb80      0c20a0e1       mov r2, ip
+        │   0x008abb84      04309de5       ldr r3, [sp, 4]
+        │   0x008abb88      33ff2fe1       blx r3
+        │   0x008abb8c      7000afe6       sxtb r0, r0
+        │   0x008abb90      000050e3       cmp r0, 0
+       ┌──< 0x008abb94      0200000a       beq 0x8abba4
+       ││   0x008abb98      010000e3       movw r0, 1
+       ││   0x008abb9c      01004be5       strb r0, [fp, -1]
+      ┌───< 0x008abba0      020000ea       b 0x8abbb0
+     ┌─└──> 0x008abba4      ffffffea       b 0x8abba8
+     └──└─> 0x008abba8      000000e3       movw r0, 0
+      │     0x008abbac      01004be5       strb r0, [fp, -1]
+      └───> 0x008abbb0      d1005be1       ldrsb r0, [fp, -1]
+            0x008abbb4      0bd0a0e1       mov sp, fp
+            0x008abbb8      0088bde8       pop {fp, pc}
+            0x008abbbc      acbcffff       invalid
+            0x008abbc0      9c31e2ff       invalid
+            0x008abbc4      bc3f7b00       ldrhteq r3, [fp], -0xfc
