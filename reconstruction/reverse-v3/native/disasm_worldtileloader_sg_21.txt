@@ -1,0 +1,20 @@
+# Sign -[offsetType]
+# types: i8@0:4
+# implementation: 0x0060129c
+# ARM.exidx end: 0x00601314
+
+            0x0060129c      08d04de2       sub sp, sp, 8
+            0x006012a0      04008de5       str r0, [sp, 4]
+            0x006012a4      00108de5       str r1, [sp]
+            0x006012a8      04009de5       ldr r0, [sp, 4]
+            0x006012ac      1c109fe5       ldr r1, [0x006012d0]        ; [0x6012d0:4]=0xffffcffc
+            0x006012b0      1c209fe5       ldr r2, [0x006012d4]        ; [0x6012d4:4]=0xa5e838
+            0x006012b4      02208fe0       add r2, pc, r2
+            0x006012b8      021091e7       ldr r1, [r1, r2]
+            0x006012bc      001091e5       ldr r1, [r1]
+            0x006012c0      010090e7       ldr r0, [r0, r1]
+            0x006012c4      5bf07ff5       dmb ish
+            0x006012c8      08d08de2       add sp, sp, 8
+            0x006012cc      1eff2fe1       bx lr
+            0x006012d0      fccfffff       invalid
+            0x006012d4      38e8a500       adceq lr, r5, r8, lsr r8
