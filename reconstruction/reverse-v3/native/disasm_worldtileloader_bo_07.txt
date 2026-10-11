@@ -1,0 +1,112 @@
+# Boat -[cameraPosForBlockhead:]
+# types: {Vector2=[2f]}12@0:4@8
+# implementation: 0x00977568
+# ARM.exidx end: 0x00977714
+
+            0x00977568      104c2de9       push {r4, sl, fp, lr}
+            0x0097756c      08b08de2       add fp, sp, 8
+            0x00977570      60d04de2       sub sp, sp, 0x60
+            0x00977574      94c19fe5       ldr ip, [0x00977710]        ; [0x977710:4]=0x6e8574
+            0x00977578      0cc08fe0       add ip, pc, ip
+            0x0097757c      00e000e3       movw lr, 0
+            0x00977580      70419fe5       ldr r4, [0x009776f8]        ; [0x9776f8:4]=0xffe2431c
+            0x00977584      0cc084e0       add ip, r4, ip
+            0x00977588      0c100be5       str r1, [fp, -0xc]
+            0x0097758c      10200be5       str r2, [fp, -0x10]
+            0x00977590      14300be5       str r3, [fp, -0x14]
+            0x00977594      0c101be5       ldr r1, [fp, -0xc]
+            0x00977598      00209ce5       ldr r2, [ip]
+            0x0097759c      0e0051e1       cmp r1, lr
+            0x009775a0      2c100be5       str r1, [fp, -0x2c]
+            0x009775a4      30200be5       str r2, [fp, -0x30]
+            0x009775a8      34008de5       str r0, [sp, 0x34]
+        ┌─< 0x009775ac      0400000a       beq 0x9775c4
+        │   0x009775b0      20004be2       sub r0, fp, 0x20
+        │   0x009775b4      2c101be5       ldr r1, [fp, -0x2c]
+        │   0x009775b8      30201be5       ldr r2, [fp, -0x30]
+        │   0x009775bc      d52ce1eb       bl loc.imp.objc_msgSend_stret
+       ┌──< 0x009775c0      070000ea       b 0x9775e4
+       │└─> 0x009775c4      000000e3       movw r0, 0
+       │    0x009775c8      082000e3       movw r2, 8
+       │    0x009775cc      20104be2       sub r1, fp, 0x20
+       │    0x009775d0      30008de5       str r0, [sp, 0x30]
+       │    0x009775d4      0100a0e1       mov r0, r1
+       │    0x009775d8      30109de5       ldr r1, [sp, 0x30]
+       │    0x009775dc      ff1001e2       and r1, r1, 0xff
+       │    0x009775e0      cf2ce1eb       bl sym.imp.memset
+       └──> 0x009775e4      0c001be5       ldr r0, [fp, -0xc]
+            0x009775e8      0c119fe5       ldr r1, [0x009776fc]        ; [0x9776fc:4]=0xffffe8e4
+            0x009775ec      0c219fe5       ldr r2, [0x00977700]        ; [0x977700:4]=0x6e84fc
+            0x009775f0      02208fe0       add r2, pc, r2
+            0x009775f4      021091e7       ldr r1, [r1, r2]
+            0x009775f8      001091e5       ldr r1, [r1]
+            0x009775fc      011080e0       add r1, r0, r1
+            0x00977600      000a91ed       vldr s0, [r1]
+            0x00977604      c01ab7ee       vcvt.f64.f32 d1, s0
+            0x00977608      362b9fed       vldr d2, [0x009776e8]
+            0x0097760c      021b21ee       vmul.f64 d1, d1, d2
+            0x00977610      ec109fe5       ldr r1, [0x00977704]        ; [0x977704:4]=0xffffc8a0
+            0x00977614      021091e7       ldr r1, [r1, r2]
+            0x00977618      003091e5       ldr r3, [r1]
+            0x0097761c      030090e7       ldr r0, [r0, r3]
+            0x00977620      e0309fe5       ldr r3, [0x00977708]        ; [0x977708:4]=0xffe24320
+            0x00977624      02c093e7       ldr ip, [r3, r2]
+            0x00977628      2c108de5       str r1, [sp, 0x2c]
+            0x0097762c      0c10a0e1       mov r1, ip
+            0x00977630      28308de5       str r3, [sp, 0x28]
+            0x00977634      24208de5       str r2, [sp, 0x24]
+            0x00977638      061b8ded       vstr d1, [sp, 0x18]
+            0x0097763c      762ce1eb       bl loc.imp.objc_msgSend
+            0x00977640      000a90ed       vldr s0, [r0]
+            0x00977644      303a9fed       vldr s6, [0x0097770c]
+            0x00977648      030a30ee       vadd.f32 s0, s0, s6
+            0x0097764c      c01ab7ee       vcvt.f64.f32 d1, s0
+            0x00977650      062b9ded       vldr d2, [sp, 0x18]
+            0x00977654      011b22ee       vmul.f64 d1, d2, d1
+            0x00977658      242b9fed       vldr d2, [0x009776f0]
+            0x0097765c      021b81ee       vdiv.f64 d1, d1, d2
+            0x00977660      c10bb7ee       vcvt.f32.f64 s0, d1
+            0x00977664      0c001be5       ldr r0, [fp, -0xc]
+            0x00977668      2c109de5       ldr r1, [sp, 0x2c]
+            0x0097766c      002091e5       ldr r2, [r1]
+            0x00977670      020090e7       ldr r0, [r0, r2]
+            0x00977674      28209de5       ldr r2, [sp, 0x28]
+            0x00977678      24309de5       ldr r3, [sp, 0x24]
+            0x0097767c      031092e7       ldr r1, [r2, r3]
+            0x00977680      053a8ded       vstr s6, [sp, 0x14]
+            0x00977684      022b8ded       vstr d2, [sp, 8]
+            0x00977688      010a8ded       vstr s0, [sp, 4]
+            0x0097768c      622ce1eb       bl loc.imp.objc_msgSend
+            0x00977690      000a90ed       vldr s0, [r0]
+            0x00977694      053a9ded       vldr s6, [sp, 0x14]
+            0x00977698      030a30ee       vadd.f32 s0, s0, s6
+            0x0097769c      c01ab7ee       vcvt.f64.f32 d1, s0
+            0x009776a0      002bb6ee       vmov.f64 d2, 5
+            0x009776a4      021b21ee       vmul.f64 d1, d1, d2
+            0x009776a8      022b9ded       vldr d2, [sp, 8]
+            0x009776ac      021b81ee       vdiv.f64 d1, d1, d2
+            0x009776b0      c10bb7ee       vcvt.f32.f64 s0, d1
+            0x009776b4      014a9ded       vldr s8, [sp, 4]
+            0x009776b8      101a14ee       vmov r1, s8
+            0x009776bc      102a10ee       vmov r2, s0
+            0x009776c0      28004be2       sub r0, fp, 0x28
+            0x009776c4      6d63edeb       bl method.Vector2.Vector2_float__float_ ; Vector2::Vector2(float, float)
+            0x009776c8      28201be5       ldr r2, [fp, -0x28]
+            0x009776cc      24301be5       ldr r3, [fp, -0x24]
+            0x009776d0      20104be2       sub r1, fp, 0x20
+            0x009776d4      34009de5       ldr r0, [sp, 0x34]
+            0x009776d8      4e63edeb       bl method.Vector2.operator_Vector2_ ; Vector2::operator+(Vector2)
+            0x009776dc      08d04be2       sub sp, fp, 8
+            0x009776e0      108cbde8       pop {r4, sl, fp, pc}
+            0x009776e4      00f020e3       nop
+            0x009776e8      9a999999       ldmibls sb, {r1, r3, r4, r7, r8, fp, ip, pc}
+            0x009776ec      9999c93f       svclo 0xc99999
+            0x009776f0      00000000       andeq r0, r0, r0
+            0x009776f4      00007440       rsbsmi r0, r4, r0
+            0x009776f8      1c43e2ff       invalid
+            0x009776fc      e4e8ffff       invalid
+            0x00977700      fc846e00       invalid
+            0x00977704      a0c8ffff       invalid
+            0x00977708      2043e2ff       invalid
+            0x0097770c      00007043       cmnmi r0, 0
+            0x00977710      74856e00       rsbeq r8, lr, r4, ror r5
