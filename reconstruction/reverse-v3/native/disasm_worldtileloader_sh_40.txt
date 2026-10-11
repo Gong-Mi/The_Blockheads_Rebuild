@@ -1,0 +1,86 @@
+# Shark -[riderPosForBlockhead:]
+# types: {Vector=[4f]}12@0:4@8
+# implementation: 0x007dd398
+# ARM.exidx end: 0x007dd4dc
+
+            0x007dd398      00482de9       push {fp, lr}
+            0x007dd39c      0db0a0e1       mov fp, sp
+            0x007dd3a0      50d04de2       sub sp, sp, 0x50
+            0x007dd3a4      2cc19fe5       ldr ip, [0x007dd4d8]        ; [0x7dd4d8:4]=0x882744
+            0x007dd3a8      0cc08fe0       add ip, pc, ip
+            0x007dd3ac      20e19fe5       ldr lr, [0x007dd4d4]        ; [0x7dd4d4:4]=0xffffdef0
+            0x007dd3b0      0ce09ee7       ldr lr, [lr, ip]
+            0x007dd3b4      04100be5       str r1, [fp, -4]
+            0x007dd3b8      08200be5       str r2, [fp, -8]
+            0x007dd3bc      0c300be5       str r3, [fp, -0xc]
+            0x007dd3c0      04101be5       ldr r1, [fp, -4]
+            0x007dd3c4      00209ee5       ldr r2, [lr]
+            0x007dd3c8      021081e0       add r1, r1, r2
+            0x007dd3cc      24000be5       str r0, [fp, -0x24]
+            0x007dd3d0      0100a0e1       mov r0, r1
+            0x007dd3d4      28c08de5       str ip, [sp, 0x28]
+            0x007dd3d8      b381f3eb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+            0x007dd3dc      f0109fe5       ldr r1, [0x007dd4d4]        ; [0x7dd4d4:4]=0xffffdef0
+            0x007dd3e0      28209de5       ldr r2, [sp, 0x28]
+            0x007dd3e4      021091e7       ldr r1, [r1, r2]
+            0x007dd3e8      000a90ed       vldr s0, [r0]
+            0x007dd3ec      04001be5       ldr r0, [fp, -4]
+            0x007dd3f0      001091e5       ldr r1, [r1]
+            0x007dd3f4      010080e0       add r0, r0, r1
+            0x007dd3f8      090a8ded       vstr s0, [sp, 0x24]
+            0x007dd3fc      aa81f3eb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+            0x007dd400      011000e3       movw r1, 1
+            0x007dd404      001bb7ee       vmov.f64 d1, 1
+            0x007dd408      282302e3       movw r2, 0x2328             ; '(#'
+            0x007dd40c      2e0a9fed       vldr s0, [0x007dd4cc]
+            0x007dd410      b8309fe5       ldr r3, [0x007dd4d0]        ; [0x7dd4d0:4]=0xffffd194
+            0x007dd414      28c09de5       ldr ip, [sp, 0x28]
+            0x007dd418      0c3093e7       ldr r3, [r3, ip]
+            0x007dd41c      002ab7ee       vmov.f32 s4, 1
+            0x007dd420      013a90ed       vldr s6, [r0, 4]
+            0x007dd424      422a33ee       vsub.f32 s4, s6, s4
+            0x007dd428      c24ab7ee       vcvt.f64.f32 d4, s4
+            0x007dd42c      04001be5       ldr r0, [fp, -4]
+            0x007dd430      003093e5       ldr r3, [r3]
+            0x007dd434      030080e0       add r0, r0, r3
+            0x007dd438      002a90ed       vldr s4, [r0]
+            0x007dd43c      000a82ee       vdiv.f32 s0, s4, s0
+            0x007dd440      040a0bed       vstr s0, [fp, -0x10]
+            0x007dd444      061b0bed       vstr d1, [fp, -0x18]
+            0x007dd448      040a1bed       vldr s0, [fp, -0x10]
+            0x007dd44c      c01ab7ee       vcvt.f64.f32 d1, s0
+            0x007dd450      065b1bed       vldr d5, [fp, -0x18]
+            0x007dd454      c51bb4ee       vcmpe.f64 d1, d5
+            0x007dd458      10faf1ee       vmrs apsr_nzcv, fpscr
+            0x007dd45c      064b8ded       vstr d4, [sp, 0x18]
+            0x007dd460      14108de5       str r1, [sp, 0x14]
+            0x007dd464      10208de5       str r2, [sp, 0x10]
+        ┌─< 0x007dd468      0300005a       bpl 0x7dd47c
+        │   0x007dd46c      040a1bed       vldr s0, [fp, -0x10]
+        │   0x007dd470      c01ab7ee       vcvt.f64.f32 d1, s0
+        │   0x007dd474      021b8ded       vstr d1, [sp, 8]
+       ┌──< 0x007dd478      010000ea       b 0x7dd484
+       │└─> 0x007dd47c      060b1bed       vldr d0, [fp, -0x18]
+       │    0x007dd480      020b8ded       vstr d0, [sp, 8]
+       └──> 0x007dd484      020b9ded       vldr d0, [sp, 8]
+            0x007dd488      081abeee       vmov.f32 s2, -7
+            0x007dd48c      002bb6ee       vmov.f64 d2, 5
+            0x007dd490      080b0bed       vstr d0, [fp, -0x20]
+            0x007dd494      080b1bed       vldr d0, [fp, -0x20]
+            0x007dd498      000b22ee       vmul.f64 d0, d2, d0
+            0x007dd49c      062b9ded       vldr d2, [sp, 0x18]
+            0x007dd4a0      000b32ee       vadd.f64 d0, d2, d0
+            0x007dd4a4      c03bb7ee       vcvt.f32.f64 s6, d0
+            0x007dd4a8      24001be5       ldr r0, [fp, -0x24]
+            0x007dd4ac      094a9ded       vldr s8, [sp, 0x24]
+            0x007dd4b0      101a14ee       vmov r1, s8
+            0x007dd4b4      102a13ee       vmov r2, s6
+            0x007dd4b8      103a11ee       vmov r3, s2
+            0x007dd4bc      7a5ff3eb       bl method.Vector.Vector_float__float__float_ ; Vector::Vector(float, float, float)
+            0x007dd4c0      04008de5       str r0, [sp, 4]
+            0x007dd4c4      0bd0a0e1       mov sp, fp
+            0x007dd4c8      0088bde8       pop {fp, pc}
+            0x007dd4cc      00a00c46       strmi sl, [ip], -r0
+            0x007dd4d0      94d1ffff       invalid
+            0x007dd4d4      f0deffff       invalid
+            0x007dd4d8      44278800       addeq r2, r8, r4, asr 14
