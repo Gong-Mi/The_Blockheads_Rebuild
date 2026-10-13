@@ -1,4 +1,4 @@
-# Action (E154)
+# NetPlayerButton (E156)
 
 The multiplayer player-row button lands: the touch cycle, the button dispatch, the moderation actions and the player-state refresh. 36 bodies, 4048 verified instruction words, from the pinned original libApplication.so (1.7.6, armeabi-v7a). Every listing regenerates byte-identically from the pinned r2 recipe and the recover tool re-verifies every word, cell and branch against the ELF.
 
