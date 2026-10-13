@@ -1,0 +1,50 @@
+# polarToRectangular  [C function]
+# implementation: 0x00582e00
+# ARM.exidx end: 0x00582eb4
+
+            ;-- polarToRectangular(double, double):
+            0x00582e00      00482de9       push {fp, lr}               ; polarToRectangular(double, double)
+            0x00582e04      0db0a0e1       mov fp, sp
+            0x00582e08      28d04de2       sub sp, sp, 0x28
+            0x00582e0c      102b43ec       vmov d0, r2, r3
+            0x00582e10      021b9bed       vldr d1, [fp, 8]
+            0x00582e14      020b0bed       vstr d0, [fp, -8]
+            0x00582e18      041b0bed       vstr d1, [fp, -0x10]
+            0x00582e1c      020b1bed       vldr d0, [fp, -8]
+            0x00582e20      102b51ec       vmov r2, r1, d0
+            0x00582e24      0c008de5       str r0, [sp, 0xc]
+            0x00582e28      0200a0e1       mov r0, r2
+            0x00582e2c      c5fef0eb       bl sym.imp.cos
+            0x00582e30      100b41ec       vmov d0, r0, r1
+            0x00582e34      040b8ded       vstr d0, [sp, 0x10]
+            0x00582e38      040b1bed       vldr d0, [fp, -0x10]
+            0x00582e3c      100b51ec       vmov r0, r1, d0
+            0x00582e40      c3fef0eb       bl sym.imp.sin
+            0x00582e44      100b41ec       vmov d0, r0, r1
+            0x00582e48      041b9ded       vldr d1, [sp, 0x10]
+            0x00582e4c      010b20ee       vmul.f64 d0, d0, d1
+            0x00582e50      c02bb7ee       vcvt.f32.f64 s4, d0
+            0x00582e54      020b1bed       vldr d0, [fp, -8]
+            0x00582e58      100b51ec       vmov r0, r1, d0
+            0x00582e5c      022a8ded       vstr s4, [sp, 8]
+            0x00582e60      bbfef0eb       bl sym.imp.sin
+            0x00582e64      100b41ec       vmov d0, r0, r1
+            0x00582e68      c02bb7ee       vcvt.f32.f64 s4, d0
+            0x00582e6c      040b1bed       vldr d0, [fp, -0x10]
+            0x00582e70      100b51ec       vmov r0, r1, d0
+            0x00582e74      012a8ded       vstr s4, [sp, 4]
+            0x00582e78      b2fef0eb       bl sym.imp.cos
+            0x00582e7c      100b41ec       vmov d0, r0, r1
+            0x00582e80      041b9ded       vldr d1, [sp, 0x10]
+            0x00582e84      010b20ee       vmul.f64 d0, d0, d1
+            0x00582e88      c02bb7ee       vcvt.f32.f64 s4, d0
+            0x00582e8c      0c009de5       ldr r0, [sp, 0xc]
+            0x00582e90      023a9ded       vldr s6, [sp, 8]
+            0x00582e94      101a13ee       vmov r1, s6
+            0x00582e98      014a9ded       vldr s8, [sp, 4]
+            0x00582e9c      102a14ee       vmov r2, s8
+            0x00582ea0      103a12ee       vmov r3, s4
+            0x00582ea4      00c9fceb       bl method.Vector.Vector_float__float__float_ ; Vector::Vector(float, float, float)
+            0x00582ea8      00008de5       str r0, [sp]
+            0x00582eac      0bd0a0e1       mov sp, fp
+            0x00582eb0      0088bde8       pop {fp, pc}

@@ -1,0 +1,23 @@
+# Weather -[windMovement]
+# types: f8@0:4
+# implementation: 0x007ebf60
+# ARM.exidx end: 0x007ebff4
+
+            0x007ebf60      0cd04de2       sub sp, sp, 0xc
+            0x007ebf64      04008de5       str r0, [sp, 4]
+            0x007ebf68      00108de5       str r1, [sp]
+            0x007ebf6c      04009de5       ldr r0, [sp, 4]
+            0x007ebf70      28109fe5       ldr r1, [0x007ebfa0]        ; [0x7ebfa0:4]=0xffffdfa4
+            0x007ebf74      28209fe5       ldr r2, [0x007ebfa4]        ; [0x7ebfa4:4]=0x873b74
+            0x007ebf78      02208fe0       add r2, pc, r2
+            0x007ebf7c      021091e7       ldr r1, [r1, r2]
+            0x007ebf80      001091e5       ldr r1, [r1]
+            0x007ebf84      010090e7       ldr r0, [r0, r1]
+            0x007ebf88      5bf07ff5       dmb ish
+            0x007ebf8c      08008de5       str r0, [sp, 8]
+            0x007ebf90      020a9ded       vldr s0, [sp, 8]
+            0x007ebf94      100a10ee       vmov r0, s0
+            0x007ebf98      0cd08de2       add sp, sp, 0xc
+            0x007ebf9c      1eff2fe1       bx lr
+            0x007ebfa0      a4dfffff       invalid
+            0x007ebfa4      743b8700       addeq r3, r7, r4, ror fp

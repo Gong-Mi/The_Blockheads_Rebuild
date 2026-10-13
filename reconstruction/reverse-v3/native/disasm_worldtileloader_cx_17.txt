@@ -1,0 +1,66 @@
+# Vector2::normal()  [C function]
+# implementation: 0x00575108
+# ARM.exidx end: 0x005751f8
+
+            ;-- method.Vector2.normal__:
+            ;-- Vector2::normal():
+            0x00575108      00482de9       push {fp, lr}               ; Vector2::normal()
+            0x0057510c      0db0a0e1       mov fp, sp
+            0x00575110      28d04de2       sub sp, sp, 0x28
+            0x00575114      04100be5       str r1, [fp, -4]
+            0x00575118      04101be5       ldr r1, [fp, -4]
+            0x0057511c      10000be5       str r0, [fp, -0x10]
+            0x00575120      0100a0e1       mov r0, r1
+            0x00575124      14108de5       str r1, [sp, 0x14]
+            0x00575128      dbffffeb       bl method.Vector2.length___const ; Vector2::length() const
+            0x0057512c      100a00ee       vmov s0, r0
+            0x00575130      020a0bed       vstr s0, [fp, -8]
+            0x00575134      14009de5       ldr r0, [sp, 0x14]
+            0x00575138      0c000be5       str r0, [fp, -0xc]
+            0x0057513c      10001be5       ldr r0, [fp, -0x10]
+            0x00575140      0a80fdeb       bl method.Vector2.Vector2__ ; Vector2::Vector2()
+            0x00575144      020a1bed       vldr s0, [fp, -8]
+            0x00575148      c00ab5ee       vcmpe.f32 s0, 0
+            0x0057514c      10faf1ee       vmrs apsr_nzcv, fpscr
+            0x00575150      10008de5       str r0, [sp, 0x10]
+        ┌─< 0x00575154      0400000a       beq 0x57516c
+        │   0x00575158      240a9fed       vldr s0, [0x005751f0]
+        │   0x0057515c      021a1bed       vldr s2, [fp, -8]
+        │   0x00575160      c01ab4ee       vcmpe.f32 s2, s0
+        │   0x00575164      10faf1ee       vmrs apsr_nzcv, fpscr
+       ┌──< 0x00575168      0c00001a       bne 0x5751a0
+       │└─> 0x0057516c      10001be5       ldr r0, [fp, -0x10]
+       │    0x00575170      4d22fdeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+       │    0x00575174      001000e3       movw r1, 0
+       │    0x00575178      1d0a9fed       vldr s0, [0x005751f4]
+       │    0x0057517c      000a80ed       vstr s0, [r0]
+       │    0x00575180      10001be5       ldr r0, [fp, -0x10]
+       │    0x00575184      0c108de5       str r1, [sp, 0xc]
+       │    0x00575188      4722fdeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+       │    0x0057518c      001000e3       movw r1, 0
+       │    0x00575190      170a9fed       vldr s0, [0x005751f4]
+       │    0x00575194      010a80ed       vstr s0, [r0, 4]
+       │    0x00575198      08108de5       str r1, [sp, 8]
+       │┌─< 0x0057519c      110000ea       b 0x5751e8
+       └──> 0x005751a0      0c001be5       ldr r0, [fp, -0xc]
+        │   0x005751a4      000a90ed       vldr s0, [r0]
+        │   0x005751a8      021a1bed       vldr s2, [fp, -8]
+        │   0x005751ac      010a80ee       vdiv.f32 s0, s0, s2
+        │   0x005751b0      10001be5       ldr r0, [fp, -0x10]
+        │   0x005751b4      010a8ded       vstr s0, [sp, 4]
+        │   0x005751b8      3b22fdeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+        │   0x005751bc      010a9ded       vldr s0, [sp, 4]
+        │   0x005751c0      000a80ed       vstr s0, [r0]
+        │   0x005751c4      0c001be5       ldr r0, [fp, -0xc]
+        │   0x005751c8      011a90ed       vldr s2, [r0, 4]
+        │   0x005751cc      022a1bed       vldr s4, [fp, -8]
+        │   0x005751d0      021a81ee       vdiv.f32 s2, s2, s4
+        │   0x005751d4      10001be5       ldr r0, [fp, -0x10]
+        │   0x005751d8      001a8ded       vstr s2, [sp]
+        │   0x005751dc      3222fdeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+        │   0x005751e0      000a9ded       vldr s0, [sp]
+        │   0x005751e4      010a80ed       vstr s0, [r0, 4]
+        └─> 0x005751e8      0bd0a0e1       mov sp, fp
+            0x005751ec      0088bde8       pop {fp, pc}
+            0x005751f0      00000080       andhi r0, r0, r0
+            0x005751f4      00000000       andeq r0, r0, r0

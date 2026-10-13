@@ -1,0 +1,31 @@
+# Vector2::operator*(Vector2)  [C function]
+# implementation: 0x00820690
+# ARM.exidx end: 0x008206f8
+
+            ;-- Vector2::operator*(Vector2):
+            0x00820690      00482de9       push {fp, lr}               ; Vector2::operator*(Vector2)
+            0x00820694      0db0a0e1       mov fp, sp
+            0x00820698      18d04de2       sub sp, sp, 0x18
+            0x0082069c      08c04be2       sub ip, fp, 8
+            0x008206a0      08200be5       str r2, [fp, -8]
+            0x008206a4      04300be5       str r3, [fp, -4]
+            0x008206a8      0c108de5       str r1, [sp, 0xc]
+            0x008206ac      0c109de5       ldr r1, [sp, 0xc]
+            0x008206b0      08108de5       str r1, [sp, 8]
+            0x008206b4      04c08de5       str ip, [sp, 4]
+            0x008206b8      08109de5       ldr r1, [sp, 8]
+            0x008206bc      000a91ed       vldr s0, [r1]
+            0x008206c0      04109de5       ldr r1, [sp, 4]
+            0x008206c4      001a91ed       vldr s2, [r1]
+            0x008206c8      010a20ee       vmul.f32 s0, s0, s2
+            0x008206cc      08109de5       ldr r1, [sp, 8]
+            0x008206d0      011a91ed       vldr s2, [r1, 4]
+            0x008206d4      04109de5       ldr r1, [sp, 4]
+            0x008206d8      012a91ed       vldr s4, [r1, 4]
+            0x008206dc      021a21ee       vmul.f32 s2, s2, s4
+            0x008206e0      101a10ee       vmov r1, s0
+            0x008206e4      102a11ee       vmov r2, s2
+            0x008206e8      64bff2eb       bl method.Vector2.Vector2_float__float_ ; Vector2::Vector2(float, float)
+            0x008206ec      00008de5       str r0, [sp]
+            0x008206f0      0bd0a0e1       mov sp, fp
+            0x008206f4      0088bde8       pop {fp, pc}

@@ -1,0 +1,31 @@
+# CoffeeTree -[makeTileDead:]
+# types: v12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8
+# implementation: 0x007e0c24
+# ARM.exidx end: 0x007e0c8c
+
+            0x007e0c24      0cd04de2       sub sp, sp, 0xc
+            0x007e0c28      08008de5       str r0, [sp, 8]
+            0x007e0c2c      04108de5       str r1, [sp, 4]
+            0x007e0c30      00208de5       str r2, [sp]
+            0x007e0c34      00009de5       ldr r0, [sp]
+            0x007e0c38      0300d0e5       ldrb r0, [r0, 3]
+            0x007e0c3c      180050e3       cmp r0, 0x18
+        ┌─< 0x007e0c40      0300001a       bne 0x7e0c54
+        │   0x007e0c44      290000e3       movw r0, 0x29               ; ')'
+        │   0x007e0c48      00109de5       ldr r1, [sp]
+        │   0x007e0c4c      0300c1e5       strb r0, [r1, 3]
+       ┌──< 0x007e0c50      0b0000ea       b 0x7e0c84
+       │└─> 0x007e0c54      00009de5       ldr r0, [sp]
+       │    0x007e0c58      0300d0e5       ldrb r0, [r0, 3]
+       │    0x007e0c5c      190050e3       cmp r0, 0x19
+       │┌─< 0x007e0c60      0300000a       beq 0x7e0c74
+       ││   0x007e0c64      00009de5       ldr r0, [sp]
+       ││   0x007e0c68      0300d0e5       ldrb r0, [r0, 3]
+       ││   0x007e0c6c      1a0050e3       cmp r0, 0x1a
+      ┌───< 0x007e0c70      0200001a       bne 0x7e0c80
+      ││└─> 0x007e0c74      2a0000e3       movw r0, 0x2a               ; '*'
+      ││    0x007e0c78      00109de5       ldr r1, [sp]
+      ││    0x007e0c7c      0300c1e5       strb r0, [r1, 3]
+      └─┌─< 0x007e0c80      ffffffea       b 0x7e0c84
+       └└─> 0x007e0c84      0cd08de2       add sp, sp, 0xc
+            0x007e0c88      1eff2fe1       bx lr

@@ -1,0 +1,53 @@
+# Boat -[riderPosForBlockhead:]
+# types: {Vector=[4f]}12@0:4@8
+# implementation: 0x00976c98
+# ARM.exidx end: 0x00976dcc
+
+            0x00976c98      00482de9       push {fp, lr}
+            0x00976c9c      0db0a0e1       mov fp, sp
+            0x00976ca0      20d04de2       sub sp, sp, 0x20
+            0x00976ca4      a8c09fe5       ldr ip, [0x00976d54]        ; [0x976d54:4]=0x6e8e44
+            0x00976ca8      0cc08fe0       add ip, pc, ip
+            0x00976cac      9ce09fe5       ldr lr, [0x00976d50]        ; [0x976d50:4]=0xffffc8dc
+            0x00976cb0      0ce09ee7       ldr lr, [lr, ip]
+            0x00976cb4      04100be5       str r1, [fp, -4]
+            0x00976cb8      08200be5       str r2, [fp, -8]
+            0x00976cbc      0c300be5       str r3, [fp, -0xc]
+            0x00976cc0      04101be5       ldr r1, [fp, -4]
+            0x00976cc4      00209ee5       ldr r2, [lr]
+            0x00976cc8      021081e0       add r1, r1, r2
+            0x00976ccc      10008de5       str r0, [sp, 0x10]
+            0x00976cd0      0100a0e1       mov r0, r1
+            0x00976cd4      0cc08de5       str ip, [sp, 0xc]
+            0x00976cd8      731bedeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+            0x00976cdc      6c109fe5       ldr r1, [0x00976d50]        ; [0x976d50:4]=0xffffc8dc
+            0x00976ce0      0c209de5       ldr r2, [sp, 0xc]
+            0x00976ce4      021091e7       ldr r1, [r1, r2]
+            0x00976ce8      000a90ed       vldr s0, [r0]
+            0x00976cec      04001be5       ldr r0, [fp, -4]
+            0x00976cf0      001091e5       ldr r1, [r1]
+            0x00976cf4      010080e0       add r0, r0, r1
+            0x00976cf8      020a8ded       vstr s0, [sp, 8]
+            0x00976cfc      6a1bedeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+            0x00976d00      080abeee       vmov.f32 s0, -7
+            0x00976d04      001bb6ee       vmov.f64 d1, 5
+            0x00976d08      0e2b9fed       vldr d2, [0x00976d48]
+            0x00976d0c      013a90ed       vldr s6, [r0, 4]
+            0x00976d10      c34ab7ee       vcvt.f64.f32 d4, s6
+            0x00976d14      422b34ee       vsub.f64 d2, d4, d2
+            0x00976d18      411b32ee       vsub.f64 d1, d2, d1
+            0x00976d1c      c13bb7ee       vcvt.f32.f64 s6, d1
+            0x00976d20      10009de5       ldr r0, [sp, 0x10]
+            0x00976d24      025a9ded       vldr s10, [sp, 8]
+            0x00976d28      101a15ee       vmov r1, s10
+            0x00976d2c      102a13ee       vmov r2, s6
+            0x00976d30      103a10ee       vmov r3, s0
+            0x00976d34      5cf9eceb       bl method.Vector.Vector_float__float__float_ ; Vector::Vector(float, float, float)
+            0x00976d38      04008de5       str r0, [sp, 4]
+            0x00976d3c      0bd0a0e1       mov sp, fp
+            0x00976d40      0088bde8       pop {fp, pc}
+            0x00976d44      00f020e3       nop
+            0x00976d48      9a999999       ldmibls sb, {r1, r3, r4, r7, r8, fp, ip, pc}
+            0x00976d4c      9999d93f       svclo 0xd99999
+            0x00976d50      dcc8ffff       invalid
+            0x00976d54      448e6e00       rsbeq r8, lr, r4, asr 28

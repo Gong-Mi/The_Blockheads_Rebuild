@@ -1,0 +1,43 @@
+# NPC -[healthFraction]
+# types: f8@0:4
+# implementation: 0x00649390
+# ARM.exidx end: 0x0064952c
+
+            0x00649390      00482de9       push {fp, lr}
+            0x00649394      0db0a0e1       mov fp, sp
+            0x00649398      18d04de2       sub sp, sp, 0x18
+            0x0064939c      04000be5       str r0, [fp, -4]
+            0x006493a0      08100be5       str r1, [fp, -8]
+            0x006493a4      04001be5       ldr r0, [fp, -4]
+            0x006493a8      68109fe5       ldr r1, [0x00649418]        ; [0x649418:4]=0xffffd198
+            0x006493ac      68209fe5       ldr r2, [0x0064941c]        ; [0x64941c:4]=0xa1673c
+            0x006493b0      02208fe0       add r2, pc, r2
+            0x006493b4      021091e7       ldr r1, [r1, r2]
+            0x006493b8      001091e5       ldr r1, [r1]
+            0x006493bc      011080e0       add r1, r0, r1
+            0x006493c0      b010d1e1       ldrh r1, [r1]
+            0x006493c4      101a00ee       vmov s0, r1
+            0x006493c8      400ab8ee       vcvt.f32.u32 s0, s0
+            0x006493cc      4c109fe5       ldr r1, [0x00649420]        ; [0x649420:4]=0xffe1f6a0
+            0x006493d0      021091e7       ldr r1, [r1, r2]
+            0x006493d4      020a8ded       vstr s0, [sp, 8]
+            0x006493d8      0fe5edeb       bl loc.imp.objc_msgSend
+            0x006493dc      100a00ee       vmov s0, r0
+            0x006493e0      400ab8ee       vcvt.f32.u32 s0, s0
+            0x006493e4      021a9ded       vldr s2, [sp, 8]
+            0x006493e8      000a81ee       vdiv.f32 s0, s2, s0
+            0x006493ec      001ab7ee       vmov.f32 s2, 1
+            0x006493f0      400a31ee       vsub.f32 s0, s2, s0
+            0x006493f4      030a8ded       vstr s0, [sp, 0xc]
+            0x006493f8      0c009de5       ldr r0, [sp, 0xc]
+            0x006493fc      0010a0e3       mov r1, 0
+            0x00649400      fe25a0e3       mov r2, 0x3f800000
+            0x00649404      17d3f9eb       bl sym.clamp_float__float__float_ ; clamp(float, float, float)
+            0x00649408      100a00ee       vmov s0, r0
+            0x0064940c      010a8ded       vstr s0, [sp, 4]
+            0x00649410      0bd0a0e1       mov sp, fp
+            0x00649414      0088bde8       pop {fp, pc}
+            0x00649418      98d1ffff       invalid
+            0x0064941c      3c67a100       adceq r6, r1, ip, lsr r7
+            0x00649420      a0f6e1ff       invalid
+            0x00649424      00000000       andeq r0, r0, r0

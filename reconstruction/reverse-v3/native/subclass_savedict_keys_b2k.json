@@ -1,0 +1,235 @@
+{
+  "claim": "Boat saves currentBlockheadIndex as the numberWithInt of the LOOP INDEX of its rider inside [dynamicWorld blockheads] (rider nil-guarded, needsRemoved-entries skipped; rider itself is NOT saved) plus a nil-guarded DIRECT ownerID; ArtificialLight saves eight plain-int keys maxRed/maxGreen/maxBlue/maxHeat/radius/lightDirection and the DOTTED contributionGridOrigin.x/.y word pair (@84 +0/+4) all via numberWithInt:; DropBear saves provokeMeter@300/courageMeter@304/dropSpeed@312 as numberWithFloat (vldr), dropping@308/onGround@344 as numberWithBool of ldrb+sxtb signed bytes, and dropPos.x/.y@348 + goalTreeDirection@356 as numberWithBool of WORD loads narrowed by sxtb to their low byte; 7 overrides remain (Action, Plant, Tree, CaveTroll, InteractionObject, TrainCar, Workbench), read-back/roundtrip unresolved",
+  "classes": [
+    {
+      "boundary": "0x0096c674",
+      "class": "Boat",
+      "code_words": 271,
+      "imp": "0x0096c238",
+      "keys": [
+        {
+          "cfstring_object": "0x00f95838",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x0096c57c",
+          "ivar": null,
+          "key": "currentBlockheadIndex",
+          "set_object_site": "0x0096c5a0",
+          "value_source": "loop_index"
+        },
+        {
+          "cfstring_object": "0x00f95828",
+          "conversion": "direct_object",
+          "ivar": "OBJC_IVAR_$_DynamicObject.ownerID",
+          "ivar_offset": 36,
+          "key": "ownerID",
+          "set_object_site": "0x0096c624"
+        }
+      ],
+      "site_gates": [
+        "rider_guard_cmp@0x0096c2bc",
+        "rider_guard_beq@0x0096c2c0",
+        "enumerate_site@0x0096c340",
+        "rider_cmp@0x0096c438",
+        "rider_bne@0x0096c440",
+        "needsremoved_msg_site@0x0096c46c",
+        "needsremoved_sxtb@0x0096c470",
+        "needsremoved_bne@0x0096c478",
+        "found_ldrsb@0x0096c510",
+        "found_beq@0x0096c518",
+        "ownerid_guard_beq@0x0096c5cc"
+      ],
+      "style": "super_plus_own_keys",
+      "super_class_struct": "0x00e91638",
+      "super_site": "0x0096c28c"
+    },
+    {
+      "boundary": "0x00a947ac",
+      "class": "ArtificialLight",
+      "code_words": 310,
+      "imp": "0x00a942d4",
+      "keys": [
+        {
+          "cfstring_object": "0x00f9b238",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x00a9447c",
+          "ivar": "OBJC_IVAR_$_ArtificialLight.maxRed",
+          "ivar_offset": 64,
+          "key": "maxRed",
+          "set_object_site": "0x00a944a0"
+        },
+        {
+          "cfstring_object": "0x00f9b248",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x00a944dc",
+          "ivar": "OBJC_IVAR_$_ArtificialLight.maxGreen",
+          "ivar_offset": 68,
+          "key": "maxGreen",
+          "set_object_site": "0x00a94500"
+        },
+        {
+          "cfstring_object": "0x00f9b258",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x00a9453c",
+          "ivar": "OBJC_IVAR_$_ArtificialLight.maxBlue",
+          "ivar_offset": 72,
+          "key": "maxBlue",
+          "set_object_site": "0x00a94560"
+        },
+        {
+          "cfstring_object": "0x00f9b268",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x00a9459c",
+          "ivar": "OBJC_IVAR_$_ArtificialLight.maxHeat",
+          "ivar_offset": 76,
+          "key": "maxHeat",
+          "set_object_site": "0x00a945c0"
+        },
+        {
+          "cfstring_object": "0x00f9b278",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x00a945fc",
+          "ivar": "OBJC_IVAR_$_ArtificialLight.radius",
+          "ivar_offset": 80,
+          "key": "radius",
+          "set_object_site": "0x00a94620"
+        },
+        {
+          "cfstring_object": "0x00f9b288",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x00a9465c",
+          "ivar": "OBJC_IVAR_$_ArtificialLight.contributionGridOrigin",
+          "ivar_offset": 84,
+          "key": "contributionGridOrigin.x",
+          "set_object_site": "0x00a94680"
+        },
+        {
+          "cfstring_object": "0x00f9b298",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x00a946bc",
+          "ivar": "OBJC_IVAR_$_ArtificialLight.contributionGridOrigin",
+          "ivar_offset": 84,
+          "key": "contributionGridOrigin.y",
+          "set_object_site": "0x00a946e0"
+        },
+        {
+          "cfstring_object": "0x00f9b2a8",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x00a9471c",
+          "ivar": "OBJC_IVAR_$_ArtificialLight.lightDirection",
+          "ivar_offset": 96,
+          "key": "lightDirection",
+          "set_object_site": "0x00a94740"
+        }
+      ],
+      "site_gates": [
+        "cgo_x_word_ldr@0x00a94640",
+        "cgo_y_word_ldr4@0x00a946a0"
+      ],
+      "style": "super_plus_own_keys",
+      "super_class_struct": "0x00e91b10",
+      "super_site": "0x00a94328"
+    },
+    {
+      "boundary": "0x0079e2b8",
+      "class": "DropBear",
+      "code_words": 318,
+      "imp": "0x0079ddc0",
+      "keys": [
+        {
+          "cfstring_object": "0x00f908d8",
+          "conversion": "numberWithFloat:",
+          "conversion_site": "0x0079df84",
+          "ivar": "OBJC_IVAR_$_DropBear.provokeMeter",
+          "ivar_offset": 300,
+          "key": "provokeMeter",
+          "set_object_site": "0x0079dfa8"
+        },
+        {
+          "cfstring_object": "0x00f908e8",
+          "conversion": "numberWithFloat:",
+          "conversion_site": "0x0079dfe4",
+          "ivar": "OBJC_IVAR_$_DropBear.courageMeter",
+          "ivar_offset": 304,
+          "key": "courageMeter",
+          "set_object_site": "0x0079e008"
+        },
+        {
+          "cfstring_object": "0x00f908f8",
+          "conversion": "numberWithBool:",
+          "conversion_site": "0x0079e044",
+          "ivar": "OBJC_IVAR_$_DropBear.dropping",
+          "ivar_offset": 308,
+          "key": "dropping",
+          "set_object_site": "0x0079e068"
+        },
+        {
+          "cfstring_object": "0x00f90908",
+          "conversion": "numberWithFloat:",
+          "conversion_site": "0x0079e0a4",
+          "ivar": "OBJC_IVAR_$_DropBear.dropSpeed",
+          "ivar_offset": 312,
+          "key": "dropSpeed",
+          "set_object_site": "0x0079e0c8"
+        },
+        {
+          "cfstring_object": "0x00f90918",
+          "conversion": "numberWithBool:",
+          "conversion_site": "0x0079e104",
+          "ivar": "OBJC_IVAR_$_DropBear.onGround",
+          "ivar_offset": 344,
+          "key": "onGround",
+          "set_object_site": "0x0079e128"
+        },
+        {
+          "cfstring_object": "0x00f90928",
+          "conversion": "numberWithBool:",
+          "conversion_site": "0x0079e164",
+          "ivar": "OBJC_IVAR_$_DropBear.dropPos",
+          "ivar_offset": 348,
+          "key": "dropPos.x",
+          "set_object_site": "0x0079e188"
+        },
+        {
+          "cfstring_object": "0x00f90938",
+          "conversion": "numberWithBool:",
+          "conversion_site": "0x0079e1c4",
+          "ivar": "OBJC_IVAR_$_DropBear.dropPos",
+          "ivar_offset": 348,
+          "key": "dropPos.y",
+          "set_object_site": "0x0079e1e8"
+        },
+        {
+          "cfstring_object": "0x00f90948",
+          "conversion": "numberWithBool:",
+          "conversion_site": "0x0079e224",
+          "ivar": "OBJC_IVAR_$_DropBear.goalTreeDirection",
+          "ivar_offset": 356,
+          "key": "goalTreeDirection",
+          "set_object_site": "0x0079e248"
+        }
+      ],
+      "site_gates": [
+        "provoke_vldr@0x0079df44",
+        "courage_vldr@0x0079dfc8",
+        "dropping_ldrb@0x0079e028",
+        "dropping_sxtb@0x0079e03c",
+        "dropSpeed_vldr@0x0079e088",
+        "onGround_ldrb@0x0079e0e8",
+        "onGround_sxtb@0x0079e0fc",
+        "dropPos_x_ldr@0x0079e148",
+        "dropPos_x_sxtb@0x0079e15c",
+        "dropPos_y_ldr4@0x0079e1a8",
+        "dropPos_y_sxtb@0x0079e1bc",
+        "goalTree_ldr@0x0079e208",
+        "goalTree_sxtb@0x0079e21c"
+      ],
+      "style": "super_plus_own_keys",
+      "super_class_struct": "0x00e91020",
+      "super_site": "0x0079de14"
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "method": "getSaveDict key pairings (batch 2k)",
+  "pic_base": "0x0105faf4",
+  "schema": 1
+}

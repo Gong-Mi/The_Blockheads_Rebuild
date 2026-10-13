@@ -1,0 +1,35 @@
+# tileIsInteractionObject  [C function]
+# implementation: 0x00a143d8
+# ARM.exidx end: 0x00a146a0
+
+            ;-- tileIsInteractionObject(Tile*):
+            0x00a143d8      00482de9       push {fp, lr}               ; tileIsInteractionObject(Tile*)
+            0x00a143dc      0db0a0e1       mov fp, sp
+            0x00a143e0      10d04de2       sub sp, sp, 0x10
+            0x00a143e4      001000e3       movw r1, 0
+            0x00a143e8      002000e3       movw r2, 0
+            0x00a143ec      04000be5       str r0, [fp, -4]
+            0x00a143f0      04001be5       ldr r0, [fp, -4]
+            0x00a143f4      020050e1       cmp r0, r2
+            0x00a143f8      08108de5       str r1, [sp, 8]
+        ┌─< 0x00a143fc      0e00000a       beq 0xa1443c
+        │   0x00a14400      04001be5       ldr r0, [fp, -4]
+        │   0x00a14404      d8ffffeb       bl sym.tileIsWorkbench_Tile_ ; tileIsWorkbench(Tile*)
+        │   0x00a14408      011000e3       movw r1, 1
+        │   0x00a1440c      7000afe6       sxtb r0, r0
+        │   0x00a14410      000050e3       cmp r0, 0
+        │   0x00a14414      04108de5       str r1, [sp, 4]
+       ┌──< 0x00a14418      0500001a       bne 0xa14434
+       ││   0x00a1441c      04001be5       ldr r0, [fp, -4]
+       ││   0x00a14420      0300d0e5       ldrb r0, [r0, 3]
+       ││   0x00a14424      300050e3       cmp r0, 0x30                ; '0'
+       ││   0x00a14428      000000e3       movw r0, 0
+       ││   0x00a1442c      0100a003       moveq r0, 1
+       ││   0x00a14430      04008de5       str r0, [sp, 4]
+       └──> 0x00a14434      04009de5       ldr r0, [sp, 4]
+        │   0x00a14438      08008de5       str r0, [sp, 8]
+        └─> 0x00a1443c      08009de5       ldr r0, [sp, 8]
+            0x00a14440      010000e2       and r0, r0, 1
+            0x00a14444      7000afe6       sxtb r0, r0
+            0x00a14448      0bd0a0e1       mov sp, fp
+            0x00a1444c      0088bde8       pop {fp, pc}

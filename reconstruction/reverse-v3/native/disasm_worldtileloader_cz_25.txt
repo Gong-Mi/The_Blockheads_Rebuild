@@ -1,0 +1,74 @@
+# tileTexCoordsForWorkbenchTypeAndLevel  [C function]
+# implementation: 0x005effb8
+# ARM.exidx end: 0x005f00c4
+
+            ;-- tileTexCoordsForWorkbenchTypeAndLevel(WorkbenchType, int, signed char, signed char):
+; tileTexCoordsForWorkbenchTypeAndLevel(WorkbenchType, int, signed cha
+; r, signed char)
+            0x005effb8      00482de9       push {fp, lr}
+            0x005effbc      0db0a0e1       mov fp, sp
+            0x005effc0      40d04de2       sub sp, sp, 0x40
+            0x005effc4      08c09be5       ldr ip, [fp, 8]
+            0x005effc8      04100be5       str r1, [fp, -4]
+            0x005effcc      08200be5       str r2, [fp, -8]
+            0x005effd0      09304be5       strb r3, [fp, -9]
+            0x005effd4      0ac04be5       strb ip, [fp, -0xa]
+            0x005effd8      d9105be1       ldrsb r1, [fp, -9]
+            0x005effdc      000051e3       cmp r1, 0
+            0x005effe0      1c000be5       str r0, [fp, -0x1c]
+        ┌─< 0x005effe4      0500000a       beq 0x5f0000
+        │   0x005effe8      04001be5       ldr r0, [fp, -4]
+        │   0x005effec      08101be5       ldr r1, [fp, -8]
+        │   0x005efff0      da205be1       ldrsb r2, [fp, -0xa]
+        │   0x005efff4      820b00eb       bl 0x5f2e04
+        │   0x005efff8      20008de5       str r0, [sp, 0x20]
+       ┌──< 0x005efffc      040000ea       b 0x5f0014
+       │└─> 0x005f0000      04001be5       ldr r0, [fp, -4]
+       │    0x005f0004      08101be5       ldr r1, [fp, -8]
+       │    0x005f0008      da205be1       ldrsb r2, [fp, -0xa]
+       │    0x005f000c      be0b00eb       bl 0x5f2f0c
+       │    0x005f0010      20008de5       str r0, [sp, 0x20]
+       └──> 0x005f0014      20009de5       ldr r0, [sp, 0x20]
+            0x005f0018      280a9fed       vldr s0, [0x005f00c0]
+            0x005f001c      231b9fed       vldr d1, [0x005f00b0]
+            0x005f0020      242b9fed       vldr d2, [0x005f00b8]
+            0x005f0024      201000e3       movw r1, 0x20
+            0x005f0028      10000be5       str r0, [fp, -0x10]
+            0x005f002c      10001be5       ldr r0, [fp, -0x10]
+            0x005f0030      1c108de5       str r1, [sp, 0x1c]
+            0x005f0034      042b8ded       vstr d2, [sp, 0x10]
+            0x005f0038      030a8ded       vstr s0, [sp, 0xc]
+            0x005f003c      001b8ded       vstr d1, [sp]
+            0x005f0040      f64befeb       bl sym.imp.__modsi3
+            0x005f0044      14000be5       str r0, [fp, -0x14]
+            0x005f0048      10001be5       ldr r0, [fp, -0x10]
+            0x005f004c      1c109de5       ldr r1, [sp, 0x1c]
+            0x005f0050      b44defeb       bl sym.imp.__aeabi_idiv
+            0x005f0054      18000be5       str r0, [fp, -0x18]
+            0x005f0058      14001be5       ldr r0, [fp, -0x14]
+            0x005f005c      100a00ee       vmov s0, r0
+            0x005f0060      c01bb8ee       vcvt.f64.s32 d1, s0
+            0x005f0064      042b9ded       vldr d2, [sp, 0x10]
+            0x005f0068      011b22ee       vmul.f64 d1, d2, d1
+            0x005f006c      003b9ded       vldr d3, [sp]
+            0x005f0070      031b31ee       vadd.f64 d1, d1, d3
+            0x005f0074      c10bb7ee       vcvt.f32.f64 s0, d1
+            0x005f0078      1c001be5       ldr r0, [fp, -0x1c]
+            0x005f007c      000a80ed       vstr s0, [r0]
+            0x005f0080      030a9ded       vldr s0, [sp, 0xc]
+            0x005f0084      020a80ed       vstr s0, [r0, 8]
+            0x005f0088      18101be5       ldr r1, [fp, -0x18]
+            0x005f008c      101a04ee       vmov s8, r1
+            0x005f0090      c41bb8ee       vcvt.f64.s32 d1, s8
+            0x005f0094      011b22ee       vmul.f64 d1, d2, d1
+            0x005f0098      031b31ee       vadd.f64 d1, d1, d3
+            0x005f009c      c14bb7ee       vcvt.f32.f64 s8, d1
+            0x005f00a0      014a80ed       vstr s8, [r0, 4]
+            0x005f00a4      030a80ed       vstr s0, [r0, 0xc]
+            0x005f00a8      0bd0a0e1       mov sp, fp
+            0x005f00ac      0088bde8       pop {fp, pc}
+            0x005f00b0      00000000       andeq r0, r0, r0
+            0x005f00b4      0000403f       svclo 0x400000
+            0x005f00b8      00000000       andeq r0, r0, r0
+            0x005f00bc      0000a03f       svclo 0xa00000
+            0x005f00c0      0000f83c       ldcllo p0, c0, [r8], 0

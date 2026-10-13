@@ -1,0 +1,568 @@
+# particleColorForTile  [C function]
+# implementation: 0x00a10a48
+# ARM.exidx end: 0x00a11690
+
+            ;-- particleColorForTile(Tile*):
+            0x00a10a48      00482de9       push {fp, lr}               ; particleColorForTile(Tile*)
+            0x00a10a4c      0db0a0e1       mov fp, sp
+            0x00a10a50      f8d04de2       sub sp, sp, 0xf8
+            0x00a10a54      002000e3       movw r2, 0
+            0x00a10a58      04100be5       str r1, [fp, -4]
+            0x00a10a5c      04101be5       ldr r1, [fp, -4]
+            0x00a10a60      020051e1       cmp r1, r2
+            0x00a10a64      08000be5       str r0, [fp, -8]
+        ┌─< 0x00a10a68      0202000a       beq 0xa11278
+        │   0x00a10a6c      04001be5       ldr r0, [fp, -4]
+        │   0x00a10a70      270200eb       bl sym.tileIsBushOrScrub_Tile_ ; tileIsBushOrScrub(Tile*)
+        │   0x00a10a74      7000afe6       sxtb r0, r0
+        │   0x00a10a78      000050e3       cmp r0, 0
+       ┌──< 0x00a10a7c      1200000a       beq 0xa10acc
+       ││   0x00a10a80      000000e3       movw r0, 0
+       ││   0x00a10a84      fa0a9fed       vldr s0, [0x00a10e74]
+       ││   0x00a10a88      fa1a9fed       vldr s2, [0x00a10e78]
+       ││   0x00a10a8c      fa2a9fed       vldr s4, [0x00a10e7c]
+       ││   0x00a10a90      011000e3       movw r1, 1
+       ││   0x00a10a94      003ab7ee       vmov.f32 s6, 1
+       ││   0x00a10a98      08201be5       ldr r2, [fp, -8]
+       ││   0x00a10a9c      0c000be5       str r0, [fp, -0xc]
+       ││   0x00a10aa0      0200a0e1       mov r0, r2
+       ││   0x00a10aa4      103a10ee       vmov r3, s0
+       ││   0x00a10aa8      10100be5       str r1, [fp, -0x10]
+       ││   0x00a10aac      0310a0e1       mov r1, r3
+       ││   0x00a10ab0      102a11ee       vmov r2, s2
+       ││   0x00a10ab4      103a12ee       vmov r3, s4
+       ││   0x00a10ab8      10ca13ee       vmov ip, s6
+       ││   0x00a10abc      00c08de5       str ip, [sp]
+       ││   0x00a10ac0      9000ebeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+       ││   0x00a10ac4      14000be5       str r0, [fp, -0x14]
+      ┌───< 0x00a10ac8      f60100ea       b 0xa112a8
+      │└──> 0x00a10acc      04001be5       ldr r0, [fp, -4]
+      │ │   0x00a10ad0      2e0200eb       bl sym.tileIsTreeTrunk_Tile_ ; tileIsTreeTrunk(Tile*)
+      │ │   0x00a10ad4      7000afe6       sxtb r0, r0
+      │ │   0x00a10ad8      000050e3       cmp r0, 0
+      │┌──< 0x00a10adc      0f00000a       beq 0xa10b20
+      │││   0x00a10ae0      f60a9fed       vldr s0, [0x00a10ec0]
+      │││   0x00a10ae4      f61a9fed       vldr s2, [0x00a10ec4]
+      │││   0x00a10ae8      f62a9fed       vldr s4, [0x00a10ec8]
+      │││   0x00a10aec      010000e3       movw r0, 1
+      │││   0x00a10af0      003ab7ee       vmov.f32 s6, 1
+      │││   0x00a10af4      08101be5       ldr r1, [fp, -8]
+      │││   0x00a10af8      18000be5       str r0, [fp, -0x18]
+      │││   0x00a10afc      0100a0e1       mov r0, r1
+      │││   0x00a10b00      101a10ee       vmov r1, s0
+      │││   0x00a10b04      102a11ee       vmov r2, s2
+      │││   0x00a10b08      103a12ee       vmov r3, s4
+      │││   0x00a10b0c      10ca13ee       vmov ip, s6
+      │││   0x00a10b10      00c08de5       str ip, [sp]
+      │││   0x00a10b14      7b00ebeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+      │││   0x00a10b18      1c000be5       str r0, [fp, -0x1c]
+     ┌────< 0x00a10b1c      e10100ea       b 0xa112a8
+     ││└──> 0x00a10b20      04001be5       ldr r0, [fp, -4]
+     ││ │   0x00a10b24      0000d0e5       ldrb r0, [r0]
+     ││ │   0x00a10b28      010040e2       sub r0, r0, 1
+     ││ │   0x00a10b2c      4c0050e3       cmp r0, 0x4c                ; 'L'
+     ││ │   0x00a10b30      20000be5       str r0, [fp, -0x20]
+     ││┌──< 0x00a10b34      c001008a       bhi 0xa1123c
+     ││││   0x00a10b38      20001be5       ldr r0, [fp, -0x20]
+     ││││   0x00a10b3c      0011a0e1       lsl r1, r0, 2
+     ││││   0x00a10b40      04208fe2       add r2, pc, 4
+     ││││   0x00a10b44      021091e7       ldr r1, [r1, r2]
+     ││││   0x00a10b48      02f081e0       add pc, r1, r2
+     ││││   0x00a10b4c      34010000       andeq r0, r0, r4, lsr r1
+     ││││   0x00a10b50      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10b54      80040000       andeq r0, r0, r0, lsl 9
+     ││││   0x00a10b58      80040000       andeq r0, r0, r0, lsl 9
+     ││││   0x00a10b5c      80040000       andeq r0, r0, r0, lsl 9
+     ││││   0x00a10b60      c0040000       andeq r0, r0, r0, asr 9
+     ││││   0x00a10b64      6c010000       andeq r0, r0, ip, ror 2
+     ││││   0x00a10b68      6c010000       andeq r0, r0, ip, ror 2
+     ││││   0x00a10b6c      ec010000       andeq r0, r0, ip, ror 3
+     ││││   0x00a10b70      34010000       andeq r0, r0, r4, lsr r1
+     ││││   0x00a10b74      2c020000       andeq r0, r0, ip, lsr 4
+     ││││   0x00a10b78      00040000       andeq r0, r0, r0, lsl 8
+     ││││   0x00a10b7c      00040000       andeq r0, r0, r0, lsl 8
+     ││││   0x00a10b80      40040000       andeq r0, r0, r0, asr 8
+     ││││   0x00a10b84      40040000       andeq r0, r0, r0, asr 8
+     ││││   0x00a10b88      68020000       andeq r0, r0, r8, ror 4
+     ││││   0x00a10b8c      ac010000       andeq r0, r0, ip, lsr 3
+     ││││   0x00a10b90      ac010000       andeq r0, r0, ip, lsr 3
+     ││││   0x00a10b94      9c020000       muleq r0, ip, r2
+     ││││   0x00a10b98      9c020000       muleq r0, ip, r2
+     ││││   0x00a10b9c      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10ba0      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10ba4      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10ba8      80040000       andeq r0, r0, r0, lsl 9
+     ││││   0x00a10bac      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10bb0      e8020000       andeq r0, r0, r8, ror 5
+     ││││   0x00a10bb4      c0040000       andeq r0, r0, r0, asr 9
+     ││││   0x00a10bb8      c0040000       andeq r0, r0, r0, asr 9
+     ││││   0x00a10bbc      c0030000       andeq r0, r0, r0, asr 7
+     ││││   0x00a10bc0      c0030000       andeq r0, r0, r0, asr 7
+     ││││   0x00a10bc4      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10bc8      ec010000       andeq r0, r0, ip, ror 3
+     ││││   0x00a10bcc      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10bd0      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10bd4      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10bd8      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10bdc      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10be0      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10be4      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10be8      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10bec      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10bf0      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10bf4      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10bf8      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10bfc      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10c00      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10c04      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10c08      04050000       andeq r0, r0, r4, lsl 10
+     ││││   0x00a10c0c      04050000       andeq r0, r0, r4, lsl 10
+     ││││   0x00a10c10      04050000       andeq r0, r0, r4, lsl 10
+     ││││   0x00a10c14      ac060000       andeq r0, r0, ip, lsr 13
+     ││││   0x00a10c18      ac060000       andeq r0, r0, ip, lsr 13
+     ││││   0x00a10c1c      34030000       andeq r0, r0, r4, lsr r3
+     ││││   0x00a10c20      80030000       andeq r0, r0, r0, lsl 7
+     ││││   0x00a10c24      34030000       andeq r0, r0, r4, lsr r3
+     ││││   0x00a10c28      ac060000       andeq r0, r0, ip, lsr 13
+     ││││   0x00a10c2c      ac060000       andeq r0, r0, ip, lsr 13
+     ││││   0x00a10c30      ac060000       andeq r0, r0, ip, lsr 13
+     ││││   0x00a10c34      ac060000       andeq r0, r0, ip, lsr 13
+     ││││   0x00a10c38      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10c3c      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10c40      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10c44      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10c48      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10c4c      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10c50      f0060000       strdeq r0, r1, [r0], -r0
+     ││││   0x00a10c54      ac060000       andeq r0, r0, ip, lsr 13
+     ││││   0x00a10c58      ac060000       andeq r0, r0, ip, lsr 13
+     ││││   0x00a10c5c      ac060000       andeq r0, r0, ip, lsr 13
+     ││││   0x00a10c60      34010000       andeq r0, r0, r4, lsr r1
+     ││││   0x00a10c64      50050000       andeq r0, r0, r0, asr r5
+     ││││   0x00a10c68      98050000       muleq r0, r8, r5
+     ││││   0x00a10c6c      dc050000       ldrdeq r0, r1, [r0], -ip
+     ││││   0x00a10c70      28060000       andeq r0, r0, r8, lsr 12
+     ││││   0x00a10c74      70060000       andeq r0, r0, r0, ror r6
+     ││││   0x00a10c78      40040000       andeq r0, r0, r0, asr 8
+     ││││   0x00a10c7c      40040000       andeq r0, r0, r0, asr 8
+     ││││   0x00a10c80      f10a9fed       vldr s0, [0x00a1104c]
+     ││││   0x00a10c84      010000e3       movw r0, 1
+     ││││   0x00a10c88      001ab7ee       vmov.f32 s2, 1
+     ││││   0x00a10c8c      08101be5       ldr r1, [fp, -8]
+     ││││   0x00a10c90      24000be5       str r0, [fp, -0x24]
+     ││││   0x00a10c94      0100a0e1       mov r0, r1
+     ││││   0x00a10c98      101a10ee       vmov r1, s0
+     ││││   0x00a10c9c      102a10ee       vmov r2, s0
+     ││││   0x00a10ca0      103a10ee       vmov r3, s0
+     ││││   0x00a10ca4      10ca11ee       vmov ip, s2
+     ││││   0x00a10ca8      00c08de5       str ip, [sp]
+     ││││   0x00a10cac      1500ebeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+     ││││   0x00a10cb0      28000be5       str r0, [fp, -0x28]
+    ┌─────< 0x00a10cb4      7b0100ea       b 0xa112a8
+    │││││   0x00a10cb8      f40a9fed       vldr s0, [0x00a11090]
+    │││││   0x00a10cbc      f41a9fed       vldr s2, [0x00a11094]
+    │││││   0x00a10cc0      f42a9fed       vldr s4, [0x00a11098]
+    │││││   0x00a10cc4      010000e3       movw r0, 1
+    │││││   0x00a10cc8      003ab7ee       vmov.f32 s6, 1
+    │││││   0x00a10ccc      08101be5       ldr r1, [fp, -8]
+    │││││   0x00a10cd0      2c000be5       str r0, [fp, -0x2c]
+    │││││   0x00a10cd4      0100a0e1       mov r0, r1
+    │││││   0x00a10cd8      101a10ee       vmov r1, s0
+    │││││   0x00a10cdc      102a11ee       vmov r2, s2
+    │││││   0x00a10ce0      103a12ee       vmov r3, s4
+    │││││   0x00a10ce4      10ca13ee       vmov ip, s6
+    │││││   0x00a10ce8      00c08de5       str ip, [sp]
+    │││││   0x00a10cec      0500ebeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+    │││││   0x00a10cf0      30000be5       str r0, [fp, -0x30]
+   ┌──────< 0x00a10cf4      6b0100ea       b 0xa112a8
+   ││││││   0x00a10cf8      f60a9fed       vldr s0, [0x00a110d8]
+   ││││││   0x00a10cfc      f61a9fed       vldr s2, [0x00a110dc]
+   ││││││   0x00a10d00      f62a9fed       vldr s4, [0x00a110e0]
+   ││││││   0x00a10d04      010000e3       movw r0, 1
+   ││││││   0x00a10d08      003ab7ee       vmov.f32 s6, 1
+   ││││││   0x00a10d0c      08101be5       ldr r1, [fp, -8]
+   ││││││   0x00a10d10      34000be5       str r0, [fp, -0x34]         ; elf_phdr
+   ││││││   0x00a10d14      0100a0e1       mov r0, r1
+   ││││││   0x00a10d18      101a10ee       vmov r1, s0
+   ││││││   0x00a10d1c      102a11ee       vmov r2, s2
+   ││││││   0x00a10d20      103a12ee       vmov r3, s4
+   ││││││   0x00a10d24      10ca13ee       vmov ip, s6
+   ││││││   0x00a10d28      00c08de5       str ip, [sp]
+   ││││││   0x00a10d2c      f5ffeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+   ││││││   0x00a10d30      38000be5       str r0, [fp, -0x38]
+  ┌───────< 0x00a10d34      5b0100ea       b 0xa112a8
+  │││││││   0x00a10d38      600a9fed       vldr s0, [0x00a10ec0]
+  │││││││   0x00a10d3c      601a9fed       vldr s2, [0x00a10ec4]
+  │││││││   0x00a10d40      602a9fed       vldr s4, [0x00a10ec8]
+  │││││││   0x00a10d44      010000e3       movw r0, 1
+  │││││││   0x00a10d48      003ab7ee       vmov.f32 s6, 1
+  │││││││   0x00a10d4c      08101be5       ldr r1, [fp, -8]
+  │││││││   0x00a10d50      3c000be5       str r0, [fp, -0x3c]
+  │││││││   0x00a10d54      0100a0e1       mov r0, r1
+  │││││││   0x00a10d58      101a10ee       vmov r1, s0
+  │││││││   0x00a10d5c      102a11ee       vmov r2, s2
+  │││││││   0x00a10d60      103a12ee       vmov r3, s4
+  │││││││   0x00a10d64      10ca13ee       vmov ip, s6
+  │││││││   0x00a10d68      00c08de5       str ip, [sp]
+  │││││││   0x00a10d6c      e5ffeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││││   0x00a10d70      40000be5       str r0, [fp, -0x40]
+  ────────< 0x00a10d74      4b0100ea       b 0xa112a8
+  │││││││   0x00a10d78      010000e3       movw r0, 1
+  │││││││   0x00a10d7c      000ab7ee       vmov.f32 s0, 1
+  │││││││   0x00a10d80      f91a9fed       vldr s2, [0x00a1116c]
+  │││││││   0x00a10d84      f92a9fed       vldr s4, [0x00a11170]
+  │││││││   0x00a10d88      08101be5       ldr r1, [fp, -8]
+  │││││││   0x00a10d8c      44000be5       str r0, [fp, -0x44]
+  │││││││   0x00a10d90      0100a0e1       mov r0, r1
+  │││││││   0x00a10d94      101a10ee       vmov r1, s0
+  │││││││   0x00a10d98      102a11ee       vmov r2, s2
+  │││││││   0x00a10d9c      103a12ee       vmov r3, s4
+  │││││││   0x00a10da0      10ca10ee       vmov ip, s0
+  │││││││   0x00a10da4      00c08de5       str ip, [sp]
+  │││││││   0x00a10da8      d6ffeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││││   0x00a10dac      48000be5       str r0, [fp, -0x48]
+  ────────< 0x00a10db0      3c0100ea       b 0xa112a8
+  │││││││   0x00a10db4      010000e3       movw r0, 1
+  │││││││   0x00a10db8      000ab7ee       vmov.f32 s0, 1
+  │││││││   0x00a10dbc      08101be5       ldr r1, [fp, -8]
+  │││││││   0x00a10dc0      4c000be5       str r0, [fp, -0x4c]
+  │││││││   0x00a10dc4      0100a0e1       mov r0, r1
+  │││││││   0x00a10dc8      101a10ee       vmov r1, s0
+  │││││││   0x00a10dcc      102a10ee       vmov r2, s0
+  │││││││   0x00a10dd0      103a10ee       vmov r3, s0
+  │││││││   0x00a10dd4      10ca10ee       vmov ip, s0
+  │││││││   0x00a10dd8      00c08de5       str ip, [sp]
+  │││││││   0x00a10ddc      c9ffeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││││   0x00a10de0      50000be5       str r0, [fp, -0x50]
+  ────────< 0x00a10de4      2f0100ea       b 0xa112a8
+  │││││││   0x00a10de8      f20a9fed       vldr s0, [0x00a111b8]
+  │││││││   0x00a10dec      000000e3       movw r0, 0
+  │││││││   0x00a10df0      1f1a9fed       vldr s2, [0x00a10e74]
+  │││││││   0x00a10df4      fe2a9fed       vldr s4, [0x00a111f4]
+  │││││││   0x00a10df8      011000e3       movw r1, 1
+  │││││││   0x00a10dfc      003ab7ee       vmov.f32 s6, 1
+  │││││││   0x00a10e00      08201be5       ldr r2, [fp, -8]
+  │││││││   0x00a10e04      54000be5       str r0, [fp, -0x54]
+  │││││││   0x00a10e08      0200a0e1       mov r0, r2
+  │││││││   0x00a10e0c      103a10ee       vmov r3, s0
+  │││││││   0x00a10e10      58100be5       str r1, [fp, -0x58]
+  │││││││   0x00a10e14      0310a0e1       mov r1, r3
+  │││││││   0x00a10e18      102a11ee       vmov r2, s2
+  │││││││   0x00a10e1c      103a12ee       vmov r3, s4
+  │││││││   0x00a10e20      10ca13ee       vmov ip, s6
+  │││││││   0x00a10e24      00c08de5       str ip, [sp]
+  │││││││   0x00a10e28      b6ffeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││││   0x00a10e2c      5c000be5       str r0, [fp, -0x5c]
+  ────────< 0x00a10e30      1c0100ea       b 0xa112a8
+  │││││││   0x00a10e34      fd0a9fed       vldr s0, [0x00a11230]
+  │││││││   0x00a10e38      fd1a9fed       vldr s2, [0x00a11234]
+  │││││││   0x00a10e3c      fd2a9fed       vldr s4, [0x00a11238]
+  │││││││   0x00a10e40      010000e3       movw r0, 1
+  │││││││   0x00a10e44      003ab7ee       vmov.f32 s6, 1
+  │││││││   0x00a10e48      08101be5       ldr r1, [fp, -8]
+  │││││││   0x00a10e4c      60000be5       str r0, [fp, -0x60]
+  │││││││   0x00a10e50      0100a0e1       mov r0, r1
+  │││││││   0x00a10e54      101a10ee       vmov r1, s0
+  │││││││   0x00a10e58      102a11ee       vmov r2, s2
+  │││││││   0x00a10e5c      103a12ee       vmov r3, s4
+  │││││││   0x00a10e60      10ca13ee       vmov ip, s6
+  │││││││   0x00a10e64      00c08de5       str ip, [sp]
+  │││││││   0x00a10e68      a6ffeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││││   0x00a10e6c      64000be5       str r0, [fp, -0x64]
+  ────────< 0x00a10e70      0c0100ea       b 0xa112a8
+  │││││││   0x00a10e74      00000000       andeq r0, r0, r0
+  │││││││   0x00a10e78      e9f0703e       cdplo p0, 7, c15, c0, c9, 7
+  │││││││   0x00a10e7c      fdc1403c       mcrrlo p1, 0xf, ip, r0, c13
+  │││││││   0x00a10e80      fa0a9fed       vldr s0, [0x00a11270]
+  │││││││   0x00a10e84      0e1a9fed       vldr s2, [0x00a10ec4]
+  │││││││   0x00a10e88      f92a9fed       vldr s4, [0x00a11274]
+  │││││││   0x00a10e8c      010000e3       movw r0, 1
+  │││││││   0x00a10e90      003ab7ee       vmov.f32 s6, 1
+  │││││││   0x00a10e94      08101be5       ldr r1, [fp, -8]
+  │││││││   0x00a10e98      68000be5       str r0, [fp, -0x68]
+  │││││││   0x00a10e9c      0100a0e1       mov r0, r1
+  │││││││   0x00a10ea0      101a10ee       vmov r1, s0
+  │││││││   0x00a10ea4      102a11ee       vmov r2, s2
+  │││││││   0x00a10ea8      103a12ee       vmov r3, s4
+  │││││││   0x00a10eac      10ca13ee       vmov ip, s6
+  │││││││   0x00a10eb0      00c08de5       str ip, [sp]
+  │││││││   0x00a10eb4      93ffeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││││   0x00a10eb8      6c000be5       str r0, [fp, -0x6c]
+  ────────< 0x00a10ebc      f90000ea       b 0xa112a8
+  │││││││   0x00a10ec0      c5c9493f       svclo 0x49c9c5
+  │││││││   0x00a10ec4      bebebe3e       mrclo p14, 5, fp, c14, c14, 5
+  │││││││   0x00a10ec8      9294143e       mrclo p4, 0, sb, c4, c2, 4
+  │││││││   0x00a10ecc      fd0a9fed       vldr s0, [0x00a112c8]
+  │││││││   0x00a10ed0      f61a9fed       vldr s2, [0x00a112b0]
+  │││││││   0x00a10ed4      f62a9fed       vldr s4, [0x00a112b4]
+  │││││││   0x00a10ed8      010000e3       movw r0, 1
+  │││││││   0x00a10edc      003ab7ee       vmov.f32 s6, 1
+  │││││││   0x00a10ee0      08101be5       ldr r1, [fp, -8]
+  │││││││   0x00a10ee4      70000be5       str r0, [fp, -0x70]
+  │││││││   0x00a10ee8      0100a0e1       mov r0, r1
+  │││││││   0x00a10eec      101a10ee       vmov r1, s0
+  │││││││   0x00a10ef0      102a11ee       vmov r2, s2
+  │││││││   0x00a10ef4      103a12ee       vmov r3, s4
+  │││││││   0x00a10ef8      10ca13ee       vmov ip, s6
+  │││││││   0x00a10efc      00c08de5       str ip, [sp]
+  │││││││   0x00a10f00      80ffeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││││   0x00a10f04      74000be5       str r0, [fp, -0x74]
+  ────────< 0x00a10f08      e60000ea       b 0xa112a8
+  │││││││   0x00a10f0c      fd0a9fed       vldr s0, [0x00a11308]
+  │││││││   0x00a10f10      fd1a9fed       vldr s2, [0x00a1130c]
+  │││││││   0x00a10f14      fd2a9fed       vldr s4, [0x00a11310]
+  │││││││   0x00a10f18      010000e3       movw r0, 1
+  │││││││   0x00a10f1c      003ab7ee       vmov.f32 s6, 1
+  │││││││   0x00a10f20      08101be5       ldr r1, [fp, -8]
+  │││││││   0x00a10f24      78000be5       str r0, [fp, -0x78]
+  │││││││   0x00a10f28      0100a0e1       mov r0, r1
+  │││││││   0x00a10f2c      101a10ee       vmov r1, s0
+  │││││││   0x00a10f30      102a11ee       vmov r2, s2
+  │││││││   0x00a10f34      103a12ee       vmov r3, s4
+  │││││││   0x00a10f38      10ca13ee       vmov ip, s6
+  │││││││   0x00a10f3c      00c08de5       str ip, [sp]
+  │││││││   0x00a10f40      70ffeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││││   0x00a10f44      7c008de5       str r0, [sp, 0x7c]
+  ────────< 0x00a10f48      d60000ea       b 0xa112a8
+  │││││││   0x00a10f4c      ea0a9fed       vldr s0, [0x00a112fc]
+  │││││││   0x00a10f50      ea1a9fed       vldr s2, [0x00a11300]
+  │││││││   0x00a10f54      ea2a9fed       vldr s4, [0x00a11304]
+  │││││││   0x00a10f58      010000e3       movw r0, 1
+  │││││││   0x00a10f5c      003ab7ee       vmov.f32 s6, 1
+  │││││││   0x00a10f60      08101be5       ldr r1, [fp, -8]
+  │││││││   0x00a10f64      78008de5       str r0, [sp, 0x78]
+  │││││││   0x00a10f68      0100a0e1       mov r0, r1
+  │││││││   0x00a10f6c      101a10ee       vmov r1, s0
+  │││││││   0x00a10f70      102a11ee       vmov r2, s2
+  │││││││   0x00a10f74      103a12ee       vmov r3, s4
+  │││││││   0x00a10f78      10ca13ee       vmov ip, s6
+  │││││││   0x00a10f7c      00c08de5       str ip, [sp]
+  │││││││   0x00a10f80      60ffeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││││   0x00a10f84      74008de5       str r0, [sp, 0x74]
+  ────────< 0x00a10f88      c60000ea       b 0xa112a8
+  │││││││   0x00a10f8c      d70a9fed       vldr s0, [0x00a112f0]
+  │││││││   0x00a10f90      d71a9fed       vldr s2, [0x00a112f4]
+  │││││││   0x00a10f94      d72a9fed       vldr s4, [0x00a112f8]
+  │││││││   0x00a10f98      010000e3       movw r0, 1
+  │││││││   0x00a10f9c      003ab7ee       vmov.f32 s6, 1
+  │││││││   0x00a10fa0      08101be5       ldr r1, [fp, -8]
+  │││││││   0x00a10fa4      70008de5       str r0, [sp, 0x70]
+  │││││││   0x00a10fa8      0100a0e1       mov r0, r1
+  │││││││   0x00a10fac      101a10ee       vmov r1, s0
+  │││││││   0x00a10fb0      102a11ee       vmov r2, s2
+  │││││││   0x00a10fb4      103a12ee       vmov r3, s4
+  │││││││   0x00a10fb8      10ca13ee       vmov ip, s6
+  │││││││   0x00a10fbc      00c08de5       str ip, [sp]
+  │││││││   0x00a10fc0      50ffeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││││   0x00a10fc4      6c008de5       str r0, [sp, 0x6c]
+  ────────< 0x00a10fc8      b60000ea       b 0xa112a8
+  │││││││   0x00a10fcc      c40a9fed       vldr s0, [0x00a112e4]
+  │││││││   0x00a10fd0      c41a9fed       vldr s2, [0x00a112e8]
+  │││││││   0x00a10fd4      c42a9fed       vldr s4, [0x00a112ec]
+  │││││││   0x00a10fd8      010000e3       movw r0, 1
+  │││││││   0x00a10fdc      003ab7ee       vmov.f32 s6, 1
+  │││││││   0x00a10fe0      08101be5       ldr r1, [fp, -8]
+  │││││││   0x00a10fe4      68008de5       str r0, [sp, 0x68]
+  │││││││   0x00a10fe8      0100a0e1       mov r0, r1
+  │││││││   0x00a10fec      101a10ee       vmov r1, s0
+  │││││││   0x00a10ff0      102a11ee       vmov r2, s2
+  │││││││   0x00a10ff4      103a12ee       vmov r3, s4
+  │││││││   0x00a10ff8      10ca13ee       vmov ip, s6
+  │││││││   0x00a10ffc      00c08de5       str ip, [sp]
+  │││││││   0x00a11000      40ffeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││││   0x00a11004      64008de5       str r0, [sp, 0x64]
+  ────────< 0x00a11008      a60000ea       b 0xa112a8
+  │││││││   0x00a1100c      b10a9fed       vldr s0, [0x00a112d8]
+  │││││││   0x00a11010      b11a9fed       vldr s2, [0x00a112dc]
+  │││││││   0x00a11014      b12a9fed       vldr s4, [0x00a112e0]
+  │││││││   0x00a11018      010000e3       movw r0, 1
+  │││││││   0x00a1101c      003ab7ee       vmov.f32 s6, 1
+  │││││││   0x00a11020      08101be5       ldr r1, [fp, -8]
+  │││││││   0x00a11024      60008de5       str r0, [sp, 0x60]
+  │││││││   0x00a11028      0100a0e1       mov r0, r1
+  │││││││   0x00a1102c      101a10ee       vmov r1, s0
+  │││││││   0x00a11030      102a11ee       vmov r2, s2
+  │││││││   0x00a11034      103a12ee       vmov r3, s4
+  │││││││   0x00a11038      10ca13ee       vmov ip, s6
+  │││││││   0x00a1103c      00c08de5       str ip, [sp]
+  │││││││   0x00a11040      30ffeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││││   0x00a11044      5c008de5       str r0, [sp, 0x5c]
+  ────────< 0x00a11048      960000ea       b 0xa112a8
+  │││││││   0x00a1104c      0ad7a33e       cdplo p7, 0xa, c13, c3, c10, 0
+  │││││││   0x00a11050      9d0a9fed       vldr s0, [0x00a112cc]
+  │││││││   0x00a11054      9d1a9fed       vldr s2, [0x00a112d0]
+  │││││││   0x00a11058      9d2a9fed       vldr s4, [0x00a112d4]
+  │││││││   0x00a1105c      010000e3       movw r0, 1
+  │││││││   0x00a11060      003ab7ee       vmov.f32 s6, 1
+  │││││││   0x00a11064      08101be5       ldr r1, [fp, -8]
+  │││││││   0x00a11068      58008de5       str r0, [sp, 0x58]
+  │││││││   0x00a1106c      0100a0e1       mov r0, r1
+  │││││││   0x00a11070      101a10ee       vmov r1, s0
+  │││││││   0x00a11074      102a11ee       vmov r2, s2
+  │││││││   0x00a11078      103a12ee       vmov r3, s4
+  │││││││   0x00a1107c      10ca13ee       vmov ip, s6
+  │││││││   0x00a11080      00c08de5       str ip, [sp]
+  │││││││   0x00a11084      1fffeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││││   0x00a11088      54008de5       str r0, [sp, 0x54]
+  ────────< 0x00a1108c      850000ea       b 0xa112a8
+  │││││││   0x00a11090      e2e5653f       svclo 0x65e5e2
+  │││││││   0x00a11094      c5c7473f       svclo 0x47c7c5
+  │││││││   0x00a11098      938c8c3e       mcrlo p12, 4, r8, c12, c3, 4
+  │││││││   0x00a1109c      880a9fed       vldr s0, [0x00a112c4]
+  │││││││   0x00a110a0      881a9fed       vldr s2, [0x00a112c8]
+  │││││││   0x00a110a4      010000e3       movw r0, 1
+  │││││││   0x00a110a8      002ab7ee       vmov.f32 s4, 1
+  │││││││   0x00a110ac      08101be5       ldr r1, [fp, -8]
+  │││││││   0x00a110b0      50008de5       str r0, [sp, 0x50]
+  │││││││   0x00a110b4      0100a0e1       mov r0, r1
+  │││││││   0x00a110b8      101a10ee       vmov r1, s0
+  │││││││   0x00a110bc      102a11ee       vmov r2, s2
+  │││││││   0x00a110c0      103a12ee       vmov r3, s4
+  │││││││   0x00a110c4      10ca12ee       vmov ip, s4
+  │││││││   0x00a110c8      00c08de5       str ip, [sp]
+  │││││││   0x00a110cc      0dffeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││││   0x00a110d0      4c008de5       str r0, [sp, 0x4c]
+  ────────< 0x00a110d4      730000ea       b 0xa112a8
+  │││││││   0x00a110d8      bccaca3e       invalid
+  │││││││   0x00a110dc      919c9c3e       mrclo p12, 4, sb, c12, c1, 4
+  │││││││   0x00a110e0      7380803e       mcrlo p0, 4, r8, c0, c3, 3
+  │││││││   0x00a110e4      000000e3       movw r0, 0
+  │││││││   0x00a110e8      720a9fed       vldr s0, [0x00a112b8]
+  │││││││   0x00a110ec      011000e3       movw r1, 1
+  │││││││   0x00a110f0      001ab7ee       vmov.f32 s2, 1
+  │││││││   0x00a110f4      08201be5       ldr r2, [fp, -8]
+  │││││││   0x00a110f8      48008de5       str r0, [sp, 0x48]
+  │││││││   0x00a110fc      0200a0e1       mov r0, r2
+  │││││││   0x00a11100      103a10ee       vmov r3, s0
+  │││││││   0x00a11104      44108de5       str r1, [sp, 0x44]
+  │││││││   0x00a11108      0310a0e1       mov r1, r3
+  │││││││   0x00a1110c      102a10ee       vmov r2, s0
+  │││││││   0x00a11110      103a11ee       vmov r3, s2
+  │││││││   0x00a11114      10ca11ee       vmov ip, s2
+  │││││││   0x00a11118      00c08de5       str ip, [sp]
+  │││││││   0x00a1111c      f9feeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││││   0x00a11120      40008de5       str r0, [sp, 0x40]
+  ────────< 0x00a11124      5f0000ea       b 0xa112a8
+  │││││││   0x00a11128      000000e3       movw r0, 0
+  │││││││   0x00a1112c      610a9fed       vldr s0, [0x00a112b8]
+  │││││││   0x00a11130      011000e3       movw r1, 1
+  │││││││   0x00a11134      001ab7ee       vmov.f32 s2, 1
+  │││││││   0x00a11138      08201be5       ldr r2, [fp, -8]
+  │││││││   0x00a1113c      3c008de5       str r0, [sp, 0x3c]
+  │││││││   0x00a11140      0200a0e1       mov r0, r2
+  │││││││   0x00a11144      103a10ee       vmov r3, s0
+  │││││││   0x00a11148      38108de5       str r1, [sp, 0x38]
+  │││││││   0x00a1114c      0310a0e1       mov r1, r3
+  │││││││   0x00a11150      102a11ee       vmov r2, s2
+  │││││││   0x00a11154      103a10ee       vmov r3, s0
+  │││││││   0x00a11158      10ca11ee       vmov ip, s2
+  │││││││   0x00a1115c      00c08de5       str ip, [sp]
+  │││││││   0x00a11160      e8feeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││││   0x00a11164      34008de5       str r0, [sp, 0x34]
+  ────────< 0x00a11168      4e0000ea       b 0xa112a8
+  │││││││   0x00a1116c      cadc5c3e       cdplo p12, 5, c13, c12, c10, 6
+  │││││││   0x00a11170      8386863e       cdplo p6, 8, c8, c6, c3, 4
+  │││││││   0x00a11174      010000e3       movw r0, 1
+  │││││││   0x00a11178      000ab7ee       vmov.f32 s0, 1
+  │││││││   0x00a1117c      001000e3       movw r1, 0
+  │││││││   0x00a11180      4c1a9fed       vldr s2, [0x00a112b8]
+  │││││││   0x00a11184      08201be5       ldr r2, [fp, -8]
+  │││││││   0x00a11188      30008de5       str r0, [sp, 0x30]
+  │││││││   0x00a1118c      0200a0e1       mov r0, r2
+  │││││││   0x00a11190      103a10ee       vmov r3, s0
+  │││││││   0x00a11194      2c108de5       str r1, [sp, 0x2c]
+  │││││││   0x00a11198      0310a0e1       mov r1, r3
+  │││││││   0x00a1119c      102a11ee       vmov r2, s2
+  │││││││   0x00a111a0      103a11ee       vmov r3, s2
+  │││││││   0x00a111a4      10ca10ee       vmov ip, s0
+  │││││││   0x00a111a8      00c08de5       str ip, [sp]
+  │││││││   0x00a111ac      d5feeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││││   0x00a111b0      28008de5       str r0, [sp, 0x28]
+  ────────< 0x00a111b4      3b0000ea       b 0xa112a8
+  │││││││   0x00a111b8      e9f0f03e       cdplo p0, 0xf, c15, c0, c9, 7
+  │││││││   0x00a111bc      3f0a9fed       vldr s0, [0x00a112c0]
+  │││││││   0x00a111c0      010000e3       movw r0, 1
+  │││││││   0x00a111c4      001ab7ee       vmov.f32 s2, 1
+  │││││││   0x00a111c8      08101be5       ldr r1, [fp, -8]
+  │││││││   0x00a111cc      24008de5       str r0, [sp, 0x24]
+  │││││││   0x00a111d0      0100a0e1       mov r0, r1
+  │││││││   0x00a111d4      101a10ee       vmov r1, s0
+  │││││││   0x00a111d8      102a11ee       vmov r2, s2
+  │││││││   0x00a111dc      103a11ee       vmov r3, s2
+  │││││││   0x00a111e0      10ca11ee       vmov ip, s2
+  │││││││   0x00a111e4      00c08de5       str ip, [sp]
+  │││││││   0x00a111e8      c6feeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││││   0x00a111ec      20008de5       str r0, [sp, 0x20]
+  ────────< 0x00a111f0      2c0000ea       b 0xa112a8
+  │││││││   0x00a111f4      f5a0a03c       stclo p0, c10, [r0], 0x3d4
+  │││││││   0x00a111f8      2f0a9fed       vldr s0, [0x00a112bc]
+  │││││││   0x00a111fc      010000e3       movw r0, 1
+  │││││││   0x00a11200      001ab7ee       vmov.f32 s2, 1
+  │││││││   0x00a11204      08101be5       ldr r1, [fp, -8]
+  │││││││   0x00a11208      1c008de5       str r0, [sp, 0x1c]
+  │││││││   0x00a1120c      0100a0e1       mov r0, r1
+  │││││││   0x00a11210      101a10ee       vmov r1, s0
+  │││││││   0x00a11214      102a10ee       vmov r2, s0
+  │││││││   0x00a11218      103a10ee       vmov r3, s0
+  │││││││   0x00a1121c      10ca11ee       vmov ip, s2
+  │││││││   0x00a11220      00c08de5       str ip, [sp]
+  │││││││   0x00a11224      b7feeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││││   0x00a11228      18008de5       str r0, [sp, 0x18]
+  ────────< 0x00a1122c      1d0000ea       b 0xa112a8
+  │││││││   0x00a11230      01fa793f       svclo 0x79fa01
+  │││││││   0x00a11234      f8fc7c3f       svclo 0x7cfcf8
+  │││││││   0x00a11238      a9d8d83d       ldcllo p8, c13, [r8, 0x2a4]
+  │││││└──> 0x00a1123c      000000e3       movw r0, 0
+  │││││ │   0x00a11240      1c0a9fed       vldr s0, [0x00a112b8]
+  │││││ │   0x00a11244      08101be5       ldr r1, [fp, -8]
+  │││││ │   0x00a11248      14008de5       str r0, [sp, 0x14]
+  │││││ │   0x00a1124c      0100a0e1       mov r0, r1
+  │││││ │   0x00a11250      101a10ee       vmov r1, s0
+  │││││ │   0x00a11254      102a10ee       vmov r2, s0
+  │││││ │   0x00a11258      103a10ee       vmov r3, s0
+  │││││ │   0x00a1125c      10ca10ee       vmov ip, s0
+  │││││ │   0x00a11260      00c08de5       str ip, [sp]
+  │││││ │   0x00a11264      a7feeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  │││││ │   0x00a11268      10008de5       str r0, [sp, 0x10]
+  │││││┌──< 0x00a1126c      0d0000ea       b 0xa112a8
+  │││││││   0x00a11270      a29a1a3f       svclo 0x1a9aa2
+  │││││││   0x00a11274      c9e4643e       cdplo p4, 6, c14, c4, c9, 6
+  ││││││└─> 0x00a11278      000000e3       movw r0, 0
+  ││││││    0x00a1127c      0d0a9fed       vldr s0, [0x00a112b8]
+  ││││││    0x00a11280      08101be5       ldr r1, [fp, -8]
+  ││││││    0x00a11284      0c008de5       str r0, [sp, 0xc]
+  ││││││    0x00a11288      0100a0e1       mov r0, r1
+  ││││││    0x00a1128c      101a10ee       vmov r1, s0
+  ││││││    0x00a11290      102a10ee       vmov r2, s0
+  ││││││    0x00a11294      103a10ee       vmov r3, s0
+  ││││││    0x00a11298      10ca10ee       vmov ip, s0
+  ││││││    0x00a1129c      00c08de5       str ip, [sp]
+  ││││││    0x00a112a0      98feeaeb       bl method.Vector.Vector_float__float__float__float_ ; Vector::Vector(float, float, float, float)
+  ││││││    0x00a112a4      08008de5       str r0, [sp, 8]
+  └└└└└└──> 0x00a112a8      0bd0a0e1       mov sp, fp
+            0x00a112ac      0088bde8       pop {fp, pc}
+            0x00a112b0      8386063f       svclo 0x68683
+            0x00a112b4      a29c1c3f       svclo 0x1c9ca2
+            0x00a112b8      00000000       andeq r0, r0, r0
+            0x00a112bc      cdcccc3d       stcllo p12, c12, [ip, 0x334]
+            0x00a112c0      4a0c823e       cdplo p12, 8, c0, c2, c10, 2
+            0x00a112c4      c286073f       svclo 0x786c2
+            0x00a112c8      dae6e63e       mcrlo p6, 7, lr, c6, c10, 6
+            0x00a112cc      8f519e3e       cdplo p1, 9, c5, c14, c15, 4
+            0x00a112d0      889f1f3e       cdplo p15, 1, c9, c15, c8, 4
+            0x00a112d4      02d4d43c       ldcllo p4, c13, [r4], {2}
+            0x00a112d8      a9a3233f       svclo 0x23a3a9
+            0x00a112dc      919c9c3e       mrclo p12, 4, sb, c12, c1, 4
+            0x00a112e0      68d0503d       ldcllo p0, c13, [r0, -0x1a0]
+            0x00a112e4      cdce4e3f       svclo 0x4ececd
+            0x00a112e8      dcda5a3f       svclo 0x5adadc
+            0x00a112ec      ebe2623f       svclo 0x62e2eb
+            0x00a112f0      e4db5b3f       svclo 0x5bdbe4
+            0x00a112f4      d3d9593f       svclo 0x59d9d3
+            0x00a112f8      eaea6a3f       svclo 0x6aeaea
+            0x00a112fc      dcd8583f       svclo 0x58d8dc
+            0x00a11300      bfb6363f       svclo 0x36b6bf
+            0x00a11304      a29c1c3f       svclo 0x1c9ca2
+            0x00a11308      b398983d       ldclo p8, c9, [r8, 0x2cc]
+            0x00a1130c      e8f8783e       cdplo p8, 7, c15, c8, c8, 7
+            0x00a11310      a19e1e3f       svclo 0x1e9ea1

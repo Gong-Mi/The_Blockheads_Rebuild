@@ -1,0 +1,383 @@
+# drawClock  [C function]
+# implementation: 0x007c4860
+# ARM.exidx end: 0x007c4e48
+
+            ;-- drawClock:
+            0x007c4860      30482de9       push {r4, r5, fp, lr}
+            0x007c4864      08b08de2       add fp, sp, 8
+            0x007c4868      52df4de2       sub sp, sp, segment.NOTE
+            0x007c486c      103a00ee       vmov s0, r3
+            0x007c4870      102a01ee       vmov s2, r2
+            0x007c4874      101a02ee       vmov s4, r1
+            0x007c4878      100a03ee       vmov s6, r0
+            0x007c487c      064a9bed       vldr s8, [fp, 0x18]
+            0x007c4880      055a9bed       vldr s10, [fp, 0x14]
+            0x007c4884      046a9bed       vldr s12, [fp, 0x10]
+            0x007c4888      037a9bed       vldr s14, [fp, 0xc]
+            0x007c488c      020adbed       vldr s1, [fp, 8]
+            0x007c4890      010000e3       movw r0, 1
+            0x007c4894      001af7ee       vmov.f32 s3, 1
+            0x007c4898      033a0bed       vstr s6, [fp, -0xc]
+            0x007c489c      042a0bed       vstr s4, [fp, -0x10]
+            0x007c48a0      051a0bed       vstr s2, [fp, -0x14]
+            0x007c48a4      060a0bed       vstr s0, [fp, -0x18]
+            0x007c48a8      070a4bed       vstr s1, [fp, -0x1c]
+            0x007c48ac      087a0bed       vstr s14, [fp, -0x20]
+            0x007c48b0      096a0bed       vstr s12, [fp, -0x24]
+            0x007c48b4      0a5a0bed       vstr s10, [fp, -0x28]
+            0x007c48b8      0b4a0bed       vstr s8, [fp, -0x2c]
+            0x007c48bc      0b0a1bed       vldr s0, [fp, -0x2c]
+            0x007c48c0      e10ab4ee       vcmpe.f32 s0, s3
+            0x007c48c4      10faf1ee       vmrs apsr_nzcv, fpscr
+            0x007c48c8      48008de5       str r0, [sp, 0x48]
+        ┌─< 0x007c48cc      170000ba       blt 0x7c4930
+        │   0x007c48d0      030a1bed       vldr s0, [fp, -0xc]
+        │   0x007c48d4      041a1bed       vldr s2, [fp, -0x10]
+        │   0x007c48d8      052a1bed       vldr s4, [fp, -0x14]
+        │   0x007c48dc      063a1bed       vldr s6, [fp, -0x18]
+        │   0x007c48e0      074a1bed       vldr s8, [fp, -0x1c]
+        │   0x007c48e4      085a1bed       vldr s10, [fp, -0x20]
+        │   0x007c48e8      096a1bed       vldr s12, [fp, -0x24]
+        │   0x007c48ec      0a7a1bed       vldr s14, [fp, -0x28]
+        │   0x007c48f0      100a10ee       vmov r0, s0
+        │   0x007c48f4      101a11ee       vmov r1, s2
+        │   0x007c48f8      102a12ee       vmov r2, s4
+        │   0x007c48fc      103a13ee       vmov r3, s6
+        │   0x007c4900      10ca14ee       vmov ip, s8
+        │   0x007c4904      00c08de5       str ip, [sp]
+        │   0x007c4908      10ca15ee       vmov ip, s10
+        │   0x007c490c      04c08de5       str ip, [sp, 4]
+        │   0x007c4910      10ca16ee       vmov ip, s12
+        │   0x007c4914      08c08de5       str ip, [sp, 8]
+        │   0x007c4918      10ca17ee       vmov ip, s14
+        │   0x007c491c      0cc08de5       str ip, [sp, 0xc]
+        │   0x007c4920      5afeffeb       bl sym.drawQuad
+       ┌──< 0x007c4924      3e0100ea       b 0x7c4e24
+       ││   0x007c4928      182d4454       strbpl r2, [r4], -0xd18
+       ││   0x007c492c      fb210940       strdmi r2, r3, [sb], -fp
+       │└─> 0x007c4930      020000e3       movw r0, 2
+       │    0x007c4934      000bb0ee       vmov.f64 d0, 2
+       │    0x007c4938      061b1fed       vldr d1, [0x007c4928]
+       │    0x007c493c      081000e3       movw r1, 8
+       │    0x007c4940      002ab2ee       vmov.f32 s4, 8
+       │    0x007c4944      003ab6ee       vmov.f32 s6, 5
+       │    0x007c4948      034a1bed       vldr s8, [fp, -0xc]
+       │    0x007c494c      045a1bed       vldr s10, [fp, -0x10]
+       │    0x007c4950      036a1bed       vldr s12, [fp, -0xc]
+       │    0x007c4954      465a35ee       vsub.f32 s10, s10, s12
+       │    0x007c4958      035a25ee       vmul.f32 s10, s10, s6
+       │    0x007c495c      054a34ee       vadd.f32 s8, s8, s10
+       │    0x007c4960      0c4a0bed       vstr s8, [fp, -0x30]
+       │    0x007c4964      054a1bed       vldr s8, [fp, -0x14]
+       │    0x007c4968      065a1bed       vldr s10, [fp, -0x18]
+       │    0x007c496c      056a1bed       vldr s12, [fp, -0x14]
+       │    0x007c4970      465a35ee       vsub.f32 s10, s10, s12
+       │    0x007c4974      035a25ee       vmul.f32 s10, s10, s6
+       │    0x007c4978      054a34ee       vadd.f32 s8, s8, s10
+       │    0x007c497c      0d4a0bed       vstr s8, [fp, -0x34]
+       │    0x007c4980      074a1bed       vldr s8, [fp, -0x1c]
+       │    0x007c4984      085a1bed       vldr s10, [fp, -0x20]
+       │    0x007c4988      076a1bed       vldr s12, [fp, -0x1c]
+       │    0x007c498c      465a35ee       vsub.f32 s10, s10, s12
+       │    0x007c4990      035a25ee       vmul.f32 s10, s10, s6
+       │    0x007c4994      054a34ee       vadd.f32 s8, s8, s10
+       │    0x007c4998      0e4a0bed       vstr s8, [fp, -0x38]
+       │    0x007c499c      094a1bed       vldr s8, [fp, -0x24]
+       │    0x007c49a0      0a5a1bed       vldr s10, [fp, -0x28]
+       │    0x007c49a4      096a1bed       vldr s12, [fp, -0x24]
+       │    0x007c49a8      465a35ee       vsub.f32 s10, s10, s12
+       │    0x007c49ac      033a25ee       vmul.f32 s6, s10, s6
+       │    0x007c49b0      033a34ee       vadd.f32 s6, s8, s6
+       │    0x007c49b4      0f3a0bed       vstr s6, [fp, -0x3c]
+       │    0x007c49b8      0b3a1bed       vldr s6, [fp, -0x2c]
+       │    0x007c49bc      022a23ee       vmul.f32 s4, s6, s4
+       │    0x007c49c0      c22abdee       vcvt.s32.f32 s4, s4
+       │    0x007c49c4      102a12ee       vmov r2, s4
+       │    0x007c49c8      40200be5       str r2, [fp, -0x40]
+       │    0x007c49cc      40201be5       ldr r2, [fp, -0x40]
+       │    0x007c49d0      44008de5       str r0, [sp, 0x44]
+       │    0x007c49d4      0200a0e1       mov r0, r2
+       │    0x007c49d8      0e1b8ded       vstr d1, [sp, 0x38]
+       │    0x007c49dc      0c0b8ded       vstr d0, [sp, 0x30]
+       │    0x007c49e0      8ef9e7eb       bl sym.imp.__modsi3
+       │    0x007c49e4      40000be5       str r0, [fp, -0x40]
+       │    0x007c49e8      0c2a1bed       vldr s4, [fp, -0x30]
+       │    0x007c49ec      242a0bed       vstr s4, [fp, -0x90]
+       │    0x007c49f0      0d2a1bed       vldr s4, [fp, -0x34]
+       │    0x007c49f4      232a0bed       vstr s4, [fp, -0x8c]
+       │    0x007c49f8      0c2a1bed       vldr s4, [fp, -0x30]
+       │    0x007c49fc      222a0bed       vstr s4, [fp, -0x88]
+       │    0x007c4a00      062a1bed       vldr s4, [fp, -0x18]
+       │    0x007c4a04      212a0bed       vstr s4, [fp, -0x84]
+       │    0x007c4a08      042a1bed       vldr s4, [fp, -0x10]
+       │    0x007c4a0c      202a0bed       vstr s4, [fp, -0x80]
+       │    0x007c4a10      062a1bed       vldr s4, [fp, -0x18]
+       │    0x007c4a14      1f2a0bed       vstr s4, [fp, -0x7c]
+       │    0x007c4a18      042a1bed       vldr s4, [fp, -0x10]
+       │    0x007c4a1c      1e2a0bed       vstr s4, [fp, -0x78]
+       │    0x007c4a20      0d2a1bed       vldr s4, [fp, -0x34]
+       │    0x007c4a24      1d2a0bed       vstr s4, [fp, -0x74]
+       │    0x007c4a28      042a1bed       vldr s4, [fp, -0x10]
+       │    0x007c4a2c      1c2a0bed       vstr s4, [fp, -0x70]
+       │    0x007c4a30      052a1bed       vldr s4, [fp, -0x14]
+       │    0x007c4a34      1b2a0bed       vstr s4, [fp, -0x6c]
+       │    0x007c4a38      0c2a1bed       vldr s4, [fp, -0x30]
+       │    0x007c4a3c      1a2a0bed       vstr s4, [fp, -0x68]
+       │    0x007c4a40      052a1bed       vldr s4, [fp, -0x14]
+       │    0x007c4a44      192a0bed       vstr s4, [fp, -0x64]
+       │    0x007c4a48      032a1bed       vldr s4, [fp, -0xc]
+       │    0x007c4a4c      182a0bed       vstr s4, [fp, -0x60]
+       │    0x007c4a50      052a1bed       vldr s4, [fp, -0x14]
+       │    0x007c4a54      172a0bed       vstr s4, [fp, -0x5c]
+       │    0x007c4a58      032a1bed       vldr s4, [fp, -0xc]
+       │    0x007c4a5c      162a0bed       vstr s4, [fp, -0x58]
+       │    0x007c4a60      0d2a1bed       vldr s4, [fp, -0x34]
+       │    0x007c4a64      152a0bed       vstr s4, [fp, -0x54]
+       │    0x007c4a68      032a1bed       vldr s4, [fp, -0xc]
+       │    0x007c4a6c      142a0bed       vstr s4, [fp, -0x50]
+       │    0x007c4a70      062a1bed       vldr s4, [fp, -0x18]
+       │    0x007c4a74      132a0bed       vstr s4, [fp, -0x4c]
+       │    0x007c4a78      0c2a1bed       vldr s4, [fp, -0x30]
+       │    0x007c4a7c      122a0bed       vstr s4, [fp, -0x48]
+       │    0x007c4a80      062a1bed       vldr s4, [fp, -0x18]
+       │    0x007c4a84      112a0bed       vstr s4, [fp, -0x44]
+       │    0x007c4a88      0e2a1bed       vldr s4, [fp, -0x38]
+       │    0x007c4a8c      1c2a8ded       vstr s4, [sp, 0x70]
+       │    0x007c4a90      0f2a1bed       vldr s4, [fp, -0x3c]
+       │    0x007c4a94      1d2a8ded       vstr s4, [sp, 0x74]
+       │    0x007c4a98      0e2a1bed       vldr s4, [fp, -0x38]
+       │    0x007c4a9c      1e2a8ded       vstr s4, [sp, 0x78]
+       │    0x007c4aa0      0a2a1bed       vldr s4, [fp, -0x28]
+       │    0x007c4aa4      1f2a8ded       vstr s4, [sp, 0x7c]
+       │    0x007c4aa8      082a1bed       vldr s4, [fp, -0x20]
+       │    0x007c4aac      202a8ded       vstr s4, [sp, 0x80]
+       │    0x007c4ab0      0a2a1bed       vldr s4, [fp, -0x28]
+       │    0x007c4ab4      212a8ded       vstr s4, [sp, 0x84]
+       │    0x007c4ab8      082a1bed       vldr s4, [fp, -0x20]
+       │    0x007c4abc      222a8ded       vstr s4, [sp, 0x88]
+       │    0x007c4ac0      0f2a1bed       vldr s4, [fp, -0x3c]
+       │    0x007c4ac4      232a8ded       vstr s4, [sp, 0x8c]
+       │    0x007c4ac8      082a1bed       vldr s4, [fp, -0x20]
+       │    0x007c4acc      242a8ded       vstr s4, [sp, 0x90]
+       │    0x007c4ad0      092a1bed       vldr s4, [fp, -0x24]
+       │    0x007c4ad4      252a8ded       vstr s4, [sp, 0x94]
+       │    0x007c4ad8      0e2a1bed       vldr s4, [fp, -0x38]
+       │    0x007c4adc      262a8ded       vstr s4, [sp, 0x98]
+       │    0x007c4ae0      092a1bed       vldr s4, [fp, -0x24]
+       │    0x007c4ae4      272a8ded       vstr s4, [sp, 0x9c]
+       │    0x007c4ae8      072a1bed       vldr s4, [fp, -0x1c]
+       │    0x007c4aec      282a8ded       vstr s4, [sp, 0xa0]
+       │    0x007c4af0      092a1bed       vldr s4, [fp, -0x24]
+       │    0x007c4af4      292a8ded       vstr s4, [sp, 0xa4]
+       │    0x007c4af8      072a1bed       vldr s4, [fp, -0x1c]
+       │    0x007c4afc      2a2a8ded       vstr s4, [sp, 0xa8]
+       │    0x007c4b00      0f2a1bed       vldr s4, [fp, -0x3c]
+       │    0x007c4b04      2b2a8ded       vstr s4, [sp, 0xac]
+       │    0x007c4b08      072a1bed       vldr s4, [fp, -0x1c]
+       │    0x007c4b0c      2c2a8ded       vstr s4, [sp, 0xb0]
+       │    0x007c4b10      0a2a1bed       vldr s4, [fp, -0x28]
+       │    0x007c4b14      2d2a8ded       vstr s4, [sp, 0xb4]
+       │    0x007c4b18      0e2a1bed       vldr s4, [fp, -0x38]
+       │    0x007c4b1c      2e2a8ded       vstr s4, [sp, 0xb8]
+       │    0x007c4b20      0a2a1bed       vldr s4, [fp, -0x28]
+       │    0x007c4b24      2f2a8ded       vstr s4, [sp, 0xbc]
+       │    0x007c4b28      0b2a1bed       vldr s4, [fp, -0x2c]
+       │    0x007c4b2c      c20ab7ee       vcvt.f64.f32 d0, s4
+       │    0x007c4b30      0e1b9ded       vldr d1, [sp, 0x38]
+       │    0x007c4b34      010b20ee       vmul.f64 d0, d0, d1
+       │    0x007c4b38      0c7b9ded       vldr d7, [sp, 0x30]
+       │    0x007c4b3c      070b20ee       vmul.f64 d0, d0, d7
+       │    0x007c4b40      c02bb7ee       vcvt.f32.f64 s4, d0
+       │    0x007c4b44      1b2a8ded       vstr s4, [sp, 0x6c]
+       │    0x007c4b48      40001be5       ldr r0, [fp, -0x40]
+       │    0x007c4b4c      000050e3       cmp r0, 0
+       │┌─< 0x007c4b50      0200000a       beq 0x7c4b60
+       ││   0x007c4b54      40001be5       ldr r0, [fp, -0x40]
+       ││   0x007c4b58      070050e3       cmp r0, 7
+      ┌───< 0x007c4b5c      2000001a       bne 0x7c4be4
+      ││└─> 0x007c4b60      70008de2       add r0, sp, 0x70
+      ││    0x007c4b64      021000e3       movw r1, 2
+      ││    0x007c4b68      40201be5       ldr r2, [fp, -0x40]
+      ││    0x007c4b6c      0430a0e3       mov r3, 4
+      ││    0x007c4b70      822083e0       add r2, r3, r2, lsl 1
+      ││    0x007c4b74      68208de5       str r2, [sp, 0x68]
+      ││    0x007c4b78      6c209de5       ldr r2, [sp, 0x6c]
+      ││    0x007c4b7c      2c008de5       str r0, [sp, 0x2c]
+      ││    0x007c4b80      0200a0e1       mov r0, r2
+      ││    0x007c4b84      28108de5       str r1, [sp, 0x28]
+      ││    0x007c4b88      8dfce7eb       bl sym.imp.tanf
+      ││    0x007c4b8c      100a00ee       vmov s0, r0
+      ││    0x007c4b90      64008de5       str r0, [sp, 0x64]
+      ││    0x007c4b94      0c1a1bed       vldr s2, [fp, -0x30]
+      ││    0x007c4b98      032a1bed       vldr s4, [fp, -0xc]
+      ││    0x007c4b9c      422a31ee       vsub.f32 s4, s2, s4
+      ││    0x007c4ba0      000a22ee       vmul.f32 s0, s4, s0
+      ││    0x007c4ba4      010a30ee       vadd.f32 s0, s0, s2
+      ││    0x007c4ba8      68009de5       ldr r0, [sp, 0x68]
+      ││    0x007c4bac      90104be2       sub r1, fp, 0x90
+      ││    0x007c4bb0      000181e0       add r0, r1, r0, lsl 2
+      ││    0x007c4bb4      000a80ed       vstr s0, [r0]
+      ││    0x007c4bb8      0e0a1bed       vldr s0, [fp, -0x38]
+      ││    0x007c4bbc      071a1bed       vldr s2, [fp, -0x1c]
+      ││    0x007c4bc0      411a30ee       vsub.f32 s2, s0, s2
+      ││    0x007c4bc4      192a9ded       vldr s4, [sp, 0x64]
+      ││    0x007c4bc8      021a21ee       vmul.f32 s2, s2, s4
+      ││    0x007c4bcc      000a31ee       vadd.f32 s0, s2, s0
+      ││    0x007c4bd0      68009de5       ldr r0, [sp, 0x68]
+      ││    0x007c4bd4      70108de2       add r1, sp, 0x70
+      ││    0x007c4bd8      000181e0       add r0, r1, r0, lsl 2
+      ││    0x007c4bdc      000a80ed       vstr s0, [r0]
+      ││┌─< 0x007c4be0      800000ea       b 0x7c4de8
+      └───> 0x007c4be4      40001be5       ldr r0, [fp, -0x40]
+       ││   0x007c4be8      010050e3       cmp r0, 1
+      ┌───< 0x007c4bec      0200000a       beq 0x7c4bfc
+      │││   0x007c4bf0      40001be5       ldr r0, [fp, -0x40]
+      │││   0x007c4bf4      020050e3       cmp r0, 2
+     ┌────< 0x007c4bf8      2600001a       bne 0x7c4c98
+     │└───> 0x007c4bfc      70008de2       add r0, sp, 0x70
+     │ ││   0x007c4c00      021000e3       movw r1, 2
+     │ ││   0x007c4c04      40201be5       ldr r2, [fp, -0x40]
+     │ ││   0x007c4c08      0530a0e3       mov r3, 5
+     │ ││   0x007c4c0c      822083e0       add r2, r3, r2, lsl 1
+     │ ││   0x007c4c10      60208de5       str r2, [sp, 0x60]
+     │ ││   0x007c4c14      1b0a9ded       vldr s0, [sp, 0x6c]
+     │ ││   0x007c4c18      c01ab7ee       vcvt.f64.f32 d1, s0
+     │ ││   0x007c4c1c      872b9fed       vldr d2, [0x007c4e40]
+     │ ││   0x007c4c20      021b31ee       vadd.f64 d1, d1, d2
+     │ ││   0x007c4c24      c10bb7ee       vcvt.f32.f64 s0, d1
+     │ ││   0x007c4c28      102a10ee       vmov r2, s0
+     │ ││   0x007c4c2c      24008de5       str r0, [sp, 0x24]
+     │ ││   0x007c4c30      0200a0e1       mov r0, r2
+     │ ││   0x007c4c34      20108de5       str r1, [sp, 0x20]
+     │ ││   0x007c4c38      61fce7eb       bl sym.imp.tanf
+     │ ││   0x007c4c3c      020120e2       eor r0, r0, 0x80000000
+     │ ││   0x007c4c40      100a00ee       vmov s0, r0
+     │ ││   0x007c4c44      5c008de5       str r0, [sp, 0x5c]
+     │ ││   0x007c4c48      0d3a1bed       vldr s6, [fp, -0x34]
+     │ ││   0x007c4c4c      054a1bed       vldr s8, [fp, -0x14]
+     │ ││   0x007c4c50      444a33ee       vsub.f32 s8, s6, s8
+     │ ││   0x007c4c54      000a24ee       vmul.f32 s0, s8, s0
+     │ ││   0x007c4c58      030a30ee       vadd.f32 s0, s0, s6
+     │ ││   0x007c4c5c      60009de5       ldr r0, [sp, 0x60]
+     │ ││   0x007c4c60      90104be2       sub r1, fp, 0x90
+     │ ││   0x007c4c64      000181e0       add r0, r1, r0, lsl 2
+     │ ││   0x007c4c68      000a80ed       vstr s0, [r0]
+     │ ││   0x007c4c6c      0f0a1bed       vldr s0, [fp, -0x3c]
+     │ ││   0x007c4c70      093a1bed       vldr s6, [fp, -0x24]
+     │ ││   0x007c4c74      433a30ee       vsub.f32 s6, s0, s6
+     │ ││   0x007c4c78      174a9ded       vldr s8, [sp, 0x5c]
+     │ ││   0x007c4c7c      043a23ee       vmul.f32 s6, s6, s8
+     │ ││   0x007c4c80      000a33ee       vadd.f32 s0, s6, s0
+     │ ││   0x007c4c84      60009de5       ldr r0, [sp, 0x60]
+     │ ││   0x007c4c88      70108de2       add r1, sp, 0x70
+     │ ││   0x007c4c8c      000181e0       add r0, r1, r0, lsl 2
+     │ ││   0x007c4c90      000a80ed       vstr s0, [r0]
+     │┌───< 0x007c4c94      520000ea       b 0x7c4de4
+     └────> 0x007c4c98      40001be5       ldr r0, [fp, -0x40]
+      │││   0x007c4c9c      030050e3       cmp r0, 3
+     ┌────< 0x007c4ca0      0200000a       beq 0x7c4cb0
+     ││││   0x007c4ca4      40001be5       ldr r0, [fp, -0x40]
+     ││││   0x007c4ca8      040050e3       cmp r0, 4
+    ┌─────< 0x007c4cac      2600001a       bne 0x7c4d4c
+    │└────> 0x007c4cb0      70008de2       add r0, sp, 0x70
+    │ │││   0x007c4cb4      021000e3       movw r1, 2
+    │ │││   0x007c4cb8      40201be5       ldr r2, [fp, -0x40]
+    │ │││   0x007c4cbc      0430a0e3       mov r3, 4
+    │ │││   0x007c4cc0      822083e0       add r2, r3, r2, lsl 1
+    │ │││   0x007c4cc4      58208de5       str r2, [sp, 0x58]
+    │ │││   0x007c4cc8      1b0a9ded       vldr s0, [sp, 0x6c]
+    │ │││   0x007c4ccc      c01ab7ee       vcvt.f64.f32 d1, s0
+    │ │││   0x007c4cd0      562b9fed       vldr d2, [0x007c4e30]
+    │ │││   0x007c4cd4      021b31ee       vadd.f64 d1, d1, d2
+    │ │││   0x007c4cd8      c10bb7ee       vcvt.f32.f64 s0, d1
+    │ │││   0x007c4cdc      102a10ee       vmov r2, s0
+    │ │││   0x007c4ce0      1c008de5       str r0, [sp, 0x1c]
+    │ │││   0x007c4ce4      0200a0e1       mov r0, r2
+    │ │││   0x007c4ce8      18108de5       str r1, [sp, 0x18]
+    │ │││   0x007c4cec      34fce7eb       bl sym.imp.tanf
+    │ │││   0x007c4cf0      020120e2       eor r0, r0, 0x80000000
+    │ │││   0x007c4cf4      100a00ee       vmov s0, r0
+    │ │││   0x007c4cf8      54008de5       str r0, [sp, 0x54]
+    │ │││   0x007c4cfc      0c3a1bed       vldr s6, [fp, -0x30]
+    │ │││   0x007c4d00      034a1bed       vldr s8, [fp, -0xc]
+    │ │││   0x007c4d04      444a33ee       vsub.f32 s8, s6, s8
+    │ │││   0x007c4d08      000a24ee       vmul.f32 s0, s8, s0
+    │ │││   0x007c4d0c      030a30ee       vadd.f32 s0, s0, s6
+    │ │││   0x007c4d10      58009de5       ldr r0, [sp, 0x58]
+    │ │││   0x007c4d14      90104be2       sub r1, fp, 0x90
+    │ │││   0x007c4d18      000181e0       add r0, r1, r0, lsl 2
+    │ │││   0x007c4d1c      000a80ed       vstr s0, [r0]
+    │ │││   0x007c4d20      0e0a1bed       vldr s0, [fp, -0x38]
+    │ │││   0x007c4d24      073a1bed       vldr s6, [fp, -0x1c]
+    │ │││   0x007c4d28      433a30ee       vsub.f32 s6, s0, s6
+    │ │││   0x007c4d2c      154a9ded       vldr s8, [sp, 0x54]
+    │ │││   0x007c4d30      043a23ee       vmul.f32 s6, s6, s8
+    │ │││   0x007c4d34      000a33ee       vadd.f32 s0, s6, s0
+    │ │││   0x007c4d38      58009de5       ldr r0, [sp, 0x58]
+    │ │││   0x007c4d3c      70108de2       add r1, sp, 0x70
+    │ │││   0x007c4d40      000181e0       add r0, r1, r0, lsl 2
+    │ │││   0x007c4d44      000a80ed       vstr s0, [r0]
+    │┌────< 0x007c4d48      240000ea       b 0x7c4de0
+    └─────> 0x007c4d4c      70008de2       add r0, sp, 0x70
+     ││││   0x007c4d50      021000e3       movw r1, 2
+     ││││   0x007c4d54      40201be5       ldr r2, [fp, -0x40]
+     ││││   0x007c4d58      0530a0e3       mov r3, 5
+     ││││   0x007c4d5c      822083e0       add r2, r3, r2, lsl 1
+     ││││   0x007c4d60      50208de5       str r2, [sp, 0x50]
+     ││││   0x007c4d64      1b0a9ded       vldr s0, [sp, 0x6c]
+     ││││   0x007c4d68      c01ab7ee       vcvt.f64.f32 d1, s0
+     ││││   0x007c4d6c      312b9fed       vldr d2, [0x007c4e38]
+     ││││   0x007c4d70      021b31ee       vadd.f64 d1, d1, d2
+     ││││   0x007c4d74      c10bb7ee       vcvt.f32.f64 s0, d1
+     ││││   0x007c4d78      102a10ee       vmov r2, s0
+     ││││   0x007c4d7c      14008de5       str r0, [sp, 0x14]
+     ││││   0x007c4d80      0200a0e1       mov r0, r2
+     ││││   0x007c4d84      10108de5       str r1, [sp, 0x10]
+     ││││   0x007c4d88      0dfce7eb       bl sym.imp.tanf
+     ││││   0x007c4d8c      100a00ee       vmov s0, r0
+     ││││   0x007c4d90      4c008de5       str r0, [sp, 0x4c]
+     ││││   0x007c4d94      0d3a1bed       vldr s6, [fp, -0x34]
+     ││││   0x007c4d98      054a1bed       vldr s8, [fp, -0x14]
+     ││││   0x007c4d9c      444a33ee       vsub.f32 s8, s6, s8
+     ││││   0x007c4da0      000a24ee       vmul.f32 s0, s8, s0
+     ││││   0x007c4da4      030a30ee       vadd.f32 s0, s0, s6
+     ││││   0x007c4da8      50009de5       ldr r0, [sp, 0x50]
+     ││││   0x007c4dac      90104be2       sub r1, fp, 0x90
+     ││││   0x007c4db0      000181e0       add r0, r1, r0, lsl 2
+     ││││   0x007c4db4      000a80ed       vstr s0, [r0]
+     ││││   0x007c4db8      0f0a1bed       vldr s0, [fp, -0x3c]
+     ││││   0x007c4dbc      093a1bed       vldr s6, [fp, -0x24]
+     ││││   0x007c4dc0      433a30ee       vsub.f32 s6, s0, s6
+     ││││   0x007c4dc4      134a9ded       vldr s8, [sp, 0x4c]
+     ││││   0x007c4dc8      043a23ee       vmul.f32 s6, s6, s8
+     ││││   0x007c4dcc      000a33ee       vadd.f32 s0, s6, s0
+     ││││   0x007c4dd0      50009de5       ldr r0, [sp, 0x50]
+     ││││   0x007c4dd4      70108de2       add r1, sp, 0x70
+     ││││   0x007c4dd8      000181e0       add r0, r1, r0, lsl 2
+     ││││   0x007c4ddc      000a80ed       vstr s0, [r0]
+    ┌└────> 0x007c4de0      ffffffea       b 0x7c4de4
+    └┌└───> 0x007c4de4      ffffffea       b 0x7c4de8
+     └──└─> 0x007c4de8      020000e3       movw r0, 2
+       │    0x007c4dec      061401e3       movw r1, 0x1406
+       │    0x007c4df0      002000e3       movw r2, 0
+       │    0x007c4df4      90304be2       sub r3, fp, 0x90
+       │    0x007c4df8      b0f7e7eb       bl sym.imp.__wrap_glVertexPointer
+       │    0x007c4dfc      020000e3       movw r0, 2
+       │    0x007c4e00      061401e3       movw r1, 0x1406
+       │    0x007c4e04      002000e3       movw r2, 0
+       │    0x007c4e08      70308de2       add r3, sp, 0x70
+       │    0x007c4e0c      a8f7e7eb       bl sym.imp.__wrap_glTexCoordPointer
+       │    0x007c4e10      060000e3       movw r0, 6
+       │    0x007c4e14      001000e3       movw r1, 0
+       │    0x007c4e18      40201be5       ldr r2, [fp, -0x40]
+       │    0x007c4e1c      032082e2       add r2, r2, 3
+       │    0x007c4e20      a9f7e7eb       bl sym.imp.__wrap_glDrawArrays
+       └──> 0x007c4e24      08d04be2       sub sp, fp, 8
+            0x007c4e28      3088bde8       pop {r4, r5, fp, pc}
+            0x007c4e2c      00f020e3       nop
+            0x007c4e30      182d4454       strbpl r2, [r4], -0xd18
+            0x007c4e34      fb210940       strdmi r2, r3, [sb], -fp
+            0x007c4e38      d221337f       svcvc 0x3321d2
+            0x007c4e3c      7cd91240       andsmi sp, r2, ip, ror sb
+            0x007c4e40      182d4454       strbpl r2, [r4], -0xd18
+            0x007c4e44      fb21f93f       svclo 0xf921fb

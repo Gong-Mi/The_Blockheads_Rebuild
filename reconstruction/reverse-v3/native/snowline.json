@@ -1,0 +1,3931 @@
+{
+  "batch": "Snow surface + ice melt (E118): the SnowSurfaceBlock lifecycle, the Column/Stairs ice melt and the snow propagation hooks; 25 bodies",
+  "claim": "the snow-surface lifecycle + ice melt; four giants are census-grade and the ParticleEmitter/macroTiles contracts are outside these bodies",
+  "classes": [
+    {
+      "boundary": "ARM.exidx end 0x00d919a0 (listing bound); next ObjC IMP 0x00d919a0 SnowSurfaceBlock -[partialContent]",
+      "boundary_end": "0x00d919a0",
+      "branches": [
+        {
+          "address": "0x00d91904",
+          "destination": "0x00d91934",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d91930"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00d9197c"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d918d8",
+      "ivars": {},
+      "method": "SnowSurfaceBlock -[setNeedsRemoved:]",
+      "name": "sl_00",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d91988": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d9198c": {
+          "selector": "removeAllSnow",
+          "slot": "0x00e88d80"
+        },
+        "0x00d91990": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x00d91994": {
+          "selector": "setNeedsRemoved:",
+          "slot": "0x00e88d7c"
+        },
+        "0x00d91998": {
+          "class": "OBJC_CLASS_$_SnowSurfaceBlock",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bf38"
+        }
+      },
+      "semantics": "[SnowSurfaceBlock -[setNeedsRemoved:]] (imp 0x00d918d8, 50w): the removal setter - on a true flag runs removeAllSnow first, then the super setNeedsRemoved:.\n",
+      "types": "v12@0:4c8",
+      "verified_words": 50
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d8da7c (listing bound); next ObjC IMP 0x00d8da7c SnowSurfaceBlock -[getSaveDict]",
+      "boundary_end": "0x00d8da7c",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r5",
+          "site": "0x00d8da2c"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d8da54"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d8d9b8",
+      "ivars": {
+        "0x00d8da74": {
+          "offset": 64,
+          "slot": "0x0105fa68",
+          "symbol": "OBJC_IVAR_$_SnowSurfaceBlock.saveDictCached"
+        }
+      },
+      "method": "SnowSurfaceBlock -[dealloc]",
+      "name": "sl_01",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d8da60": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x00d8da64": {
+          "selector": "dealloc",
+          "slot": "0x00e88d54"
+        },
+        "0x00d8da68": {
+          "class": "OBJC_CLASS_$_SnowSurfaceBlock",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bf38"
+        },
+        "0x00d8da6c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d8da70": {
+          "selector": "release",
+          "slot": "0x00e88d50"
+        }
+      },
+      "semantics": "[SnowSurfaceBlock -[dealloc]] (imp 0x00d8d9b8, 49w): releases saveDictCached, then the super dealloc.\n",
+      "types": "v8@0:4",
+      "verified_words": 49
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d8d89c (listing bound); next ObjC IMP 0x00d8d89c SnowSurfaceBlock -[initWithWorld:dynamicWorld:saveDict:cache:]",
+      "boundary_end": "0x00d8d89c",
+      "branches": [
+        {
+          "address": "0x00d8d6ac",
+          "destination": "0x00d8d6bc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d8d6b8",
+          "destination": "0x00d8d860",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c29fc",
+          "route": "bl loc.imp.objc_msgSendSuper2",
+          "site": "0x00d8d690"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d8d6d4"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d8d718"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d8d744"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d8d774"
+        },
+        {
+          "callee": "0x00a14a48",
+          "route": "bl sym.seasonForWorldX_int__double__World_",
+          "site": "0x00d8d7a4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d8d7cc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d8d7f4"
+        },
+        {
+          "callee": "0x00a15404",
+          "route": "bl sym.currentTemperatureForTileAtWorldPos_Tile__intpair__float__float__float__World_",
+          "site": "0x00d8d834"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d8d5e0",
+      "ivars": {
+        "0x00d8d878": {
+          "offset": 56,
+          "slot": "0x0105fa6c",
+          "symbol": "OBJC_IVAR_$_SnowSurfaceBlock.temperature"
+        },
+        "0x00d8d884": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x00d8d888": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        }
+      },
+      "method": "SnowSurfaceBlock -[initWithWorld:dynamicWorld:atPosition:cache:]",
+      "name": "sl_02",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d8d86c": {
+          "class": "OBJC_CLASS_$_SnowSurfaceBlock",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bf38"
+        },
+        "0x00d8d874": {
+          "selector": "initWithWorld:dynamicWorld:atPosition:cache:",
+          "slot": "0x00e88d38"
+        },
+        "0x00d8d87c": {
+          "selector": "initSubDerivedItems",
+          "slot": "0x00e88d3c"
+        },
+        "0x00d8d88c": {
+          "selector": "worldTime",
+          "slot": "0x00e88d40"
+        },
+        "0x00d8d890": {
+          "selector": "timeOfDayFraction",
+          "slot": "0x00e88d44"
+        },
+        "0x00d8d894": {
+          "selector": "weatherFraction",
+          "slot": "0x00e88d48"
+        }
+      },
+      "semantics": "[SnowSurfaceBlock -[initWithWorld:dynamicWorld:atPosition:cache:]] (imp 0x00d8d5e0, 175w): the placement ctor - the initSubDerivedItems super chain, then seeds SnowSurfaceBlock.temperature from the world clock/weather chain (timeOfDayFraction/worldTime/weatherFraction).\n",
+      "types": "@28@0:4@8@12{?=ii}16@24",
+      "verified_words": 175
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d8d9b8 (listing bound); next ObjC IMP 0x00d8d9b8 SnowSurfaceBlock -[dealloc]",
+      "boundary_end": "0x00d8d9b8",
+      "branches": [
+        {
+          "address": "0x00d8d950",
+          "destination": "0x00d8d960",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d8d95c",
+          "destination": "0x00d8d994",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r6",
+          "site": "0x00d8d934"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d8d988"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d8d89c",
+      "ivars": {},
+      "method": "SnowSurfaceBlock -[initWithWorld:dynamicWorld:saveDict:cache:]",
+      "name": "sl_03",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d8d9a0": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x00d8d9a4": {
+          "selector": "initWithWorld:dynamicWorld:saveDict:cache:",
+          "slot": "0x00e88d4c"
+        },
+        "0x00d8d9a8": {
+          "class": "OBJC_CLASS_$_SnowSurfaceBlock",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bf38"
+        },
+        "0x00d8d9ac": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d8d9b0": {
+          "selector": "initSubDerivedItems",
+          "slot": "0x00e88d3c"
+        }
+      },
+      "semantics": "[SnowSurfaceBlock -[initWithWorld:dynamicWorld:saveDict:cache:]] (imp 0x00d8d89c, 71w): the load ctor - the super saveDict chain + initSubDerivedItems.\n",
+      "types": "@24@0:4@8@12@16@20",
+      "verified_words": 71
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d8dab8 (listing bound); next ObjC IMP 0x00d8dab8 SnowSurfaceBlock -[removeFromMacroBlock]",
+      "boundary_end": "0x00d8dab8",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d8da7c",
+      "ivars": {
+        "0x00d8dab0": {
+          "offset": 64,
+          "slot": "0x0105fa68",
+          "symbol": "OBJC_IVAR_$_SnowSurfaceBlock.saveDictCached"
+        }
+      },
+      "method": "SnowSurfaceBlock -[getSaveDict]",
+      "name": "sl_04",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[SnowSurfaceBlock -[getSaveDict]] (imp 0x00d8da7c, 15w): returns the cached dict (saveDictCached).\n",
+      "types": "@8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d8d5e0 (listing bound); next ObjC IMP 0x00d8d5e0 SnowSurfaceBlock -[initWithWorld:dynamicWorld:atPosition:cache:]",
+      "boundary_end": "0x00d8d5e0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d8d5c4",
+      "ivars": {},
+      "method": "SnowSurfaceBlock -[objectType]",
+      "name": "sl_05",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[SnowSurfaceBlock -[objectType]] (imp 0x00d8d5c4, 7w): returns 0x1d (29) - the SnowSurfaceBlock dynamic-object type (cross-checked against the rebuild's dynamic_object_type_table.inc).\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d8d5b4 (listing bound); next ObjC IMP 0x00d8d5c4 SnowSurfaceBlock -[objectType]",
+      "boundary_end": "0x00d8d5b4",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d8d50c"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d8d540"
+        },
+        {
+          "callee": "0x00d8d5b4",
+          "route": "bl 0xd8d5b4",
+          "site": "0x00d8d558"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d8d4b8",
+      "ivars": {
+        "0x00d8d59c": {
+          "offset": 68,
+          "slot": "0x0105fa64",
+          "symbol": "OBJC_IVAR_$_SnowSurfaceBlock.rainRandomTimer"
+        },
+        "0x00d8d5a4": {
+          "offset": 64,
+          "slot": "0x0105fa68",
+          "symbol": "OBJC_IVAR_$_SnowSurfaceBlock.saveDictCached"
+        }
+      },
+      "method": "SnowSurfaceBlock -[initSubDerivedItems]",
+      "name": "sl_06",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d8d590": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x00d8d594": {
+          "selector": "getSaveDict",
+          "slot": "0x00e88d30"
+        },
+        "0x00d8d598": {
+          "class": "OBJC_CLASS_$_SnowSurfaceBlock",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bf38"
+        },
+        "0x00d8d5a8": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d8d5ac": {
+          "selector": "retain",
+          "slot": "0x00e88d34"
+        }
+      },
+      "semantics": "[SnowSurfaceBlock -[initSubDerivedItems]] (imp 0x00d8d4b8, 63w): caches the save dict (getSaveDict + retain) and seeds rainRandomTimer.\n",
+      "types": "v8@0:4",
+      "verified_words": 63
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d8db28 (listing bound); next ObjC IMP 0x00d8db28 SnowSurfaceBlock -[updateInTimeSinceSaved]",
+      "boundary_end": "0x00d8db28",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d8db08"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d8dab8",
+      "ivars": {},
+      "method": "SnowSurfaceBlock -[removeFromMacroBlock]",
+      "name": "sl_07",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d8db14": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x00d8db18": {
+          "selector": "removeFromMacroBlock",
+          "slot": "0x00e88d58"
+        },
+        "0x00d8db1c": {
+          "class": "OBJC_CLASS_$_SnowSurfaceBlock",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bf38"
+        }
+      },
+      "semantics": "[SnowSurfaceBlock -[removeFromMacroBlock]] (imp 0x00d8dab8, 28w): the super removeFromMacroBlock call only.\n",
+      "types": "v8@0:4",
+      "verified_words": 28
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d8e530 (listing bound); next ObjC IMP 0x00d8e530 SnowSurfaceBlock -[update:accurateDT:isSimulation:]",
+      "boundary_end": "0x00d8e530",
+      "branches": [
+        {
+          "address": "0x00d8db64",
+          "destination": "0x00d8db6c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8db68",
+          "destination": "0x00d8e4d4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8dc38",
+          "destination": "0x00d8e4d4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8dc48",
+          "destination": "0x00d8e4d4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8dc5c",
+          "destination": "0x00d8e4d4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d8dc70",
+          "destination": "0x00d8e4d4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d8dc80",
+          "destination": "0x00d8e4d4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8dcec",
+          "destination": "0x00d8e290",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00d8decc",
+          "destination": "0x00d8e028",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d8def8",
+          "destination": "0x00d8e024",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d8df2c",
+          "destination": "0x00d8df3c",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d8df38",
+          "destination": "0x00d8df44",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8dff4",
+          "destination": "0x00d8e020",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d8e020",
+          "destination": "0x00d8e024",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8e024",
+          "destination": "0x00d8e240",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8e04c",
+          "destination": "0x00d8e23c",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d8e060",
+          "destination": "0x00d8e238",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d8e08c",
+          "destination": "0x00d8e238",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d8e09c",
+          "destination": "0x00d8e238",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d8e0f4",
+          "destination": "0x00d8e108",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d8e100",
+          "destination": "0x00d8e110",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8e194",
+          "destination": "0x00d8e1a4",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d8e1a0",
+          "destination": "0x00d8e1ac",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8e210",
+          "destination": "0x00d8e234",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d8e234",
+          "destination": "0x00d8e238",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8e238",
+          "destination": "0x00d8e23c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8e23c",
+          "destination": "0x00d8e240",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8e240",
+          "destination": "0x00d8e244",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8e250",
+          "destination": "0x00d8dce4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8e438",
+          "destination": "0x00d8e464",
+          "mnemonic": "ble"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d8dba0"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d8dbd4"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d8dc24"
+        },
+        {
+          "callee": "0x00a11690",
+          "route": "bl sym.tileIsWater_Tile_",
+          "site": "0x00d8dc50"
+        },
+        {
+          "callee": "0x00a11690",
+          "route": "bl sym.tileIsWater_Tile_",
+          "site": "0x00d8dc64"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00d8dccc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d8dd98"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d8ddf0"
+        },
+        {
+          "callee": "0x00a14a48",
+          "route": "bl sym.seasonForWorldX_int__double__World_",
+          "site": "0x00d8de50"
+        },
+        {
+          "callee": "0x00a15404",
+          "route": "bl sym.currentTemperatureForTileAtWorldPos_Tile__intpair__float__float__float__World_",
+          "site": "0x00d8de90"
+        },
+        {
+          "callee": "0x00a14a48",
+          "route": "bl sym.seasonForWorldX_int__double__World_",
+          "site": "0x00d8e304"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d8e35c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d8e3b0"
+        },
+        {
+          "callee": "0x00a15404",
+          "route": "bl sym.currentTemperatureForTileAtWorldPos_Tile__intpair__float__float__float__World_",
+          "site": "0x00d8e3f0"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d8e4b4"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d8e4d0"
+        }
+      ],
+      "disjoint_branch_rows": [
+        {
+          "address": "0x00d8e254",
+          "destination": "0xfee52c18",
+          "mnemonic": "blo"
+        },
+        {
+          "address": "0x00d8e260",
+          "destination": "0x00e52c24",
+          "mnemonic": "bllo"
+        },
+        {
+          "address": "0x00d8e520",
+          "destination": "0xff684150",
+          "mnemonic": "bllo"
+        }
+      ],
+      "imp": "0x00d8db28",
+      "ivars": {
+        "0x00d8e4dc": {
+          "offset": 48,
+          "slot": "0x0105c3c8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.needsRemoved"
+        },
+        "0x00d8e4e0": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x00d8e4e4": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x00d8e4f0": {
+          "offset": 56,
+          "slot": "0x0105fa6c",
+          "symbol": "OBJC_IVAR_$_SnowSurfaceBlock.temperature"
+        },
+        "0x00d8e504": {
+          "offset": 60,
+          "slot": "0x0105fa70",
+          "symbol": "OBJC_IVAR_$_SnowSurfaceBlock.partialContent"
+        }
+      },
+      "method": "SnowSurfaceBlock -[updateInTimeSinceSaved]",
+      "name": "sl_08",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d8e4e8": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d8e4ec": {
+          "selector": "worldTime",
+          "slot": "0x00e88d40"
+        },
+        "0x00d8e4f8": {
+          "selector": "getDayNightFractionForX:atWorldTime:",
+          "slot": "0x00e88d60"
+        },
+        "0x00d8e4fc": {
+          "selector": "getWeatherFractionForPos:",
+          "slot": "0x00e88d64"
+        },
+        "0x00d8e508": {
+          "selector": "updateGroundFrozen:tile:",
+          "slot": "0x00e88d6c"
+        },
+        "0x00d8e50c": {
+          "selector": "updateSnowContent:tile:",
+          "slot": "0x00e88d68"
+        },
+        "0x00d8e514": {
+          "selector": "getWeatherFractionForPos:atWorldTime:",
+          "slot": "0x00e88d5c"
+        }
+      },
+      "semantics": "[SnowSurfaceBlock -[updateInTimeSinceSaved]] (imp 0x00d8db28, 642w): the offline catch-up - replays up to 4 stacked time units of the melt/freeze evolution (per-unit seasonForWorldX/currentTemperatureForTileAtWorldPos + the melt formula constants 0.001/0.2/0.002, the temp>0 / temp>5.0 gates, 0x12c (300) in the rate chain, particles per unit); 16 calls - census-grade, not a per-instruction walkthrough.\n",
+      "types": "v8@0:4",
+      "verified_words": 642
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d8fb80 (listing bound); next ObjC IMP 0x00d8fb80 SnowSurfaceBlock -[updateRain:dt:]",
+      "boundary_end": "0x00d8fb80",
+      "branches": [
+        {
+          "address": "0x00d8e584",
+          "destination": "0x00d8e58c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8e588",
+          "destination": "0x00d8fb0c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8e650",
+          "destination": "0x00d8e758",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8e754",
+          "destination": "0x00d8e7c0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8e81c",
+          "destination": "0x00d8e840",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8e82c",
+          "destination": "0x00d8e840",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8e83c",
+          "destination": "0x00d8e844",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d8e840",
+          "destination": "0x00d8fb0c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8ea1c",
+          "destination": "0x00d8eda4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d8ea2c",
+          "destination": "0x00d8eda4",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d8ea78",
+          "destination": "0x00d8eda0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d8eaac",
+          "destination": "0x00d8eb2c",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d8eb28",
+          "destination": "0x00d8ed9c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8eb5c",
+          "destination": "0x00d8ed98",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d8eb70",
+          "destination": "0x00d8ebd4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8ecbc",
+          "destination": "0x00d8ed20",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8ed30",
+          "destination": "0x00d8ed94",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8ed94",
+          "destination": "0x00d8ed98",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8ed98",
+          "destination": "0x00d8ed9c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8ed9c",
+          "destination": "0x00d8eda0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8eda0",
+          "destination": "0x00d8edfc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8edb4",
+          "destination": "0x00d8edf8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8edf8",
+          "destination": "0x00d8edfc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8ee0c",
+          "destination": "0x00d8f550",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8ee88",
+          "destination": "0x00d8ef24",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d8eebc",
+          "destination": "0x00d8ef20",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d8ef20",
+          "destination": "0x00d8ef24",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8ef30",
+          "destination": "0x00d8f544",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d8f054",
+          "destination": "0x00d8f06c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8f068",
+          "destination": "0x00d8f08c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8f100",
+          "destination": "0x00d8f110",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d8f10c",
+          "destination": "0x00d8f118",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8f140",
+          "destination": "0x00d8f15c",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d8f14c",
+          "destination": "0x00d8f164",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8f18c",
+          "destination": "0x00d8f1d0",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d8f3a0",
+          "destination": "0x00d8f540",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00d8f538",
+          "destination": "0x00d8f378",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8f540",
+          "destination": "0x00d8f544",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8f544",
+          "destination": "0x00d8fb0c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8f560",
+          "destination": "0x00d8f5d0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8f570",
+          "destination": "0x00d8f5d0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8f5b4",
+          "destination": "0x00d8fb08",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8f618",
+          "destination": "0x00d8fb04",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d8f628",
+          "destination": "0x00d8fb00",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8f650",
+          "destination": "0x00d8f80c",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d8f67c",
+          "destination": "0x00d8f690",
+          "mnemonic": "bgt"
+        },
+        {
+          "address": "0x00d8f68c",
+          "destination": "0x00d8f7fc",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d8f6c0",
+          "destination": "0x00d8f6d0",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d8f6cc",
+          "destination": "0x00d8f6d8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8f788",
+          "destination": "0x00d8f7b4",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d8f7fc",
+          "destination": "0x00d8fa9c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8f830",
+          "destination": "0x00d8fa98",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d8f844",
+          "destination": "0x00d8fa94",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d8f870",
+          "destination": "0x00d8fa94",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d8f880",
+          "destination": "0x00d8fa94",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d8f8d8",
+          "destination": "0x00d8f8ec",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d8f8e4",
+          "destination": "0x00d8f8f4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8f978",
+          "destination": "0x00d8f9bc",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d8f984",
+          "destination": "0x00d8f9c4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8fa28",
+          "destination": "0x00d8fa4c",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d8fa94",
+          "destination": "0x00d8fa98",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8fa98",
+          "destination": "0x00d8fa9c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8fb00",
+          "destination": "0x00d8fb04",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8fb04",
+          "destination": "0x00d8fb08",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8fb08",
+          "destination": "0x00d8fb0c",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d8e5c0"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d8e5f8"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d8e644"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d8e6a0"
+        },
+        {
+          "callee": "0x00a16e68",
+          "route": "bl sym.tileAtWorldPosition_int__int__MacroTile__World_",
+          "site": "0x00d8e6cc"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00d8e720"
+        },
+        {
+          "callee": "0x00a16e68",
+          "route": "bl sym.tileAtWorldPosition_int__int__MacroTile__World_",
+          "site": "0x00d8e74c"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d8e788"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d8e7b8"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d8e808"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d8e8b0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d8e8f8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d8e920"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d8e97c"
+        },
+        {
+          "callee": "0x00a14a48",
+          "route": "bl sym.seasonForWorldX_int__double__World_",
+          "site": "0x00d8e9ac"
+        },
+        {
+          "callee": "0x00a15404",
+          "route": "bl sym.currentTemperatureForTileAtWorldPos_Tile__intpair__float__float__float__World_",
+          "site": "0x00d8e9ec"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d8ea6c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d8eb24"
+        },
+        {
+          "callee": "0x00a11690",
+          "route": "bl sym.tileIsWater_Tile_",
+          "site": "0x00d8eb64"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d8ebd0"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d8ec08"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d8ec40"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d8ec74"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d8eca4"
+        },
+        {
+          "callee": "0x00a11690",
+          "route": "bl sym.tileIsWater_Tile_",
+          "site": "0x00d8ecb0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d8ed1c"
+        },
+        {
+          "callee": "0x00a11690",
+          "route": "bl sym.tileIsWater_Tile_",
+          "site": "0x00d8ed24"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d8ed90"
+        },
+        {
+          "callee": "0x00a11690",
+          "route": "bl sym.tileIsWater_Tile_",
+          "site": "0x00d8eda8"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d8edf4"
+        },
+        {
+          "callee": "0x00a11690",
+          "route": "bl sym.tileIsWater_Tile_",
+          "site": "0x00d8ee00"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00d8ee58"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00d8ee7c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d8ef1c"
+        },
+        {
+          "callee": "0x00d8d5b4",
+          "route": "bl 0xd8d5b4",
+          "site": "0x00d8ef68"
+        },
+        {
+          "callee": "0x00d8d5b4",
+          "route": "bl 0xd8d5b4",
+          "site": "0x00d8efcc"
+        },
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x00d8f014"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x00d8f064"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x00d8f088"
+        },
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x00d8f214"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x00d8f21c"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x00d8f250"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x00d8f270"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x00d8f29c"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x00d8f2bc"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x00d8f2e8"
+        },
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x00d8f318"
+        },
+        {
+          "callee": "0x004d0d08",
+          "route": "bl method.Vector.Vector_float__float__float__float_",
+          "site": "0x00d8f340"
+        },
+        {
+          "callee": "0x0058198c",
+          "route": "bl sym.Vector::operator_Vector_",
+          "site": "0x00d8f368"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x00d8f394"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d8f3c4"
+        },
+        {
+          "callee": "0x00d8d5b4",
+          "route": "bl 0xd8d5b4",
+          "site": "0x00d8f3ec"
+        },
+        {
+          "callee": "0x00d8d5b4",
+          "route": "bl 0xd8d5b4",
+          "site": "0x00d8f424"
+        },
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x00d8f454"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d8f528"
+        },
+        {
+          "callee": "0x00a12300",
+          "route": "bl sym.tileIsAir_Tile_",
+          "site": "0x00d8f554"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d8f5b0"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d8f60c"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d8f7f8"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d8fa90"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d8fae0"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d8fafc"
+        }
+      ],
+      "disjoint_branch_rows": [
+        {
+          "address": "0x00d8f990",
+          "destination": "0xfee54354",
+          "mnemonic": "blo"
+        },
+        {
+          "address": "0x00d8f99c",
+          "destination": "0x00e54360",
+          "mnemonic": "bllo"
+        },
+        {
+          "address": "0x00d8fb54",
+          "destination": "0xff685784",
+          "mnemonic": "bllo"
+        }
+      ],
+      "imp": "0x00d8e530",
+      "ivars": {
+        "0x00d8f548": {
+          "offset": 48,
+          "slot": "0x0105c3c8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.needsRemoved"
+        },
+        "0x00d8f54c": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x00d8f5c0": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        },
+        "0x00d8f5c4": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x00d8f988": {
+          "offset": 56,
+          "slot": "0x0105fa6c",
+          "symbol": "OBJC_IVAR_$_SnowSurfaceBlock.temperature"
+        },
+        "0x00d8fb1c": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        },
+        "0x00d8fb20": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x00d8fb24": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x00d8fb28": {
+          "offset": 56,
+          "slot": "0x0105fa6c",
+          "symbol": "OBJC_IVAR_$_SnowSurfaceBlock.temperature"
+        },
+        "0x00d8fb48": {
+          "offset": 60,
+          "slot": "0x0105fa70",
+          "symbol": "OBJC_IVAR_$_SnowSurfaceBlock.partialContent"
+        }
+      },
+      "method": "SnowSurfaceBlock -[update:accurateDT:isSimulation:]",
+      "name": "sl_09",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d8f5b8": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d8f5bc": {
+          "selector": "isClient",
+          "slot": "0x00e88d70"
+        },
+        "0x00d8f5c8": {
+          "selector": "macroTiles",
+          "slot": "0x00e88d74"
+        },
+        "0x00d8f804": {
+          "selector": "getWeatherFractionForPos:",
+          "slot": "0x00e88d64"
+        },
+        "0x00d8f808": {
+          "selector": "worldTime",
+          "slot": "0x00e88d40"
+        },
+        "0x00d8f8e8": {
+          "selector": "getDayNightFractionForX:atWorldTime:",
+          "slot": "0x00e88d60"
+        },
+        "0x00d8f9b8": {
+          "selector": "fillTile:atPos:withType:",
+          "slot": "0x00e88d78"
+        },
+        "0x00d8fb14": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d8fb18": {
+          "selector": "isClient",
+          "slot": "0x00e88d70"
+        },
+        "0x00d8fb2c": {
+          "selector": "setNeedsRemoved:",
+          "slot": "0x00e88d7c"
+        },
+        "0x00d8fb34": {
+          "selector": "fillTile:atPos:withType:",
+          "slot": "0x00e88d78"
+        },
+        "0x00d8fb58": {
+          "selector": "updateSnowContent:tile:",
+          "slot": "0x00e88d68"
+        },
+        "0x00d8fb5c": {
+          "selector": "spreadGrass:tile:",
+          "slot": "0x00e88d90"
+        },
+        "0x00d8fb60": {
+          "selector": "updateGroundFrozen:tile:",
+          "slot": "0x00e88d6c"
+        },
+        "0x00d8fb64": {
+          "selector": "removeAllSnow",
+          "slot": "0x00e88d80"
+        },
+        "0x00d8fb6c": {
+          "selector": "dayColor",
+          "slot": "0x00e88d84"
+        },
+        "0x00d8fb70": {
+          "class": "OBJC_CLASS_$_ParticleEmitter",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8b7ec"
+        },
+        "0x00d8fb78": {
+          "selector": "instance",
+          "slot": "0x00e88d88"
+        },
+        "0x00d8fb7c": {
+          "selector": "addParticleAtPos:velocity:color:gravityType:life:scale:",
+          "slot": "0x00e88d8c"
+        }
+      },
+      "semantics": "[SnowSurfaceBlock -[update:accurateDT:isSimulation:]] (imp 0x00d8e530, 1428w): the snow-surface tick - temperature = currentTemperatureForTileAtWorldPos(tile, pos, dayNight/weather/season/worldTime args); water freeze batches via fillTile:atPos:withType: with the 0x422/0x423 tile-type constants over the own tile + neighbours; the melt (temp>0: partialContent -= ((0.02 + max(weather-0.2, 0.001)*0.2) * (temp+1)) * 0.01 * 4, floor 0.002); the accumulation (temp<0 and sunLight byte7>239: ramp=(byte7-240)/1 clamped [0,1], incr=(weather-0.2)*0.005*ramp, cap 0.6); the snow particles (ParticleEmitter.instance addParticleAtPos:velocity:color:gravityType:life:scale:, count= (s16@0x14+4)/4, PRNG helper 0xd8d5b4 scaled 2^31); spreadGrass/updateGroundFrozen/updateSnowContent delegation + the isClient gates - census-grade, not a per-instruction walkthrough.\n",
+      "types": "v20@0:4f8f12c16",
+      "verified_words": 1428
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d903b8 (listing bound); next ObjC IMP 0x00d903b8 SnowSurfaceBlock -[spreadGrass:tile:]",
+      "boundary_end": "0x00d903b8",
+      "branches": [
+        {
+          "address": "0x00d8fbc0",
+          "destination": "0x00d90378",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d8fbe8",
+          "destination": "0x00d90378",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d8fc2c",
+          "destination": "0x00d90374",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d8fcd8",
+          "destination": "0x00d8fce0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d8fcdc",
+          "destination": "0x00d90378",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8fcec",
+          "destination": "0x00d90370",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x00d8fcfc",
+          "destination": "0x00d90370",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d8fd10",
+          "destination": "0x00d90370",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8fd90",
+          "destination": "0x00d9036c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8feb4",
+          "destination": "0x00d8fecc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d8fec8",
+          "destination": "0x00d8feec",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8ff60",
+          "destination": "0x00d8ff74",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d8ff6c",
+          "destination": "0x00d8ff7c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8ffa4",
+          "destination": "0x00d8ffc4",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d8ffb0",
+          "destination": "0x00d8ffcc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d8fff4",
+          "destination": "0x00d90038",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d901e8",
+          "destination": "0x00d90368",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00d90364",
+          "destination": "0x00d901e0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d90368",
+          "destination": "0x00d9036c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d9036c",
+          "destination": "0x00d90370",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d90370",
+          "destination": "0x00d90374",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d90374",
+          "destination": "0x00d90378",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x00d8d5b4",
+          "route": "bl 0xd8d5b4",
+          "site": "0x00d8fc30"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d8fcc4"
+        },
+        {
+          "callee": "0x00a12760",
+          "route": "bl sym.tileIsAirOrSnow_Tile_",
+          "site": "0x00d8fd04"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d8fd48"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d8fd7c"
+        },
+        {
+          "callee": "0x00d8d5b4",
+          "route": "bl 0xd8d5b4",
+          "site": "0x00d8fdc8"
+        },
+        {
+          "callee": "0x00d8d5b4",
+          "route": "bl 0xd8d5b4",
+          "site": "0x00d8fe2c"
+        },
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x00d8fe74"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x00d8fec4"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x00d8fee8"
+        },
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x00d9007c"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x00d90084"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x00d900b8"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x00d900d8"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x00d90104"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x00d90124"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x00d90150"
+        },
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x00d90180"
+        },
+        {
+          "callee": "0x004d0d08",
+          "route": "bl method.Vector.Vector_float__float__float__float_",
+          "site": "0x00d901a8"
+        },
+        {
+          "callee": "0x0058198c",
+          "route": "bl sym.Vector::operator_Vector_",
+          "site": "0x00d901d0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d9020c"
+        },
+        {
+          "callee": "0x00d8d5b4",
+          "route": "bl 0xd8d5b4",
+          "site": "0x00d90234"
+        },
+        {
+          "callee": "0x00d8d5b4",
+          "route": "bl 0xd8d5b4",
+          "site": "0x00d90258"
+        },
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x00d90284"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d90354"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d8fb80",
+      "ivars": {
+        "0x00d90380": {
+          "offset": 56,
+          "slot": "0x0105fa6c",
+          "symbol": "OBJC_IVAR_$_SnowSurfaceBlock.temperature"
+        },
+        "0x00d90384": {
+          "offset": 68,
+          "slot": "0x0105fa64",
+          "symbol": "OBJC_IVAR_$_SnowSurfaceBlock.rainRandomTimer"
+        },
+        "0x00d90388": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x00d9038c": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        }
+      },
+      "method": "SnowSurfaceBlock -[updateRain:dt:]",
+      "name": "sl_10",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d90394": {
+          "selector": "dayColor",
+          "slot": "0x00e88d84"
+        },
+        "0x00d903a0": {
+          "class": "OBJC_CLASS_$_ParticleEmitter",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8b7ec"
+        },
+        "0x00d903a8": {
+          "selector": "instance",
+          "slot": "0x00e88d88"
+        },
+        "0x00d903ac": {
+          "selector": "addParticleAtPos:velocity:color:gravityType:life:scale:",
+          "slot": "0x00e88d8c"
+        }
+      },
+      "semantics": "[SnowSurfaceBlock -[updateRain:dt:]] (imp 0x00d8fb80, 526w): the per-frame precipitation particles - rainRandomTimer-paced ParticleEmitter.instance addParticleAtPos:velocity:color:gravityType:life:scale: spawns (dayColor tint, temperature-gated); 25 calls - census-grade, not a per-instruction walkthrough.\n",
+      "types": "v16@0:4f8f12",
+      "verified_words": 526
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d90a4c (listing bound); next ObjC IMP 0x00d90a4c SnowSurfaceBlock -[updateGroundFrozen:tile:]",
+      "boundary_end": "0x00d90a4c",
+      "branches": [
+        {
+          "address": "0x00d90418",
+          "destination": "0x00d90420",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d9041c",
+          "destination": "0x00d90a14",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d90444",
+          "destination": "0x00d90a14",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d90454",
+          "destination": "0x00d90488",
+          "mnemonic": "bgt"
+        },
+        {
+          "address": "0x00d90464",
+          "destination": "0x00d90488",
+          "mnemonic": "bgt"
+        },
+        {
+          "address": "0x00d90474",
+          "destination": "0x00d90488",
+          "mnemonic": "bgt"
+        },
+        {
+          "address": "0x00d90484",
+          "destination": "0x00d90a14",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d90494",
+          "destination": "0x00d904b8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d904a4",
+          "destination": "0x00d905dc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d904b4",
+          "destination": "0x00d905dc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d904dc",
+          "destination": "0x00d905c8",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d904ec",
+          "destination": "0x00d904fc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90508",
+          "destination": "0x00d9053c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90518",
+          "destination": "0x00d9053c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90528",
+          "destination": "0x00d90538",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90538",
+          "destination": "0x00d9053c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d905c8",
+          "destination": "0x00d90a10",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d905e8",
+          "destination": "0x00d9060c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d905f8",
+          "destination": "0x00d90a0c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90608",
+          "destination": "0x00d90a0c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90748",
+          "destination": "0x00d90a08",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d90758",
+          "destination": "0x00d9076c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d90768",
+          "destination": "0x00d90a08",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d907d4",
+          "destination": "0x00d90830",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00d90848",
+          "destination": "0x00d90910",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00d908d8",
+          "destination": "0x00d908f0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d908ec",
+          "destination": "0x00d908fc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d908f8",
+          "destination": "0x00d90910",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d908fc",
+          "destination": "0x00d90900",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d9090c",
+          "destination": "0x00d9083c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d90918",
+          "destination": "0x00d90a04",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90928",
+          "destination": "0x00d90938",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90944",
+          "destination": "0x00d90978",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90954",
+          "destination": "0x00d90978",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90964",
+          "destination": "0x00d90974",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90974",
+          "destination": "0x00d90978",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d90a04",
+          "destination": "0x00d90a08",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d90a08",
+          "destination": "0x00d90a0c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d90a0c",
+          "destination": "0x00d90a10",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d90a10",
+          "destination": "0x00d90a14",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00d9040c"
+        },
+        {
+          "callee": "0x00d8d5b4",
+          "route": "bl 0xd8d5b4",
+          "site": "0x00d904b8"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d905a8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d905c4"
+        },
+        {
+          "callee": "0x00d8d5b4",
+          "route": "bl 0xd8d5b4",
+          "site": "0x00d9060c"
+        },
+        {
+          "callee": "0x00d8d5b4",
+          "route": "bl 0xd8d5b4",
+          "site": "0x00d9064c"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00d90708"
+        },
+        {
+          "callee": "0x00a16e68",
+          "route": "bl sym.tileAtWorldPosition_int__int__MacroTile__World_",
+          "site": "0x00d90734"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d90898"
+        },
+        {
+          "callee": "0x00a16e68",
+          "route": "bl sym.tileAtWorldPosition_int__int__MacroTile__World_",
+          "site": "0x00d908c4"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x00d908e0"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d909e4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d90a00"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d903b8",
+      "ivars": {
+        "0x00d90a24": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        },
+        "0x00d90a28": {
+          "offset": 56,
+          "slot": "0x0105fa6c",
+          "symbol": "OBJC_IVAR_$_SnowSurfaceBlock.temperature"
+        },
+        "0x00d90a2c": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x00d90a34": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        }
+      },
+      "method": "SnowSurfaceBlock -[spreadGrass:tile:]",
+      "name": "sl_11",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d90a1c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d90a20": {
+          "selector": "isClient",
+          "slot": "0x00e88d70"
+        },
+        "0x00d90a30": {
+          "selector": "macroTiles",
+          "slot": "0x00e88d74"
+        },
+        "0x00d90a40": {
+          "selector": "snowChangedAtMacroPos:",
+          "slot": "0x00e88d94"
+        }
+      },
+      "semantics": "[SnowSurfaceBlock -[spreadGrass:tile:]] (imp 0x00d903b8, 421w): the thaw recovery - temperature > 0 and the cover bytes (byte7/+0xe/+0x10/+0x12) <= 0x40 gate a probabilistic (PRNG 0xd8d5b4 vs the threshold double) conversion of the frosted surface codes '0'->'1' (byte0; plus the byte1==2 arm) and fire snowChangedAtMacroPos:.\n",
+      "types": "v16@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}12",
+      "verified_words": 421
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d90e84 (listing bound); next ObjC IMP 0x00d90e84 SnowSurfaceBlock -[updateSnowContent:tile:]",
+      "boundary_end": "0x00d90e84",
+      "branches": [
+        {
+          "address": "0x00d90aac",
+          "destination": "0x00d90ab4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d90ab0",
+          "destination": "0x00d90e50",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d90ad8",
+          "destination": "0x00d90afc",
+          "mnemonic": "bmi"
+        },
+        {
+          "address": "0x00d90ae8",
+          "destination": "0x00d90c90",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90af8",
+          "destination": "0x00d90c90",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d90b08",
+          "destination": "0x00d90bc4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90b24",
+          "destination": "0x00d90b34",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90bc0",
+          "destination": "0x00d90c8c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d90bd0",
+          "destination": "0x00d90c88",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90bec",
+          "destination": "0x00d90bfc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90c88",
+          "destination": "0x00d90c8c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d90c8c",
+          "destination": "0x00d90e50",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d90cb4",
+          "destination": "0x00d90e4c",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d90cc4",
+          "destination": "0x00d90d80",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90ce0",
+          "destination": "0x00d90cf0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90d7c",
+          "destination": "0x00d90e48",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d90d8c",
+          "destination": "0x00d90e44",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90da8",
+          "destination": "0x00d90db8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90e44",
+          "destination": "0x00d90e48",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d90e48",
+          "destination": "0x00d90e4c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d90e4c",
+          "destination": "0x00d90e50",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00d90aa0"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d90ba0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d90bbc"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d90c68"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d90c84"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d90d5c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d90d78"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d90e24"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d90e40"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d90a4c",
+      "ivars": {
+        "0x00d90e60": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        },
+        "0x00d90e64": {
+          "offset": 56,
+          "slot": "0x0105fa6c",
+          "symbol": "OBJC_IVAR_$_SnowSurfaceBlock.temperature"
+        },
+        "0x00d90e6c": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        }
+      },
+      "method": "SnowSurfaceBlock -[updateGroundFrozen:tile:]",
+      "name": "sl_12",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d90e58": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d90e5c": {
+          "selector": "isClient",
+          "slot": "0x00e88d70"
+        },
+        "0x00d90e70": {
+          "selector": "snowChangedAtMacroPos:",
+          "slot": "0x00e88d94"
+        }
+      },
+      "semantics": "[SnowSurfaceBlock -[updateGroundFrozen:tile:]] (imp 0x00d90a4c, 270w): the ground-frozen state machine - isClient gate; temperature < 0 freezes (the 0x1b/0x1c and 0x31/0x32 pairs written into BOTH fg/bg), temperature > 0 thaws them; a tile with byte0==5 carrying snow (byte4>0) also enters the freeze path; every flip fires snowChangedAtMacroPos: with the macro pos (x>>5, (y-1)>>5).\n",
+      "types": "v16@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}12",
+      "verified_words": 270
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d9119c (listing bound); next ObjC IMP 0x00d911d8 SnowSurfaceBlock -[removeAllSnow]",
+      "boundary_end": "0x00d9119c",
+      "branches": [
+        {
+          "address": "0x00d90eb8",
+          "destination": "0x00d90f18",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d90ec8",
+          "destination": "0x00d90f18",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d90f14",
+          "destination": "0x00d90f1c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d90f18",
+          "destination": "0x00d91168",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d90f64",
+          "destination": "0x00d90f74",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d90f70",
+          "destination": "0x00d91168",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d90f94",
+          "destination": "0x00d91048",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d91058",
+          "destination": "0x00d910f0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d910fc",
+          "destination": "0x00d91110",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d9110c",
+          "destination": "0x00d91164",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d9111c",
+          "destination": "0x00d91140",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d9112c",
+          "destination": "0x00d9113c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d9113c",
+          "destination": "0x00d91160",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d9114c",
+          "destination": "0x00d9115c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d9115c",
+          "destination": "0x00d91160",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d91160",
+          "destination": "0x00d91164",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d91164",
+          "destination": "0x00d91168",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d90f08"
+        },
+        {
+          "callee": "0x00d9119c",
+          "route": "bl 0xd9119c",
+          "site": "0x00d90f8c"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00d9100c"
+        },
+        {
+          "callee": "0x00a1915c",
+          "route": "bl sym.reloadDrawBlockGeometryForTile_int__int__MacroTile__World__signed_char_",
+          "site": "0x00d91044"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d910d0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d910ec"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d90e84",
+      "ivars": {
+        "0x00d91178": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        },
+        "0x00d91180": {
+          "offset": 60,
+          "slot": "0x0105fa70",
+          "symbol": "OBJC_IVAR_$_SnowSurfaceBlock.partialContent"
+        },
+        "0x00d91184": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x00d9118c": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        }
+      },
+      "method": "SnowSurfaceBlock -[updateSnowContent:tile:]",
+      "name": "sl_13",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d91170": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d91174": {
+          "selector": "isClient",
+          "slot": "0x00e88d70"
+        },
+        "0x00d91188": {
+          "selector": "macroTiles",
+          "slot": "0x00e88d74"
+        },
+        "0x00d91194": {
+          "selector": "snowChangedAtMacroPos:",
+          "slot": "0x00e88d94"
+        }
+      },
+      "semantics": "[SnowSurfaceBlock -[updateSnowContent:tile:]] (imp 0x00d90e84, 198w): the snow amount write - target = (int)(partialContent * 255.0); the surface types 3/4 are exempt; a change writes tile byte4 and re-reloads the draw geometry (reloadDrawBlockGeometryForTile, sxtb arg 0) + fires snowChangedAtMacroPos:; the grass/type-5 tail arm.\n",
+      "types": "v16@0:4c8^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}12",
+      "verified_words": 198
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d913d4 (listing bound); next ObjC IMP 0x00d913d4 SnowSurfaceBlock -[removeIfFloating]",
+      "boundary_end": "0x00d913d4",
+      "branches": [
+        {
+          "address": "0x00d91274",
+          "destination": "0x00d913ac",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d91284",
+          "destination": "0x00d913ac",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d91294",
+          "destination": "0x00d913ac",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d912a4",
+          "destination": "0x00d913ac",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d91260"
+        },
+        {
+          "callee": null,
+          "route": "blx r5",
+          "site": "0x00d91318"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d91370"
+        },
+        {
+          "callee": "0x00a1915c",
+          "route": "bl sym.reloadDrawBlockGeometryForTile_int__int__MacroTile__World__signed_char_",
+          "site": "0x00d913a8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d911d8",
+      "ivars": {
+        "0x00d913b4": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x00d913b8": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x00d913c0": {
+          "offset": 60,
+          "slot": "0x0105fa70",
+          "symbol": "OBJC_IVAR_$_SnowSurfaceBlock.partialContent"
+        }
+      },
+      "method": "SnowSurfaceBlock -[removeAllSnow]",
+      "name": "sl_14",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d913c4": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d913c8": {
+          "selector": "macroTiles",
+          "slot": "0x00e88d74"
+        },
+        "0x00d913cc": {
+          "selector": "updateSnowContent:tile:",
+          "slot": "0x00e88d68"
+        }
+      },
+      "semantics": "[SnowSurfaceBlock -[removeAllSnow]] (imp 0x00d911d8, 127w): the snow clear - walks the macro tiles and drives updateSnowContent:tile: to zero, then reloads.\n",
+      "types": "v8@0:4",
+      "verified_words": 127
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d918d8; body trimmed at the next IMP 0x00d91588 SnowSurfaceBlock -[worldChanged:]",
+      "boundary_end": "0x00d91588",
+      "branches": [
+        {
+          "address": "0x00d91454",
+          "destination": "0x00d9155c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d91468",
+          "destination": "0x00d9152c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d914c8",
+          "destination": "0x00d91528",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d914d8",
+          "destination": "0x00d91528",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d91524",
+          "destination": "0x00d91564",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d91528",
+          "destination": "0x00d91558",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d91558",
+          "destination": "0x00d9155c",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d9143c"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x00d91448"
+        },
+        {
+          "callee": "0x00a11690",
+          "route": "bl sym.tileIsWater_Tile_",
+          "site": "0x00d9145c"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d914b4"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d91518"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d91554"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d913d4",
+      "ivars": {
+        "0x00d91570": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x00d91574": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        }
+      },
+      "method": "SnowSurfaceBlock -[removeIfFloating]",
+      "name": "sl_15",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d91578": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d9157c": {
+          "selector": "setNeedsRemoved:",
+          "slot": "0x00e88d7c"
+        },
+        "0x00d91580": {
+          "selector": "removeAllSnow",
+          "slot": "0x00e88d80"
+        }
+      },
+      "semantics": "[SnowSurfaceBlock -[removeIfFloating]] (imp 0x00d913d4, 109w): the floating cleanup - when the support is gone: removeAllSnow + setNeedsRemoved:.\n",
+      "types": "c8@0:4",
+      "verified_words": 109
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d918d8 (listing bound); next ObjC IMP 0x00d918d8 SnowSurfaceBlock -[setNeedsRemoved:]",
+      "boundary_end": "0x00d918d8",
+      "branches": [
+        {
+          "address": "0x00d915c8",
+          "destination": "0x00d915d0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d915cc",
+          "destination": "0x00d918b4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d916bc",
+          "destination": "0x00d918b4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d91704",
+          "destination": "0x00d91874",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d9172c",
+          "destination": "0x00d91800",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d9178c",
+          "destination": "0x00d917fc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d917a0",
+          "destination": "0x00d917b8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d917b4",
+          "destination": "0x00d917fc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d917f8",
+          "destination": "0x00d918b4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d917fc",
+          "destination": "0x00d91870",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d91828",
+          "destination": "0x00d9186c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d91860",
+          "destination": "0x00d91868",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d91864",
+          "destination": "0x00d918b4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d91868",
+          "destination": "0x00d9186c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d9186c",
+          "destination": "0x00d91870",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d91870",
+          "destination": "0x00d91874",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d91874",
+          "destination": "0x00d91878",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d918b0",
+          "destination": "0x00d91624",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d91778"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x00d91794"
+        },
+        {
+          "callee": "0x00a11690",
+          "route": "bl sym.tileIsWater_Tile_",
+          "site": "0x00d917a8"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d917f4"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d91854"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d91588",
+      "ivars": {
+        "0x00d918bc": {
+          "offset": 48,
+          "slot": "0x0105c3c8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.needsRemoved"
+        },
+        "0x00d918c0": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x00d918cc": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        }
+      },
+      "method": "SnowSurfaceBlock -[worldChanged:]",
+      "name": "sl_16",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d918c4": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d918c8": {
+          "selector": "removeIfFloating",
+          "slot": "0x00e88d98"
+        },
+        "0x00d918d0": {
+          "selector": "setNeedsRemoved:",
+          "slot": "0x00e88d7c"
+        }
+      },
+      "semantics": "[SnowSurfaceBlock -[worldChanged:]] (imp 0x00d91588, 212w): the invalidation handler - 18 branches over the neighbour states with the removeIfFloating/ setNeedsRemoved: follow-ups.\n",
+      "types": "v12@0:4^{vector<intpair, std::__1::allocator<intpair> >=^{?}^{?}{__compressed_pair<intpair *, std::__1::allocator<intpair> >=^{?}}}8",
+      "verified_words": 212
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d91a34; body trimmed at the next IMP 0x00d919e8 SnowSurfaceBlock -[setPartialContent:]",
+      "boundary_end": "0x00d919e8",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d919a0",
+      "ivars": {
+        "0x00d919e0": {
+          "offset": 60,
+          "slot": "0x0105fa70",
+          "symbol": "OBJC_IVAR_$_SnowSurfaceBlock.partialContent"
+        }
+      },
+      "method": "SnowSurfaceBlock -[partialContent]",
+      "name": "sl_17",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[SnowSurfaceBlock -[partialContent]] (imp 0x00d919a0, 18w): bare getter (the snow target float).\n",
+      "types": "f8@0:4",
+      "verified_words": 18
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d91a34 (listing bound); next ObjC IMP 0x00d98d78 DrawCube -[initWithWidth:height:depth:topMinS:topMaxS:topMinT:topMaxT:sideMinS:sideMaxS:sideMinT:sideMaxT:calculateNormals:]",
+      "boundary_end": "0x00d91a34",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d919e8",
+      "ivars": {
+        "0x00d91a2c": {
+          "offset": 60,
+          "slot": "0x0105fa70",
+          "symbol": "OBJC_IVAR_$_SnowSurfaceBlock.partialContent"
+        }
+      },
+      "method": "SnowSurfaceBlock -[setPartialContent:]",
+      "name": "sl_18",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[SnowSurfaceBlock -[setPartialContent:]] (imp 0x00d919e8, 19w): bare setter.\n",
+      "types": "v12@0:4f8",
+      "verified_words": 19
+    },
+    {
+      "boundary": "ARM.exidx end 0x00834538 (listing bound); next ObjC IMP 0x00834538 Column -[initSubDerivedItems]",
+      "boundary_end": "0x00834538",
+      "branches": [
+        {
+          "address": "0x00834294",
+          "destination": "0x008342b4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008342a4",
+          "destination": "0x008342b0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x008342b0",
+          "destination": "0x008342b4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0083431c",
+          "destination": "0x0083433c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0083432c",
+          "destination": "0x00834338",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00834338",
+          "destination": "0x0083433c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0083434c",
+          "destination": "0x00834374",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00834358",
+          "destination": "0x00834368",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00834364",
+          "destination": "0x00834370",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00834370",
+          "destination": "0x0083438c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0083437c",
+          "destination": "0x00834388",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00834388",
+          "destination": "0x0083438c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008343b0",
+          "destination": "0x00834500",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008343f0",
+          "destination": "0x00834484",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00834280"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00834308"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0083445c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00834480"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008344d0"
+        },
+        {
+          "callee": "0x00a19598",
+          "route": "bl sym.reloadDrawBlockDynamicObjectStaticGeometryForTile_intpair__MacroTile__World_",
+          "site": "0x008344fc"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00834210",
+      "ivars": {
+        "0x00834508": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x0083450c": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x00834510": {
+          "offset": 64,
+          "slot": "0x0105dc9c",
+          "symbol": "OBJC_IVAR_$_Column.currentConfiguration"
+        },
+        "0x00834514": {
+          "offset": 52,
+          "slot": "0x0105c5c0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.isNet"
+        },
+        "0x00834518": {
+          "offset": 49,
+          "slot": "0x0105c3cc",
+          "symbol": "OBJC_IVAR_$_DynamicObject.updateNeedsToBeSent"
+        },
+        "0x00834520": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        }
+      },
+      "method": "Column -[updateConfiguration]",
+      "name": "sl_19",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00834524": {
+          "selector": "objectType",
+          "slot": "0x00e82094"
+        },
+        "0x00834528": {
+          "selector": "dynamicWorldChangedAtPos:objectType:",
+          "slot": "0x00e82098"
+        },
+        "0x00834530": {
+          "selector": "macroTiles",
+          "slot": "0x00e8209c"
+        }
+      },
+      "semantics": "[Column -[updateConfiguration]] (imp 0x00834210, 202w): the column layout config - probes the marker 0x64 above and below (tileAtWorldPositionLoaded x, y-1 / y+1), config = 4 - 2*above - below; unchanged exits; else writes currentConfiguration + updateNeedsToBeSent and (when !isNet) fires dynamicWorldChangedAtPos:objectType:, then reloadDrawBlockDynamicObjectStaticGeometryForTile.\n",
+      "types": "v8@0:4",
+      "verified_words": 202
+    },
+    {
+      "boundary": "ARM.exidx end 0x00835fa0 (listing bound); next ObjC IMP 0x00835fa0 Column -[draw:projectionMatrix:modelViewMatrix:cameraMinXWorld:cameraMaxXWorld:cameraMinYWorld:cameraMaxYWorld:]",
+      "boundary_end": "0x00835fa0",
+      "branches": [
+        {
+          "address": "0x00835bd0",
+          "destination": "0x00835f58",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00835bf4",
+          "destination": "0x00835f58",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00835c18",
+          "destination": "0x00835f58",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00835c68",
+          "destination": "0x00835f54",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00835e84",
+          "destination": "0x00835f50",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00835f50",
+          "destination": "0x00835f54",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00835f54",
+          "destination": "0x00835f58",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00835bc4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00835cf0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00835d38"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00835d60"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00835d98"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00835df0"
+        },
+        {
+          "callee": "0x00a14a48",
+          "route": "bl sym.seasonForWorldX_int__double__World_",
+          "site": "0x00835e20"
+        },
+        {
+          "callee": "0x00a15404",
+          "route": "bl sym.currentTemperatureForTileAtWorldPos_Tile__intpair__float__float__float__World_",
+          "site": "0x00835e60"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00835f24"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00835f4c"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00835b60",
+      "ivars": {
+        "0x00835f68": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        },
+        "0x00835f6c": {
+          "offset": 48,
+          "slot": "0x0105c3c8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.needsRemoved"
+        },
+        "0x00835f70": {
+          "offset": 56,
+          "slot": "0x0105dc98",
+          "symbol": "OBJC_IVAR_$_Column.itemType"
+        },
+        "0x00835f74": {
+          "offset": 68,
+          "slot": "0x0105dca0",
+          "symbol": "OBJC_IVAR_$_Column.iceMeltTimer"
+        },
+        "0x00835f7c": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x00835f80": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        }
+      },
+      "method": "Column -[update:accurateDT:isSimulation:]",
+      "name": "sl_20",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00835f60": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00835f64": {
+          "selector": "isClient",
+          "slot": "0x00e82108"
+        },
+        "0x00835f84": {
+          "selector": "getWeatherFractionForPos:",
+          "slot": "0x00e8210c"
+        },
+        "0x00835f88": {
+          "selector": "worldTime",
+          "slot": "0x00e82110"
+        },
+        "0x00835f8c": {
+          "selector": "getDayNightFractionForX:atWorldTime:",
+          "slot": "0x00e82114"
+        },
+        "0x00835f90": {
+          "selector": "removeStandardObject:",
+          "slot": "0x00e8211c"
+        },
+        "0x00835f98": {
+          "selector": "fillTile:atPos:withType:",
+          "slot": "0x00e82118"
+        }
+      },
+      "semantics": "[Column -[update:accurateDT:isSimulation:]] (imp 0x00835b60, 272w): the ice-column melt - gates (the ffffc8d4 flag / the currentBlockhead-relic / itemType == 0xf4 (244 = Ice Column)); iceMeltTimer += dt and only past 5.0 seconds acts: reset the timer, compute currentTemperatureForTileAtWorldPos (dayNight/weather/season/worldTime chain), and when temperature > 1.0 melt: fillTile:atPos:withType: with the 0x423 tile-type constant (the community-documented half block of water) + removeStandardObject:.\n",
+      "types": "v20@0:4f8f12c16",
+      "verified_words": 272
+    },
+    {
+      "boundary": "ARM.exidx end 0x006cc2bc (listing bound); next ObjC IMP 0x006cc2bc Stairs -[initSubDerivedItems]",
+      "boundary_end": "0x006cc2bc",
+      "branches": [
+        {
+          "address": "0x006cbc6c",
+          "destination": "0x006cbd90",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x006cbc80",
+          "destination": "0x006cbd8c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x006cbce8",
+          "destination": "0x006cbd88",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x006cbcf8",
+          "destination": "0x006cbd84",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x006cbd60",
+          "destination": "0x006cbd80",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x006cbd70",
+          "destination": "0x006cbd7c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x006cbd7c",
+          "destination": "0x006cbd80",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x006cbd80",
+          "destination": "0x006cbd84",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x006cbd84",
+          "destination": "0x006cbd88",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x006cbd88",
+          "destination": "0x006cbd8c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x006cbd8c",
+          "destination": "0x006cbd90",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x006cbd98",
+          "destination": "0x006cbe24",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x006cbe00",
+          "destination": "0x006cbe20",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x006cbe10",
+          "destination": "0x006cbe1c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x006cbe1c",
+          "destination": "0x006cbe20",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x006cbe20",
+          "destination": "0x006cbe24",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x006cbe2c",
+          "destination": "0x006cbeb8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x006cbe94",
+          "destination": "0x006cbeb4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x006cbea4",
+          "destination": "0x006cbeb0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x006cbeb0",
+          "destination": "0x006cbeb4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x006cbeb4",
+          "destination": "0x006cbeb8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x006cbf20",
+          "destination": "0x006cbf44",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x006cbf34",
+          "destination": "0x006cbf40",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x006cbf40",
+          "destination": "0x006cbf44",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x006cbf4c",
+          "destination": "0x006cc0bc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x006cbfac",
+          "destination": "0x006cc0b8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x006cbfbc",
+          "destination": "0x006cc0b8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x006cbfc8",
+          "destination": "0x006cc040",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x006cc030",
+          "destination": "0x006cc03c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x006cc03c",
+          "destination": "0x006cc0b4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x006cc0a4",
+          "destination": "0x006cc0b0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x006cc0b0",
+          "destination": "0x006cc0b4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x006cc0b4",
+          "destination": "0x006cc0b8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x006cc0b8",
+          "destination": "0x006cc0bc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x006cc0c4",
+          "destination": "0x006cc0ec",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x006cc0d0",
+          "destination": "0x006cc0e0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x006cc0dc",
+          "destination": "0x006cc0e8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x006cc0e8",
+          "destination": "0x006cc110",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x006cc0f4",
+          "destination": "0x006cc104",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x006cc100",
+          "destination": "0x006cc10c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x006cc10c",
+          "destination": "0x006cc110",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x006cc134",
+          "destination": "0x006cc284",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x006cc174",
+          "destination": "0x006cc208",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x006cbc58"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x006cbc74"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x006cbcd4"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x006cbd4c"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x006cbdec"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x006cbe80"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x006cbf0c"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x006cbf28"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x006cbf98"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x006cc018"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x006cc024"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x006cc08c"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x006cc098"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x006cc1e0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x006cc204"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x006cc254"
+        },
+        {
+          "callee": "0x00a19598",
+          "route": "bl sym.reloadDrawBlockDynamicObjectStaticGeometryForTile_intpair__MacroTile__World_",
+          "site": "0x006cc280"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x006cbbe0",
+      "ivars": {
+        "0x006cc28c": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x006cc290": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x006cc294": {
+          "offset": 60,
+          "slot": "0x0105d0c4",
+          "symbol": "OBJC_IVAR_$_Stairs.currentConfiguration"
+        },
+        "0x006cc298": {
+          "offset": 52,
+          "slot": "0x0105c5c0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.isNet"
+        },
+        "0x006cc29c": {
+          "offset": 49,
+          "slot": "0x0105c3cc",
+          "symbol": "OBJC_IVAR_$_DynamicObject.updateNeedsToBeSent"
+        },
+        "0x006cc2a4": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        }
+      },
+      "method": "Stairs -[updateConfiguration]",
+      "name": "sl_21",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x006cc2a8": {
+          "selector": "objectType",
+          "slot": "0x00e7fbe8"
+        },
+        "0x006cc2ac": {
+          "selector": "dynamicWorldChangedAtPos:objectType:",
+          "slot": "0x00e7fbec"
+        },
+        "0x006cc2b4": {
+          "selector": "macroTiles",
+          "slot": "0x00e7fbf0"
+        }
+      },
+      "semantics": "[Stairs -[updateConfiguration]] (imp 0x006cbbe0, 439w): the stair layout config - the sl_19 sibling with the richer arm/neighbour classification (17 calls, 43 branches; same currentConfiguration/isNet/dynamicWorldChangedAtPos:objectType: family) - census-grade, not a per-instruction walkthrough.\n",
+      "types": "v8@0:4",
+      "verified_words": 439
+    },
+    {
+      "boundary": "ARM.exidx end 0x006ce10c (listing bound); next ObjC IMP 0x006ce10c Stairs -[freeblockCreationItemType]",
+      "boundary_end": "0x006ce10c",
+      "branches": [
+        {
+          "address": "0x006cdd3c",
+          "destination": "0x006ce0c4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x006cdd60",
+          "destination": "0x006ce0c4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x006cdd84",
+          "destination": "0x006ce0c4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x006cddd4",
+          "destination": "0x006ce0c0",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x006cdff0",
+          "destination": "0x006ce0bc",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x006ce0bc",
+          "destination": "0x006ce0c0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x006ce0c0",
+          "destination": "0x006ce0c4",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x006cdd30"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x006cde5c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x006cdea4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x006cdecc"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x006cdf04"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x006cdf5c"
+        },
+        {
+          "callee": "0x00a14a48",
+          "route": "bl sym.seasonForWorldX_int__double__World_",
+          "site": "0x006cdf8c"
+        },
+        {
+          "callee": "0x00a15404",
+          "route": "bl sym.currentTemperatureForTileAtWorldPos_Tile__intpair__float__float__float__World_",
+          "site": "0x006cdfcc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x006ce090"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x006ce0b8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x006cdccc",
+      "ivars": {
+        "0x006ce0d4": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        },
+        "0x006ce0d8": {
+          "offset": 48,
+          "slot": "0x0105c3c8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.needsRemoved"
+        },
+        "0x006ce0dc": {
+          "offset": 56,
+          "slot": "0x0105d0c0",
+          "symbol": "OBJC_IVAR_$_Stairs.itemType"
+        },
+        "0x006ce0e0": {
+          "offset": 68,
+          "slot": "0x0105d0c8",
+          "symbol": "OBJC_IVAR_$_Stairs.iceMeltTimer"
+        },
+        "0x006ce0e8": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x006ce0ec": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        }
+      },
+      "method": "Stairs -[update:accurateDT:isSimulation:]",
+      "name": "sl_22",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x006ce0cc": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x006ce0d0": {
+          "selector": "isClient",
+          "slot": "0x00e7fc64"
+        },
+        "0x006ce0f0": {
+          "selector": "getWeatherFractionForPos:",
+          "slot": "0x00e7fc68"
+        },
+        "0x006ce0f4": {
+          "selector": "worldTime",
+          "slot": "0x00e7fc6c"
+        },
+        "0x006ce0f8": {
+          "selector": "getDayNightFractionForX:atWorldTime:",
+          "slot": "0x00e7fc70"
+        },
+        "0x006ce0fc": {
+          "selector": "removeStandardObject:",
+          "slot": "0x00e7fc78"
+        },
+        "0x006ce104": {
+          "selector": "fillTile:atPos:withType:",
+          "slot": "0x00e7fc74"
+        }
+      },
+      "semantics": "[Stairs -[update:accurateDT:isSimulation:]] (imp 0x006cdccc, 272w): the stair melt - the sl_20 sibling (Stairs.itemType/iceMeltTimer; the same 244/5.0s/temp>1.0/fillTile:atPos:withType: chain).\n",
+      "types": "v20@0:4f8f12c16",
+      "verified_words": 272
+    },
+    {
+      "boundary": "ARM.exidx end 0x008e1f18 (listing bound); next ObjC IMP 0x008e1f18 DynamicWorld -[lightChangedAtMacroPos:sendReliably:sendAtAll:]",
+      "boundary_end": "0x008e1f18",
+      "branches": [
+        {
+          "address": "0x008e1d30",
+          "destination": "0x008e1dc0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008e1d60",
+          "destination": "0x008e1d80",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x008e1d70",
+          "destination": "0x008e1d80",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x008e1d7c",
+          "destination": "0x008e1dc0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008e1d80",
+          "destination": "0x008e1d84",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008e1dbc",
+          "destination": "0x008e1c84",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008e1dc8",
+          "destination": "0x008e1f08",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x008e1e24",
+          "destination": "0x008e1ef8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008e1eb8",
+          "destination": "0x008e1ee4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008e1ef4",
+          "destination": "0x008e1f04",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008e1f04",
+          "destination": "0x008e1f08",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x0052d84c",
+          "route": "bl method.void_std::__1::vector_intpair__std::__1::allocator_intpair___.__push_back_slow_path_intpair_const__intpair_const_",
+          "site": "0x008e1f00"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008e1bf0",
+      "ivars": {
+        "0x008e1f10": {
+          "offset": 6096,
+          "slot": "0x0105e074",
+          "symbol": "OBJC_IVAR_$_DynamicWorld.snowChangedMacroPositions"
+        }
+      },
+      "method": "DynamicWorld -[snowChangedAtMacroPos:]",
+      "name": "sl_23",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[DynamicWorld -[snowChangedAtMacroPos:]] (imp 0x008e1bf0, 202w): the snow-change accumulator - appends the macro pos into DynamicWorld.snowChangedMacroPositions (the dup/empty gates).\n",
+      "types": "v16@0:4{?=ii}8",
+      "verified_words": 202
+    },
+    {
+      "boundary": "ARM.exidx end 0x008e66d4 (listing bound); next ObjC IMP 0x008e66d4 DynamicWorld -[loadNPCAtPosition:type:saveDict:isAdult:wasPlaced:placedByClient:]",
+      "boundary_end": "0x008e66d4",
+      "branches": [
+        {
+          "address": "0x008e6688",
+          "destination": "0x008e66b8",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008e6678"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x008e66b4"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008e6608",
+      "ivars": {},
+      "method": "DynamicWorld -[loadSnowSurfaceBlockAtPos:loadSnow:]",
+      "name": "sl_24",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008e66c0": {
+          "selector": "loadStandardDynamicObjectOfType:atPos:",
+          "slot": "0x00e830a4"
+        },
+        "0x008e66c8": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x008e66cc": {
+          "selector": "updateInTimeSinceSaved",
+          "slot": "0x00e830a8"
+        }
+      },
+      "semantics": "[DynamicWorld -[loadSnowSurfaceBlockAtPos:loadSnow:]] (imp 0x008e6608, 51w): the loader hook - loadStandardDynamicObjectOfType:atPos: then updateInTimeSinceSaved.\n",
+      "types": "v20@0:4{?=ii}8c16",
+      "verified_words": 51
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "schema": 1
+}

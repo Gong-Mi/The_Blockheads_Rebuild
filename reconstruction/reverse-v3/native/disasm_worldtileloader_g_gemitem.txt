@@ -1,0 +1,52 @@
+# GemTree -[gemItemType]
+# types: i8@0:4
+# implementation: 0x0052bb20
+# ARM.exidx end: 0x0052bbdc
+
+            0x0052bb20      10d04de2       sub sp, sp, 0x10
+            0x0052bb24      08008de5       str r0, [sp, 8]
+            0x0052bb28      04108de5       str r1, [sp, 4]
+            0x0052bb2c      08009de5       ldr r0, [sp, 8]
+            0x0052bb30      9c109fe5       ldr r1, [0x0052bbd4]        ; [0x52bbd4:4]=0xffffcb90
+            0x0052bb34      9c209fe5       ldr r2, [0x0052bbd8]        ; [0x52bbd8:4]=0xb33fb4
+            0x0052bb38      02208fe0       add r2, pc, r2
+            0x0052bb3c      021091e7       ldr r1, [r1, r2]
+            0x0052bb40      001091e5       ldr r1, [r1]
+            0x0052bb44      010090e7       ldr r0, [r0, r1]
+            0x0052bb48      0b0040e2       sub r0, r0, 0xb
+            0x0052bb4c      040050e3       cmp r0, 4
+            0x0052bb50      00008de5       str r0, [sp]
+        ┌─< 0x0052bb54      1800008a       bhi 0x52bbbc
+        │   0x0052bb58      00009de5       ldr r0, [sp]
+        │   0x0052bb5c      0011a0e1       lsl r1, r0, 2
+        │   0x0052bb60      04208fe2       add r2, pc, 4
+        │   0x0052bb64      021091e7       ldr r1, [r1, r2]
+        │   0x0052bb68      02f081e0       add pc, r1, r2
+        │   0x0052bb6c      14000000       andeq r0, r0, r4, lsl r0
+        │   0x0052bb70      20000000       andeq r0, r0, r0, lsr 32
+        │   0x0052bb74      2c000000       andeq r0, r0, ip, lsr 32
+        │   0x0052bb78      38000000       andeq r0, r0, r8, lsr r0
+        │   0x0052bb7c      44000000       andeq r0, r0, r4, asr 32
+        │   0x0052bb80      570000e3       movw r0, 0x57               ; 'W'
+        │   0x0052bb84      0c008de5       str r0, [sp, 0xc]
+       ┌──< 0x0052bb88      0e0000ea       b 0x52bbc8
+       ││   0x0052bb8c      560000e3       movw r0, 0x56               ; 'V'
+       ││   0x0052bb90      0c008de5       str r0, [sp, 0xc]
+      ┌───< 0x0052bb94      0b0000ea       b 0x52bbc8
+      │││   0x0052bb98      4c0000e3       movw r0, 0x4c               ; 'L'
+      │││   0x0052bb9c      0c008de5       str r0, [sp, 0xc]
+     ┌────< 0x0052bba0      080000ea       b 0x52bbc8
+     ││││   0x0052bba4      4b0000e3       movw r0, 0x4b               ; 'K'
+     ││││   0x0052bba8      0c008de5       str r0, [sp, 0xc]
+    ┌─────< 0x0052bbac      050000ea       b 0x52bbc8
+    │││││   0x0052bbb0      580000e3       movw r0, 0x58               ; 'X'
+    │││││   0x0052bbb4      0c008de5       str r0, [sp, 0xc]
+   ┌──────< 0x0052bbb8      020000ea       b 0x52bbc8
+  ┌─────└─> 0x0052bbbc      ffffffea       b 0x52bbc0
+  └───────> 0x0052bbc0      570000e3       movw r0, 0x57               ; 'W'
+   │││││    0x0052bbc4      0c008de5       str r0, [sp, 0xc]
+   └└└└└──> 0x0052bbc8      0c009de5       ldr r0, [sp, 0xc]
+            0x0052bbcc      10d08de2       add sp, sp, 0x10
+            0x0052bbd0      1eff2fe1       bx lr
+            0x0052bbd4      90cbffff       invalid
+            0x0052bbd8      b43fb300       ldrhteq r3, [r3], r4

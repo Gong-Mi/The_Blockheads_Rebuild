@@ -1,0 +1,233 @@
+# cpLookAt  [C function]
+# implementation: 0x007c3a6c
+# ARM.exidx end: 0x007c3e00
+
+            ;-- cpLookAt:
+            0x007c3a6c      00482de9       push {fp, lr}
+            0x007c3a70      0db0a0e1       mov fp, sp
+            0x007c3a74      98d04de2       sub sp, sp, 0x98
+            0x007c3a78      103a00ee       vmov s0, r3
+            0x007c3a7c      102a01ee       vmov s2, r2
+            0x007c3a80      101a02ee       vmov s4, r1
+            0x007c3a84      100a03ee       vmov s6, r0
+            0x007c3a88      064a9bed       vldr s8, [fp, 0x18]
+            0x007c3a8c      055a9bed       vldr s10, [fp, 0x14]
+            0x007c3a90      046a9bed       vldr s12, [fp, 0x10]
+            0x007c3a94      037a9bed       vldr s14, [fp, 0xc]
+            0x007c3a98      020adbed       vldr s1, [fp, 8]
+            0x007c3a9c      013a0bed       vstr s6, [fp, -4]
+            0x007c3aa0      022a0bed       vstr s4, [fp, -8]
+            0x007c3aa4      031a0bed       vstr s2, [fp, -0xc]
+            0x007c3aa8      040a0bed       vstr s0, [fp, -0x10]
+            0x007c3aac      050a4bed       vstr s1, [fp, -0x14]
+            0x007c3ab0      067a0bed       vstr s14, [fp, -0x18]
+            0x007c3ab4      076a0bed       vstr s12, [fp, -0x1c]
+            0x007c3ab8      085a0bed       vstr s10, [fp, -0x20]
+            0x007c3abc      094a0bed       vstr s8, [fp, -0x24]
+            0x007c3ac0      010a1bed       vldr s0, [fp, -4]
+            0x007c3ac4      041a1bed       vldr s2, [fp, -0x10]
+            0x007c3ac8      410a30ee       vsub.f32 s0, s0, s2
+            0x007c3acc      040a8ded       vstr s0, [sp, 0x10]
+            0x007c3ad0      020a1bed       vldr s0, [fp, -8]
+            0x007c3ad4      051a1bed       vldr s2, [fp, -0x14]
+            0x007c3ad8      410a30ee       vsub.f32 s0, s0, s2
+            0x007c3adc      050a8ded       vstr s0, [sp, 0x14]
+            0x007c3ae0      030a1bed       vldr s0, [fp, -0xc]
+            0x007c3ae4      061a1bed       vldr s2, [fp, -0x18]
+            0x007c3ae8      410a30ee       vsub.f32 s0, s0, s2
+            0x007c3aec      060a8ded       vstr s0, [sp, 0x18]
+            0x007c3af0      040a9ded       vldr s0, [sp, 0x10]
+            0x007c3af4      041a9ded       vldr s2, [sp, 0x10]
+            0x007c3af8      010a20ee       vmul.f32 s0, s0, s2
+            0x007c3afc      051a9ded       vldr s2, [sp, 0x14]
+            0x007c3b00      052a9ded       vldr s4, [sp, 0x14]
+            0x007c3b04      021a21ee       vmul.f32 s2, s2, s4
+            0x007c3b08      010a30ee       vadd.f32 s0, s0, s2
+            0x007c3b0c      061a9ded       vldr s2, [sp, 0x18]
+            0x007c3b10      062a9ded       vldr s4, [sp, 0x18]
+            0x007c3b14      021a21ee       vmul.f32 s2, s2, s4
+            0x007c3b18      010a30ee       vadd.f32 s0, s0, s2
+            0x007c3b1c      100a10ee       vmov r0, s0
+            0x007c3b20      00fce7eb       bl sym.imp.sqrtf
+            0x007c3b24      100a00ee       vmov s0, r0
+            0x007c3b28      030a8ded       vstr s0, [sp, 0xc]
+            0x007c3b2c      030a9ded       vldr s0, [sp, 0xc]
+            0x007c3b30      c00ab5ee       vcmpe.f32 s0, 0
+            0x007c3b34      10faf1ee       vmrs apsr_nzcv, fpscr
+        ┌─< 0x007c3b38      0b00000a       beq 0x7c3b6c
+        │   0x007c3b3c      030a9ded       vldr s0, [sp, 0xc]
+        │   0x007c3b40      041a9ded       vldr s2, [sp, 0x10]
+        │   0x007c3b44      000a81ee       vdiv.f32 s0, s2, s0
+        │   0x007c3b48      040a8ded       vstr s0, [sp, 0x10]
+        │   0x007c3b4c      030a9ded       vldr s0, [sp, 0xc]
+        │   0x007c3b50      051a9ded       vldr s2, [sp, 0x14]
+        │   0x007c3b54      000a81ee       vdiv.f32 s0, s2, s0
+        │   0x007c3b58      050a8ded       vstr s0, [sp, 0x14]
+        │   0x007c3b5c      030a9ded       vldr s0, [sp, 0xc]
+        │   0x007c3b60      061a9ded       vldr s2, [sp, 0x18]
+        │   0x007c3b64      000a81ee       vdiv.f32 s0, s2, s0
+        │   0x007c3b68      060a8ded       vstr s0, [sp, 0x18]
+        └─> 0x007c3b6c      070a1bed       vldr s0, [fp, -0x1c]
+            0x007c3b70      070a8ded       vstr s0, [sp, 0x1c]
+            0x007c3b74      080a1bed       vldr s0, [fp, -0x20]
+            0x007c3b78      080a8ded       vstr s0, [sp, 0x20]
+            0x007c3b7c      090a1bed       vldr s0, [fp, -0x24]
+            0x007c3b80      090a8ded       vstr s0, [sp, 0x24]
+            0x007c3b84      080a9ded       vldr s0, [sp, 0x20]
+            0x007c3b88      061a9ded       vldr s2, [sp, 0x18]
+            0x007c3b8c      010a20ee       vmul.f32 s0, s0, s2
+            0x007c3b90      091a9ded       vldr s2, [sp, 0x24]
+            0x007c3b94      052a9ded       vldr s4, [sp, 0x14]
+            0x007c3b98      021a21ee       vmul.f32 s2, s2, s4
+            0x007c3b9c      410a30ee       vsub.f32 s0, s0, s2
+            0x007c3ba0      0a0a8ded       vstr s0, [sp, 0x28]
+            0x007c3ba4      070a9ded       vldr s0, [sp, 0x1c]
+            0x007c3ba8      400ab1ee       vneg.f32 s0, s0
+            0x007c3bac      061a9ded       vldr s2, [sp, 0x18]
+            0x007c3bb0      010a20ee       vmul.f32 s0, s0, s2
+            0x007c3bb4      091a9ded       vldr s2, [sp, 0x24]
+            0x007c3bb8      042a9ded       vldr s4, [sp, 0x10]
+            0x007c3bbc      021a21ee       vmul.f32 s2, s2, s4
+            0x007c3bc0      010a30ee       vadd.f32 s0, s0, s2
+            0x007c3bc4      0b0a8ded       vstr s0, [sp, 0x2c]
+            0x007c3bc8      070a9ded       vldr s0, [sp, 0x1c]
+            0x007c3bcc      051a9ded       vldr s2, [sp, 0x14]
+            0x007c3bd0      010a20ee       vmul.f32 s0, s0, s2
+            0x007c3bd4      081a9ded       vldr s2, [sp, 0x20]
+            0x007c3bd8      042a9ded       vldr s4, [sp, 0x10]
+            0x007c3bdc      021a21ee       vmul.f32 s2, s2, s4
+            0x007c3be0      410a30ee       vsub.f32 s0, s0, s2
+            0x007c3be4      0c0a8ded       vstr s0, [sp, 0x30]
+            0x007c3be8      050a9ded       vldr s0, [sp, 0x14]
+            0x007c3bec      0c1a9ded       vldr s2, [sp, 0x30]
+            0x007c3bf0      010a20ee       vmul.f32 s0, s0, s2
+            0x007c3bf4      061a9ded       vldr s2, [sp, 0x18]
+            0x007c3bf8      0b2a9ded       vldr s4, [sp, 0x2c]
+            0x007c3bfc      021a21ee       vmul.f32 s2, s2, s4
+            0x007c3c00      410a30ee       vsub.f32 s0, s0, s2
+            0x007c3c04      070a8ded       vstr s0, [sp, 0x1c]
+            0x007c3c08      040a9ded       vldr s0, [sp, 0x10]
+            0x007c3c0c      400ab1ee       vneg.f32 s0, s0
+            0x007c3c10      0c1a9ded       vldr s2, [sp, 0x30]
+            0x007c3c14      010a20ee       vmul.f32 s0, s0, s2
+            0x007c3c18      061a9ded       vldr s2, [sp, 0x18]
+            0x007c3c1c      0a2a9ded       vldr s4, [sp, 0x28]
+            0x007c3c20      021a21ee       vmul.f32 s2, s2, s4
+            0x007c3c24      010a30ee       vadd.f32 s0, s0, s2
+            0x007c3c28      080a8ded       vstr s0, [sp, 0x20]
+            0x007c3c2c      040a9ded       vldr s0, [sp, 0x10]
+            0x007c3c30      0b1a9ded       vldr s2, [sp, 0x2c]
+            0x007c3c34      010a20ee       vmul.f32 s0, s0, s2
+            0x007c3c38      051a9ded       vldr s2, [sp, 0x14]
+            0x007c3c3c      0a2a9ded       vldr s4, [sp, 0x28]
+            0x007c3c40      021a21ee       vmul.f32 s2, s2, s4
+            0x007c3c44      410a30ee       vsub.f32 s0, s0, s2
+            0x007c3c48      090a8ded       vstr s0, [sp, 0x24]
+            0x007c3c4c      0a0a9ded       vldr s0, [sp, 0x28]
+            0x007c3c50      0a1a9ded       vldr s2, [sp, 0x28]
+            0x007c3c54      010a20ee       vmul.f32 s0, s0, s2
+            0x007c3c58      0b1a9ded       vldr s2, [sp, 0x2c]
+            0x007c3c5c      0b2a9ded       vldr s4, [sp, 0x2c]
+            0x007c3c60      021a21ee       vmul.f32 s2, s2, s4
+            0x007c3c64      010a30ee       vadd.f32 s0, s0, s2
+            0x007c3c68      0c1a9ded       vldr s2, [sp, 0x30]
+            0x007c3c6c      0c2a9ded       vldr s4, [sp, 0x30]
+            0x007c3c70      021a21ee       vmul.f32 s2, s2, s4
+            0x007c3c74      010a30ee       vadd.f32 s0, s0, s2
+            0x007c3c78      100a10ee       vmov r0, s0
+            0x007c3c7c      a9fbe7eb       bl sym.imp.sqrtf
+            0x007c3c80      100a00ee       vmov s0, r0
+            0x007c3c84      030a8ded       vstr s0, [sp, 0xc]
+            0x007c3c88      030a9ded       vldr s0, [sp, 0xc]
+            0x007c3c8c      c00ab5ee       vcmpe.f32 s0, 0
+            0x007c3c90      10faf1ee       vmrs apsr_nzcv, fpscr
+        ┌─< 0x007c3c94      0b00000a       beq 0x7c3cc8
+        │   0x007c3c98      030a9ded       vldr s0, [sp, 0xc]
+        │   0x007c3c9c      0a1a9ded       vldr s2, [sp, 0x28]
+        │   0x007c3ca0      000a81ee       vdiv.f32 s0, s2, s0
+        │   0x007c3ca4      0a0a8ded       vstr s0, [sp, 0x28]
+        │   0x007c3ca8      030a9ded       vldr s0, [sp, 0xc]
+        │   0x007c3cac      0b1a9ded       vldr s2, [sp, 0x2c]
+        │   0x007c3cb0      000a81ee       vdiv.f32 s0, s2, s0
+        │   0x007c3cb4      0b0a8ded       vstr s0, [sp, 0x2c]
+        │   0x007c3cb8      030a9ded       vldr s0, [sp, 0xc]
+        │   0x007c3cbc      0c1a9ded       vldr s2, [sp, 0x30]
+        │   0x007c3cc0      000a81ee       vdiv.f32 s0, s2, s0
+        │   0x007c3cc4      0c0a8ded       vstr s0, [sp, 0x30]
+        └─> 0x007c3cc8      070a9ded       vldr s0, [sp, 0x1c]
+            0x007c3ccc      071a9ded       vldr s2, [sp, 0x1c]
+            0x007c3cd0      010a20ee       vmul.f32 s0, s0, s2
+            0x007c3cd4      081a9ded       vldr s2, [sp, 0x20]
+            0x007c3cd8      082a9ded       vldr s4, [sp, 0x20]
+            0x007c3cdc      021a21ee       vmul.f32 s2, s2, s4
+            0x007c3ce0      010a30ee       vadd.f32 s0, s0, s2
+            0x007c3ce4      091a9ded       vldr s2, [sp, 0x24]
+            0x007c3ce8      092a9ded       vldr s4, [sp, 0x24]
+            0x007c3cec      021a21ee       vmul.f32 s2, s2, s4
+            0x007c3cf0      010a30ee       vadd.f32 s0, s0, s2
+            0x007c3cf4      100a10ee       vmov r0, s0
+            0x007c3cf8      8afbe7eb       bl sym.imp.sqrtf
+            0x007c3cfc      100a00ee       vmov s0, r0
+            0x007c3d00      030a8ded       vstr s0, [sp, 0xc]
+            0x007c3d04      030a9ded       vldr s0, [sp, 0xc]
+            0x007c3d08      c00ab5ee       vcmpe.f32 s0, 0
+            0x007c3d0c      10faf1ee       vmrs apsr_nzcv, fpscr
+        ┌─< 0x007c3d10      0b00000a       beq 0x7c3d44
+        │   0x007c3d14      030a9ded       vldr s0, [sp, 0xc]
+        │   0x007c3d18      071a9ded       vldr s2, [sp, 0x1c]
+        │   0x007c3d1c      000a81ee       vdiv.f32 s0, s2, s0
+        │   0x007c3d20      070a8ded       vstr s0, [sp, 0x1c]
+        │   0x007c3d24      030a9ded       vldr s0, [sp, 0xc]
+        │   0x007c3d28      081a9ded       vldr s2, [sp, 0x20]
+        │   0x007c3d2c      000a81ee       vdiv.f32 s0, s2, s0
+        │   0x007c3d30      080a8ded       vstr s0, [sp, 0x20]
+        │   0x007c3d34      030a9ded       vldr s0, [sp, 0xc]
+        │   0x007c3d38      091a9ded       vldr s2, [sp, 0x24]
+        │   0x007c3d3c      000a81ee       vdiv.f32 s0, s2, s0
+        │   0x007c3d40      090a8ded       vstr s0, [sp, 0x24]
+        └─> 0x007c3d44      34008de2       add r0, sp, 0x34
+            0x007c3d48      011000e3       movw r1, 1
+            0x007c3d4c      000ab7ee       vmov.f32 s0, 1
+            0x007c3d50      002000e3       movw r2, 0
+            0x007c3d54      271a9fed       vldr s2, [0x007c3df8]
+            0x007c3d58      0a2a9ded       vldr s4, [sp, 0x28]
+            0x007c3d5c      0d2a8ded       vstr s4, [sp, 0x34]
+            0x007c3d60      0b2a9ded       vldr s4, [sp, 0x2c]
+            0x007c3d64      112a8ded       vstr s4, [sp, 0x44]
+            0x007c3d68      0c2a9ded       vldr s4, [sp, 0x30]
+            0x007c3d6c      152a8ded       vstr s4, [sp, 0x54]
+            0x007c3d70      191a8ded       vstr s2, [sp, 0x64]
+            0x007c3d74      072a9ded       vldr s4, [sp, 0x1c]
+            0x007c3d78      0e2a8ded       vstr s4, [sp, 0x38]
+            0x007c3d7c      082a9ded       vldr s4, [sp, 0x20]
+            0x007c3d80      122a8ded       vstr s4, [sp, 0x48]
+            0x007c3d84      092a9ded       vldr s4, [sp, 0x24]
+            0x007c3d88      162a8ded       vstr s4, [sp, 0x58]
+            0x007c3d8c      1a1a8ded       vstr s2, [sp, 0x68]
+            0x007c3d90      042a9ded       vldr s4, [sp, 0x10]
+            0x007c3d94      0f2a8ded       vstr s4, [sp, 0x3c]
+            0x007c3d98      052a9ded       vldr s4, [sp, 0x14]
+            0x007c3d9c      132a8ded       vstr s4, [sp, 0x4c]
+            0x007c3da0      062a9ded       vldr s4, [sp, 0x18]
+            0x007c3da4      172a8ded       vstr s4, [sp, 0x5c]
+            0x007c3da8      1b1a8ded       vstr s2, [sp, 0x6c]
+            0x007c3dac      101a8ded       vstr s2, [sp, 0x40]
+            0x007c3db0      141a8ded       vstr s2, [sp, 0x50]
+            0x007c3db4      181a8ded       vstr s2, [sp, 0x60]
+            0x007c3db8      1c0a8ded       vstr s0, [sp, 0x70]
+            0x007c3dbc      08208de5       str r2, [sp, 8]
+            0x007c3dc0      04108de5       str r1, [sp, 4]
+            0x007c3dc4      d300e8eb       bl sym.imp.__wrap_glMultMatrixf
+            0x007c3dc8      010a1bed       vldr s0, [fp, -4]
+            0x007c3dcc      400ab1ee       vneg.f32 s0, s0
+            0x007c3dd0      021a1bed       vldr s2, [fp, -8]
+            0x007c3dd4      411ab1ee       vneg.f32 s2, s2
+            0x007c3dd8      032a1bed       vldr s4, [fp, -0xc]
+            0x007c3ddc      422ab1ee       vneg.f32 s4, s4
+            0x007c3de0      100a10ee       vmov r0, s0
+            0x007c3de4      101a11ee       vmov r1, s2
+            0x007c3de8      102a12ee       vmov r2, s4
+            0x007c3dec      cc00e8eb       bl sym.imp.__wrap_glTranslatef
+            0x007c3df0      0bd0a0e1       mov sp, fp
+            0x007c3df4      0088bde8       pop {fp, pc}
+            0x007c3df8      00000000       andeq r0, r0, r0

@@ -1,0 +1,25 @@
+# Donkey -[maxVelocity]
+# types: f8@0:4
+# implementation: 0x006bca88
+# ARM.exidx end: 0x006bcad8
+
+            0x006bca88      08d04de2       sub sp, sp, 8
+            0x006bca8c      04008de5       str r0, [sp, 4]
+            0x006bca90      00108de5       str r1, [sp]
+            0x006bca94      04009de5       ldr r0, [sp, 4]
+            0x006bca98      30109fe5       ldr r1, [0x006bcad0]        ; [0x6bcad0:4]=0xffffd1bc
+            0x006bca9c      30209fe5       ldr r2, [0x006bcad4]        ; [0x6bcad4:4]=0x9a304c
+            0x006bcaa0      02208fe0       add r2, pc, r2
+            0x006bcaa4      021091e7       ldr r1, [r1, r2]
+            0x006bcaa8      001091e5       ldr r1, [r1]
+            0x006bcaac      010080e0       add r0, r0, r1
+            0x006bcab0      b000d0e1       ldrh r0, [r0]
+            0x006bcab4      020ab2ee       vmov.f32 s0, 9
+            0x006bcab8      081ab1ee       vmov.f32 s2, 6
+            0x006bcabc      0b0050e3       cmp r0, 0xb
+            0x006bcac0      401ab0ce       vmovgt.f32 s2, s0
+            0x006bcac4      100a11ee       vmov r0, s2
+            0x006bcac8      08d08de2       add sp, sp, 8
+            0x006bcacc      1eff2fe1       bx lr
+            0x006bcad0      bcd1ffff       invalid
+            0x006bcad4      4c309a00       addseq r3, sl, ip, asr 32

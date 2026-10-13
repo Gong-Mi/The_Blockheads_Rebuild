@@ -1,0 +1,33 @@
+# Vector::length()  [C function]
+# implementation: 0x0057509c
+# ARM.exidx end: 0x005751f8
+
+            ;-- method.Vector2.length___const:
+            ;-- Vector2::length() const:
+            0x0057509c      00482de9       push {fp, lr}               ; Vector2::length() const
+            0x005750a0      0db0a0e1       mov fp, sp
+            0x005750a4      10d04de2       sub sp, sp, 0x10
+            0x005750a8      08008de5       str r0, [sp, 8]
+            0x005750ac      08009de5       ldr r0, [sp, 8]
+            0x005750b0      71aa01eb       bl method.Vector2.lengthSquared___const ; Vector2::lengthSquared() const
+            0x005750b4      100a00ee       vmov s0, r0
+            0x005750b8      010a8ded       vstr s0, [sp, 4]
+            0x005750bc      010a9ded       vldr s0, [sp, 4]
+            0x005750c0      c00ab5ee       vcmpe.f32 s0, 0
+            0x005750c4      10faf1ee       vmrs apsr_nzcv, fpscr
+        ┌─< 0x005750c8      0400008a       bhi 0x5750e0
+        │   0x005750cc      000000e3       movw r0, 0
+        │   0x005750d0      0b0a9fed       vldr s0, [0x00575104]
+        │   0x005750d4      010a0bed       vstr s0, [fp, -4]
+        │   0x005750d8      00008de5       str r0, [sp]
+       ┌──< 0x005750dc      040000ea       b 0x5750f4
+       │└─> 0x005750e0      010a9ded       vldr s0, [sp, 4]
+       │    0x005750e4      100a10ee       vmov r0, s0
+       │    0x005750e8      8e36f1eb       bl sym.imp.sqrtf
+       │    0x005750ec      100a00ee       vmov s0, r0
+       │    0x005750f0      010a0bed       vstr s0, [fp, -4]
+       └──> 0x005750f4      010a1bed       vldr s0, [fp, -4]
+            0x005750f8      100a10ee       vmov r0, s0
+            0x005750fc      0bd0a0e1       mov sp, fp
+            0x00575100      0088bde8       pop {fp, pc}
+            0x00575104      00000000       andeq r0, r0, r0

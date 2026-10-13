@@ -1,0 +1,234 @@
+# GemTree -[recursivelyAddOwnedTile:toPositions:]
+# types: v20@0:4{?=ii}8^{unordered_set<int, std::__1::hash<int>, std::__1::equal_to<int>, std::__1::allocator<int> >={__hash_table<int, std::__1::hash<int>, std::__1::equal_to<int>, std::__1::allocator<int> >={unique_ptr<std::__1::__hash_node<int, void *> *[], std::__1::__bucket_list_deallocator<std::__1::allocator<std::__1::__hash_node<int, void *> *> > >={__compressed_pair<std::__1::__hash_node<int, void *> **, std::__1::__bucket_list_deallocator<std::__1::allocator<std::__1::__hash_node<int, void *> *> > >=^^{__hash_node<int, void *>}{__bucket_list_deallocator<std::__1::allocator<std::__1::__hash_node<int, void *> *> >={__compressed_pair<unsigned long, std::__1::allocator<std::__1::__hash_node<int, void *> *> >=L}}}}{__compressed_pair<std::__1::__hash_node_base<std::__1::__hash_node<int, void *> *>, std::__1::allocator<std::__1::__hash_node<int, void *> > >={__hash_node_base<std::__1::__hash_node<int, void *> *>=^{__hash_node<int, void *>}}}{__compressed_pair<unsigned long, std::__1::hash<int> >=L}{__compressed_pair<float, std::__1::equal_to<int> >=f}}}16
+# implementation: 0x0052b750
+# ARM.exidx end: 0x0052bae4
+
+            0x0052b750      104c2de9       push {r4, sl, fp, lr}
+            0x0052b754      08b08de2       add fp, sp, 8
+            0x0052b758      e0d04de2       sub sp, sp, 0xe0
+            0x0052b75c      7cc39fe5       ldr ip, [0x0052bae0]        ; [0x52bae0:4]=0xb3438c
+            0x0052b760      0cc08fe0       add ip, pc, ip
+            0x0052b764      08e09be5       ldr lr, [fp, 8]
+            0x0052b768      54439fe5       ldr r4, [0x0052bac4]        ; [0x52bac4:4]=0xffffc8a0
+            0x0052b76c      0c4094e7       ldr r4, [r4, ip]
+            0x0052b770      70208de5       str r2, [sp, 0x70]
+            0x0052b774      74308de5       str r3, [sp, 0x74]
+            0x0052b778      6c008de5       str r0, [sp, 0x6c]
+            0x0052b77c      68108de5       str r1, [sp, 0x68]
+            0x0052b780      64e08de5       str lr, [sp, 0x64]
+            0x0052b784      70009de5       ldr r0, [sp, 0x70]
+            0x0052b788      74109de5       ldr r1, [sp, 0x74]
+            0x0052b78c      6c209de5       ldr r2, [sp, 0x6c]
+            0x0052b790      003094e5       ldr r3, [r4]
+            0x0052b794      032082e0       add r2, r2, r3
+            0x0052b798      002092e5       ldr r2, [r2]
+            0x0052b79c      2cc08de5       str ip, [sp, 0x2c]
+            0x0052b7a0      df9d13eb       bl sym.tileAtWorldPositionLoaded_int__int__World_ ; tileAtWorldPositionLoaded(int, int, World*)
+            0x0052b7a4      18139fe5       ldr r1, [0x0052bac4]        ; [0x52bac4:4]=0xffffc8a0
+            0x0052b7a8      2c209de5       ldr r2, [sp, 0x2c]
+            0x0052b7ac      021091e7       ldr r1, [r1, r2]
+            0x0052b7b0      60008de5       str r0, [sp, 0x60]
+            0x0052b7b4      70009de5       ldr r0, [sp, 0x70]
+            0x0052b7b8      74309de5       ldr r3, [sp, 0x74]
+            0x0052b7bc      6cc09de5       ldr ip, [sp, 0x6c]
+            0x0052b7c0      001091e5       ldr r1, [r1]
+            0x0052b7c4      01108ce0       add r1, ip, r1
+            0x0052b7c8      002091e5       ldr r2, [r1]
+            0x0052b7cc      0310a0e1       mov r1, r3
+            0x0052b7d0      b4a713eb       bl sym.worldIndexAtWorldPosition_int__int__World_ ; worldIndexAtWorldPosition(int, int, World*)
+            0x0052b7d4      001000e3       movw r1, 0
+            0x0052b7d8      5c008de5       str r0, [sp, 0x5c]
+            0x0052b7dc      60009de5       ldr r0, [sp, 0x60]
+            0x0052b7e0      010050e1       cmp r0, r1
+        ┌─< 0x0052b7e4      b400000a       beq 0x52babc
+        │   0x0052b7e8      d8029fe5       ldr r0, [0x0052bac8]        ; [0x52bac8:4]=0xffffbcac
+        │   0x0052b7ec      2c109de5       ldr r1, [sp, 0x2c]
+        │   0x0052b7f0      010090e7       ldr r0, [r0, r1]
+        │   0x0052b7f4      d0229fe5       ldr r2, [0x0052bacc]        ; [0x52bacc:4]=0xffe1de9c
+        │   0x0052b7f8      012082e0       add r2, r2, r1
+        │   0x0052b7fc      6c309de5       ldr r3, [sp, 0x6c]
+        │   0x0052b800      60c09de5       ldr ip, [sp, 0x60]
+        │   0x0052b804      001092e5       ldr r1, [r2]
+        │   0x0052b808      28008de5       str r0, [sp, 0x28]
+        │   0x0052b80c      0300a0e1       mov r0, r3
+        │   0x0052b810      0c20a0e1       mov r2, ip
+        │   0x0052b814      28309de5       ldr r3, [sp, 0x28]
+        │   0x0052b818      33ff2fe1       blx r3
+        │   0x0052b81c      7000afe6       sxtb r0, r0
+        │   0x0052b820      000050e3       cmp r0, 0
+       ┌──< 0x0052b824      a400000a       beq 0x52babc
+       ││   0x0052b828      60009de5       ldr r0, [sp, 0x60]
+       ││   0x0052b82c      281090e5       ldr r1, [r0, 0x28]
+       ││   0x0052b830      2c0090e5       ldr r0, [r0, 0x2c]
+       ││   0x0052b834      6c209de5       ldr r2, [sp, 0x6c]
+       ││   0x0052b838      90329fe5       ldr r3, [0x0052bad0]        ; [0x52bad0:4]=0xffffc900
+       ││   0x0052b83c      90c29fe5       ldr ip, [0x0052bad4]        ; [0x52bad4:4]=0xb342ac
+       ││   0x0052b840      0cc08fe0       add ip, pc, ip
+       ││   0x0052b844      0c3093e7       ldr r3, [r3, ip]
+       ││   0x0052b848      003093e5       ldr r3, [r3]
+       ││   0x0052b84c      0330b2e7       ldr r3, [r2, r3]!
+       ││   0x0052b850      042092e5       ldr r2, [r2, 4]
+       ││   0x0052b854      031021e0       eor r1, r1, r3
+       ││   0x0052b858      020020e0       eor r0, r0, r2
+       ││   0x0052b85c      000081e1       orr r0, r1, r0
+       ││   0x0052b860      000050e3       cmp r0, 0
+      ┌───< 0x0052b864      9400001a       bne 0x52babc
+     ┌────< 0x0052b868      ffffffea       b 0x52b86c
+     └────> 0x0052b86c      5c008de2       add r0, sp, 0x5c
+      │││   0x0052b870      64109de5       ldr r1, [sp, 0x64]
+      │││   0x0052b874      6c100be5       str r1, [fp, -0x6c]
+      │││   0x0052b878      70000be5       str r0, [fp, -0x70]
+      │││   0x0052b87c      6c001be5       ldr r0, [fp, -0x6c]
+      │││   0x0052b880      70101be5       ldr r1, [fp, -0x70]
+      │││   0x0052b884      58000be5       str r0, [fp, -0x58]
+      │││   0x0052b888      5c100be5       str r1, [fp, -0x5c]
+      │││   0x0052b88c      58001be5       ldr r0, [fp, -0x58]
+      │││   0x0052b890      5c101be5       ldr r1, [fp, -0x5c]
+      │││   0x0052b894      24008de5       str r0, [sp, 0x24]
+      │││   0x0052b898      430700eb       bl method.std::__1::__hash_const_iterator_std::__1::__hash_node_int__void__const__std::__1::__hash_table_int__std::__1::hash_int___std::__1::equal_to_int___std::__1::allocator_int___.find_int__int_const__const ; std::__1::__hash_const_iterator<std::__1::__hash_node<int, void*> const*> std::__1::__hash_table<int, std::__1::hash<int>, std::__1::equal_to<int>, std::__1::allocator<int> >::find<int>(int const&) const
+      │││   0x0052b89c      68104be2       sub r1, fp, 0x68
+      │││   0x0052b8a0      60204be2       sub r2, fp, 0x60
+      │││   0x0052b8a4      003000e3       movw r3, 0
+      │││   0x0052b8a8      50c04be2       sub ip, fp, 0x50
+      │││   0x0052b8ac      60000be5       str r0, [fp, -0x60]
+      │││   0x0052b8b0      24009de5       ldr r0, [sp, 0x24]
+      │││   0x0052b8b4      54000be5       str r0, [fp, -0x54]
+      │││   0x0052b8b8      44c00be5       str ip, [fp, -0x44]
+      │││   0x0052b8bc      48300be5       str r3, [fp, -0x48]
+      │││   0x0052b8c0      44301be5       ldr r3, [fp, -0x44]
+      │││   0x0052b8c4      48c01be5       ldr ip, [fp, -0x48]
+      │││   0x0052b8c8      00c083e5       str ip, [r3]
+      │││   0x0052b8cc      50301be5       ldr r3, [fp, -0x50]
+      │││   0x0052b8d0      68300be5       str r3, [fp, -0x68]
+      │││   0x0052b8d4      3c200be5       str r2, [fp, -0x3c]
+      │││   0x0052b8d8      40100be5       str r1, [fp, -0x40]
+      │││   0x0052b8dc      3c101be5       ldr r1, [fp, -0x3c]
+      │││   0x0052b8e0      001091e5       ldr r1, [r1]
+      │││   0x0052b8e4      40201be5       ldr r2, [fp, -0x40]
+      │││   0x0052b8e8      002092e5       ldr r2, [r2]
+      │││   0x0052b8ec      020051e1       cmp r1, r2
+      │││   0x0052b8f0      001000e3       movw r1, 0
+      │││   0x0052b8f4      0110a013       movne r1, 1
+      │││   0x0052b8f8      011001e2       and r1, r1, 1
+      │││   0x0052b8fc      000051e3       cmp r1, 0
+     ┌────< 0x0052b900      6d00001a       bne 0x52babc
+     ││││   0x0052b904      64009de5       ldr r0, [sp, 0x64]
+     ││││   0x0052b908      28000be5       str r0, [fp, -0x28]
+     ││││   0x0052b90c      5c008de2       add r0, sp, 0x5c
+     ││││   0x0052b910      2c000be5       str r0, [fp, -0x2c]
+     ││││   0x0052b914      28101be5       ldr r1, [fp, -0x28]
+     ││││   0x0052b918      38204be2       sub r2, fp, 0x38
+     ││││   0x0052b91c      20008de5       str r0, [sp, 0x20]
+     ││││   0x0052b920      0200a0e1       mov r0, r2
+     ││││   0x0052b924      20309de5       ldr r3, [sp, 0x20]
+     ││││   0x0052b928      1c208de5       str r2, [sp, 0x1c]
+     ││││   0x0052b92c      0320a0e1       mov r2, r3
+     ││││   0x0052b930      4a0100eb       bl method.std::__1::__hash_table_int__std::__1::hash_int___std::__1::equal_to_int___std::__1::allocator_int___.__insert_unique_int_const_ ; std::__1::__hash_table<int, std::__1::hash<int>, std::__1::equal_to<int>, std::__1::allocator<int> >::__insert_unique(int const&)
+     ││││   0x0052b934      50008de2       add r0, sp, 0x50
+     ││││   0x0052b938      1c000be5       str r0, [fp, -0x1c]
+     ││││   0x0052b93c      1c009de5       ldr r0, [sp, 0x1c]
+     ││││   0x0052b940      20000be5       str r0, [fp, -0x20]
+     ││││   0x0052b944      0010a0e3       mov r1, 0
+     ││││   0x0052b948      24100be5       str r1, [fp, -0x24]
+     ││││   0x0052b94c      1c101be5       ldr r1, [fp, -0x1c]
+     ││││   0x0052b950      20201be5       ldr r2, [fp, -0x20]
+     ││││   0x0052b954      18200be5       str r2, [fp, -0x18]
+     ││││   0x0052b958      0c100be5       str r1, [fp, -0xc]
+     ││││   0x0052b95c      10200be5       str r2, [fp, -0x10]
+     ││││   0x0052b960      0c301be5       ldr r3, [fp, -0xc]
+     ││││   0x0052b964      002092e5       ldr r2, [r2]
+     ││││   0x0052b968      002083e5       str r2, [r3]
+     ││││   0x0052b96c      20201be5       ldr r2, [fp, -0x20]
+     ││││   0x0052b970      043082e2       add r3, r2, 4
+     ││││   0x0052b974      14300be5       str r3, [fp, -0x14]
+     ││││   0x0052b978      0420d2e5       ldrb r2, [r2, 4]
+     ││││   0x0052b97c      012002e2       and r2, r2, 1
+     ││││   0x0052b980      0420c1e5       strb r2, [r1, 4]
+     ││││   0x0052b984      6c009de5       ldr r0, [sp, 0x6c]
+     ││││   0x0052b988      70109de5       ldr r1, [sp, 0x70]
+     ││││   0x0052b98c      74209de5       ldr r2, [sp, 0x74]
+     ││││   0x0052b990      011041e2       sub r1, r1, 1
+     ││││   0x0052b994      48308de2       add r3, sp, 0x48
+     ││││   0x0052b998      18008de5       str r0, [sp, 0x18]
+     ││││   0x0052b99c      0300a0e1       mov r0, r3
+     ││││   0x0052b9a0      1524feeb       bl sym.makeIntpair_int__int_ ; makeIntpair(int, int)
+     ││││   0x0052b9a4      64009de5       ldr r0, [sp, 0x64]
+     ││││   0x0052b9a8      28119fe5       ldr r1, [0x0052bad8]        ; [0x52bad8:4]=0xffe1dea8
+     ││││   0x0052b9ac      28219fe5       ldr r2, [0x0052badc]        ; [0x52badc:4]=0xb3413c
+     ││││   0x0052b9b0      02208fe0       add r2, pc, r2
+     ││││   0x0052b9b4      023091e7       ldr r3, [r1, r2]
+     ││││   0x0052b9b8      48c09de5       ldr ip, [sp, 0x48]
+     ││││   0x0052b9bc      4ce09de5       ldr lr, [sp, 0x4c]
+     ││││   0x0052b9c0      0d40a0e1       mov r4, sp
+     ││││   0x0052b9c4      000084e5       str r0, [r4]
+     ││││   0x0052b9c8      18009de5       ldr r0, [sp, 0x18]
+     ││││   0x0052b9cc      14108de5       str r1, [sp, 0x14]
+     ││││   0x0052b9d0      0310a0e1       mov r1, r3
+     ││││   0x0052b9d4      10208de5       str r2, [sp, 0x10]
+     ││││   0x0052b9d8      0c20a0e1       mov r2, ip
+     ││││   0x0052b9dc      0e30a0e1       mov r3, lr
+     ││││   0x0052b9e0      8d5bf2eb       bl loc.imp.objc_msgSend
+     ││││   0x0052b9e4      6c009de5       ldr r0, [sp, 0x6c]
+     ││││   0x0052b9e8      70109de5       ldr r1, [sp, 0x70]
+     ││││   0x0052b9ec      74209de5       ldr r2, [sp, 0x74]
+     ││││   0x0052b9f0      011081e2       add r1, r1, 1
+     ││││   0x0052b9f4      40308de2       add r3, sp, 0x40
+     ││││   0x0052b9f8      0c008de5       str r0, [sp, 0xc]
+     ││││   0x0052b9fc      0300a0e1       mov r0, r3
+     ││││   0x0052ba00      fd23feeb       bl sym.makeIntpair_int__int_ ; makeIntpair(int, int)
+     ││││   0x0052ba04      64009de5       ldr r0, [sp, 0x64]
+     ││││   0x0052ba08      14109de5       ldr r1, [sp, 0x14]
+     ││││   0x0052ba0c      10209de5       ldr r2, [sp, 0x10]
+     ││││   0x0052ba10      021091e7       ldr r1, [r1, r2]
+     ││││   0x0052ba14      40209de5       ldr r2, [sp, 0x40]
+     ││││   0x0052ba18      44309de5       ldr r3, [sp, 0x44]
+     ││││   0x0052ba1c      0dc0a0e1       mov ip, sp
+     ││││   0x0052ba20      00008ce5       str r0, [ip]
+     ││││   0x0052ba24      0c009de5       ldr r0, [sp, 0xc]
+     ││││   0x0052ba28      7b5bf2eb       bl loc.imp.objc_msgSend
+     ││││   0x0052ba2c      6c009de5       ldr r0, [sp, 0x6c]
+     ││││   0x0052ba30      70109de5       ldr r1, [sp, 0x70]
+     ││││   0x0052ba34      74209de5       ldr r2, [sp, 0x74]
+     ││││   0x0052ba38      012042e2       sub r2, r2, 1
+     ││││   0x0052ba3c      38308de2       add r3, sp, 0x38
+     ││││   0x0052ba40      08008de5       str r0, [sp, 8]
+     ││││   0x0052ba44      0300a0e1       mov r0, r3
+     ││││   0x0052ba48      eb23feeb       bl sym.makeIntpair_int__int_ ; makeIntpair(int, int)
+     ││││   0x0052ba4c      64009de5       ldr r0, [sp, 0x64]
+     ││││   0x0052ba50      14109de5       ldr r1, [sp, 0x14]
+     ││││   0x0052ba54      10209de5       ldr r2, [sp, 0x10]
+     ││││   0x0052ba58      021091e7       ldr r1, [r1, r2]
+     ││││   0x0052ba5c      38209de5       ldr r2, [sp, 0x38]
+     ││││   0x0052ba60      3c309de5       ldr r3, [sp, 0x3c]
+     ││││   0x0052ba64      0dc0a0e1       mov ip, sp
+     ││││   0x0052ba68      00008ce5       str r0, [ip]
+     ││││   0x0052ba6c      08009de5       ldr r0, [sp, 8]
+     ││││   0x0052ba70      695bf2eb       bl loc.imp.objc_msgSend
+     ││││   0x0052ba74      6c009de5       ldr r0, [sp, 0x6c]
+     ││││   0x0052ba78      70109de5       ldr r1, [sp, 0x70]
+     ││││   0x0052ba7c      74209de5       ldr r2, [sp, 0x74]
+     ││││   0x0052ba80      012082e2       add r2, r2, 1
+     ││││   0x0052ba84      30308de2       add r3, sp, 0x30
+     ││││   0x0052ba88      04008de5       str r0, [sp, 4]
+     ││││   0x0052ba8c      0300a0e1       mov r0, r3
+     ││││   0x0052ba90      d923feeb       bl sym.makeIntpair_int__int_ ; makeIntpair(int, int)
+     ││││   0x0052ba94      64009de5       ldr r0, [sp, 0x64]
+     ││││   0x0052ba98      14109de5       ldr r1, [sp, 0x14]
+     ││││   0x0052ba9c      10209de5       ldr r2, [sp, 0x10]
+     ││││   0x0052baa0      021091e7       ldr r1, [r1, r2]
+     ││││   0x0052baa4      30209de5       ldr r2, [sp, 0x30]
+     ││││   0x0052baa8      34309de5       ldr r3, [sp, 0x34]
+     ││││   0x0052baac      0dc0a0e1       mov ip, sp
+     ││││   0x0052bab0      00008ce5       str r0, [ip]
+     ││││   0x0052bab4      04009de5       ldr r0, [sp, 4]
+     ││││   0x0052bab8      575bf2eb       bl loc.imp.objc_msgSend
+     └└└└─> 0x0052babc      08d04be2       sub sp, fp, 8
+            0x0052bac0      108cbde8       pop {r4, sl, fp, pc}
+            0x0052bac4      a0c8ffff       invalid
+            0x0052bac8      acbcffff       invalid
+            0x0052bacc      9cdee1ff       invalid
+            0x0052bad0      00c9ffff       invalid
+            0x0052bad4      ac42b300       adcseq r4, r3, ip, lsr 5
+            0x0052bad8      a8dee1ff       invalid
+            0x0052badc      3c41b300       adcseq r4, r3, ip, lsr r1
+            0x0052bae0      8c43b300       adcseq r4, r3, ip, lsl 7

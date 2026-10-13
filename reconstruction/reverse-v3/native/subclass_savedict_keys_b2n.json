@@ -1,0 +1,94 @@
+{
+  "claim": "TrainCar saves one DYNAMIC format-string key per occupied rider slot \u2014 [NSString stringWithFormat:'currentBlockheadIndex_%d', i] gating the blockhead-index numberWithInt (first format-string wire key; riders@76 is a raw C array indexed base+i*4; needsRemoved entries skipped); rightCarID/leftCarID/engineCarID serialize the NEIGHBOR car uniqueID behind nil-guards (cross-entity references), ownerID@36 nil-guarded DIRECT, and engineIsRight@180 signed-byte bool saved unconditionally; 3 overrides remain (Action, Tree, Workbench), read-back/roundtrip unresolved",
+  "classes": [
+    {
+      "boundary": "0x00a39d64",
+      "class": "TrainCar",
+      "code_words": 557,
+      "imp": "0x00a394b0",
+      "keys": [
+        {
+          "cfstring_object": "0x00f972a8",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x00a39878",
+          "key": "currentBlockheadIndex_%d",
+          "key_kind": "format_string",
+          "set_object_site": "0x00a398c4",
+          "value_source": "blockhead_index_per_occupied_slot"
+        },
+        {
+          "cfstring_object": "0x00f972b8",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x00a399a8",
+          "ivar": "OBJC_IVAR_$_TrainCar.rightCar",
+          "ivar_offset": 168,
+          "key": "rightCarID",
+          "set_object_site": "0x00a399cc",
+          "value_source": "neighbor_uniqueID"
+        },
+        {
+          "cfstring_object": "0x00f972c8",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x00a39a98",
+          "ivar": "OBJC_IVAR_$_TrainCar.leftCar",
+          "ivar_offset": 172,
+          "key": "leftCarID",
+          "set_object_site": "0x00a39abc",
+          "value_source": "neighbor_uniqueID"
+        },
+        {
+          "cfstring_object": "0x00f972d8",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x00a39b88",
+          "ivar": "OBJC_IVAR_$_TrainCar.engineCar",
+          "ivar_offset": 176,
+          "key": "engineCarID",
+          "set_object_site": "0x00a39bac",
+          "value_source": "neighbor_uniqueID"
+        },
+        {
+          "cfstring_object": "0x00f97298",
+          "conversion": "direct_object",
+          "ivar": "OBJC_IVAR_$_DynamicObject.ownerID",
+          "ivar_offset": 36,
+          "key": "ownerID",
+          "set_object_site": "0x00a39c2c"
+        },
+        {
+          "cfstring_object": "0x00f972e8",
+          "conversion": "numberWithBool:",
+          "conversion_site": "0x00a39ca8",
+          "ivar": "OBJC_IVAR_$_TrainCar.engineIsRight",
+          "ivar_offset": 180,
+          "key": "engineIsRight",
+          "set_object_site": "0x00a39ccc"
+        }
+      ],
+      "site_gates": [
+        "maxriders_msg_site@0x00a39550",
+        "maxriders_bge@0x00a3955c",
+        "riders_slot_ldr@0x00a3958c",
+        "riders_slot_nil_beq@0x00a39598",
+        "rider_enumerate_site@0x00a39618",
+        "needsremoved_msg_site@0x00a39748",
+        "found_ldrsb@0x00a397ec",
+        "found_beq@0x00a397f4",
+        "rightcar_guard_beq@0x00a39904",
+        "leftcar_guard_beq@0x00a399f4",
+        "enginecar_guard_beq@0x00a39ae4",
+        "uniqueid_thunk_right@0x00a39980",
+        "uniqueid_thunk_left@0x00a39a70",
+        "uniqueid_thunk_engine@0x00a39b60",
+        "engineisright_ldrb@0x00a39c7c",
+        "engineisright_sxtb@0x00a39c8c"
+      ],
+      "style": "super_plus_own_keys",
+      "super_class_struct": "0x00e919a8",
+      "super_site": "0x00a39504"
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "method": "getSaveDict key pairings (batch 2n)",
+  "pic_base": "0x0105faf4",
+  "schema": 1
+}

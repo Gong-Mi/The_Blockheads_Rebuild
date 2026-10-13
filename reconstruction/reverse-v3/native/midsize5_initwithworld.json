@@ -1,0 +1,149 @@
+{
+  "batch": "b3j",
+  "census": {
+    "covered_after_b3j": 25,
+    "remaining_methods": 18,
+    "remaining_words": 9051
+  },
+  "claim": "AppleTree (102w, long variant, super=Tree), TrainStation (105w, exact, super=DynamicObject), Plant (114w, long, super=Tree), GatherBlock (128w, exact, super=DynamicObject), Yak (134w, exact, super=DynamicObject) \u2014 583 words total \u2014 share the forward-then-read shape: objc_msgSendSuper2 forwards the SAME selector with own-class superref, nil guard returns nil, then the method reads its OWN save keys via objectForKey:/floatValue/intValue into its OWN ivar slots (key/ivar pairs: AppleTree availableFood\u2192AppleTree.availableFood; TrainStation text\u2192TrainStation.text then [self initSubDerivedItems]; GatherBlock lastKnownGatherValue\u2192.lastKnownGatherValue with a float\u2192uint\u2192float round trip and timer\u2192.timer; Yak hair\u2192.hair, milk\u2192.milk then [self updateTextures]). Plant reads NO key: it stores the two noise-function ARGS into its ivars and DELEGATES save-dict reading to its own already-covered loadSaveDictValues: (b3a). Key/ivar/conversion-selector sets are exact-gated per class. Static level-A evidence only",
+  "classes": [
+    {
+      "boundary": "0x009bd548",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys into its own ivars (exact key/ivar/selector sets gated); not a pure constructor: own save-dict keys are read directly",
+      "class": "AppleTree",
+      "code_words": 102,
+      "imp": "0x009bd3b0",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_AppleTree",
+        "msgsend_got": "0x0105b7a0",
+        "own_selectors": [
+          "floatValue",
+          "objectForKey:"
+        ],
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bdec"
+      },
+      "own_key_ivar_pairs": {
+        "availableFood": "OBJC_IVAR_$_AppleTree.availableFood"
+      },
+      "own_keys": [
+        "availableFood"
+      ],
+      "runtime_superclass": "Tree",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:treeDensityNoiseFunction:seasonOffsetNoiseFunction:"
+    },
+    {
+      "boundary": "0x00b3912c",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys into its own ivars (exact key/ivar/selector sets gated); not a pure constructor: own save-dict keys are read directly",
+      "class": "TrainStation",
+      "code_words": 105,
+      "imp": "0x00b38f88",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_TrainStation",
+        "msgsend_got": "0x0105b7a0",
+        "own_selectors": [
+          "initSubDerivedItems",
+          "objectForKey:",
+          "retain"
+        ],
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8be8c"
+      },
+      "own_key_ivar_pairs": {
+        "text": "OBJC_IVAR_$_TrainStation.text"
+      },
+      "own_keys": [
+        "text"
+      ],
+      "runtime_superclass": "InteractionObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x00955b98",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys into its own ivars (exact key/ivar/selector sets gated); not a pure constructor: own save-dict keys are read directly",
+      "class": "Plant",
+      "code_words": 114,
+      "imp": "0x009559d0",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_Plant",
+        "msgsend_got": null,
+        "own_selectors": [
+          "dynamicWorldChangedAtPos:objectType:",
+          "loadSaveDictValues:",
+          "objectType"
+        ],
+        "pic_cells": 2,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bdc4"
+      },
+      "own_key_ivar_pairs": {},
+      "own_keys": [],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:treeDensityNoiseFunction:seasonOffsetNoiseFunction:"
+    },
+    {
+      "boundary": "0x008697a0",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys into its own ivars (exact key/ivar/selector sets gated); not a pure constructor: own save-dict keys are read directly",
+      "class": "GatherBlock",
+      "code_words": 128,
+      "imp": "0x008695a0",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_GatherBlock",
+        "msgsend_got": "0x0105b7a0",
+        "own_selectors": [
+          "floatValue",
+          "intValue",
+          "objectForKey:"
+        ],
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bd94"
+      },
+      "own_key_ivar_pairs": {
+        "lastKnownGatherValue": "OBJC_IVAR_$_GatherBlock.lastKnownGatherValue",
+        "timer": "OBJC_IVAR_$_GatherBlock.timer"
+      },
+      "own_keys": [
+        "lastKnownGatherValue",
+        "timer"
+      ],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x0095dcfc",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys into its own ivars (exact key/ivar/selector sets gated); not a pure constructor: own save-dict keys are read directly",
+      "class": "Yak",
+      "code_words": 134,
+      "imp": "0x0095dae4",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_Yak",
+        "msgsend_got": "0x0105b7a0",
+        "own_selectors": [
+          "floatValue",
+          "objectForKey:",
+          "updateTextures"
+        ],
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bdcc"
+      },
+      "own_key_ivar_pairs": {
+        "hair": "OBJC_IVAR_$_Yak.hair",
+        "milk": "OBJC_IVAR_$_Yak.milk"
+      },
+      "own_keys": [
+        "hair",
+        "milk"
+      ],
+      "runtime_superclass": "DonkeyLike",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "method": "five mid-size initWithWorld loaders with own post-init messages (batch b3j)",
+  "pic_base": "0x0105faf4",
+  "schema": 1
+}

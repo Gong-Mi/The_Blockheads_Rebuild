@@ -3,7 +3,7 @@ project(BlockheadsRecoveredView LANGUAGES CXX)
 
 add_library(blockheads_recovered_view STATIC
     gameview_update.cpp projection_update.cpp world_view_contracts.cpp world_translation.cpp sound_manager.cpp gameview_input.cpp gameview_starttouch.cpp gameview_move_touch.cpp world_move_touch.cpp gameview_end_touch.cpp world_end_touch.cpp gameview_cancel_touch.cpp gameview_secondary_touch.cpp
-    pinch_return.cpp translation_return.cpp zoom_settle.cpp)
+    pinch_return.cpp translation_return.cpp zoom_settle.cpp dynamic_object_flags.cpp world_clock_domain.cpp frame_loop_participants.cpp dynamic_object_layout.cpp audio_wiring_model.cpp world_layout.cpp craftable_item_record.cpp interaction_test_result.cpp dynamic_object_net_data.cpp dynamic_world_layout.cpp paint_mix_ui_layout.cpp action_layout.cpp)
 target_include_directories(blockheads_recovered_view PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(blockheads_recovered_view PUBLIC cxx_std_17)
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
@@ -16,6 +16,149 @@ add_library(blockheads_recovered_inventory STATIC
 target_include_directories(blockheads_recovered_inventory PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(blockheads_recovered_inventory PUBLIC cxx_std_17)
 
+# NPC loader slice (read-back line, batch b4a): recovered contract for
+# -[NPC initWithWorld:dynamicWorld:saveDict:cache:]'s hunger-timer seed.
+add_library(blockheads_recovered_npc STATIC npc_init_with_world.cpp)
+target_include_directories(blockheads_recovered_npc PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_npc PUBLIC cxx_std_17)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(blockheads_recovered_npc PUBLIC -fno-fast-math -ffp-contract=off)
+endif()
+
+# NPC state-load slice (read-back line, batch b4f): recovered contract for
+# -[NPC loadValuesFromSaveDict:]'s 15 key chains, group gates and the
+# tameCountsByClientID dictionary copy.
+add_library(blockheads_recovered_npc_load_values STATIC npc_load_values_from_save_dict.cpp)
+target_include_directories(blockheads_recovered_npc_load_values PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_npc_load_values PUBLIC cxx_std_17)
+
+# Tree growth state machine slice (read-back line, batch b4g, stage 1):
+# recovered contract for -[Tree growInTimeSinceSaved:] nil-tile path.
+add_library(blockheads_recovered_tree_grow STATIC tree_grow_in_time.cpp)
+target_include_directories(blockheads_recovered_tree_grow PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_tree_grow PUBLIC cxx_std_17)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(blockheads_recovered_tree_grow PUBLIC -fno-fast-math -ffp-contract=off)
+endif()
+
+# Plant read-back slice (batch b4b): recovered contract for
+# -[Plant loadSaveDictValues:] including the 0x004c0b70 clamp helper.
+add_library(blockheads_recovered_plant STATIC plant_load_save_dict.cpp)
+target_include_directories(blockheads_recovered_plant PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_plant PUBLIC cxx_std_17)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(blockheads_recovered_plant PUBLIC -fno-fast-math -ffp-contract=off)
+endif()
+
+# Forwarder convention slice (batch b4c): recovered contract shared by the five
+# 74-word initWithWorld:dynamicWorld:saveDict:cache: forwarders.
+add_library(blockheads_recovered_forwarder STATIC object_forwarder_init.cpp)
+target_include_directories(blockheads_recovered_forwarder PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_forwarder PUBLIC cxx_std_17)
+
+# Tree-family LONG loader slice (batch b3i, executed): ONE shared recovered
+# contract for the nine byte-identical 62-word
+# initWithWorld:...:treeDensityNoiseFunction:seasonOffsetNoiseFunction: bodies,
+# plus per-class thin wrappers that bind their own superref/selector cells.
+add_library(blockheads_recovered_treefamily9_long STATIC treefamily9_long_init.cpp)
+target_include_directories(blockheads_recovered_treefamily9_long PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_treefamily9_long PUBLIC cxx_std_17)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(blockheads_recovered_treefamily9_long PUBLIC -fno-fast-math -ffp-contract=off)
+endif()
+
+# Tree loader stage-1 slice (batch b4d): recovered contract for the scalar
+# chains, the treeFruit reset/enumeration entry and the isStaticTree gate.
+add_library(blockheads_recovered_tree_stage1 STATIC tree_load_save_dict.cpp)
+add_library(blockheads_recovered_tree_records STATIC tree_load_records.cpp)
+target_include_directories(blockheads_recovered_tree_records PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_tree_records PUBLIC cxx_std_17)
+target_include_directories(blockheads_recovered_tree_stage1 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_tree_stage1 PUBLIC cxx_std_17)
+
+# FreightCar loader slice (batch b4h): 4th selector variant front member
+add_library(blockheads_recovered_freight_car STATIC freight_car_init.cpp)
+target_include_directories(blockheads_recovered_freight_car PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_freight_car PUBLIC cxx_std_17)
+
+# TradePortal price offsets slice (batch b4i): price normalization loop and clamp
+add_library(blockheads_recovered_trade_portal_offsets STATIC trade_portal_price_offsets.cpp)
+target_include_directories(blockheads_recovered_trade_portal_offsets PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_trade_portal_offsets PUBLIC cxx_std_17)
+
+# TradingPost slot initialization slice (batch b4j): sellSlot restoration and itemType != 11 filter
+add_library(blockheads_recovered_interaction STATIC interaction_object_init.cpp)
+target_include_directories(blockheads_recovered_interaction PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_interaction PUBLIC cxx_std_17)
+add_library(blockheads_recovered_trading_post_slots STATIC trading_post_init_slots.cpp)
+target_include_directories(blockheads_recovered_trading_post_slots PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_trading_post_slots PUBLIC cxx_std_17)
+
+# DynamicObject derived stuff slice (batch b4k): macroTile registration and physical block loading
+add_library(blockheads_recovered_dynamic_object_derived STATIC dynamic_object_init_derived_stuff.cpp)
+target_include_directories(blockheads_recovered_dynamic_object_derived PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_dynamic_object_derived PUBLIC cxx_std_17)
+
+# Chest loader slice (batch b4m): the save-system centerpiece — five own keys
+# (two of them formatted per-slot families), InventoryItem child construction,
+# the private 0x00CB623C capacity rule and the shelf restore loop.
+add_library(blockheads_recovered_chest STATIC chest_init_with_world.cpp)
+target_include_directories(blockheads_recovered_chest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_chest PUBLIC cxx_std_17)
+
+# KelpPlant BIG loader slice (batch b4n): the long-variant plant loader —
+# lrand48 food refill, the age/saveTime gate with the compost elapsed rewrite
+# and the multi-tile growth loop with world tile queries.
+add_library(blockheads_recovered_kelp STATIC kelp_plant_init.cpp)
+target_include_directories(blockheads_recovered_kelp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_kelp PUBLIC cxx_std_17)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(blockheads_recovered_kelp PUBLIC -fno-fast-math -ffp-contract=off)
+endif()
+
+# VinePlant BIG loader slice (batch b4o): KelpPlant's mirror twin — inverted
+# tile-kind gate, the light/sun suitability key, marker 0x7C and energy 900.
+add_library(blockheads_recovered_vine STATIC vine_plant_init.cpp)
+target_include_directories(blockheads_recovered_vine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_vine PUBLIC cxx_std_17)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(blockheads_recovered_vine PUBLIC -fno-fast-math -ffp-contract=off)
+endif()
+
+# b4p: FreeBlock exact-variant loader (1,347w). The 12-key walk, the
+# array-of-arrays subItems loop, the 64-bit priority resolution, the
+# hovers/creationTime>900s gate with the probed itemType blacklists, the
+# creationTime re-anchor and the max-16 ground-fall loop.
+add_library(blockheads_recovered_freeblock STATIC freeblock_init.cpp)
+target_include_directories(blockheads_recovered_freeblock PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_freeblock PUBLIC cxx_std_17)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(blockheads_recovered_freeblock PUBLIC -fno-fast-math -ffp-contract=off)
+endif()
+
+# b4q: Workbench loader (1,390w) — the crafting centerpiece, the LAST
+# executed initWithWorld front member. The 16-key walk, the double
+# currentBlockheadIndexFuel read, the craftingItemData v1->v2 migration
+# (bytes + two 124-byte memcpys), the 3-way craftable classref, the
+# sourceItems_%d per-slot loop, the always-on craft wiring, the fuel
+# blockhead wiring and the ArtificialLight 5-arg restore.
+add_library(blockheads_recovered_workbench STATIC workbench_init.cpp)
+target_include_directories(blockheads_recovered_workbench PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_workbench PUBLIC cxx_std_17)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(blockheads_recovered_workbench PUBLIC -fno-fast-math -ffp-contract=off)
+endif()
+
+# b3j "forward-then-read" loaders, executed (batch ownkey5): ONE shared engine
+# (ownkey_loader.cpp) plus five thin per-class descriptor tables
+# (ownkey5_init.cpp). The plans are data, not five copies of a function body.
+add_library(blockheads_recovered_ownkey5 STATIC ownkey5_init.cpp ownkey_loader.cpp)
+target_include_directories(blockheads_recovered_ownkey5 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(blockheads_recovered_ownkey5 PUBLIC cxx_std_17)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(blockheads_recovered_ownkey5 PUBLIC -fno-fast-math -ffp-contract=off)
+endif()
+
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     include(CTest)
     if(BUILD_TESTING)
@@ -25,6 +168,89 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
             target_compile_options(test_inventory_${inventory_part} PRIVATE -UNDEBUG)
             add_test(NAME recovered_inventory_${inventory_part} COMMAND test_inventory_${inventory_part})
         endforeach()
+        add_executable(test_npc_init_with_world ../../tools/test_npc_init_with_world.cpp)
+        target_link_libraries(test_npc_init_with_world PRIVATE blockheads_recovered_npc)
+        target_compile_options(test_npc_init_with_world PRIVATE -UNDEBUG)
+        add_test(NAME recovered_npc_init_with_world COMMAND test_npc_init_with_world)
+        add_executable(test_npc_load_values ../../tools/test_npc_load_values.cpp)
+        target_link_libraries(test_npc_load_values PRIVATE blockheads_recovered_npc_load_values)
+        target_compile_options(test_npc_load_values PRIVATE -UNDEBUG)
+        add_test(NAME recovered_npc_load_values COMMAND test_npc_load_values)
+        add_executable(test_tree_grow_in_time ../../tools/test_tree_grow_in_time.cpp)
+        target_link_libraries(test_tree_grow_in_time PRIVATE blockheads_recovered_tree_grow)
+        target_compile_options(test_tree_grow_in_time PRIVATE -UNDEBUG)
+        add_test(NAME recovered_tree_grow_in_time COMMAND test_tree_grow_in_time)
+        add_executable(test_plant_load_save_dict ../../tools/test_plant_load_save_dict.cpp)
+        target_link_libraries(test_plant_load_save_dict PRIVATE blockheads_recovered_plant)
+        target_compile_options(test_plant_load_save_dict PRIVATE -UNDEBUG)
+        add_test(NAME recovered_plant_load_save_dict COMMAND test_plant_load_save_dict)
+        add_executable(test_object_forwarder_init ../../tools/test_object_forwarder_init.cpp)
+        target_link_libraries(test_object_forwarder_init PRIVATE blockheads_recovered_forwarder)
+        target_compile_options(test_object_forwarder_init PRIVATE -UNDEBUG)
+        add_test(NAME recovered_object_forwarder_init COMMAND test_object_forwarder_init)
+        # One shared thin driver, one CTest entry per tree class: each exercises
+        # that class's own superref/selector binding.
+        add_executable(test_treefamily9_long_init ../../tools/test_treefamily9_long_init.cpp)
+        target_link_libraries(test_treefamily9_long_init PRIVATE blockheads_recovered_treefamily9_long)
+        target_compile_options(test_treefamily9_long_init PRIVATE -UNDEBUG)
+        foreach(tree_class CactusTree CherryTree CoconutTree CoffeeTree GemTree LimeTree MangoTree MapleTree OrangeTree)
+            add_test(NAME recovered_treefamily9_${tree_class}_long_init
+                     COMMAND test_treefamily9_long_init ${tree_class})
+        endforeach()
+        add_executable(test_tree_load_save_dict_stage1 ../../tools/test_tree_load_save_dict.cpp)
+        target_link_libraries(test_tree_load_save_dict_stage1 PRIVATE blockheads_recovered_tree_stage1)
+        target_compile_options(test_tree_load_save_dict_stage1 PRIVATE -UNDEBUG)
+        add_test(NAME recovered_tree_load_save_dict_stage1 COMMAND test_tree_load_save_dict_stage1)
+        add_executable(test_tree_load_records ../../tools/test_tree_load_records.cpp)
+        target_link_libraries(test_tree_load_records PRIVATE blockheads_recovered_tree_records)
+        target_compile_options(test_tree_load_records PRIVATE -UNDEBUG)
+        add_test(NAME recovered_tree_load_records COMMAND test_tree_load_records)
+        add_executable(test_freight_car_init ../../tools/test_freight_car_init.cpp)
+        target_link_libraries(test_freight_car_init PRIVATE blockheads_recovered_freight_car)
+        target_compile_options(test_freight_car_init PRIVATE -UNDEBUG)
+        add_test(NAME recovered_freight_car_init COMMAND test_freight_car_init)
+        add_executable(test_trade_portal_price_offsets ../../tools/test_trade_portal_price_offsets.cpp)
+        target_link_libraries(test_trade_portal_price_offsets PRIVATE blockheads_recovered_trade_portal_offsets)
+        target_compile_options(test_trade_portal_price_offsets PRIVATE -UNDEBUG)
+        add_test(NAME recovered_trade_portal_price_offsets COMMAND test_trade_portal_price_offsets)
+        add_executable(test_trading_post_init_slots ../../tools/test_trading_post_init_slots.cpp)
+        target_link_libraries(test_trading_post_init_slots PRIVATE blockheads_recovered_trading_post_slots)
+        target_compile_options(test_trading_post_init_slots PRIVATE -UNDEBUG)
+        add_test(NAME recovered_trading_post_init_slots COMMAND test_trading_post_init_slots)
+        add_executable(test_interaction_object_init ../../tools/test_interaction_object_init.cpp)
+        target_link_libraries(test_interaction_object_init PRIVATE blockheads_recovered_interaction)
+        target_compile_options(test_interaction_object_init PRIVATE -UNDEBUG)
+        add_test(NAME recovered_interaction_object_init COMMAND test_interaction_object_init)
+        add_executable(test_dynamic_object_init_derived ../../tools/test_dynamic_object_init_derived_stuff.cpp)
+        target_link_libraries(test_dynamic_object_init_derived PRIVATE blockheads_recovered_dynamic_object_derived)
+        target_compile_options(test_dynamic_object_init_derived PRIVATE -UNDEBUG)
+        add_test(NAME recovered_dynamic_object_init_derived COMMAND test_dynamic_object_init_derived)
+        add_executable(test_chest_init_with_world ../../tools/test_chest_init_with_world.cpp)
+        target_link_libraries(test_chest_init_with_world PRIVATE blockheads_recovered_chest)
+        target_compile_options(test_chest_init_with_world PRIVATE -UNDEBUG)
+        add_test(NAME recovered_chest_init_with_world COMMAND test_chest_init_with_world)
+        add_executable(test_kelp_plant_init ../../tools/test_kelp_plant_init.cpp)
+        target_link_libraries(test_kelp_plant_init PRIVATE blockheads_recovered_kelp)
+        target_compile_options(test_kelp_plant_init PRIVATE -UNDEBUG)
+        add_test(NAME recovered_kelp_plant_init COMMAND test_kelp_plant_init)
+        add_executable(test_vine_plant_init ../../tools/test_vine_plant_init.cpp)
+        target_link_libraries(test_vine_plant_init PRIVATE blockheads_recovered_vine)
+        target_compile_options(test_vine_plant_init PRIVATE -UNDEBUG)
+        add_test(NAME recovered_vine_plant_init COMMAND test_vine_plant_init)
+
+        add_executable(test_freeblock_init ../../tools/test_freeblock_init.cpp)
+        target_link_libraries(test_freeblock_init PRIVATE blockheads_recovered_freeblock)
+        target_compile_options(test_freeblock_init PRIVATE -UNDEBUG)
+        add_test(NAME recovered_freeblock_init COMMAND test_freeblock_init)
+
+        add_executable(test_workbench_init ../../tools/test_workbench_init.cpp)
+        target_link_libraries(test_workbench_init PRIVATE blockheads_recovered_workbench)
+        target_compile_options(test_workbench_init PRIVATE -UNDEBUG)
+        add_test(NAME recovered_workbench_init COMMAND test_workbench_init)
+        add_executable(test_ownkey5_init ../../tools/test_ownkey5_init.cpp)
+        target_link_libraries(test_ownkey5_init PRIVATE blockheads_recovered_ownkey5)
+        target_compile_options(test_ownkey5_init PRIVATE -UNDEBUG)
+        add_test(NAME recovered_ownkey5_init COMMAND test_ownkey5_init)
         add_executable(test_gameview_update ../../tools/test_gameview_update.cpp)
         target_link_libraries(test_gameview_update PRIVATE blockheads_recovered_view)
         add_test(NAME gameview_update COMMAND test_gameview_update)
@@ -80,9 +306,660 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         # Real replacement-gameplay contracts are separate from recovered-method
         # evidence, but run in the same O0/O2 CI batch and preserve assertions.
         add_subdirectory(../../tools/gameplay ${CMAKE_CURRENT_BINARY_DIR}/gameplay)
+        add_library(original_client_world STATIC original_client_world.cpp)
+        target_include_directories(original_client_world PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+        target_compile_features(original_client_world PUBLIC cxx_std_17)
+        add_executable(load_client_world ../../tools/load_client_world.cpp)
+        target_link_libraries(load_client_world PRIVATE original_client_world)
+        add_executable(test_original_client_world ../../tools/test_original_client_world.cpp)
+        target_link_libraries(test_original_client_world PRIVATE original_client_world)
+        target_compile_options(test_original_client_world PRIVATE -UNDEBUG)
+        add_test(NAME original_client_world COMMAND test_original_client_world)
+        # Client assembly app skeleton (batch b5a): the app-side original-save
+        # load path — block domain, dynamic index, SaveDict stub layer and the
+        # 1..64 dynamic object registry whose entries start as stubs. The
+        # sources live in app/src/main/cpp so the production APK builds the same
+        # files; this host target is what CI compiles and tests.
+        # original_world_import includes game_item_ids.h (generated); reuse the
+        # gameplay subdirectory's generation step via a dependency on its stamp
+        add_library(original_client_app STATIC
+            ../../app/src/main/cpp/original_world_import.cpp
+            ../../app/src/main/cpp/original_save_dict.cpp
+            ../../app/src/main/cpp/dynamic_object_registry.cpp
+            ../../app/src/main/cpp/original_client_app.cpp
+            ../../app/src/main/cpp/original_dynamic_import.cpp
+            plant_full.cpp
+            tree_full.cpp
+            tree_growth.cpp
+            ui_touch_router.cpp
+            ui_control.cpp
+            tree_load_save_dict.cpp
+            npc_full.cpp
+            npc_load_values_from_save_dict.cpp
+            workbench_full.cpp
+            workbench_init.cpp
+            gatherblock_full.cpp
+            kelpvine_full.cpp
+            trainstation_full.cpp
+            interaction_full.cpp
+            interaction_object_init.cpp
+            bed_sign_full.cpp
+            glowblock_full.cpp
+            fire_torch_full.cpp
+            midtier_full.cpp
+            painting_full.cpp
+            ownershipsign_full.cpp
+            traincar_full.cpp
+            artificial_light_full.cpp
+            chest_full.cpp
+            freeblock_full.cpp
+            tradeportal_full.cpp
+            tradingpost_full.cpp
+            trade_portal_price_offsets.cpp
+            original_client_world.cpp)
+        target_include_directories(original_client_app PUBLIC
+            ${CMAKE_CURRENT_SOURCE_DIR}
+            ../../app/src/main/cpp
+            ${CMAKE_CURRENT_BINARY_DIR}/gameplay/generated)
+        add_dependencies(original_client_app blockheads_gameplay_host)
+        target_compile_features(original_client_app PUBLIC cxx_std_17)
+        add_executable(test_original_client_app ../../tools/test_original_client_app.cpp)
+        target_link_libraries(test_original_client_app PRIVATE original_client_app)
+        target_compile_options(test_original_client_app PRIVATE -UNDEBUG)
+        add_test(NAME original_client_app COMMAND test_original_client_app)
+        add_executable(test_plant_full ../../tools/test_plant_full.cpp)
+        target_link_libraries(test_plant_full PRIVATE original_client_app)
+        target_compile_options(test_plant_full PRIVATE -UNDEBUG)
+        add_test(NAME plant_full COMMAND test_plant_full)
+        add_executable(test_npc_full ../../tools/test_npc_full.cpp)
+        target_link_libraries(test_npc_full PRIVATE original_client_app)
+        target_compile_options(test_npc_full PRIVATE -UNDEBUG)
+        add_test(NAME npc_full COMMAND test_npc_full)
+        add_executable(test_tree_full ../../tools/test_tree_full.cpp)
+        target_link_libraries(test_tree_full PRIVATE original_client_app)
+        target_compile_options(test_tree_full PRIVATE -UNDEBUG)
+        add_test(NAME tree_full COMMAND test_tree_full)
+        add_executable(test_workbench_full ../../tools/test_workbench_full.cpp)
+        target_link_libraries(test_workbench_full PRIVATE original_client_app)
+        target_compile_options(test_workbench_full PRIVATE -UNDEBUG)
+        add_test(NAME workbench_full COMMAND test_workbench_full)
+        add_executable(test_gatherblock_full ../../tools/test_gatherblock_full.cpp)
+        target_link_libraries(test_gatherblock_full PRIVATE original_client_app)
+        target_compile_options(test_gatherblock_full PRIVATE -UNDEBUG)
+        add_test(NAME gatherblock_full COMMAND test_gatherblock_full)
+        add_executable(test_kelpvine_full ../../tools/test_kelpvine_full.cpp)
+        target_link_libraries(test_kelpvine_full PRIVATE original_client_app)
+        target_compile_options(test_kelpvine_full PRIVATE -UNDEBUG)
+        add_test(NAME kelpvine_full COMMAND test_kelpvine_full)
+        add_executable(test_trainstation_full ../../tools/test_trainstation_full.cpp)
+        target_link_libraries(test_trainstation_full PRIVATE original_client_app)
+        target_compile_options(test_trainstation_full PRIVATE -UNDEBUG)
+        add_test(NAME trainstation_full COMMAND test_trainstation_full)
+        add_executable(test_interaction_full ../../tools/test_interaction_full.cpp)
+        target_link_libraries(test_interaction_full PRIVATE original_client_app)
+        target_compile_options(test_interaction_full PRIVATE -UNDEBUG)
+        add_test(NAME interaction_full COMMAND test_interaction_full)
+        add_executable(test_bed_sign_full ../../tools/test_bed_sign_full.cpp)
+        target_link_libraries(test_bed_sign_full PRIVATE original_client_app)
+        target_compile_options(test_bed_sign_full PRIVATE -UNDEBUG)
+        add_test(NAME bed_sign_full COMMAND test_bed_sign_full)
+        add_executable(test_glowblock_full ../../tools/test_glowblock_full.cpp)
+        target_link_libraries(test_glowblock_full PRIVATE original_client_app)
+        target_compile_options(test_glowblock_full PRIVATE -UNDEBUG)
+        add_test(NAME glowblock_full COMMAND test_glowblock_full)
+        add_executable(test_fire_torch_full ../../tools/test_fire_torch_full.cpp)
+        target_link_libraries(test_fire_torch_full PRIVATE original_client_app)
+        target_compile_options(test_fire_torch_full PRIVATE -UNDEBUG)
+        add_test(NAME fire_torch_full COMMAND test_fire_torch_full)
+        add_executable(test_midtier_full ../../tools/test_midtier_full.cpp)
+        target_link_libraries(test_midtier_full PRIVATE original_client_app)
+        target_compile_options(test_midtier_full PRIVATE -UNDEBUG)
+        add_test(NAME midtier_full COMMAND test_midtier_full)
+        add_executable(test_painting_sign_full ../../tools/test_painting_sign_full.cpp)
+        target_link_libraries(test_painting_sign_full PRIVATE original_client_app)
+        target_compile_options(test_painting_sign_full PRIVATE -UNDEBUG)
+        add_test(NAME painting_sign_full COMMAND test_painting_sign_full)
+        add_executable(test_light_full ../../tools/test_light_full.cpp)
+        target_link_libraries(test_light_full PRIVATE original_client_app)
+        target_compile_options(test_light_full PRIVATE -UNDEBUG)
+        add_test(NAME light_full COMMAND test_light_full)
+
+        add_executable(test_traincar_full ../../tools/test_traincar_full.cpp)
+        target_link_libraries(test_traincar_full PRIVATE original_client_app)
+        target_compile_options(test_traincar_full PRIVATE -UNDEBUG)
+        add_test(NAME traincar_full COMMAND test_traincar_full)
+        add_executable(test_chest_full ../../tools/test_chest_full.cpp)
+        target_link_libraries(test_chest_full PRIVATE original_client_app)
+        target_compile_options(test_chest_full PRIVATE -UNDEBUG)
+        add_test(NAME chest_full COMMAND test_chest_full)
+        add_executable(test_freeblock_full ../../tools/test_freeblock_full.cpp)
+        target_link_libraries(test_freeblock_full PRIVATE original_client_app)
+        target_compile_options(test_freeblock_full PRIVATE -UNDEBUG)
+        add_test(NAME freeblock_full COMMAND test_freeblock_full)
+        add_executable(test_tradeportal_full ../../tools/test_tradeportal_full.cpp)
+        target_link_libraries(test_tradeportal_full PRIVATE original_client_app)
+        target_compile_options(test_tradeportal_full PRIVATE -UNDEBUG)
+        add_test(NAME tradeportal_full COMMAND test_tradeportal_full)
+        add_executable(test_tradingpost_full ../../tools/test_tradingpost_full.cpp)
+        target_link_libraries(test_tradingpost_full PRIVATE original_client_app)
+        target_compile_options(test_tradingpost_full PRIVATE -UNDEBUG)
+        add_test(NAME tradingpost_full COMMAND test_tradingpost_full)
+        add_executable(client_app_skeleton_cli ../../tools/client_app_skeleton_cli.cpp)
+        target_link_libraries(client_app_skeleton_cli PRIVATE original_client_app)
+        # Standalone reverse-pipeline run test: assemble a snapshot fixture and
+        # run the loader through the CLI. No APK, no Gradle, no device — this
+        # is the "the reverse pipeline actually runs" gate.
+        find_program(BH_PYTHON3 python3)
+        if(BH_PYTHON3)
+            add_executable(test_world_seed ../../tools/test_world_seed.cpp)
+        target_link_libraries(test_world_seed PRIVATE blockheads_gameplay_host)
+        target_compile_options(test_world_seed PRIVATE -UNDEBUG)
+        add_test(NAME world_seed COMMAND test_world_seed)
+            add_executable(test_world_import ../../tools/test_world_import.cpp)
+        target_link_libraries(test_world_import PRIVATE original_client_app blockheads_gameplay_host)
+        target_compile_options(test_world_import PRIVATE -UNDEBUG)
+        add_test(NAME world_import COMMAND test_world_import)
+        add_executable(test_world_clock ../../tools/test_world_clock.cpp)
+        target_link_libraries(test_world_clock PRIVATE blockheads_gameplay_host)
+        target_compile_options(test_world_clock PRIVATE -UNDEBUG)
+        add_test(NAME world_clock COMMAND test_world_clock)
+        # The craft-completion sound: drives the event and cross-checks the asset against the recovered
+        # table, so the call site and the evidence cannot disagree silently.
+        get_filename_component(BH_APP_CPP_DIR "${CMAKE_SOURCE_DIR}/../../app/src/main/cpp" ABSOLUTE)
+        add_executable(test_craft_completion_sound ../../tools/test_craft_completion_sound.cpp)
+        target_link_libraries(test_craft_completion_sound PRIVATE blockheads_gameplay_host)
+        target_include_directories(test_craft_completion_sound PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+        target_compile_definitions(test_craft_completion_sound PRIVATE
+                                   BH_APP_SOURCE_DIR="${BH_APP_CPP_DIR}")
+        target_compile_options(test_craft_completion_sound PRIVATE -UNDEBUG)
+        add_test(NAME craft_completion_sound COMMAND test_craft_completion_sound)
+        add_executable(test_blockhead_gender_model ../../tools/test_blockhead_gender_model.cpp)
+        target_include_directories(test_blockhead_gender_model PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+        target_compile_options(test_blockhead_gender_model PRIVATE -UNDEBUG)
+        add_test(NAME recovered_blockhead_gender_model COMMAND test_blockhead_gender_model)
+        # The GENERATED load-time sound list: data consumed by a real target, so that a
+        # hand-edit of the generated header cannot survive the suite.
+        add_executable(test_sound_preload_list ../../tools/test_sound_preload_list.cpp)
+        target_include_directories(test_sound_preload_list PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+        target_compile_options(test_sound_preload_list PRIVATE -UNDEBUG)
+        add_test(NAME sound_preload_list COMMAND test_sound_preload_list)
+        # The replacement-side consumer of the same generated list (not a recovered mirror).
+        add_executable(test_sound_preload_registry ../../tools/test_sound_preload_registry.cpp)
+        target_include_directories(test_sound_preload_registry PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../../app/src/main/cpp)
+        target_compile_options(test_sound_preload_registry PRIVATE -UNDEBUG)
+        add_test(NAME sound_preload_registry COMMAND test_sound_preload_registry)
+        add_executable(test_data_source ../../tools/test_data_source.cpp)
+        target_link_libraries(test_data_source PRIVATE original_client_app blockheads_gameplay_host)
+        target_compile_options(test_data_source PRIVATE -UNDEBUG)
+        add_test(NAME data_source COMMAND test_data_source)
+        add_test(NAME client_snapshot_run
+                     COMMAND ${BH_PYTHON3}
+                             ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_client_snapshot_run.py
+                             $<TARGET_FILE:client_app_skeleton_cli>)
+            # Guard against the npc_full-class CI break: every recovered module
+            # the app includes must be compiled into the APK source list.
+            add_test(NAME apk_source_sync
+                     COMMAND ${BH_PYTHON3}
+                             ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_apk_source_sync.py)
+            add_test(NAME tree9_pure_trees_evidence
+                     COMMAND ${BH_PYTHON3}
+                             ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_tree9_pure_trees_evidence.py)
+            add_test(NAME interaction_object_init_arm_evidence
+                     COMMAND ${BH_PYTHON3}
+                             ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_interaction_object_arm_evidence.py)
+            add_test(NAME forwarder5b_arm_evidence
+                     COMMAND ${BH_PYTHON3}
+                             ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_forwarder5b_arm_evidence.py)
+            add_test(NAME midtier_arm_evidence
+                     COMMAND ${BH_PYTHON3}
+                             ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_midtier_arm_evidence.py)
+            add_test(NAME specials_arm_evidence
+                     COMMAND ${BH_PYTHON3}
+                             ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_specials_arm_evidence.py)
+            add_test(NAME item_id_alignment_evidence
+                     COMMAND ${BH_PYTHON3}
+                             ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_item_id_alignment_evidence.py)
+            add_test(NAME item_id_alignment_regressions
+                     COMMAND ${BH_PYTHON3}
+                             ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_item_alignment.py)
+            add_test(NAME coverage_audit
+                     COMMAND ${BH_PYTHON3}
+                             ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_coverage_audit.py)
+            add_test(NAME class_graph
+                     COMMAND ${BH_PYTHON3}
+                             ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_class_graph.py)
+            add_test(NAME key_table_extraction
+                     COMMAND ${BH_PYTHON3}
+                             ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_key_table_extraction.py)
+            add_executable(test_ui_pipeline
+                           ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_ui_pipeline.cpp)
+            target_include_directories(test_ui_pipeline PRIVATE
+                                       ${CMAKE_CURRENT_SOURCE_DIR})
+            target_link_libraries(test_ui_pipeline PRIVATE original_client_app)
+            target_compile_options(test_ui_pipeline PRIVATE -UNDEBUG)
+            add_test(NAME ui_pipeline COMMAND test_ui_pipeline)
+
+            add_executable(test_ui_control
+                           ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_ui_control.cpp)
+            target_include_directories(test_ui_control PRIVATE
+                                       ${CMAKE_CURRENT_SOURCE_DIR})
+            target_link_libraries(test_ui_control PRIVATE original_client_app)
+            target_compile_options(test_ui_control PRIVATE -UNDEBUG)
+            add_test(NAME ui_control COMMAND test_ui_control)
+
+            add_executable(test_ui_touch_router
+                           ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_ui_touch_router.cpp)
+            target_include_directories(test_ui_touch_router PRIVATE
+                                       ${CMAKE_CURRENT_SOURCE_DIR})
+            target_link_libraries(test_ui_touch_router PRIVATE original_client_app)
+            target_compile_options(test_ui_touch_router PRIVATE -UNDEBUG)
+            add_test(NAME ui_touch_router COMMAND test_ui_touch_router)
+
+            add_executable(test_tree_growth
+                           ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_tree_growth.cpp)
+            target_include_directories(test_tree_growth PRIVATE
+                                       ${CMAKE_CURRENT_SOURCE_DIR})
+            target_link_libraries(test_tree_growth PRIVATE original_client_app)
+            target_compile_options(test_tree_growth PRIVATE -UNDEBUG)
+            add_test(NAME tree_growth COMMAND test_tree_growth)
+
+            add_test(NAME arm_goldens
+                     COMMAND ${BH_PYTHON3}
+                             ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/test_arm_goldens.py)
+        endif()
         # Tests using assert must still exercise their contracts in Release.
-        foreach(test_target test_gameview_update test_projection_update test_world_view_contracts test_world_translation test_sound_manager test_original_save_format test_gameview_starttouch test_gameview_movetouch test_gameview_endtouch test_gameview_canceltouch test_gameview_secondarytouch)
+        foreach(test_target test_gameview_update test_projection_update test_world_view_contracts test_world_translation test_sound_manager test_original_save_format test_gameview_starttouch test_original_client_world test_gameview_movetouch test_gameview_endtouch test_gameview_canceltouch test_world_seed test_world_clock test_gameview_secondarytouch test_sound_preload_list test_sound_preload_registry)
             target_compile_options(${test_target} PRIVATE -UNDEBUG)
         endforeach()
     endif()
+endif()
+
+add_executable(test_dynamic_object_flags_model ../../tools/test_dynamic_object_flags_model.cpp)
+target_link_libraries(test_dynamic_object_flags_model PRIVATE blockheads_recovered_view)
+target_compile_options(test_dynamic_object_flags_model PRIVATE -UNDEBUG)
+add_test(NAME recovered_dynamic_object_flags_model COMMAND test_dynamic_object_flags_model)
+
+add_executable(test_world_clock_domain ../../tools/test_world_clock_domain.cpp)
+target_link_libraries(test_world_clock_domain PRIVATE blockheads_recovered_view)
+target_compile_options(test_world_clock_domain PRIVATE -UNDEBUG)
+add_test(NAME recovered_world_clock_domain COMMAND test_world_clock_domain)
+
+add_executable(test_frame_loop_participants ../../tools/test_frame_loop_participants.cpp)
+target_link_libraries(test_frame_loop_participants PRIVATE blockheads_recovered_view)
+target_compile_options(test_frame_loop_participants PRIVATE -UNDEBUG)
+add_test(NAME recovered_frame_loop_participants COMMAND test_frame_loop_participants)
+
+add_executable(test_dynamic_object_layout ../../tools/test_dynamic_object_layout.cpp)
+target_link_libraries(test_dynamic_object_layout PRIVATE blockheads_recovered_view)
+target_compile_options(test_dynamic_object_layout PRIVATE -UNDEBUG)
+add_test(NAME recovered_dynamic_object_layout COMMAND test_dynamic_object_layout)
+
+add_executable(test_audio_wiring_model ../../tools/test_audio_wiring_model.cpp)
+target_link_libraries(test_audio_wiring_model PRIVATE blockheads_recovered_view)
+target_compile_options(test_audio_wiring_model PRIVATE -UNDEBUG)
+add_test(NAME recovered_audio_wiring_model COMMAND test_audio_wiring_model)
+
+add_executable(test_world_layout ../../tools/test_world_layout.cpp)
+target_link_libraries(test_world_layout PRIVATE blockheads_recovered_view)
+target_compile_options(test_world_layout PRIVATE -UNDEBUG)
+add_test(NAME recovered_world_layout COMMAND test_world_layout)
+
+add_executable(test_craftable_item_record ../../tools/test_craftable_item_record.cpp)
+target_link_libraries(test_craftable_item_record PRIVATE blockheads_recovered_view)
+target_compile_options(test_craftable_item_record PRIVATE -UNDEBUG)
+add_test(NAME recovered_craftable_item_record COMMAND test_craftable_item_record)
+
+add_executable(test_interaction_test_result ../../tools/test_interaction_test_result.cpp)
+target_link_libraries(test_interaction_test_result PRIVATE blockheads_recovered_view)
+target_compile_options(test_interaction_test_result PRIVATE -UNDEBUG)
+add_test(NAME recovered_interaction_test_result COMMAND test_interaction_test_result)
+
+add_executable(test_dynamic_object_net_data ../../tools/test_dynamic_object_net_data.cpp)
+target_link_libraries(test_dynamic_object_net_data PRIVATE blockheads_recovered_view)
+target_compile_options(test_dynamic_object_net_data PRIVATE -UNDEBUG)
+add_test(NAME recovered_dynamic_object_net_data COMMAND test_dynamic_object_net_data)
+
+add_executable(test_dynamic_world_layout ../../tools/test_dynamic_world_layout.cpp)
+target_link_libraries(test_dynamic_world_layout PRIVATE blockheads_recovered_view)
+target_compile_options(test_dynamic_world_layout PRIVATE -UNDEBUG)
+add_test(NAME recovered_dynamic_world_layout COMMAND test_dynamic_world_layout)
+
+add_executable(test_paint_mix_ui_layout ../../tools/test_paint_mix_ui_layout.cpp)
+target_link_libraries(test_paint_mix_ui_layout PRIVATE blockheads_recovered_view)
+target_compile_options(test_paint_mix_ui_layout PRIVATE -UNDEBUG)
+add_test(NAME recovered_paint_mix_ui_layout COMMAND test_paint_mix_ui_layout)
+
+add_executable(test_action_layout ../../tools/test_action_layout.cpp)
+target_link_libraries(test_action_layout PRIVATE blockheads_recovered_view)
+target_compile_options(test_action_layout PRIVATE -UNDEBUG)
+add_test(NAME recovered_action_layout COMMAND test_action_layout)
+
+target_sources(blockheads_recovered_view PRIVATE u_i_manager_layout.cpp)
+if(NOT TARGET test_u_i_manager_layout)
+    add_executable(test_u_i_manager_layout ../../tools/test_u_i_manager_layout.cpp)
+    target_link_libraries(test_u_i_manager_layout PRIVATE blockheads_recovered_view)
+    target_compile_options(test_u_i_manager_layout PRIVATE -UNDEBUG)
+    add_test(NAME recovered_u_i_manager_layout COMMAND test_u_i_manager_layout)
+endif()
+
+target_sources(blockheads_recovered_view PRIVATE craftable_item_object_layout.cpp)
+if(NOT TARGET test_craftable_item_object_layout)
+    add_executable(test_craftable_item_object_layout ../../tools/test_craftable_item_object_layout.cpp)
+    target_link_libraries(test_craftable_item_object_layout PRIVATE blockheads_recovered_view)
+    target_compile_options(test_craftable_item_object_layout PRIVATE -UNDEBUG)
+    add_test(NAME recovered_craftable_item_object_layout COMMAND test_craftable_item_object_layout)
+endif()
+
+target_sources(blockheads_recovered_view PRIVATE workbench_layout.cpp)
+if(NOT TARGET test_workbench_layout)
+    add_executable(test_workbench_layout ../../tools/test_workbench_layout.cpp)
+    target_link_libraries(test_workbench_layout PRIVATE blockheads_recovered_view)
+    target_compile_options(test_workbench_layout PRIVATE -UNDEBUG)
+    add_test(NAME recovered_workbench_layout COMMAND test_workbench_layout)
+endif()
+
+# World-change queue slice (E21/E22/E23): recovered contract for the
+# worldChangedAtPos:sendReliably: / waterChangedAtPos:fullBlock: /
+# lightChangedAtMacroPos:sendReliably:sendAtAll: queue producers and the
+# saveAndSendOnlyBlocksThatNeedToBeSent flush passes.
+target_sources(blockheads_recovered_view PRIVATE world_change_queues.cpp)
+if(NOT TARGET test_world_change_queues)
+    add_executable(test_world_change_queues ../../tools/test_world_change_queues.cpp)
+    target_link_libraries(test_world_change_queues PRIVATE blockheads_recovered_view)
+    target_compile_options(test_world_change_queues PRIVATE -UNDEBUG)
+    add_test(NAME recovered_world_change_queues COMMAND test_world_change_queues)
+endif()
+
+# Dynamic-object type-code slice (E24-E44): the pinned type immediates, the
+# >= 0x41 type gate, the per-body skip sets, the family index gates and the
+# ffffe54c member slice offsets, plus the macro-position helper.
+target_sources(blockheads_recovered_view PRIVATE dynamic_object_type_codes.cpp)
+if(NOT TARGET test_dynamic_object_type_codes)
+    add_executable(test_dynamic_object_type_codes ../../tools/test_dynamic_object_type_codes.cpp)
+    target_link_libraries(test_dynamic_object_type_codes PRIVATE blockheads_recovered_view)
+    target_compile_options(test_dynamic_object_type_codes PRIVATE -UNDEBUG)
+    add_test(NAME recovered_dynamic_object_type_codes COMMAND test_dynamic_object_type_codes)
+endif()
+
+# Object registry pair slice (E26/E30/E31/E33/E40): the ffffe550/ffffe554
+# (dynamicObjectsToAdd / dynamicObjectsByWorldPosIndex) bookkeeping contract
+# with the type gate and the ffe234ac loaded gate.
+target_sources(blockheads_recovered_view PRIVATE object_registry_pair.cpp)
+if(NOT TARGET test_object_registry_pair)
+    add_executable(test_object_registry_pair ../../tools/test_object_registry_pair.cpp)
+    target_link_libraries(test_object_registry_pair PRIVATE blockheads_recovered_view)
+    target_compile_options(test_object_registry_pair PRIVATE -UNDEBUG)
+    add_test(NAME recovered_object_registry_pair COMMAND test_object_registry_pair)
+endif()
+
+# Dynamic-world-changed recorder slice (E29/E30/E40): the ffffe578 producer
+# gate + /32 macro conversion + the 65-segment exact-pair dedup, and the
+# consumer's (end - start) / 8 pair-count idiom with its per-type skip triple.
+target_sources(blockheads_recovered_view PRIVATE dynamic_world_changed.cpp)
+if(NOT TARGET test_dynamic_world_changed)
+    add_executable(test_dynamic_world_changed ../../tools/test_dynamic_world_changed.cpp)
+    target_link_libraries(test_dynamic_world_changed PRIVATE blockheads_recovered_view)
+    target_compile_options(test_dynamic_world_changed PRIVATE -UNDEBUG)
+    add_test(NAME recovered_dynamic_world_changed COMMAND test_dynamic_world_changed)
+endif()
+
+# Typed-accessor triplet dispatcher slice (E36/E37/E38/E39/E43): the pinned
+# per-type remove-cell table over the shared ffe235f0/ffe23624/ffe23600
+# family cells, with the door/workbench pos-then-y-1 two-probe contract.
+target_sources(blockheads_recovered_view PRIVATE accessor_triplets.cpp)
+if(NOT TARGET test_accessor_triplets)
+    add_executable(test_accessor_triplets ../../tools/test_accessor_triplets.cpp)
+    target_link_libraries(test_accessor_triplets PRIVATE blockheads_recovered_view)
+    target_compile_options(test_accessor_triplets PRIVATE -UNDEBUG)
+    add_test(NAME recovered_accessor_triplets COMMAND test_accessor_triplets)
+endif()
+
+# World-collections merge slice (E35 readers + the slot tables of E27/E29/E31/
+# E40/E42): the ffffe4f0/ffffe4f4/ffffe4f8 trio, the client/server slot
+# booleans and the three merge getters.
+target_sources(blockheads_recovered_view PRIVATE world_collections.cpp)
+if(NOT TARGET test_world_collections)
+    add_executable(test_world_collections ../../tools/test_world_collections.cpp)
+    target_link_libraries(test_world_collections PRIVATE blockheads_recovered_view)
+    target_compile_options(test_world_collections PRIVATE -UNDEBUG)
+    add_test(NAME recovered_world_collections COMMAND test_world_collections)
+endif()
+
+# Simulation-step slice (E40): the /8.0f family step over 8 families, the
+# accurate-update single call and the 8-slot finisher loop.
+target_sources(blockheads_recovered_view PRIVATE simulation_step.cpp)
+if(NOT TARGET test_simulation_step)
+    add_executable(test_simulation_step ../../tools/test_simulation_step.cpp)
+    target_link_libraries(test_simulation_step PRIVATE blockheads_recovered_view)
+    target_compile_options(test_simulation_step PRIVATE -UNDEBUG)
+    add_test(NAME recovered_simulation_step COMMAND test_simulation_step)
+endif()
+
+# Tree-life density kernel slice (E23): the bilinear tent max(0, 1 - |d|/32),
+# the 2^31 random gate and the (weight / 32) normalisation from
+# getTreeLifeFractionForPos:.
+target_sources(blockheads_recovered_view PRIVATE tree_life_fraction.cpp)
+if(NOT TARGET test_tree_life_fraction)
+    add_executable(test_tree_life_fraction ../../tools/test_tree_life_fraction.cpp)
+    target_link_libraries(test_tree_life_fraction PRIVATE blockheads_recovered_view)
+    target_compile_options(test_tree_life_fraction PRIVATE -UNDEBUG)
+    add_test(NAME recovered_tree_life_fraction COMMAND test_tree_life_fraction)
+endif()
+
+# Door-state slice (E38/E39): the 0x34/0xa4 -> 0x46 marker-write gate, the
+# door open/direction state and the fetch/check/set cell identities.
+target_sources(blockheads_recovered_view PRIVATE door_state.cpp)
+if(NOT TARGET test_door_state)
+    add_executable(test_door_state ../../tools/test_door_state.cpp)
+    target_link_libraries(test_door_state PRIVATE blockheads_recovered_view)
+    target_compile_options(test_door_state PRIVATE -UNDEBUG)
+    add_test(NAME recovered_door_state COMMAND test_door_state)
+endif()
+
+# Client-registry slice (E30/E33/E39): the ffffe51c server gate, the selector
+# quintet (ffe237a8/ac/b0/b4/b8), the pole-taken dict (ffffe564, key
+# 0xfff34284) and the workbench flag (ffffe558).
+target_sources(blockheads_recovered_view PRIVATE client_registry.cpp)
+if(NOT TARGET test_client_registry)
+    add_executable(test_client_registry ../../tools/test_client_registry.cpp)
+    target_link_libraries(test_client_registry PRIVATE blockheads_recovered_view)
+    target_compile_options(test_client_registry PRIVATE -UNDEBUG)
+    add_test(NAME recovered_client_registry COMMAND test_client_registry)
+endif()
+
+# Light-channel array slice (E28/E29/E31/E42): the 32-slot ffffe56c channel
+# array (0x180/12), the -1 all-channels arm and the send iteration contract.
+target_sources(blockheads_recovered_view PRIVATE light_channels.cpp)
+if(NOT TARGET test_light_channels)
+    add_executable(test_light_channels ../../tools/test_light_channels.cpp)
+    target_link_libraries(test_light_channels PRIVATE blockheads_recovered_view)
+    target_compile_options(test_light_channels PRIVATE -UNDEBUG)
+    add_test(NAME recovered_light_channels COMMAND test_light_channels)
+endif()
+
+# Five-container save sweep slice (E22/E40): the pinned 570/574/578(+0x120)/
+# 57c/580 scan order with the insertion-order element walk.
+target_sources(blockheads_recovered_view PRIVATE save_sweep.cpp)
+if(NOT TARGET test_save_sweep)
+    add_executable(test_save_sweep ../../tools/test_save_sweep.cpp)
+    target_link_libraries(test_save_sweep PRIVATE blockheads_recovered_view)
+    target_compile_options(test_save_sweep PRIVATE -UNDEBUG)
+    add_test(NAME recovered_save_sweep COMMAND test_save_sweep)
+endif()
+
+# Blockhead-selection slice (E42): the ffffe55c index slot, the range-check-
+# then-store setter (0-on-out-of-range) and the resolver's nil path.
+target_sources(blockheads_recovered_view PRIVATE blockhead_selection.cpp)
+if(NOT TARGET test_blockhead_selection)
+    add_executable(test_blockhead_selection ../../tools/test_blockhead_selection.cpp)
+    target_link_libraries(test_blockhead_selection PRIVATE blockheads_recovered_view)
+    target_compile_options(test_blockhead_selection PRIVATE -UNDEBUG)
+    add_test(NAME recovered_blockhead_selection COMMAND test_blockhead_selection)
+endif()
+
+# Family-probe slice (E32/E34/E38/E39/E43): the indexed arm probe (gate ->
+# one arm) and the sequential loop probe (ascending arms, first hit wins).
+target_sources(blockheads_recovered_view PRIVATE family_probes.cpp)
+if(NOT TARGET test_family_probes)
+    add_executable(test_family_probes ../../tools/test_family_probes.cpp)
+    target_link_libraries(test_family_probes PRIVATE blockheads_recovered_view)
+    target_compile_options(test_family_probes PRIVATE -UNDEBUG)
+    add_test(NAME recovered_family_probes COMMAND test_family_probes)
+endif()
+
+# Interaction-object query/remover slice (E39): the uint16 type query and the
+# two remover legs sharing the ffe23690 removal.
+target_sources(blockheads_recovered_view PRIVATE interaction_objects.cpp)
+if(NOT TARGET test_interaction_objects)
+    add_executable(test_interaction_objects ../../tools/test_interaction_objects.cpp)
+    target_link_libraries(test_interaction_objects PRIVATE blockheads_recovered_view)
+    target_compile_options(test_interaction_objects PRIVATE -UNDEBUG)
+    add_test(NAME recovered_interaction_objects COMMAND test_interaction_objects)
+endif()
+
+# Sound-accumulator slice (E24/E42/E43): the ffffe5a4 accumulator with the
+# >= 1.0 exit gate and the play-at-position callback contract.
+target_sources(blockheads_recovered_view PRIVATE sound_accumulator.cpp)
+if(NOT TARGET test_sound_accumulator)
+    add_executable(test_sound_accumulator ../../tools/test_sound_accumulator.cpp)
+    target_link_libraries(test_sound_accumulator PRIVATE blockheads_recovered_view)
+    target_compile_options(test_sound_accumulator PRIVATE -UNDEBUG)
+    add_test(NAME recovered_sound_accumulator COMMAND test_sound_accumulator)
+endif()
+
+# Net-sync phase slice (E21/E32/E40): the four ordered phases with per-phase
+# drain, the 8-byte ID / 24-byte record strides and the receiver gates.
+target_sources(blockheads_recovered_view PRIVATE net_sync_phases.cpp)
+if(NOT TARGET test_net_sync_phases)
+    add_executable(test_net_sync_phases ../../tools/test_net_sync_phases.cpp)
+    target_link_libraries(test_net_sync_phases PRIVATE blockheads_recovered_view)
+    target_compile_options(test_net_sync_phases PRIVATE -UNDEBUG)
+    add_test(NAME recovered_net_sync_phases COMMAND test_net_sync_phases)
+endif()
+
+# Remote-receive bucket array slice (E32/E40): the ffffe544/ffffe53c 4-byte
+# slot arrays with lazy create-on-null and the pre-bucketing gates.
+target_sources(blockheads_recovered_view PRIVATE bucket_arrays.cpp)
+if(NOT TARGET test_bucket_arrays)
+    add_executable(test_bucket_arrays ../../tools/test_bucket_arrays.cpp)
+    target_link_libraries(test_bucket_arrays PRIVATE blockheads_recovered_view)
+    target_compile_options(test_bucket_arrays PRIVATE -UNDEBUG)
+    add_test(NAME recovered_bucket_arrays COMMAND test_bucket_arrays)
+endif()
+
+# Tile-marker slice (E30/E38): the 0x46/0x4b arm-1, 0x45 arm-2 and the strict
+# > 0xaa ore-threshold predicate.
+target_sources(blockheads_recovered_view PRIVATE tile_markers.cpp)
+if(NOT TARGET test_tile_markers)
+    add_executable(test_tile_markers ../../tools/test_tile_markers.cpp)
+    target_link_libraries(test_tile_markers PRIVATE blockheads_recovered_view)
+    target_compile_options(test_tile_markers PRIVATE -UNDEBUG)
+    add_test(NAME recovered_tile_markers COMMAND test_tile_markers)
+endif()
+
+# Cross-slice scenario test (E63): door lifecycle + tile dispatch + selection
+# + triplet round trip across five slices (interoperation contract).
+if(NOT TARGET test_world_line_scenario)
+    add_executable(test_world_line_scenario ../../tools/test_world_line_scenario.cpp)
+    target_link_libraries(test_world_line_scenario PRIVATE blockheads_recovered_view)
+    target_compile_options(test_world_line_scenario PRIVATE -UNDEBUG)
+    add_test(NAME recovered_world_line_scenario COMMAND test_world_line_scenario)
+endif()
+
+# Electric charge store slice (E75/E76): the u16 charge semantics - the drain
+# gate, the furnace fuel fence (100), the storage capacity divisor (8192) and
+# the pinned workbench type tables.
+target_sources(blockheads_recovered_view PRIVATE electric_charge_store.cpp)
+if(NOT TARGET test_electric_charge_store)
+    add_executable(test_electric_charge_store ../../tools/test_electric_charge_store.cpp)
+    target_link_libraries(test_electric_charge_store PRIVATE blockheads_recovered_view)
+    target_compile_options(test_electric_charge_store PRIVATE -UNDEBUG)
+    add_test(NAME recovered_electric_charge_store COMMAND test_electric_charge_store)
+endif()
+
+# Torch placement codes slice (E72): the neighbour-classification order and
+# the -2..3 codes (half-depth/full/empty/solid-below/marker 'd'/door arms).
+target_sources(blockheads_recovered_view PRIVATE torch_placement_codes.cpp)
+if(NOT TARGET test_torch_placement_codes)
+    add_executable(test_torch_placement_codes ../../tools/test_torch_placement_codes.cpp)
+    target_link_libraries(test_torch_placement_codes PRIVATE blockheads_recovered_view)
+    target_compile_options(test_torch_placement_codes PRIVATE -UNDEBUG)
+    add_test(NAME recovered_torch_placement_codes COMMAND test_torch_placement_codes)
+endif()
+
+# Train type traits slice (E70/E71/E74): the pinned train constants (itemType
+# 205 = the fuel item, objectType 42, fuelItemCount 4, maxRiders 1, fuelUI
+# offset 4.0f) and the boolean traits.
+target_sources(blockheads_recovered_view PRIVATE train_type_traits.cpp)
+if(NOT TARGET test_particle_pool_slots)
+    add_executable(test_particle_pool_slots ../../tools/test_particle_pool_slots.cpp)
+    target_link_libraries(test_particle_pool_slots PRIVATE blockheads_recovered_view)
+    target_compile_options(test_particle_pool_slots PRIVATE -UNDEBUG)
+    add_test(NAME recovered_particle_pool_slots COMMAND test_particle_pool_slots)
+endif()
+
+# Particle pool slots slice (E73): the 2048-slot pool with the 0x7fffffff
+# sentinel, the stop gate and the world-width band; plus the train traits
+# static_asserts in the same test.
+target_sources(blockheads_recovered_view PRIVATE particle_pool_slots.cpp)
+
+# Trade price response slice (E108): the epsilon gate (0.01 / -0.01,
+# boundary-inclusive), the pow(0.999, delta) multiplier law with the 1.0
+# default and the two f32 accumulator slots - all stores behind hooks.
+target_sources(blockheads_recovered_view PRIVATE trade_price_response.cpp)
+if(NOT TARGET test_trade_price_response)
+    add_executable(test_trade_price_response ../../tools/test_trade_price_response.cpp)
+    target_link_libraries(test_trade_price_response PRIVATE blockheads_recovered_view)
+    target_compile_options(test_trade_price_response PRIVATE -UNDEBUG)
+    add_test(NAME recovered_trade_price_response COMMAND test_trade_price_response)
+endif()
+
+# NPC feed response slice (E117): the gate, the fullness +2700/clamp 8100
+# law, the min(field, food/2) hunger reduction, the 675.0 fill-slot replay
+# and the tame count/requirement/max stage.
+target_sources(blockheads_recovered_view PRIVATE npc_feed_response.cpp)
+if(NOT TARGET test_npc_feed_response)
+    add_executable(test_npc_feed_response ../../tools/test_npc_feed_response.cpp)
+    target_link_libraries(test_npc_feed_response PRIVATE blockheads_recovered_view)
+    target_compile_options(test_npc_feed_response PRIVATE -UNDEBUG)
+    add_test(NAME recovered_npc_feed_response COMMAND test_npc_feed_response)
+endif()
+
+# Workbench craft abort slice (E78): the [abortCraft] restore - the
+# needsRemoved/release head, the fractionComplete = 0 reset, the paid arm
+# (type 11, f3 x countLeft, the 50000 cap) and the per-unit drop arm,
+# feeding the craftAborted -> isInUse = 0 -> craftItemFinished ->
+# dynamicWorldChanged -> updateNeedsToBeSent = 1 -> countLeft = 0 finalize.
+target_sources(blockheads_recovered_view PRIVATE workbench_craft_abort.cpp)
+if(NOT TARGET test_workbench_craft_abort)
+    add_executable(test_workbench_craft_abort ../../tools/test_workbench_craft_abort.cpp)
+    target_link_libraries(test_workbench_craft_abort PRIVATE blockheads_recovered_view)
+    target_compile_options(test_workbench_craft_abort PRIVATE -UNDEBUG)
+    add_test(NAME recovered_workbench_craft_abort COMMAND test_workbench_craft_abort)
+endif()
+
+# Workbench hard abort slice (E78): the
+# [abortImmediatelyAndRestoreBlockheadItems] restore - the
+# currentBlockhead/isInUse head, the same paid arm and the inventory-return
+# plain arm (addItemToInventory: per enumerated sub-item).
+target_sources(blockheads_recovered_view PRIVATE workbench_abort_immediate.cpp)
+if(NOT TARGET test_workbench_abort_immediate)
+    add_executable(test_workbench_abort_immediate ../../tools/test_workbench_abort_immediate.cpp)
+    target_link_libraries(test_workbench_abort_immediate PRIVATE blockheads_recovered_view)
+    target_compile_options(test_workbench_abort_immediate PRIVATE -UNDEBUG)
+    add_test(NAME recovered_workbench_abort_immediate COMMAND test_workbench_abort_immediate)
+endif()
+
+# Craft completed slice (E75/E78 line): the [craftCompleted] first pass -
+# the nil/needsRemoved -> [self abortCraft] bail, the paid-slot skip, the
+# per-unit loop (the sourceItems[i].count > 0 predicate, the
+# preserveItemDataAInCraftedItem(f2[i], f0) gate, the build and the consume
+# on both preserve outcomes).
+target_sources(blockheads_recovered_view PRIVATE workbench_craft_completed.cpp)
+if(NOT TARGET test_workbench_craft_completed)
+    add_executable(test_workbench_craft_completed ../../tools/test_workbench_craft_completed.cpp)
+    target_link_libraries(test_workbench_craft_completed PRIVATE blockheads_recovered_view)
+    target_compile_options(test_workbench_craft_completed PRIVATE -UNDEBUG)
+    add_test(NAME recovered_workbench_craft_completed COMMAND test_workbench_craft_completed)
 endif()

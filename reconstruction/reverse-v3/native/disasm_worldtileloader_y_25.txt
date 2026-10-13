@@ -1,0 +1,30 @@
+# Yak -[jumps]
+# types: c8@0:4
+# implementation: 0x00965850
+# ARM.exidx end: 0x009658b4
+
+            0x00965850      0cd04de2       sub sp, sp, 0xc
+            0x00965854      54209fe5       ldr r2, [0x009658b0]        ; [0x9658b0:4]=0x6fa294
+            0x00965858      02208fe0       add r2, pc, r2
+            0x0096585c      843300e3       movw r3, 0x384
+            0x00965860      100a9fed       vldr s0, [0x009658a8]
+            0x00965864      40c09fe5       ldr ip, [0x009658ac]        ; [0x9658ac:4]=0xffffd194
+            0x00965868      02209ce7       ldr r2, [ip, r2]
+            0x0096586c      08008de5       str r0, [sp, 8]
+            0x00965870      04108de5       str r1, [sp, 4]
+            0x00965874      08009de5       ldr r0, [sp, 8]
+            0x00965878      001092e5       ldr r1, [r2]
+            0x0096587c      010080e0       add r0, r0, r1
+            0x00965880      001a90ed       vldr s2, [r0]
+            0x00965884      c01ab4ee       vcmpe.f32 s2, s0
+            0x00965888      10faf1ee       vmrs apsr_nzcv, fpscr
+            0x0096588c      000000e3       movw r0, 0
+            0x00965890      0100a043       movmi r0, 1
+            0x00965894      010000e2       and r0, r0, 1
+            0x00965898      7000afe6       sxtb r0, r0
+            0x0096589c      00308de5       str r3, [sp]
+            0x009658a0      0cd08de2       add sp, sp, 0xc
+            0x009658a4      1eff2fe1       bx lr
+            0x009658a8      00006144       strbtmi r0, [r1], -0
+            0x009658ac      94d1ffff       invalid
+            0x009658b0      94a26f00       mlseq pc, r4, r2, sl

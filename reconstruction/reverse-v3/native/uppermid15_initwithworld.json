@@ -1,0 +1,359 @@
+{
+  "batch": "b3l",
+  "census": {
+    "covered_after_b3l": 55,
+    "covered_words_after_b3l": 9039,
+    "front_methods": 60,
+    "front_words": 13820,
+    "remaining_methods": 5,
+    "remaining_words": 4781
+  },
+  "claim": "Fifteen upper-mid-tier loaders (214-408w, 4,518 words, 71 own-key reads) including the two chain nodes: DynamicObject (273w, the ROOT loader \u2014 reads pos_x/pos_y/floatPos/uniqueID and runs initDerivedStuff:loadPhysicalBlockIfNeeded:, no forward) and InteractionObject (352w \u2014 reads currentBlockheadIndex/flipped/isInUse/ownerID/ownerName/paintColor, resolves ownerName via getOwnerNameForObjectOwnerID: with an isServer gate). A THIRD selector variant initWithWorld:\u2026:parentObject: appears in GlowBlock/FireObject/NormalPlant/TradePortal/Torch pools \u2014 these construct child LIGHT objects (alloc + the 5-arg variant) from their lightDict key. TrainCar reads FORMATTED keys currentBlockheadIndex_%d via stringWithFormat: (per-rider slots). DropBear is the third saveTime+worldTime site. CaveTroll parses a byte blob (bytes/length) with a new hook initSubDerivedStuffStuff. Static level-A evidence only",
+  "classes": [
+    {
+      "boundary": "0x00cad624",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the pool",
+      "class": "ElevatorShaft",
+      "code_words": 214,
+      "imp": "0x00cad2cc",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_ElevatorShaft",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bee8"
+      },
+      "own_keys": [
+        "itemType",
+        "lastKnownMotorPos.x",
+        "lastKnownMotorPos.y",
+        "ownerID",
+        "paintColor"
+      ],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x00ca8c78",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the pool",
+      "class": "GlowBlock",
+      "code_words": 214,
+      "imp": "0x00ca8920",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_GlowBlock",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 2,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bee0"
+      },
+      "own_keys": [
+        "lightDict",
+        "tileType"
+      ],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x007007d4",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the pool",
+      "class": "ElevatorMotor",
+      "code_words": 218,
+      "imp": "0x0070046c",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_ElevatorMotor",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bce8"
+      },
+      "own_keys": [
+        "availableElectricity",
+        "itemType",
+        "maxY",
+        "minY",
+        "ownerID"
+      ],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x005e5a94",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the pool",
+      "class": "TradingPost",
+      "code_words": 223,
+      "imp": "0x005e5718",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_TradingPost",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bc64"
+      },
+      "own_keys": [
+        "coinCount",
+        "priceTier",
+        "sellerClientID",
+        "sellerClientName"
+      ],
+      "runtime_superclass": "InteractionObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x00674f00",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the pool",
+      "class": "FireObject",
+      "code_words": 259,
+      "imp": "0x00674af4",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_FireObject",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 2,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bc9c"
+      },
+      "own_keys": [
+        "burnTimer",
+        "lightDict",
+        "spreadTimer_0",
+        "spreadTimer_1",
+        "spreadTimer_2",
+        "spreadTimer_3"
+      ],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x0083a3c0",
+      "claim": "root loader: reads base keys and runs initDerivedStuff:loadPhysicalBlockIfNeeded:",
+      "class": "DynamicObject",
+      "code_words": 273,
+      "imp": "0x00839f7c",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_DynamicObject",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 2,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bd84"
+      },
+      "own_keys": [
+        "floatPos",
+        "pos_x",
+        "pos_y",
+        "uniqueID"
+      ],
+      "runtime_superclass": null,
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x00a66a78",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the pool",
+      "class": "NormalPlant",
+      "code_words": 281,
+      "imp": "0x00a66614",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_NormalPlant",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 2,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8be38"
+      },
+      "own_keys": [
+        "availableFood",
+        "lightDict"
+      ],
+      "runtime_superclass": "Plant",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:treeDensityNoiseFunction:seasonOffsetNoiseFunction:"
+    },
+    {
+      "boundary": "0x00d38760",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the pool",
+      "class": "TradePortal",
+      "code_words": 281,
+      "imp": "0x00d382fc",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_TradePortal",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 2,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bf18"
+      },
+      "own_keys": [
+        "level",
+        "lightDict",
+        "localPriceOffsets"
+      ],
+      "runtime_superclass": "InteractionObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x004b6230",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the pool",
+      "class": "Torch",
+      "code_words": 318,
+      "imp": "0x004b5d38",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_Torch",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bc2c"
+      },
+      "own_keys": [
+        "connectionType",
+        "dataA",
+        "dataB",
+        "itemType",
+        "lightDict",
+        "ownerID"
+      ],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x005f4bb4",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the pool",
+      "class": "InteractionObject",
+      "code_words": 352,
+      "imp": "0x005f4634",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_InteractionObject",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bc68"
+      },
+      "own_keys": [
+        "currentBlockheadIndex",
+        "flipped",
+        "isInUse",
+        "ownerID",
+        "ownerName",
+        "paintColor"
+      ],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x00a35098",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the pool",
+      "class": "OwnershipSign",
+      "code_words": 352,
+      "imp": "0x00a34b18",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_OwnershipSign",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8be20"
+      },
+      "own_keys": [
+        "h",
+        "landOwnerID",
+        "landOwnerName",
+        "w"
+      ],
+      "runtime_superclass": "Sign",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x00aa8780",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the pool",
+      "class": "Painting",
+      "code_words": 358,
+      "imp": "0x00aa81e8",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_Painting",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8be64"
+      },
+      "own_keys": [
+        "hasVerifiedImageData",
+        "itemType",
+        "outputImageData",
+        "ownerID",
+        "ownerName"
+      ],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x00a38ed8",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the pool",
+      "class": "TrainCar",
+      "code_words": 363,
+      "imp": "0x00a3892c",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_TrainCar",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 6,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8be24"
+      },
+      "own_keys": [
+        "currentBlockheadIndex_%d",
+        "engineCarID",
+        "engineIsRight",
+        "leftCarID",
+        "ownerID",
+        "rightCarID"
+      ],
+      "runtime_superclass": "DynamicObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x0079db88",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the pool",
+      "class": "DropBear",
+      "code_words": 404,
+      "imp": "0x0079d538",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_DropBear",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bd3c"
+      },
+      "own_keys": [
+        "courageMeter",
+        "dropPos.x",
+        "dropPos.y",
+        "dropSpeed",
+        "dropping",
+        "goalTreeDirection",
+        "onGround",
+        "provokeMeter",
+        "saveTime"
+      ],
+      "runtime_superclass": "NPC",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    },
+    {
+      "boundary": "0x00d53f2c",
+      "claim": "super-forwards via objc_msgSendSuper2 (nil guard \u2192 nil), then reads its own save keys via objectForKey: into its own ivar slots; exact key/ivar/selector/super sets gated from the pool",
+      "class": "CaveTroll",
+      "code_words": 408,
+      "imp": "0x00d538cc",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_CaveTroll",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 1,
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bf2c"
+      },
+      "own_keys": [
+        "dead",
+        "defendSquare.x",
+        "defendSquare.y",
+        "state"
+      ],
+      "runtime_superclass": "NPC",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "method": "fifteen upper-mid-tier initWithWorld loaders incl. the chain nodes (batch b3l)",
+  "pic_base": "0x0105faf4",
+  "schema": 1
+}

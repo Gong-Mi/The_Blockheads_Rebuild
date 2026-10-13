@@ -1,0 +1,27 @@
+# itemTypeIsTrainCar  [C function]
+# implementation: 0x0057bd18
+# ARM.exidx end: 0x0057bd70
+
+            ;-- itemTypeIsTrainCar(ItemType):
+            0x0057bd18      08d04de2       sub sp, sp, 8               ; itemTypeIsTrainCar(ItemType)
+            0x0057bd1c      00008de5       str r0, [sp]
+            0x0057bd20      00009de5       ldr r0, [sp]
+            0x0057bd24      cc0050e3       cmp r0, 0xcc
+        ┌─< 0x0057bd28      0800000a       beq 0x57bd50
+        │   0x0057bd2c      00009de5       ldr r0, [sp]
+        │   0x0057bd30      cd0050e3       cmp r0, 0xcd
+       ┌──< 0x0057bd34      0500000a       beq 0x57bd50
+       ││   0x0057bd38      00009de5       ldr r0, [sp]
+       ││   0x0057bd3c      ce0050e3       cmp r0, 0xce
+      ┌───< 0x0057bd40      0200000a       beq 0x57bd50
+      │││   0x0057bd44      00009de5       ldr r0, [sp]
+      │││   0x0057bd48      d00050e3       cmp r0, 0xd0
+     ┌────< 0x0057bd4c      0200001a       bne 0x57bd5c
+     │└└└─> 0x0057bd50      010000e3       movw r0, 1
+     │      0x0057bd54      0700cde5       strb r0, [sp, 7]
+     │  ┌─< 0x0057bd58      010000ea       b 0x57bd64
+     └────> 0x0057bd5c      000000e3       movw r0, 0
+        │   0x0057bd60      0700cde5       strb r0, [sp, 7]
+        └─> 0x0057bd64      d700dde1       ldrsb r0, [sp, 7]
+            0x0057bd68      08d08de2       add sp, sp, 8
+            0x0057bd6c      1eff2fe1       bx lr

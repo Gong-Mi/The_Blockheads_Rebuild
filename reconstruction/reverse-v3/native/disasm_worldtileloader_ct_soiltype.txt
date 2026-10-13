@@ -1,0 +1,44 @@
+# CactusTree -[isRequiredSoilType:]
+# types: c12@0:4i8
+# implementation: 0x00b556c0
+# ARM.exidx end: 0x00b5575c
+
+            0x00b556c0      10d04de2       sub sp, sp, 0x10
+            0x00b556c4      013000e3       movw r3, 1
+            0x00b556c8      0c008de5       str r0, [sp, 0xc]
+            0x00b556cc      08108de5       str r1, [sp, 8]
+            0x00b556d0      04208de5       str r2, [sp, 4]
+            0x00b556d4      04009de5       ldr r0, [sp, 4]
+            0x00b556d8      070050e3       cmp r0, 7
+            0x00b556dc      00308de5       str r3, [sp]
+        ┌─< 0x00b556e0      1800000a       beq 0xb55748
+        │   0x00b556e4      010000e3       movw r0, 1
+        │   0x00b556e8      04109de5       ldr r1, [sp, 4]
+        │   0x00b556ec      080051e3       cmp r1, 8
+        │   0x00b556f0      00008de5       str r0, [sp]
+       ┌──< 0x00b556f4      1300000a       beq 0xb55748
+       ││   0x00b556f8      010000e3       movw r0, 1
+       ││   0x00b556fc      04109de5       ldr r1, [sp, 4]
+       ││   0x00b55700      3a0051e3       cmp r1, 0x3a                ; ':'
+       ││   0x00b55704      00008de5       str r0, [sp]
+      ┌───< 0x00b55708      0e00000a       beq 0xb55748
+      │││   0x00b5570c      010000e3       movw r0, 1
+      │││   0x00b55710      04109de5       ldr r1, [sp, 4]
+      │││   0x00b55714      300051e3       cmp r1, 0x30                ; '0'
+      │││   0x00b55718      00008de5       str r0, [sp]
+     ┌────< 0x00b5571c      0900000a       beq 0xb55748
+     ││││   0x00b55720      010000e3       movw r0, 1
+     ││││   0x00b55724      04109de5       ldr r1, [sp, 4]
+     ││││   0x00b55728      310051e3       cmp r1, 0x31                ; '1'
+     ││││   0x00b5572c      00008de5       str r0, [sp]
+    ┌─────< 0x00b55730      0400000a       beq 0xb55748
+    │││││   0x00b55734      04009de5       ldr r0, [sp, 4]
+    │││││   0x00b55738      320050e3       cmp r0, 0x32                ; '2'
+    │││││   0x00b5573c      000000e3       movw r0, 0
+    │││││   0x00b55740      0100a003       moveq r0, 1
+    │││││   0x00b55744      00008de5       str r0, [sp]
+    └└└└└─> 0x00b55748      00009de5       ldr r0, [sp]
+            0x00b5574c      010000e2       and r0, r0, 1
+            0x00b55750      7000afe6       sxtb r0, r0
+            0x00b55754      10d08de2       add sp, sp, 0x10
+            0x00b55758      1eff2fe1       bx lr

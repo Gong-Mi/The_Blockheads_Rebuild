@@ -1,0 +1,31 @@
+# ElevatorShaft -[staticGeometryDrawQuadCountForMacroPos:]
+# types: i16@0:4{?=ii}8
+# implementation: 0x00cafb50
+# ARM.exidx end: 0x00cafbb8
+
+            0x00cafb50      00482de9       push {fp, lr}
+            0x00cafb54      18d04de2       sub sp, sp, 0x18
+            0x00cafb58      54c09fe5       ldr ip, [0x00cafbb4]        ; [0xcafbb4:4]=0x3aff90
+            0x00cafb5c      0cc08fe0       add ip, pc, ip
+            0x00cafb60      48e09fe5       ldr lr, [0x00cafbb0]        ; [0xcafbb0:4]=0xfffff9a4
+            0x00cafb64      0cc09ee7       ldr ip, [lr, ip]
+            0x00cafb68      08208de5       str r2, [sp, 8]
+            0x00cafb6c      0c308de5       str r3, [sp, 0xc]
+            0x00cafb70      04008de5       str r0, [sp, 4]
+            0x00cafb74      00108de5       str r1, [sp]
+            0x00cafb78      04009de5       ldr r0, [sp, 4]
+            0x00cafb7c      00109ce5       ldr r1, [ip]
+            0x00cafb80      010080e0       add r0, r0, r1
+            0x00cafb84      d000d0e1       ldrsb r0, [r0]
+            0x00cafb88      000050e3       cmp r0, 0
+        ┌─< 0x00cafb8c      0200000a       beq 0xcafb9c
+        │   0x00cafb90      000000e3       movw r0, 0
+        │   0x00cafb94      14008de5       str r0, [sp, 0x14]
+       ┌──< 0x00cafb98      010000ea       b 0xcafba4
+       │└─> 0x00cafb9c      020000e3       movw r0, 2
+       │    0x00cafba0      14008de5       str r0, [sp, 0x14]
+       └──> 0x00cafba4      14009de5       ldr r0, [sp, 0x14]
+            0x00cafba8      18d08de2       add sp, sp, 0x18
+            0x00cafbac      0088bde8       pop {fp, pc}
+            0x00cafbb0      a4f9ffff       invalid
+            0x00cafbb4      90ff3a00       mlaseq sl, r0, pc, pc

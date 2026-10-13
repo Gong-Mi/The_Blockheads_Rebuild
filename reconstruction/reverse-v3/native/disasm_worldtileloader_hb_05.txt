@@ -1,0 +1,281 @@
+# Blockhead -[canDigBackWallforTile:atPos:withItem:includeActions:]
+# types: c28@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8{?=ii}12@20c24
+# implementation: 0x00ba9d8c
+# ARM.exidx end: 0x00baa1dc
+
+            0x00ba9d8c      704c2de9       push {r4, r5, r6, sl, fp, lr}
+            0x00ba9d90      10b08de2       add fp, sp, 0x10
+            0x00ba9d94      68d04de2       sub sp, sp, 0x68
+            0x00ba9d98      38c49fe5       ldr ip, [0x00baa1d8]        ; [0xbaa1d8:4]=0x4b5d50
+            0x00ba9d9c      0cc08fe0       add ip, pc, ip
+            0x00ba9da0      08e09be5       ldr lr, [fp, 8]
+            0x00ba9da4      10409be5       ldr r4, [fp, 0x10]
+            0x00ba9da8      0c509be5       ldr r5, [fp, 0xc]
+            0x00ba9dac      006000e3       movw r6, 0
+            0x00ba9db0      20300be5       str r3, [fp, -0x20]
+            0x00ba9db4      1ce00be5       str lr, [fp, -0x1c]
+            0x00ba9db8      24000be5       str r0, [fp, -0x24]
+            0x00ba9dbc      28100be5       str r1, [fp, -0x28]
+            0x00ba9dc0      2c200be5       str r2, [fp, -0x2c]
+            0x00ba9dc4      30500be5       str r5, [fp, -0x30]
+            0x00ba9dc8      31404be5       strb r4, [fp, -0x31]
+            0x00ba9dcc      30001be5       ldr r0, [fp, -0x30]
+            0x00ba9dd0      060050e1       cmp r0, r6
+            0x00ba9dd4      24c08de5       str ip, [sp, 0x24]
+        ┌─< 0x00ba9dd8      f400000a       beq 0xbaa1b0
+        │   0x00ba9ddc      000000e3       movw r0, 0
+        │   0x00ba9de0      2c101be5       ldr r1, [fp, -0x2c]
+        │   0x00ba9de4      000051e1       cmp r1, r0
+       ┌──< 0x00ba9de8      f000000a       beq 0xbaa1b0
+       ││   0x00ba9dec      2c001be5       ldr r0, [fp, -0x2c]
+       ││   0x00ba9df0      39a2f9eb       bl sym.tileIsAirWaterOrSnow_Tile_ ; tileIsAirWaterOrSnow(Tile*)
+       ││   0x00ba9df4      7000afe6       sxtb r0, r0
+       ││   0x00ba9df8      000050e3       cmp r0, 0
+      ┌───< 0x00ba9dfc      eb00000a       beq 0xbaa1b0
+      │││   0x00ba9e00      2c001be5       ldr r0, [fp, -0x2c]
+      │││   0x00ba9e04      0b00d0e5       ldrb r0, [r0, 0xb]
+      │││   0x00ba9e08      000050e3       cmp r0, 0
+     ┌────< 0x00ba9e0c      e700001a       bne 0xbaa1b0
+     ││││   0x00ba9e10      2c001be5       ldr r0, [fp, -0x2c]
+     ││││   0x00ba9e14      0c00d0e5       ldrb r0, [r0, 0xc]
+     ││││   0x00ba9e18      000050e3       cmp r0, 0
+    ┌─────< 0x00ba9e1c      e300001a       bne 0xbaa1b0
+    │││││   0x00ba9e20      2c001be5       ldr r0, [fp, -0x2c]
+    │││││   0x00ba9e24      0300d0e5       ldrb r0, [r0, 3]
+    │││││   0x00ba9e28      000050e3       cmp r0, 0
+   ┌──────< 0x00ba9e2c      df00001a       bne 0xbaa1b0
+   ││││││   0x00ba9e30      2c001be5       ldr r0, [fp, -0x2c]
+   ││││││   0x00ba9e34      0100d0e5       ldrb r0, [r0, 1]
+   ││││││   0x00ba9e38      020050e3       cmp r0, 2
+  ┌───────< 0x00ba9e3c      db00000a       beq 0xbaa1b0
+  │││││││   0x00ba9e40      2c001be5       ldr r0, [fp, -0x2c]
+  │││││││   0x00ba9e44      0100d0e5       ldrb r0, [r0, 1]
+  │││││││   0x00ba9e48      030050e3       cmp r0, 3
+  ────────< 0x00ba9e4c      d700000a       beq 0xbaa1b0
+  │││││││   0x00ba9e50      2c001be5       ldr r0, [fp, -0x2c]
+  │││││││   0x00ba9e54      3ca1f9eb       bl sym.backWallIsMutable_Tile_ ; backWallIsMutable(Tile*)
+  │││││││   0x00ba9e58      7000afe6       sxtb r0, r0
+  │││││││   0x00ba9e5c      000050e3       cmp r0, 0
+  ────────< 0x00ba9e60      0300001a       bne 0xba9e74
+  │││││││   0x00ba9e64      2c001be5       ldr r0, [fp, -0x2c]
+  │││││││   0x00ba9e68      0100d0e5       ldrb r0, [r0, 1]
+  │││││││   0x00ba9e6c      010050e3       cmp r0, 1
+  ────────< 0x00ba9e70      ce00001a       bne 0xbaa1b0
+  ────────> 0x00ba9e74      000000e3       movw r0, 0
+  │││││││   0x00ba9e78      30101be5       ldr r1, [fp, -0x30]
+  │││││││   0x00ba9e7c      000051e1       cmp r1, r0
+  ────────< 0x00ba9e80      c900000a       beq 0xbaa1ac
+  │││││││   0x00ba9e84      38039fe5       ldr r0, [0x00baa1c4]        ; [0xbaa1c4:4]=0xffffbcac
+  │││││││   0x00ba9e88      24109de5       ldr r1, [sp, 0x24]
+  │││││││   0x00ba9e8c      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00ba9e90      0020a0e1       mov r2, r0
+  │││││││   0x00ba9e94      2c339fe5       ldr r3, [0x00baa1c8]        ; [0xbaa1c8:4]=0xffe276ec
+  │││││││   0x00ba9e98      013083e0       add r3, r3, r1
+  │││││││   0x00ba9e9c      28c39fe5       ldr ip, [0x00baa1cc]        ; [0xbaa1cc:4]=0xffe27600
+  │││││││   0x00ba9ea0      01c08ce0       add ip, ip, r1
+  │││││││   0x00ba9ea4      30e01be5       ldr lr, [fp, -0x30]
+  │││││││   0x00ba9ea8      00109ce5       ldr r1, [ip]
+  │││││││   0x00ba9eac      20008de5       str r0, [sp, 0x20]
+  │││││││   0x00ba9eb0      0e00a0e1       mov r0, lr
+  │││││││   0x00ba9eb4      20c09de5       ldr ip, [sp, 0x20]
+  │││││││   0x00ba9eb8      1c208de5       str r2, [sp, 0x1c]
+  │││││││   0x00ba9ebc      18308de5       str r3, [sp, 0x18]
+  │││││││   0x00ba9ec0      3cff2fe1       blx ip
+  │││││││   0x00ba9ec4      38000be5       str r0, [fp, -0x38]
+  │││││││   0x00ba9ec8      24001be5       ldr r0, [fp, -0x24]
+  │││││││   0x00ba9ecc      38201be5       ldr r2, [fp, -0x38]
+  │││││││   0x00ba9ed0      31105be5       ldrb r1, [fp, -0x31]
+  │││││││   0x00ba9ed4      18309de5       ldr r3, [sp, 0x18]
+  │││││││   0x00ba9ed8      00c093e5       ldr ip, [r3]
+  │││││││   0x00ba9edc      14108de5       str r1, [sp, 0x14]
+  │││││││   0x00ba9ee0      0c10a0e1       mov r1, ip
+  │││││││   0x00ba9ee4      14c09de5       ldr ip, [sp, 0x14]
+  │││││││   0x00ba9ee8      7c30afe6       sxtb r3, ip
+  │││││││   0x00ba9eec      1ce09de5       ldr lr, [sp, 0x1c]
+  │││││││   0x00ba9ef0      3eff2fe1       blx lr
+  │││││││   0x00ba9ef4      3c008de5       str r0, [sp, 0x3c]
+  │││││││   0x00ba9ef8      3c009de5       ldr r0, [sp, 0x3c]
+  │││││││   0x00ba9efc      000050e3       cmp r0, 0
+  ────────< 0x00ba9f00      a80000da       ble 0xbaa1a8
+  │││││││   0x00ba9f04      b8029fe5       ldr r0, [0x00baa1c4]        ; [0xbaa1c4:4]=0xffffbcac
+  │││││││   0x00ba9f08      24109de5       ldr r1, [sp, 0x24]
+  │││││││   0x00ba9f0c      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00ba9f10      b8229fe5       ldr r2, [0x00baa1d0]        ; [0xbaa1d0:4]=0xffe27750
+  │││││││   0x00ba9f14      012082e0       add r2, r2, r1
+  │││││││   0x00ba9f18      24301be5       ldr r3, [fp, -0x24]
+  │││││││   0x00ba9f1c      2cc01be5       ldr ip, [fp, -0x2c]
+  │││││││   0x00ba9f20      01c0dce5       ldrb ip, [ip, 1]
+  │││││││   0x00ba9f24      38e01be5       ldr lr, [fp, -0x38]
+  │││││││   0x00ba9f28      001092e5       ldr r1, [r2]
+  │││││││   0x00ba9f2c      10008de5       str r0, [sp, 0x10]
+  │││││││   0x00ba9f30      0300a0e1       mov r0, r3
+  │││││││   0x00ba9f34      0c20a0e1       mov r2, ip
+  │││││││   0x00ba9f38      0e30a0e1       mov r3, lr
+  │││││││   0x00ba9f3c      10c09de5       ldr ip, [sp, 0x10]
+  │││││││   0x00ba9f40      3cff2fe1       blx ip
+  │││││││   0x00ba9f44      7000afe6       sxtb r0, r0
+  │││││││   0x00ba9f48      000050e3       cmp r0, 0
+  ────────< 0x00ba9f4c      9400000a       beq 0xbaa1a4
+  │││││││   0x00ba9f50      2c001be5       ldr r0, [fp, -0x2c]
+  │││││││   0x00ba9f54      0100d0e5       ldrb r0, [r0, 1]
+  │││││││   0x00ba9f58      010050e3       cmp r0, 1
+  ────────< 0x00ba9f5c      8c00001a       bne 0xbaa194
+  │││││││   0x00ba9f60      6c029fe5       ldr r0, [0x00baa1d4]        ; [0xbaa1d4:4]=0xffffc8a0
+  │││││││   0x00ba9f64      24109de5       ldr r1, [sp, 0x24]
+  │││││││   0x00ba9f68      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00ba9f6c      002000e3       movw r2, 0
+  │││││││   0x00ba9f70      38208de5       str r2, [sp, 0x38]
+  │││││││   0x00ba9f74      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x00ba9f78      1c301be5       ldr r3, [fp, -0x1c]
+  │││││││   0x00ba9f7c      011083e2       add r1, r3, 1
+  │││││││   0x00ba9f80      24301be5       ldr r3, [fp, -0x24]
+  │││││││   0x00ba9f84      000090e5       ldr r0, [r0]
+  │││││││   0x00ba9f88      000083e0       add r0, r3, r0
+  │││││││   0x00ba9f8c      000090e5       ldr r0, [r0]
+  │││││││   0x00ba9f90      0c008de5       str r0, [sp, 0xc]
+  │││││││   0x00ba9f94      0200a0e1       mov r0, r2
+  │││││││   0x00ba9f98      0c209de5       ldr r2, [sp, 0xc]
+  │││││││   0x00ba9f9c      e0a3f9eb       bl sym.tileAtWorldPositionLoaded_int__int__World_ ; tileAtWorldPositionLoaded(int, int, World*)
+  │││││││   0x00ba9fa0      001000e3       movw r1, 0
+  │││││││   0x00ba9fa4      34008de5       str r0, [sp, 0x34]
+  │││││││   0x00ba9fa8      34009de5       ldr r0, [sp, 0x34]
+  │││││││   0x00ba9fac      010050e1       cmp r0, r1
+  ────────< 0x00ba9fb0      0a00000a       beq 0xba9fe0
+  │││││││   0x00ba9fb4      34009de5       ldr r0, [sp, 0x34]
+  │││││││   0x00ba9fb8      0100d0e5       ldrb r0, [r0, 1]
+  │││││││   0x00ba9fbc      020050e3       cmp r0, 2
+  ────────< 0x00ba9fc0      0300000a       beq 0xba9fd4
+  │││││││   0x00ba9fc4      34009de5       ldr r0, [sp, 0x34]
+  │││││││   0x00ba9fc8      0100d0e5       ldrb r0, [r0, 1]
+  │││││││   0x00ba9fcc      030050e3       cmp r0, 3
+  ────────< 0x00ba9fd0      0200001a       bne 0xba9fe0
+  ────────> 0x00ba9fd4      38009de5       ldr r0, [sp, 0x38]
+  │││││││   0x00ba9fd8      010080e2       add r0, r0, 1
+  │││││││   0x00ba9fdc      38008de5       str r0, [sp, 0x38]
+  ────────> 0x00ba9fe0      ec019fe5       ldr r0, [0x00baa1d4]        ; [0xbaa1d4:4]=0xffffc8a0
+  │││││││   0x00ba9fe4      24109de5       ldr r1, [sp, 0x24]
+  │││││││   0x00ba9fe8      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00ba9fec      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x00ba9ff0      012082e2       add r2, r2, 1
+  │││││││   0x00ba9ff4      1c101be5       ldr r1, [fp, -0x1c]
+  │││││││   0x00ba9ff8      24301be5       ldr r3, [fp, -0x24]
+  │││││││   0x00ba9ffc      000090e5       ldr r0, [r0]
+  │││││││   0x00baa000      000083e0       add r0, r3, r0
+  │││││││   0x00baa004      000090e5       ldr r0, [r0]
+  │││││││   0x00baa008      08008de5       str r0, [sp, 8]
+  │││││││   0x00baa00c      0200a0e1       mov r0, r2
+  │││││││   0x00baa010      08209de5       ldr r2, [sp, 8]
+  │││││││   0x00baa014      c2a3f9eb       bl sym.tileAtWorldPositionLoaded_int__int__World_ ; tileAtWorldPositionLoaded(int, int, World*)
+  │││││││   0x00baa018      001000e3       movw r1, 0
+  │││││││   0x00baa01c      30008de5       str r0, [sp, 0x30]
+  │││││││   0x00baa020      30009de5       ldr r0, [sp, 0x30]
+  │││││││   0x00baa024      010050e1       cmp r0, r1
+  ────────< 0x00baa028      0a00000a       beq 0xbaa058
+  │││││││   0x00baa02c      30009de5       ldr r0, [sp, 0x30]
+  │││││││   0x00baa030      0100d0e5       ldrb r0, [r0, 1]
+  │││││││   0x00baa034      020050e3       cmp r0, 2
+  ────────< 0x00baa038      0300000a       beq 0xbaa04c
+  │││││││   0x00baa03c      30009de5       ldr r0, [sp, 0x30]
+  │││││││   0x00baa040      0100d0e5       ldrb r0, [r0, 1]
+  │││││││   0x00baa044      030050e3       cmp r0, 3
+  ────────< 0x00baa048      0200001a       bne 0xbaa058
+  ────────> 0x00baa04c      38009de5       ldr r0, [sp, 0x38]
+  │││││││   0x00baa050      010080e2       add r0, r0, 1
+  │││││││   0x00baa054      38008de5       str r0, [sp, 0x38]
+  ────────> 0x00baa058      38009de5       ldr r0, [sp, 0x38]
+  │││││││   0x00baa05c      020050e3       cmp r0, 2
+  ────────< 0x00baa060      020000ba       blt 0xbaa070
+  │││││││   0x00baa064      010000e3       movw r0, 1
+  │││││││   0x00baa068      11004be5       strb r0, [fp, -0x11]
+  ────────< 0x00baa06c      510000ea       b 0xbaa1b8
+  ────────> 0x00baa070      5c019fe5       ldr r0, [0x00baa1d4]        ; [0xbaa1d4:4]=0xffffc8a0
+  │││││││   0x00baa074      24109de5       ldr r1, [sp, 0x24]
+  │││││││   0x00baa078      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00baa07c      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x00baa080      012042e2       sub r2, r2, 1
+  │││││││   0x00baa084      1c101be5       ldr r1, [fp, -0x1c]
+  │││││││   0x00baa088      24301be5       ldr r3, [fp, -0x24]
+  │││││││   0x00baa08c      000090e5       ldr r0, [r0]
+  │││││││   0x00baa090      000083e0       add r0, r3, r0
+  │││││││   0x00baa094      000090e5       ldr r0, [r0]
+  │││││││   0x00baa098      04008de5       str r0, [sp, 4]
+  │││││││   0x00baa09c      0200a0e1       mov r0, r2
+  │││││││   0x00baa0a0      04209de5       ldr r2, [sp, 4]
+  │││││││   0x00baa0a4      9ea3f9eb       bl sym.tileAtWorldPositionLoaded_int__int__World_ ; tileAtWorldPositionLoaded(int, int, World*)
+  │││││││   0x00baa0a8      001000e3       movw r1, 0
+  │││││││   0x00baa0ac      2c008de5       str r0, [sp, 0x2c]
+  │││││││   0x00baa0b0      2c009de5       ldr r0, [sp, 0x2c]
+  │││││││   0x00baa0b4      010050e1       cmp r0, r1
+  ────────< 0x00baa0b8      0a00000a       beq 0xbaa0e8
+  │││││││   0x00baa0bc      2c009de5       ldr r0, [sp, 0x2c]
+  │││││││   0x00baa0c0      0100d0e5       ldrb r0, [r0, 1]
+  │││││││   0x00baa0c4      020050e3       cmp r0, 2
+  ────────< 0x00baa0c8      0300000a       beq 0xbaa0dc
+  │││││││   0x00baa0cc      2c009de5       ldr r0, [sp, 0x2c]
+  │││││││   0x00baa0d0      0100d0e5       ldrb r0, [r0, 1]
+  │││││││   0x00baa0d4      030050e3       cmp r0, 3
+  ────────< 0x00baa0d8      0200001a       bne 0xbaa0e8
+  ────────> 0x00baa0dc      38009de5       ldr r0, [sp, 0x38]
+  │││││││   0x00baa0e0      010080e2       add r0, r0, 1
+  │││││││   0x00baa0e4      38008de5       str r0, [sp, 0x38]
+  ────────> 0x00baa0e8      38009de5       ldr r0, [sp, 0x38]
+  │││││││   0x00baa0ec      020050e3       cmp r0, 2
+  ────────< 0x00baa0f0      020000ba       blt 0xbaa100
+  │││││││   0x00baa0f4      010000e3       movw r0, 1
+  │││││││   0x00baa0f8      11004be5       strb r0, [fp, -0x11]
+  ────────< 0x00baa0fc      2d0000ea       b 0xbaa1b8
+  ────────> 0x00baa100      cc009fe5       ldr r0, [0x00baa1d4]        ; [0xbaa1d4:4]=0xffffc8a0
+  │││││││   0x00baa104      24109de5       ldr r1, [sp, 0x24]
+  │││││││   0x00baa108      010090e7       ldr r0, [r0, r1]
+  │││││││   0x00baa10c      20201be5       ldr r2, [fp, -0x20]
+  │││││││   0x00baa110      1c301be5       ldr r3, [fp, -0x1c]
+  │││││││   0x00baa114      011043e2       sub r1, r3, 1
+  │││││││   0x00baa118      24301be5       ldr r3, [fp, -0x24]
+  │││││││   0x00baa11c      000090e5       ldr r0, [r0]
+  │││││││   0x00baa120      000083e0       add r0, r3, r0
+  │││││││   0x00baa124      000090e5       ldr r0, [r0]
+  │││││││   0x00baa128      00008de5       str r0, [sp]
+  │││││││   0x00baa12c      0200a0e1       mov r0, r2
+  │││││││   0x00baa130      00209de5       ldr r2, [sp]
+  │││││││   0x00baa134      7aa3f9eb       bl sym.tileAtWorldPositionLoaded_int__int__World_ ; tileAtWorldPositionLoaded(int, int, World*)
+  │││││││   0x00baa138      001000e3       movw r1, 0
+  │││││││   0x00baa13c      28008de5       str r0, [sp, 0x28]
+  │││││││   0x00baa140      28009de5       ldr r0, [sp, 0x28]
+  │││││││   0x00baa144      010050e1       cmp r0, r1
+  ────────< 0x00baa148      0a00000a       beq 0xbaa178
+  │││││││   0x00baa14c      28009de5       ldr r0, [sp, 0x28]
+  │││││││   0x00baa150      0100d0e5       ldrb r0, [r0, 1]
+  │││││││   0x00baa154      020050e3       cmp r0, 2
+  ────────< 0x00baa158      0300000a       beq 0xbaa16c
+  │││││││   0x00baa15c      28009de5       ldr r0, [sp, 0x28]
+  │││││││   0x00baa160      0100d0e5       ldrb r0, [r0, 1]
+  │││││││   0x00baa164      030050e3       cmp r0, 3
+  ────────< 0x00baa168      0200001a       bne 0xbaa178
+  ────────> 0x00baa16c      38009de5       ldr r0, [sp, 0x38]
+  │││││││   0x00baa170      010080e2       add r0, r0, 1
+  │││││││   0x00baa174      38008de5       str r0, [sp, 0x38]
+  ────────> 0x00baa178      38009de5       ldr r0, [sp, 0x38]
+  │││││││   0x00baa17c      020050e3       cmp r0, 2
+  ────────< 0x00baa180      020000ba       blt 0xbaa190
+  │││││││   0x00baa184      010000e3       movw r0, 1
+  │││││││   0x00baa188      11004be5       strb r0, [fp, -0x11]
+  ────────< 0x00baa18c      090000ea       b 0xbaa1b8
+  ────────> 0x00baa190      020000ea       b 0xbaa1a0
+  ────────> 0x00baa194      010000e3       movw r0, 1
+  │││││││   0x00baa198      11004be5       strb r0, [fp, -0x11]
+  ────────< 0x00baa19c      050000ea       b 0xbaa1b8
+  ────────< 0x00baa1a0      ffffffea       b 0xbaa1a4
+  ────────> 0x00baa1a4      ffffffea       b 0xbaa1a8
+  ────────> 0x00baa1a8      ffffffea       b 0xbaa1ac
+  ────────> 0x00baa1ac      ffffffea       b 0xbaa1b0
+  └└└└└└└─> 0x00baa1b0      000000e3       movw r0, 0
+            0x00baa1b4      11004be5       strb r0, [fp, -0x11]
+  ────────> 0x00baa1b8      d1015be1       ldrsb r0, [fp, -0x11]
+            0x00baa1bc      10d04be2       sub sp, fp, 0x10
+            0x00baa1c0      708cbde8       pop {r4, r5, r6, sl, fp, pc}
+            0x00baa1c4      acbcffff       invalid
+            0x00baa1c8      ec76e2ff       invalid
+            0x00baa1cc      0076e2ff       invalid
+            0x00baa1d0      5077e2ff       invalid
+            0x00baa1d4      a0c8ffff       invalid
+            0x00baa1d8      505d4b00       subeq r5, fp, r0, asr sp

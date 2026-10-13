@@ -1,0 +1,42 @@
+# tileIsBurnableBlock  [C function]
+# implementation: 0x00a140ec
+# ARM.exidx end: 0x00a14180
+
+            ;-- tileIsBurnableBlock(Tile*):
+            0x00a140ec      08d04de2       sub sp, sp, 8               ; tileIsBurnableBlock(Tile*)
+            0x00a140f0      011000e3       movw r1, 1
+            0x00a140f4      04008de5       str r0, [sp, 4]
+            0x00a140f8      04009de5       ldr r0, [sp, 4]
+            0x00a140fc      0000d0e5       ldrb r0, [r0]
+            0x00a14100      090050e3       cmp r0, 9
+            0x00a14104      00108de5       str r1, [sp]
+        ┌─< 0x00a14108      1700000a       beq 0xa1416c
+        │   0x00a1410c      010000e3       movw r0, 1
+        │   0x00a14110      04109de5       ldr r1, [sp, 4]
+        │   0x00a14114      0010d1e5       ldrb r1, [r1]
+        │   0x00a14118      150051e3       cmp r1, 0x15
+        │   0x00a1411c      00008de5       str r0, [sp]
+       ┌──< 0x00a14120      1100000a       beq 0xa1416c
+       ││   0x00a14124      010000e3       movw r0, 1
+       ││   0x00a14128      04109de5       ldr r1, [sp, 4]
+       ││   0x00a1412c      0010d1e5       ldrb r1, [r1]
+       ││   0x00a14130      160051e3       cmp r1, 0x16
+       ││   0x00a14134      00008de5       str r0, [sp]
+      ┌───< 0x00a14138      0b00000a       beq 0xa1416c
+      │││   0x00a1413c      010000e3       movw r0, 1
+      │││   0x00a14140      04109de5       ldr r1, [sp, 4]
+      │││   0x00a14144      0010d1e5       ldrb r1, [r1]
+      │││   0x00a14148      170051e3       cmp r1, 0x17
+      │││   0x00a1414c      00008de5       str r0, [sp]
+     ┌────< 0x00a14150      0500000a       beq 0xa1416c
+     ││││   0x00a14154      04009de5       ldr r0, [sp, 4]
+     ││││   0x00a14158      0000d0e5       ldrb r0, [r0]
+     ││││   0x00a1415c      200050e3       cmp r0, 0x20
+     ││││   0x00a14160      000000e3       movw r0, 0
+     ││││   0x00a14164      0100a003       moveq r0, 1
+     ││││   0x00a14168      00008de5       str r0, [sp]
+     └└└└─> 0x00a1416c      00009de5       ldr r0, [sp]
+            0x00a14170      010000e2       and r0, r0, 1
+            0x00a14174      7000afe6       sxtb r0, r0
+            0x00a14178      08d08de2       add sp, sp, 8
+            0x00a1417c      1eff2fe1       bx lr

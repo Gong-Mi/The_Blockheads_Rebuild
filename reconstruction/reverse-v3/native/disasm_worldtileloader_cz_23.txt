@@ -1,0 +1,74 @@
+# tileIsDeadTreeTrunk  [C function]
+# implementation: 0x00a137e8
+# ARM.exidx end: 0x00a138fc
+
+            ;-- tileIsDeadTreeTrunk(Tile*):
+            0x00a137e8      0cd04de2       sub sp, sp, 0xc             ; tileIsDeadTreeTrunk(Tile*)
+            0x00a137ec      001000e3       movw r1, 0
+            0x00a137f0      002000e3       movw r2, 0
+            0x00a137f4      08008de5       str r0, [sp, 8]
+            0x00a137f8      08009de5       ldr r0, [sp, 8]
+            0x00a137fc      020050e1       cmp r0, r2
+            0x00a13800      04108de5       str r1, [sp, 4]
+        ┌─< 0x00a13804      3700000a       beq 0xa138e8
+        │   0x00a13808      010000e3       movw r0, 1
+        │   0x00a1380c      08109de5       ldr r1, [sp, 8]
+        │   0x00a13810      0310d1e5       ldrb r1, [r1, 3]
+        │   0x00a13814      1d0051e3       cmp r1, 0x1d
+        │   0x00a13818      00008de5       str r0, [sp]
+       ┌──< 0x00a1381c      2f00000a       beq 0xa138e0
+       ││   0x00a13820      010000e3       movw r0, 1
+       ││   0x00a13824      08109de5       ldr r1, [sp, 8]
+       ││   0x00a13828      0310d1e5       ldrb r1, [r1, 3]
+       ││   0x00a1382c      1f0051e3       cmp r1, 0x1f
+       ││   0x00a13830      00008de5       str r0, [sp]
+      ┌───< 0x00a13834      2900000a       beq 0xa138e0
+      │││   0x00a13838      010000e3       movw r0, 1
+      │││   0x00a1383c      08109de5       ldr r1, [sp, 8]
+      │││   0x00a13840      0310d1e5       ldrb r1, [r1, 3]
+      │││   0x00a13844      210051e3       cmp r1, 0x21                ; '!'
+      │││   0x00a13848      00008de5       str r0, [sp]
+     ┌────< 0x00a1384c      2300000a       beq 0xa138e0
+     ││││   0x00a13850      010000e3       movw r0, 1
+     ││││   0x00a13854      08109de5       ldr r1, [sp, 8]
+     ││││   0x00a13858      0310d1e5       ldrb r1, [r1, 3]
+     ││││   0x00a1385c      240051e3       cmp r1, 0x24                ; '$'
+     ││││   0x00a13860      00008de5       str r0, [sp]
+    ┌─────< 0x00a13864      1d00000a       beq 0xa138e0
+    │││││   0x00a13868      010000e3       movw r0, 1
+    │││││   0x00a1386c      08109de5       ldr r1, [sp, 8]
+    │││││   0x00a13870      0310d1e5       ldrb r1, [r1, 3]
+    │││││   0x00a13874      260051e3       cmp r1, 0x26                ; '&'
+    │││││   0x00a13878      00008de5       str r0, [sp]
+   ┌──────< 0x00a1387c      1700000a       beq 0xa138e0
+   ││││││   0x00a13880      010000e3       movw r0, 1
+   ││││││   0x00a13884      08109de5       ldr r1, [sp, 8]
+   ││││││   0x00a13888      0310d1e5       ldrb r1, [r1, 3]
+   ││││││   0x00a1388c      5d0051e3       cmp r1, 0x5d                ; ']'
+   ││││││   0x00a13890      00008de5       str r0, [sp]
+  ┌───────< 0x00a13894      1100000a       beq 0xa138e0
+  │││││││   0x00a13898      010000e3       movw r0, 1
+  │││││││   0x00a1389c      08109de5       ldr r1, [sp, 8]
+  │││││││   0x00a138a0      0310d1e5       ldrb r1, [r1, 3]
+  │││││││   0x00a138a4      1c0051e3       cmp r1, 0x1c
+  │││││││   0x00a138a8      00008de5       str r0, [sp]
+  ────────< 0x00a138ac      0b00000a       beq 0xa138e0
+  │││││││   0x00a138b0      010000e3       movw r0, 1
+  │││││││   0x00a138b4      08109de5       ldr r1, [sp, 8]
+  │││││││   0x00a138b8      0310d1e5       ldrb r1, [r1, 3]
+  │││││││   0x00a138bc      280051e3       cmp r1, 0x28                ; '('
+  │││││││   0x00a138c0      00008de5       str r0, [sp]
+  ────────< 0x00a138c4      0500000a       beq 0xa138e0
+  │││││││   0x00a138c8      08009de5       ldr r0, [sp, 8]
+  │││││││   0x00a138cc      0300d0e5       ldrb r0, [r0, 3]
+  │││││││   0x00a138d0      2a0050e3       cmp r0, 0x2a                ; '*'
+  │││││││   0x00a138d4      000000e3       movw r0, 0
+  │││││││   0x00a138d8      0100a003       moveq r0, 1
+  │││││││   0x00a138dc      00008de5       str r0, [sp]
+  └└└└└└──> 0x00a138e0      00009de5       ldr r0, [sp]
+        │   0x00a138e4      04008de5       str r0, [sp, 4]
+        └─> 0x00a138e8      04009de5       ldr r0, [sp, 4]
+            0x00a138ec      010000e2       and r0, r0, 1
+            0x00a138f0      7000afe6       sxtb r0, r0
+            0x00a138f4      0cd08de2       add sp, sp, 0xc
+            0x00a138f8      1eff2fe1       bx lr

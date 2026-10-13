@@ -1,0 +1,210 @@
+{
+  "claim": "Torch saves itemType/dataA/dataB/connectionType as numberWithInt: boxes (dataA@80/dataB@82 are ldrh zero-extended halfwords) plus nil-guarded DIRECT lightDict (Torch.light@56) and ownerID (shared DynamicObject.ownerID@36); TradingPost stores a nil-guarded DIRECT sellerClientName@112, builds a local NSMutableArray of per-item [saveData] dicts EXCLUDING itemType==11 entries (saveData is a selector on each item of sellSlot@100, not an ivar), and saves priceTier@108/coinCount@104 numberWithInt: plus the LIVE sellSlot array DIRECT; FireObject is the first numberWithFloat: batch - burnTimer@56 and the four float32 lanes of spreadTimers@60 (spreadTimer_0..3, vldr s0 [r3, #0/4/8/0xc]) are float-boxed, lightDict DIRECT from FireObject.light@76 nil-guarded; 10 overrides remain, read-back/roundtrip unresolved",
+  "classes": [
+    {
+      "boundary": "0x004b69e0",
+      "class": "Torch",
+      "code_words": 266,
+      "imp": "0x004b65b8",
+      "keys": [
+        {
+          "cfstring_object": "0x00f73498",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x004b6740",
+          "ivar": "OBJC_IVAR_$_Torch.itemType",
+          "ivar_offset": 64,
+          "key": "itemType",
+          "set_object_site": "0x004b6764"
+        },
+        {
+          "cfstring_object": "0x00f734a8",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x004b67a0",
+          "ivar": "OBJC_IVAR_$_Torch.dataA",
+          "ivar_offset": 80,
+          "key": "dataA",
+          "set_object_site": "0x004b67c4"
+        },
+        {
+          "cfstring_object": "0x00f734b8",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x004b6800",
+          "ivar": "OBJC_IVAR_$_Torch.dataB",
+          "ivar_offset": 82,
+          "key": "dataB",
+          "set_object_site": "0x004b6824"
+        },
+        {
+          "cfstring_object": "0x00f73488",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x004b6860",
+          "ivar": "OBJC_IVAR_$_Torch.connectionType",
+          "ivar_offset": 60,
+          "key": "connectionType",
+          "set_object_site": "0x004b6884"
+        },
+        {
+          "cfstring_object": "0x00f734c8",
+          "conversion": "direct_object",
+          "ivar": "OBJC_IVAR_$_Torch.light",
+          "ivar_offset": 56,
+          "key": "lightDict",
+          "set_object_site": "0x004b6900"
+        },
+        {
+          "cfstring_object": "0x00f73478",
+          "conversion": "direct_object",
+          "ivar": "OBJC_IVAR_$_DynamicObject.ownerID",
+          "ivar_offset": 36,
+          "key": "ownerID",
+          "set_object_site": "0x004b6980"
+        }
+      ],
+      "site_gates": [
+        "second_getsavedict_site@0x004b660c",
+        "ownerID_guard_cmp@0x004b6924",
+        "ownerID_guard_beq@0x004b6928",
+        "light_guard_cmp@0x004b68b8",
+        "light_guard_beq@0x004b68bc",
+        "dataA_ldrh@0x004b6784",
+        "dataB_ldrh@0x004b67e4"
+      ],
+      "style": "super_plus_own_keys",
+      "super_class_struct": "0x00e90490",
+      "super_site": "0x004b660c"
+    },
+    {
+      "boundary": "0x005e7024",
+      "class": "TradingPost",
+      "code_words": 327,
+      "imp": "0x005e6b08",
+      "keys": [
+        {
+          "cfstring_object": "0x00f7e0b8",
+          "conversion": "direct_object",
+          "ivar": "OBJC_IVAR_$_TradingPost.sellerClientName",
+          "ivar_offset": 112,
+          "key": "sellerClientName",
+          "set_object_site": "0x005e6be8"
+        },
+        {
+          "cfstring_object": "0x00f7e098",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x005e6f38",
+          "ivar": "OBJC_IVAR_$_TradingPost.coinCount",
+          "ivar_offset": 104,
+          "key": "coinCount",
+          "set_object_site": "0x005e6f5c"
+        },
+        {
+          "cfstring_object": "0x00f7e0a8",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x005e6f98",
+          "ivar": "OBJC_IVAR_$_TradingPost.priceTier",
+          "ivar_offset": 108,
+          "key": "priceTier",
+          "set_object_site": "0x005e6fbc"
+        },
+        {
+          "cfstring_object": "0x00f7dff8",
+          "conversion": "direct_object",
+          "ivar": "OBJC_IVAR_$_TradingPost.sellSlot",
+          "ivar_offset": 100,
+          "key": "sellSlot",
+          "set_object_site": "0x005e6efc"
+        }
+      ],
+      "site_gates": [
+        "seller_guard_cmp@0x005e6b8c",
+        "seller_guard_beq@0x005e6b90",
+        "enumerate_site@0x005e6cb8",
+        "itemtype_msg_site@0x005e6d64",
+        "itemtype_cmp_0xb@0x005e6d68",
+        "itemtype_beq@0x005e6d6c",
+        "savedata_msg_site@0x005e6db4",
+        "addobject_site@0x005e6dd4"
+      ],
+      "style": "super_plus_own_keys",
+      "super_class_struct": "0x00e906e8",
+      "super_site": "0x005e6b5c"
+    },
+    {
+      "boundary": "0x006753ec",
+      "class": "FireObject",
+      "code_words": 244,
+      "imp": "0x0067501c",
+      "keys": [
+        {
+          "cfstring_object": "0x00f82558",
+          "conversion": "numberWithFloat:",
+          "conversion_site": "0x00675178",
+          "ivar": "OBJC_IVAR_$_FireObject.burnTimer",
+          "ivar_offset": 56,
+          "key": "burnTimer",
+          "set_object_site": "0x0067519c"
+        },
+        {
+          "cfstring_object": "0x00f82568",
+          "conversion": "numberWithFloat:",
+          "conversion_site": "0x006751d8",
+          "ivar": "OBJC_IVAR_$_FireObject.spreadTimers",
+          "ivar_offset": 60,
+          "key": "spreadTimer_0",
+          "set_object_site": "0x006751fc"
+        },
+        {
+          "cfstring_object": "0x00f82578",
+          "conversion": "numberWithFloat:",
+          "conversion_site": "0x00675238",
+          "ivar": "OBJC_IVAR_$_FireObject.spreadTimers",
+          "ivar_offset": 60,
+          "key": "spreadTimer_1",
+          "set_object_site": "0x0067525c"
+        },
+        {
+          "cfstring_object": "0x00f82588",
+          "conversion": "numberWithFloat:",
+          "conversion_site": "0x00675298",
+          "ivar": "OBJC_IVAR_$_FireObject.spreadTimers",
+          "ivar_offset": 60,
+          "key": "spreadTimer_2",
+          "set_object_site": "0x006752bc"
+        },
+        {
+          "cfstring_object": "0x00f82598",
+          "conversion": "numberWithFloat:",
+          "conversion_site": "0x006752f8",
+          "ivar": "OBJC_IVAR_$_FireObject.spreadTimers",
+          "ivar_offset": 60,
+          "key": "spreadTimer_3",
+          "set_object_site": "0x0067531c"
+        },
+        {
+          "cfstring_object": "0x00f825a8",
+          "conversion": "direct_object",
+          "ivar": "OBJC_IVAR_$_FireObject.light",
+          "ivar_offset": 76,
+          "key": "lightDict",
+          "set_object_site": "0x00675398"
+        }
+      ],
+      "site_gates": [
+        "second_getsavedict_site@0x00675070",
+        "burn_vldr@0x0067513c",
+        "spread_vldr_0@0x006751bc",
+        "spread_vldr_1@0x0067521c",
+        "spread_vldr_2@0x0067527c",
+        "spread_vldr_3@0x006752dc",
+        "light_guard_cmp@0x00675350",
+        "light_guard_beq@0x00675354"
+      ],
+      "style": "super_plus_own_keys",
+      "super_class_struct": "0x00e90918",
+      "super_site": "0x00675070"
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "method": "getSaveDict key pairings (batch 2j)",
+  "pic_base": "0x0105faf4",
+  "schema": 1
+}

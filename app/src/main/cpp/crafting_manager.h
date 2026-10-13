@@ -27,6 +27,13 @@ public:
     std::map<uint64_t, ActiveCraft> activeCrafts;
     std::mutex craftMutex;
 
+    // The crafting completion transition, as a counter the caller drains. The manager deliberately does not
+    // touch the audio layer itself: the recovered mapping says the original plays fanfare.wav when a craft is
+    // completed/delivered (Blockhead -[craftProgressUICompleteButtonTapped], and again when the crafted
+    // blockhead is teleported to the workbench), and it is game_engine's job to turn that into a queued sound
+    // - a counter keeps the manager headless and lets a test drive the event.
+    int craftsCompleted = 0;
+
     CraftingManager() {}
 
     bool canCraft(Player* p, int recipeId) {
@@ -106,6 +113,7 @@ public:
                 ac.progress = std::min(1.0f, ac.progress + dt / ac.totalTime);
                 if (ac.progress >= 1.0f) {
                     ac.finished = true;
+                    ++craftsCompleted;   // counted once, at the transition
                 }
             }
             if (ac.finished) {

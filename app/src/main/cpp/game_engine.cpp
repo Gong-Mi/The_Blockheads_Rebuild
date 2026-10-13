@@ -16,11 +16,19 @@
 #include "world_renderer.h"
 #include "settings_manager.h"
 
+// Original client assembly (batch b5a/b5b): the recovered original-save path.
+#include "original_client_app.h"
+#include "original_dynamic_import.h"
+#include "original_world_import.h"
+
 #undef LOG_TAG
 #define LOG_TAG "BlockheadsNative"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
 
 // 全局实例
+#include "sound_preload_registry.h"
+static blockheads::replacement::SoundPreloadRegistry g_soundPreload;
+
 static GameWorld* g_world = nullptr;
 EntityManager* g_entities = nullptr;
 BlockheadAI* g_ai = nullptr;
@@ -28,6 +36,10 @@ CraftingManager* g_crafting = nullptr;
 std::string g_storagePath;
 std::recursive_mutex g_engineMutex;
 FILE* g_logFile = nullptr;
+
+// The original-client assembly handle (kept alive for later slices; see the
+// OriginalClientApp wiring inside initNative).
+static bh176::OriginalClientApp g_originalClientApp;
 
 void logToFile(const char* fmt, ...) {
     if(!g_logFile) return;
@@ -127,7 +139,133 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
     
     logToFile("Managers allocated");
 
-    if (!PersistenceManager::loadWorld(g_storagePath.c_str(), g_world, g_entities)) {
+    // ---- Original client assembly path (b5b device wiring) ----------------
+    // If an assembled original save snapshot is present on the device, open it
+    // through the recovered client path and write the load report. This wires
+    // OriginalClientApp into the production APK's startup; it does not replace
+    // the replacement-world path below, and a missing snapshot is an explicit
+    // log line, never invented data.
+    {
+        const std::string snapshotDir = g_storagePath + "/original-snapshot";
+        std::string originalError;
+        if (g_originalClientApp.open(snapshotDir, &originalError)) {
+            if (g_originalClientApp.loadDynamicObjects(&originalError)) {
+                const bh176::ClientAppReport& r = g_originalClientApp.report();
+                logToFile("Original snapshot loaded: blocks=%zu records=%zu objects=%zu stub=%zu unidentified=%zu out_of_range=%zu opaque=%zu malformed=%zu",
+                          r.blocks, r.dynamic_records, r.dynamic_objects,
+                          r.stub_objects, r.unidentified_objects,
+                          r.out_of_range_objects, r.opaque_records,
+                          r.malformed_records);
+                for (const auto& entry : r.per_type) {
+                    logToFile("  original type %d: %zu object(s)", entry.first,
+                              entry.second);
+                }
+                // Layer 3: the dynamic domain materialized into markers. This
+                // line reports data availability, not gameplay consumption.
+                const bh176::DynamicImportReport& mat =
+                    g_originalClientApp.materializationReport();
+                logToFile("Original dynamic markers: materialized=%zu (floatPos=%zu integer=%zu recovered=%zu stub=%zu) without_position=%zu out_of_world=%zu",
+                          mat.materialized, mat.from_float_pos,
+                          mat.from_integer_pos, mat.recovered_objects,
+                          mat.stub_objects, mat.without_position,
+                          mat.out_of_world);
+                const bh176::OriginalWorldState& ws =
+                    g_originalClientApp.worldState();
+                logToFile("Original world state: worldv2=%d randomSeed=%lld portal=%lld expert=%d maxPlayers=%s player_records=%zu opaque_blobs=%zu",
+                          ws.worldv2_present ? 1 : 0, ws.random_seed,
+                          ws.portal_level, ws.expert_mode ? 1 : 0,
+                          ws.max_players.c_str(), ws.player_records,
+                          ws.opaque_data_blobs);
+                const std::string reportPath =
+                    g_storagePath + "/original_snapshot_report.json";
+                FILE* reportFile = fopen(reportPath.c_str(), "w");
+                if (reportFile) {
+                    const std::string json = g_originalClientApp.toJson();
+                    fwrite(json.data(), 1, json.size(), reportFile);
+                    fclose(reportFile);
+                    logToFile("Original snapshot report written: %s",
+                              reportPath.c_str());
+                } else {
+                    logToFile("Original snapshot report NOT writable: %s",
+                              reportPath.c_str());
+                }
+            } else {
+                logToFile("Original snapshot open OK but dynamic load failed: %s",
+                          originalError.c_str());
+            }
+        } else {
+            logToFile("Original snapshot not present at %s (%s)",
+                      snapshotDir.c_str(), originalError.c_str());
+        }
+    }
+
+    // World data source, layer 2: when an assembled original snapshot is
+    // present AND no replacement world.bin exists yet, its decoded block
+    // domain becomes the seed terrain (one-time import). After the first
+    // save the world.bin becomes authoritative — later launches load it and
+    // the player's edits survive; the snapshot stays as the evidence copy.
+    // Import is all-or-nothing; on any failure the log names the error and
+    // the old generation path runs. Dynamic objects / player state are NOT
+    // imported yet (their consumers are separate gaps).
+    bool originalTerrainActive = false;
+    const bool hasWorldBin =
+        std::filesystem::exists(std::filesystem::path(g_storagePath) /
+                                "world.bin");
+    if (g_originalClientApp.report().blocks > 0 && !hasWorldBin) {
+        bh176::WorldImportReport importReport;
+        // Layer 4 consumer: the original save's randomSeed becomes the
+        // replacement generation seed. It only affects chunks the snapshot
+        // does NOT cover; with no seed the generator is unchanged.
+        {
+            const bh176::OriginalWorldState& ws =
+                g_originalClientApp.worldState();
+            if (ws.worldv2_present && g_world) {
+                g_world->setGenerationSeed(ws.random_seed);
+                // Layer 4 clock: the save's own worldTime (seconds) seeds the
+                // world clock so season gates and day/night continue where the
+                // original left off (this save: 900.0 = exactly one day).
+                g_world->worldSeconds = g_originalClientApp.worldTime();
+
+            // Audio: register the original's load-time sound names (World -[incrementalLoad], 32 of
+            // them, generated with a --check gate into sound_preload_list.h). This only records what
+            // the original names - it plays nothing and claims no playback order. 26 of the 32 are
+            // still unreferenced by this replacement, which is the wiring backlog the artifact lists.
+            g_soundPreload.registerLoadTimeSounds();
+                g_world->hasWorldSeconds = true;
+                logToFile("Original world seed applied: randomSeed=%lld "
+                          "(offset %.1f,%.1f)",
+                          ws.random_seed, g_world->generationSeedOffsetX(),
+                          g_world->generationSeedOffsetY());
+            }
+        }
+        if (bh176::importOriginalWorld(g_originalClientApp.world(), *g_world,
+                                       importReport)) {
+            originalTerrainActive = true;
+            logToFile("Original terrain imported: blocks=%zu tiles=%zu mapped=%zu unmapped=%zu item0/air=%zu",
+                      importReport.blocks_imported, importReport.tiles_total,
+                      importReport.tiles_mapped, importReport.tiles_unmapped,
+                      importReport.tiles_empty);
+            for (const auto& [tileType, count] : importReport.unmapped_by_tile_type) {
+                logToFile("  original TileType %d: %zu tile(s) without a direct item mapping",
+                          tileType, count);
+            }
+            // Seed save: the imported terrain becomes the authoritative
+            // world.bin so a later launch (with or without the snapshot)
+            // loads the same world instead of re-importing over edits.
+            PersistenceManager::saveWorld(g_storagePath.c_str(), g_world, g_entities);
+            logToFile("Imported terrain saved as world.bin (seed)");
+        } else {
+            logToFile("Original terrain import FAILED: %s",
+                      importReport.error.c_str());
+        }
+    }
+
+    if (originalTerrainActive) {
+        logToFile("Original terrain active; skipping world generation");
+        g_entities->player.x = 16.0f;
+        g_entities->player.y = 90.0f;
+        g_entities->inventoryDirty = true;
+    } else if (!PersistenceManager::loadWorld(g_storagePath.c_str(), g_world, g_entities)) {
         logToFile("No save found or load failed, generating new world...");
         for (int cx = -2; cx <= 2; cx++) {
             for (int cy = 0; cy <= 4; cy++) {
@@ -137,10 +275,11 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_initNative(JNIEnv* env, jobj
         g_entities->player.x = 0.0f;
         g_entities->player.y = 100.0f;
         
-        // Initial supplies for logic verification
-        g_entities->player.addItem(ITEM_STICK, 10);
-        g_entities->player.addItem(ITEM_FLINT, 10);
-        g_entities->player.addItem(BLOCK_WOOD, 10);
+        // Explicit original ItemType -> compatibility id boundary. These produce
+        // the identical legacy slots/counts; world.bin ids are not renumbered.
+        g_entities->player.addOriginalItem(ORIGINAL_ITEM_STICK, 10);
+        g_entities->player.addOriginalItem(ORIGINAL_ITEM_FLINT, 10);
+        g_entities->player.addOriginalItem(ORIGINAL_BLOCK_WOOD, 10);
         g_entities->inventoryDirty = true;
     } else {
         logToFile("World loaded successfully");
@@ -336,21 +475,42 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
     if (frameLog++ % 600 == 0) logToFile("Frame %d", frameLog);
 
     if (g_world && g_entities && g_ai) {
-        // Time Acceleration Logic
-        float timeSpeed = 1.0f;
-        if (g_ai->isSleeping) {
-            timeSpeed = 100.0f; // 100x speed
-            // Wake up if it's morning (0.25 is usually dawn)
-            if (g_renderer && g_renderer->worldTime > 0.25f && g_renderer->worldTime < 0.3f) {
-                g_ai->isSleeping = false;
-            }
+        // Time acceleration. The only multiplier measured in the original is the
+        // fastForward state's 20.0 (LIVE_WORLD_CLOCK.md); the previous 100.0 here
+        // had no evidence behind it. Which condition sets fastForward in the
+        // original is still unknown, so mapping our sleep state onto it is an
+        // inference - the STATE and the 20.0 are measured, the trigger is not. See
+        // reconstruction/reverse-v3/native/WORLD_CLOCK_WRITER_BOUNDARY.md: eight
+        // mechanisms that could have set it statically were each excluded, so the trigger is
+        // outside static reach and this mapping stays a labelled guess.
+        const bool sleeping = g_ai->isSleeping;
+        g_world->setFastForward(sleeping);
+        const float timeSpeed = g_world->clockTimeScale;
+        if (sleeping && g_renderer && g_renderer->worldTime > 0.25f && g_renderer->worldTime < 0.3f) {
+            g_ai->isSleeping = false;   // wake up if it's morning (0.25 is usually dawn)
         }
         if (g_renderer) g_renderer->timeScale = timeSpeed;
+        // World clock (WORLD_TIME_DOMAIN.md): the engine's own seconds clock
+        // is advanced by the worker's 50ms cadence times the acceleration;
+        // the renderer's fraction is derived from it, not the other way round.
+        g_world->clockTimeScale = timeSpeed;
 
         if (g_ai->update(g_entities->player.x, g_entities->player.y, g_world, g_entities)) g_world->updateLighting();
         
-        if (g_crafting && g_crafting->update(0.05f * timeSpeed, &g_entities->player)) {
-            g_entities->inventoryDirty = true;
+        if (g_crafting) {
+            const int done = g_crafting->craftsCompleted;
+            const bool inventoryChanged = g_crafting->update(0.05f * timeSpeed, &g_entities->player);
+            // A craft completing is where the original plays fanfare.wav: it is the sound of
+            // Blockhead -[craftProgressUICompleteButtonTapped], and the same asset plays again when the
+            // crafted blockhead is delivered. Both are recovered pairs in audio_wiring_model.h, and
+            // tools/test_craft_completion_sound.py keeps this call site and that table from disagreeing.
+            for (int i = done; i < g_crafting->craftsCompleted; ++i) g_entities->queueSound("fanfare.wav");
+            // unchanged from before this edit: the dirty flag follows update()'s return value, which means
+            // "the inventory changed", NOT "a craft completed" - those differ whenever a finished craft has
+            // output still being delivered.
+            if (inventoryChanged) {
+                g_entities->inventoryDirty = true;
+            }
         }
 
         if (g_ai->pendingInteractionBenchId != -1) {
@@ -425,8 +585,11 @@ Java_com_noodlecake_blockheads_rebuild_GameActivity_onDrawFrameNative(JNIEnv* en
             if (g_renderer->followingPlayer) { g_renderer->targetX = g_entities->player.x; g_renderer->targetY = g_entities->player.y; }
             g_world->updateChunks(g_renderer->camX, g_renderer->camY);
             
-            // Sync Time to World for Simulation (Temperature, etc)
-            g_world->worldTime = g_renderer->worldTime;
+            // Time flows world -> renderer (WORLD_TIME_DOMAIN.md): the world
+            // clock is authoritative and the renderer mirrors the derived
+            // day fraction; copying the renderer fraction into the world made
+            // the seconds-domain gates unfireable.
+            g_renderer->worldTime = g_world->worldTime;
             
             // Sync Clothing for Rendering
             g_renderer->clothingHead = g_entities->player.clothingHead;

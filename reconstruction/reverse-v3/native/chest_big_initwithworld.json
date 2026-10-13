@@ -1,0 +1,47 @@
+{
+  "batch": "b3m2",
+  "census": {
+    "covered_after_b3m2": 58,
+    "covered_words_after_b3m2": 11086,
+    "front_methods": 60,
+    "front_words": 13820,
+    "remaining_methods": 2,
+    "remaining_words": 2734
+  },
+  "claim": "Chest 0x00cb627c (760w, exact variant, super=InteractionObject) is the save-system centerpiece: five own keys including two FORMATTED per-slot key families, InventoryItem child construction (alloc + initWithSaveData:), and a decoded SLOT CAPACITY RULE from its private helper 0x00cb623c (chestType 2/5 \u2192 4 slots, else 16). Only front method with __stack_chk_guard. Static level-A evidence only",
+  "classes": [
+    {
+      "boundary": "0x00cb6e5c",
+      "capacity_helper": {
+        "code_words": 16,
+        "imp": "0x00cb623c",
+        "rule": "numberOfSlots = (chestType == 2 || chestType == 5) ? 4 : 16"
+      },
+      "claim": "super-forwards to InteractionObject (nil guard \u2192 nil), then reads chestType/safeClientID and enumerates saveItemSlots, reading FORMATTED keys shelfItemDataBs_%d / shelfRenderItems_%d per slot; constructs InventoryItem children via alloc + initWithSaveData: into inventoryItems/shelf arrays sized by the private capacity helper 0x00cb623c: chestType 2 or 5 \u2192 4 slots, else 16 slots; the only front method with a stack canary; exact key/ivar/selector/classref/GOT sets gated",
+      "class": "Chest",
+      "code_words": 760,
+      "imp": "0x00cb627c",
+      "literal_cells": {
+        "class_object": "OBJC_CLASS_$_Chest",
+        "msgsend_got": "0x0105b7a0",
+        "pic_cells": 3,
+        "stack_chk_guard_got": "0x0105b7e0",
+        "super2_got": "0x0105b79c",
+        "superref_slot": "0x00e8bef0"
+      },
+      "own_keys": [
+        "chestType",
+        "safeClientID",
+        "saveItemSlots",
+        "shelfItemDataBs_%d",
+        "shelfRenderItems_%d"
+      ],
+      "runtime_superclass": "InteractionObject",
+      "selector": "initWithWorld:dynamicWorld:saveDict:cache:"
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "method": "the Chest loader \u2014 save-system centerpiece (batch b3m-2, closeout series part 2)",
+  "pic_base": "0x0105faf4",
+  "schema": 1
+}

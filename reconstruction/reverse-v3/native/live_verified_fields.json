@@ -1,0 +1,1264 @@
+{
+ "schema": 1,
+ "title": "Live object-graph verified ivar offsets (original 1.7.5 build d09418e9)",
+ "method": "runtime class objects resolved from the pinned ELF ObjC classlist (relocated values read from the live process); instances anchored by full-region scans whose candidates must satisfy structural signatures; every hop requires the header word to equal the runtime-resolved class pointer; each field requires the storage-cell value to equal the empirically observed offset (mutual confirmation)",
+ "build": {
+  "live_libApplication_sha256": "d09418e9c0865902054a71358dcff3264d47f7b24ede58667cb5ea0e6f269b96",
+  "live_libSystem_sha256": "a76881ea18cccb13612b3fd8d21c166d819aacdfa2e757bb4b14cf93c2dce6bf",
+  "static_baseline_elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "note": "device currently runs the original 1.7.5 build; the repository static baseline remains 1.7.6"
+ },
+ "instances": {
+  "GameView": "0x607d6c00",
+  "EAGLView": "0x68d8da70",
+  "World": "0x60779000",
+  "DynamicWorld": "0x237fd000",
+  "Blockhead": "0x23bff000"
+ },
+ "chain": [
+  "World+416 -> DynamicWorld (header == runtime class pointer)",
+  "DynamicWorld+44 -> __NSCFArray (blockheads container)",
+  "__NSCFArray+20 -> store; store+12 -> Blockhead",
+  "Blockhead+4 -> World (DynamicObject.world)",
+  "Blockhead+8 -> DynamicWorld (DynamicObject.dynamicWorld)",
+  "GameView+24 -> World",
+  "EAGLView+176 -> GameView",
+  "EvolutionViewController+176 -> GameView",
+  "DynamicWorld+4 -> World (back-reference)"
+ ],
+ "external_crosscheck": {
+  "World.saveID": "the +436 object is an __NSCFString whose bytes contain a8124d2b4dea3347ddef22a1550a78c6, equal to the save directory actually open via /proc/<pid>/fd"
+ },
+ "verified_field_count": 153,
+ "verified_fields": [
+  {
+   "object": "World",
+   "offset": 4,
+   "class": "CMMotionManager",
+   "ivars": [
+    "World.motionManager"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 20,
+   "class": "__NSCFTimer",
+   "ivars": [
+    "World.motionUpdateTimer"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 156,
+   "class": "Weather",
+   "ivars": [
+    "World.weather"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 232,
+   "class": "Tutorial",
+   "ivars": [
+    "World.tutorial"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 236,
+   "class": "CloudInterface",
+   "ivars": [
+    "World.cloudInterface"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 240,
+   "class": "UIManager",
+   "ivars": [
+    "World.uiManager"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 408,
+   "class": "CPCache",
+   "ivars": [
+    "World.cache"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 416,
+   "class": "DynamicWorld",
+   "ivars": [
+    "World.dynamicWorld"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 420,
+   "class": "WorldTileLoader",
+   "ivars": [
+    "World.worldTileLoader"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 424,
+   "class": "PathCreator",
+   "ivars": [
+    "World.pathCreator"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 428,
+   "class": "__NSCFArray",
+   "ivars": [
+    "World.pathQueue"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 436,
+   "class": "__NSCFString",
+   "ivars": [
+    "World.saveID"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 440,
+   "class": "__NSCFString",
+   "ivars": [
+    "World.worldName"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 452,
+   "class": "__NSDate",
+   "ivars": [
+    "World.creationDate"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 524,
+   "class": "CPTexture2D",
+   "ivars": [
+    "World.tileMapTexture"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 528,
+   "class": "CPTexture2D",
+   "ivars": [
+    "World.skyTexture"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 532,
+   "class": "CPTexture2D",
+   "ivars": [
+    "World.groundColorTexture"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 536,
+   "class": "CPTexture2D",
+   "ivars": [
+    "World.buttonTexture"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 540,
+   "class": "CPTexture2D",
+   "ivars": [
+    "World.sunTexture"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 544,
+   "class": "CPTexture2D",
+   "ivars": [
+    "World.moonTexture"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 548,
+   "class": "CPTexture2D",
+   "ivars": [
+    "World.itemsTexture"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 552,
+   "class": "CPTexture2D",
+   "ivars": [
+    "World.itemNormalsTexture"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 556,
+   "class": "CPTexture2D",
+   "ivars": [
+    "World.lightTexture"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 560,
+   "class": "CPTexture2D",
+   "ivars": [
+    "World.repairBoxTexture"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 564,
+   "class": "CPTexture2D",
+   "ivars": [
+    "World.tileDestructTexture"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 568,
+   "class": "Shader",
+   "ivars": [
+    "World.skyShader"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 572,
+   "class": "Shader",
+   "ivars": [
+    "World.blockShader"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 576,
+   "class": "Shader",
+   "ivars": [
+    "World.blockTransparentShader"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 580,
+   "class": "Shader",
+   "ivars": [
+    "World.buttonShader"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 584,
+   "class": "Shader",
+   "ivars": [
+    "World.standardObjectColoredShader"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 588,
+   "class": "Shader",
+   "ivars": [
+    "World.standardObjectShader"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 592,
+   "class": "Shader",
+   "ivars": [
+    "World.blackTileShader"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 596,
+   "class": "Shader",
+   "ivars": [
+    "World.blackCubeShader"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 600,
+   "class": "Shader",
+   "ivars": [
+    "World.starShader"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 604,
+   "class": "Shader",
+   "ivars": [
+    "World.staticDrawCubeShader"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 608,
+   "class": "Shader",
+   "ivars": [
+    "World.dodoEggShader"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 612,
+   "class": "Shader",
+   "ivars": [
+    "World.lightsShader"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 656,
+   "class": "NoiseFunction",
+   "ivars": [
+    "World.weatherNoiseFunction"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 904,
+   "class": "FNImageData",
+   "ivars": [
+    "World.dayColorImageData"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 908,
+   "class": "FNImageData",
+   "ivars": [
+    "World.dayColorCloudyImageData"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 912,
+   "class": "FNImageData",
+   "ivars": [
+    "World.skyPixelData"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 3184,
+   "class": "FNImageData",
+   "ivars": [
+    "World.mapPixelData"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 3204,
+   "class": "ProjectileManager",
+   "ivars": [
+    "World.projectileManager"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 3336,
+   "class": "PortalChestManager",
+   "ivars": [
+    "World.portalChestManager"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 3392,
+   "class": "DatabaseEnvironment",
+   "ivars": [
+    "World.databaseEnvironment"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 3396,
+   "class": "Database",
+   "ivars": [
+    "World.mainDatabase"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 3400,
+   "class": "Database",
+   "ivars": [
+    "World.dynamicObjectDatabase"
+   ]
+  },
+  {
+   "object": "World",
+   "offset": 3404,
+   "class": "Database",
+   "ivars": [
+    "World.blockDatabase"
+   ]
+  },
+  {
+   "object": "DynamicWorld",
+   "offset": 4,
+   "class": "World",
+   "ivars": [
+    "DynamicWorld.world"
+   ]
+  },
+  {
+   "object": "DynamicWorld",
+   "offset": 8,
+   "class": "WorldTileLoader",
+   "ivars": [
+    "DynamicWorld.worldTileLoader"
+   ]
+  },
+  {
+   "object": "DynamicWorld",
+   "offset": 28,
+   "class": "Database",
+   "ivars": [
+    "DynamicWorld.appDatabase"
+   ]
+  },
+  {
+   "object": "DynamicWorld",
+   "offset": 32,
+   "class": "Database",
+   "ivars": [
+    "DynamicWorld.worldDatabase"
+   ]
+  },
+  {
+   "object": "DynamicWorld",
+   "offset": 36,
+   "class": "Database",
+   "ivars": [
+    "DynamicWorld.dynamicObjectDatabase"
+   ]
+  },
+  {
+   "object": "DynamicWorld",
+   "offset": 40,
+   "class": "__NSCFString",
+   "ivars": [
+    "DynamicWorld.worldSaveDirectory"
+   ]
+  },
+  {
+   "object": "DynamicWorld",
+   "offset": 44,
+   "class": "__NSCFArray",
+   "ivars": [
+    "DynamicWorld.blockheads"
+   ]
+  },
+  {
+   "object": "DynamicWorld",
+   "offset": 48,
+   "class": "__NSCFArray",
+   "ivars": [
+    "DynamicWorld.netBlockheads"
+   ]
+  },
+  {
+   "object": "DynamicWorld",
+   "offset": 52,
+   "class": "__NSCFArray",
+   "ivars": [
+    "DynamicWorld.netBlockheadsWithDisconnectedClients"
+   ]
+  },
+  {
+   "object": "DynamicWorld",
+   "offset": 56,
+   "class": "__NSCFDictionary",
+   "ivars": [
+    "DynamicWorld.clientBlockheadInventoriesToSave"
+   ]
+  },
+  {
+   "object": "DynamicWorld",
+   "offset": 7336,
+   "class": "CPCache",
+   "ivars": [
+    "DynamicWorld.cache"
+   ]
+  },
+  {
+   "object": "DynamicWorld",
+   "offset": 7340,
+   "class": "NoiseFunction",
+   "ivars": [
+    "DynamicWorld.treeDensityNoiseFunction"
+   ]
+  },
+  {
+   "object": "DynamicWorld",
+   "offset": 7344,
+   "class": "NoiseFunction",
+   "ivars": [
+    "DynamicWorld.seasonOffsetNoiseFunction"
+   ]
+  },
+  {
+   "object": "DynamicWorld",
+   "offset": 9496,
+   "class": "WirePathCreator",
+   "ivars": [
+    "DynamicWorld.wirePathCreator"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 4,
+   "class": "World",
+   "ivars": [
+    "DynamicObject.world"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 8,
+   "class": "DynamicWorld",
+   "ivars": [
+    "DynamicObject.dynamicWorld"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 32,
+   "class": "CPCache",
+   "ivars": [
+    "DynamicObject.cache"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 180,
+   "class": "Shader",
+   "ivars": [
+    "Blockhead.shader"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 184,
+   "class": "Shader",
+   "ivars": [
+    "Blockhead.renderShader"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 188,
+   "class": "Shader",
+   "ivars": [
+    "Blockhead.faceShader"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 192,
+   "class": "Shader",
+   "ivars": [
+    "Blockhead.hairShader"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 196,
+   "class": "Shader",
+   "ivars": [
+    "Blockhead.bodyShader"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 200,
+   "class": "Shader",
+   "ivars": [
+    "Blockhead.clothingShader"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 204,
+   "class": "CPTexture2D",
+   "ivars": [
+    "Blockhead.headTexture"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 208,
+   "class": "CPTexture2D",
+   "ivars": [
+    "Blockhead.headHairTexture"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 212,
+   "class": "DrawCube",
+   "ivars": [
+    "Blockhead.headCube"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 216,
+   "class": "DrawCube",
+   "ivars": [
+    "Blockhead.hairCubeA"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 224,
+   "class": "CPTexture2D",
+   "ivars": [
+    "Blockhead.bodyTexture"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 228,
+   "class": "DrawCube",
+   "ivars": [
+    "Blockhead.bodyCube"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 232,
+   "class": "CPTexture2D",
+   "ivars": [
+    "Blockhead.armTexture"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 236,
+   "class": "DrawCube",
+   "ivars": [
+    "Blockhead.armCube"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 240,
+   "class": "CPTexture2D",
+   "ivars": [
+    "Blockhead.legTexture"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 244,
+   "class": "DrawCube",
+   "ivars": [
+    "Blockhead.legCube"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 428,
+   "class": "CPTexture2D",
+   "ivars": [
+    "Blockhead.itemsTexture"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 440,
+   "class": "CPTexture2D",
+   "ivars": [
+    "Blockhead.actionSquareTexture"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 444,
+   "class": "Shader",
+   "ivars": [
+    "Blockhead.goalBoxGlyphShader"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 448,
+   "class": "Shader",
+   "ivars": [
+    "Blockhead.actionSquareShader"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 452,
+   "class": "CPTexture2D",
+   "ivars": [
+    "Blockhead.cogTextures"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 664,
+   "class": "__NSCFArray",
+   "ivars": [
+    "Blockhead.inventoryItems"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 704,
+   "class": "__NSCFString",
+   "ivars": [
+    "Blockhead.name"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 1860,
+   "class": "__NSCFArray",
+   "ivars": [
+    "Blockhead.saveItemSlotsArray"
+   ]
+  },
+  {
+   "object": "Blockhead",
+   "offset": 1980,
+   "class": "__NSCFArray",
+   "ivars": [
+    "Blockhead.actionQueue"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 4,
+   "class": "World",
+   "ivars": [
+    "UIManager.world"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 8,
+   "class": "DynamicWorld",
+   "ivars": [
+    "UIManager.dynamicWorld"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 12,
+   "class": "CPCache",
+   "ivars": [
+    "UIManager.cache"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 20,
+   "class": "WorldUI",
+   "ivars": [
+    "UIManager.worldUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 32,
+   "class": "TCUI",
+   "ivars": [
+    "UIManager.tcUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 36,
+   "class": "DPad",
+   "ivars": [
+    "UIManager.dpad"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 44,
+   "class": "WorkbenchChoiceUI",
+   "ivars": [
+    "UIManager.workbenchChoiceUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 48,
+   "class": "CraftUI",
+   "ivars": [
+    "UIManager.craftUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 52,
+   "class": "NewBlockheadUI",
+   "ivars": [
+    "UIManager.newBlockheadUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 56,
+   "class": "PaintMixUI",
+   "ivars": [
+    "UIManager.paintMixUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 60,
+   "class": "ChestUI",
+   "ivars": [
+    "UIManager.chestUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 64,
+   "class": "BlockheadUI",
+   "ivars": [
+    "UIManager.blockheadUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 68,
+   "class": "CraftProgressUI",
+   "ivars": [
+    "UIManager.craftProgressUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 72,
+   "class": "AddFuelUI",
+   "ivars": [
+    "UIManager.addFuelUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 76,
+   "class": "JetPackUI",
+   "ivars": [
+    "UIManager.jetPackUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 80,
+   "class": "SleepProgressUI",
+   "ivars": [
+    "UIManager.sleepProgressUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 84,
+   "class": "RegenerateUI",
+   "ivars": [
+    "UIManager.regenerateUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 88,
+   "class": "HungerUI",
+   "ivars": [
+    "UIManager.hungerUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 92,
+   "class": "WearUI",
+   "ivars": [
+    "UIManager.wearUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 96,
+   "class": "InventoryFullUI",
+   "ivars": [
+    "UIManager.inventoryFullUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 108,
+   "class": "TradingPostSellUI",
+   "ivars": [
+    "UIManager.tradingPostSellUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 112,
+   "class": "TradingPostBuyUI",
+   "ivars": [
+    "UIManager.tradingPostBuyUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 116,
+   "class": "OwnershipSignUI",
+   "ivars": [
+    "UIManager.ownershipSignUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 120,
+   "class": "WorkbenchProgressBarUI",
+   "ivars": [
+    "UIManager.workbenchProgressBarUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 124,
+   "class": "TradePortalUI",
+   "ivars": [
+    "UIManager.tradePortalUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 128,
+   "class": "TradeMissionUI",
+   "ivars": [
+    "UIManager.tradeMissionUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 132,
+   "class": "PetUI",
+   "ivars": [
+    "UIManager.petUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 136,
+   "class": "CustomizeBlockheadUI",
+   "ivars": [
+    "UIManager.customizeBlockheadUI"
+   ]
+  },
+  {
+   "object": "UIManager",
+   "offset": 140,
+   "class": "__NSCFArray",
+   "ivars": [
+    "UIManager.uiViews"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 4,
+   "class": "World",
+   "ivars": [
+    "WorldUI.world"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 8,
+   "class": "UIManager",
+   "ivars": [
+    "WorldUI.uiManager"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 12,
+   "class": "CPTexture2D",
+   "ivars": [
+    "WorldUI.itemsTexture"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 16,
+   "class": "Blockhead",
+   "ivars": [
+    "WorldUI.currentBlockhead"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 116,
+   "class": "CPCache",
+   "ivars": [
+    "WorldUI.cache"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 120,
+   "class": "MJButton",
+   "ivars": [
+    "WorldUI.timeCrystalButton"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 124,
+   "class": "MJImageView",
+   "ivars": [
+    "WorldUI.timeCrystalImage"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 128,
+   "class": "MJTextView",
+   "ivars": [
+    "WorldUI.timeCrystalText"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 132,
+   "class": "Shader",
+   "ivars": [
+    "WorldUI.flashShader"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 140,
+   "class": "MJButton",
+   "ivars": [
+    "WorldUI.pauseButton"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 144,
+   "class": "__NSCFArray",
+   "ivars": [
+    "WorldUI.inventoryButtons"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 148,
+   "class": "InventoryButton",
+   "ivars": [
+    "WorldUI.selectedInventoryButton"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 160,
+   "class": "__NSCFArray",
+   "ivars": [
+    "WorldUI.blockheadButtons"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 164,
+   "class": "BlockheadButton",
+   "ivars": [
+    "WorldUI.selectedBlockheadButton"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 196,
+   "class": "__NSCFArray",
+   "ivars": [
+    "WorldUI.dragItems"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 240,
+   "class": "ChestUI",
+   "ivars": [
+    "WorldUI.chestUI"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 244,
+   "class": "TradingPostSellUI",
+   "ivars": [
+    "WorldUI.tradingPostSellUI"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 248,
+   "class": "Shader",
+   "ivars": [
+    "WorldUI.vignetteShader"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 252,
+   "class": "CPTexture2D",
+   "ivars": [
+    "WorldUI.fastForwardArrowTexture"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 256,
+   "class": "Shader",
+   "ivars": [
+    "WorldUI.fastForwardShader"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 264,
+   "class": "MJTextView",
+   "ivars": [
+    "WorldUI.instructionalTextView"
+   ]
+  },
+  {
+   "object": "WorldUI",
+   "offset": 272,
+   "class": "Shader",
+   "ivars": [
+    "WorldUI.cameraFlashShader"
+   ]
+  },
+  {
+   "object": "GameView",
+   "offset": 4,
+   "class": "EvolutionViewController",
+   "ivars": [
+    "GameView.viewController"
+   ]
+  },
+  {
+   "object": "GameView",
+   "offset": 8,
+   "class": "EAGLView",
+   "ivars": [
+    "GameView.glView"
+   ]
+  },
+  {
+   "object": "GameView",
+   "offset": 12,
+   "class": "CPCache",
+   "ivars": [
+    "GameView.cache"
+   ]
+  },
+  {
+   "object": "GameView",
+   "offset": 16,
+   "class": "Shader",
+   "ivars": [
+    "GameView.basicShader"
+   ]
+  },
+  {
+   "object": "GameView",
+   "offset": 24,
+   "class": "World",
+   "ivars": [
+    "GameView.world"
+   ]
+  },
+  {
+   "object": "GameView",
+   "offset": 32,
+   "class": "DatabaseEnvironment",
+   "ivars": [
+    "GameView.appDatabaseEnvironment"
+   ]
+  },
+  {
+   "object": "GameView",
+   "offset": 36,
+   "class": "Database",
+   "ivars": [
+    "GameView.appDatabase"
+   ]
+  },
+  {
+   "object": "GameView",
+   "offset": 252,
+   "class": "__NSCFArray",
+   "ivars": [
+    "GameView.gameSaves"
+   ]
+  },
+  {
+   "object": "GameView",
+   "offset": 260,
+   "class": "__NSCFString",
+   "ivars": [
+    "GameView.loadWorldName"
+   ]
+  },
+  {
+   "object": "GameView",
+   "offset": 264,
+   "class": "__NSCFString",
+   "ivars": [
+    "GameView.loadSaveID"
+   ]
+  },
+  {
+   "object": "GameView",
+   "offset": 444,
+   "class": "__NSCFArray",
+   "ivars": [
+    "GameView.recentConnectionsList"
+   ]
+  },
+  {
+   "object": "GameView",
+   "offset": 456,
+   "class": "CloudInterface",
+   "ivars": [
+    "GameView.cloudInterface"
+   ]
+  }
+ ],
+ "boundaries": [
+  "binds to the live 1.7.5 build; the 79-cell rewritten list is build-specific (1.7.6 same-build audit pending)",
+  "no-cell-match rows (e.g. GameView +4112.. NSCFString run) are not part of this set",
+  "read-only forensics: no injection, no screenshots, no game interaction"
+ ]
+}

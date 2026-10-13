@@ -1,0 +1,111 @@
+# Blockhead -[hurryCostForCraftTimeRemaining:totalCraftTime:]
+# types: i16@0:4i8i12
+# implementation: 0x00c89c48
+# ARM.exidx end: 0x00c89e3c
+
+            0x00c89c48      00482de9       push {fp, lr}
+            0x00c89c4c      0db0a0e1       mov fp, sp
+            0x00c89c50      68d04de2       sub sp, sp, 0x68
+            0x00c89c54      000ab6ee       vmov.f32 s0, 5
+            0x00c89c58      02c000e3       movw ip, 2
+            0x00c89c5c      001bb0ee       vmov.f64 d1, 2
+            0x00c89c60      04000be5       str r0, [fp, -4]
+            0x00c89c64      08100be5       str r1, [fp, -8]
+            0x00c89c68      0c200be5       str r2, [fp, -0xc]
+            0x00c89c6c      10300be5       str r3, [fp, -0x10]
+            0x00c89c70      10001be5       ldr r0, [fp, -0x10]
+            0x00c89c74      100a02ee       vmov s4, r0
+            0x00c89c78      c22ab8ee       vcvt.f32.s32 s4, s4
+            0x00c89c7c      c23ab7ee       vcvt.f64.f32 d3, s4
+            0x00c89c80      011b23ee       vmul.f64 d1, d3, d1
+            0x00c89c84      c12bb7ee       vcvt.f32.f64 s4, d1
+            0x00c89c88      100a12ee       vmov r0, s4
+            0x00c89c8c      101a10ee       vmov r1, s0
+            0x00c89c90      14c08de5       str ip, [sp, 0x14]
+            0x00c89c94      bfe8d4eb       bl sym.imp.__wrap_powf
+            0x00c89c98      100a00ee       vmov s0, r0
+            0x00c89c9c      900100e3       movw r0, 0x190
+            0x00c89ca0      c00abdee       vcvt.s32.f32 s0, s0
+            0x00c89ca4      101a10ee       vmov r1, s0
+            0x00c89ca8      14100be5       str r1, [fp, -0x14]
+            0x00c89cac      14101be5       ldr r1, [fp, -0x14]
+            0x00c89cb0      20100be5       str r1, [fp, -0x20]
+            0x00c89cb4      24000be5       str r0, [fp, -0x24]
+            0x00c89cb8      20001be5       ldr r0, [fp, -0x20]
+            0x00c89cbc      24101be5       ldr r1, [fp, -0x24]
+            0x00c89cc0      010050e1       cmp r0, r1
+        ┌─< 0x00c89cc4      020000aa       bge 0xc89cd4
+        │   0x00c89cc8      20001be5       ldr r0, [fp, -0x20]
+        │   0x00c89ccc      10008de5       str r0, [sp, 0x10]
+       ┌──< 0x00c89cd0      010000ea       b 0xc89cdc
+       │└─> 0x00c89cd4      24001be5       ldr r0, [fp, -0x24]
+       │    0x00c89cd8      10008de5       str r0, [sp, 0x10]
+       └──> 0x00c89cdc      10009de5       ldr r0, [sp, 0x10]
+            0x00c89ce0      011000e3       movw r1, 1
+            0x00c89ce4      28000be5       str r0, [fp, -0x28]
+            0x00c89ce8      28001be5       ldr r0, [fp, -0x28]
+            0x00c89cec      1c000be5       str r0, [fp, -0x1c]
+            0x00c89cf0      2c100be5       str r1, [fp, -0x2c]
+            0x00c89cf4      1c001be5       ldr r0, [fp, -0x1c]
+            0x00c89cf8      2c101be5       ldr r1, [fp, -0x2c]
+            0x00c89cfc      010050e1       cmp r0, r1
+        ┌─< 0x00c89d00      020000aa       bge 0xc89d10
+        │   0x00c89d04      2c001be5       ldr r0, [fp, -0x2c]
+        │   0x00c89d08      0c008de5       str r0, [sp, 0xc]
+       ┌──< 0x00c89d0c      010000ea       b 0xc89d18
+       │└─> 0x00c89d10      1c001be5       ldr r0, [fp, -0x1c]
+       │    0x00c89d14      0c008de5       str r0, [sp, 0xc]
+       └──> 0x00c89d18      0c009de5       ldr r0, [sp, 0xc]
+            0x00c89d1c      901100e3       movw r1, 0x190
+            0x00c89d20      30000be5       str r0, [fp, -0x30]
+            0x00c89d24      30001be5       ldr r0, [fp, -0x30]
+            0x00c89d28      18000be5       str r0, [fp, -0x18]
+            0x00c89d2c      0c001be5       ldr r0, [fp, -0xc]
+            0x00c89d30      100a00ee       vmov s0, r0
+            0x00c89d34      c00ab8ee       vcvt.f32.s32 s0, s0
+            0x00c89d38      10001be5       ldr r0, [fp, -0x10]
+            0x00c89d3c      100a01ee       vmov s2, r0
+            0x00c89d40      c11ab8ee       vcvt.f32.s32 s2, s2
+            0x00c89d44      010a80ee       vdiv.f32 s0, s0, s2
+            0x00c89d48      0d0a8ded       vstr s0, [sp, 0x34]
+            0x00c89d4c      0d0a9ded       vldr s0, [sp, 0x34]
+            0x00c89d50      18001be5       ldr r0, [fp, -0x18]
+            0x00c89d54      100a01ee       vmov s2, r0
+            0x00c89d58      c11ab8ee       vcvt.f32.s32 s2, s2
+            0x00c89d5c      010a20ee       vmul.f32 s0, s0, s2
+            0x00c89d60      c00abdee       vcvt.s32.f32 s0, s0
+            0x00c89d64      100a10ee       vmov r0, s0
+            0x00c89d68      30008de5       str r0, [sp, 0x30]
+            0x00c89d6c      30009de5       ldr r0, [sp, 0x30]
+            0x00c89d70      010080e2       add r0, r0, 1
+            0x00c89d74      28008de5       str r0, [sp, 0x28]
+            0x00c89d78      24108de5       str r1, [sp, 0x24]
+            0x00c89d7c      28009de5       ldr r0, [sp, 0x28]
+            0x00c89d80      24109de5       ldr r1, [sp, 0x24]
+            0x00c89d84      010050e1       cmp r0, r1
+        ┌─< 0x00c89d88      020000aa       bge 0xc89d98
+        │   0x00c89d8c      28009de5       ldr r0, [sp, 0x28]
+        │   0x00c89d90      08008de5       str r0, [sp, 8]
+       ┌──< 0x00c89d94      010000ea       b 0xc89da0
+       │└─> 0x00c89d98      24009de5       ldr r0, [sp, 0x24]
+       │    0x00c89d9c      08008de5       str r0, [sp, 8]
+       └──> 0x00c89da0      08009de5       ldr r0, [sp, 8]
+            0x00c89da4      011000e3       movw r1, 1
+            0x00c89da8      20008de5       str r0, [sp, 0x20]
+            0x00c89dac      20009de5       ldr r0, [sp, 0x20]
+            0x00c89db0      2c008de5       str r0, [sp, 0x2c]
+            0x00c89db4      1c108de5       str r1, [sp, 0x1c]
+            0x00c89db8      2c009de5       ldr r0, [sp, 0x2c]
+            0x00c89dbc      1c109de5       ldr r1, [sp, 0x1c]
+            0x00c89dc0      010050e1       cmp r0, r1
+        ┌─< 0x00c89dc4      020000aa       bge 0xc89dd4
+        │   0x00c89dc8      1c009de5       ldr r0, [sp, 0x1c]
+        │   0x00c89dcc      04008de5       str r0, [sp, 4]
+       ┌──< 0x00c89dd0      010000ea       b 0xc89ddc
+       │└─> 0x00c89dd4      2c009de5       ldr r0, [sp, 0x2c]
+       │    0x00c89dd8      04008de5       str r0, [sp, 4]
+       └──> 0x00c89ddc      04009de5       ldr r0, [sp, 4]
+            0x00c89de0      18008de5       str r0, [sp, 0x18]
+            0x00c89de4      18009de5       ldr r0, [sp, 0x18]
+            0x00c89de8      0bd0a0e1       mov sp, fp
+            0x00c89dec      0088bde8       pop {fp, pc}

@@ -1,0 +1,22 @@
+# NetPlayerButton -[setCloudMode:]
+# types: v12@0:4i8
+# implementation: 0x00788d30
+# ARM.exidx end: 0x00788d74
+
+            0x00788d30      0cd04de2       sub sp, sp, 0xc
+            0x00788d34      08008de5       str r0, [sp, 8]
+            0x00788d38      04108de5       str r1, [sp, 4]
+            0x00788d3c      00208de5       str r2, [sp]
+            0x00788d40      08009de5       ldr r0, [sp, 8]
+            0x00788d44      20109fe5       ldr r1, [0x00788d6c]        ; [0x788d6c:4]=0xffffdc20
+            0x00788d48      20309fe5       ldr r3, [0x00788d70]        ; [0x788d70:4]=0x8d6da0
+            0x00788d4c      03308fe0       add r3, pc, r3
+            0x00788d50      031091e7       ldr r1, [r1, r3]
+            0x00788d54      001091e5       ldr r1, [r1]
+            0x00788d58      5bf07ff5       dmb ish
+            0x00788d5c      012080e7       str r2, [r0, r1]
+            0x00788d60      5bf07ff5       dmb ish
+            0x00788d64      0cd08de2       add sp, sp, 0xc
+            0x00788d68      1eff2fe1       bx lr
+            0x00788d6c      20dcffff       invalid
+            0x00788d70      a06d8d00       addeq r6, sp, r0, lsr 27

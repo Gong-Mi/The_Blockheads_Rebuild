@@ -1,0 +1,633 @@
+// ui_touch_router.h — the UI family's touch traversal, modelled from the
+// ARM-attested listings (INPUT_FRONT.md):
+//   - GameUIView (the panel base): touchIsInViewAtAll: = the panel's own rect
+//     test; touchIsInUI: / startTouch:tapCount: = the own-rect test OR-ed
+//     with / delegating to the widget children (CraftUI 0x00B80EB4..);
+//   - MJView (the widget base): touchIsInUI: / startTouch: = the `hidden`
+//     and `ignoreEvents` gates, then the fast enumeration over subviews@44
+//     recursing into each subview, then the view's own frame test
+//     (0x006614A8.., disasm_mjview_touch.txt);
+//   - the UIManager router's flat pass over uiViews@140 (0x00AD7748..) —
+//     plus `run_ui_router` below: the router's FULL block chain as decoded
+//     from disasm_uimanager_starttouch.txt.
+//
+// The model parameterises the *traversal*; per-class geometry arrives as
+// rects (the listing-verified pattern: point minus windowInfo, then the
+// frame/translationOffset comparison).
+#pragma once
+
+#include <vector>
+
+namespace blockheads::ui {
+
+struct Rect {
+    float x = 0.0f, y = 0.0f, w = 0.0f, h = 0.0f;
+
+    bool contains(float px, float py) const {
+        return px >= x && px <= x + w && py >= y && py <= y + h;
+    }
+};
+
+struct Point {
+    float x = 0.0f, y = 0.0f;
+};
+
+// A node in the UI tree: what a panel/widget contributes to the traversal.
+struct Node {
+    Rect rect;
+    bool displayed = true;       // GameUIView -displayed (the uiViews@140
+                                 // enumeration's per-view gate)
+    bool hidden = false;         // MJView -hidden gate
+    bool ignore_events = false;  // MJView -ignoreEvents gate
+    bool handles_own_rect = false;  // panels handle their own rect; MJView
+                                    // falls through to the frame test
+    std::vector<Node*> subviews;    // MJView.subviews@44 / the panels'
+                                    // scrollingButtons/craftButton/...
+    void* tag = nullptr;            // the concrete widget (opaque here)
+
+    // The MJView-shaped hit test (hidden/ignore gates, subview recursion,
+    // then the frame test). The panel form is expressed with the same walk.
+    bool touch_is_in_ui(Point p) const;
+    // The MJView-shaped handling walk; returns the aggregate "handled".
+    bool start_touch(Point p) const;
+};
+
+// The UIManager router: the flat pass over the top-level views; the first
+// one reporting "in UI" wins, and start_touch is offered to each in order
+// until one reports handled (the decoding in INPUT_FRONT.md).
+struct RouterResult {
+    Node* ui_hit = nullptr;       // the first view whose touch_is_in_ui said yes
+    Node* handled_by = nullptr;   // the first view whose start_touch said yes
+};
+
+RouterResult route(std::vector<Node*>& views, Point p);
+
+// --- the UIManager router's full block chain -----------------------------
+// UIManager -startTouch:tapCount:index: (0x00AD7748..0x00AD8048, 576w) walks
+// its UI ivars in order; each block offers the touch to its receiver and
+// (for the three panel blocks) to worldUI with `paused:`. `run_ui_router`
+// models that chain, the events the ARM differential records
+// (tools/test_specials_arm.py) and the currentTouchIsInAnyButtons@154 byte.
+//
+// A Receiver is what a differential fixture makes the receiver's methods
+// answer (the stub graph answers 0 unless the case pins a 1): the call
+// replies are inputs here, like the boxed values of the loader models.
+struct Receiver {
+    bool handles = false;         // [x startTouch:tapCount:...] -> 1
+    bool handles_paused = false;  // [x startTouch:tapCount:paused:index:...] -> 1
+    bool displayed = false;       // [x displayed] -> 1
+    bool in_view = false;         // [x touchIsInViewAtAll:] -> 1
+};
+
+struct RouterInputs {
+    // the UIManager block gates (the ivars that switch blocks on/off)
+    bool tc_ui_displayed = false;  // @40: block 1 (tcUI) runs only when set
+    bool hide_pause_ui = false;    // @148: block 2 (pauseUI) returns 1 with
+                                   //       no call at all when set
+    bool map_displayed = false;    // @152: block 5 exits before the uiViews
+                                   //       pass when set
+    // the receivers (nullptr = nil)
+    const Receiver* tc_ui = nullptr;      // @32
+    const Receiver* world_ui = nullptr;   // @20
+    const Receiver* pause_ui = nullptr;   // @24
+    const Receiver* camera_ui = nullptr;  // @100
+    const Receiver* dpad = nullptr;       // @36
+    std::vector<const Receiver*> ui_views;  // @140
+};
+
+struct RouterTrace {
+    // the objc_msgSend selectors the ARM records, in order; "import(memset)"
+    // is the enumeration-setup memset the harness records as an import
+    std::vector<const char*> calls;
+    bool current_touch_is_in_any_buttons = false;  // the @154 byte's value
+    int handled = 0;                               // the returned BOOL
+};
+
+// The point/tapCount/index flow to the receivers; their geometry and
+// arguments are outside this model, so the receivers' replies stand in.
+RouterTrace run_ui_router(const RouterInputs& in, Point p);
+
+// --- the CraftUI panel (the first subclass overrides) --------------------
+// CraftUI (0x00B80EB4..0x00B817A4, disasm_craftui_touch.txt /
+// disasm_craftui_starttouch.txt). The panel-local frame is
+//   local = point - windowInfo(+8/+0xc) - translationOffset(@212/@216)
+// (translationOffset is the pair of floats at 212/216). The touch methods
+// delegate to three widget children: scrollingButtons@148, craftButton@208,
+// countSlider@164.
+struct PanelFrame {
+    float window_x = 0.0f;  // windowInfo[+8]
+    float window_y = 0.0f;  // windowInfo[+0xc]
+    float offset_x = 0.0f;  // translationOffset.x (@212)
+    float offset_y = 0.0f;  // translationOffset.y (@216)
+};
+
+// What a widget child answers to the one-argument touch forms (the
+// differential fixture pins these, like every Receiver reply).
+struct ChildReply {
+    bool in_ui = false;    // [child touchIsInUI:] -> 1
+    bool handles = false;  // [child startTouch:] -> 1
+};
+
+// CraftUI -touchIsInViewAtAll: (95w) — the panel's own-rect test: 260 x 302
+// with EXCLUSIVE edges, x in (-130, 130), y in (0, 302), in the local frame.
+bool craftui_touch_is_in_view_at_all(Point p, const PanelFrame& f);
+
+// The delegation artifact: the selector sequence the ARM records plus the
+// BOOL the touch methods return (the void ones leave handled at 0).
+struct PanelTrace {
+    std::vector<const char*> calls;
+    int handled = 0;
+};
+
+// CraftUI -touchIsInUI: (134w) — the children's touchIsInUI: in the decoded
+// order (scrollingButtons, craftButton, countSlider), first nonzero wins.
+// The listing has NO own-rect term here: the rect lives in
+// touchIsInViewAtAll: alone. (This corrects the earlier INPUT_FRONT note.)
+PanelTrace craftui_touch_is_in_ui(const ChildReply* sb, const ChildReply* cb,
+                                  const ChildReply* cs);
+
+// CraftUI -startTouch:tapCount: (137w) — the children's startTouch: in the
+// same order, first nonzero wins; no own-rect gate either.
+PanelTrace craftui_start_touch(const ChildReply* sb, const ChildReply* cb,
+                               const ChildReply* cs);
+
+// CraftUI -moveTouch: (103w) / -endTouch: (103w) — ALL THREE children, in
+// the OTHER order the listing attests (craftButton, countSlider,
+// scrollingButtons); void, and the point they receive is the local one.
+PanelTrace craftui_move_touch(const ChildReply* sb, const ChildReply* cb,
+                              const ChildReply* cs);
+PanelTrace craftui_end_touch(const ChildReply* sb, const ChildReply* cb,
+                             const ChildReply* cs);
+
+// --- the DPad panel (the rotated hit test) -------------------------------
+// DPad -touchIsInViewAtAll: (0x0070567C..0x007058F8, 232w) with its rotation
+// helper (0x0070591C, inside the method's span): the local point is rebased
+// through the window fields, rotated by the constant angle (0xBF490FDB,
+// movw/movt = -pi/4; sinf/cosf), then tested against the +-80 square, all
+// edges exclusive. windowInfo[+8]/[+0xc] are the window origin;
+// [+0x10]/[+0x14]/[+0x1c] feed the dpad's own offsets; rightSide@160 selects
+// the mirrored layout. DPad -touchIsInUI: (24w) is the pure forward to
+// touchIsInViewAtAll:.
+struct DPadFrame {
+    float window_x = 0.0f;    // windowInfo[+8]
+    float window_y = 0.0f;    // windowInfo[+0xc]
+    float w10 = 0.0f;         // windowInfo[+0x10]
+    float w14 = 0.0f;         // windowInfo[+0x14]
+    float w1c = 0.0f;         // windowInfo[+0x1c]
+    bool right_side = false;  // rightSide@160
+};
+
+bool dpad_touch_is_in_view_at_all(Point p, const DPadFrame& f);
+
+// The forward: the reply of [self touchIsInViewAtAll:point] (sxtb'd).
+bool dpad_touch_is_in_ui(bool in_view_at_all);
+
+// --- the BlockheadUI panel (the third subclass) --------------------------
+// BlockheadUI -touchIsInViewAtAll: (0x006FD188..0x006FD2F8, 99w): the
+// own-rect test — local = point - windowInfo(+8/+0xc) - translationOffset
+// (the float pair at 184/188), x in (-120, 120), y in (-144, 142), every
+// edge exclusive.
+struct BlockheadFrame {
+    float window_x = 0.0f;  // windowInfo[+8]
+    float window_y = 0.0f;  // windowInfo[+0xc]
+    float offset_x = 0.0f;  // translationOffset[0] (@184)
+    float offset_y = 0.0f;  // translationOffset[1] (@188)
+};
+
+bool blockheadui_touch_is_in_view_at_all(Point p, const BlockheadFrame& f);
+
+// BlockheadUI -touchIsInUI: (0x006FD314..0x006FD69C, 226w): the children's
+// OR in the decoded order — getWorkbenchButton@80, nameEditButton@96, then
+// sleepButton@84, meditateButton@88 — EXCEPT that a set
+// stopButtonDisplayed@76 routes to stopButton@92 and RETURNS right after it
+// (sleepButton/meditateButton are never tried in that regime).
+struct BlockheadChildren {
+    const ChildReply* workbench = nullptr;  // getWorkbenchButton @80
+    const ChildReply* name_edit = nullptr;  // nameEditButton @96
+    const ChildReply* stop = nullptr;       // stopButton @92
+    const ChildReply* sleep = nullptr;      // sleepButton @84
+    const ChildReply* meditate = nullptr;   // meditateButton @88
+    bool stop_displayed = false;            // stopButtonDisplayed@76
+};
+
+PanelTrace blockheadui_touch_is_in_ui(const BlockheadChildren& c, Point p);
+
+// BlockheadUI -startTouch:tapCount: (0x006FD69C..0x006FDA2C, 228w): the
+// SAME chain as touchIsInUI: but with the one-argument startTouch: — the
+// children's handles replies, first nonzero wins, the stopButtonDisplayed
+// gate ending the chain at stopButton.
+PanelTrace blockheadui_start_touch(const BlockheadChildren& c, Point p);
+
+// BlockheadUI -moveTouch: (159w) / -endTouch: (159w): ALL children in the
+// same order, no short-circuit, and the same gate early-exit (with the gate
+// set the chain ends at stopButton); void.
+PanelTrace blockheadui_move_touch(const BlockheadChildren& c, Point p);
+PanelTrace blockheadui_end_touch(const BlockheadChildren& c, Point p);
+
+// --- the constant-verdict panels (decoded) --------------------------------
+// These panels' rect / in-UI bodies rebase the point into dead locals (the
+// windowInfo(+8/+0xc) reads happen; the results are discarded) and return
+// the class's literal (`movw lr, #N; sxtb r0, lr`) — no receiver is ever
+// messaged and nothing is written. Arm-attested per class:
+//   MapUI      rect 0 / inUI 0 (its press returns 0; move/end are 7w stubs)
+//   OptionsUI  rect 1 / inUI 0
+//   ShareUI    rect 1 / inUI 0
+//   PauseUI    rect 1 (its in-UI is 79w and not yet decoded)
+//   MainMenuUI rect 1 / inUI 1
+constexpr bool kMapUiRect = false;
+constexpr bool kMapUiInUi = false;
+constexpr int kMapUiPress = 0;
+constexpr bool kOptionsUiRect = true;
+constexpr bool kOptionsUiInUi = false;
+constexpr bool kShareUiRect = true;
+constexpr bool kShareUiInUi = false;
+constexpr bool kPauseUiRect = true;
+constexpr bool kMainMenuUiRect = true;
+constexpr bool kMainMenuUiInUi = true;
+
+// --- the WorkbenchProgressBarUI panel -------------------------------------
+// rect (95w): the same four-compare shape as CraftUI with its own numbers —
+// local = point - windowInfo(+8/+0xc) - translationOffset(@120/@124);
+// x in (-120, 120), y in (0, 102), every edge exclusive. Everything else is
+// constant: touchIsInUI: returns 0 (59w, the rebase is dead), the press
+// returns 0 (61w), moveTouch:/endTouch: are empty void bodies (56w each) —
+// no receiver is ever messaged.
+bool wbpbarui_touch_is_in_view_at_all(Point p, const PanelFrame& f);
+constexpr bool kWorkbenchProgressBarInUi = false;
+constexpr int kWorkbenchProgressBarPress = 0;
+
+// --- the CameraUI panel ---------------------------------------------------
+// rect (32w): constant 1 (dead rebase, windowInfo@96). touchIsInUI: (78w)
+// and startTouch:tapCount: (99w) are the two-child OR in the order
+// cancelButton@104, takePhotoButton@108 (short-circuit; the press uses the
+// one-argument startTouch:); moveTouch:/endTouch: (66w each) message BOTH
+// children.
+constexpr bool kCameraUiRect = true;
+PanelTrace cameraui_touch_is_in_ui(const ChildReply* cancel,
+                                   const ChildReply* photo);
+PanelTrace cameraui_start_touch(const ChildReply* cancel,
+                                const ChildReply* photo);
+PanelTrace cameraui_move_touch(const ChildReply* cancel,
+                               const ChildReply* photo);
+PanelTrace cameraui_end_touch(const ChildReply* cancel,
+                              const ChildReply* photo);
+
+// --- the PetUI panel ------------------------------------------------------
+// rect (98w): local = point - windowInfo(+8/+0xc) - translationOffset(@136);
+// x in (-120, 120), y in (-16, 114), all edges exclusive. The four chains
+// message the SINGLE child nameEditButton@52: touchIsInUI: (91w) and the
+// press (93w) return its reply, moveTouch:/endTouch: (68w each) are void.
+bool petui_touch_is_in_view_at_all(Point p, const PanelFrame& f);
+PanelTrace petui_touch_is_in_ui(const ChildReply* name_edit);
+PanelTrace petui_start_touch(const ChildReply* name_edit);
+PanelTrace petui_move_touch(const ChildReply* name_edit);
+PanelTrace petui_end_touch(const ChildReply* name_edit);
+
+// --- the WearUI panel -----------------------------------------------------
+// rect (118w): local = point - windowInfo(+8/+0xc) - translationOffset
+// (@152); the x compares run in DOUBLE against +-w/2 (frameSize.w, an
+// embedded float pair at @28/@32), y in (0, h - 16) in f32 — all edges
+// exclusive. The chains message the SINGLE child wearButton@60:
+// touchIsInUI: (69w) / the press (93w) return its reply, move/end (68w)
+// each are void.
+bool wearui_touch_is_in_view_at_all(Point p, const PanelFrame& f,
+                                    float w, float h);
+PanelTrace wearui_touch_is_in_ui(const ChildReply* wear_button);
+PanelTrace wearui_start_touch(const ChildReply* wear_button);
+PanelTrace wearui_move_touch(const ChildReply* wear_button);
+PanelTrace wearui_end_touch(const ChildReply* wear_button);
+
+// --- the RegenerateUI panel -----------------------------------------------
+// rect (95w): local = point - windowInfo(+8/+0xc) - translationOffset
+// (@128); x in (-120, 120), y in (0, 184), all edges exclusive.
+// touchIsInUI: (122w) / startTouch:tapCount: (127w) are the two-child OR
+// in the order dieButton@120, completeButton@124 (short-circuit, the press
+// uses the one-arg startTouch:); moveTouch:/endTouch: (87w each) message
+// BOTH children.
+bool regenerateui_touch_is_in_view_at_all(Point p, const PanelFrame& f);
+PanelTrace regenerateui_touch_is_in_ui(const ChildReply* die,
+                                       const ChildReply* complete);
+PanelTrace regenerateui_start_touch(const ChildReply* die,
+                                    const ChildReply* complete);
+PanelTrace regenerateui_move_touch(const ChildReply* die,
+                                   const ChildReply* complete);
+PanelTrace regenerateui_end_touch(const ChildReply* die,
+                                  const ChildReply* complete);
+
+// --- the TradingPostBuyUI panel -------------------------------------------
+// rect (98w): x in (-82, 82), y in (-16, 190), all edges exclusive. ALL
+// four chains gate on the closed@172 byte: closed != 0 -> return 0 with
+// ZERO child calls (move/end skip too). Open: touchIsInUI: (130w) /
+// startTouch:tapCount: (131w) are the two-child OR countSlider@164 ->
+// buyButton@192, short-circuit; NOTE the inUI fall-through messages
+// buyButton with startTouch: (an original-code quirk the differential
+// pins). moveTouch:/endTouch: (107w each) message BOTH children.
+bool tpbuyui_touch_is_in_view_at_all(Point p, const PanelFrame& f);
+PanelTrace tpbuyui_touch_is_in_ui(bool closed, const ChildReply* slider,
+                                  const ChildReply* buy);
+PanelTrace tpbuyui_start_touch(bool closed, const ChildReply* slider,
+                               const ChildReply* buy);
+PanelTrace tpbuyui_move_touch(bool closed, const ChildReply* slider,
+                              const ChildReply* buy);
+PanelTrace tpbuyui_end_touch(bool closed, const ChildReply* slider,
+                             const ChildReply* buy);
+
+// --- the SoundOptionsUI panel ---------------------------------------------
+// rect (32w) is the constant 1 (dead windowInfo read); touchIsInUI: (32w)
+// the constant 0. startTouch:tapCount: (95w) messages ALL THREE children
+// [OKButton@104, musicSlider@112, soundSlider@120] with the one-arg
+// startTouch: and returns the constant local 0 — the child replies land in
+// dead stack slots (an original-code quirk). moveTouch:/endTouch: (82w
+// each) message all three.
+constexpr bool kSoundOptionsUiRect = true;
+constexpr int kSoundOptionsUiInUi = 0;
+PanelTrace soundoptionsui_start_touch(const ChildReply* ok,
+                                      const ChildReply* music,
+                                      const ChildReply* sound);
+PanelTrace soundoptionsui_move_touch(const ChildReply* ok,
+                                     const ChildReply* music,
+                                     const ChildReply* sound);
+PanelTrace soundoptionsui_end_touch(const ChildReply* ok,
+                                    const ChildReply* music,
+                                    const ChildReply* sound);
+
+// --- the InventoryFullUI panel --------------------------------------------
+// rect (95w): local = point - windowInfo(+8/+0xc) - translationOffset
+// (@120); x in (-120, 120), y in (0, 126), all edges exclusive.
+// touchIsInUI: (58w) and startTouch:tapCount: (63w) both return the
+// constant 0 after full (dead) rebases; moveTouch:/endTouch: (56w each)
+// are the rebases alone — no child calls anywhere.
+bool inventoryfullui_touch_is_in_view_at_all(Point p,
+                                             const PanelFrame& f);
+constexpr int kInventoryFullUiInUi = 0;
+constexpr int kInventoryFullUiPress = 0;
+
+// --- the FreeOfferUI panel ------------------------------------------------
+// rect (32w) is the constant 1 (dead rebase); touchIsInUI: (32w) the
+// constant 0. startTouch:tapCount: (108w): local = [exitButton@152
+// startTouch:pt], then for i in 0..offerCount@156-1: if (local == 0)
+// local = norm([buyButton[i] startTouch:pt]) — buyButton@36 is an ARRAY
+// of button pointers, so the walk calls one entry per index until the
+// first true, then iterates the rest with no calls; returns the OR.
+// moveTouch:/endTouch: (89w each) message exitButton then EVERY
+// buyButton[i] (the same loop without short-circuit).
+constexpr bool kFreeOfferUiRect = true;
+constexpr int kFreeOfferUiInUi = 0;
+PanelTrace freeofferui_start_touch(const ChildReply* exit_btn,
+                                   const ChildReply* const* buy_arr,
+                                   int offer_count);
+PanelTrace freeofferui_move_touch(const ChildReply* exit_btn,
+                                  const ChildReply* const* buy_arr,
+                                  int offer_count);
+PanelTrace freeofferui_end_touch(const ChildReply* exit_btn,
+                                 const ChildReply* const* buy_arr,
+                                 int offer_count);
+
+// --- the AddCreditUI panel ------------------------------------------------
+// rect (32w) is the constant 1; touchIsInUI: (32w) the constant 0.
+// startTouch:tapCount: (111w) gates on inProgress@160: set -> return 1
+// with ZERO calls; clear -> message ALL THREE [cancelButton@128,
+// add1WeekButton@132, add1MonthButton@136] with the one-arg startTouch:
+// and return the constant 0 (the replies land in dead slots).
+// moveTouch:/endTouch: (95w each) gate the same way, then message all
+// three.
+constexpr bool kAddCreditUiRect = true;
+constexpr int kAddCreditUiInUi = 0;
+PanelTrace addcredit_ui_start_touch(bool in_progress,
+                                    const ChildReply* cancel,
+                                    const ChildReply* week,
+                                    const ChildReply* month);
+PanelTrace addcredit_ui_move_touch(bool in_progress,
+                                   const ChildReply* cancel,
+                                   const ChildReply* week,
+                                   const ChildReply* month);
+PanelTrace addcredit_ui_end_touch(bool in_progress,
+                                  const ChildReply* cancel,
+                                  const ChildReply* week,
+                                  const ChildReply* month);
+
+// --- the ControlOptionsUI panel -------------------------------------------
+// rect (32w) is the constant 1 (dead rebase); touchIsInUI: (32w) the
+// constant 0. startTouch:tapCount: (114w) messages ALL FOUR
+// [OKButton@104, tiltControlButton@112, directControlButton@120,
+// dpadSideButton@128] with the one-arg startTouch: and returns the
+// constant local 0; moveTouch:/endTouch: (98w each) message the same
+// four.
+constexpr bool kControlOptionsUiRect = true;
+constexpr int kControlOptionsUiInUi = 0;
+PanelTrace controloptionsui_start_touch(const ChildReply* ok,
+                                        const ChildReply* tilt,
+                                        const ChildReply* direct,
+                                        const ChildReply* dpad_side);
+PanelTrace controloptionsui_move_touch(const ChildReply* ok,
+                                       const ChildReply* tilt,
+                                       const ChildReply* direct,
+                                       const ChildReply* dpad_side);
+PanelTrace controloptionsui_end_touch(const ChildReply* ok,
+                                      const ChildReply* tilt,
+                                      const ChildReply* direct,
+                                      const ChildReply* dpad_side);
+
+// --- the HungerUI panel ---------------------------------------------------
+// rect (95w): local = point - windowInfo(+8/+0xc) - translationOffset
+// (@152); x in (-80, 80), y in (0, 92), all edges exclusive. The chains
+// message the SINGLE child eatButton@68: touchIsInUI: (69w) /
+// startTouch:tapCount: (93w) return its reply; moveTouch:/endTouch:
+// (68w each) are void.
+bool hungerui_touch_is_in_view_at_all(Point p, const PanelFrame& f);
+PanelTrace hungerui_touch_is_in_ui(const ChildReply* eat);
+PanelTrace hungerui_start_touch(const ChildReply* eat);
+PanelTrace hungerui_move_touch(const ChildReply* eat);
+PanelTrace hungerui_end_touch(const ChildReply* eat);
+
+// --- the JetPackUI panel --------------------------------------------------
+// rect (95w): local = point - windowInfo(+8/+0xc) - translationOffset
+// (@144); x in (-120, 120), y in (0, 108), all edges exclusive.
+// touchIsInUI: (103w) / startTouch:tapCount: (105w) are the two-child OR
+// in the order addFuelButton@44, freeFlightButton@48 (short-circuit);
+// moveTouch:/endTouch: (87w each) message BOTH children.
+bool jetpackui_touch_is_in_view_at_all(Point p, const PanelFrame& f);
+PanelTrace jetpackui_touch_is_in_ui(const ChildReply* add_fuel,
+                                    const ChildReply* free_flight);
+PanelTrace jetpackui_start_touch(const ChildReply* add_fuel,
+                                 const ChildReply* free_flight);
+PanelTrace jetpackui_move_touch(const ChildReply* add_fuel,
+                                const ChildReply* free_flight);
+PanelTrace jetpackui_end_touch(const ChildReply* add_fuel,
+                               const ChildReply* free_flight);
+
+// --- the SleepProgressUI panel --------------------------------------------
+// rect (95w): local = point - windowInfo(+8/+0xc) - translationOffset
+// (@128); x in (-120, 120), y in (0, 110). touchIsInUI: (132w) /
+// startTouch:tapCount: (138w): local = [abortButton@120 ...]; the
+// isMeditation@140 gate sits BEFORE the second child — when set,
+// completeButton@124 is never reached; otherwise the standard
+// short-circuit OR. moveTouch:/endTouch: (100w each): abortButton always,
+// completeButton only when !isMeditation.
+bool sleepprogressui_touch_is_in_view_at_all(Point p,
+                                             const PanelFrame& f);
+PanelTrace sleepprogressui_touch_is_in_ui(bool is_meditation,
+                                          const ChildReply* abort_btn,
+                                          const ChildReply* complete_btn);
+PanelTrace sleepprogressui_start_touch(bool is_meditation,
+                                       const ChildReply* abort_btn,
+                                       const ChildReply* complete_btn);
+PanelTrace sleepprogressui_move_touch(bool is_meditation,
+                                      const ChildReply* abort_btn,
+                                      const ChildReply* complete_btn);
+PanelTrace sleepprogressui_end_touch(bool is_meditation,
+                                     const ChildReply* abort_btn,
+                                     const ChildReply* complete_btn);
+
+// --- the AddFuelUI panel --------------------------------------------------
+// rect (95w): local = point - windowInfo(+8/+0xc) - translationOffset
+// (@148); x in (-120, 120), y in (0, 108), all edges exclusive. The four
+// chains NSFastEnumeration over fuelButtons@40: touchIsInUI: (180w) /
+// startTouch:tapCount: (183w) walk the batch and BREAK on the first true
+// reply (the exhausted batch re-requests countByEnumerating once);
+// moveTouch:/endTouch: (171w each) message EVERY element.
+bool addfuelui_touch_is_in_view_at_all(Point p, const PanelFrame& f);
+PanelTrace addfuelui_touch_is_in_ui(const ChildReply* const* items,
+                                    int count);
+PanelTrace addfuelui_start_touch(const ChildReply* const* items,
+                                 int count);
+PanelTrace addfuelui_move_touch(const ChildReply* const* items, int count);
+PanelTrace addfuelui_end_touch(const ChildReply* const* items, int count);
+
+// --- the PaintMixUI panel -------------------------------------------------
+// rect (95w): local = point - windowInfo(+8/+0xc) - translationOffset
+// (@160); x in (-130, 130), y in (0, 262), all edges exclusive. The
+// inUI/press chains are workbench.level-gated: [scrollingButtons[0] ...]
+// always; [workbench level] decides whether scrollingButtons[1]
+// (level > 0, then a SECOND level probe for scrollingButtons[2] with
+// level > 1) runs; countSlider@128 and craftButton@120 follow
+// unconditionally, each behind the local short-circuit.
+// moveTouch:/endTouch: (195w each): SB0 always, the same level gates,
+// then countSlider and craftButton — no short-circuit.
+bool paintmixui_touch_is_in_view_at_all(Point p, const PanelFrame& f);
+PanelTrace paintmixui_touch_is_in_ui(int level, const ChildReply* sb0,
+                                     const ChildReply* sb1,
+                                     const ChildReply* sb2,
+                                     const ChildReply* slider,
+                                     const ChildReply* craft);
+PanelTrace paintmixui_start_touch(int level, const ChildReply* sb0,
+                                  const ChildReply* sb1,
+                                  const ChildReply* sb2,
+                                  const ChildReply* slider,
+                                  const ChildReply* craft);
+PanelTrace paintmixui_move_touch(int level, const ChildReply* sb0,
+                                 const ChildReply* sb1,
+                                 const ChildReply* sb2,
+                                 const ChildReply* slider,
+                                 const ChildReply* craft);
+PanelTrace paintmixui_end_touch(int level, const ChildReply* sb0,
+                                const ChildReply* sb1,
+                                const ChildReply* sb2,
+                                const ChildReply* slider,
+                                const ChildReply* craft);
+
+// --- the PauseUI panel (the inUI/press/move/end batch) --------------------
+// touchIsInUI: (79w): disabled@138 gate -> 0 with NO calls; else if
+// optionsUI@8 non-nil -> [optionsUI touchIsInUI:pt] (its reply returned);
+// else 0 (the dead rect). startTouch:tapCount: (261w): the same gate; else
+// optionsUI non-nil -> [optionsUI startTouch:tapCount:pt tapCount]
+// returned; else shareUI@12 non-nil -> [shareUI startTouch:tapCount:...]
+// returned; else SEVEN buttons [resumeButton@132, tcButton@108,
+// achievementsButton@120, instructionsButton@128, exitButton@104,
+// optionsButton@116, shareButton@112] each [startTouch:] and the constant
+// 0 (dead replies). moveTouch:/endTouch: (218w each): the same
+// gates/order with their selectors; the else path walks the seven.
+PanelTrace pauseui_touch_is_in_ui(bool disabled, const ChildReply* options_ui);
+PanelTrace pauseui_start_touch(bool disabled, const ChildReply* options_ui,
+                               const ChildReply* share_ui,
+                               const ChildReply* const* buttons /* 7 */);
+PanelTrace pauseui_move_touch(bool disabled, const ChildReply* options_ui,
+                              const ChildReply* share_ui,
+                              const ChildReply* const* buttons /* 7 */);
+PanelTrace pauseui_end_touch(bool disabled, const ChildReply* options_ui,
+                             const ChildReply* share_ui,
+                             const ChildReply* const* buttons /* 7 */);
+
+// --- the ShareUI panel (the press/move/end batch) -------------------------
+// startTouch:tapCount: (171w) messages the SEVEN buttons [OKButton@104,
+// shareAppButton@108, portalButton@116, inviteToWorldButton@112,
+// twitterButton@120, facebookButton@124, forumsButton@128] each
+// [startTouch:] (replies dead) and returns the constant local 0.
+// moveTouch:/endTouch: (146w each) walk the same seven.
+PanelTrace shareui_start_touch(const ChildReply* const* buttons /* 7 */);
+PanelTrace shareui_move_touch(const ChildReply* const* buttons /* 7 */);
+PanelTrace shareui_end_touch(const ChildReply* const* buttons /* 7 */);
+
+// --- the OptionsUI panel (the press/move/end batch) -----------------------
+// startTouch:tapCount: (265w): the three sub-UIs gate in order —
+// multiplayerWorldOptionsUI@136 -> soundOptionsUI@140 -> controlOptionsUI
+// @144 (each nil-checked: the first non-nil one takes the call
+// [sub startTouch:tapCount:pt tapCount] and its reply is returned); when
+// all three are nil, SIX buttons [OKButton@104, restoreButton@124,
+// hdTexturesButton@112, soundOptionsButton@116, multiplayerOptionsButton
+// @128, controlOptionsButton@120] each [startTouch:] and the constant 0.
+// move/end (220w each): the same cascade with their selectors.
+PanelTrace optionsui_start_touch(const ChildReply* mpw,
+                                 const ChildReply* snd,
+                                 const ChildReply* ctl,
+                                 const ChildReply* const* buttons /* 6 */);
+PanelTrace optionsui_move_touch(const ChildReply* mpw,
+                                const ChildReply* snd,
+                                const ChildReply* ctl,
+                                const ChildReply* const* buttons /* 6 */);
+PanelTrace optionsui_end_touch(const ChildReply* mpw,
+                               const ChildReply* snd,
+                               const ChildReply* ctl,
+                               const ChildReply* const* buttons /* 6 */);
+
+// --- the MainMenuUI panel (the press batch) -------------------------------
+// startTouch:tapCount: (437w): attemptingToConnectToWorld@468 -> 0 with
+// NO calls; else tcUI@444 -> addCreditUI@476 -> mainMenuOptionsUI@48
+// (each nil-checked, the first non-nil takes [sub startTouch:tapCount:pt
+// tapCount] and its reply is returned); else loading@408 -> 0; else the
+// selection dispatch currentMainMenuSelection@452 (3 -> loadWorldUI@456,
+// 1 -> createWorldUI@460, 2 -> joinWorldUI@464, each [startTouch:pt],
+// short-circuit OR'd with) timeCrystalButton@420 -> moreGamesButton@432
+// -> settingsButton@440. Then the state writes: startTouchWasInView@361
+// = !local, scrollInProgress@360 = 0, lastX@356 = x_local, and
+// scrollTargetIndex@364 = -3 when startTouchWasInView. Returns local.
+PanelTrace mainmenuui_start_touch(bool connecting,
+                                  const ChildReply* tc_ui,
+                                  const ChildReply* add_credit,
+                                  const ChildReply* mm_options,
+                                  bool loading,
+                                  int selection,
+                                  const ChildReply* load_world,
+                                  const ChildReply* create_world,
+                                  const ChildReply* join_world,
+                                  const ChildReply* time_crystal,
+                                  const ChildReply* more_games,
+                                  const ChildReply* settings);
+
+// --- the MainMenuUI panel (the move batch) --------------------------------
+// moveTouch: (607w): the same gate cascade and selection dispatch with
+// [moveTouch:]; then the startTouchWasInView@361 gate. Not-in-view -> the
+// three buttons [timeCrystalButton@420, settingsButton@440,
+// moreGamesButton@432]. In-view: dx = x_local - lastX@356; |dx| > 2 (or
+// scrollInProgress@360 already set) latches scrollInProgress = 1 and runs
+// the kinetic block: [self delegate] gameSaves -> count (two stubbed
+// sends), the +-160 x 0.75 extents, the out-of-bounds dx halving, and the
+// state writes lastX = currentScroll@348 + dx, scrollVelocity@352 =
+// dx x 2, currentScroll += dx; otherwise (a small drag) the three
+// buttons run. Void.
+PanelTrace mainmenuui_move_touch(bool connecting,
+                                 const ChildReply* tc_ui,
+                                 const ChildReply* add_credit,
+                                 const ChildReply* mm_options,
+                                 bool loading,
+                                 int selection,
+                                 const ChildReply* load_world,
+                                 const ChildReply* create_world,
+                                 const ChildReply* join_world,
+                                 bool start_touch_was_in_view,
+                                 bool scroll_in_progress,
+                                 float x_local,
+                                 float last_x,
+                                 int gs_count);
+
+}  // namespace blockheads::ui

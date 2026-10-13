@@ -1,0 +1,140 @@
+{
+ "schema": 1,
+ "target": "PaintMixUI:craftButton:",
+ "imp": "0x673388",
+ "why_this_is_different": "the static tracker needed a rule to recognise a record buffer and its precision measured 1 in 3; here the buffer is identified AT RUN TIME - the destination of the length-124 memset stub call - so a store inside [base, base+124) is a field write because its address was observed, not because an offset matched",
+ "method": "the record buffer is identified AT RUN TIME by the length-124 memset/memcpy stub call (its destination is the base), and every store inside [base, base+124) is a record field write by construction - observed addresses, not matched offsets",
+ "receiver": "all-zero receiver",
+ "counts": {
+  "instructions": 577,
+  "stub_calls": 1,
+  "stores_total": 180,
+  "field_stores": 7,
+  "distinct_field_offsets": 7,
+  "zero_pages_invented": 1
+ },
+ "record_base": "0x40ffff50",
+ "field_stores": [
+  {
+   "offset": 16,
+   "size": 4,
+   "site": "0x673564",
+   "value": 101,
+   "occurrences": 1
+  },
+  {
+   "offset": 48,
+   "size": 4,
+   "site": "via-stub-return",
+   "value": 1,
+   "occurrences": 1
+  },
+  {
+   "offset": 52,
+   "size": 4,
+   "site": "0x6734a0",
+   "value": 0,
+   "occurrences": 1
+  },
+  {
+   "offset": 56,
+   "size": 4,
+   "site": "0x6734a0",
+   "value": 0,
+   "occurrences": 1
+  },
+  {
+   "offset": 60,
+   "size": 4,
+   "site": "0x6734a0",
+   "value": 0,
+   "occurrences": 1
+  },
+  {
+   "offset": 72,
+   "size": 4,
+   "site": "0x6734a0",
+   "value": 3,
+   "occurrences": 1
+  },
+  {
+   "offset": 86,
+   "size": 2,
+   "site": "via-stub-return",
+   "value": 0,
+   "occurrences": 1
+  }
+ ],
+ "stubs": [
+  {
+   "stub": "stub-2924(memset)",
+   "site": "0x1c2924",
+   "r0": "0x40ffff50",
+   "r1": "0x0",
+   "r2": "0x7c"
+  }
+ ],
+ "stopped": null,
+ "interpretation": {
+  "16": "f2[2] (int[8] at offset 8, element 2)",
+  "48": "f3[2] (int[8] at 40, element 2)",
+  "52": "f3[3]",
+  "56": "f3[4]",
+  "60": "f3[5]",
+  "72": "f4",
+  "86": "f8 - the 16-bit field the static reading also found at strh r7,[fp,#-0x52]"
+ },
+ "agreements_with_the_static_reading": [
+  "offset 86 is the same 16-bit field both approaches find",
+  "the array at offset 40 receives small integers in both readings"
+ ],
+ "boundary": "a fabricated zeroed receiver decides which branch this run takes, sends are stubbed with r0 = 0, VFP is skipped: these are the writes THIS RUN performed into the record it built, not every write the original performs",
+ "receiver_sensitivity": {
+  "measured": {
+   "all-zero receiver": {
+    "instructions": 577,
+    "field_stores": 7
+   },
+   "flat object graph (every pointer slot -> its own zeroed page)": {
+    "instructions": 589,
+    "field_stores": 0,
+    "record_base": null
+   }
+  },
+  "reading": "enriching the receiver REMOVED the case: with non-null pointer fields the method takes the other branch and never builds a record (the length-124 stub call does not happen). Same receiver-sensitivity the msgSend traces showed; the productive receiver here is the zeroed one"
+ },
+ "entry_point_sweep": {
+  "why": "the same runtime watch, run at every other construction entry point the static analysis pointed at, to widen field coverage without touching the rules",
+  "results": {
+   "PaintMixUI -[craftButton:]": {
+    "instructions": 577,
+    "field_stores": 7,
+    "record_base": "0x40ffff50",
+    "note": "the only entry point that fills fields with zero arguments"
+   },
+   "World -[craftOrConfigureItem:atWorkbench:withBlockhead:count:]": {
+    "instructions": 58,
+    "field_stores": 0,
+    "note": "returns after a guard - the argument slots are zero in this run"
+   },
+   "World -[craftItem:atWorkbench:withBlockhead:count:]": {
+    "instructions": 4178,
+    "field_stores": 0,
+    "note": "one stub call, but not a length-124 one: the record build is not reached"
+   },
+   "Workbench -[craftCompleted]": {
+    "instructions": 35,
+    "field_stores": 0,
+    "note": "returns immediately"
+   },
+   "CraftProgressUI -[setCraftingItem:craftingObject:blockhead:count:]": {
+    "instructions": 1015,
+    "field_stores": 0,
+    "record_base": "0x40ffff48",
+    "note": "a record buffer IS identified and prepared, but nothing is written into its fields in this run"
+   }
+  },
+  "reading": "the runtime watch is precise - a store in [base, base+124) is a field write by construction - but its coverage is gated by INPUTS, not by the method list. Only the entry point that fills fields from a zeroed receiver produced any, and enriching the receiver was measured to remove the case entirely. So the coverage gap cannot be closed by picking more methods or by fabricating richer inputs: it needs real arguments, which is the live route.",
+  "consequence_for_the_session_blocker": "this turns 'the live app would help' into a measured statement: the static route is exhausted for this record (rules unstable, precision 1/3), and the runtime route is input-gated in exactly the way a fabricated input cannot fix."
+ }
+}

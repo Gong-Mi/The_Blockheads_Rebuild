@@ -1,0 +1,20 @@
+# LoadWorldUI -[state]
+# types: i8@0:4
+# implementation: 0x008087ec
+# ARM.exidx end: 0x00808828
+
+            0x008087ec      08d04de2       sub sp, sp, 8
+            0x008087f0      04008de5       str r0, [sp, 4]
+            0x008087f4      00108de5       str r1, [sp]
+            0x008087f8      04009de5       ldr r0, [sp, 4]
+            0x008087fc      1c109fe5       ldr r1, [0x00808820]        ; [0x808820:4]=0xffffdfc8
+            0x00808800      1c209fe5       ldr r2, [0x00808824]        ; [0x808824:4]=0x8572e8
+            0x00808804      02208fe0       add r2, pc, r2
+            0x00808808      021091e7       ldr r1, [r1, r2]
+            0x0080880c      001091e5       ldr r1, [r1]
+            0x00808810      010090e7       ldr r0, [r0, r1]
+            0x00808814      5bf07ff5       dmb ish
+            0x00808818      08d08de2       add sp, sp, 8
+            0x0080881c      1eff2fe1       bx lr
+            0x00808820      c8dfffff       invalid
+            0x00808824      e8728500       addeq r7, r5, r8, ror 5

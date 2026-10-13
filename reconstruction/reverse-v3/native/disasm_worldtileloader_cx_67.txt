@@ -1,0 +1,43 @@
+# objectTypeMayHaveArtificalLight  [C function]
+# implementation: 0x00903420
+# ARM.exidx end: 0x00903594
+
+            ;-- objectTypeMayHaveArtificalLight(int):
+            0x00903420      00482de9       push {fp, lr}               ; objectTypeMayHaveArtificalLight(int)
+            0x00903424      0db0a0e1       mov fp, sp
+            0x00903428      08d04de2       sub sp, sp, 8
+            0x0090342c      011000e3       movw r1, 1
+            0x00903430      04008de5       str r0, [sp, 4]
+            0x00903434      04009de5       ldr r0, [sp, 4]
+            0x00903438      110050e3       cmp r0, 0x11
+            0x0090343c      00108de5       str r1, [sp]
+        ┌─< 0x00903440      1700000a       beq 0x9034a4
+        │   0x00903444      010000e3       movw r0, 1
+        │   0x00903448      04109de5       ldr r1, [sp, 4]
+        │   0x0090344c      100051e3       cmp r1, 0x10
+        │   0x00903450      00008de5       str r0, [sp]
+       ┌──< 0x00903454      1200000a       beq 0x9034a4
+       ││   0x00903458      010000e3       movw r0, 1
+       ││   0x0090345c      04109de5       ldr r1, [sp, 4]
+       ││   0x00903460      120051e3       cmp r1, 0x12
+       ││   0x00903464      00008de5       str r0, [sp]
+      ┌───< 0x00903468      0d00000a       beq 0x9034a4
+      │││   0x0090346c      04009de5       ldr r0, [sp, 4]
+      │││   0x00903470      6ae5feeb       bl sym.objectTypeIsPlant_int_ ; objectTypeIsPlant(int)
+      │││   0x00903474      011000e3       movw r1, 1
+      │││   0x00903478      7000afe6       sxtb r0, r0
+      │││   0x0090347c      000050e3       cmp r0, 0
+      │││   0x00903480      00108de5       str r1, [sp]
+     ┌────< 0x00903484      0600001a       bne 0x9034a4
+     ││││   0x00903488      04009de5       ldr r0, [sp, 4]
+     ││││   0x0090348c      8ee5feeb       bl sym.objectTypeIsInteractionObject_int_ ; objectTypeIsInteractionObject(int)
+     ││││   0x00903490      7000afe6       sxtb r0, r0
+     ││││   0x00903494      000050e3       cmp r0, 0
+     ││││   0x00903498      000000e3       movw r0, 0
+     ││││   0x0090349c      0100a013       movne r0, 1
+     ││││   0x009034a0      00008de5       str r0, [sp]
+     └└└└─> 0x009034a4      00009de5       ldr r0, [sp]
+            0x009034a8      010000e2       and r0, r0, 1
+            0x009034ac      7000afe6       sxtb r0, r0
+            0x009034b0      0bd0a0e1       mov sp, fp
+            0x009034b4      0088bde8       pop {fp, pc}

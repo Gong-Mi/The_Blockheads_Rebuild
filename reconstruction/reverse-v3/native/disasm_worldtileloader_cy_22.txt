@@ -1,0 +1,69 @@
+# baseGrowthRateForTreeType  [C function]
+# implementation: 0x004c1e84
+# ARM.exidx end: 0x004c1f84
+
+            ;-- baseGrowthRateForTreeType(TreeType):
+            0x004c1e84      14d04de2       sub sp, sp, 0x14            ; baseGrowthRateForTreeType(TreeType)
+            0x004c1e88      0c008de5       str r0, [sp, 0xc]
+            0x004c1e8c      010040e2       sub r0, r0, 1
+            0x004c1e90      090050e3       cmp r0, 9
+            0x004c1e94      08008de5       str r0, [sp, 8]
+        ┌─< 0x004c1e98      2e00008a       bhi 0x4c1f58
+        │   0x004c1e9c      08009de5       ldr r0, [sp, 8]
+        │   0x004c1ea0      0011a0e1       lsl r1, r0, 2
+        │   0x004c1ea4      04208fe2       add r2, pc, 4
+        │   0x004c1ea8      021091e7       ldr r1, [r1, r2]
+        │   0x004c1eac      02f081e0       add pc, r1, r2
+        │   0x004c1eb0      28000000       andeq r0, r0, r8, lsr 32
+        │   0x004c1eb4      34000000       andeq r0, r0, r4, lsr r0
+        │   0x004c1eb8      40000000       andeq r0, r0, r0, asr 32
+        │   0x004c1ebc      4c000000       andeq r0, r0, ip, asr 32
+        │   0x004c1ec0      60000000       andeq r0, r0, r0, rrx
+        │   0x004c1ec4      6c000000       andeq r0, r0, ip, rrx
+        │   0x004c1ec8      78000000       andeq r0, r0, r8, ror r0
+        │   0x004c1ecc      90000000       muleq r0, r0, r0
+        │   0x004c1ed0      9c000000       muleq r0, ip, r0
+        │   0x004c1ed4      84000000       andeq r0, r0, r4, lsl 1
+        │   0x004c1ed8      000ab5ee       vmov.f32 s0, 2
+        │   0x004c1edc      040a8ded       vstr s0, [sp, 0x10]
+       ┌──< 0x004c1ee0      200000ea       b 0x4c1f68
+       ││   0x004c1ee4      000ab6ee       vmov.f32 s0, 5
+       ││   0x004c1ee8      040a8ded       vstr s0, [sp, 0x10]
+      ┌───< 0x004c1eec      1d0000ea       b 0x4c1f68
+      │││   0x004c1ef0      000ab5ee       vmov.f32 s0, 2
+      │││   0x004c1ef4      040a8ded       vstr s0, [sp, 0x10]
+     ┌────< 0x004c1ef8      1a0000ea       b 0x4c1f68
+     ││││   0x004c1efc      010000e3       movw r0, 1
+     ││││   0x004c1f00      000ab7ee       vmov.f32 s0, 1
+     ││││   0x004c1f04      040a8ded       vstr s0, [sp, 0x10]
+     ││││   0x004c1f08      04008de5       str r0, [sp, 4]
+    ┌─────< 0x004c1f0c      150000ea       b 0x4c1f68
+    │││││   0x004c1f10      000ab5ee       vmov.f32 s0, 2
+    │││││   0x004c1f14      040a8ded       vstr s0, [sp, 0x10]
+   ┌──────< 0x004c1f18      120000ea       b 0x4c1f68
+   ││││││   0x004c1f1c      000ab6ee       vmov.f32 s0, 5
+   ││││││   0x004c1f20      040a8ded       vstr s0, [sp, 0x10]
+  ┌───────< 0x004c1f24      0f0000ea       b 0x4c1f68
+  │││││││   0x004c1f28      140a9fed       vldr s0, [0x004c1f80]
+  │││││││   0x004c1f2c      040a8ded       vstr s0, [sp, 0x10]
+  ────────< 0x004c1f30      0c0000ea       b 0x4c1f68
+  │││││││   0x004c1f34      100a9fed       vldr s0, [0x004c1f7c]
+  │││││││   0x004c1f38      040a8ded       vstr s0, [sp, 0x10]
+  ────────< 0x004c1f3c      090000ea       b 0x4c1f68
+  │││││││   0x004c1f40      000ab5ee       vmov.f32 s0, 2
+  │││││││   0x004c1f44      040a8ded       vstr s0, [sp, 0x10]
+  ────────< 0x004c1f48      060000ea       b 0x4c1f68
+  │││││││   0x004c1f4c      090a9fed       vldr s0, [0x004c1f78]
+  │││││││   0x004c1f50      040a8ded       vstr s0, [sp, 0x10]
+  ────────< 0x004c1f54      030000ea       b 0x4c1f68
+  ││││││└─> 0x004c1f58      010000e3       movw r0, 1
+  ││││││    0x004c1f5c      000ab7ee       vmov.f32 s0, 1
+  ││││││    0x004c1f60      040a8ded       vstr s0, [sp, 0x10]
+  ││││││    0x004c1f64      00008de5       str r0, [sp]
+  └└└└└└──> 0x004c1f68      040a9ded       vldr s0, [sp, 0x10]
+            0x004c1f6c      100a10ee       vmov r0, s0
+            0x004c1f70      14d08de2       add sp, sp, 0x14
+            0x004c1f74      1eff2fe1       bx lr
+            0x004c1f78      cdcccc3d       stcllo p12, c12, [ip, 0x334]
+            0x004c1f7c      cdcc4c3e       cdplo p12, 4, c12, c12, c13, 6
+            0x004c1f80      3333b33e       mrclo p3, 5, r3, c3, c3, 1

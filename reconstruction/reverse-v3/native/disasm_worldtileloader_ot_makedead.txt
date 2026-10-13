@@ -1,0 +1,31 @@
+# OrangeTree -[makeTileDead:]
+# types: v12@0:4^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}8
+# implementation: 0x00a98d70
+# ARM.exidx end: 0x00a98dd8
+
+            0x00a98d70      0cd04de2       sub sp, sp, 0xc
+            0x00a98d74      08008de5       str r0, [sp, 8]
+            0x00a98d78      04108de5       str r1, [sp, 4]
+            0x00a98d7c      00208de5       str r2, [sp]
+            0x00a98d80      00009de5       ldr r0, [sp]
+            0x00a98d84      0300d0e5       ldrb r0, [r0, 3]
+            0x00a98d88      120050e3       cmp r0, 0x12
+        ┌─< 0x00a98d8c      0300001a       bne 0xa98da0
+        │   0x00a98d90      250000e3       movw r0, 0x25               ; '%'
+        │   0x00a98d94      00109de5       ldr r1, [sp]
+        │   0x00a98d98      0300c1e5       strb r0, [r1, 3]
+       ┌──< 0x00a98d9c      0b0000ea       b 0xa98dd0
+       │└─> 0x00a98da0      00009de5       ldr r0, [sp]
+       │    0x00a98da4      0300d0e5       ldrb r0, [r0, 3]
+       │    0x00a98da8      130050e3       cmp r0, 0x13
+       │┌─< 0x00a98dac      0300000a       beq 0xa98dc0
+       ││   0x00a98db0      00009de5       ldr r0, [sp]
+       ││   0x00a98db4      0300d0e5       ldrb r0, [r0, 3]
+       ││   0x00a98db8      140050e3       cmp r0, 0x14
+      ┌───< 0x00a98dbc      0200001a       bne 0xa98dcc
+      ││└─> 0x00a98dc0      260000e3       movw r0, 0x26               ; '&'
+      ││    0x00a98dc4      00109de5       ldr r1, [sp]
+      ││    0x00a98dc8      0300c1e5       strb r0, [r1, 3]
+      └─┌─< 0x00a98dcc      ffffffea       b 0xa98dd0
+       └└─> 0x00a98dd0      0cd08de2       add sp, sp, 0xc
+            0x00a98dd4      1eff2fe1       bx lr

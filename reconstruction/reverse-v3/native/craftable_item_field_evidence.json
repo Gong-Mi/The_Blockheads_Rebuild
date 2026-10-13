@@ -1,0 +1,63 @@
+{
+ "schema": 1,
+ "scope": "field-level write evidence for the 124-byte CraftableItem record",
+ "method": "read out of the stack frame of PaintMixUI -[craftButton:] @0x00673388, where the record is built at fp-0xa8; the base is confirmed by the 124-byte copy-family calls that take that address, so field stores at fp-0xa8+offset are this record's fields rather than a coincidence of offset numbers",
+ "record_base_in_frame": "fp-0xa8",
+ "observed": {
+  "f8": {
+   "offset": 86,
+   "type": "S (2 bytes)",
+   "evidence": "ldrh r7,[...] followed by strh r7,[fp,#-0x52]; -0x52 == -0xa8 + 86, so a 16-bit value read elsewhere is stored into this field",
+   "site": "0x00673468",
+   "reading_NOT_name": "a 16-bit value; 'count' would be a guess"
+  },
+  "f3": {
+   "offset": 40,
+   "type": "int[8]",
+   "evidence": "str r6,[r4,#0x28] with r4 = (fp-0xa8) + i*4 and r6 = 1, so slot i of this array is set to 1; a second site stores the result of an objc_msgSend into the same array",
+   "sites": [
+    "0x00673540",
+    "0x00673724"
+   ],
+   "reading_NOT_name": "a per-slot flag/state array written with 1 and with an object-derived value"
+  },
+  "f2": {
+   "offset": 8,
+   "type": "int[8]",
+   "evidence": "stores land at (fp-0xa8) + 8 + i*4, with the value returned by the local helper at 0x00668560",
+   "site": "0x00673578",
+   "reading_NOT_name": "a per-slot array of helper-derived values"
+  }
+ },
+ "not_observed": [
+  "f0",
+  "f1",
+  "f4",
+  "f5",
+  "f6",
+  "f7",
+  "f9",
+  "f10"
+ ],
+ "copy_idiom": {
+  "zero": "movw r2,#0x7c ; sub r1,fp,#0xa8 ; bl 0x001c2924 (copy family)",
+  "copy_or_zero": "0x006733e4 bl 0x001c2918 with a source argument, guarded by a null check at 0x006733d0 - the record is either copied in or zeroed",
+  "by_value_forward": "0x0067398c..0x006739b0 copies 124 bytes (r2 = 0x7c) from the stack record to an out-parameter for the objc_msgSend at 0x006739c4 - this is the setCraftableItem: call"
+ },
+ "boundary": "these are observed write patterns inside one method, not names: nothing here says what the values MEAN, and the remaining eight fields have no evidence yet. The value of the batch is that the record's base address is now known and field-level tracking works from it, which the project previously recorded as the blocker for small structs.",
+ "copy_semantics": {
+  "correction": "the stubs at 0x001c2888/0x001c2918/0x001c2924/0x001c2948 are NOT local copy helpers: each is a PLT-style trampoline (add ip,pc,#0xe00000 ; add ip,ip,#0x9d000 ; ldr pc,[ip,#imm]!) that jumps through a GOT slot, i.e. a call to an IMPORTED function. Several earlier artifacts of mine called them 'the copy family' - the mechanism I used to serve them was right, the name was not.",
+  "identifications": {
+   "0x001c2924": "called with (r0 = dest, r1 = 0, r2 = 0x7c) in craftButton: - the argument shape is memset(dest, 0, 124), so the record is zero-initialised",
+   "0x001c2918": "called with (r0 = dest, r1 = source, r2 = another value) - the shape is memcpy(dest, src, n)"
+  },
+  "consequence": "inside craftButton: only f2 (offset 8), f3 (offset 40) and f8 (offset 86) are written field by field; the other eight fields arrive through the memcpy from a SOURCE record. Their meaning therefore lives with whoever owns that source, not in this method"
+ },
+ "unresolved_source": {
+  "site": "0x006733b8..0x006733e4",
+  "what_the_code_does": "loads a value from an ivar of PaintMixUI, stores it at sp+0x124, and passes it as the memcpy source (guarded: if it is null the record is only zeroed)",
+  "cell_scan_says": "the chain resolves to the ivar PaintMixUI.craftButton",
+  "conflict": "a UIButton outlet is an odd thing to memcpy 124 bytes from, so either that ivar holds a source record rather than a button (the name would then be misleading), or the cell scan's chain attribution for this site is off - only one of the two source chains in the block resolved at all, and this project has already recorded that method attribution breaks down in places",
+  "status": "recorded as unresolved rather than asserted either way"
+ }
+}

@@ -43,6 +43,11 @@ require("(type - 1) % 32" not in RENDERER and "(item.type - 1) % 32" not in REND
         "numeric IDs must not be used as guessed atlas coordinates")
 require("ItemManager::getInstance().getDef(item.type)" in RENDERER,
         "drop items must resolve through the item definition table")
+# Item ids are aligned to the original ItemType namespace via original_type;
+# the rebuild's own ids remain the app compatibility layer (see
+# ITEM_ID_ALIGNMENT.md) and must not be promoted to original semantics.
+require(all("original_type" in item for item in ITEM_DEFS.values()),
+        "every item definition must carry its aligned original_type")
 # The current rebuild IDs and texRow/texCol fields are compatibility placeholders.
 # Do not promote their cells to original semantic evidence: original rendering
 # resolves raw Tile fields into three draw-pass slots inside reloadDrawBlock.

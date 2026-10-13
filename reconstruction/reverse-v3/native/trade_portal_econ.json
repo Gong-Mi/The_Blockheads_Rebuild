@@ -1,0 +1,2577 @@
+{
+  "batch": "TradePortal economics batch (E9b): trade pricing and settlement - loadPriceOffsets: (price dict rebuild, [0.5, 2.0] clamp), currentBlockhead trio, setPaused:, sellItem:atTotalPrice:count:usageMultiplier:, buyItem:atTotalPrice:count:, upgradeToNextLevel, upgradeCraftableItem (level jump table), takeItemsFromBlockheadForUpgradeToNextLevel, randomizeLocalTradeOffsets (trade-table walk + powf price jitter), worldChanged:(vector<intpair>), isSellInteraction/isMissionInteraction (14 bodies)",
+  "claim": "static bounded-body maps with per-instruction anchors; runtime values, the UI consumers and the trade-table contents are outside these bodies",
+  "classes": [
+    {
+      "boundary": "ARM.exidx end 0x00d37d8c; the next ObjC IMP ([worldChanged:]) is at 0x00d3a8f8, so the body is bounded by the exidx entry",
+      "boundary_end": "0x00d37d8c",
+      "branches": [
+        {
+          "address": "0x00d37b1c",
+          "destination": "0x00d37d5c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d37b6c",
+          "destination": "0x00d37b78",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d37c14",
+          "destination": "0x00d37c24",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d37c20",
+          "destination": "0x00d37c54",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d37c3c",
+          "destination": "0x00d37c50",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d37c50",
+          "destination": "0x00d37c54",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d37cfc",
+          "destination": "0x00d37b48",
+          "mnemonic": "blo"
+        },
+        {
+          "address": "0x00d37d58",
+          "destination": "0x00d37b48",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d37d5c",
+          "destination": "0x00d37d60",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x00d37ae0"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00d37b10"
+        },
+        {
+          "callee": "0x001c2e28",
+          "route": "bl sym.imp.objc_enumerationMutation",
+          "site": "0x00d37b74"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d37be0"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d37bf8"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d37cbc"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d37ce0"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d37d44"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d37a78",
+      "ivars": {
+        "0x00d37d84": {
+          "offset": 128,
+          "slot": "0x0105f858",
+          "symbol": "OBJC_IVAR_$_TradePortal.localPriceOffsets"
+        }
+      },
+      "method": "TradePortal -[loadPriceOffsets:]",
+      "name": "tp_loadprice",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d37d68": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d37d6c": {
+          "selector": "countByEnumeratingWithState:objects:count:",
+          "slot": "0x00e887f0"
+        },
+        "0x00d37d70": {
+          "selector": "doubleValue",
+          "slot": "0x00e887f8"
+        },
+        "0x00d37d74": {
+          "selector": "objectForKey:",
+          "slot": "0x00e887f4"
+        },
+        "0x00d37d78": {
+          "selector": "setObject:forKey:",
+          "slot": "0x00e88800"
+        },
+        "0x00d37d7c": {
+          "selector": "numberWithDouble:",
+          "slot": "0x00e887fc"
+        },
+        "0x00d37d80": {
+          "class": "OBJC_CLASS_$_NSNumber",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8b754"
+        }
+      },
+      "semantics": "loadPriceOffsets: rebuilds the portal's price-offset dictionary by fast-enumerating the source dict (memset of the 0x20-byte NSFastEnumeration state, countByEnumeratingWithState:objects:count: at 0xd37ae0): per key objectForKey: then doubleValue, clamped to [0.5, 2.0] by the two VFP compare branches (0.5 at 0xd37b78, 2.0 at 0xd37c28/0xd37c44), then [NSNumber numberWithDouble:] and [self.localPriceOffsets setObject:forKey:] (ivar@128); the enumeration guard calls objc_enumerationMutation at 0xd37b74. Same clamp bounds as the b4i C++ contract in reconstruction/recovered/trade_portal_price_offsets.cpp.",
+      "types": "v12@0:4@8",
+      "verified_words": 197
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d3b1f4; the next ObjC IMP ([worldContentsChanged:]) is at 0x00d3b230, past a 0x3c-byte non-method gap",
+      "boundary_end": "0x00d3b1f4",
+      "branches": [
+        {
+          "address": "0x00d3a938",
+          "destination": "0x00d3a940",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3a93c",
+          "destination": "0x00d3b1a8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3aa88",
+          "destination": "0x00d3b1a8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3ab24",
+          "destination": "0x00d3ab98",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x00d3ab94",
+          "destination": "0x00d3acb0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3ac0c",
+          "destination": "0x00d3ac80",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00d3ac7c",
+          "destination": "0x00d3aca8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3acbc",
+          "destination": "0x00d3b168",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00d3ace8",
+          "destination": "0x00d3ad14",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3ad10",
+          "destination": "0x00d3b168",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x00d3ad74",
+          "destination": "0x00d3b164",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3ad88",
+          "destination": "0x00d3b164",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3ae04",
+          "destination": "0x00d3b160",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3ae14",
+          "destination": "0x00d3b160",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3ae74",
+          "destination": "0x00d3b15c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3ae84",
+          "destination": "0x00d3b15c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3af3c",
+          "destination": "0x00d3b158",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3af4c",
+          "destination": "0x00d3b158",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3af60",
+          "destination": "0x00d3b158",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3b018",
+          "destination": "0x00d3b154",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3b028",
+          "destination": "0x00d3b154",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3b03c",
+          "destination": "0x00d3b154",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3b0f4",
+          "destination": "0x00d3b150",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3b104",
+          "destination": "0x00d3b150",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3b118",
+          "destination": "0x00d3b150",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3b14c",
+          "destination": "0x00d3b1a8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3b150",
+          "destination": "0x00d3b154",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3b154",
+          "destination": "0x00d3b158",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3b158",
+          "destination": "0x00d3b15c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3b15c",
+          "destination": "0x00d3b160",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3b160",
+          "destination": "0x00d3b164",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3b164",
+          "destination": "0x00d3b168",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3b168",
+          "destination": "0x00d3b16c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3b1a4",
+          "destination": "0x00d3a9f0",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d3a998"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3ab00"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x00d3ab18"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3ab78"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3abf0"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x00d3ac00"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3ac60"
+        },
+        {
+          "callee": "0x00d3b1f4",
+          "route": "bl 0xd3b1f4",
+          "site": "0x00d3acb4"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d3ad60"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x00d3ad7c"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d3ade4"
+        },
+        {
+          "callee": "0x00a14450",
+          "route": "bl sym.tileIsHalfDepth_Tile__World__intpair_",
+          "site": "0x00d3adf8"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d3ae60"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d3aedc"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d3af1c"
+        },
+        {
+          "callee": "0x00a14450",
+          "route": "bl sym.tileIsHalfDepth_Tile__World__intpair_",
+          "site": "0x00d3af30"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x00d3af54"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d3afb8"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d3aff8"
+        },
+        {
+          "callee": "0x00a14450",
+          "route": "bl sym.tileIsHalfDepth_Tile__World__intpair_",
+          "site": "0x00d3b00c"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x00d3b030"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d3b094"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d3b0d4"
+        },
+        {
+          "callee": "0x00a14450",
+          "route": "bl sym.tileIsHalfDepth_Tile__World__intpair_",
+          "site": "0x00d3b0e8"
+        },
+        {
+          "callee": "0x00a1179c",
+          "route": "bl sym.tileIsSolid_Tile_",
+          "site": "0x00d3b10c"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00d3b148"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d3a8f8",
+      "ivars": {
+        "0x00d3b1b0": {
+          "offset": 52,
+          "slot": "0x0105c5c0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.isNet"
+        },
+        "0x00d3b1bc": {
+          "offset": 100,
+          "slot": "0x0105f854",
+          "symbol": "OBJC_IVAR_$_TradePortal.light"
+        },
+        "0x00d3b1c0": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x00d3b1c8": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        }
+      },
+      "method": "TradePortal -[worldChanged:]",
+      "name": "tp_worldchanged",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d3b1b4": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d3b1b8": {
+          "selector": "worldChanged:",
+          "slot": "0x00e8888c"
+        },
+        "0x00d3b1cc": {
+          "selector": "worldWidthMacro",
+          "slot": "0x00e88890"
+        },
+        "0x00d3b1ec": {
+          "selector": "remove:",
+          "slot": "0x00e88894"
+        }
+      },
+      "semantics": "worldChanged:(std::vector<intpair>&): the argument is the changed-position vector (begin/end at *(v+0)/*(v+4), 8-byte intpair elements; no stret). Gate: self.isNet@52 != 0 -> return (0xd3a938, 0xd3a93c). Otherwise the single delegate message is [self.light@100 worldChanged:changed] with plain objc_msgSend at 0xd3a998 - the receiver is the light ivar, not super (no objc_msgSendSuper import in this body). Then per element (cp): dx = self.pos.x - cp.x wrapped into [-ww<<5/2, ww<<5/2) using [self.world worldWidthMacro] and __aeabi_idiv (0xd3ab18, 0xd3ab88, 0xd3ac00, 0xd3ac70); the local helper at 0xd3b1f4 is abs(int) (called at 0xd3acb4) and |dx| must be < 2 (0xd3acbc). Y gate: cp.y == pos.y-1 or cp.y >= pos.y (0xd3ace0, 0xd3ad10). Then five tile probes through tileAtWorldPositionLoaded(x, y, world) @0x00a12f24: t0(pos.x, pos.y-1) must be non-nil && !tileIsSolid && !tileIsHalfDepth(intpair) && tile[3] != 0x60 (0xd3ad60, 0xd3ad88, 0xd3adf8, 0xd3ae10); t1(pos.x, pos.y) non-nil && tile[1] == 2 (0xd3ae84); t2(pos.x-1, pos.y), t3(pos.x+1, pos.y), t4(pos.x, pos.y+1) each !tileIsHalfDepth && tile[3] != 0x60 && !tileIsSolid (0xd3af30 .. 0xd3b094, no nil test on t2/t3/t4). Any failure skips the element; when all five pass the body calls [self remove:0] (0xd3b148, selector cell 0xd3b1ec) and returns.",
+      "types": "v12@0:4^{vector<intpair, std::__1::allocator<intpair> >=^{?}^{?}{__compressed_pair<intpair *, std::__1::allocator<intpair> >=^{?}}}8",
+      "verified_words": 575
+    },
+    {
+      "boundary": "consecutive IMPs: next method follows at 0x00d3c6d4",
+      "boundary_end": "0x00d3c6d4",
+      "branches": [
+        {
+          "address": "0x00d3c664",
+          "destination": "0x00d3c674",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3c670",
+          "destination": "0x00d3c6b8",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3c6b0"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d3c624",
+      "ivars": {
+        "0x00d3c6c4": {
+          "offset": 56,
+          "slot": "0x0105cac4",
+          "symbol": "OBJC_IVAR_$_InteractionObject.currentBlockhead"
+        }
+      },
+      "method": "TradePortal -[currentBlockheadCash]",
+      "name": "tp_cbcash",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d3c6c8": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d3c6cc": {
+          "selector": "totalCash",
+          "slot": "0x00e888c4"
+        }
+      },
+      "semantics": "currentBlockheadCash = nil-guarded [self.currentBlockhead totalCash] (InteractionObject.currentBlockhead@56 reached through slot 0x0105cac4): the cmp/beq at 0xd3c65c/0xd3c664 returns 0 when there is no blockhead, otherwise the single objc_msgSend at 0xd3c6b0 answers totalCash.",
+      "types": "i8@0:4",
+      "verified_words": 44
+    },
+    {
+      "boundary": "consecutive IMPs: next method follows at 0x00d3c818",
+      "boundary_end": "0x00d3c818",
+      "branches": [
+        {
+          "address": "0x00d3c718",
+          "destination": "0x00d3c728",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3c724",
+          "destination": "0x00d3c7f8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3c730",
+          "destination": "0x00d3c79c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3c798",
+          "destination": "0x00d3c7f8",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00d3c790"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d3c7f0"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d3c6d4",
+      "ivars": {
+        "0x00d3c804": {
+          "offset": 56,
+          "slot": "0x0105cac4",
+          "symbol": "OBJC_IVAR_$_InteractionObject.currentBlockhead"
+        }
+      },
+      "method": "TradePortal -[currentBlockheadCountOfInventoryItemsOfType:]",
+      "name": "tp_cbcount",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d3c808": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d3c80c": {
+          "selector": "countOfInventoryItemsOfType:includeActions:",
+          "slot": "0x00e888cc"
+        },
+        "0x00d3c810": {
+          "selector": "countOfInventoryItemsWithSpecificDataBOfType:dataB:includeActions:",
+          "slot": "0x00e888c8"
+        }
+      },
+      "semantics": "currentBlockheadCountOfInventoryItemsOfType: = nil-guarded dispatch on self.currentBlockhead (@56): the itemType argument (0xd3c728) is compared with 0x5b, and itemType 0x5b goes to countOfInventoryItemsWithSpecificDataBOfType:dataB:includeActions: with dataB = 0 (r3 set at 0xd3c734) and includeActions = 0 (stack slot written at 0xd3c788), every other type to countOfInventoryItemsOfType:includeActions: with includeActions = 0 (r3 from 0xd3c7e8); a nil blockhead returns 0 without any call.",
+      "types": "i12@0:4i8",
+      "verified_words": 81
+    },
+    {
+      "boundary": "consecutive IMPs: next method follows at 0x00d3c8e4",
+      "boundary_end": "0x00d3c8e4",
+      "branches": [
+        {
+          "address": "0x00d3c85c",
+          "destination": "0x00d3c874",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3c870",
+          "destination": "0x00d3c8c4",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00d3c8b8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d3c818",
+      "ivars": {
+        "0x00d3c8d4": {
+          "offset": 56,
+          "slot": "0x0105cac4",
+          "symbol": "OBJC_IVAR_$_InteractionObject.currentBlockhead"
+        }
+      },
+      "method": "TradePortal -[currentBlockheadUsageMultiplierForFirstItemOfType:]",
+      "name": "tp_cbusage",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d3c8d8": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d3c8dc": {
+          "selector": "usageMultiplierForFirstItemOfType:",
+          "slot": "0x00e888d0"
+        }
+      },
+      "semantics": "currentBlockheadUsageMultiplierForFirstItemOfType: = nil-guarded [self.currentBlockhead usageMultiplierForFirstItemOfType:itemType] (@56, call at 0xd3c8b8); the nil path loads 1.0f (vmov.f32 s0, #1 at 0xd3c864) into the return slot, so a portal without a current blockhead answers multiplier 1.0.",
+      "types": "f12@0:4i8",
+      "verified_words": 51
+    },
+    {
+      "boundary": "consecutive IMPs: next method follows at 0x00d3c9b8",
+      "boundary_end": "0x00d3c9b8",
+      "branches": [
+        {
+          "address": "0x00d3c938",
+          "destination": "0x00d3c99c",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00d3c980"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d3c8e4",
+      "ivars": {
+        "0x00d3c9a4": {
+          "offset": 116,
+          "slot": "0x0105f864",
+          "symbol": "OBJC_IVAR_$_TradePortal.paused"
+        },
+        "0x00d3c9a8": {
+          "offset": 112,
+          "slot": "0x0105f860",
+          "symbol": "OBJC_IVAR_$_TradePortal.sound"
+        }
+      },
+      "method": "TradePortal -[setPaused:]",
+      "name": "tp_setpaused",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d3c9ac": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d3c9b0": {
+          "selector": "stop",
+          "slot": "0x00e88888"
+        }
+      },
+      "semantics": "setPaused: stores the byte argument into TradePortal.paused@116 (strb at 0xd3c91c) and, when the stored value read back with ldrsb at 0xd3c92c is non-zero, calls [self.sound stop] (MJSoundManager ivar@112, objc_msgSend at 0xd3c980); no other state is touched and the paused byte is not reset.",
+      "types": "v12@0:4c8",
+      "verified_words": 53
+    },
+    {
+      "boundary": "consecutive IMPs: next method follows at 0x00d3d638",
+      "boundary_end": "0x00d3d638",
+      "branches": [
+        {
+          "address": "0x00d3cf5c",
+          "destination": "0x00d3d5d4",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00d3d14c",
+          "destination": "0x00d3d450",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00d3d448",
+          "destination": "0x00d3d144",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3d50c",
+          "destination": "0x00d3d5d0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3d538",
+          "destination": "0x00d3d5c8",
+          "mnemonic": "bhi"
+        },
+        {
+          "address": "0x00d3d570",
+          "destination": "0x00d3d5cc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3d594",
+          "destination": "0x00d3d5cc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3d5a4",
+          "destination": "0x00d3d5cc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3d5b4",
+          "destination": "0x00d3d5cc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3d5c4",
+          "destination": "0x00d3d5cc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3d5c8",
+          "destination": "0x00d3d5cc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3d5cc",
+          "destination": "0x00d3d5d0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3d5d0",
+          "destination": "0x00d3d5d4",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3cfdc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3cff4"
+        },
+        {
+          "callee": "0x004d0480",
+          "route": "bl method.Vector2.Vector2_float__float_",
+          "site": "0x00d3d03c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3d058"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3d0a0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3d0c4"
+        },
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x00d3d130"
+        },
+        {
+          "callee": "0x00d37798",
+          "route": "bl 0xd37798",
+          "site": "0x00d3d150"
+        },
+        {
+          "callee": "0x004d0d08",
+          "route": "bl method.Vector.Vector_float__float__float__float_",
+          "site": "0x00d3d1b4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3d1d8"
+        },
+        {
+          "callee": "0x00d37798",
+          "route": "bl 0xd37798",
+          "site": "0x00d3d1e0"
+        },
+        {
+          "callee": "0x00d37798",
+          "route": "bl 0xd37798",
+          "site": "0x00d3d204"
+        },
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x00d3d234"
+        },
+        {
+          "callee": "0x004d6538",
+          "route": "bl method.Vector.operator_Vector_",
+          "site": "0x00d3d25c"
+        },
+        {
+          "callee": "0x00d37798",
+          "route": "bl 0xd37798",
+          "site": "0x00d3d260"
+        },
+        {
+          "callee": "0x00d37798",
+          "route": "bl 0xd37798",
+          "site": "0x00d3d28c"
+        },
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x00d3d2c4"
+        },
+        {
+          "callee": "0x00d37798",
+          "route": "bl 0xd37798",
+          "site": "0x00d3d2e8"
+        },
+        {
+          "callee": "0x00d37798",
+          "route": "bl 0xd37798",
+          "site": "0x00d3d310"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3d438"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00d3d4a8"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3d4b8"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00d3d4f8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d3cf20",
+      "ivars": {
+        "0x00d3d5dc": {
+          "offset": 132,
+          "slot": "0x0105f85c",
+          "symbol": "OBJC_IVAR_$_TradePortal.level"
+        },
+        "0x00d3d5e0": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x00d3d5e4": {
+          "offset": 49,
+          "slot": "0x0105c3cc",
+          "symbol": "OBJC_IVAR_$_DynamicObject.updateNeedsToBeSent"
+        },
+        "0x00d3d600": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        },
+        "0x00d3d60c": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        }
+      },
+      "method": "TradePortal -[upgradeToNextLevel]",
+      "name": "tp_upgrade",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d3d5ec": {
+          "class": "OBJC_CLASS_$_MJSoundManager",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8b764"
+        },
+        "0x00d3d5f0": {
+          "selector": "instance",
+          "slot": "0x00e88874"
+        },
+        "0x00d3d5f4": {
+          "selector": "multiSoundNamed:",
+          "slot": "0x00e88878"
+        },
+        "0x00d3d5f8": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00fae268"
+        },
+        "0x00d3d5fc": {
+          "selector": "playAtPosition:",
+          "slot": "0x00e8887c"
+        },
+        "0x00d3d604": {
+          "selector": "objectType",
+          "slot": "0x00e8886c"
+        },
+        "0x00d3d608": {
+          "selector": "dynamicWorldChangedAtPos:objectType:",
+          "slot": "0x00e88870"
+        },
+        "0x00d3d610": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d3d614": {
+          "selector": "updateTradePortalUIs",
+          "slot": "0x00e888dc"
+        },
+        "0x00d3d618": {
+          "selector": "uiManager",
+          "slot": "0x00e888d8"
+        },
+        "0x00d3d620": {
+          "class": "OBJC_CLASS_$_ParticleEmitter",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8b768"
+        },
+        "0x00d3d62c": {
+          "selector": "addParticleAtPos:velocity:color:gravityType:life:scale:center:",
+          "slot": "0x00e88880"
+        }
+      },
+      "semantics": "upgradeToNextLevel: level@132 >= 5 returns immediately (0xd3cf54); otherwise level++ (0xd3cfa4). Sound: [MJSoundManager instance] then multiSoundNamed:@\"upgrade.wav\" (CFString 0xfae268) and playAtPosition:Vector2(pos.x, pos.y) (0xd3cfdc, 0xd3cff4, 0xd3d03c, 0xd3d058). Then [self.dynamicWorld@8 dynamicWorldChangedAtPos:(pos.x, pos.y) objectType:] with the objectType on the stack (0xd3d0c4) and self.updateNeedsToBeSent@49 = 1 (0xd3d0dc). Particles: base Vector v0 = (pos.x+0.5, pos.y, -0.5) (0xd3d130), loop i < 8 (0xd3d148): r = lrand48()/2147483648.0f - the called thunk 0xd37798 is {push {fp,lr}; mov fp,sp; bl lrand48@plt; pop {fp,pc}}, i.e. plain lrand48() (corrects the E9a batch description, which called 0xd37798 a price-hash helper) - colour Vector4 (r*1.5+0.231373, r*1.5+0.347059, 1.0, 0.5) (0xd3d1b4), velocity ((r-0.5)*4, (r-0.3)*4, 0) (0xd3d2c4), position v0+(r-0.5, 2r, 0) via Vector::operator+ (0xd3d25c), then [ParticleEmitter instance addParticleAtPos:velocity:color:gravityType:2 life:r*4+1 scale:r*4+4 center:v0] (0xd3d438). Tail: [[self.world uiManager] updateTradePortalUIs] (0xd3d4a8, 0xd3d4b8); tile = tileAtWorldPositionLoaded(pos.x, pos.y-1, world) and when non-nil switch (level-1, 0..4 through the 5-word table at 0xd3d550) writes tile[0] = {0x3d, 0x3e, 0x3f, 0x40, 0x41} (0xd3d56c).",
+      "types": "v8@0:4",
+      "verified_words": 454
+    },
+    {
+      "boundary": "consecutive IMPs: next method follows at 0x00d3dcf0",
+      "boundary_end": "0x00d3dcf0",
+      "branches": [
+        {
+          "address": "0x00d3d690",
+          "destination": "0x00d3dc54",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3d69c",
+          "destination": "0x00d3d6c8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3d6ac",
+          "destination": "0x00d3d6c8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3d6b8",
+          "destination": "0x00d3d6c8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3d6c4",
+          "destination": "0x00d3d6cc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3d6c8",
+          "destination": "0x00d3dc50",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3d6dc",
+          "destination": "0x00d3d6e8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3d774",
+          "destination": "0x00d3dc3c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3d798",
+          "destination": "0x00d3d83c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3d7e4",
+          "destination": "0x00d3d83c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3d904",
+          "destination": "0x00d3d93c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3d95c",
+          "destination": "0x00d3d96c",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d3d968",
+          "destination": "0x00d3d99c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3d984",
+          "destination": "0x00d3d998",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d3d998",
+          "destination": "0x00d3d99c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3dc38",
+          "destination": "0x00d3dc4c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3dc4c",
+          "destination": "0x00d3dc50",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3dc50",
+          "destination": "0x00d3dc54",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d3d750"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3d760"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3d7d8"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d3d838"
+        },
+        {
+          "callee": null,
+          "route": "blx r5",
+          "site": "0x00d3d8bc"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d3d8f0"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3d930"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3d9e8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3da0c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3da3c"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d3dabc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3db24"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3db64"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3db88"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3dbb8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3dbd0"
+        },
+        {
+          "callee": "0x004d0480",
+          "route": "bl method.Vector2.Vector2_float__float_",
+          "site": "0x00d3dc08"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3dc34"
+        },
+        {
+          "callee": "0x001c2a5c",
+          "route": "bl sym.imp.NSLog",
+          "site": "0x00d3dc48"
+        }
+      ],
+      "disjoint_branch_rows": [
+        {
+          "address": "0x00d3dc60",
+          "destination": "0x01e2326c",
+          "mnemonic": "blhi"
+        }
+      ],
+      "imp": "0x00d3d638",
+      "ivars": {
+        "0x00d3dc68": {
+          "offset": 56,
+          "slot": "0x0105cac4",
+          "symbol": "OBJC_IVAR_$_InteractionObject.currentBlockhead"
+        },
+        "0x00d3dc7c": {
+          "offset": 52,
+          "slot": "0x0105c5c0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.isNet"
+        },
+        "0x00d3dc8c": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x00d3dc94": {
+          "offset": 128,
+          "slot": "0x0105f858",
+          "symbol": "OBJC_IVAR_$_TradePortal.localPriceOffsets"
+        },
+        "0x00d3dcbc": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        },
+        "0x00d3dcc0": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x00d3dcd0": {
+          "offset": 49,
+          "slot": "0x0105c3cc",
+          "symbol": "OBJC_IVAR_$_DynamicObject.updateNeedsToBeSent"
+        }
+      },
+      "method": "TradePortal -[sellItem:atTotalPrice:count:usageMultiplier:]",
+      "name": "tp_sell",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d3dc6c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d3dc70": {
+          "selector": "count",
+          "slot": "0x00e888e4"
+        },
+        "0x00d3dc74": {
+          "selector": "subtractItemsFromInventoryOfType:count:dataB:",
+          "slot": "0x00e888e0"
+        },
+        "0x00d3dc78": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00fae2e8"
+        },
+        "0x00d3dc80": {
+          "selector": "isClientBlockheadBeingControlledByServer",
+          "slot": "0x00e888e8"
+        },
+        "0x00d3dc84": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00fae2b8"
+        },
+        "0x00d3dc88": {
+          "selector": "reportAchievementWithIdentifier:",
+          "slot": "0x00e888ec"
+        },
+        "0x00d3dc90": {
+          "selector": "objectForKey:",
+          "slot": "0x00e887f4"
+        },
+        "0x00d3dc98": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00fae2c8"
+        },
+        "0x00d3dc9c": {
+          "selector": "stringWithFormat:",
+          "slot": "0x00e888ac"
+        },
+        "0x00d3dca0": {
+          "class": "OBJC_CLASS_$_NSString",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8b76c"
+        },
+        "0x00d3dca4": {
+          "selector": "doubleValue",
+          "slot": "0x00e887f8"
+        },
+        "0x00d3dcac": {
+          "class": "OBJC_CLASS_$_NSNumber",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8b754"
+        },
+        "0x00d3dcb0": {
+          "selector": "numberWithDouble:",
+          "slot": "0x00e887fc"
+        },
+        "0x00d3dcb4": {
+          "selector": "setObject:forKey:",
+          "slot": "0x00e88800"
+        },
+        "0x00d3dcb8": {
+          "selector": "updatePriceForItemBoughtOrSoldOfTypeKey:soldCount:",
+          "slot": "0x00e888f0"
+        },
+        "0x00d3dcc4": {
+          "selector": "createFreeBlockAtPosition:ofType:dataA:dataB:subItems:dynamicObjectSaveDict:hovers:playSound:priorityBlockhead:",
+          "slot": "0x00e888a4"
+        },
+        "0x00d3dcc8": {
+          "selector": "objectType",
+          "slot": "0x00e8886c"
+        },
+        "0x00d3dccc": {
+          "selector": "dynamicWorldChangedAtPos:objectType:",
+          "slot": "0x00e88870"
+        },
+        "0x00d3dcd4": {
+          "class": "OBJC_CLASS_$_MJSoundManager",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8b764"
+        },
+        "0x00d3dcd8": {
+          "selector": "instance",
+          "slot": "0x00e88874"
+        },
+        "0x00d3dcdc": {
+          "selector": "multiSoundNamed:",
+          "slot": "0x00e88878"
+        },
+        "0x00d3dce0": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00fae2d8"
+        },
+        "0x00d3dce4": {
+          "selector": "playAtPosition:afterDelay:",
+          "slot": "0x00e888f4"
+        }
+      },
+      "semantics": "sellItem:atTotalPrice:count:usageMultiplier: returns without effect when currentBlockhead@56 is nil (0xd3d690) or when itemType is one of {0xa7 (0xd3d698), 0x444 (0xd3d6a0), 0xa6 (0xd3d6b4), 0x104 (0xd3d6c0)} - the same set the sibling buyItem: handles as a coin swap. dataB starts as -1 (mvn r0, 0 at 0xd3d6cc) and becomes 0 when itemType == 0x5b (0xd3d6d8, 0xd3d6e0). It then calls [currentBlockhead subtractItemsFromInventoryOfType:count:dataB:] (0xd3d750) and [result count] (0xd3d760); soldCount != count logs CFString@0xfae2e8 \"Error trying to subtract items to sell.\" (0xd3dc48) and returns. Otherwise, only when !isNet@52 (0xd3d790) and ![currentBlockhead isClientBlockheadBeingControlledByServer] (0xd3d7d8), it reports [self.world reportAchievementWithIdentifier:@\"grp.trade\" (0xfae2b8)] (0xd3d838). key = [NSString stringWithFormat:@\"%d\" (0xfae2c8), itemType] (0xd3d8bc); the price multiplier is [self.localPriceOffsets@128[key] doubleValue] (or 1.0 when absent, 0xd3d864) multiplied by 0.997 (double 0x3fefe76c8b439581 at 0xd3dc60, vmul at 0xd3d948) and clamped to [0.5, 2.0] (0xd3d93c, 0xd3d960, 0xd3d970, 0xd3d98c), then written back with numberWithDouble:; [self.world updatePriceForItemBoughtOrSoldOfTypeKey:soldCount:] (0xd3da3c) receives the key and r3 = the raw float bits of usageMultiplier. The returned price is split as price/10000 (0xd3da44 magic 0x68db8bad) and price%10000 (0xd3da6c 0x2710), then [self.dynamicWorld@8 createFreeBlockAtPosition:makeIntpair(pos.x, pos.y+1) ofType:298 (0x12a) dataA:price/10000 dataB:price%10000 subItems:0 dynamicObjectSaveDict:0 hovers:0 playSound:4 priorityBlockhead:currentBlockhead] (0xd3db24; both halves are read back with ldrh, so they are 16-bit); then dynamicWorldChangedAtPos:pos objectType:0x32, self.updateNeedsToBeSent@49 = 1 (0xd3dba0) and [MJSoundManager instance multiSoundNamed:@\"sale.wav\" (0xf4ef89) playAtPosition:pos afterDelay:0].",
+      "types": "v24@0:4i8i12i16f20",
+      "verified_words": 430
+    },
+    {
+      "boundary": "consecutive IMPs: next method follows at 0x00d3e7dc",
+      "boundary_end": "0x00d3e7dc",
+      "branches": [
+        {
+          "address": "0x00d3dd40",
+          "destination": "0x00d3e738",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3dd4c",
+          "destination": "0x00d3dd78",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3dd5c",
+          "destination": "0x00d3dd78",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3dd68",
+          "destination": "0x00d3dd78",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3dd74",
+          "destination": "0x00d3e0cc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3dd94",
+          "destination": "0x00d3ddb4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3ddb0",
+          "destination": "0x00d3de30",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3ddbc",
+          "destination": "0x00d3dddc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3ddd8",
+          "destination": "0x00d3de2c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3dde8",
+          "destination": "0x00d3de10",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3de0c",
+          "destination": "0x00d3de28",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3de28",
+          "destination": "0x00d3de2c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3de2c",
+          "destination": "0x00d3de30",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3de90",
+          "destination": "0x00d3e0c8",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x00d3df18",
+          "destination": "0x00d3e0b4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3df34",
+          "destination": "0x00d3e008",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00d3e004",
+          "destination": "0x00d3df28",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3e0b0",
+          "destination": "0x00d3e0c4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3e0c4",
+          "destination": "0x00d3e0c8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3e0c8",
+          "destination": "0x00d3e734",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3e11c",
+          "destination": "0x00d3e730",
+          "mnemonic": "bgt"
+        },
+        {
+          "address": "0x00d3e140",
+          "destination": "0x00d3e1e4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3e18c",
+          "destination": "0x00d3e1e4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3e2fc",
+          "destination": "0x00d3e334",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3e354",
+          "destination": "0x00d3e364",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00d3e360",
+          "destination": "0x00d3e394",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3e37c",
+          "destination": "0x00d3e390",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d3e390",
+          "destination": "0x00d3e394",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3e4b8",
+          "destination": "0x00d3e4c8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3e4e0",
+          "destination": "0x00d3e5e0",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00d3e4ec",
+          "destination": "0x00d3e5c4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3e5c4",
+          "destination": "0x00d3e5c8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3e5d4",
+          "destination": "0x00d3e4d4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3e730",
+          "destination": "0x00d3e734",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3e734",
+          "destination": "0x00d3e738",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d3de84"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d3def4"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3df04"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d3df8c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3dff4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3e028"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3e040"
+        },
+        {
+          "callee": "0x004d0480",
+          "route": "bl method.Vector2.Vector2_float__float_",
+          "site": "0x00d3e080"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3e0ac"
+        },
+        {
+          "callee": "0x001c2a5c",
+          "route": "bl sym.imp.NSLog",
+          "site": "0x00d3e0c0"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3e108"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3e180"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d3e1e0"
+        },
+        {
+          "callee": null,
+          "route": "blx sl",
+          "site": "0x00d3e28c"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d3e2b4"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d3e2e8"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3e328"
+        },
+        {
+          "callee": null,
+          "route": "blx r7",
+          "site": "0x00d3e438"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d3e468"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d3e498"
+        },
+        {
+          "callee": "0x0056871c",
+          "route": "bl sym.itemTypeIsSowable_ItemType_",
+          "site": "0x00d3e4ac"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00d3e544"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3e5c0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3e61c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3e634"
+        },
+        {
+          "callee": "0x004d0480",
+          "route": "bl method.Vector2.Vector2_float__float_",
+          "site": "0x00d3e67c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3e6a8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3e6f0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3e714"
+        }
+      ],
+      "disjoint_branch_rows": [
+        {
+          "address": "0x00d3e5d8",
+          "destination": "0x01e23be4",
+          "mnemonic": "blhi"
+        }
+      ],
+      "imp": "0x00d3dcf0",
+      "ivars": {
+        "0x00d3e740": {
+          "offset": 56,
+          "slot": "0x0105cac4",
+          "symbol": "OBJC_IVAR_$_InteractionObject.currentBlockhead"
+        },
+        "0x00d3e74c": {
+          "offset": 52,
+          "slot": "0x0105c5c0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.isNet"
+        },
+        "0x00d3e75c": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x00d3e764": {
+          "offset": 128,
+          "slot": "0x0105f858",
+          "symbol": "OBJC_IVAR_$_TradePortal.localPriceOffsets"
+        },
+        "0x00d3e78c": {
+          "offset": 49,
+          "slot": "0x0105c3cc",
+          "symbol": "OBJC_IVAR_$_DynamicObject.updateNeedsToBeSent"
+        },
+        "0x00d3e7a4": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x00d3e7ac": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        }
+      },
+      "method": "TradePortal -[buyItem:atTotalPrice:count:]",
+      "name": "tp_buy",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d3e744": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d3e748": {
+          "selector": "totalCash",
+          "slot": "0x00e888c4"
+        },
+        "0x00d3e750": {
+          "selector": "isClientBlockheadBeingControlledByServer",
+          "slot": "0x00e888e8"
+        },
+        "0x00d3e754": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00fae2b8"
+        },
+        "0x00d3e758": {
+          "selector": "reportAchievementWithIdentifier:",
+          "slot": "0x00e888ec"
+        },
+        "0x00d3e760": {
+          "selector": "objectForKey:",
+          "slot": "0x00e887f4"
+        },
+        "0x00d3e768": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00fae2c8"
+        },
+        "0x00d3e76c": {
+          "selector": "stringWithFormat:",
+          "slot": "0x00e888ac"
+        },
+        "0x00d3e770": {
+          "class": "OBJC_CLASS_$_NSString",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8b76c"
+        },
+        "0x00d3e774": {
+          "selector": "subtractCash:",
+          "slot": "0x00e888fc"
+        },
+        "0x00d3e778": {
+          "selector": "doubleValue",
+          "slot": "0x00e887f8"
+        },
+        "0x00d3e77c": {
+          "selector": "updatePriceForItemBoughtOrSoldOfTypeKey:soldCount:",
+          "slot": "0x00e888f0"
+        },
+        "0x00d3e780": {
+          "selector": "setObject:forKey:",
+          "slot": "0x00e88800"
+        },
+        "0x00d3e784": {
+          "selector": "numberWithDouble:",
+          "slot": "0x00e887fc"
+        },
+        "0x00d3e788": {
+          "class": "OBJC_CLASS_$_NSNumber",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8b754"
+        },
+        "0x00d3e790": {
+          "class": "OBJC_CLASS_$_MJSoundManager",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8b764"
+        },
+        "0x00d3e798": {
+          "selector": "instance",
+          "slot": "0x00e88874"
+        },
+        "0x00d3e79c": {
+          "selector": "multiSoundNamed:",
+          "slot": "0x00e88878"
+        },
+        "0x00d3e7a0": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00fae2d8"
+        },
+        "0x00d3e7a8": {
+          "selector": "playAtPosition:afterDelay:",
+          "slot": "0x00e888f4"
+        },
+        "0x00d3e7b0": {
+          "selector": "objectType",
+          "slot": "0x00e8886c"
+        },
+        "0x00d3e7b4": {
+          "selector": "dynamicWorldChangedAtPos:objectType:",
+          "slot": "0x00e88870"
+        },
+        "0x00d3e7bc": {
+          "selector": "createFreeBlockAtPosition:ofType:dataA:dataB:subItems:dynamicObjectSaveDict:hovers:playSound:priorityBlockhead:",
+          "slot": "0x00e888a4"
+        },
+        "0x00d3e7c0": {
+          "selector": "countOfInventoryItemsOfType:includeActions:",
+          "slot": "0x00e888cc"
+        },
+        "0x00d3e7c4": {
+          "selector": "count",
+          "slot": "0x00e888e4"
+        },
+        "0x00d3e7c8": {
+          "selector": "subtractItemsFromInventoryOfType:count:",
+          "slot": "0x00e888f8"
+        },
+        "0x00d3e7cc": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00fae2f8"
+        }
+      },
+      "semantics": "buyItem:atTotalPrice:count: returns when currentBlockhead@56 is nil (0xd3dd40). itemType in {0xa7, 0x444, 0xa6, 0x104} takes the coin-swap fast path (0xd3dd48 .. 0xd3dd74): per case {blocks, required, spawned, consumed} = 0xa6 {100 x 0xa7 -> 1 x 0xa6} (0xd3dd98), 0x104 {1 x 0xa7 -> 100 required} (0xd3ddc0), 0x444 {1 x 0xa6 -> 100 x 0xa7} (0xd3ddec), 0xa7 {100 x 0x104 -> 1 required} (0xd3de10); it gates on [currentBlockhead countOfInventoryItemsOfType:includeActions:0] >= required (0xd3de40, 0xd3de90) and on [currentBlockhead subtractItemsFromInventoryOfType:count:] == required, otherwise logs CFString@0xfae2f8 \"Error trying to subtract coins to trade.\" (0xd3df18) and returns; then count x [dynamicWorld createFreeBlockAtPosition:(pos.x, pos.y+1) ofType:... playSound:4 priorityBlockhead:currentBlockhead] (0xd3dfac, 0xd3dfc4, 0xd3dff4) followed by [MJSoundManager instance multiSoundNamed:@\"sale.wav\" playAtPosition:pos afterDelay:0] (0xd3e008). Every other itemType takes the priced path (0xd3e0cc): cash = [currentBlockhead totalCash] (0xd3e0d8) and atTotalPrice > cash returns (0xd3e11c); only when !isNet@52 && ![currentBlockhead isClientBlockheadBeingControlledByServer] it reports [self.world reportAchievementWithIdentifier:@\"grp.trade\"] (0xd3e1a4); [currentBlockhead subtractCash:atTotalPrice] (0xd3e22c); key = [NSString stringWithFormat:@\"%d\", itemType] (0xd3e768); the multiplier is [localPriceOffsets@128[key] doubleValue] (1.0 when absent, 0xd3e20c) divided by 0.997 (0xd3e338, 0xd3e5d8) and clamped to [0.5, 2.0] (0xd3e354, 0xd3e37c), stored back through numberWithDouble: and pushed as [self.world updatePriceForItemBoughtOrSoldOfTypeKey:soldCount:-1.0f] (0xd3e39c); dataA = dataB = itemTypeIsSowable(itemType) ? 0x7f : 0 (0xd3e4ac, 0xd3e4bc); then for i < count, skipping itemType 11 (0xd3e4e8), [dynamicWorld createFreeBlockAtPosition:(pos.x, pos.y+1) ofType:itemType dataA:dataA dataB:dataB ... playSound:4 priorityBlockhead:currentBlockhead] (0xd3e584); the tail is the sound, [dynamicWorld dynamicWorldChangedAtPos:pos objectType:[self objectType]] and self.updateNeedsToBeSent@49 = 1 (0xd3e72c).",
+      "types": "v20@0:4i8i12i16",
+      "verified_words": 699
+    },
+    {
+      "boundary": "consecutive IMPs: next method follows at 0x00d3eb54",
+      "boundary_end": "0x00d3eb54",
+      "branches": [
+        {
+          "address": "0x00d3e86c",
+          "destination": "0x00d3e87c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3e8a0",
+          "destination": "0x00d3eb30",
+          "mnemonic": "bhi"
+        },
+        {
+          "address": "0x00d3e92c",
+          "destination": "0x00d3e93c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3e93c",
+          "destination": "0x00d3eb34",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3e9a0",
+          "destination": "0x00d3e9b0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3e9b0",
+          "destination": "0x00d3eb34",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3ea14",
+          "destination": "0x00d3ea2c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3ea2c",
+          "destination": "0x00d3eb34",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3ea9c",
+          "destination": "0x00d3eaac",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3eaac",
+          "destination": "0x00d3eb34",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3eb1c",
+          "destination": "0x00d3eb2c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3eb2c",
+          "destination": "0x00d3eb34",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3eb30",
+          "destination": "0x00d3eb34",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d3e860"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3e920"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3e994"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3ea08"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3ea90"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3eb10"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d3e7dc",
+      "ivars": {
+        "0x00d3eb44": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x00d3eb48": {
+          "offset": 132,
+          "slot": "0x0105f85c",
+          "symbol": "OBJC_IVAR_$_TradePortal.level"
+        }
+      },
+      "method": "TradePortal -[upgradeCraftableItem]",
+      "name": "tp_upgradecraft",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d3eb3c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d3eb40": {
+          "selector": "expertMode",
+          "slot": "0x00e88900"
+        }
+      },
+      "semantics": "upgradeCraftableItem returns the CraftableItem struct by value: it writes the constant header {0x84@0x00 at 0xd3e828, 1@0x04, 0x0b@0x10, 1@0x28 at 0xd3e838} and, when [world expertMode] (call at 0xd3e860) answers non-zero, 0x0a@0x28 (0xd3e878); then switch (self.level@132, 0..4 selected by the 5-word jump table at 0xd3e8b8 -> 0xd3e8cc/0xd3e940/0xd3e9b4/0xd3ea30/0xd3eab0) sets the item type at +8 and the two counts at +0x2c/+0x30: L0 {0x57, 0x0a, 0x0a}, L1 {0x56, 0x14, 0x14}, L2 {0x4c, 0x32, 0x32}, L3 {0x4b, 1, 0x64 with 0x104@0x0c}, L4 {0x58, 0x0a, 0xc8 with 0x104@0x0c}; after each case a second [world expertMode] probe overrides the count: L0 -> 0x32, L1 -> 0x63, L2 -> 0x104@0x0c + count 5, L3 -> 0x14, L4 -> 0x63; level > 4 falls through to the epilogue with only the header written. The struct consumed by takeItemsFromBlockheadForUpgradeToNextLevel is 0x7c bytes with types[]@+8, reqCounts[]@+0x28, nItems@+0x48.",
+      "types": "{CraftableItem=ii[8i][8i]iiiSSi[8i]}8@0:4",
+      "verified_words": 222
+    },
+    {
+      "boundary": "consecutive IMPs: next method follows at 0x00d3f38c",
+      "boundary_end": "0x00d3f38c",
+      "branches": [
+        {
+          "address": "0x00d3eb94",
+          "destination": "0x00d3ebac",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3eba8",
+          "destination": "0x00d3ebcc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3ebec",
+          "destination": "0x00d3f128",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00d3ec10",
+          "destination": "0x00d3f114",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3ec5c",
+          "destination": "0x00d3f110",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3edd4",
+          "destination": "0x00d3ee48",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3ee44",
+          "destination": "0x00d3ee50",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3ee74",
+          "destination": "0x00d3ee84",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d3ee80",
+          "destination": "0x00d3f318",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3eea4",
+          "destination": "0x00d3f10c",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d3f08c",
+          "destination": "0x00d3f100",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3f0fc",
+          "destination": "0x00d3f108",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3f108",
+          "destination": "0x00d3f10c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3f10c",
+          "destination": "0x00d3f110",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3f110",
+          "destination": "0x00d3f114",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3f114",
+          "destination": "0x00d3f118",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3f124",
+          "destination": "0x00d3ebe0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3f13c",
+          "destination": "0x00d3f258",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00d3f160",
+          "destination": "0x00d3f244",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3f230",
+          "destination": "0x00d3f240",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00d3f23c",
+          "destination": "0x00d3f318",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3f240",
+          "destination": "0x00d3f244",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3f244",
+          "destination": "0x00d3f248",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3f254",
+          "destination": "0x00d3f130",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3f260",
+          "destination": "0x00d3f310",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x00d3eba4"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x00d3ebc8"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3ec50"
+        },
+        {
+          "callee": null,
+          "route": "blx sl",
+          "site": "0x00d3ed2c"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3ed3c"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00d3ed60"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3ed70"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00d3ed98"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3eda8"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00d3edc8"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00d3ee28"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3ee38"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3ef34"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3ef44"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3ef98"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3efa8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3efc4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3efe4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3effc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3f00c"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d3f050"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3f060"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00d3f080"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00d3f0e0"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3f0f0"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d3f1f0"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00d3f218"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3f2d4"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3f2e4"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00d3f2f4"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00d3f308"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d3eb54",
+      "ivars": {
+        "0x00d3f34c": {
+          "offset": 56,
+          "slot": "0x0105cac4",
+          "symbol": "OBJC_IVAR_$_InteractionObject.currentBlockhead"
+        }
+      },
+      "method": "TradePortal -[takeItemsFromBlockheadForUpgradeToNextLevel]",
+      "name": "tp_takeitems",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d3f324": {
+          "selector": "upgradeCraftableItem",
+          "slot": "0x00e88904"
+        },
+        "0x00d3f328": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00fae328"
+        },
+        "0x00d3f32c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d3f330": {
+          "selector": "displayInterstitialForTag:",
+          "slot": "0x00e88924"
+        },
+        "0x00d3f334": {
+          "selector": "viewController",
+          "slot": "0x00e88920"
+        },
+        "0x00d3f338": {
+          "selector": "delegate",
+          "slot": "0x00e8891c"
+        },
+        "0x00d3f33c": {
+          "selector": "sharedApplication",
+          "slot": "0x00e88918"
+        },
+        "0x00d3f340": {
+          "class": "OBJC_CLASS_$_UIApplication",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8b774"
+        },
+        "0x00d3f344": {
+          "selector": "count",
+          "slot": "0x00e888e4"
+        },
+        "0x00d3f348": {
+          "selector": "subtractItemsFromInventoryOfType:count:",
+          "slot": "0x00e888f8"
+        },
+        "0x00d3f354": {
+          "selector": "isClientBlockheadBeingControlledByServer",
+          "slot": "0x00e888e8"
+        },
+        "0x00d3f358": {
+          "selector": "isEqualToString:",
+          "slot": "0x00e888c0"
+        },
+        "0x00d3f35c": {
+          "selector": "stringFromMD5",
+          "slot": "0x00e88910"
+        },
+        "0x00d3f360": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00fae308"
+        },
+        "0x00d3f364": {
+          "selector": "stringWithFormat:",
+          "slot": "0x00e888ac"
+        },
+        "0x00d3f368": {
+          "class": "OBJC_CLASS_$_NSString",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8b76c"
+        },
+        "0x00d3f36c": {
+          "selector": "amountString",
+          "slot": "0x00e8890c"
+        },
+        "0x00d3f370": {
+          "selector": "instance",
+          "slot": "0x00e88874"
+        },
+        "0x00d3f374": {
+          "class": "OBJC_CLASS_$_CrystalManager",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8b770"
+        },
+        "0x00d3f378": {
+          "selector": "amount",
+          "slot": "0x00e88908"
+        },
+        "0x00d3f380": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00fae318"
+        },
+        "0x00d3f384": {
+          "selector": "modify:modifyString:",
+          "slot": "0x00e88914"
+        }
+      },
+      "semantics": "takeItemsFromBlockheadForUpgradeToNextLevel returns BOOL. It first calls [self upgradeCraftableItem] through objc_msgSend_stret into a 0x7c-byte buffer at fp-0xa8 (0xd3eba4) and memsets 0x7c bytes when self is nil (0xd3ebb0); the struct layout used here is types[]@+8, reqCounts[]@+0x28, nItems@+0x48. Pass 1 (0xd3ebe0, i < nItems) only acts on type 11 (0xd3ec08) and only when ![currentBlockhead@56 isClientBlockheadBeingControlledByServer] (0xd3ec50): it takes [CrystalManager instance] (0xd3ed2c) and its amount/amountString (0xd3ed70); when amountString != MD5([NSString stringWithFormat:@\"7acfe93afc08%dc65ae2c54ecaf07f\" (0xfae308), amount]) (0xd3ed98, 0xd3eda8, 0xd3edc8) the amount is forced to 0 (0xd3ee4c); reqCounts[i] > amount returns NO (0xd3ee7c); otherwise for reqCounts[i] > 0 it calls [instance modify:reqCounts[i] modifyString:MD5(stringWithFormat:@\"7acfe93afc08c%d65ae2c54ecaf07f\" (0xfae318), amount - reqCounts[i] + 73)] (0xd3ef6c, 0xd3efe4) and a second fingerprint check against the new amountString sets a cheat flag byte (0xd3f104). Pass 2 (0xd3f130) skips type 11 and calls [currentBlockhead subtractItemsFromInventoryOfType:types[i] count:reqCounts[i]] (0xd3f1f0), returning NO when reqCounts[i] - [result count] > 0 (0xd3f218, 0xd3f238). When the cheat flag is set the tail is [[[UIApplication sharedApplication] delegate] viewController] displayInterstitialForTag:@\"Hax\" (0xfae328)] (0xd3f308) and the method returns the pass-2 result (YES).",
+      "types": "c8@0:4",
+      "verified_words": 526
+    },
+    {
+      "boundary": "consecutive IMPs: next method follows at 0x00d3f7ac",
+      "boundary_end": "0x00d3f7ac",
+      "branches": [
+        {
+          "address": "0x00d3f494",
+          "destination": "0x00d3f6ac",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00d3f4c4",
+          "destination": "0x00d3f698",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d3f510",
+          "destination": "0x00d3f540",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d3f530",
+          "destination": "0x00d3f53c",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x00d3f53c",
+          "destination": "0x00d3f694",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3f694",
+          "destination": "0x00d3f4ac",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3f698",
+          "destination": "0x00d3f69c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d3f6a8",
+          "destination": "0x00d3f48c",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x00d37798",
+          "route": "bl 0xd37798",
+          "site": "0x00d3f540"
+        },
+        {
+          "callee": "0x001c3f98",
+          "route": "bl sym.imp.__wrap_powf",
+          "site": "0x00d3f584"
+        },
+        {
+          "callee": null,
+          "route": "blx r6",
+          "site": "0x00d3f614"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00d3f654"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00d3f684"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3f718"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00d3f73c"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d3f460",
+      "ivars": {
+        "0x00d3f760": {
+          "offset": 49,
+          "slot": "0x0105c3cc",
+          "symbol": "OBJC_IVAR_$_DynamicObject.updateNeedsToBeSent"
+        },
+        "0x00d3f764": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        },
+        "0x00d3f76c": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x00d3f790": {
+          "offset": 128,
+          "slot": "0x0105f858",
+          "symbol": "OBJC_IVAR_$_TradePortal.localPriceOffsets"
+        }
+      },
+      "method": "TradePortal -[randomizeLocalTradeOffsets]",
+      "name": "tp_randomize",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00d3f770": {
+          "selector": "objectType",
+          "slot": "0x00e8886c"
+        },
+        "0x00d3f774": {
+          "selector": "dynamicWorldChangedAtPos:objectType:",
+          "slot": "0x00e88870"
+        },
+        "0x00d3f780": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00d3f784": {
+          "selector": "setObject:forKey:",
+          "slot": "0x00e88800"
+        },
+        "0x00d3f788": {
+          "selector": "numberWithFloat:",
+          "slot": "0x00e88928"
+        },
+        "0x00d3f78c": {
+          "class": "OBJC_CLASS_$_NSNumber",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8b754"
+        },
+        "0x00d3f794": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00fae2c8"
+        },
+        "0x00d3f798": {
+          "selector": "stringWithFormat:",
+          "slot": "0x00e888ac"
+        },
+        "0x00d3f79c": {
+          "class": "OBJC_CLASS_$_NSString",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8b76c"
+        }
+      },
+      "semantics": "randomizeLocalTradeOffsets walks the PIC-relative trade table at 0x00e18ee0 (cell 0xd3f778 holds -0x246c14; entry = table + level*0x360 + slot*0x90 where level runs 1..8 and slot 0..5, and the word at +0 is the occupancy test read at 0xd3f4fc): for every non-zero entry it calls the thunk at 0xd37798 (0xd3f540) which is {push {fp,lr}; mov fp,sp; bl lrand48@plt; pop {fp,pc}} - i.e. plain lrand48(), not the price-hash helper the E9a batch description assumed - and computes powf(0.8f, ((float)v / 2147483648.0f - 0.5f) * 10.0f) with the pool constants 0x3f4ccccd = 0.8f and 0x4f000000 = 2^31 at 0xd3f7a0/0xd3f7a4 and __wrap_powf at 0xd3f584 (10.0f / 0.5f immediates at 0xd3f54c / 0xd3f550). The result becomes [NSNumber numberWithFloat:] (class cell 0xd3f78c) and is stored by [self.localPriceOffsets setObject:forKey:] (ivar@128, cell 0xd3f784) under [NSString stringWithFormat: CFString@0x00fae2c8] (class cell 0xd3f79c); a zero entry advances the slot (0xd3f514) and marks the level exhausted at slot >= 6 (0xd3f534). Tail (0xd3f6ac): dyW = self.dynamicWorld@8, objType = [dyW objectType] (0xd3f718), [dyW dynamicWorldChangedAtPos:(self.pos.x, self.pos.y) objectType:objType] (0xd3f73c), then self.updateNeedsToBeSent@49 = 1 (strb at 0xd3f754).",
+      "types": "v8@0:4",
+      "verified_words": 211
+    },
+    {
+      "boundary": "body trimmed at the next IMP 0x00d3f930 (ARM.exidx over-covers into isMissionInteraction)",
+      "boundary_end": "0x00d3f930",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d3f8f4",
+      "ivars": {
+        "0x00d3f928": {
+          "offset": 136,
+          "slot": "0x0105f874",
+          "symbol": "OBJC_IVAR_$_TradePortal.isSellInteraction"
+        }
+      },
+      "method": "TradePortal -[isSellInteraction]",
+      "name": "tp_issell",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "isSellInteraction = ldrsb of the TradePortal.isSellInteraction byte at @136 (0xd3f91c); no call, no branch.",
+      "types": "c8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d3f96c; the next ObjC IMP (Bed -[objectType]) is at 0x00d3fc38",
+      "boundary_end": "0x00d3f96c",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d3f930",
+      "ivars": {
+        "0x00d3f964": {
+          "offset": 137,
+          "slot": "0x0105f878",
+          "symbol": "OBJC_IVAR_$_TradePortal.isMissionInteraction"
+        }
+      },
+      "method": "TradePortal -[isMissionInteraction]",
+      "name": "tp_ismission",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "isMissionInteraction = ldrsb of the TradePortal.isMissionInteraction byte at @137 (0xd3f958); the body is byte-identical to isSellInteraction apart from the ivar cell (0xd3f964) and the pool literal.",
+      "types": "c8@0:4",
+      "verified_words": 15
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "schema": 1
+}

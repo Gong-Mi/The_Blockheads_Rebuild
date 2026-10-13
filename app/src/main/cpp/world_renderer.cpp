@@ -259,8 +259,9 @@ void WorldRenderer::updateMesh(const std::vector<PhysicalBlock*>& chunks) {
 
 void WorldRenderer::renderFrame() {
     animTime += 0.05f; 
-    worldTime += 0.0001f * timeScale; 
-    if (worldTime > 1.0f) worldTime = 0;
+    // worldTime is no longer advanced here: GameWorld's seconds clock owns it
+    // and game_engine syncs the derived day fraction each frame
+    // (WORLD_TIME_DOMAIN.md). timeScale stays for consumers of acceleration.
 
     camX += (targetX - camX) * 0.1f;
     camY += (targetY - camY) * 0.1f;

@@ -1,0 +1,67 @@
+# itemTypeCanBeColored  [C function]
+# implementation: 0x004d6128
+# ARM.exidx end: 0x004d6260
+
+            ;-- itemTypeCanBeColored(ItemType):
+            0x004d6128      08d04de2       sub sp, sp, 8               ; itemTypeCanBeColored(ItemType)
+            0x004d612c      011000e3       movw r1, 1
+            0x004d6130      04008de5       str r0, [sp, 4]
+            0x004d6134      04009de5       ldr r0, [sp, 4]
+            0x004d6138      550050e3       cmp r0, 0x55                ; 'U'
+            0x004d613c      00108de5       str r1, [sp]
+        ┌─< 0x004d6140      3100000a       beq 0x4d620c
+        │   0x004d6144      010000e3       movw r0, 1
+        │   0x004d6148      04109de5       ldr r1, [sp, 4]
+        │   0x004d614c      540051e3       cmp r1, 0x54                ; 'T'
+        │   0x004d6150      00008de5       str r0, [sp]
+       ┌──< 0x004d6154      2c00000a       beq 0x4d620c
+       ││   0x004d6158      010000e3       movw r0, 1
+       ││   0x004d615c      04109de5       ldr r1, [sp, 4]
+       ││   0x004d6160      750051e3       cmp r1, 0x75                ; 'u'
+       ││   0x004d6164      00008de5       str r0, [sp]
+      ┌───< 0x004d6168      2700000a       beq 0x4d620c
+      │││   0x004d616c      010000e3       movw r0, 1
+      │││   0x004d6170      04109de5       ldr r1, [sp, 4]
+      │││   0x004d6174      730051e3       cmp r1, 0x73                ; 's'
+      │││   0x004d6178      00008de5       str r0, [sp]
+     ┌────< 0x004d617c      2200000a       beq 0x4d620c
+     ││││   0x004d6180      010000e3       movw r0, 1
+     ││││   0x004d6184      04109de5       ldr r1, [sp, 4]
+     ││││   0x004d6188      7a0051e3       cmp r1, 0x7a                ; 'z'
+     ││││   0x004d618c      00008de5       str r0, [sp]
+    ┌─────< 0x004d6190      1d00000a       beq 0x4d620c
+    │││││   0x004d6194      010000e3       movw r0, 1
+    │││││   0x004d6198      04109de5       ldr r1, [sp, 4]
+    │││││   0x004d619c      820051e3       cmp r1, 0x82
+    │││││   0x004d61a0      00008de5       str r0, [sp]
+   ┌──────< 0x004d61a4      1800000a       beq 0x4d620c
+   ││││││   0x004d61a8      010000e3       movw r0, 1
+   ││││││   0x004d61ac      04109de5       ldr r1, [sp, 4]
+   ││││││   0x004d61b0      7c0051e3       cmp r1, 0x7c                ; '|'
+   ││││││   0x004d61b4      00008de5       str r0, [sp]
+  ┌───────< 0x004d61b8      1300000a       beq 0x4d620c
+  │││││││   0x004d61bc      010000e3       movw r0, 1
+  │││││││   0x004d61c0      04109de5       ldr r1, [sp, 4]
+  │││││││   0x004d61c4      7e0051e3       cmp r1, 0x7e                ; '~'
+  │││││││   0x004d61c8      00008de5       str r0, [sp]
+  ────────< 0x004d61cc      0e00000a       beq 0x4d620c
+  │││││││   0x004d61d0      010000e3       movw r0, 1
+  │││││││   0x004d61d4      04109de5       ldr r1, [sp, 4]
+  │││││││   0x004d61d8      7f0051e3       cmp r1, 0x7f                ; '\x7f'
+  │││││││   0x004d61dc      00008de5       str r0, [sp]
+  ────────< 0x004d61e0      0900000a       beq 0x4d620c
+  │││││││   0x004d61e4      010000e3       movw r0, 1
+  │││││││   0x004d61e8      04109de5       ldr r1, [sp, 4]
+  │││││││   0x004d61ec      a90051e3       cmp r1, 0xa9
+  │││││││   0x004d61f0      00008de5       str r0, [sp]
+  ────────< 0x004d61f4      0400000a       beq 0x4d620c
+  │││││││   0x004d61f8      04009de5       ldr r0, [sp, 4]
+  │││││││   0x004d61fc      aa0050e3       cmp r0, 0xaa
+  │││││││   0x004d6200      000000e3       movw r0, 0
+  │││││││   0x004d6204      0100a003       moveq r0, 1
+  │││││││   0x004d6208      00008de5       str r0, [sp]
+  └└└└└└└─> 0x004d620c      00009de5       ldr r0, [sp]
+            0x004d6210      010000e2       and r0, r0, 1
+            0x004d6214      7000afe6       sxtb r0, r0
+            0x004d6218      08d08de2       add sp, sp, 8
+            0x004d621c      1eff2fe1       bx lr

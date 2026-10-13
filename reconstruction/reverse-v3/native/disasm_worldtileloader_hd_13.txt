@@ -1,0 +1,43 @@
+# Blockhead -[hungerPaused]
+# types: c8@0:4
+# implementation: 0x00c82104
+# ARM.exidx end: 0x00c8219c
+
+            0x00c82104      10d04de2       sub sp, sp, 0x10
+            0x00c82108      88209fe5       ldr r2, [0x00c82198]        ; [0xc82198:4]=0x3dd9e0
+            0x00c8210c      02208fe0       add r2, pc, r2
+            0x00c82110      013000e3       movw r3, 1
+            0x00c82114      1c0a9fed       vldr s0, [0x00c8218c]
+            0x00c82118      70c09fe5       ldr ip, [0x00c82190]        ; [0xc82190:4]=0xfffff55c
+            0x00c8211c      02c09ce7       ldr ip, [ip, r2]
+            0x00c82120      0c008de5       str r0, [sp, 0xc]
+            0x00c82124      08108de5       str r1, [sp, 8]
+            0x00c82128      0c009de5       ldr r0, [sp, 0xc]
+            0x00c8212c      00109ce5       ldr r1, [ip]
+            0x00c82130      010080e0       add r0, r0, r1
+            0x00c82134      161a90ed       vldr s2, [r0, 0x58]
+            0x00c82138      c01ab4ee       vcmpe.f32 s2, s0
+            0x00c8213c      10faf1ee       vmrs apsr_nzcv, fpscr
+            0x00c82140      04208de5       str r2, [sp, 4]
+            0x00c82144      00308de5       str r3, [sp]
+        ┌─< 0x00c82148      0a0000ca       bgt 0xc82178
+        │   0x00c8214c      40009fe5       ldr r0, [0x00c82194]        ; [0xc82194:4]=0xfffff598
+        │   0x00c82150      04109de5       ldr r1, [sp, 4]
+        │   0x00c82154      010090e7       ldr r0, [r0, r1]
+        │   0x00c82158      0c209de5       ldr r2, [sp, 0xc]
+        │   0x00c8215c      000090e5       ldr r0, [r0]
+        │   0x00c82160      000082e0       add r0, r2, r0
+        │   0x00c82164      b000d0e1       ldrh r0, [r0]
+        │   0x00c82168      8c0050e3       cmp r0, 0x8c
+        │   0x00c8216c      000000e3       movw r0, 0
+        │   0x00c82170      0100a003       moveq r0, 1
+        │   0x00c82174      00008de5       str r0, [sp]
+        └─> 0x00c82178      00009de5       ldr r0, [sp]
+            0x00c8217c      010000e2       and r0, r0, 1
+            0x00c82180      7000afe6       sxtb r0, r0
+            0x00c82184      10d08de2       add sp, sp, 0x10
+            0x00c82188      1eff2fe1       bx lr
+        ┌─< 0x00c8218c      6f12833a       blo 0xfed46b50
+        │   0x00c82190      5cf5ffff       invalid
+        │   0x00c82194      98f5ffff       invalid
+        │   0x00c82198      e0d93d00       eorseq sp, sp, r0, ror 19

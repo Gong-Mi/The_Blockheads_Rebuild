@@ -1,0 +1,51 @@
+# TradePortal -[lightPos]
+# types: {Vector=[4f]}8@0:4
+# implementation: 0x00d3f3a8
+# ARM.exidx end: 0x00d3f460
+
+            0x00d3f3a8      00482de9       push {fp, lr}
+            0x00d3f3ac      0db0a0e1       mov fp, sp
+            0x00d3f3b0      20d04de2       sub sp, sp, 0x20
+            0x00d3f3b4      a0309fe5       ldr r3, [0x00d3f45c]        ; [0xd3f45c:4]=0x320734
+            0x00d3f3b8      03308fe0       add r3, pc, r3
+            0x00d3f3bc      94c09fe5       ldr ip, [0x00d3f458]        ; [0xd3f458:4]=0xffffc8dc
+            0x00d3f3c0      03c09ce7       ldr ip, [ip, r3]
+            0x00d3f3c4      04100be5       str r1, [fp, -4]
+            0x00d3f3c8      08200be5       str r2, [fp, -8]
+            0x00d3f3cc      04101be5       ldr r1, [fp, -4]
+            0x00d3f3d0      00209ce5       ldr r2, [ip]
+            0x00d3f3d4      021081e0       add r1, r1, r2
+            0x00d3f3d8      0c000be5       str r0, [fp, -0xc]
+            0x00d3f3dc      0100a0e1       mov r0, r1
+            0x00d3f3e0      10308de5       str r3, [sp, 0x10]
+            0x00d3f3e4      b0f9ddeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+            0x00d3f3e8      68109fe5       ldr r1, [0x00d3f458]        ; [0xd3f458:4]=0xffffc8dc
+            0x00d3f3ec      10209de5       ldr r2, [sp, 0x10]
+            0x00d3f3f0      021091e7       ldr r1, [r1, r2]
+            0x00d3f3f4      000a90ed       vldr s0, [r0]
+            0x00d3f3f8      04001be5       ldr r0, [fp, -4]
+            0x00d3f3fc      001091e5       ldr r1, [r1]
+            0x00d3f400      010080e0       add r0, r0, r1
+            0x00d3f404      030a8ded       vstr s0, [sp, 0xc]
+            0x00d3f408      a7f9ddeb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+            0x00d3f40c      0010e0e3       mvn r1, 0
+            0x00d3f410      000abfee       vmov.f32 s0, -1
+            0x00d3f414      012000e3       movw r2, 1
+            0x00d3f418      001ab7ee       vmov.f32 s2, 1
+            0x00d3f41c      012a90ed       vldr s4, [r0, 4]
+            0x00d3f420      011a32ee       vadd.f32 s2, s4, s2
+            0x00d3f424      0c001be5       ldr r0, [fp, -0xc]
+            0x00d3f428      032a9ded       vldr s4, [sp, 0xc]
+            0x00d3f42c      103a12ee       vmov r3, s4
+            0x00d3f430      08108de5       str r1, [sp, 8]
+            0x00d3f434      0310a0e1       mov r1, r3
+            0x00d3f438      103a11ee       vmov r3, s2
+            0x00d3f43c      04208de5       str r2, [sp, 4]
+            0x00d3f440      0320a0e1       mov r2, r3
+            0x00d3f444      103a10ee       vmov r3, s0
+            0x00d3f448      97d7ddeb       bl method.Vector.Vector_float__float__float_ ; Vector::Vector(float, float, float)
+            0x00d3f44c      00008de5       str r0, [sp]
+            0x00d3f450      0bd0a0e1       mov sp, fp
+            0x00d3f454      0088bde8       pop {fp, pc}
+            0x00d3f458      dcc8ffff       invalid
+            0x00d3f45c      34073200       eorseq r0, r2, r4, lsr r7

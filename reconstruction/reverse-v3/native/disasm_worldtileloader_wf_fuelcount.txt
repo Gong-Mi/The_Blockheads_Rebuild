@@ -1,0 +1,57 @@
+# Workbench -[fuelCount]
+# types: i8@0:4
+# implementation: 0x00afdec4
+# ARM.exidx end: 0x00afdf94
+
+            0x00afdec4      28d04de2       sub sp, sp, 0x28
+            0x00afdec8      c0209fe5       ldr r2, [0x00afdf90]        ; [0xafdf90:4]=0x561c20
+            0x00afdecc      02208fe0       add r2, pc, r2
+            0x00afded0      0a3000e3       movw r3, 0xa
+            0x00afded4      2b0a9fed       vldr s0, [0x00afdf88]
+            0x00afded8      041ab2ee       vmov.f32 s2, 1
+            0x00afdedc      a8c09fe5       ldr ip, [0x00afdf8c]        ; [0xafdf8c:4]=0xfffff14c
+            0x00afdee0      02209ce7       ldr r2, [ip, r2]
+            0x00afdee4      24008de5       str r0, [sp, 0x24]
+            0x00afdee8      20108de5       str r1, [sp, 0x20]
+            0x00afdeec      24009de5       ldr r0, [sp, 0x24]
+            0x00afdef0      001092e5       ldr r1, [r2]
+            0x00afdef4      010080e0       add r0, r0, r1
+            0x00afdef8      002a90ed       vldr s4, [r0]
+            0x00afdefc      011a22ee       vmul.f32 s2, s4, s2
+            0x00afdf00      000a31ee       vadd.f32 s0, s2, s0
+            0x00afdf04      c00abdee       vcvt.s32.f32 s0, s0
+            0x00afdf08      100a10ee       vmov r0, s0
+            0x00afdf0c      18008de5       str r0, [sp, 0x18]
+            0x00afdf10      14308de5       str r3, [sp, 0x14]
+            0x00afdf14      18009de5       ldr r0, [sp, 0x18]
+            0x00afdf18      14109de5       ldr r1, [sp, 0x14]
+            0x00afdf1c      010050e1       cmp r0, r1
+        ┌─< 0x00afdf20      020000aa       bge 0xafdf30
+        │   0x00afdf24      18009de5       ldr r0, [sp, 0x18]
+        │   0x00afdf28      04008de5       str r0, [sp, 4]
+       ┌──< 0x00afdf2c      010000ea       b 0xafdf38
+       │└─> 0x00afdf30      14009de5       ldr r0, [sp, 0x14]
+       │    0x00afdf34      04008de5       str r0, [sp, 4]
+       └──> 0x00afdf38      04009de5       ldr r0, [sp, 4]
+            0x00afdf3c      001000e3       movw r1, 0
+            0x00afdf40      10008de5       str r0, [sp, 0x10]
+            0x00afdf44      10009de5       ldr r0, [sp, 0x10]
+            0x00afdf48      1c008de5       str r0, [sp, 0x1c]
+            0x00afdf4c      0c108de5       str r1, [sp, 0xc]
+            0x00afdf50      1c009de5       ldr r0, [sp, 0x1c]
+            0x00afdf54      0c109de5       ldr r1, [sp, 0xc]
+            0x00afdf58      010050e1       cmp r0, r1
+        ┌─< 0x00afdf5c      020000aa       bge 0xafdf6c
+        │   0x00afdf60      0c009de5       ldr r0, [sp, 0xc]
+        │   0x00afdf64      00008de5       str r0, [sp]
+       ┌──< 0x00afdf68      010000ea       b 0xafdf74
+       │└─> 0x00afdf6c      1c009de5       ldr r0, [sp, 0x1c]
+       │    0x00afdf70      00008de5       str r0, [sp]
+       └──> 0x00afdf74      00009de5       ldr r0, [sp]
+            0x00afdf78      08008de5       str r0, [sp, 8]
+            0x00afdf7c      08009de5       ldr r0, [sp, 8]
+            0x00afdf80      28d08de2       add sp, sp, 0x28
+            0x00afdf84      1eff2fe1       bx lr
+            0x00afdf88      a4707d3f       svclo 0x7d70a4
+            0x00afdf8c      4cf1ffff       invalid
+            0x00afdf90      201c5600       subseq r1, r6, r0, lsr 24

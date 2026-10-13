@@ -1,0 +1,52 @@
+# itemTypeIsPlacableOnTrees  [C function]
+# implementation: 0x00580c20
+# ARM.exidx end: 0x00580e5c
+
+            ;-- itemTypeIsPlacableOnTrees(ItemType):
+            0x00580c20      08d04de2       sub sp, sp, 8               ; itemTypeIsPlacableOnTrees(ItemType)
+            0x00580c24      00008de5       str r0, [sp]
+            0x00580c28      00009de5       ldr r0, [sp]
+            0x00580c2c      110050e3       cmp r0, 0x11
+        ┌─< 0x00580c30      2100000a       beq 0x580cbc
+        │   0x00580c34      00009de5       ldr r0, [sp]
+        │   0x00580c38      b70050e3       cmp r0, 0xb7
+       ┌──< 0x00580c3c      1e00000a       beq 0x580cbc
+       ││   0x00580c40      00009de5       ldr r0, [sp]
+       ││   0x00580c44      2f0050e3       cmp r0, 0x2f                ; '/'
+      ┌───< 0x00580c48      1b00000a       beq 0x580cbc
+      │││   0x00580c4c      00009de5       ldr r0, [sp]
+      │││   0x00580c50      960050e3       cmp r0, 0x96
+     ┌────< 0x00580c54      1800000a       beq 0x580cbc
+     ││││   0x00580c58      00009de5       ldr r0, [sp]
+     ││││   0x00580c5c      fe0050e3       cmp r0, 0xfe
+    ┌─────< 0x00580c60      1500000a       beq 0x580cbc
+    │││││   0x00580c64      020100e3       movw r0, 0x102
+    │││││   0x00580c68      00109de5       ldr r1, [sp]
+    │││││   0x00580c6c      000051e1       cmp r1, r0
+   ┌──────< 0x00580c70      1100000a       beq 0x580cbc
+   ││││││   0x00580c74      00009de5       ldr r0, [sp]
+   ││││││   0x00580c78      4b0050e3       cmp r0, 0x4b                ; 'K'
+  ┌───────< 0x00580c7c      0e00000a       beq 0x580cbc
+  │││││││   0x00580c80      00009de5       ldr r0, [sp]
+  │││││││   0x00580c84      4c0050e3       cmp r0, 0x4c                ; 'L'
+  ────────< 0x00580c88      0b00000a       beq 0x580cbc
+  │││││││   0x00580c8c      00009de5       ldr r0, [sp]
+  │││││││   0x00580c90      560050e3       cmp r0, 0x56                ; 'V'
+  ────────< 0x00580c94      0800000a       beq 0x580cbc
+  │││││││   0x00580c98      00009de5       ldr r0, [sp]
+  │││││││   0x00580c9c      570050e3       cmp r0, 0x57                ; 'W'
+  ────────< 0x00580ca0      0500000a       beq 0x580cbc
+  │││││││   0x00580ca4      00009de5       ldr r0, [sp]
+  │││││││   0x00580ca8      580050e3       cmp r0, 0x58                ; 'X'
+  ────────< 0x00580cac      0200000a       beq 0x580cbc
+  │││││││   0x00580cb0      00009de5       ldr r0, [sp]
+  │││││││   0x00580cb4      350050e3       cmp r0, 0x35                ; '5'
+  ────────< 0x00580cb8      0200001a       bne 0x580cc8
+  └└└└└└└─> 0x00580cbc      010000e3       movw r0, 1
+            0x00580cc0      0700cde5       strb r0, [sp, 7]
+        ┌─< 0x00580cc4      010000ea       b 0x580cd0
+  ────────> 0x00580cc8      000000e3       movw r0, 0
+        │   0x00580ccc      0700cde5       strb r0, [sp, 7]
+        └─> 0x00580cd0      d700dde1       ldrsb r0, [sp, 7]
+            0x00580cd4      08d08de2       add sp, sp, 8
+            0x00580cd8      1eff2fe1       bx lr

@@ -97,8 +97,42 @@ def read_implementation_records(path: Path, source_root: Path) -> dict:
     return records
 
 
-def build(rows: list[dict[str, str]], refs: set[str], cfg: set[str], records: dict | None = None) -> dict:
+def read_runtime_records(path: Path, source_root: Path, implementation_records: dict) -> dict:
+    """Records that a method's BEHAVIOUR was measured on the running original.
+
+    Deliberately separate from the implementation registry: a runtime claim adds a measurement and a boundary, while
+    the implementation, source, test and evidence paths live in one place. A runtime record must name an
+    implementation that already has an implementation record - a method whose behaviour was measured but which has
+    no recorded source/test/evidence would be a contradiction, not a promotion.
+    """
+    data = json.loads(path.read_text())
+    if data.get("schema") != 1 or not isinstance(data.get("methods"), list):
+        raise ValueError("invalid origin-runtime manifest schema: " + str(path))
+    here = source_root.resolve()
+    out = {}
+    for record in data["methods"]:
+        imp = str(record.get("implementation", "")).lower()
+        if not re.fullmatch(r"0x[0-9a-f]{8}", imp):
+            raise ValueError("invalid runtime record implementation: " + repr(record.get("implementation")))
+        if imp in out:
+            raise ValueError("duplicate runtime record: " + imp)
+        if imp not in implementation_records:
+            raise ValueError("runtime record must also be an implementation record: " + imp)
+        for field in ("measured_on", "boundary", "evidence"):
+            if not isinstance(record.get(field), str) or not record[field]:
+                raise ValueError("runtime record missing " + field + ": " + imp)
+        rel = Path(record["evidence"])
+        target = (here / rel).resolve()
+        if rel.is_absolute() or not target.is_relative_to(here) or not target.is_file():
+            raise ValueError("missing/outside runtime evidence file: " + record["evidence"])
+        out[imp] = record
+    return out
+
+
+def build(rows: list[dict[str, str]], refs: set[str], cfg: set[str], records: dict | None = None,
+          runtime_records: dict | None = None) -> dict:
     records = records or {}
+    runtime_records = runtime_records or {}
     by_imp = {row["implementation"]: row for row in rows}
     for imp, record in records.items():
         if imp not in by_imp or any(record.get(k) != by_imp[imp][k] for k in ("implementation", "class", "kind", "selector", "types")):
@@ -130,6 +164,18 @@ def build(rows: list[dict[str, str]], refs: set[str], cfg: set[str], records: di
             entry["implementation_status"] = "explicit-record"
             entry["implementation_record"] = record
             # Local interface/fixture tests do not establish original-runtime parity.
+    # The last stage is fed ONLY by records pointing at a measurement of the running original. It was
+    # structurally pinned at 0 before this existed: the generator wrote behavior_status = not-tested and
+    # had no path by which a runtime measurement could leave that state, however much evidence there was.
+    for imp, record in runtime_records.items():
+        entry = next((e for e in entries if e["implementation"] == imp), None)
+        if entry is None:
+            raise ValueError("runtime record for an unknown implementation: " + imp)
+        if imp not in records:
+            raise ValueError("runtime record must also be an implementation record: " + imp)
+        entry["stages"]["behavior-verified"] = True
+        entry["behavior_status"] = "measured-on-original-runtime"
+        entry["runtime_record"] = record
     counts = {stage: sum(e["stages"][stage] for e in entries) for stage in STAGES}
     return {
         "schema": 1,
@@ -176,11 +222,15 @@ def main() -> int:
     parser.add_argument("--markdown", type=Path, required=True)
     parser.add_argument("--implementation-records", type=Path)
     parser.add_argument("--source-root", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument("--origin-runtime-records", type=Path,
+                        help="records whose behaviour was MEASURED on the running original; they must be a subset of the implementation records")
     args = parser.parse_args()
     rows = read_methods(args.methods)
     refs, cfg = implementations_in_files(evidence_files(args.evidence_root))
     records = read_implementation_records(args.implementation_records, args.source_root) if args.implementation_records else {}
-    ledger = build(rows, refs, cfg, records)
+    runtime_records = (read_runtime_records(args.origin_runtime_records, args.source_root, records)
+                       if args.origin_runtime_records else {})
+    ledger = build(rows, refs, cfg, records, runtime_records)
     args.json.parent.mkdir(parents=True, exist_ok=True)
     args.json.write_text(json.dumps(ledger, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     args.markdown.parent.mkdir(parents=True, exist_ok=True)

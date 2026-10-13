@@ -1,0 +1,66 @@
+# Scorpion -[riderPosForBlockhead:]
+# types: {Vector=[4f]}12@0:4@8
+# implementation: 0x008abdb8
+# ARM.exidx end: 0x008abeac
+
+            0x008abdb8      104c2de9       push {r4, sl, fp, lr}
+            0x008abdbc      08b08de2       add fp, sp, 8
+            0x008abdc0      40d04de2       sub sp, sp, 0x40
+            0x008abdc4      dcc09fe5       ldr ip, [0x008abea8]        ; [0x8abea8:4]=0x7b3d24
+            0x008abdc8      0cc08fe0       add ip, pc, ip
+            0x008abdcc      00e000e3       movw lr, 0
+            0x008abdd0      cc409fe5       ldr r4, [0x008abea4]        ; [0x8abea4:4]=0xffe231b0
+            0x008abdd4      0cc084e0       add ip, r4, ip
+            0x008abdd8      0c100be5       str r1, [fp, -0xc]
+            0x008abddc      10200be5       str r2, [fp, -0x10]
+            0x008abde0      14300be5       str r3, [fp, -0x14]
+            0x008abde4      0c101be5       ldr r1, [fp, -0xc]
+            0x008abde8      00209ce5       ldr r2, [ip]
+            0x008abdec      0e0051e1       cmp r1, lr
+            0x008abdf0      14108de5       str r1, [sp, 0x14]
+            0x008abdf4      10208de5       str r2, [sp, 0x10]
+            0x008abdf8      0c008de5       str r0, [sp, 0xc]
+        ┌─< 0x008abdfc      0400000a       beq 0x8abe14
+        │   0x008abe00      20008de2       add r0, sp, 0x20
+        │   0x008abe04      14109de5       ldr r1, [sp, 0x14]
+        │   0x008abe08      10209de5       ldr r2, [sp, 0x10]
+        │   0x008abe0c      c15ae4eb       bl loc.imp.objc_msgSend_stret
+       ┌──< 0x008abe10      070000ea       b 0x8abe34
+       │└─> 0x008abe14      000000e3       movw r0, 0
+       │    0x008abe18      082000e3       movw r2, 8
+       │    0x008abe1c      20108de2       add r1, sp, 0x20
+       │    0x008abe20      08008de5       str r0, [sp, 8]
+       │    0x008abe24      0100a0e1       mov r0, r1
+       │    0x008abe28      08109de5       ldr r1, [sp, 8]
+       │    0x008abe2c      ff1001e2       and r1, r1, 0xff
+       │    0x008abe30      bb5ae4eb       bl sym.imp.memset
+       └──> 0x008abe34      18008de2       add r0, sp, 0x18
+            0x008abe38      0010a0e3       mov r1, 0
+            0x008abe3c      9a2909e3       movw r2, 0x999a
+            0x008abe40      192e4be3       movt r2, 0xbe19
+            0x008abe44      8d91f0eb       bl method.Vector2.Vector2_float__float_ ; Vector2::Vector2(float, float)
+            0x008abe48      18209de5       ldr r2, [sp, 0x18]
+            0x008abe4c      1c309de5       ldr r3, [sp, 0x1c]
+            0x008abe50      20004be2       sub r0, fp, 0x20
+            0x008abe54      20108de2       add r1, sp, 0x20
+            0x008abe58      6e91f0eb       bl method.Vector2.operator_Vector2_ ; Vector2::operator+(Vector2)
+            0x008abe5c      20004be2       sub r0, fp, 0x20
+            0x008abe60      1147f0eb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+            0x008abe64      20104be2       sub r1, fp, 0x20
+            0x008abe68      000a90ed       vldr s0, [r0]
+            0x008abe6c      0100a0e1       mov r0, r1
+            0x008abe70      010a8ded       vstr s0, [sp, 4]
+            0x008abe74      0c47f0eb       bl method.Vector2.operator_float__ ; Vector2::operator float*()
+            0x008abe78      000abdee       vmov.f32 s0, -2
+            0x008abe7c      011a90ed       vldr s2, [r0, 4]
+            0x008abe80      0c009de5       ldr r0, [sp, 0xc]
+            0x008abe84      012a9ded       vldr s4, [sp, 4]
+            0x008abe88      101a12ee       vmov r1, s4
+            0x008abe8c      102a11ee       vmov r2, s2
+            0x008abe90      103a10ee       vmov r3, s0
+            0x008abe94      0425f0eb       bl method.Vector.Vector_float__float__float_ ; Vector::Vector(float, float, float)
+            0x008abe98      00008de5       str r0, [sp]
+            0x008abe9c      08d04be2       sub sp, fp, 8
+            0x008abea0      108cbde8       pop {r4, sl, fp, pc}
+            0x008abea4      b031e2ff       invalid
+            0x008abea8      243d7b00       rsbseq r3, fp, r4, lsr 26

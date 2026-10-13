@@ -1,0 +1,33 @@
+# reloadDrawBlockDynamicObjectQuadsForTile  [C function]
+# implementation: 0x00a19670
+# ARM.exidx end: 0x00a19c0c
+
+            ;-- reloadDrawBlockDynamicObjectQuadsForTile(intpair, MacroTile*, World*):
+; reloadDrawBlockDynamicObjectQuadsForTile(intpair, MacroTile*, World*
+            0x00a19670      00482de9       push {fp, lr}
+            0x00a19674      0db0a0e1       mov fp, sp
+            0x00a19678      18d04de2       sub sp, sp, 0x18
+            0x00a1967c      00c000e3       movw ip, 0
+            0x00a19680      08000be5       str r0, [fp, -8]
+            0x00a19684      04100be5       str r1, [fp, -4]
+            0x00a19688      0c208de5       str r2, [sp, 0xc]
+            0x00a1968c      08308de5       str r3, [sp, 8]
+            0x00a19690      0c009de5       ldr r0, [sp, 0xc]
+            0x00a19694      0c0050e1       cmp r0, ip
+        ┌─< 0x00a19698      0d00000a       beq 0xa196d4
+        │   0x00a1969c      08001be5       ldr r0, [fp, -8]
+        │   0x00a196a0      04101be5       ldr r1, [fp, -4]
+        │   0x00a196a4      0c209de5       ldr r2, [sp, 0xc]
+        │   0x00a196a8      08309de5       ldr r3, [sp, 8]
+        │   0x00a196ac      d0f6ffeb       bl sym.drawBlockAtWorldPostion_int__int__MacroTile__World_ ; drawBlockAtWorldPostion(int, int, MacroTile*, World*)
+        │   0x00a196b0      001000e3       movw r1, 0
+        │   0x00a196b4      04008de5       str r0, [sp, 4]
+        │   0x00a196b8      04009de5       ldr r0, [sp, 4]
+        │   0x00a196bc      010050e1       cmp r0, r1
+       ┌──< 0x00a196c0      0200000a       beq 0xa196d0
+       ││   0x00a196c4      010000e3       movw r0, 1
+       ││   0x00a196c8      04109de5       ldr r1, [sp, 4]
+       ││   0x00a196cc      a001c1e5       strb r0, [r1, 0x1a0]
+      ┌└──> 0x00a196d0      ffffffea       b 0xa196d4
+      └─└─> 0x00a196d4      0bd0a0e1       mov sp, fp
+            0x00a196d8      0088bde8       pop {fp, pc}

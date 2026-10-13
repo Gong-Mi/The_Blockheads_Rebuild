@@ -1,0 +1,175 @@
+# baseTemperatureForWorldPos  [C function]
+# implementation: 0x00a14f28
+# ARM.exidx end: 0x00a155dc
+
+            ;-- baseTemperatureForWorldPos(intpair, float, float, float, World*):
+            0x00a14f28      00482de9       push {fp, lr}               ; baseTemperatureForWorldPos(intpair, float, float, float, World*)
+            0x00a14f2c      0db0a0e1       mov fp, sp
+            0x00a14f30      78d04de2       sub sp, sp, 0x78
+            0x00a14f34      90c29fe5       ldr ip, [0x00a151cc]        ; [0xa151cc:4]=0x64abb4
+            0x00a14f38      0cc08fe0       add ip, pc, ip
+            0x00a14f3c      103a00ee       vmov s0, r3
+            0x00a14f40      102a01ee       vmov s2, r2
+            0x00a14f44      0c209be5       ldr r2, [fp, 0xc]
+            0x00a14f48      022a9bed       vldr s4, [fp, 8]
+            0x00a14f4c      08000be5       str r0, [fp, -8]
+            0x00a14f50      04100be5       str r1, [fp, -4]
+            0x00a14f54      031a0bed       vstr s2, [fp, -0xc]
+            0x00a14f58      040a0bed       vstr s0, [fp, -0x10]
+            0x00a14f5c      052a0bed       vstr s4, [fp, -0x14]
+            0x00a14f60      18200be5       str r2, [fp, -0x18]
+            0x00a14f64      18001be5       ldr r0, [fp, -0x18]
+            0x00a14f68      38c00be5       str ip, [fp, -0x38]
+            0x00a14f6c      0bffffeb       bl sym.customRulesBaseTemp_World_ ; customRulesBaseTemp(World*)
+            0x00a14f70      100a00ee       vmov s0, r0
+            0x00a14f74      001ab6ee       vmov.f32 s2, 5
+            0x00a14f78      38029fe5       ldr r0, [0x00a151b8]        ; [0xa151b8:4]=0xffffbcac
+            0x00a14f7c      38101be5       ldr r1, [fp, -0x38]
+            0x00a14f80      010090e7       ldr r0, [r0, r1]
+            0x00a14f84      30229fe5       ldr r2, [0x00a151bc]        ; [0xa151bc:4]=0xffe25174
+            0x00a14f88      012082e0       add r2, r2, r1
+            0x00a14f8c      203000e3       movw r3, 0x20
+            0x00a14f90      8a2a9fed       vldr s4, [0x00a151c0]
+            0x00a14f94      070a0bed       vstr s0, [fp, -0x1c]
+            0x00a14f98      08c01be5       ldr ip, [fp, -8]
+            0x00a14f9c      10ca00ee       vmov s0, ip
+            0x00a14fa0      c00ab8ee       vcvt.f32.s32 s0, s0
+            0x00a14fa4      020a80ee       vdiv.f32 s0, s0, s4
+            0x00a14fa8      18c01be5       ldr ip, [fp, -0x18]
+            0x00a14fac      001092e5       ldr r1, [r2]
+            0x00a14fb0      3c008de5       str r0, [sp, 0x3c]
+            0x00a14fb4      0c00a0e1       mov r0, ip
+            0x00a14fb8      3c209de5       ldr r2, [sp, 0x3c]
+            0x00a14fbc      38308de5       str r3, [sp, 0x38]
+            0x00a14fc0      0d1a8ded       vstr s2, [sp, 0x34]
+            0x00a14fc4      0c0a8ded       vstr s0, [sp, 0x30]
+            0x00a14fc8      32ff2fe1       blx r2
+            0x00a14fcc      100a00ee       vmov s0, r0
+            0x00a14fd0      c00ab8ee       vcvt.f32.s32 s0, s0
+            0x00a14fd4      0c1a9ded       vldr s2, [sp, 0x30]
+            0x00a14fd8      000a81ee       vdiv.f32 s0, s2, s0
+            0x00a14fdc      100a10ee       vmov r0, s0
+            0x00a14fe0      0d0a9ded       vldr s0, [sp, 0x34]
+            0x00a14fe4      101a10ee       vmov r1, s0
+            0x00a14fe8      57bbdeeb       bl sym.imp.__wrap_fmodf
+            0x00a14fec      100a00ee       vmov s0, r0
+            0x00a14ff0      001ab5ee       vmov.f32 s2, 2
+            0x00a14ff4      410a30ee       vsub.f32 s0, s0, s2
+            0x00a14ff8      c00ab0ee       vabs.f32 s0, s0
+            0x00a14ffc      010a80ee       vdiv.f32 s0, s0, s2
+            0x00a15000      080a0bed       vstr s0, [fp, -0x20]
+            0x00a15004      070a1bed       vldr s0, [fp, -0x1c]
+            0x00a15008      081a1bed       vldr s2, [fp, -0x20]
+            0x00a1500c      18001be5       ldr r0, [fp, -0x18]
+            0x00a15010      0b0a8ded       vstr s0, [sp, 0x2c]
+            0x00a15014      0a1a8ded       vstr s2, [sp, 0x28]
+            0x00a15018      5effffeb       bl sym.customRulesPoleOffset_World_ ; customRulesPoleOffset(World*)
+            0x00a1501c      100a00ee       vmov s0, r0
+            0x00a15020      050000e3       movw r0, 5
+            0x00a15024      041ab1ee       vmov.f32 s2, 5
+            0x00a15028      0f1000e3       movw r1, 0xf
+            0x00a1502c      0e2ab2ee       vmov.f32 s4, 1
+            0x00a15030      0a3a9ded       vldr s6, [sp, 0x28]
+            0x00a15034      000a23ee       vmul.f32 s0, s6, s0
+            0x00a15038      0b3a9ded       vldr s6, [sp, 0x2c]
+            0x00a1503c      400a33ee       vsub.f32 s0, s6, s0
+            0x00a15040      053a1bed       vldr s6, [fp, -0x14]
+            0x00a15044      022a23ee       vmul.f32 s4, s6, s4
+            0x00a15048      0a2a0bed       vstr s4, [fp, -0x28]
+            0x00a1504c      0b1a0bed       vstr s2, [fp, -0x2c]
+            0x00a15050      0a1a1bed       vldr s2, [fp, -0x28]
+            0x00a15054      0b2a1bed       vldr s4, [fp, -0x2c]
+            0x00a15058      c21ab4ee       vcmpe.f32 s2, s4
+            0x00a1505c      10faf1ee       vmrs apsr_nzcv, fpscr
+            0x00a15060      090a8ded       vstr s0, [sp, 0x24]
+            0x00a15064      20008de5       str r0, [sp, 0x20]
+            0x00a15068      1c108de5       str r1, [sp, 0x1c]
+        ┌─< 0x00a1506c      0200005a       bpl 0xa1507c
+        │   0x00a15070      0a0a1bed       vldr s0, [fp, -0x28]
+        │   0x00a15074      060a8ded       vstr s0, [sp, 0x18]
+       ┌──< 0x00a15078      010000ea       b 0xa15084
+       │└─> 0x00a1507c      0b0a1bed       vldr s0, [fp, -0x2c]
+       │    0x00a15080      060a8ded       vstr s0, [sp, 0x18]
+       └──> 0x00a15084      060a9ded       vldr s0, [sp, 0x18]
+            0x00a15088      0c0a0bed       vstr s0, [fp, -0x30]
+            0x00a1508c      0c0a1bed       vldr s0, [fp, -0x30]
+            0x00a15090      091a9ded       vldr s2, [sp, 0x24]
+            0x00a15094      400a31ee       vsub.f32 s0, s2, s0
+            0x00a15098      090a0bed       vstr s0, [fp, -0x24]
+            0x00a1509c      04001be5       ldr r0, [fp, -4]
+            0x00a150a0      020c50e3       cmp r0, 0x200
+        ┌─< 0x00a150a4      100000da       ble 0xa150ec
+        │   0x00a150a8      320000e3       movw r0, 0x32               ; '2'
+        │   0x00a150ac      440a9fed       vldr s0, [0x00a151c4]
+        │   0x00a150b0      001200e3       movw r1, 0x200
+        │   0x00a150b4      431a9fed       vldr s2, [0x00a151c8]
+        │   0x00a150b8      04201be5       ldr r2, [fp, -4]
+        │   0x00a150bc      102a02ee       vmov s4, r2
+        │   0x00a150c0      c22ab8ee       vcvt.f32.s32 s4, s4
+        │   0x00a150c4      412a32ee       vsub.f32 s4, s4, s2
+        │   0x00a150c8      011a82ee       vdiv.f32 s2, s4, s2
+        │   0x00a150cc      0d1a0bed       vstr s2, [fp, -0x34]
+        │   0x00a150d0      0d1a1bed       vldr s2, [fp, -0x34]
+        │   0x00a150d4      000a21ee       vmul.f32 s0, s2, s0
+        │   0x00a150d8      091a1bed       vldr s2, [fp, -0x24]
+        │   0x00a150dc      400a31ee       vsub.f32 s0, s2, s0
+        │   0x00a150e0      090a0bed       vstr s0, [fp, -0x24]
+        │   0x00a150e4      14008de5       str r0, [sp, 0x14]
+        │   0x00a150e8      10108de5       str r1, [sp, 0x10]
+        └─> 0x00a150ec      040a1bed       vldr s0, [fp, -0x10]
+            0x00a150f0      0e1ab2ee       vmov.f32 s2, 1
+            0x00a150f4      010a20ee       vmul.f32 s0, s0, s2
+            0x00a150f8      c02ab7ee       vcvt.f64.f32 d2, s0
+            0x00a150fc      080a1bed       vldr s0, [fp, -0x20]
+            0x00a15100      c03ab7ee       vcvt.f64.f32 d3, s0
+            0x00a15104      274b9fed       vldr d4, [0x00a151a8]
+            0x00a15108      043b23ee       vmul.f64 d3, d3, d4
+            0x00a1510c      005bb7ee       vmov.f64 d5, 1
+            0x00a15110      433b35ee       vsub.f64 d3, d5, d3
+            0x00a15114      032b22ee       vmul.f64 d2, d2, d3
+            0x00a15118      090a1bed       vldr s0, [fp, -0x24]
+            0x00a1511c      c03ab7ee       vcvt.f64.f32 d3, s0
+            0x00a15120      022b33ee       vadd.f64 d2, d3, d2
+            0x00a15124      c20bb7ee       vcvt.f32.f64 s0, d2
+            0x00a15128      090a0bed       vstr s0, [fp, -0x24]
+            0x00a1512c      030a1bed       vldr s0, [fp, -0xc]
+            0x00a15130      c02ab7ee       vcvt.f64.f32 d2, s0
+            0x00a15134      1d3b9fed       vldr d3, [0x00a151b0]
+            0x00a15138      032b22ee       vmul.f64 d2, d2, d3
+            0x00a1513c      022b32ee       vadd.f64 d2, d2, d2
+            0x00a15140      432b32ee       vsub.f64 d2, d2, d3
+            0x00a15144      c20bb7ee       vcvt.f32.f64 s0, d2
+            0x00a15148      100a10ee       vmov r0, s0
+            0x00a1514c      025b8ded       vstr d5, [sp, 8]
+            0x00a15150      004b8ded       vstr d4, [sp]
+            0x00a15154      7fb6deeb       bl sym.imp.cosf
+            0x00a15158      100a00ee       vmov s0, r0
+            0x00a1515c      041ab1ee       vmov.f32 s2, 5
+            0x00a15160      010a20ee       vmul.f32 s0, s0, s2
+            0x00a15164      c02ab7ee       vcvt.f64.f32 d2, s0
+            0x00a15168      080a1bed       vldr s0, [fp, -0x20]
+            0x00a1516c      c03ab7ee       vcvt.f64.f32 d3, s0
+            0x00a15170      004b9ded       vldr d4, [sp]
+            0x00a15174      043b23ee       vmul.f64 d3, d3, d4
+            0x00a15178      025b9ded       vldr d5, [sp, 8]
+            0x00a1517c      433b35ee       vsub.f64 d3, d5, d3
+            0x00a15180      032b22ee       vmul.f64 d2, d2, d3
+            0x00a15184      090a1bed       vldr s0, [fp, -0x24]
+            0x00a15188      c03ab7ee       vcvt.f64.f32 d3, s0
+            0x00a1518c      022b33ee       vadd.f64 d2, d3, d2
+            0x00a15190      c20bb7ee       vcvt.f32.f64 s0, d2
+            0x00a15194      090a0bed       vstr s0, [fp, -0x24]
+            0x00a15198      100a10ee       vmov r0, s0
+            0x00a1519c      0bd0a0e1       mov sp, fp
+            0x00a151a0      0088bde8       pop {fp, pc}
+            0x00a151a4      00f020e3       nop
+            0x00a151a8      9a999999       ldmibls sb, {r1, r3, r4, r7, r8, fp, ip, pc}
+            0x00a151ac      9999e93f       svclo 0xe99999
+            0x00a151b0      182d4454       strbpl r2, [r4], -0xd18
+            0x00a151b4      fb210940       strdmi r2, r3, [sb], -fp
+            0x00a151b8      acbcffff       invalid
+            0x00a151bc      7451e2ff       invalid
+            0x00a151c0      00000042       andmi r0, r0, 0
+            0x00a151c4      00004842       submi r0, r8, 0
+            0x00a151c8      00000044       strmi r0, [r0], -0
+            0x00a151cc      b4ab6400       strhteq sl, [r4], -0xb4

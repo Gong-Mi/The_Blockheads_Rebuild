@@ -1,0 +1,141 @@
+{
+  "claim": "PaintingCraftableItemObject: two direct-object NSData ivars (imageData@128, outputImageData@132) plus numberWithInt: craftableObjectType whose value cell stays pending; NormalPlant/GlowBlock add a NESTED [child getSaveDict] (child ivar NormalPlant.light@124 / GlowBlock.light@56) inserted as lightDict, NormalPlant gated by an emitsLight bool test; GatherBlock saves timer@56 float BEFORE lastKnownGatherValue@60 int despite pool order; every dispatch word here was extracted mechanically from the annotated listing before gating; 33 overrides and the read-back/roundtrip behavior remain unresolved",
+  "classes": [
+    {
+      "boundary": "0x007421b8",
+      "class": "PaintingCraftableItemObject",
+      "code_words": 129,
+      "imp": "0x00741fb4",
+      "keys": [
+        {
+          "cfstring_object": "0x00f8ceb8",
+          "conversion": "direct_object",
+          "ivar": "OBJC_IVAR_$_PaintingCraftableItemObject.imageData",
+          "ivar_offset": 128,
+          "key": "imageData",
+          "set_object_site": "0x00742074"
+        },
+        {
+          "cfstring_object": "0x00f8cec8",
+          "conversion": "direct_object",
+          "ivar": "OBJC_IVAR_$_PaintingCraftableItemObject.outputImageData",
+          "ivar_offset": 132,
+          "key": "outputImageData",
+          "set_object_site": "0x007420ec"
+        },
+        {
+          "cfstring_object": "0x00f8ced8",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x00742150",
+          "key": "craftableObjectType",
+          "set_object_site": "0x00742174",
+          "value_source": "pending (value cell not gated)"
+        }
+      ],
+      "super_class_struct": "0x00e90e18",
+      "super_site": "0x00742008"
+    },
+    {
+      "boundary": "0x00a67034",
+      "class": "NormalPlant",
+      "code_words": 136,
+      "guard": {
+        "beq_site": "0x00a66f48",
+        "cmp_site": "0x00a66f44",
+        "emits_light_selref": "emitsLight",
+        "emits_light_site": "0x00a66f3c",
+        "emits_light_word": "32ff2fe1",
+        "emits_selref_cell": "0x00a67010",
+        "skip_target": "0x00a66ff4"
+      },
+      "imp": "0x00a66e14",
+      "keys": [
+        {
+          "cfstring_object": "0x00f97418",
+          "conversion": "numberWithFloat:",
+          "conversion_site": "0x00a66f04",
+          "ivar": "OBJC_IVAR_$_NormalPlant.availableFood",
+          "ivar_offset": 120,
+          "key": "availableFood",
+          "set_object_site": "0x00a66f28"
+        },
+        {
+          "cfstring_object": "0x00f97428",
+          "conversion": "nested_getSaveDict",
+          "conversion_site": "0x00a66f94",
+          "ivar": "OBJC_IVAR_$_NormalPlant.light",
+          "ivar_offset": 124,
+          "key": "lightDict",
+          "set_object_site": "0x00a66fec"
+        }
+      ],
+      "super_class_struct": "0x00e91a70",
+      "super_site": "0x00a66e68"
+    },
+    {
+      "boundary": "0x00ca8e64",
+      "class": "GlowBlock",
+      "code_words": 123,
+      "guard": {
+        "beq_site": "0x00ca8de0",
+        "cmp_site": "0x00ca8ddc",
+        "skip_target": "0x00ca8e28"
+      },
+      "imp": "0x00ca8c78",
+      "keys": [
+        {
+          "cfstring_object": "0x00fa30d8",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x00ca8d84",
+          "ivar": "OBJC_IVAR_$_GlowBlock.tileType",
+          "ivar_offset": 60,
+          "key": "tileType",
+          "set_object_site": "0x00ca8da8"
+        },
+        {
+          "cfstring_object": "0x00fa30e8",
+          "conversion": "nested_getSaveDict",
+          "conversion_site": "0x00ca8dcc",
+          "ivar": "OBJC_IVAR_$_GlowBlock.light",
+          "ivar_offset": 56,
+          "key": "lightDict",
+          "set_object_site": "0x00ca8e24"
+        }
+      ],
+      "super_class_struct": "0x00e92128",
+      "super_site": "0x00ca8ccc"
+    },
+    {
+      "boundary": "0x00869988",
+      "class": "GatherBlock",
+      "code_words": 122,
+      "imp": "0x008697a0",
+      "keys": [
+        {
+          "cfstring_object": "0x00f925f8",
+          "conversion": "numberWithFloat:",
+          "conversion_site": "0x008698c0",
+          "ivar": "OBJC_IVAR_$_GatherBlock.timer",
+          "ivar_offset": 56,
+          "key": "timer",
+          "set_object_site": "0x008698e4"
+        },
+        {
+          "cfstring_object": "0x00f92608",
+          "conversion": "numberWithInt:",
+          "conversion_site": "0x00869920",
+          "ivar": "OBJC_IVAR_$_GatherBlock.lastKnownGatherValue",
+          "ivar_offset": 60,
+          "key": "lastKnownGatherValue",
+          "set_object_site": "0x00869944"
+        }
+      ],
+      "super_class_struct": "0x00e913b8",
+      "super_site": "0x008697f4"
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "method": "getSaveDict key pairings (batch 2d)",
+  "pic_base": "0x0105faf4",
+  "schema": 1
+}

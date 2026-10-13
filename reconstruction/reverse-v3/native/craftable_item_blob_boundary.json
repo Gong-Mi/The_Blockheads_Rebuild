@@ -1,0 +1,79 @@
+{
+ "schema": 1,
+ "title": "CraftableItem blob: what is proved, and what is sealed",
+ "context": "the crafting line needed field semantics for the 124-byte CraftableItem blob. This records what the static analysis DID establish at instruction level, the method rules that invalidated three earlier attempts, and the one condition needed to finish.",
+ "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+ "layout": {
+  "encoding": "{CraftableItem=ii[8i][8i]iiiSSi[8i]}",
+  "field_offsets": [
+   0,
+   4,
+   8,
+   40,
+   72,
+   76,
+   80,
+   84,
+   86,
+   88,
+   92
+  ],
+  "sizes": "4,4,32,32,4,4,4,2,2,4,32 = 124",
+  "independent_confirmation": "-[CraftableItemObject setCraftableItem:]'s own type encoding is v132@0:4{CraftableItem=ii[8i][8i]iiiSSi[8i]}8 - the same layout arrives from a method signature, not only from the savedict read length. Two independent sources now agree."
+ },
+ "proved": {
+  "struct_is_passed_by_value": {
+   "evidence": "-[CraftableItemObject setCraftableItem:] type encoding v132@0:4{...}8",
+   "consequence": "the 51 sites that copy 124 bytes are the by-value argument/return copies of this struct, not 'a bulk copy into an object'. Field reads therefore sit on caller stack buffers."
+  },
+  "read_back_from_the_save": {
+   "method": "CraftableItemObject -[initWithSaveDict:]",
+   "chain": [
+    "0xac79e0 blx r4        ; objc_msgSend(saveDict, objectForKey:, @\"craftableItem\")",
+    "0xac79f4 ldr r3, [r2]  ; r3 = the ivar offset taken from a .got slot",
+    "0xac79f8 add r1, r1, r3; r1 = self + offset   (the ivar offset is 4)",
+    "0xac7a10 ldr r3, [sp,#0x10]  ; r3 = 124  (movw r3, #0x7c at 0xac7984)",
+    "0xac7a18 blx ip        ; objc_msgSend(NSData, getBytes:length:, &self->craftableItem, 124)"
+   ],
+   "verdict": "instruction-level confirmation of the previously recorded line [[saveDict objectForKey:@\"craftableItem\"] getBytes:&self->craftableItem length:124]. An earlier claim of mine that the library has only ONE getBytes:length: reference (a 10-byte UINib path) was WRONG - a tool-coverage artefact."
+  },
+  "write_direction": {
+   "method": "CraftableItemObject -[setCraftableItem:]",
+   "chain": [
+    "0xac7c28 add r2, fp, #8     ; r2 = &(the by-value struct argument)",
+    "0xac7c2c movw r3, #0x7c     ; 124",
+    "0xac7c4c ldr r1, [ip]       ; r1 = the ivar offset from a .got slot (=4)",
+    "0xac7c50 add r0, r0, r1     ; r0 = self+4 = &self->craftableItem",
+    "0xac7c68 bl #0x1c2888       ; memcpy(&self->craftableItem, &arg, 124)"
+   ]
+  },
+  "the_ivar_has_three_reference_sites": {
+   "ivar": "CraftableItemObject.craftableItem",
+   "cell": "0xf34ea0",
+   "offset": 4,
+   "sites": [
+    "CraftableItemObject -[initWithSaveDict:] (the getBytes read-back)",
+    "CraftableItemObject -[setCraftableItem:] (the memcpy write)",
+    "0xac7ccc - an initialiser (super dispatch then return self); role inferred from shape, not proved by name"
+   ],
+   "consequence": "no field read touches the cell, because consumers hold the struct by value or by pointer"
+  },
+  "selector_addressing_has_a_third_form": {
+   "form": "ldr ip,[pc,#k] ; add ip, ip, r1 ; ldr ip,[ip] ; blx - r1 is a PER-CLASS slot index",
+   "consequence": "find_selector_senders.py models only the pool+PIC form, so for getBytes:length: it reports slots=1 / sends=0 while real call sites exist (e.g. the Action site at 0x735be8, movw r3, #0xc). Empty results cover only the scanned channel.",
+   "reliable_search": "search the length immediate instead: movw r3,#0x7c (124) occurs exactly 5 times (CraftableItemObject -[initWithSaveDict:] 0xac7984, -[setCraftableItem:] 0xac7c2c, Workbench -[initWithWorld:...] 0xae594c, Workbench -[blockheadWouldLikeToTakeOwnership:...] 0xae7864, CraftUI -[updateTeleportCraftableItem] 0xb6b1a0); #0xc (12) occurs 19 times."
+  }
+ },
+ "method_rules_earned_here": [
+  "A small struct's field offsets collide numerically with stack-frame offsets, so matching an offset alone is invalid by construction - it produced a table of ~1600 'field accesses' that were all [sp, ...] frames.",
+  "Field access must first PROVE the base: track the register that receives self+cell for the ivar, or the destination of the by-value copy.",
+  "A fast alarm that a rule has not locked onto an object: the hits cover essentially every method in the library.",
+  "Empty results cover only the channel that was scanned (the getBytes:length: lesson).",
+  "dst/src forms read by 'last matching instruction before the call' are unreliable - here they produced a copy whose source and destination were the same stack slot."
+ ],
+ "sealed": {
+  "what_is_not_done": "field semantics for the 11 field offsets",
+  "condition_needed": "a base-provenance tracker: instruction-level register/dataflow from the by-value buffer (the 124-byte copy destination) to each access, so that [sp, #k+field] can be distinguished from a genuine stack frame at the same offset. Offset heuristics cannot do it; three attempts failed and each was invalid by construction, not merely incomplete.",
+  "what_would_make_it_easy": "a live CraftableItemObject instance to read (the current world has no workbench, so none exists), or a save containing a craftableItem blob paired with a known crafting state."
+ }
+}

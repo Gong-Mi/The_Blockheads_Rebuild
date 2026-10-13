@@ -1,0 +1,22 @@
+//
+//  Shader.vsh
+//  SandLandiPad
+//
+//  Created by David Frampton on 8/03/11.
+//  Copyright 2011 Jungle Ltd. All rights reserved.
+//
+
+attribute vec4 position;
+attribute vec4 color;
+
+uniform mat4 mvp_matrix;
+uniform highp vec4 foregroundDayColor;
+uniform highp vec4 backgroundDayColor;
+
+varying highp vec4 outColor;
+
+void main()
+{
+    gl_Position = mvp_matrix * vec4(position.xyz, 1.0);
+    outColor = mix(backgroundDayColor, color * foregroundDayColor, position.w);
+}

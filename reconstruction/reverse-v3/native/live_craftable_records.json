@@ -1,0 +1,661 @@
+{
+ "schema": 1,
+ "captured": "2026-10-05T11:40+0800",
+ "grade": "LIVE - read from the running original (pid 4428) via /proc/<pid>/maps + pread on /proc/<pid>/mem; read-only, no injection, no ptrace",
+ "build": {
+  "running_lib_sha256": "d09418e9c0865902054a71358dcff3264d47f7b24ede58667cb5ea0e6f269b96",
+  "note": "the device runs 1.7.5 while the static baseline is 1.7.6; the live probe refuses to work against a mismatched ELF, which is how this was caught rather than silently mis-mapped"
+ },
+ "live_clock": {
+  "window_seconds": 60.017,
+  "worldTime_units_advanced": 1200.64874,
+  "worldTime_per_wall_second": 20.005144214,
+  "lastUpdateTime_advanced": 60.035153,
+  "reading": "the live game corroborates the x20 conclusion by a completely different method: 20.005 world units per wall second while the NSDate domain advances 1:1"
+ },
+ "live_clock_anomaly": {
+  "timeOfDayFraction_delta": 0.353949,
+  "implied_days_from_worldTime": 1.334,
+  "reading": "the day/night fraction moved by 0.35 while worldTime advanced 1.33 days, so the fraction is NOT the naive fmod(worldTime, 900)/900 - recorded as an open discrepancy against the simple reading of the clock model"
+ },
+ "live_craftable_objects": {
+  "class": "CraftableItemObject",
+  "class_ptr": "0x67128cac",
+  "classlist_cross_check_agrees": true,
+  "resolution": "the class object is relocated from the ELF's __objc_classlist through the live rw segment and cross-checked against the relocated classlist cell (both agree), rather than being read from the OBJC_CLASS_$_ symbol slot - an earlier attempt did the latter and 'found' 18 hits that were entries in the library's own pointer tables",
+  "candidates_in_anonymous_rw": 3,
+  "instances": [
+   {
+    "object": "0x67d35f34",
+    "fields": {
+     "+0": 1978731970,
+     "+4": 1978721200,
+     "+8": [
+      1757234904,
+      1757370348,
+      1986648499,
+      1986691420,
+      1757238111,
+      1757376428,
+      1730436576,
+      1729249868
+     ],
+     "+40": [
+      -1,
+      0,
+      1978727985,
+      1978716360,
+      1978730261,
+      1978719360,
+      1730442264,
+      1729258108
+     ],
+     "+72": -1,
+     "+76": 0,
+     "+80": -1,
+     "+84": 0,
+     "+86": 0,
+     "+88": -1,
+     "+92": [
+      0,
+      -1,
+      0,
+      1978726717,
+      1978714640,
+      1757234708,
+      1757369908,
+      1730445016
+     ]
+    }
+   },
+   {
+    "object": "0x67d5751c",
+    "fields": {
+     "+0": -2139095040,
+     "+4": 0,
+     "+8": [
+      1730619384,
+      1999531808,
+      1742030496,
+      0,
+      0,
+      1729261188,
+      -2147352576,
+      7
+     ],
+     "+40": [
+      1730619080,
+      0,
+      0,
+      0,
+      0,
+      1729261208,
+      -2139095040,
+      0
+     ],
+     "+72": 1730619824,
+     "+76": 1997495296,
+     "+80": 1997522880,
+     "+84": 0,
+     "+86": 0,
+     "+88": 0,
+     "+92": [
+      1729261328,
+      -2147352576,
+      7,
+      1730619424,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "object": "0x67d65df4",
+    "fields": {
+     "+0": 1,
+     "+4": 1757379328,
+     "+8": [
+      0,
+      0,
+      0,
+      0,
+      1,
+      1986692520,
+      2,
+      1741782116
+     ],
+     "+40": [
+      0,
+      0,
+      0,
+      0,
+      1,
+      1729268948,
+      0,
+      0
+     ],
+     "+72": 1,
+     "+76": 1978719800,
+     "+80": 0,
+     "+84": 0,
+     "+86": 0,
+     "+88": 1,
+     "+92": [
+      1986694560,
+      0,
+      0,
+      1,
+      1978713660,
+      0,
+      0,
+      3
+     ]
+    }
+   }
+  ],
+  "observation": "one instance (0x67d65df4) carries small integers in the record (f0=1, f4=1, f9=1, arrays mostly 0 with a few 1s), which is what a crafting record should look like; the other two are pointer-heavy. With three instances no generalisation is claimed - the value here is that live records are now readable and reproducible."
+ },
+ "boundary": "three instances at one moment in one save. Nothing here names a field; the values are recorded as read.",
+ "instance_identification_negative": {
+  "what_was_tried": "find instances by scanning anonymous rw regions for a word equal to the class pointer, for both Action (reading interactionTestResult @52, modelled as iiSS) and CraftableItemObject",
+  "class_resolution_is_sound": "Action -> 0x67127d84 and CraftableItemObject -> 0x67128cac, both agreeing with the relocated __objc_classlist cell",
+  "but_the_criterion_is_not": "only three words matched per class, and their contents do not match the layouts the encodings declare: CraftableItemObject's records show pointers inside the int[8] array ranges, and Action's interactionTestResult decodes as pointers rather than iiSS. So 'first word == class pointer' still matches class references held elsewhere (tables, caches) rather than instances",
+  "raw": {
+   "Action_records": [
+    {
+     "object": "0x67d178b4",
+     "fields": {
+      "+0": 1768715361,
+      "+4": 29811,
+      "+8": 1313557575
+     },
+     "raw": "61746c6973740000474c4b4e"
+    },
+    {
+     "object": "0x67d34fcc",
+     "fields": {
+      "+0": 4294967295,
+      "+4": 0,
+      "+8": 1978729813
+     },
+     "raw": "ffffffff000000005505f175"
+    },
+    {
+     "object": "0x67d5719c",
+     "fields": {
+      "+0": 0,
+      "+4": 0,
+      "+8": 1729266208
+     },
+     "raw": "000000000000000020821267"
+    }
+   ],
+   "CraftableItemObject_records": [
+    {
+     "object": "0x67d35f34",
+     "fields": {
+      "+0": 1978731970,
+      "+4": 1978721200,
+      "+8": 1757234904,
+      "+12": 1757370348,
+      "+16": 1986648499,
+      "+20": 1986691420,
+      "+24": 1757238111,
+      "+28": 1757376428,
+      "+32": 1730436576,
+      "+36": 1729249868,
+      "+40": 4294967295,
+      "+44": 0,
+      "+48": 1978727985,
+      "+52": 1978716360,
+      "+56": 1978730261,
+      "+60": 1978719360,
+      "+64": 1730442264,
+      "+68": 1729258108,
+      "+72": 4294967295,
+      "+76": 0,
+      "+80": 4294967295,
+      "+84": 0,
+      "+88": 4294967295,
+      "+92": 0,
+      "+96": 4294967295,
+      "+100": 0,
+      "+104": 1978726717,
+      "+108": 1978714640,
+      "+112": 1757234708,
+      "+116": 1757369908,
+      "+120": 1730445016
+     },
+     "raw": "c20df175b0e3f075d846bd68ec57bf68b3d969765c816a765f53bd68ac6fbf68e05d24674c421267ffffffff0000000031fef075c8d0f0751507f17580dcf075187424677c621267ffffffff00000000ffffffff00000000ffffffff00000000ffffffff000000003df9f07510caf0751446bd683456bf68d87e2467"
+    },
+    {
+     "object": "0x67d5751c",
+     "fields": {
+      "+0": 2155872256,
+      "+4": 0,
+      "+8": 1730619384,
+      "+12": 1999531808,
+      "+16": 1742030496,
+      "+20": 0,
+      "+24": 0,
+      "+28": 1729261188,
+      "+32": 2147614720,
+      "+36": 7,
+      "+40": 1730619080,
+      "+44": 0,
+      "+48": 0,
+      "+52": 0,
+      "+56": 0,
+      "+60": 1729261208,
+      "+64": 2155872256,
+      "+68": 0,
+      "+72": 1730619824,
+      "+76": 1997495296,
+      "+80": 1997522880,
+      "+84": 0,
+      "+88": 0,
+      "+92": 1729261328,
+      "+96": 2147614720,
+      "+100": 7,
+      "+104": 1730619424,
+      "+108": 0,
+      "+112": 0,
+      "+116": 0,
+      "+120": 0
+     },
+     "raw": "0000808000000000f8272767206f2e77a046d5670000000000000000846e12670000028007000000c826276700000000000000000000000000000000986e12670000808000000000b0292767005c0f77c0c70f770000000000000000106f126700000280070000002028276700000000000000000000000000000000"
+    },
+    {
+     "object": "0x67d65df4",
+     "fields": {
+      "+0": 1,
+      "+4": 1757379328,
+      "+8": 0,
+      "+12": 0,
+      "+16": 0,
+      "+20": 0,
+      "+24": 1,
+      "+28": 1986692520,
+      "+32": 2,
+      "+36": 1741782116,
+      "+40": 0,
+      "+44": 0,
+      "+48": 0,
+      "+52": 0,
+      "+56": 1,
+      "+60": 1729268948,
+      "+64": 0,
+      "+68": 0,
+      "+72": 1,
+      "+76": 1978719800,
+      "+80": 0,
+      "+84": 0,
+      "+88": 1,
+      "+92": 1986694560,
+      "+96": 0,
+      "+100": 0,
+      "+104": 1,
+      "+108": 1978713660,
+      "+112": 0,
+      "+116": 0,
+      "+120": 3
+     },
+     "raw": "01000000007bbf680000000000000000000000000000000001000000a8856a7602000000647cd1670000000000000000000000000000000001000000d48c126700000000000000000100000038def075000000000000000001000000a08d6a760000000000000000010000003cc6f075000000000000000003000000"
+    }
+   ]
+  },
+  "conclusion": "the heap scan is replaced, not patched: the right route is to WALK THE OBJECT GRAPH from a root that can be identified with a strong signature - _validate_world does exactly that (header class, DynamicWorld hop, backref, saveID string) - and this project's world_layout.h with its 227 named ivar offsets is the map for that walk. The deliverable becomes the tool."
+ },
+ "graph_walk": {
+  "method": "identify a root with a strong signature (find_world: header class, DynamicWorld hop, its backref, saveID string), then follow KNOWN ivar offsets - the project's own layouts used as the map",
+  "world": "0x61f96000",
+  "world_info": {
+   "world_class": "0x671276a4",
+   "dw_class": "0x671284b4",
+   "classlist_reloc_world": "0x671276a4",
+   "world_dynamicWorld_off": 416,
+   "dw_world_off": 4,
+   "world_saveID_off": 436,
+   "stack_words_scanned": 24709120,
+   "stack_candidates": [],
+   "heap_hits": 1,
+   "heap_rejections": {}
+  },
+  "reachable_within_3_hops": [
+   {
+    "path": "root -> worldTileLoader",
+    "depth": 1,
+    "class": "WorldTileLoader",
+    "object": "0x370cc040",
+    "offset": 420
+   },
+   {
+    "path": "root -> uiManager",
+    "depth": 1,
+    "class": "UIManager",
+    "object": "0x6206a240",
+    "offset": 240
+   },
+   {
+    "path": "root -> dynamicWorld",
+    "depth": 1,
+    "class": "DynamicWorld",
+    "object": "0x254fd000",
+    "offset": 416
+   },
+   {
+    "path": "root -> uiManager -> paintMixUI",
+    "depth": 2,
+    "class": "PaintMixUI",
+    "object": "0x77073ba0",
+    "offset": 56
+   }
+  ],
+  "class_identity_checked_at_every_hop": true,
+  "notes": [
+   "DynamicWorld sits at World+416, which is the offset world_layout.h records - the model agrees with the live object, which is the first time this project's static layout has been checked against reality",
+   "PaintMixUI is reachable at depth 2 via World -> UIManager -> paintMixUI (0x77073ba0), i.e. the crafting entry point's own class is locatable live",
+   "deeper walking found nothing more, and inspecting PaintMixUI's 28 ivars shows only ONE pointer to a known class: its world backref. The idle paint-mix UI holds no workbench and no craftable object - which is exactly why the record is not here to read"
+  ]
+ },
+ "next_action_required": {
+  "what": "with the game in the foreground, open the crafting interface and start/queue a craft (or select an item in a workbench) so a CraftableItemObject or Action exists in the live graph",
+  "then": "re-run walk_from_world.py and read_live_record.py - the machinery is proven end to end: root identification with a strong signature, class resolution cross-checked against the relocated classlist, graph walk with isa checks at every hop, and 124-byte record reads",
+  "why_it_matters": "those records are the only place the field VALUES (and therefore the semantics) exist; every static route to them is exhausted and recorded as such"
+ },
+ "live_clock_domain_snapshot": {
+  "method": "read the LIVE World at exactly the offsets world_clock_domain.h declares, decoding by the model's own types - i.e. the deliverable checked against a running game rather than against the binary",
+  "world": "0x61f96000",
+  "values": {
+   "worldTime": 459886.87642370164,
+   "sunDirection": [
+    -0.09148769825696945,
+    0.00937353353947401,
+    -0.9957621097564697,
+    1.0
+   ],
+   "timeOfDayFraction": 0.2286284863948822,
+   "weatherFraction": 0.13606323301792145,
+   "rainFraction": 0.0,
+   "rainFractionNotIncludingSnow": 0.0,
+   "fastForward": 1,
+   "doubleTimeUnlocked": 0,
+   "simulationProgress": 0.0,
+   "isSimulating": 0
+  },
+  "model_confirmations": [
+   "sunDirection came out as a UNIT vector (|v| = 1.0000, fourth float 1.0), so the model's '4 floats' is right and the semantics is a direction - the strongest kind of live confirmation available short of reading a crafting record",
+   "fastForward reads 1 at the same time the clock advances 20.005 units per wall second, so the flag and the rate agree as two independent live signals",
+   "the offsets/types for all ten fields decoded without a single implausible value (fractions are in [0,1], flags are 0/1, worldTime is a large double)"
+  ],
+  "anomaly_sharpened": {
+   "before": "timeOfDayFraction moved 0.354 while worldTime advanced 1.33 days, so the fraction is not fmod(worldTime, 900)/900",
+   "now": "at this snapshot the fraction reads 0.2286 while the sun's Y component is ~0.0094, i.e. the sun is essentially on the horizon - the phase and the sun agree with each other. So the fraction IS a day phase (~0.25 = sunrise); what disagrees is its rate against worldTime",
+   "falsifiable_next_question": "which counter advances the phase? The fraction is consistent with the sun and inconsistent with worldTime/900, so either a second counter exists or the fraction is derived per frame with a different constant - both are answerable statically now that the question is that specific."
+  }
+ },
+ "live_world_rate_table": {
+  "method": "sample every numeric World ivar twice, 25.001 s apart, and report units/second (the probe reuses the validated Probe class; read-only)",
+  "window_seconds": 25.001,
+  "moving_fields": {
+   "worldTime": 19.999315,
+   "noRainTimer": 19.859284,
+   "lastUpdateTime": 0.999973,
+   "saveCount": 0.999959,
+   "forcedCalibrationTimer": 0.983724,
+   "slowAnimationIndex": -0.55998,
+   "waterAnimationIndex": -0.479983,
+   "updateGeometryDrawBlockIndex": 0.199993,
+   "saveCounter": 0.199993,
+   "isHeadingTowardsMIdday": -0.039999,
+   "mapUpdateTimer": 0.018661,
+   "timeOfDayFraction": 0.011831,
+   "cloudFraction": -0.011298,
+   "weatherFraction": -0.000565
+  },
+  "semantics_earned_from_rates": [
+   "isHeadingTowardsMIdday is a one-byte DIRECTION flag for the day phase (it toggles 1 -> 0 in this window, and its name is in the World layout this project already derived) - a meaning the live rates give and the static reading could not",
+   "noRainTimer advances with worldTime and carries worldTime's magnitude (459607 -> 460104 against 461585 -> 462085), so it is the same clock domain expressed as seconds, not an independent timer",
+   "slowAnimationIndex and waterAnimationIndex advance by WRAPPING (14 -> 0, 12 -> 0), which is what frame-cycled animation counters look like",
+   "saveCount and saveCounter are DIFFERENT fields with different rates (0.99996/s vs 0.19999/s) and this also corrects an earlier note of mine that read saveCounter as decreasing: live data says it increments"
+  ],
+  "anomaly_answered": {
+   "question": "which counter advances the day phase? (recorded last batch as falsifiable)",
+   "answer": "not worldTime. The phase advances 0.01183/s while worldTime advances 20/s - a ratio of about 1:1690 worldTime units per full phase, whereas a naive 900-units-per-day reading would put it at 1:900. So a second counter or a different constant exists, and the static search now has a target rather than a mystery"
+  }
+ },
+ "live_day_phase_measured": {
+  "method": "sample timeOfDayFraction, isHeadingTowardsMIdday, sunDirection.y and worldTime every 2 s for 96 s (offsets resolved by NAME through the ivar table, not hand-copied)",
+  "findings": {
+   "shape": "the fraction is a TRIANGLE wave between ~0.002 and ~0.476, not a monotone 0..1 day cycle: it rose to 0.476, turned, fell to 0.002, and turned again inside the window",
+   "flag_meaning": "isHeadingTowardsMIdday is 1 while the phase RISES and 0 while it FALLS - it is literally 'the phase is increasing', and it flips exactly at the turning points (1->0 at 0.476, 0->1 at 0.002)",
+   "period": "half period ~1320 worldTime units and a full cycle ~2640 units (about 132 s at the observed 20 units/s)",
+   "independence_from_the_sun": "sun_y decreased monotonically through the whole window (+0.081 -> -0.372) while the phase oscillated, so the two are independent"
+  },
+  "correction_of_my_own_earlier_claim": {
+   "earlier": "'at this snapshot the fraction reads 0.2286 while the sun's Y component is ~0.0094, i.e. the sun is essentially on the horizon - the phase and the sun agree with each other'",
+   "now": "WRONG, and the samples show why: the sun's Y is monotone while the fraction is a triangle, so 0.2286 with sun_y ~0 was a coincidence of that instant. The phase is not derived from the sun.",
+   "what_replaces_it": "the phase is its own triangle wave with a measured period; the flag reports its direction. Both are now measured rather than read off a single sample."
+  },
+  "supersedes": "the previous batch's derivation of 'about 1690 worldTime units per full phase' - that number came from a 60 s delta that contained a turnaround, so it was an average over a fold, not a period. The triangle measurement replaces it."
+ },
+ "craft_path_probe": {
+  "tool": "live175/probe_craft_path.py",
+  "why": "BFS found nothing deeper and reported that as 'nothing found'; following the KNOWN ivar path instead shows exactly which hop is null, which is the difference between 'not reachable' and 'not loaded'",
+  "path_verified": [
+   "World +240 uiManager        -> UIManager   0x6206a240",
+   "UIManager +56 paintMixUI    -> PaintMixUI  0x77073ba0",
+   "PaintMixUI +20 world        -> World       0x61f96000  (backref, closes the loop)"
+  ],
+  "null_at_this_moment": {
+   "PaintMixUI +104 workbench": "0x0",
+   "PaintMixUI +112 incomingCraftableItemObject": "0x0",
+   "PaintMixUI +120 craftButton": "0x0",
+   "PaintMixUI +128 countSlider": "0x0",
+   "PaintMixUI +132 currentCount": "0x0"
+  },
+  "reading": "the paint-mix UI object exists and is wired to the World, but every crafting-related ivar is null: no workbench screen is open, so no craftable object has been bound. The path is proven and the fields that will hold the record are identified - this is a state question, not a mechanism one",
+  "ready_when_the_state_is_loaded": {
+   "watch": [
+    "PaintMixUI +104 workbench",
+    "PaintMixUI +112 incomingCraftableItemObject",
+    "Workbench +132 craftableItems",
+    "Workbench +180 craftingItemObject",
+    "Workbench +124 numberOfCraftableItems"
+   ],
+   "then": "re-run live175/probe_craft_path.py; any non-null CraftableItemObject on that path has its 124-byte record read inline at its own ivar offset and decoded against the model",
+   "records_seen_so_far": []
+  }
+ },
+ "why_the_objc_walk_stops_here": {
+  "evidence": "DynamicWorld's ivar table: dynamicObjects @60, dynamicObjectsToAdd @840, dynamicObjectsByWorldPosIndex @1620, freeBlocksByPosition @2400 - the strides are exactly 780 bytes, so these are INLINE C++ containers rather than Objective-C objects",
+  "consequence": "the world's dynamic objects (Workbench among them) live inside those containers, so an ObjC-graph walk that follows ivars and checks isas will ALWAYS stop in front of them. That is the mechanistic reason the BFS reported 'nothing deeper', not a wrong path",
+  "what_it_would_take": "decoding an inline C++ container's internal layout (libc++ or custom) to enumerate its elements - a project of its own, and not needed for the crafting record: opening the workbench screen binds PaintMixUI.workbench (1 hop) and the record becomes readable",
+  "consequence_for_the_plan": "the live route to the crafting record is the one hop that the game state provides, while the container route would be a large detour. That settles which one to wait for."
+ },
+ "static_scan_vs_live_contradiction": {
+  "static": {
+   "tool": "tools/extract_ivar_cell_references.py (the fused-store-fixed version)",
+   "timeOfDayFraction cell 0xf32b78": "exactly 1 site, classified read",
+   "sunDirection cell 0xf32b6c": "0 sites at all - not even its own getter",
+   "worldTime cell 0xf328f4": "3 sites: 2 reads plus its own getter"
+  },
+  "live": {
+   "timeOfDayFraction": "advances at 0.011831/s (measured over 25 s and again over 96 s)",
+   "sunDirection": "reads out as a unit vector at offset 660"
+  },
+  "conclusion": "the static scan reports no writer for a field that demonstrably changes, and no reference at all for a field it can read - so this family's per-ivar coverage has a CONFIRMED gap, and the contradiction comes from live data rather than from a hunch. For these fields the live read is the authority and the cell scan's silence is not evidence of absence.",
+  "why_this_matters": "it is the same failure mode as the fused-store gap (a tool limitation read as a property of the binary), but this time the counter-example is a measurement rather than a reasoned suspicion - which is what makes it worth recording separately",
+  "candidates_for_the_missing_writer": [
+   "a store through a computed pointer (the C++ side writing a field of a World-like struct)",
+   "a store form the classifier still does not recognise",
+   "the value being derived per frame from another quantity rather than stored - in which case the ivar would only be written by whatever caches it, and the scan should have seen that too"
+  ]
+ },
+ "live_dynamic_world_rate_table": {
+  "method": "the same rate table, run against the DynamicWorld reached by the validated walk (World+416, isa checked against the resolved class) instead of against World",
+  "moving_fields": {
+   "worldChangedSimulateCounter": 29.96,
+   "poleItemRestoreAddTimer": 0.19999,
+   "sendUnreliableCounter": -0.12,
+   "poleItemRestoreRecheckTimer": -0.048008,
+   "dynamicObjectIDCount": 0.04
+  },
+  "semantics_earned": [
+   "worldChangedSimulateCounter advances ~30 times per second while the game is in fast-forward: that is the simulation step counter, and it gives the frame loop's real cadence in the same units the clock was measured in (20 world units/s)",
+   "dynamicObjectIDCount increments one per 25 s in this idle world - an id allocator, not a clock"
+  ],
+  "negative_that_matters": "no DynamicWorld field advances at the day phase's 0.011831/s, and no World field did either. So the phase's driver is not a numeric ivar of either object, which narrows it to a derived value, a field of another object, or a form the cell scan cannot see",
+  "next_measurement": "sample the phase together with worldTime across two or three full cycles and fit the relation - if the phase is a function of worldTime the curve is deterministic and the period falls out; that sampler is running"
+ },
+ "second_static_form_also_empty": {
+  "what_was_tried": "the other static form for a field write: an immediate-offset store, str/strb/strh/vstr with an immediate equal to one of the modelled ivar offsets (660, 880, 648, 916, 934, 3260)",
+  "counts": {
+   "sunDirection 660": 384,
+   "timeOfDayFraction 880": 332,
+   "worldTime 648": 384,
+   "weatherFraction 916": 287,
+   "resetPauseIdleTimer field 3260": 50,
+   "fastForward 934": 0
+  },
+  "what_the_hits_are": "almost all of them are [sp, #imm] stack slots, in UI classes such as UICollectionView and UITableView. That is a property of the FORM rather than of the target: any frame with a local at that displacement matches, which is the same collision the project recorded when it first tried offset matching. The few heap-base hits (e.g. str r1,[r3,#0x370] in UIViewContext -[dealloc]) cannot be tied to World without base provenance.",
+  "conclusion": "neither static form reaches these fields' writers - the cell idiom reports no writer (and no reference at all for sunDirection), and the immediate-offset form is dominated by stack frames. fastForward at 934 is a clean zero, which is the one unambiguous result here.",
+  "what_this_leaves": [
+   "a store through a computed pointer, i.e. the C++ side writing a struct field",
+   "a form neither scan models (the sunDirection cell showing 0 sites at all says the cell scan has a blind spot in this family)",
+   "and the route that does not depend on recognising a form at all: execute the frame-step method under the emulator with a write watch over the object's field range, which reports the storing instruction itself"
+  ],
+  "next_step": "the third route is the one to take: tools/watch_record_build.py already watches writes into a byte range on a receiver; pointed at a World-shaped receiver and its clock offsets it would name the instruction that advances the phase, and that is executed evidence rather than a pattern match"
+ },
+ "executed_watch_on_the_frame_step": {
+  "what_was_run": "the msgSend-trace tool with its write watch over the modelled clock offsets (648, 660, 880, 916, 934, 3260, 3072, 3140) on a fabricated receiver - now including writes that land inside the zero pages the run invents for NULL pointer fields, so a write into a reached object is seen too",
+  "results": {
+   "DynamicWorld -[update:accurateDT:isSimulation:]": {
+    "instructions": 1999,
+    "writes": 0,
+    "invented_pages": 3
+   },
+   "World -[update:accurateDT:pinchScale:dragInProgress:]": {
+    "instructions": 372,
+    "writes": 0,
+    "invented_pages": 2
+   },
+   "DynamicWorld -[simulate:]": {
+    "instructions": 249,
+    "writes": 0,
+    "invented_pages": 0
+   }
+  },
+  "so_three_routes_are_empty": [
+   "the cell idiom: no writer, and not even a reference for sunDirection",
+   "immediate-offset stores: dominated by stack frames, nothing attributable",
+   "execution with a write watch over these methods: zero writes across 2620 instructions"
+  ],
+  "conclusion": "the phase is advanced by a DIFFERENT method than the three frame-step candidates, and one that the fabricated receiver does not reach. Combined with the live measurement (no numeric ivar of World or DynamicWorld advances at its rate), the writer is elsewhere entirely.",
+  "next_plan_stays_read_only": [
+   "sample the phase at high rate together with a cheap thread-PC census (/proc/<pid>/task/*/stat or the stack, both read-only under root) so the function that runs while the phase steps can be identified without hooking anything",
+   "or find the writer by asking the live world a different question: read the phase twice around a known game action and see which method's completion moves it"
+  ],
+  "note": "this is the fourth empty static/executed result on this field, and the live value is the only evidence of the behaviour - which is the record a future attempt needs so it does not repeat these four"
+ },
+ "day_phase_fitted": {
+  "sample": "100 points over 2943 world units (297 s), 3 s apart - three full cycles",
+  "period_measured_from_flips": {
+   "peak_to_peak_worldTime": [
+    948.4,
+    900.7
+   ],
+   "mean": 924.5,
+   "reading": "the phase's period is ~900 worldTime units, i.e. the same 900 the static analysis read as a constant in getDayNightFractionForX:atWorldTime: - so the period IS the naive one"
+  },
+  "waveform": {
+   "model": "phase = a + b*sin(2*pi*(worldTime - t0)/900 + phi)",
+   "fitted": {
+    "a": 0.2443,
+    "b": -0.2211,
+    "t0": 502830,
+    "phi": 1.276
+   },
+   "fit_quality": {
+    "sine_worst_residual": 0.0397,
+    "triangle_worst_residual": 0.2627
+   },
+   "reading": "the phase is a SINUSOID of period 900, not a ramp and not a triangle - amplitude ~0.221 around ~0.244, so it swings roughly 0.02..0.47"
+  },
+  "corrections_of_my_own_earlier_claims": [
+   "'the phase is not the naive 900-units-per-day relation' - WRONG in the part that mattered: the period IS 900. What differs is the WAVEFORM (a sinusoid, not fmod(worldTime,900)/900).",
+   "'~1690 worldTime units per full phase' and then '~2640' - both were averages over a window containing a turnaround. Three full cycles and seven flag flips put the period at ~900 with two independent peak-to-peak measurements (948.4, 900.7).",
+   "'the phase and the sun agree with each other' - still wrong, and now for a sharper reason: the phase is a sinusoid of worldTime while sunDirection.y is monotone, so they are independent signals that happen to share a period"
+  ],
+  "what_this_settles": "the day phase is a sinusoid over the 900-unit day, which is consistent with its name and with isHeadingTowardsMIdday reporting its derivative's sign. The writer's location is still unfound (four static/executed routes empty), but its BEHAVIOUR is now modelled numerically rather than guessed"
+ },
+ "fifth_route_and_a_unifying_clue": {
+  "route": "find the callers of World -[getDayNightFractionForX:atWorldTime:] (the function carrying the 900.0 day constant) by resolving its selref slot to loading sites - the chain that worked for setCraftableItem:",
+  "result": {
+   "selref_slot": "0x00e7d6d4",
+   "in_objc_selrefs": true,
+   "loading_sites": 0
+  },
+  "the_unifying_clue": {
+   "observation": "three selectors, three different visibilities: setCraftableItem: HAS a pool-word loading site (which is how the crafting entry point was found), getDayNightFractionForX:atWorldTime: has a selref slot but NO pool-word loading site, and the subclass's initWithCraftableItem:imageData:outputImageData: has neither",
+   "reading": "the pool-word form is only ONE of the ways these senders are reached. A slot existing in __objc_selrefs means the selector IS sent by something, so a selector with a slot and no loading site is a dispatch form neither this project's tooling nor mine models - most likely a table-relative or indexed lookup",
+   "why_it_matters": "it explains the crafting boundary recorded several batches ago by the same mechanism, so the two mysteries are one: the tooling cannot see that form, and both the crafting initialiser and this clock function are reached through it"
+  },
+  "stopping_rule_applied": "this is the fifth empty result on the day phase's writer, and my own record from the fourth says to start from that list rather than re-run it. So the hunt stops here, with the five routes and this clue written down - the behaviour is modelled numerically (sinusoid over the 900-unit day) and does not depend on finding the writer."
+ },
+ "live_path_round_trip": {
+  "observation": "the crafting path probe now reads PaintMixUI.world @20 and gets 0x61f96000 - the same World pointer the walk started from and that the signature check accepted",
+  "why_it_is_stronger_than_the_one_way_walk": "a one-way walk proves each hop is reachable, but a round trip proves the hops belong to the SAME object graph: starting at World, descending through UIManager+56 to paintMixUI, and reading paintMixUI+20 returns the original World address. Two independent routes through the graph agree on the identity.",
+  "state_right_now": {
+   "PaintMixUI.world": "0x61f96000 (== the World root)",
+   "PaintMixUI.workbench": "0x0",
+   "Workbench.craftingItemObject": "0x0",
+   "Workbench.numberOfCraftableItems": "0x0",
+   "Workbench.selectedIndex": "0x0"
+  },
+  "what_that_means": "the Workbench OBJECT is reachable and its table reads (the probe prints its rows), while the crafting fields inside it are all null - so the crafting UI is instantiated but no crafting is selected or in progress. The pending live read needs a selection, not just the screen.",
+  "models_that_now_cover_this_path": [
+   "world_layout.h (the World end)",
+   "u_i_manager_layout.h (paintMixUI@56, the live-verified hop)",
+   "workbench_layout.h (the 48 rows, anchored on the runtime's own offsets)",
+   "craftable_item_record.h + craftable_item_object_layout.h (the 124-byte record and its host at offset 4)"
+  ]
+ },
+ "cell_scan_blind_spot_negative_wA": {
+  "status": "WITHDRAWN - it was my own arithmetic error, not a tool defect",
+  "what_i_claimed": "that the ivar-cell scanner had a blind spot on Blockhead -[isMale], because 0 sites came back for the cell I attributed to it (0xf35440, 'shoesCube at 280'), and I proposed that a bias load sitting after the add was the unmodelled form",
+  "what_is_true": "I had used the pc of the 'ldr' instead of the pc of the 'add'. ARM's pc is the instruction address + 8, and the add is four bytes after the ldr, so my base came out 4 low (0x105faf0 instead of 0x105faf4), putting the cell on 0xf35440 and naming the wrong ivar. With the correct base the cell is 0xf3544c = OBJC_IVAR_$_Blockhead.skinOptions at 728, and the scanner resolves it with FIVE sites, including the writer.",
+  "the_writer": "Blockhead -[customizationComplete:] (IMP 0xc89eec) sets it: 0xc89f78 'mov r3,#1' then 0xc89f7c 'strb r3,[r0,r1]' where r0 is self and r1 is the offset from that cell, i.e. self[728] = 1. The scanner reports the ADD's address (0xc89f2c) and the store follows it ~20 instructions later.",
+  "why_it_is_recorded_this_way": "a four-byte slip produced a plausible-sounding tool defect and a wrong model entry (shoesCube@280) that had already been written into a header and a test. The test could not catch it because it re-derived the chain the same wrong way, so the two agreed. It now asserts the base equals the PIC base before anything else, which is the check that fails instantly on the slip.",
+  "kept_from_the_exercise": "the scanner extension (accepting a bias load that sits after the add) is an independent improvement: 20593 -> 20814 resolved pairs, 7193 -> 7281 sites, 2003 -> 2013 ivars. It was motivated by a wrong diagnosis and is still worth keeping, which is exactly the kind of thing that should be said out loud."
+ },
+ "scope_of_the_four_byte_error": {
+  "why_this_check_exists": "after finding that a hand-derived cell was wrong by four bytes, the question is which OTHER recorded facts came from hand derivation alone. So the clock/weather cells the artifacts record were cross-checked against the corrected scanner's own resolutions.",
+  "results": {
+   "World.worldTime cell 0xf328f4": "scanner names this ivar at this cell, 3 sites (2 read, 1 pointer)",
+   "World.timeOfDayFraction cell 0xf32b78": "scanner names it, 1 read",
+   "World.fastForward cell 0xf32930": "scanner names it, 1 read",
+   "World.sunDirection cell 0xf32b6c": "scanner still resolves nothing, as recorded - but this cell was confirmed independently by the struct-getter emulation, which read the field through it and got a unit vector",
+   "World.doubleTimeUnlocked cell 0xf32a98": "no cell-idiom sites, but it is reached through a .got SLOT, and the emulator read that slot's contents and found this cell"
+  },
+  "conclusion": "the four-byte error's blast radius is one file. Every clock/weather cell in the models is either named by the scanner at that cell or confirmed by a second, independent method (emulation, or the live read of a unit vector). blockhead_gender.h was the one derivation that rested on hand arithmetic alone, and it was wrong.",
+  "the_rule_this_earns": "a derived constant is trustworthy in proportion to how many INDEPENDENT methods confirm it. Hand derivation with no second witness is the weakest kind, and the fix is not more care but another witness: the scanner for cells, emulation for layouts, the live original for behaviour."
+ },
+ "audio_vein_exhausted_for_now": {
+  "question": "which sounds can still be wired HONESTLY - i.e. at an event the replacement actually has, with an unambiguous recovered mapping",
+  "checked": {
+   "events the app has": "sleep/wake (blockhead_ai.cpp), dig, place, portalInteraction, crunch, craft completion",
+   "already wired": "dig, place, portalInteraction, crunch, craftCreate (game_engine.cpp), and craft completion wired in the previous commit",
+   "sleep": "BLOCKED on a variant choice: the original plays one of the two sleep-sigh assets by Blockhead -[isMale], which reads Blockhead.skinOptions at 728, which the customisation screen writes. The rewrite has no skin options and no customisation screen, so it cannot tell them apart.",
+   "everything else in the recovered table": "belongs to classes and systems the rewrite does not implement yet - Door (six variants by material and state), Dodo/jetpack/animals, chat, camera, death, treasure trolls"
+  },
+  "conclusion": "with the two honest criteria - the event exists in the app AND the recovered mapping is unambiguous - there are no candidates left. Wiring anything further would mean either inventing a variant choice or writing a name into a file that nothing plays, and the metric would improve while the game stayed silent.",
+  "what_would_reopen_it": [
+   "implementing a gameplay event (a door, a death, a chat message) and then wiring its mapping",
+   "recovering how skinOptions is set from the save's appearance fields, which would make the sleep variant honest",
+   "deciding that multi-variant resources may pick deterministically for now - a product decision, and one that should be written down as a simplification rather than presented as recovery"
+  ]
+ }
+}

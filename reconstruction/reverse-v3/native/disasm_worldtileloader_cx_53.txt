@@ -1,0 +1,105 @@
+# worldIndexAtWorldPos  [C function]
+# implementation: 0x00a15838
+# ARM.exidx end: 0x00a159c8
+
+            ;-- worldIndexAtWorldPos(intpair, World*):
+            0x00a15838      00482de9       push {fp, lr}               ; worldIndexAtWorldPos(intpair, World*)
+            0x00a1583c      0db0a0e1       mov fp, sp
+            0x00a15840      40d04de2       sub sp, sp, 0x40
+            0x00a15844      10000be5       str r0, [fp, -0x10]
+            0x00a15848      0c100be5       str r1, [fp, -0xc]
+            0x00a1584c      14200be5       str r2, [fp, -0x14]
+            0x00a15850      0c001be5       ldr r0, [fp, -0xc]
+            0x00a15854      010b50e3       cmp r0, 0x400
+        ┌─< 0x00a15858      020000aa       bge 0xa15868
+        │   0x00a1585c      0c001be5       ldr r0, [fp, -0xc]
+        │   0x00a15860      000050e3       cmp r0, 0
+       ┌──< 0x00a15864      020000aa       bge 0xa15874
+       │└─> 0x00a15868      0000e0e3       mvn r0, 0
+       │    0x00a1586c      04000be5       str r0, [fp, -4]
+       │┌─< 0x00a15870      4c0000ea       b 0xa159a8
+      ┌└──> 0x00a15874      ffffffea       b 0xa15878
+      └┌──> 0x00a15878      050000e3       movw r0, 5
+       ╎│   0x00a1587c      10101be5       ldr r1, [fp, -0x10]
+       ╎│   0x00a15880      14201be5       ldr r2, [fp, -0x14]
+       ╎│   0x00a15884      28319fe5       ldr r3, [0x00a159b4]        ; [0xa159b4:4]=0xffe25174
+       ╎│   0x00a15888      28c19fe5       ldr ip, [0x00a159b8]        ; [0xa159b8:4]=0x64a260
+       ╎│   0x00a1588c      0cc08fe0       add ip, pc, ip
+       ╎│   0x00a15890      0c3093e7       ldr r3, [r3, ip]
+       ╎│   0x00a15894      18000be5       str r0, [fp, -0x18]
+       ╎│   0x00a15898      0200a0e1       mov r0, r2
+       ╎│   0x00a1589c      1c100be5       str r1, [fp, -0x1c]
+       ╎│   0x00a158a0      0310a0e1       mov r1, r3
+       ╎│   0x00a158a4      dcb3deeb       bl loc.imp.objc_msgSend
+       ╎│   0x00a158a8      0010a0e1       mov r1, r0
+       ╎│   0x00a158ac      8002a0e1       lsl r0, r0, 5
+       ╎│   0x00a158b0      1c201be5       ldr r2, [fp, -0x1c]
+       ╎│   0x00a158b4      000052e1       cmp r2, r0
+       ╎│   0x00a158b8      20108de5       str r1, [sp, 0x20]
+      ┌───< 0x00a158bc      100000ba       blt 0xa15904
+      │╎│   0x00a158c0      050000e3       movw r0, 5
+      │╎│   0x00a158c4      14101be5       ldr r1, [fp, -0x14]
+      │╎│   0x00a158c8      e4209fe5       ldr r2, [0x00a159b4]        ; [0xa159b4:4]=0xffe25174
+      │╎│   0x00a158cc      f0309fe5       ldr r3, [0x00a159c4]        ; [0xa159c4:4]=0x64a21c
+      │╎│   0x00a158d0      03308fe0       add r3, pc, r3
+      │╎│   0x00a158d4      032092e7       ldr r2, [r2, r3]
+      │╎│   0x00a158d8      1c008de5       str r0, [sp, 0x1c]
+      │╎│   0x00a158dc      0100a0e1       mov r0, r1
+      │╎│   0x00a158e0      0210a0e1       mov r1, r2
+      │╎│   0x00a158e4      ccb3deeb       bl loc.imp.objc_msgSend
+      │╎│   0x00a158e8      0010a0e1       mov r1, r0
+      │╎│   0x00a158ec      8002a0e1       lsl r0, r0, 5
+      │╎│   0x00a158f0      10201be5       ldr r2, [fp, -0x10]
+      │╎│   0x00a158f4      000042e0       sub r0, r2, r0
+      │╎│   0x00a158f8      10000be5       str r0, [fp, -0x10]
+      │╎│   0x00a158fc      18108de5       str r1, [sp, 0x18]
+      │└──< 0x00a15900      dcffffea       b 0xa15878
+      └┌──< 0x00a15904      ffffffea       b 0xa15908
+      ┌└──> 0x00a15908      10001be5       ldr r0, [fp, -0x10]
+      ╎ │   0x00a1590c      000050e3       cmp r0, 0
+      ╎┌──< 0x00a15910      100000aa       bge 0xa15958
+      ╎││   0x00a15914      050000e3       movw r0, 5
+      ╎││   0x00a15918      14101be5       ldr r1, [fp, -0x14]
+      ╎││   0x00a1591c      90209fe5       ldr r2, [0x00a159b4]        ; [0xa159b4:4]=0xffe25174
+      ╎││   0x00a15920      98309fe5       ldr r3, [0x00a159c0]        ; [0xa159c0:4]=0x64a1c8
+      ╎││   0x00a15924      03308fe0       add r3, pc, r3
+      ╎││   0x00a15928      032092e7       ldr r2, [r2, r3]
+      ╎││   0x00a1592c      14008de5       str r0, [sp, 0x14]
+      ╎││   0x00a15930      0100a0e1       mov r0, r1
+      ╎││   0x00a15934      0210a0e1       mov r1, r2
+      ╎││   0x00a15938      b7b3deeb       bl loc.imp.objc_msgSend
+      ╎││   0x00a1593c      0010a0e1       mov r1, r0
+      ╎││   0x00a15940      8002a0e1       lsl r0, r0, 5
+      ╎││   0x00a15944      10201be5       ldr r2, [fp, -0x10]
+      ╎││   0x00a15948      000082e0       add r0, r2, r0
+      ╎││   0x00a1594c      10000be5       str r0, [fp, -0x10]
+      ╎││   0x00a15950      10108de5       str r1, [sp, 0x10]
+      └───< 0x00a15954      ebffffea       b 0xa15908
+       └──> 0x00a15958      050000e3       movw r0, 5
+        │   0x00a1595c      0c101be5       ldr r1, [fp, -0xc]
+        │   0x00a15960      14201be5       ldr r2, [fp, -0x14]
+        │   0x00a15964      48309fe5       ldr r3, [0x00a159b4]        ; [0xa159b4:4]=0xffe25174
+        │   0x00a15968      4cc09fe5       ldr ip, [0x00a159bc]        ; [0xa159bc:4]=0x64a180
+        │   0x00a1596c      0cc08fe0       add ip, pc, ip
+        │   0x00a15970      0c3093e7       ldr r3, [r3, ip]
+        │   0x00a15974      0c008de5       str r0, [sp, 0xc]
+        │   0x00a15978      0200a0e1       mov r0, r2
+        │   0x00a1597c      08108de5       str r1, [sp, 8]
+        │   0x00a15980      0310a0e1       mov r1, r3
+        │   0x00a15984      a4b3deeb       bl loc.imp.objc_msgSend
+        │   0x00a15988      08109de5       ldr r1, [sp, 8]
+        │   0x00a1598c      910000e0       mul r0, r1, r0
+        │   0x00a15990      0010a0e1       mov r1, r0
+        │   0x00a15994      8002a0e1       lsl r0, r0, 5
+        │   0x00a15998      10201be5       ldr r2, [fp, -0x10]
+        │   0x00a1599c      020080e0       add r0, r0, r2
+        │   0x00a159a0      04000be5       str r0, [fp, -4]
+        │   0x00a159a4      04108de5       str r1, [sp, 4]
+        └─> 0x00a159a8      04001be5       ldr r0, [fp, -4]
+            0x00a159ac      0bd0a0e1       mov sp, fp
+            0x00a159b0      0088bde8       pop {fp, pc}
+            0x00a159b4      7451e2ff       invalid
+            0x00a159b8      60a26400       rsbeq sl, r4, r0, ror 4
+            0x00a159bc      80a16400       rsbeq sl, r4, r0, lsl 3
+            0x00a159c0      c8a16400       rsbeq sl, r4, r8, asr 3
+            0x00a159c4      1ca26400       rsbeq sl, r4, ip, lsl r2

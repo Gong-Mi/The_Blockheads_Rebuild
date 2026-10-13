@@ -1,0 +1,1268 @@
+{
+  "batch": "light-emission parameter trio (ArtificialLight/Torch/GlowBlock/FireObject)",
+  "claim": "static bounded-body maps with per-instruction anchors; runtime values and the render consumers are outside these bodies",
+  "classes": [
+    {
+      "boundary": "own ARM.exidx bound 0x00a93c64 (next method IMP 0x00a93c64 = -[initWithWorld:dynamicWorld:saveDict:cache:parentObject:])",
+      "boundary_end": "0x00a93c64",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x00a93c44"
+        }
+      ],
+      "imp": "0x00a93bbc",
+      "ivars": {
+        "0x00a93c54": {
+          "offset": 72,
+          "slot": "0x0105ea34",
+          "symbol": "OBJC_IVAR_$_ArtificialLight.maxBlue"
+        },
+        "0x00a93c58": {
+          "offset": 68,
+          "slot": "0x0105ea30",
+          "symbol": "OBJC_IVAR_$_ArtificialLight.maxGreen"
+        },
+        "0x00a93c5c": {
+          "offset": 64,
+          "slot": "0x0105ea2c",
+          "symbol": "OBJC_IVAR_$_ArtificialLight.maxRed"
+        }
+      },
+      "method": "ArtificialLight -[lightColor]",
+      "name": "al_lightcolor",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "Builds Vector((float)maxRed, (float)maxGreen, (float)maxBlue): reads the int fields maxRed@64 (cell 0xa93c5c), maxGreen@68 (0xa93c58), maxBlue@72 (0xa93c54), converts each with vcvt.f32.s32 and passes them as the Vector ctor (r1=maxRed, r2=maxGreen, r3=maxBlue).",
+      "types": "{Vector=[4f]}8@0:4",
+      "verified_words": 42
+    },
+    {
+      "boundary": "own ARM.exidx bound 0x00674704 (next method IMP 0x00674704 = -[initWithWorld:dynamicWorld:atPosition:cache:])",
+      "boundary_end": "0x00674704",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x006746ec"
+        }
+      ],
+      "imp": "0x006746a4",
+      "ivars": {},
+      "method": "FireObject -[getLightRGB]",
+      "name": "fire_getlightrgb",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "Constant Vector(128.0f, 64.0f, 1.0f): vldr s0,[0x6746fc]=0x43000000 (128.0), vldr s2,[0x674700]=0x42800000 (64.0), vmov.f32 s4, 1 (1.0), then Vector ctor(r1=128.0, r2=64.0, r3=1.0).",
+      "types": "{Vector=[4f]}8@0:4",
+      "verified_words": 24
+    },
+    {
+      "boundary": "own ARM.exidx bound 0x00ca83d4 (next method IMP 0x00ca83d4 = -[initWithWorld:dynamicWorld:atPosition:cache:tile:])",
+      "boundary_end": "0x00ca83d4",
+      "branches": [
+        {
+          "address": "0x00ca8388",
+          "destination": "0x00ca83a0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00ca839c",
+          "destination": "0x00ca83c0",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x00ca8398"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x00ca83bc"
+        }
+      ],
+      "imp": "0x00ca8334",
+      "ivars": {
+        "0x00ca83cc": {
+          "offset": 56,
+          "slot": "0x0105f45c",
+          "symbol": "OBJC_IVAR_$_GlowBlock.light"
+        }
+      },
+      "method": "GlowBlock -[getLightRGB]",
+      "name": "glow_getlightrgb",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00ca83c8": {
+          "selector": "lightColor",
+          "slot": "0x00e87b14"
+        }
+      },
+      "semantics": "When self.light@56 (cell 0xca83cc) == nil: memset(out, 0, 0x10) - a zero Vector. Otherwise objc_msgSend_stret(out, self.light, @selector(lightColor)) through the stret import 0x1c2918; the selector comes from the cell at 0xe87b14 and the receiver is the light object.",
+      "types": "{Vector=[4f]}8@0:4",
+      "verified_words": 40
+    },
+    {
+      "boundary": "own ARM.exidx bound 0x00ca960c (next method IMP 0x00ca960c = -[addArtificialLightContributionForPhysicalBlockLoadedAtXPos:yPos:])",
+      "boundary_end": "0x00ca960c",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x00ca9598"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x00ca95bc"
+        },
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x00ca95f0"
+        }
+      ],
+      "imp": "0x00ca955c",
+      "ivars": {
+        "0x00ca9604": {
+          "offset": 24,
+          "slot": "0x0105c3d0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.floatPos"
+        }
+      },
+      "method": "GlowBlock -[lightPos]",
+      "name": "glow_lightpos",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "Vector(floatPos.x, floatPos.y + 5.0f, 0.0f): reads DynamicObject.floatPos @24 (cell 0xca9604) through Vector2::operator float*(), takes [0]=x, [4]+5.0f as y (vadd with vmov.f32 s2, 5) and 0.0f (pool 0xca9600) as z.",
+      "types": "{Vector=[4f]}8@0:4",
+      "verified_words": 44
+    },
+    {
+      "boundary": "own ARM.exidx bound 0x00ca955c (next method IMP 0x00ca955c = -[lightPos])",
+      "boundary_end": "0x00ca955c",
+      "branches": [
+        {
+          "address": "0x00ca9530",
+          "destination": "0x00ca9540",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00ca953c",
+          "destination": "0x00ca9548",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [],
+      "imp": "0x00ca9500",
+      "ivars": {
+        "0x00ca9554": {
+          "offset": 60,
+          "slot": "0x0105f460",
+          "symbol": "OBJC_IVAR_$_GlowBlock.tileType"
+        }
+      },
+      "method": "GlowBlock -[lightGlowQuadCount]",
+      "name": "glow_glowquadcount",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "return (GlowBlock.tileType@60 (cell 0xca9554) != 0x4d); -> 1 normally, 0 when the glow block tile is type 0x4d (the light-only variant).",
+      "types": "i8@0:4",
+      "verified_words": 23
+    },
+    {
+      "boundary": "own ARM.exidx bound 0x004b52ac (next method IMP 0x004b52ac = -[initWithWorld:dynamicWorld:atPosition:cache:type:dataA:dataB:saveDict:placedByClient:])",
+      "boundary_end": "0x004b52ac",
+      "branches": [
+        {
+          "address": "0x004b4ef0",
+          "destination": "0x004b4f0c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b4f08",
+          "destination": "0x004b5260",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b4f2c",
+          "destination": "0x004b4f4c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b4f48",
+          "destination": "0x004b525c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b4f6c",
+          "destination": "0x004b4fbc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b4f90",
+          "destination": "0x004b4fbc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004b4fb8",
+          "destination": "0x004b4fd4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b4fd0",
+          "destination": "0x004b5258",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b4ff4",
+          "destination": "0x004b5010",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b500c",
+          "destination": "0x004b5254",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5030",
+          "destination": "0x004b504c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b5048",
+          "destination": "0x004b5250",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b506c",
+          "destination": "0x004b5088",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b5084",
+          "destination": "0x004b524c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b50a8",
+          "destination": "0x004b50c8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b50c4",
+          "destination": "0x004b5248",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b50e8",
+          "destination": "0x004b5104",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b5100",
+          "destination": "0x004b5244",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5124",
+          "destination": "0x004b5140",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b513c",
+          "destination": "0x004b5240",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5160",
+          "destination": "0x004b517c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b5178",
+          "destination": "0x004b523c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b519c",
+          "destination": "0x004b51b8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b51b4",
+          "destination": "0x004b5238",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b51d8",
+          "destination": "0x004b51f8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b51f4",
+          "destination": "0x004b5234",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5218",
+          "destination": "0x004b5230",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004b5230",
+          "destination": "0x004b5234",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5234",
+          "destination": "0x004b5238",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5238",
+          "destination": "0x004b523c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b523c",
+          "destination": "0x004b5240",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5240",
+          "destination": "0x004b5244",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5244",
+          "destination": "0x004b5248",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5248",
+          "destination": "0x004b524c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b524c",
+          "destination": "0x004b5250",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5250",
+          "destination": "0x004b5254",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5254",
+          "destination": "0x004b5258",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b5258",
+          "destination": "0x004b525c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004b525c",
+          "destination": "0x004b5260",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x004b5294"
+        }
+      ],
+      "imp": "0x004b4e98",
+      "ivars": {
+        "0x004b52a4": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        }
+      },
+      "method": "Torch -[getLightRGB]",
+      "name": "torch_getlightrgb",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "Item-type dispatch over Torch.itemType@64 (cell 0x4b52a4) producing an int (r,g,b) later converted with vcvt.f32.s32 and passed to the Vector ctor. Default (no match) = (253, 150, 55). Table: 0x2f -> (255,255,127); 0xb7 -> (12,100,220); 0x96 / 0xfe / 0x102 -> (300,300,170); 0x94 -> (510,130,130); 0x93 -> (130,510,130); 0x92 -> (130,130,510); 0x91 -> (270,230,510); 0x95 -> (400,510,510); 0x4b -> (220,0,0); 0x4c -> (0,220,0); 0x56 -> (0,0,220); 0x57 -> (135,115,220); 0x58 -> (200,255,255). The 0x4b/0x4c/0x56/0x57/0x58 kinds are exactly the torch types spawned by addToTiles (cross-consistent).",
+      "types": "{Vector=[4f]}8@0:4",
+      "verified_words": 261
+    },
+    {
+      "boundary": "own ARM.exidx bound 0x004bedec (next method IMP 0x004bedec = -[isDownlight])",
+      "boundary_end": "0x004bedec",
+      "branches": [
+        {
+          "address": "0x004bedc0",
+          "destination": "0x004bedd0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bedcc",
+          "destination": "0x004bedd8",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [],
+      "imp": "0x004bed90",
+      "ivars": {
+        "0x004bede4": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        }
+      },
+      "method": "Torch -[lightGlowQuadCount]",
+      "name": "torch_glowquadcount",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "return (Torch.itemType@64 (cell 0x4bede4) != 0x9d); -> 1 normally, 0 for item type 0x9d (the torch variant without a glow quad).",
+      "types": "i8@0:4",
+      "verified_words": 23
+    },
+    {
+      "boundary": "IMP-bounded body end 0x004bee3c (next method IMP 0x004bee3c = -[isUplight]); the disassembly file carries the shared exidx bound 0x004beeac",
+      "boundary_end": "0x004bee3c",
+      "branches": [],
+      "calls": [],
+      "imp": "0x004bedec",
+      "ivars": {
+        "0x004bee34": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        },
+        "0x004bee88": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        }
+      },
+      "method": "Torch -[isDownlight]",
+      "name": "torch_isdownlight",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "return (Torch.itemType@64 (cells 0x4bee34/0x4bee88) == 0xfe); -> true for item type 0xfe (254), the downlight torch.",
+      "types": "c8@0:4",
+      "verified_words": 20
+    },
+    {
+      "boundary": "IMP-bounded body end 0x004bee90 (next method IMP 0x004bee90 = -[occupiesForegroundContents]); the disassembly file carries the shared exidx bound 0x004beeac",
+      "boundary_end": "0x004bee90",
+      "branches": [],
+      "calls": [],
+      "imp": "0x004bee3c",
+      "ivars": {
+        "0x004bee88": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        }
+      },
+      "method": "Torch -[isUplight]",
+      "name": "torch_isuplight",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "return (Torch.itemType@64 (cell 0x4bee88) == 0x102); -> true for item type 0x102 (258), the uplight torch.",
+      "types": "c8@0:4",
+      "verified_words": 21
+    },
+    {
+      "boundary": "own ARM.exidx bound 0x004bed60 (next method IMP 0x004bed60 = method.Vector::Vector() region)",
+      "boundary_end": "0x004bed60",
+      "branches": [
+        {
+          "address": "0x004be1ac",
+          "destination": "0x004be200",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004be1fc",
+          "destination": "0x004bed30",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be220",
+          "destination": "0x004be440",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004be244",
+          "destination": "0x004be290",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be28c",
+          "destination": "0x004be43c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be2b0",
+          "destination": "0x004be2fc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be2f8",
+          "destination": "0x004be438",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be31c",
+          "destination": "0x004be360",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be35c",
+          "destination": "0x004be434",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be380",
+          "destination": "0x004be3c4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be3c0",
+          "destination": "0x004be430",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be3e4",
+          "destination": "0x004be3ec",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be3e8",
+          "destination": "0x004be42c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be40c",
+          "destination": "0x004be428",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be428",
+          "destination": "0x004be42c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be42c",
+          "destination": "0x004be430",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be430",
+          "destination": "0x004be434",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be434",
+          "destination": "0x004be438",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be438",
+          "destination": "0x004be43c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be43c",
+          "destination": "0x004bed2c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be460",
+          "destination": "0x004be61c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be4c0",
+          "destination": "0x004be4d8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be4d4",
+          "destination": "0x004be618",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be4f8",
+          "destination": "0x004be53c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be538",
+          "destination": "0x004be614",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be55c",
+          "destination": "0x004be5a0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be59c",
+          "destination": "0x004be610",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be5c0",
+          "destination": "0x004be5cc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be5c4",
+          "destination": "0x004be60c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be5ec",
+          "destination": "0x004be608",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be608",
+          "destination": "0x004be60c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be60c",
+          "destination": "0x004be610",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be610",
+          "destination": "0x004be614",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be614",
+          "destination": "0x004be618",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be618",
+          "destination": "0x004bed28",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be63c",
+          "destination": "0x004be668",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x004be664",
+          "destination": "0x004be828",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be6c4",
+          "destination": "0x004be6e4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be6d8",
+          "destination": "0x004be820",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be704",
+          "destination": "0x004be748",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be744",
+          "destination": "0x004be81c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be768",
+          "destination": "0x004be7ac",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be7a8",
+          "destination": "0x004be818",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be7cc",
+          "destination": "0x004be7d4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be7d0",
+          "destination": "0x004be814",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be7f4",
+          "destination": "0x004be810",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be810",
+          "destination": "0x004be814",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be814",
+          "destination": "0x004be818",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be818",
+          "destination": "0x004be81c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be81c",
+          "destination": "0x004be820",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be820",
+          "destination": "0x004bed24",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be848",
+          "destination": "0x004bea78",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be8a8",
+          "destination": "0x004be8c0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be8bc",
+          "destination": "0x004bea74",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be8e0",
+          "destination": "0x004be960",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be95c",
+          "destination": "0x004bea70",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004be980",
+          "destination": "0x004bea00",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004be9fc",
+          "destination": "0x004bea6c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bea20",
+          "destination": "0x004bea28",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bea24",
+          "destination": "0x004bea68",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bea48",
+          "destination": "0x004bea64",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bea64",
+          "destination": "0x004bea68",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bea68",
+          "destination": "0x004bea6c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bea6c",
+          "destination": "0x004bea70",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bea70",
+          "destination": "0x004bea74",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bea74",
+          "destination": "0x004bed20",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bead4",
+          "destination": "0x004beaec",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004beae8",
+          "destination": "0x004bed1c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004beb0c",
+          "destination": "0x004beb8c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004beb88",
+          "destination": "0x004bed18",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bebac",
+          "destination": "0x004bec2c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bec28",
+          "destination": "0x004bed14",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bec4c",
+          "destination": "0x004bec94",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bec8c",
+          "destination": "0x004bed10",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004becb4",
+          "destination": "0x004bed0c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x004bed0c",
+          "destination": "0x004bed10",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bed10",
+          "destination": "0x004bed14",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bed14",
+          "destination": "0x004bed18",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bed18",
+          "destination": "0x004bed1c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bed1c",
+          "destination": "0x004bed20",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bed20",
+          "destination": "0x004bed24",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bed24",
+          "destination": "0x004bed28",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bed28",
+          "destination": "0x004bed2c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x004bed2c",
+          "destination": "0x004bed30",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x004bed60",
+          "route": "bl method.Vector.Vector__",
+          "site": "0x004be0f8"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be11c"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be12c"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be150"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be168"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be178"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be1c8"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be1e0"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be1f0"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be260"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be270"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be280"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be2cc"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be2dc"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be2ec"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be338"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be350"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be39c"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be3b4"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be414"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be47c"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be494"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be4c8"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be514"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be52c"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be578"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be590"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be5f4"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be680"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be698"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be6cc"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be720"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be738"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be784"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be79c"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be7fc"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be864"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be87c"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be8b0"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be8fc"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be914"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be938"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be950"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be99c"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be9b4"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004be9d8"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004be9f0"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004bea50"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004bea90"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004beaa8"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004beadc"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004beb28"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004beb40"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004beb64"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004beb7c"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004bebc8"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004bebe0"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004bec04"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004bec1c"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004bec68"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004bec80"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x004becd0"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004bece8"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x004becf8"
+        }
+      ],
+      "imp": "0x004be0d4",
+      "ivars": {
+        "0x004bed38": {
+          "offset": 78,
+          "slot": "0x0105c384",
+          "symbol": "OBJC_IVAR_$_Torch.chandelier"
+        },
+        "0x004bed3c": {
+          "offset": 24,
+          "slot": "0x0105c3d0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.floatPos"
+        },
+        "0x004bed40": {
+          "offset": 77,
+          "slot": "0x0105c38c",
+          "symbol": "OBJC_IVAR_$_Torch.flatOnSideAndBottom"
+        },
+        "0x004bed44": {
+          "offset": 64,
+          "slot": "0x0105c380",
+          "symbol": "OBJC_IVAR_$_Torch.itemType"
+        },
+        "0x004bed48": {
+          "offset": 60,
+          "slot": "0x0105c3b0",
+          "symbol": "OBJC_IVAR_$_Torch.connectionType"
+        }
+      },
+      "method": "Torch -[lightPos]",
+      "name": "torch_lightpos",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "Type x connection dispatch producing the light position from DynamicObject.floatPos@24. Base: out = (floatPos.x, floatPos.y + 5.0, -1.0). Then: if Torch.chandelier@78 (ldrsb, cell 0xffffc890) != 0 -> out.y = floatPos.y - 0.1 (pool 0x4be5c8), out.z = -5.0, done. Else if Torch.flatOnSideAndBottom@77 (ldrsb, cell 0xffffc898) != 0 -> dispatch on Torch.connectionType@60 (cell 0xffffc8bc) only: 0 -> (x, y, -1); 3 -> (x, y, -0.1 (pool 0x4be6dc)); 1 -> (x + 0.45 (pool 0x4be6e0), y+5, -1); -1 -> (x - 0.45, y+5, -1); 2 -> unchanged; -2 -> z = -2; else unchanged. Else dispatch on Torch.itemType@64 first, then connectionType: 0x96 -> y += 0.4 (pool 0x4be824); 0xfe / 0x102 -> y += 0.4; 0x2f -> y += 0.4; anything else -> y += 0.6 (pool 0x4bed4c); then connectionType sub-chains: generic (0x96/0xfe/0x102): 3 -> z = -5; 1 -> x += 2 (0x96) / x += 0.4 (0xfe,0x102); -1 -> x -= 2 / x -= 0.4; 2 -> keep; -2 -> z = -2; else keep. 0x2f chain: 3 -> z = -5; 1 -> y = floatPos.y + 0.6 (pool 0x4bec90), x += 0.4; -1 -> y = floatPos.y + 0.6, x -= 0.4 (pool 0x4bed58); 2 -> y = floatPos.y + 0.9 (pool 0x4bed50); -2 -> y = floatPos.y + 0.9, z = -2; else keep. default chain: 3 -> z = -5; 1 -> y = floatPos.y + 0.9, x += 0.1; -1 -> y = floatPos.y + 0.9, x -= 0.1; 2 -> y = floatPos.y + 0.9; -2 -> y = floatPos.y + 0.9, z = -2; else keep. Written into the out Vector via 38 x Vector::operator float*() and 25 x Vector2::operator float*() calls (light-nibble reads of [0] = x and [4] = y); all call sites anchored.",
+      "types": "{Vector=[4f]}8@0:4",
+      "verified_words": 803
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "schema": 1
+}

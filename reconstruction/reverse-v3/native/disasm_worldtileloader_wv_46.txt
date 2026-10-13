@@ -1,0 +1,22 @@
+# WorldUI -[setChestUI:]
+# types: v12@0:4@8
+# implementation: 0x00cffba4
+# ARM.exidx end: 0x00cffc70
+
+            0x00cffba4      0cd04de2       sub sp, sp, 0xc
+            0x00cffba8      08008de5       str r0, [sp, 8]
+            0x00cffbac      04108de5       str r1, [sp, 4]
+            0x00cffbb0      00208de5       str r2, [sp]
+            0x00cffbb4      08009de5       ldr r0, [sp, 8]
+            0x00cffbb8      20109fe5       ldr r1, [0x00cffbe0]        ; [0xcffbe0:4]=0xfffffb48
+            0x00cffbbc      20309fe5       ldr r3, [0x00cffbe4]        ; [0xcffbe4:4]=0x35ff2c
+            0x00cffbc0      03308fe0       add r3, pc, r3
+            0x00cffbc4      031091e7       ldr r1, [r1, r3]
+            0x00cffbc8      001091e5       ldr r1, [r1]
+            0x00cffbcc      5bf07ff5       dmb ish
+            0x00cffbd0      012080e7       str r2, [r0, r1]
+            0x00cffbd4      5bf07ff5       dmb ish
+            0x00cffbd8      0cd08de2       add sp, sp, 0xc
+            0x00cffbdc      1eff2fe1       bx lr
+            0x00cffbe0      48fbffff       invalid
+            0x00cffbe4      2cff3500       eorseq pc, r5, ip, lsr 30

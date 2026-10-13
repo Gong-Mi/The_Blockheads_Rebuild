@@ -1,0 +1,44 @@
+# VinePlant -[isRequiredSoilType:]
+# types: c12@0:4i8
+# implementation: 0x004f8abc
+# ARM.exidx end: 0x004f8b58
+
+            0x004f8abc      10d04de2       sub sp, sp, 0x10
+            0x004f8ac0      013000e3       movw r3, 1
+            0x004f8ac4      0c008de5       str r0, [sp, 0xc]
+            0x004f8ac8      08108de5       str r1, [sp, 8]
+            0x004f8acc      04208de5       str r2, [sp, 4]
+            0x004f8ad0      04009de5       ldr r0, [sp, 4]
+            0x004f8ad4      060050e3       cmp r0, 6
+            0x004f8ad8      00308de5       str r3, [sp]
+        ┌─< 0x004f8adc      1800000a       beq 0x4f8b44
+        │   0x004f8ae0      010000e3       movw r0, 1
+        │   0x004f8ae4      04109de5       ldr r1, [sp, 4]
+        │   0x004f8ae8      1b0051e3       cmp r1, 0x1b
+        │   0x004f8aec      00008de5       str r0, [sp]
+       ┌──< 0x004f8af0      1300000a       beq 0x4f8b44
+       ││   0x004f8af4      010000e3       movw r0, 1
+       ││   0x004f8af8      04109de5       ldr r1, [sp, 4]
+       ││   0x004f8afc      1c0051e3       cmp r1, 0x1c
+       ││   0x004f8b00      00008de5       str r0, [sp]
+      ┌───< 0x004f8b04      0e00000a       beq 0x4f8b44
+      │││   0x004f8b08      010000e3       movw r0, 1
+      │││   0x004f8b0c      04109de5       ldr r1, [sp, 4]
+      │││   0x004f8b10      300051e3       cmp r1, 0x30                ; '0'
+      │││   0x004f8b14      00008de5       str r0, [sp]
+     ┌────< 0x004f8b18      0900000a       beq 0x4f8b44
+     ││││   0x004f8b1c      010000e3       movw r0, 1
+     ││││   0x004f8b20      04109de5       ldr r1, [sp, 4]
+     ││││   0x004f8b24      310051e3       cmp r1, 0x31                ; '1'
+     ││││   0x004f8b28      00008de5       str r0, [sp]
+    ┌─────< 0x004f8b2c      0400000a       beq 0x4f8b44
+    │││││   0x004f8b30      04009de5       ldr r0, [sp, 4]
+    │││││   0x004f8b34      320050e3       cmp r0, 0x32                ; '2'
+    │││││   0x004f8b38      000000e3       movw r0, 0
+    │││││   0x004f8b3c      0100a003       moveq r0, 1
+    │││││   0x004f8b40      00008de5       str r0, [sp]
+    └└└└└─> 0x004f8b44      00009de5       ldr r0, [sp]
+            0x004f8b48      010000e2       and r0, r0, 1
+            0x004f8b4c      7000afe6       sxtb r0, r0
+            0x004f8b50      10d08de2       add sp, sp, 0x10
+            0x004f8b54      1eff2fe1       bx lr

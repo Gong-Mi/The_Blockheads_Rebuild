@@ -1,0 +1,38 @@
+# tileIsAirWaterOrSnow  [C function]
+# implementation: 0x00a126dc
+# ARM.exidx end: 0x00a127cc
+
+            ;-- tileIsAirWaterOrSnow(Tile*):
+            0x00a126dc      0cd04de2       sub sp, sp, 0xc             ; tileIsAirWaterOrSnow(Tile*)
+            0x00a126e0      001000e3       movw r1, 0
+            0x00a126e4      002000e3       movw r2, 0
+            0x00a126e8      08008de5       str r0, [sp, 8]
+            0x00a126ec      08009de5       ldr r0, [sp, 8]
+            0x00a126f0      020050e1       cmp r0, r2
+            0x00a126f4      04108de5       str r1, [sp, 4]
+        ┌─< 0x00a126f8      1300000a       beq 0xa1274c
+        │   0x00a126fc      010000e3       movw r0, 1
+        │   0x00a12700      08109de5       ldr r1, [sp, 8]
+        │   0x00a12704      0010d1e5       ldrb r1, [r1]
+        │   0x00a12708      020051e3       cmp r1, 2
+        │   0x00a1270c      00008de5       str r0, [sp]
+       ┌──< 0x00a12710      0b00000a       beq 0xa12744
+       ││   0x00a12714      010000e3       movw r0, 1
+       ││   0x00a12718      08109de5       ldr r1, [sp, 8]
+       ││   0x00a1271c      0010d1e5       ldrb r1, [r1]
+       ││   0x00a12720      030051e3       cmp r1, 3
+       ││   0x00a12724      00008de5       str r0, [sp]
+      ┌───< 0x00a12728      0500000a       beq 0xa12744
+      │││   0x00a1272c      08009de5       ldr r0, [sp, 8]
+      │││   0x00a12730      0000d0e5       ldrb r0, [r0]
+      │││   0x00a12734      050050e3       cmp r0, 5
+      │││   0x00a12738      000000e3       movw r0, 0
+      │││   0x00a1273c      0100a003       moveq r0, 1
+      │││   0x00a12740      00008de5       str r0, [sp]
+      └└──> 0x00a12744      00009de5       ldr r0, [sp]
+        │   0x00a12748      04008de5       str r0, [sp, 4]
+        └─> 0x00a1274c      04009de5       ldr r0, [sp, 4]
+            0x00a12750      010000e2       and r0, r0, 1
+            0x00a12754      7000afe6       sxtb r0, r0
+            0x00a12758      0cd08de2       add sp, sp, 0xc
+            0x00a1275c      1eff2fe1       bx lr

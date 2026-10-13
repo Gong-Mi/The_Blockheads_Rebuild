@@ -1,0 +1,34 @@
+# ChilliPlant -[isRequiredSoilType:]
+# types: c12@0:4i8
+# implementation: 0x006ba268
+# ARM.exidx end: 0x006ba2dc
+
+            0x006ba268      10d04de2       sub sp, sp, 0x10
+            0x006ba26c      013000e3       movw r3, 1
+            0x006ba270      0c008de5       str r0, [sp, 0xc]
+            0x006ba274      08108de5       str r1, [sp, 8]
+            0x006ba278      04208de5       str r2, [sp, 4]
+            0x006ba27c      04009de5       ldr r0, [sp, 4]
+            0x006ba280      060050e3       cmp r0, 6
+            0x006ba284      00308de5       str r3, [sp]
+        ┌─< 0x006ba288      0e00000a       beq 0x6ba2c8
+        │   0x006ba28c      010000e3       movw r0, 1
+        │   0x006ba290      04109de5       ldr r1, [sp, 4]
+        │   0x006ba294      1b0051e3       cmp r1, 0x1b
+        │   0x006ba298      00008de5       str r0, [sp]
+       ┌──< 0x006ba29c      0900000a       beq 0x6ba2c8
+       ││   0x006ba2a0      010000e3       movw r0, 1
+       ││   0x006ba2a4      04109de5       ldr r1, [sp, 4]
+       ││   0x006ba2a8      300051e3       cmp r1, 0x30                ; '0'
+       ││   0x006ba2ac      00008de5       str r0, [sp]
+      ┌───< 0x006ba2b0      0400000a       beq 0x6ba2c8
+      │││   0x006ba2b4      04009de5       ldr r0, [sp, 4]
+      │││   0x006ba2b8      310050e3       cmp r0, 0x31                ; '1'
+      │││   0x006ba2bc      000000e3       movw r0, 0
+      │││   0x006ba2c0      0100a003       moveq r0, 1
+      │││   0x006ba2c4      00008de5       str r0, [sp]
+      └└└─> 0x006ba2c8      00009de5       ldr r0, [sp]
+            0x006ba2cc      010000e2       and r0, r0, 1
+            0x006ba2d0      7000afe6       sxtb r0, r0
+            0x006ba2d4      10d08de2       add sp, sp, 0x10
+            0x006ba2d8      1eff2fe1       bx lr

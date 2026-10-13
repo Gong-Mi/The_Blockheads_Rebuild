@@ -1,0 +1,20 @@
+# linearInterpolate(float,float,float)  [C function]
+# implementation: 0x00582a14
+# ARM.exidx end: 0x00582a50
+
+            ;-- linearInterpolate(float, float, float):
+            0x00582a14      0cd04de2       sub sp, sp, 0xc             ; linearInterpolate(float, float, float)
+            0x00582a18      102a00ee       vmov s0, r2
+            0x00582a1c      101a01ee       vmov s2, r1
+            0x00582a20      100a02ee       vmov s4, r0
+            0x00582a24      022a8ded       vstr s4, [sp, 8]
+            0x00582a28      011a8ded       vstr s2, [sp, 4]
+            0x00582a2c      000a8ded       vstr s0, [sp]
+            0x00582a30      021a9ded       vldr s2, [sp, 8]
+            0x00582a34      012a9ded       vldr s4, [sp, 4]
+            0x00582a38      412a32ee       vsub.f32 s4, s4, s2
+            0x00582a3c      000a22ee       vmul.f32 s0, s4, s0
+            0x00582a40      000a31ee       vadd.f32 s0, s2, s0
+            0x00582a44      100a10ee       vmov r0, s0
+            0x00582a48      0cd08de2       add sp, sp, 0xc
+            0x00582a4c      1eff2fe1       bx lr

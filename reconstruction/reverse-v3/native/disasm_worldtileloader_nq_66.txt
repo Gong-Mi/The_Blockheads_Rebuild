@@ -1,0 +1,26 @@
+# NPC -[shouldSaveEveryChangeInPosition]
+# types: c8@0:4
+# implementation: 0x00650abc
+# ARM.exidx end: 0x00650b10
+
+            0x00650abc      08d04de2       sub sp, sp, 8
+            0x00650ac0      44209fe5       ldr r2, [0x00650b0c]        ; [0x650b0c:4]=0xa0f028
+            0x00650ac4      02208fe0       add r2, pc, r2
+            0x00650ac8      003000e3       movw r3, 0
+            0x00650acc      34c09fe5       ldr ip, [0x00650b08]        ; [0x650b08:4]=0xffffd200
+            0x00650ad0      02209ce7       ldr r2, [ip, r2]
+            0x00650ad4      04008de5       str r0, [sp, 4]
+            0x00650ad8      00108de5       str r1, [sp]
+            0x00650adc      04009de5       ldr r0, [sp, 4]
+            0x00650ae0      001092e5       ldr r1, [r2]
+            0x00650ae4      010080e0       add r0, r0, r1
+            0x00650ae8      000090e5       ldr r0, [r0]
+            0x00650aec      030050e1       cmp r0, r3
+            0x00650af0      000000e3       movw r0, 0
+            0x00650af4      0100a013       movne r0, 1
+            0x00650af8      010000e2       and r0, r0, 1
+            0x00650afc      7000afe6       sxtb r0, r0
+            0x00650b00      08d08de2       add sp, sp, 8
+            0x00650b04      1eff2fe1       bx lr
+            0x00650b08      00d2ffff       invalid
+            0x00650b0c      28f0a000       adceq pc, r0, r8, lsr 32

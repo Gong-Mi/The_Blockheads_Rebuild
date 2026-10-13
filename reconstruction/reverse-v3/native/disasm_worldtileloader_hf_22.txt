@@ -1,0 +1,21 @@
+# Blockhead -[environmentExposure]
+# types: f8@0:4
+# implementation: 0x00b8ca78
+# ARM.exidx end: 0x00b8cc0c
+
+            0x00b8ca78      08d04de2       sub sp, sp, 8
+            0x00b8ca7c      04008de5       str r0, [sp, 4]
+            0x00b8ca80      00108de5       str r1, [sp]
+            0x00b8ca84      04009de5       ldr r0, [sp, 4]
+            0x00b8ca88      20109fe5       ldr r1, [0x00b8cab0]        ; [0xb8cab0:4]=0xfffff55c
+            0x00b8ca8c      20209fe5       ldr r2, [0x00b8cab4]        ; [0xb8cab4:4]=0x4d305c
+            0x00b8ca90      02208fe0       add r2, pc, r2
+            0x00b8ca94      021091e7       ldr r1, [r1, r2]
+            0x00b8ca98      001091e5       ldr r1, [r1]
+            0x00b8ca9c      010080e0       add r0, r0, r1
+            0x00b8caa0      100a90ed       vldr s0, [r0, 0x40]
+            0x00b8caa4      100a10ee       vmov r0, s0
+            0x00b8caa8      08d08de2       add sp, sp, 8
+            0x00b8caac      1eff2fe1       bx lr
+            0x00b8cab0      5cf5ffff       invalid
+            0x00b8cab4      5c304d00       subeq r3, sp, ip, asr r0

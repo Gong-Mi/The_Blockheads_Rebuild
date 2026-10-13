@@ -1,0 +1,24 @@
+# SnowSurfaceBlock -[setPartialContent:]
+# types: v12@0:4f8
+# implementation: 0x00d919e8
+# ARM.exidx end: 0x00d91a34
+
+            0x00d919e8      0cd04de2       sub sp, sp, 0xc
+            0x00d919ec      102a00ee       vmov s0, r2
+            0x00d919f0      08008de5       str r0, [sp, 8]
+            0x00d919f4      04108de5       str r1, [sp, 4]
+            0x00d919f8      000a8ded       vstr s0, [sp]
+            0x00d919fc      08009de5       ldr r0, [sp, 8]
+            0x00d91a00      24109fe5       ldr r1, [0x00d91a2c]        ; [0xd91a2c:4]=0xffffff7c
+            0x00d91a04      24209fe5       ldr r2, [0x00d91a30]        ; [0xd91a30:4]=0x2ce0e4
+            0x00d91a08      02208fe0       add r2, pc, r2
+            0x00d91a0c      021091e7       ldr r1, [r1, r2]
+            0x00d91a10      001091e5       ldr r1, [r1]
+            0x00d91a14      00209de5       ldr r2, [sp]
+            0x00d91a18      5bf07ff5       dmb ish
+            0x00d91a1c      012080e7       str r2, [r0, r1]
+            0x00d91a20      5bf07ff5       dmb ish
+            0x00d91a24      0cd08de2       add sp, sp, 0xc
+            0x00d91a28      1eff2fe1       bx lr
+            0x00d91a2c      7cffffff       invalid
+            0x00d91a30      e4e02c00       eoreq lr, ip, r4, ror 1

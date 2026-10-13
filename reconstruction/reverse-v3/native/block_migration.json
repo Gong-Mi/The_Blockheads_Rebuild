@@ -1,0 +1,696 @@
+{
+  "batch": "Physical-block version-upgrade batch (E15): the WorldTileLoader block upgrader - updatePhysicalBlockToLatestVersion: rewrites a record's 64-byte-stride tile image in up to three cumulative passes gated by the record's version byte (runs while byte < 3, < 5, < 7; never writes the byte back), including the column guards, the ore-band fixups and the pass-A treasure/troll placement; 1 body",
+  "claim": "a static bounded-body map with per-instruction anchors; the concrete storage layer behind the database calls, the caller that bumps the version byte, the tile-type names behind the raw tile bytes and the coordinate-geometry meaning of the noise offsets are outside this body",
+  "classes": [
+    {
+      "boundary": "ARM.exidx end 0x0086652c (listing bound); next ObjC IMP 0x0086652c WorldTileLoader -[unarchiveLightBlocksForClient:]",
+      "boundary_end": "0x0086652c",
+      "branches": [
+        {
+          "address": "0x008650e4",
+          "destination": "0x0086568c",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x008650fc",
+          "destination": "0x00865688",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x0086518c",
+          "destination": "0x00865674",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x00865198",
+          "destination": "0x00865674",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x008651a4",
+          "destination": "0x00865670",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x008651b0",
+          "destination": "0x00865670",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0086521c",
+          "destination": "0x00865670",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00865274",
+          "destination": "0x00865670",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008652f0",
+          "destination": "0x00865670",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00865330",
+          "destination": "0x00865338",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00865334",
+          "destination": "0x00865678",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00865360",
+          "destination": "0x0086566c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00865374",
+          "destination": "0x00865668",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0086541c",
+          "destination": "0x00865664",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00865574",
+          "destination": "0x00865660",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00865588",
+          "destination": "0x00865660",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00865660",
+          "destination": "0x00865664",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00865664",
+          "destination": "0x00865668",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00865668",
+          "destination": "0x0086566c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0086566c",
+          "destination": "0x00865670",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00865670",
+          "destination": "0x00865674",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00865674",
+          "destination": "0x00865678",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00865684",
+          "destination": "0x008650f4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00865688",
+          "destination": "0x0086568c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00865698",
+          "destination": "0x00865bbc",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x008656b0",
+          "destination": "0x00865bb8",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x008656f8",
+          "destination": "0x00865ba4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00865794",
+          "destination": "0x008657c4",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x008657a0",
+          "destination": "0x008657cc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008657f0",
+          "destination": "0x00865808",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00865810",
+          "destination": "0x00865ba0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00865898",
+          "destination": "0x008658a8",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x008658a4",
+          "destination": "0x008658b0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0086590c",
+          "destination": "0x00865b8c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00865938",
+          "destination": "0x00865b88",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00865a54",
+          "destination": "0x00865a64",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00865a60",
+          "destination": "0x00865aa8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00865b6c",
+          "destination": "0x00865b84",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00865b84",
+          "destination": "0x00865b88",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00865b88",
+          "destination": "0x00865b8c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00865b8c",
+          "destination": "0x00865b90",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00865b9c",
+          "destination": "0x008657dc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00865ba0",
+          "destination": "0x00865ba4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00865ba4",
+          "destination": "0x00865ba8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00865bb4",
+          "destination": "0x008656a8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00865bb8",
+          "destination": "0x00865bbc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00865bc8",
+          "destination": "0x00866474",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00865be0",
+          "destination": "0x00866470",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00865c28",
+          "destination": "0x0086645c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00865cb0",
+          "destination": "0x00865cc8",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00865cd0",
+          "destination": "0x00866458",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00865d54",
+          "destination": "0x00866440",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00865d64",
+          "destination": "0x00866440",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00865e68",
+          "destination": "0x00865eb0",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00865e74",
+          "destination": "0x00865ef4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00865fac",
+          "destination": "0x0086643c",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00865fcc",
+          "destination": "0x00866000",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00865fd8",
+          "destination": "0x00866008",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00866114",
+          "destination": "0x0086612c",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00866128",
+          "destination": "0x0086615c",
+          "mnemonic": "bmi"
+        },
+        {
+          "address": "0x00866144",
+          "destination": "0x00866260",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00866158",
+          "destination": "0x00866260",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x008661fc",
+          "destination": "0x00866234",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00866210",
+          "destination": "0x00866234",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00866234",
+          "destination": "0x00866438",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00866310",
+          "destination": "0x00866328",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00866324",
+          "destination": "0x00866358",
+          "mnemonic": "bmi"
+        },
+        {
+          "address": "0x00866340",
+          "destination": "0x00866434",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00866354",
+          "destination": "0x00866434",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x008663f8",
+          "destination": "0x00866430",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0086640c",
+          "destination": "0x00866430",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00866430",
+          "destination": "0x00866434",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00866434",
+          "destination": "0x00866438",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00866438",
+          "destination": "0x0086643c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0086643c",
+          "destination": "0x00866440",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00866440",
+          "destination": "0x00866444",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00866450",
+          "destination": "0x00865c9c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00866458",
+          "destination": "0x0086645c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0086645c",
+          "destination": "0x00866460",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0086646c",
+          "destination": "0x00865bd8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00866470",
+          "destination": "0x00866474",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00865154"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008651f8"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x00865210"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0086525c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008652c4"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x008652dc"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x008653e4"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00865410"
+        },
+        {
+          "callee": null,
+          "route": "blx r4",
+          "site": "0x0086553c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008655f4"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x00865624"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0086565c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00865744"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x008658d4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00865900"
+        },
+        {
+          "callee": null,
+          "route": "blx r4",
+          "site": "0x008659e0"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00865a4c"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00865aa0"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00865b4c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00865c74"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00865d2c"
+        },
+        {
+          "callee": null,
+          "route": "blx r6",
+          "site": "0x00865df8"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00865e60"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00865eec"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00865f90"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x008660ec"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x008661dc"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x008662e8"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x008663d8"
+        }
+      ],
+      "disjoint_branch_rows": [
+        {
+          "address": "0x00866254",
+          "destination": "0xfe92ac18",
+          "mnemonic": "bllo"
+        }
+      ],
+      "imp": "0x008650b0",
+      "ivars": {
+        "0x00865ff0": {
+          "offset": 4,
+          "slot": "0x0105dd4c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.world"
+        },
+        "0x00866238": {
+          "offset": 4,
+          "slot": "0x0105dd4c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.world"
+        },
+        "0x0086625c": {
+          "offset": 36,
+          "slot": "0x0105dd9c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.flintDensityNoiseFunction"
+        },
+        "0x00866454": {
+          "offset": 244,
+          "slot": "0x0105dd48",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.yHeightDivider"
+        },
+        "0x008664b8": {
+          "offset": 76,
+          "slot": "0x0105dd8c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.bestStartPosition"
+        },
+        "0x008664d4": {
+          "offset": 4,
+          "slot": "0x0105dd4c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.world"
+        },
+        "0x008664dc": {
+          "offset": 36,
+          "slot": "0x0105dd9c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.flintDensityNoiseFunction"
+        },
+        "0x008664e0": {
+          "offset": 40,
+          "slot": "0x0105dd98",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.tinDensityNoiseFunction"
+        },
+        "0x008664e4": {
+          "offset": 96,
+          "slot": "0x0105dd60",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.rockHeights"
+        },
+        "0x00866510": {
+          "offset": 92,
+          "slot": "0x0105dd5c",
+          "symbol": "OBJC_IVAR_$_WorldTileLoader.dirtHeights"
+        }
+      },
+      "method": "WorldTileLoader -[updatePhysicalBlockToLatestVersion:]",
+      "name": "wtl_updatephysicalblocktol",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00865fe0": {
+          "selector": "getRockAndDirtHeightforX:rockHeight:dirtHeight:",
+          "slot": "0x00e82438"
+        },
+        "0x00865ff8": {
+          "selector": "worldWidthMacro",
+          "slot": "0x00e823a8"
+        },
+        "0x0086623c": {
+          "selector": "worldWidthMacro",
+          "slot": "0x00e823a8"
+        },
+        "0x00866244": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00866248": {
+          "selector": "isCaveForX:y:faultOffset:",
+          "slot": "0x00e82408"
+        },
+        "0x0086624c": {
+          "selector": "faultOffsetForX:y:",
+          "slot": "0x00e82404"
+        },
+        "0x00866258": {
+          "selector": "getX:Y:octaves:",
+          "slot": "0x00e82420"
+        },
+        "0x008664bc": {
+          "selector": "getRockAndDirtHeightforX:rockHeight:dirtHeight:",
+          "slot": "0x00e82438"
+        },
+        "0x008664c4": {
+          "selector": "faultOffsetForX:y:",
+          "slot": "0x00e82404"
+        },
+        "0x008664cc": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x008664d0": {
+          "selector": "worldWidthMacro",
+          "slot": "0x00e823a8"
+        },
+        "0x008664d8": {
+          "selector": "getX:Y:octaves:",
+          "slot": "0x00e82420"
+        },
+        "0x00866514": {
+          "selector": "isBeachForPos:height:",
+          "slot": "0x00e8241c"
+        },
+        "0x00866524": {
+          "selector": "dynamicWorld",
+          "slot": "0x00e8246c"
+        },
+        "0x00866528": {
+          "selector": "createTreasureChestOrTrollAtTile:atPos:loadTroll:loadTreasure:",
+          "slot": "0x00e824dc"
+        }
+      },
+      "semantics": "updatePhysicalBlockToLatestVersion: is the WorldTileLoader physical-block format-migration routine: handed one ^{PhysicalBlock} record it upgrades the record's 32x32 in-memory tile image in up to three cumulative passes selected by the record's version byte, and returns without ever writing that byte back. The prologue pushes {r4,r5,r6,r7,r8,sl,fp,lr} at 0x008650b0 and reserves 0x298 at 0x008650bc; the PIC base comes from the pool word at 0x00865fdc (add r3,pc,r3 at 0x008650c4) and is kept at [fp,-0x130]; self goes to [fp,-0x30] (0x008650c8), the never-re-read _cmd to [fp,-0x34] (0x008650cc) and the record argument to [fp,-0x38] (0x008650d0). The first thing it reads is the version byte (ldrb r0,[r0,0xd] at 0x008650d8, cmp 3 at 0x008650dc); the bge at 0x008650e4 skips the first pass and lands at 0x0086568c where the same byte is re-read (0x0086568c-0x00865690) and gate two runs (cmp 5, bge 0x00865bbc at 0x00865698), and gate three re-reads it at 0x00865bc0 (cmp 7) whose bge at 0x00865bc8 jumps straight to the epilogue at 0x00866474 (sub sp,fp,0x28; vpop {d8,d9}; pop {r4,r5,r6,r7,r8,sl,fp,pc}). The passes are therefore cumulative: byte <3 runs A then B then C in one call, 3..4 runs B and C, 5..6 runs C only, >=7 does nothing; the whole listing contains no store to offset 13 of the record, so nothing in this body bumps the version. Pass A (byte<3) is a single loop over tile columns i (counter [fp,-0x3c], zeroed at 0x008650e8; head 0x008650f4 cmp 0x20, bge 0x008650fc exiting at 0x00865688; increment 0x00865678-0x00865684). Per column it forms index = physicalBlock->[0]*32 + i (ldr 0x00865108, add r1,r2,r1,lsl 5 0x00865110), calls [self getRockAndDirtHeightforX:index rockHeight:&(fp-0x44) dirtHeight:(stack, &(fp-0x48) staged at 0x00865134)] (bl objc_msgSend 0x00865154, selector from cell 0x00865fe0), subtracts physicalBlock->[4]*32 from both returned heights (0x00865160-0x00865180) into local rock/dirt at [fp,-0x4c]/[fp,-0x50], and runs a guard chain: continue only when 0 <= local rock < 0x20 (blt 0x0086518c, bge 0x00865198), global rockHeight > 0x1f0 (ble 0x008651a4), index != 0 (beq 0x008651b0), index != (W*32)/4 (bl 0x008651f8 = [self->world worldWidthMacro], __aeabi_idiv 0x00865210, beq 0x0086521c), index != (W*32)/4*2 (0x00865260-0x00865268, beq 0x00865274) and index != (W*32)/4*3 (idiv 0x008652dc, mul 0x008652e4, beq 0x008652f0), W being re-asked each time (0x008651f8, 0x0086525c, 0x008652c4). It then addresses the tile at tiles(physicalBlock+8) + (local rock*32+i)*64 (0x00865314-0x00865320) and bails unless byte3 == 0 (ldrb 0x00865324, beq 0x00865330) and byte0 == 8 (ldrb 0x0086534c, bne 0x00865360) and local dirt - local rock > 2 (0x00865364-0x00865374); it evaluates the inner call [self faultOffsetForX:index y:rockHeight-1] (blx ip 0x008653e4, selector cell 0x0086624c) and the outer [self isCaveForX:index y:rockHeight-1 faultOffset:fault] (blx lr 0x00865410, cell 0x00866248, fault returned at 0x008653f4 and stacked at 0x00865408) and skips when the result is nonzero (bne 0x0086541c). The last test is a flint-density band: [self->flintDensityNoiseFunction getX:(((float)index+1453.0f)/32.0f/self->yHeightDivider)*1.4230f Y:(((float)rockHeight+1247.0f)/32.0f/self->yHeightDivider)*1.4536f octaves:5] (ivar cells 0x0086625c and 0x00866454, float pools 0x008657a4-0x008657c0, blx r4 = objc_msgSend 0x0086553c), with 0.55 synthesised as 0.85-0.3 at 0x00865568; the fixup runs only for 0.55 < noise < 0.85 (ble 0x00865574, bpl 0x00865588) and rewrites the tile in place: byte2 = 1 (strb 0x008655a0), byte1 = 1 (strb 0x008655b4), byte0 = 2 (strb 0x008655c8), after which it registers a dynamic object: [self->world dynamicWorld] (bl 0x008655f4, world ivar via 0x008664d4/0x00866520, selector cell 0x00866524), makeIntpair(&(fp-0x80), index, rockHeight) (bl 0x00865624), then [dynamicWorld createTreasureChestOrTrollAtTile:&tile atPos:(index,rockHeight) loadTroll:0 loadTreasure:1] (bl 0x0086565c, selector cell 0x00866528; receiver is the dynamicWorld result, the pair words are read back at 0x00865638/0x0086563c and 0/1 are stacked at 0x00865648-0x00865654). Every pass-A skip funnels through the chain 0x00865660-0x00865678 back to the increment. Pass B (byte<5) loops columns j = [fp,-0x84] 0..31 (head 0x008656a8, bge 0x008656b0 to 0x00865bb8): per column idx = physicalBlock->[0]*32 + j, skipped when idx equals self->bestStartPosition (cell 0x008664b8, offset 76; ldr 0x008656ec, beq 0x008656f8), it recomputes fresh heights via [self getRockAndDirtHeightforX:idx ...] (bl 0x00865744) minus physicalBlock->[4]*32 and walks k from max(local rock, 0) (0x00865788-0x008657d8) while k < local dirt and k < 0x20 (head 0x008657dc, exit beq 0x00865810 to 0x00865ba0), per k reading self->rockHeights[idx] (cell 0x008664e4, offset 96, ldr 0x0086585c) and self->dirtHeights[idx] (cell 0x00866510, offset 92, ldr 0x00865880) and passing their maximum as the height (selection 0x00865898-0x008658b0); it requires [self isBeachForPos:(idx, k+physicalBlock->[4]*32) height:max] to be true (makeIntpair 0x008658d4, bl 0x00865900, beq 0x0086590c skips when false) and tile byte0 at tiles+((k*32)+j)*64 to equal 8 (ldrb 0x0086592c, bne 0x00865938). It then samples flint noise with X = (idx/(32*W))*0.0625 and Y = ((((k+physicalBlock->[4]*32) - 5*rockHeights[idx])/32)/max(W,512))*4*6.0, octaves 3 (double 5.0 at 0x00865a14, max(W,512) selection 0x00865a50-0x00865aa4, 0.0625 pool 0x00865e80, 6.0 staged at 0x00865ac8, blx lr 0x00865b4c), and when noise > 0.4 (ble 0x00865b6c) writes 0x3a into tile byte0 (strb 0x00865b78) and byte1 (strb 0x00865b80); its skips funnel 0x00865b84-0x00865b90 to the k increment and 0x00865ba0-0x00865ba8 to the column increment. Pass C (byte<7) loops columns m = [fp,-0xe0] 0..31 (head 0x00865bd8, exit bge 0x00865be0 to 0x00866470 and the epilogue): idx = physicalBlock->[0]*32 + m, skipped when idx == self->bestStartPosition (beq 0x00865c28), fresh rock via bl 0x00865c74; inner loop k = 0 while k < min(local rock, 0x20) (head 0x00865c9c, exit beq 0x00865cd0 to 0x00866458); per k with idx1 = k + physicalBlock->[4]*32 and tile index (k*32)+m it first calls [self faultOffsetForX:idx y:idx1] (bl 0x00865d2c, selector cell 0x008664c4), requires tile byte0 == 1 (ldrb 0x00865d4c, bne 0x00865d54) and byte3 == 0 (ldrb 0x00865d5c, bne 0x00865d64), then computes C_nx = ((idx+5673)/32)/W*4 (5673.0f pool 0x00865fec, [world worldWidthMacro] blx 0x00865df8) and C_ny = ((idx1+6343-fault)/32)/max(W,512)*4 (6343 via movw 0x00865d8c, clamp 0x00865e68-0x00865e74 re-issuing the width call at 0x00865eec, blx 0x00865e60). It samples noise2 = [flint getX:C_nx*0.112 Y:C_ny*0.084 octaves:2] (double pools 0x00865e90/0x00865e88, blx 0x00865f90) and requires noise2 > 0 (ble 0x00865fac), then C_ty = (1 - max(idx1,400)/self->rockHeights[idx]) * 0.004f (400 via movw 0x00865fb0, max 0x00865fc8/0x00866000-0x00866008, rockHeights re-read 0x00866074, 0.004f pool 0x00866254, stored 0x00866090) and noise3 = [self->tinDensityNoiseFunction getX:C_nx*0.012+0.212 Y:C_ny+0.47 octaves:2] (tin cell 0x008664e0, double pools 0x00865ea8/0x00865ea0/0x00865e98, blx 0x008660ec). A mirrored band test follows: noise3 <= 0.299-C_ty goes to 0x0086612c (ble 0x00866114), noise3 < 0.3 drops into the first write path at 0x0086615c (bmi 0x00866128), noise3 >= -0.299+C_ty or <= -0.3 go to the second region at 0x00866260 (bpl 0x00866144, ble 0x00866158), and the remainder (-0.3 < noise3 < -0.299+C_ty) also falls into the first write path. That path computes noise4 = [flint getX:C_nx*0.012 Y:C_ny*0.054 octaves:2] (pools 0x00866480/0x008664b0, blx 0x008661dc) and, when 0.1 < noise4 < 0.15 (ble 0x008661fc, bpl 0x00866210), stores byte3 = 0x6a (strb 0x0086622c). The second region computes noise5 = [tin getX:C_nx*0.028+0.612 Y:C_ny+0.27 octaves:2] (pools 0x00866498/0x00866490/0x00866488, blx 0x008662e8) and repeats the same-shaped band with 0.298/0.3 constants (ble 0x00866310, bmi 0x00866324 to the write path, bpl 0x00866340, ble 0x00866354): either skip or run the second write path at 0x00866358, which computes noise6 = [flint getX:C_nx*0.035 Y:C_ny*0.072 octaves:2] (pools 0x008664a8/0x008664a0, blx 0x008663d8) and stores byte3 = 0x6b when 0.1 < noise6 < 0.15 (ble 0x008663f8, bpl 0x0086640c, strb 0x00866428). All pass-C skips thread through 0x00866430-0x00866444 to the k increment (0x00866444-0x0086644c) and 0x00866458-0x00866460 to the m increment. The 81-branch decision grid in one line: three version gates; pass A per column = six numeric guards + three tile-byte/gap gates + the cave pair + the two-sided flint band; pass B per column = bestStart skip + outer/inner loop conditions + beach gate + byte0 gate + one-sided 0.4 noise test; pass C per column = bestStart skip + loop conditions + byte0/byte3 gates + noise2 > 0 + the two mirrored band tests each with its own 0.1..0.15 window; and every skip is a short chain of unconditional branches into the loop tails. State consulted: self->world (cells 0x00865ff0, 0x00866238, 0x008664d4; offset 4) only for worldWidthMacro and dynamicWorld; self->bestStartPosition (cell 0x008664b8; offset 76); self->flintDensityNoiseFunction (cells 0x0086625c, 0x008664dc; offset 36); self->tinDensityNoiseFunction (cell 0x008664e0; offset 40); self->yHeightDivider (cell 0x00866454; offset 244); self->rockHeights (cell 0x008664e4; offset 96); self->dirtHeights (cell 0x00866510; offset 92). Measured artifacts: the _cmd spill at 0x008650cc is never re-read; the movw value stubs staged around 0x00865100-0x0086532c (e.g. into [fp,-0x134] at 0x0086513c, [sp,0x158] at 0x0086532c) are never reloaded; pass A asks [self->world worldWidthMacro] up to three times per surviving column (0x008651f8, 0x0086525c, 0x008652c4) and passes B and C re-issue the same send inside their >=0x200 clamp arms (0x00865aa0, 0x00865eec); the only memory this body mutates is the 64-byte-stride tile image at physicalBlock->tiles (+8), plus the side effect of the pass-A createTreasureChestOrTrollAtTile:atPos:loadTroll:loadTreasure: send.",
+      "types": "v12@0:4^{PhysicalBlock=ii^{Tile}cCdII[32*][32C]}8",
+      "verified_words": 1311
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "schema": 1
+}

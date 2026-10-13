@@ -1,0 +1,40 @@
+# itemTypeOccupiesForegroundContents  [C function]
+# implementation: 0x0057b630
+# ARM.exidx end: 0x0057b6bc
+
+            ;-- itemTypeOccupiesForegroundContents(ItemType):
+            0x0057b630      00482de9       push {fp, lr}               ; itemTypeOccupiesForegroundContents(ItemType)
+            0x0057b634      0db0a0e1       mov fp, sp
+            0x0057b638      08d04de2       sub sp, sp, 8
+            0x0057b63c      00008de5       str r0, [sp]
+            0x0057b640      00009de5       ldr r0, [sp]
+            0x0057b644      529001eb       bl sym.itemTypeIsTorch_ItemType_ ; itemTypeIsTorch(ItemType)
+            0x0057b648      7000afe6       sxtb r0, r0
+            0x0057b64c      000050e3       cmp r0, 0
+        ┌─< 0x0057b650      1100001a       bne 0x57b69c
+        │   0x0057b654      00009de5       ldr r0, [sp]
+        │   0x0057b658      a30050e3       cmp r0, 0xa3
+       ┌──< 0x0057b65c      0e00000a       beq 0x57b69c
+       ││   0x0057b660      2d0100e3       movw r0, 0x12d
+       ││   0x0057b664      00109de5       ldr r1, [sp]
+       ││   0x0057b668      000051e1       cmp r1, r0
+      ┌───< 0x0057b66c      0a00000a       beq 0x57b69c
+      │││   0x0057b670      00009de5       ldr r0, [sp]
+      │││   0x0057b674      5b0050e3       cmp r0, 0x5b                ; '['
+     ┌────< 0x0057b678      0700000a       beq 0x57b69c
+     ││││   0x0057b67c      00009de5       ldr r0, [sp]
+     ││││   0x0057b680      c70050e3       cmp r0, 0xc7
+    ┌─────< 0x0057b684      0400000a       beq 0x57b69c
+    │││││   0x0057b688      00009de5       ldr r0, [sp]
+    │││││   0x0057b68c      66f600eb       bl sym.itemTypeIsPainting_ItemType_ ; itemTypeIsPainting(ItemType)
+    │││││   0x0057b690      7000afe6       sxtb r0, r0
+    │││││   0x0057b694      000050e3       cmp r0, 0
+   ┌──────< 0x0057b698      0200000a       beq 0x57b6a8
+   │└└└└└─> 0x0057b69c      010000e3       movw r0, 1
+   │        0x0057b6a0      01004be5       strb r0, [fp, -1]
+   │    ┌─< 0x0057b6a4      010000ea       b 0x57b6b0
+   └──────> 0x0057b6a8      000000e3       movw r0, 0
+        │   0x0057b6ac      01004be5       strb r0, [fp, -1]
+        └─> 0x0057b6b0      d1005be1       ldrsb r0, [fp, -1]
+            0x0057b6b4      0bd0a0e1       mov sp, fp
+            0x0057b6b8      0088bde8       pop {fp, pc}

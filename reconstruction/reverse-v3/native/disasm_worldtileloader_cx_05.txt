@@ -1,0 +1,32 @@
+# clamp(float,float,float)  [C function]
+# implementation: 0x004be068
+# ARM.exidx end: 0x004be0d4
+
+            ;-- clamp(float, float, float):
+            0x004be068      10d04de2       sub sp, sp, 0x10            ; clamp(float, float, float)
+            0x004be06c      102a00ee       vmov s0, r2
+            0x004be070      101a01ee       vmov s2, r1
+            0x004be074      100a02ee       vmov s4, r0
+            0x004be078      032a8ded       vstr s4, [sp, 0xc]
+            0x004be07c      021a8ded       vstr s2, [sp, 8]
+            0x004be080      010a8ded       vstr s0, [sp, 4]
+            0x004be084      030a9ded       vldr s0, [sp, 0xc]
+            0x004be088      000a8ded       vstr s0, [sp]
+            0x004be08c      030a9ded       vldr s0, [sp, 0xc]
+            0x004be090      011a9ded       vldr s2, [sp, 4]
+            0x004be094      c10ab4ee       vcmpe.f32 s0, s2
+            0x004be098      10faf1ee       vmrs apsr_nzcv, fpscr
+        ┌─< 0x004be09c      010000da       ble 0x4be0a8
+        │   0x004be0a0      010a9ded       vldr s0, [sp, 4]
+        │   0x004be0a4      000a8ded       vstr s0, [sp]
+        └─> 0x004be0a8      030a9ded       vldr s0, [sp, 0xc]
+            0x004be0ac      021a9ded       vldr s2, [sp, 8]
+            0x004be0b0      c10ab4ee       vcmpe.f32 s0, s2
+            0x004be0b4      10faf1ee       vmrs apsr_nzcv, fpscr
+        ┌─< 0x004be0b8      0100005a       bpl 0x4be0c4
+        │   0x004be0bc      020a9ded       vldr s0, [sp, 8]
+        │   0x004be0c0      000a8ded       vstr s0, [sp]
+        └─> 0x004be0c4      000a9ded       vldr s0, [sp]
+            0x004be0c8      100a10ee       vmov r0, s0
+            0x004be0cc      10d08de2       add sp, sp, 0x10
+            0x004be0d0      1eff2fe1       bx lr

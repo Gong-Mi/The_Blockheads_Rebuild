@@ -1,0 +1,1376 @@
+# SteamTrain -[updateSearchForStations]
+# types: v8@0:4
+# implementation: 0x00d1a510
+# ARM.exidx end: 0x00d1ba7c
+
+            0x00d1a510      f04d2de9       push {r4, r5, r6, r7, r8, sl, fp, lr}
+            0x00d1a514      18b08de2       add fp, sp, 0x18
+            0x00d1a518      92df4de2       sub sp, sp, 0x248
+            0x00d1a51c      582e9fe5       ldr r2, [0x00d1b37c]        ; [0xd1b37c:4]=0x3455cc
+            0x00d1a520      02208fe0       add r2, pc, r2
+            0x00d1a524      543e9fe5       ldr r3, [0x00d1b380]        ; [0xd1b380:4]=0xfffffcb8
+            0x00d1a528      023093e7       ldr r3, [r3, r2]
+            0x00d1a52c      20000be5       str r0, [fp, -0x20]
+            0x00d1a530      24100be5       str r1, [fp, -0x24]
+            0x00d1a534      20001be5       ldr r0, [fp, -0x20]
+            0x00d1a538      001093e5       ldr r1, [r3]
+            0x00d1a53c      010080e0       add r0, r0, r1
+            0x00d1a540      d000d0e1       ldrsb r0, [r0]
+            0x00d1a544      000050e3       cmp r0, 0
+            0x00d1a548      94200be5       str r2, [fp, -0x94]
+        ┌─< 0x00d1a54c      8902000a       beq 0xd1af78
+        │   0x00d1a550      000000e3       movw r0, 0
+        │   0x00d1a554      28000be5       str r0, [fp, -0x28]
+        │   0x00d1a558      28000be5       str r0, [fp, -0x28]
+       ┌──> 0x00d1a55c      28001be5       ldr r0, [fp, -0x28]
+       ╎│   0x00d1a560      080050e3       cmp r0, 8
+      ┌───< 0x00d1a564      820200aa       bge 0xd1af74
+      │╎│   0x00d1a568      140e9fe5       ldr r0, [0x00d1b384]        ; [0xd1b384:4]=0xfffffcb0
+      │╎│   0x00d1a56c      94101be5       ldr r1, [fp, -0x94]
+      │╎│   0x00d1a570      010090e7       ldr r0, [r0, r1]
+      │╎│   0x00d1a574      20201be5       ldr r2, [fp, -0x20]
+      │╎│   0x00d1a578      003090e5       ldr r3, [r0]
+      │╎│   0x00d1a57c      032082e0       add r2, r2, r3
+      │╎│   0x00d1a580      002092e5       ldr r2, [r2]
+      │╎│   0x00d1a584      011042e2       sub r1, r2, 1
+      │╎│   0x00d1a588      20201be5       ldr r2, [fp, -0x20]
+      │╎│   0x00d1a58c      000090e5       ldr r0, [r0]
+      │╎│   0x00d1a590      000082e0       add r0, r2, r0
+      │╎│   0x00d1a594      042090e5       ldr r2, [r0, 4]
+      │╎│   0x00d1a598      30004be2       sub r0, fp, 0x30
+      │╎│   0x00d1a59c      1669deeb       bl sym.makeIntpair_int__int_ ; makeIntpair(int, int)
+      │╎│   0x00d1a5a0      e00d9fe5       ldr r0, [0x00d1b388]        ; [0xd1b388:4]=0xffffc8a0
+      │╎│   0x00d1a5a4      94101be5       ldr r1, [fp, -0x94]
+      │╎│   0x00d1a5a8      010090e7       ldr r0, [r0, r1]
+      │╎│   0x00d1a5ac      30201be5       ldr r2, [fp, -0x30]
+      │╎│   0x00d1a5b0      2c101be5       ldr r1, [fp, -0x2c]
+      │╎│   0x00d1a5b4      20301be5       ldr r3, [fp, -0x20]
+      │╎│   0x00d1a5b8      000090e5       ldr r0, [r0]
+      │╎│   0x00d1a5bc      000083e0       add r0, r3, r0
+      │╎│   0x00d1a5c0      000090e5       ldr r0, [r0]
+      │╎│   0x00d1a5c4      98000be5       str r0, [fp, -0x98]
+      │╎│   0x00d1a5c8      0200a0e1       mov r0, r2
+      │╎│   0x00d1a5cc      98201be5       ldr r2, [fp, -0x98]
+      │╎│   0x00d1a5d0      53e2f3eb       bl sym.tileAtWorldPositionLoaded_int__int__World_ ; tileAtWorldPositionLoaded(int, int, World*)
+      │╎│   0x00d1a5d4      001000e3       movw r1, 0
+      │╎│   0x00d1a5d8      34000be5       str r0, [fp, -0x34]         ; elf_phdr
+      │╎│   0x00d1a5dc      34001be5       ldr r0, [fp, -0x34]         ; elf_phdr
+      │╎│   0x00d1a5e0      010050e1       cmp r0, r1
+     ┌────< 0x00d1a5e4      0000001a       bne 0xd1a5ec
+    ┌─────< 0x00d1a5e8      610200ea       b 0xd1af74
+    │└────> 0x00d1a5ec      34001be5       ldr r0, [fp, -0x34]         ; elf_phdr
+    │ │╎│   0x00d1a5f0      0b00d0e5       ldrb r0, [r0, 0xb]
+    │ │╎│   0x00d1a5f4      620050e3       cmp r0, 0x62                ; 'b'
+    │┌────< 0x00d1a5f8      4f00000a       beq 0xd1a73c
+    │││╎│   0x00d1a5fc      800d9fe5       ldr r0, [0x00d1b384]        ; [0xd1b384:4]=0xfffffcb0
+    │││╎│   0x00d1a600      94101be5       ldr r1, [fp, -0x94]
+    │││╎│   0x00d1a604      010090e7       ldr r0, [r0, r1]
+    │││╎│   0x00d1a608      20201be5       ldr r2, [fp, -0x20]
+    │││╎│   0x00d1a60c      003090e5       ldr r3, [r0]
+    │││╎│   0x00d1a610      032082e0       add r2, r2, r3
+    │││╎│   0x00d1a614      002092e5       ldr r2, [r2]
+    │││╎│   0x00d1a618      011042e2       sub r1, r2, 1
+    │││╎│   0x00d1a61c      20201be5       ldr r2, [fp, -0x20]
+    │││╎│   0x00d1a620      000090e5       ldr r0, [r0]
+    │││╎│   0x00d1a624      000082e0       add r0, r2, r0
+    │││╎│   0x00d1a628      040090e5       ldr r0, [r0, 4]
+    │││╎│   0x00d1a62c      012080e2       add r2, r0, 1
+    │││╎│   0x00d1a630      40004be2       sub r0, fp, 0x40
+    │││╎│   0x00d1a634      f068deeb       bl sym.makeIntpair_int__int_ ; makeIntpair(int, int)
+    │││╎│   0x00d1a638      480d9fe5       ldr r0, [0x00d1b388]        ; [0xd1b388:4]=0xffffc8a0
+    │││╎│   0x00d1a63c      94101be5       ldr r1, [fp, -0x94]
+    │││╎│   0x00d1a640      010090e7       ldr r0, [r0, r1]
+    │││╎│   0x00d1a644      40201be5       ldr r2, [fp, -0x40]
+    │││╎│   0x00d1a648      30200be5       str r2, [fp, -0x30]
+    │││╎│   0x00d1a64c      3c201be5       ldr r2, [fp, -0x3c]
+    │││╎│   0x00d1a650      2c200be5       str r2, [fp, -0x2c]
+    │││╎│   0x00d1a654      30201be5       ldr r2, [fp, -0x30]
+    │││╎│   0x00d1a658      2c101be5       ldr r1, [fp, -0x2c]
+    │││╎│   0x00d1a65c      20301be5       ldr r3, [fp, -0x20]
+    │││╎│   0x00d1a660      000090e5       ldr r0, [r0]
+    │││╎│   0x00d1a664      000083e0       add r0, r3, r0
+    │││╎│   0x00d1a668      000090e5       ldr r0, [r0]
+    │││╎│   0x00d1a66c      9c000be5       str r0, [fp, -0x9c]
+    │││╎│   0x00d1a670      0200a0e1       mov r0, r2
+    │││╎│   0x00d1a674      9c201be5       ldr r2, [fp, -0x9c]
+    │││╎│   0x00d1a678      29e2f3eb       bl sym.tileAtWorldPositionLoaded_int__int__World_ ; tileAtWorldPositionLoaded(int, int, World*)
+    │││╎│   0x00d1a67c      001000e3       movw r1, 0
+    │││╎│   0x00d1a680      34000be5       str r0, [fp, -0x34]         ; elf_phdr
+    │││╎│   0x00d1a684      34001be5       ldr r0, [fp, -0x34]         ; elf_phdr
+    │││╎│   0x00d1a688      010050e1       cmp r0, r1
+   ┌──────< 0x00d1a68c      2400000a       beq 0xd1a724
+   ││││╎│   0x00d1a690      34001be5       ldr r0, [fp, -0x34]         ; elf_phdr
+   ││││╎│   0x00d1a694      0b00d0e5       ldrb r0, [r0, 0xb]
+   ││││╎│   0x00d1a698      620050e3       cmp r0, 0x62                ; 'b'
+  ┌───────< 0x00d1a69c      2000000a       beq 0xd1a724
+  │││││╎│   0x00d1a6a0      dc0c9fe5       ldr r0, [0x00d1b384]        ; [0xd1b384:4]=0xfffffcb0
+  │││││╎│   0x00d1a6a4      94101be5       ldr r1, [fp, -0x94]
+  │││││╎│   0x00d1a6a8      010090e7       ldr r0, [r0, r1]
+  │││││╎│   0x00d1a6ac      20201be5       ldr r2, [fp, -0x20]
+  │││││╎│   0x00d1a6b0      003090e5       ldr r3, [r0]
+  │││││╎│   0x00d1a6b4      032082e0       add r2, r2, r3
+  │││││╎│   0x00d1a6b8      002092e5       ldr r2, [r2]
+  │││││╎│   0x00d1a6bc      011042e2       sub r1, r2, 1
+  │││││╎│   0x00d1a6c0      20201be5       ldr r2, [fp, -0x20]
+  │││││╎│   0x00d1a6c4      000090e5       ldr r0, [r0]
+  │││││╎│   0x00d1a6c8      000082e0       add r0, r2, r0
+  │││││╎│   0x00d1a6cc      040090e5       ldr r0, [r0, 4]
+  │││││╎│   0x00d1a6d0      012040e2       sub r2, r0, 1
+  │││││╎│   0x00d1a6d4      48004be2       sub r0, fp, 0x48
+  │││││╎│   0x00d1a6d8      c768deeb       bl sym.makeIntpair_int__int_ ; makeIntpair(int, int)
+  │││││╎│   0x00d1a6dc      a40c9fe5       ldr r0, [0x00d1b388]        ; [0xd1b388:4]=0xffffc8a0
+  │││││╎│   0x00d1a6e0      94101be5       ldr r1, [fp, -0x94]
+  │││││╎│   0x00d1a6e4      010090e7       ldr r0, [r0, r1]
+  │││││╎│   0x00d1a6e8      48201be5       ldr r2, [fp, -0x48]
+  │││││╎│   0x00d1a6ec      30200be5       str r2, [fp, -0x30]
+  │││││╎│   0x00d1a6f0      44201be5       ldr r2, [fp, -0x44]
+  │││││╎│   0x00d1a6f4      2c200be5       str r2, [fp, -0x2c]
+  │││││╎│   0x00d1a6f8      30201be5       ldr r2, [fp, -0x30]
+  │││││╎│   0x00d1a6fc      2c101be5       ldr r1, [fp, -0x2c]
+  │││││╎│   0x00d1a700      20301be5       ldr r3, [fp, -0x20]
+  │││││╎│   0x00d1a704      000090e5       ldr r0, [r0]
+  │││││╎│   0x00d1a708      000083e0       add r0, r3, r0
+  │││││╎│   0x00d1a70c      000090e5       ldr r0, [r0]
+  │││││╎│   0x00d1a710      a0000be5       str r0, [fp, -0xa0]
+  │││││╎│   0x00d1a714      0200a0e1       mov r0, r2
+  │││││╎│   0x00d1a718      a0201be5       ldr r2, [fp, -0xa0]
+  │││││╎│   0x00d1a71c      00e2f3eb       bl sym.tileAtWorldPositionLoaded_int__int__World_ ; tileAtWorldPositionLoaded(int, int, World*)
+  │││││╎│   0x00d1a720      34000be5       str r0, [fp, -0x34]         ; elf_phdr
+  └└──────> 0x00d1a724      000000e3       movw r0, 0
+    │││╎│   0x00d1a728      34101be5       ldr r1, [fp, -0x34]         ; elf_phdr
+    │││╎│   0x00d1a72c      000051e1       cmp r1, r0
+   ┌──────< 0x00d1a730      0000001a       bne 0xd1a738
+  ┌───────< 0x00d1a734      0e0200ea       b 0xd1af74
+  ─└──────> 0x00d1a738      ffffffea       b 0xd1a73c
+  ─┌─└────> 0x00d1a73c      ffffffea       b 0xd1a740
+  │└──────> 0x00d1a740      34001be5       ldr r0, [fp, -0x34]         ; elf_phdr
+  │ │ │╎│   0x00d1a744      0b00d0e5       ldrb r0, [r0, 0xb]
+  │ │ │╎│   0x00d1a748      620050e3       cmp r0, 0x62                ; 'b'
+  │ │┌────< 0x00d1a74c      d101001a       bne 0xd1ae98
+  │ │││╎│   0x00d1a750      000000e3       movw r0, 0
+  │ │││╎│   0x00d1a754      49004be5       strb r0, [fp, -0x49]
+  │ │││╎│   0x00d1a758      34001be5       ldr r0, [fp, -0x34]         ; elf_phdr
+  │ │││╎│   0x00d1a75c      0300d0e5       ldrb r0, [r0, 3]
+  │ │││╎│   0x00d1a760      300050e3       cmp r0, 0x30                ; '0'
+  │┌──────< 0x00d1a764      0501001a       bne 0xd1ab80
+  │││││╎│   0x00d1a768      021000e3       movw r1, 2
+  │││││╎│   0x00d1a76c      050000e3       movw r0, 5
+  │││││╎│   0x00d1a770      30201be5       ldr r2, [fp, -0x30]
+  │││││╎│   0x00d1a774      20301be5       ldr r3, [fp, -0x20]
+  │││││╎│   0x00d1a778      6ccf9fe5       ldr ip, [0x00d1b6ec]        ; [0xd1b6ec:4]=0xffffc89c
+  │││││╎│   0x00d1a77c      6cef9fe5       ldr lr, [0x00d1b6f0]        ; [0xd1b6f0:4]=0x34536c
+  │││││╎│   0x00d1a780      0ee08fe0       add lr, pc, lr
+  │││││╎│   0x00d1a784      0ec09ce7       ldr ip, [ip, lr]
+  │││││╎│   0x00d1a788      00c09ce5       ldr ip, [ip]
+  │││││╎│   0x00d1a78c      0cc093e7       ldr ip, [r3, ip]
+  │││││╎│   0x00d1a790      0c2042e0       sub r2, r2, ip
+  │││││╎│   0x00d1a794      eccb9fe5       ldr ip, [0x00d1b388]        ; [0xd1b388:4]=0xffffc8a0
+  │││││╎│   0x00d1a798      0ec09ce7       ldr ip, [ip, lr]
+  │││││╎│   0x00d1a79c      00c09ce5       ldr ip, [ip]
+  │││││╎│   0x00d1a7a0      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1a7a4      48cf9fe5       ldr ip, [0x00d1b6f4]        ; [0xd1b6f4:4]=0xffe28ae4
+  │││││╎│   0x00d1a7a8      0ec09ce7       ldr ip, [ip, lr]
+  │││││╎│   0x00d1a7ac      a4000be5       str r0, [fp, -0xa4]
+  │││││╎│   0x00d1a7b0      0300a0e1       mov r0, r3
+  │││││╎│   0x00d1a7b4      a8100be5       str r1, [fp, -0xa8]         ; "yC#"
+  │││││╎│   0x00d1a7b8      0c10a0e1       mov r1, ip
+  │││││╎│   0x00d1a7bc      ac200be5       str r2, [fp, -0xac]
+  │││││╎│   0x00d1a7c0      15a0d2eb       bl loc.imp.objc_msgSend
+  │││││╎│   0x00d1a7c4      0010a0e1       mov r1, r0
+  │││││╎│   0x00d1a7c8      8002a0e1       lsl r0, r0, 5
+  │││││╎│   0x00d1a7cc      a8201be5       ldr r2, [fp, -0xa8]         ; "yC#"
+  │││││╎│   0x00d1a7d0      b0100be5       str r1, [fp, -0xb0]
+  │││││╎│   0x00d1a7d4      0210a0e1       mov r1, r2
+  │││││╎│   0x00d1a7d8      d2a3d2eb       bl sym.imp.__aeabi_idiv
+  │││││╎│   0x00d1a7dc      ac101be5       ldr r1, [fp, -0xac]
+  │││││╎│   0x00d1a7e0      000051e1       cmp r1, r0
+  ────────< 0x00d1a7e4      1b0000ba       blt 0xd1a858
+  │││││╎│   0x00d1a7e8      050000e3       movw r0, 5
+  │││││╎│   0x00d1a7ec      30101be5       ldr r1, [fp, -0x30]
+  │││││╎│   0x00d1a7f0      20201be5       ldr r2, [fp, -0x20]
+  │││││╎│   0x00d1a7f4      f03e9fe5       ldr r3, [0x00d1b6ec]        ; [0xd1b6ec:4]=0xffffc89c
+  │││││╎│   0x00d1a7f8      e0cf9fe5       ldr ip, [0x00d1b7e0]        ; [0xd1b7e0:4]=0x3452f0
+  │││││╎│   0x00d1a7fc      0cc08fe0       add ip, pc, ip
+  │││││╎│   0x00d1a800      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1a804      003093e5       ldr r3, [r3]
+  │││││╎│   0x00d1a808      033092e7       ldr r3, [r2, r3]
+  │││││╎│   0x00d1a80c      031041e0       sub r1, r1, r3
+  │││││╎│   0x00d1a810      703b9fe5       ldr r3, [0x00d1b388]        ; [0xd1b388:4]=0xffffc8a0
+  │││││╎│   0x00d1a814      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1a818      003093e5       ldr r3, [r3]
+  │││││╎│   0x00d1a81c      032092e7       ldr r2, [r2, r3]
+  │││││╎│   0x00d1a820      cc3e9fe5       ldr r3, [0x00d1b6f4]        ; [0xd1b6f4:4]=0xffe28ae4
+  │││││╎│   0x00d1a824      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1a828      b4000be5       str r0, [fp, -0xb4]
+  │││││╎│   0x00d1a82c      0200a0e1       mov r0, r2
+  │││││╎│   0x00d1a830      b8100be5       str r1, [fp, -0xb8]
+  │││││╎│   0x00d1a834      0310a0e1       mov r1, r3
+  │││││╎│   0x00d1a838      f79fd2eb       bl loc.imp.objc_msgSend
+  │││││╎│   0x00d1a83c      0010a0e1       mov r1, r0
+  │││││╎│   0x00d1a840      8002a0e1       lsl r0, r0, 5
+  │││││╎│   0x00d1a844      b8201be5       ldr r2, [fp, -0xb8]
+  │││││╎│   0x00d1a848      000042e0       sub r0, r2, r0
+  │││││╎│   0x00d1a84c      bc100be5       str r1, [fp, -0xbc]
+  │││││╎│   0x00d1a850      c0000be5       str r0, [fp, -0xc0]
+  ────────< 0x00d1a854      450000ea       b 0xd1a970
+  ────────> 0x00d1a858      021000e3       movw r1, 2
+  │││││╎│   0x00d1a85c      050000e3       movw r0, 5
+  │││││╎│   0x00d1a860      30201be5       ldr r2, [fp, -0x30]
+  │││││╎│   0x00d1a864      20301be5       ldr r3, [fp, -0x20]
+  │││││╎│   0x00d1a868      7cce9fe5       ldr ip, [0x00d1b6ec]        ; [0xd1b6ec:4]=0xffffc89c
+  │││││╎│   0x00d1a86c      70ef9fe5       ldr lr, [0x00d1b7e4]        ; [0xd1b7e4:4]=0x34527c
+  │││││╎│   0x00d1a870      0ee08fe0       add lr, pc, lr
+  │││││╎│   0x00d1a874      0ec09ce7       ldr ip, [ip, lr]
+  │││││╎│   0x00d1a878      00c09ce5       ldr ip, [ip]
+  │││││╎│   0x00d1a87c      0cc093e7       ldr ip, [r3, ip]
+  │││││╎│   0x00d1a880      0c2042e0       sub r2, r2, ip
+  │││││╎│   0x00d1a884      fcca9fe5       ldr ip, [0x00d1b388]        ; [0xd1b388:4]=0xffffc8a0
+  │││││╎│   0x00d1a888      0ec09ce7       ldr ip, [ip, lr]
+  │││││╎│   0x00d1a88c      00c09ce5       ldr ip, [ip]
+  │││││╎│   0x00d1a890      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1a894      58ce9fe5       ldr ip, [0x00d1b6f4]        ; [0xd1b6f4:4]=0xffe28ae4
+  │││││╎│   0x00d1a898      0ec09ce7       ldr ip, [ip, lr]
+  │││││╎│   0x00d1a89c      c4000be5       str r0, [fp, -0xc4]
+  │││││╎│   0x00d1a8a0      0300a0e1       mov r0, r3
+  │││││╎│   0x00d1a8a4      c8100be5       str r1, [fp, -0xc8]
+  │││││╎│   0x00d1a8a8      0c10a0e1       mov r1, ip
+  │││││╎│   0x00d1a8ac      cc200be5       str r2, [fp, -0xcc]
+  │││││╎│   0x00d1a8b0      d99fd2eb       bl loc.imp.objc_msgSend
+  │││││╎│   0x00d1a8b4      000060e2       rsb r0, r0, 0
+  │││││╎│   0x00d1a8b8      8002a0e1       lsl r0, r0, 5
+  │││││╎│   0x00d1a8bc      c8101be5       ldr r1, [fp, -0xc8]
+  │││││╎│   0x00d1a8c0      98a3d2eb       bl sym.imp.__aeabi_idiv
+  │││││╎│   0x00d1a8c4      cc101be5       ldr r1, [fp, -0xcc]
+  │││││╎│   0x00d1a8c8      000051e1       cmp r1, r0
+  ────────< 0x00d1a8cc      1b0000aa       bge 0xd1a940
+  │││││╎│   0x00d1a8d0      050000e3       movw r0, 5
+  │││││╎│   0x00d1a8d4      30101be5       ldr r1, [fp, -0x30]
+  │││││╎│   0x00d1a8d8      20201be5       ldr r2, [fp, -0x20]
+  │││││╎│   0x00d1a8dc      083e9fe5       ldr r3, [0x00d1b6ec]        ; [0xd1b6ec:4]=0xffffc89c
+  │││││╎│   0x00d1a8e0      00cf9fe5       ldr ip, [0x00d1b7e8]        ; [0xd1b7e8:4]=0x345208
+  │││││╎│   0x00d1a8e4      0cc08fe0       add ip, pc, ip
+  │││││╎│   0x00d1a8e8      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1a8ec      003093e5       ldr r3, [r3]
+  │││││╎│   0x00d1a8f0      033092e7       ldr r3, [r2, r3]
+  │││││╎│   0x00d1a8f4      031041e0       sub r1, r1, r3
+  │││││╎│   0x00d1a8f8      883a9fe5       ldr r3, [0x00d1b388]        ; [0xd1b388:4]=0xffffc8a0
+  │││││╎│   0x00d1a8fc      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1a900      003093e5       ldr r3, [r3]
+  │││││╎│   0x00d1a904      032092e7       ldr r2, [r2, r3]
+  │││││╎│   0x00d1a908      e43d9fe5       ldr r3, [0x00d1b6f4]        ; [0xd1b6f4:4]=0xffe28ae4
+  │││││╎│   0x00d1a90c      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1a910      d0000be5       str r0, [fp, -0xd0]
+  │││││╎│   0x00d1a914      0200a0e1       mov r0, r2
+  │││││╎│   0x00d1a918      d4100be5       str r1, [fp, -0xd4]
+  │││││╎│   0x00d1a91c      0310a0e1       mov r1, r3
+  │││││╎│   0x00d1a920      bd9fd2eb       bl loc.imp.objc_msgSend
+  │││││╎│   0x00d1a924      0010a0e1       mov r1, r0
+  │││││╎│   0x00d1a928      8002a0e1       lsl r0, r0, 5
+  │││││╎│   0x00d1a92c      d4201be5       ldr r2, [fp, -0xd4]
+  │││││╎│   0x00d1a930      000082e0       add r0, r2, r0
+  │││││╎│   0x00d1a934      d8100be5       str r1, [fp, -0xd8]
+  │││││╎│   0x00d1a938      dc000be5       str r0, [fp, -0xdc]
+  ────────< 0x00d1a93c      090000ea       b 0xd1a968
+  ────────> 0x00d1a940      a40d9fe5       ldr r0, [0x00d1b6ec]        ; [0xd1b6ec:4]=0xffffc89c
+  │││││╎│   0x00d1a944      94101be5       ldr r1, [fp, -0x94]
+  │││││╎│   0x00d1a948      010090e7       ldr r0, [r0, r1]
+  │││││╎│   0x00d1a94c      30201be5       ldr r2, [fp, -0x30]
+  │││││╎│   0x00d1a950      20301be5       ldr r3, [fp, -0x20]
+  │││││╎│   0x00d1a954      000090e5       ldr r0, [r0]
+  │││││╎│   0x00d1a958      000083e0       add r0, r3, r0
+  │││││╎│   0x00d1a95c      000090e5       ldr r0, [r0]
+  │││││╎│   0x00d1a960      000042e0       sub r0, r2, r0
+  │││││╎│   0x00d1a964      dc000be5       str r0, [fp, -0xdc]
+  ────────> 0x00d1a968      dc001be5       ldr r0, [fp, -0xdc]
+  │││││╎│   0x00d1a96c      c0000be5       str r0, [fp, -0xc0]
+  ────────> 0x00d1a970      c0001be5       ldr r0, [fp, -0xc0]
+  │││││╎│   0x00d1a974      400400eb       bl 0xd1ba7c
+  │││││╎│   0x00d1a978      040050e3       cmp r0, 4
+  ────────< 0x00d1a97c      7f0000da       ble 0xd1ab80
+  │││││╎│   0x00d1a980      000000e3       movw r0, 0
+  │││││╎│   0x00d1a984      20101be5       ldr r1, [fp, -0x20]
+  │││││╎│   0x00d1a988      6c2f9fe5       ldr r2, [0x00d1b8fc]        ; [0xd1b8fc:4]=0xffffc8b4
+  │││││╎│   0x00d1a98c      6c3f9fe5       ldr r3, [0x00d1b900]        ; [0xd1b900:4]=0x34515c
+  │││││╎│   0x00d1a990      03308fe0       add r3, pc, r3
+  │││││╎│   0x00d1a994      032092e7       ldr r2, [r2, r3]
+  │││││╎│   0x00d1a998      002092e5       ldr r2, [r2]
+  │││││╎│   0x00d1a99c      021091e7       ldr r1, [r1, r2]
+  │││││╎│   0x00d1a9a0      30201be5       ldr r2, [fp, -0x30]
+  │││││╎│   0x00d1a9a4      2cc01be5       ldr ip, [fp, -0x2c]
+  │││││╎│   0x00d1a9a8      54c00be5       str ip, [fp, -0x54]
+  │││││╎│   0x00d1a9ac      58200be5       str r2, [fp, -0x58]
+  │││││╎│   0x00d1a9b0      4c2f9fe5       ldr r2, [0x00d1b904]        ; [0xd1b904:4]=0xffe28ae8
+  │││││╎│   0x00d1a9b4      032092e7       ldr r2, [r2, r3]
+  │││││╎│   0x00d1a9b8      58301be5       ldr r3, [fp, -0x58]
+  │││││╎│   0x00d1a9bc      54c01be5       ldr ip, [fp, -0x54]
+  │││││╎│   0x00d1a9c0      e0000be5       str r0, [fp, -0xe0]
+  │││││╎│   0x00d1a9c4      0100a0e1       mov r0, r1
+  │││││╎│   0x00d1a9c8      0210a0e1       mov r1, r2
+  │││││╎│   0x00d1a9cc      0320a0e1       mov r2, r3
+  │││││╎│   0x00d1a9d0      0c30a0e1       mov r3, ip
+  │││││╎│   0x00d1a9d4      909fd2eb       bl loc.imp.objc_msgSend
+  │││││╎│   0x00d1a9d8      50000be5       str r0, [fp, -0x50]
+  │││││╎│   0x00d1a9dc      50001be5       ldr r0, [fp, -0x50]
+  │││││╎│   0x00d1a9e0      e0101be5       ldr r1, [fp, -0xe0]
+  │││││╎│   0x00d1a9e4      010050e1       cmp r0, r1
+  ────────< 0x00d1a9e8      6200000a       beq 0xd1ab78
+  │││││╎│   0x00d1a9ec      fc0f9fe5       ldr r0, [0x00d1b9f0]        ; [0xd1b9f0:4]=0xffffbcac
+  │││││╎│   0x00d1a9f0      94101be5       ldr r1, [fp, -0x94]
+  │││││╎│   0x00d1a9f4      010090e7       ldr r0, [r0, r1]
+  │││││╎│   0x00d1a9f8      f42f9fe5       ldr r2, [0x00d1b9f4]        ; [0xd1b9f4:4]=0xffe28aec
+  │││││╎│   0x00d1a9fc      012082e0       add r2, r2, r1
+  │││││╎│   0x00d1aa00      50301be5       ldr r3, [fp, -0x50]
+  │││││╎│   0x00d1aa04      001092e5       ldr r1, [r2]
+  │││││╎│   0x00d1aa08      e4000be5       str r0, [fp, -0xe4]
+  │││││╎│   0x00d1aa0c      0300a0e1       mov r0, r3
+  │││││╎│   0x00d1aa10      e4201be5       ldr r2, [fp, -0xe4]
+  │││││╎│   0x00d1aa14      32ff2fe1       blx r2
+  │││││╎│   0x00d1aa18      7000ffe6       uxth r0, r0
+  │││││╎│   0x00d1aa1c      060050e3       cmp r0, 6
+  ────────< 0x00d1aa20      5300001a       bne 0xd1ab74
+  │││││╎│   0x00d1aa24      cc0f9fe5       ldr r0, [0x00d1b9f8]        ; [0xd1b9f8:4]=0xfffffcd8
+  │││││╎│   0x00d1aa28      94101be5       ldr r1, [fp, -0x94]
+  │││││╎│   0x00d1aa2c      010090e7       ldr r0, [r0, r1]
+  │││││╎│   0x00d1aa30      012000e3       movw r2, 1
+  │││││╎│   0x00d1aa34      cc3f9fe5       ldr r3, [0x00d1ba08]        ; [0xd1ba08:4]=0xfffffcf8
+  │││││╎│   0x00d1aa38      013093e7       ldr r3, [r3, r1]
+  │││││╎│   0x00d1aa3c      c8cf9fe5       ldr ip, [0x00d1ba0c]        ; [0xd1ba0c:4]=0xffffc8d8
+  │││││╎│   0x00d1aa40      01c09ce7       ldr ip, [ip, r1]
+  │││││╎│   0x00d1aa44      00e000e3       movw lr, 0
+  │││││╎│   0x00d1aa48      ac4f9fe5       ldr r4, [0x00d1b9fc]        ; [0xd1b9fc:4]=0xfffffcb8
+  │││││╎│   0x00d1aa4c      014094e7       ldr r4, [r4, r1]
+  │││││╎│   0x00d1aa50      b85f9fe5       ldr r5, [0x00d1ba10]        ; [0xd1ba10:4]=0xfffffce4
+  │││││╎│   0x00d1aa54      015095e7       ldr r5, [r5, r1]
+  │││││╎│   0x00d1aa58      b46f9fe5       ldr r6, [0x00d1ba14]        ; [0xd1ba14:4]=0xffffbcac
+  │││││╎│   0x00d1aa5c      016096e7       ldr r6, [r6, r1]
+  │││││╎│   0x00d1aa60      0670a0e1       mov r7, r6
+  │││││╎│   0x00d1aa64      e88f9fe5       ldr r8, [0x00d1ba54]        ; [0xd1ba54:4]=0xffe28a6c ; "l\x8a\xe2\xff\xf0\x8a\xe2\xff"
+  │││││╎│   0x00d1aa68      018088e0       add r8, r8, r1
+  │││││╎│   0x00d1aa6c      06a0a0e1       mov sl, r6
+  │││││╎│   0x00d1aa70      e01f9fe5       ldr r1, [0x00d1ba58]        ; [0xd1ba58:4]=0xffe28af0
+  │││││╎│   0x00d1aa74      e8000be5       str r0, [fp, -0xe8]
+  │││││╎│   0x00d1aa78      94001be5       ldr r0, [fp, -0x94]
+  │││││╎│   0x00d1aa7c      001081e0       add r1, r1, r0
+  │││││╎│   0x00d1aa80      900f9fe5       ldr r0, [0x00d1ba18]        ; [0xd1ba18:4]=0xffe28ab8
+  │││││╎│   0x00d1aa84      ec100be5       str r1, [fp, -0xec]
+  │││││╎│   0x00d1aa88      94101be5       ldr r1, [fp, -0x94]
+  │││││╎│   0x00d1aa8c      010080e0       add r0, r0, r1
+  │││││╎│   0x00d1aa90      20101be5       ldr r1, [fp, -0x20]
+  │││││╎│   0x00d1aa94      f0000be5       str r0, [fp, -0xf0]
+  │││││╎│   0x00d1aa98      000095e5       ldr r0, [r5]
+  │││││╎│   0x00d1aa9c      000081e0       add r0, r1, r0
+  │││││╎│   0x00d1aaa0      000090e5       ldr r0, [r0]
+  │││││╎│   0x00d1aaa4      f0101be5       ldr r1, [fp, -0xf0]
+  │││││╎│   0x00d1aaa8      001091e5       ldr r1, [r1]
+  │││││╎│   0x00d1aaac      f4a00be5       str sl, [fp, -0xf4]
+  │││││╎│   0x00d1aab0      f8700be5       str r7, [fp, -0xf8]
+  │││││╎│   0x00d1aab4      fc200be5       str r2, [fp, -0xfc]
+  │││││╎│   0x00d1aab8      00310be5       str r3, [fp, -0x100]
+  │││││╎│   0x00d1aabc      04c10be5       str ip, [fp, -0x104]
+  │││││╎│   0x00d1aac0      08e10be5       str lr, [fp, -0x108]
+  │││││╎│   0x00d1aac4      0c410be5       str r4, [fp, -0x10c]
+  │││││╎│   0x00d1aac8      10510be5       str r5, [fp, -0x110]
+  │││││╎│   0x00d1aacc      14810be5       str r8, [fp, -0x114]
+  │││││╎│   0x00d1aad0      36ff2fe1       blx r6
+  │││││╎│   0x00d1aad4      50001be5       ldr r0, [fp, -0x50]
+  │││││╎│   0x00d1aad8      ec101be5       ldr r1, [fp, -0xec]
+  │││││╎│   0x00d1aadc      001091e5       ldr r1, [r1]
+  │││││╎│   0x00d1aae0      f4201be5       ldr r2, [fp, -0xf4]
+  │││││╎│   0x00d1aae4      32ff2fe1       blx r2
+  │││││╎│   0x00d1aae8      14111be5       ldr r1, [fp, -0x114]
+  │││││╎│   0x00d1aaec      001091e5       ldr r1, [r1]
+  │││││╎│   0x00d1aaf0      f8201be5       ldr r2, [fp, -0xf8]
+  │││││╎│   0x00d1aaf4      32ff2fe1       blx r2
+  │││││╎│   0x00d1aaf8      20101be5       ldr r1, [fp, -0x20]
+  │││││╎│   0x00d1aafc      10211be5       ldr r2, [fp, -0x110]
+  │││││╎│   0x00d1ab00      003092e5       ldr r3, [r2]
+  │││││╎│   0x00d1ab04      031081e0       add r1, r1, r3
+  │││││╎│   0x00d1ab08      000081e5       str r0, [r1]
+  │││││╎│   0x00d1ab0c      fc001be5       ldr r0, [fp, -0xfc]
+  │││││╎│   0x00d1ab10      49004be5       strb r0, [fp, -0x49]
+  │││││╎│   0x00d1ab14      20101be5       ldr r1, [fp, -0x20]
+  │││││╎│   0x00d1ab18      0c311be5       ldr r3, [fp, -0x10c]
+  │││││╎│   0x00d1ab1c      00c093e5       ldr ip, [r3]
+  │││││╎│   0x00d1ab20      0c1081e0       add r1, r1, ip
+  │││││╎│   0x00d1ab24      08c11be5       ldr ip, [fp, -0x108]
+  │││││╎│   0x00d1ab28      00c0c1e5       strb ip, [r1]
+  │││││╎│   0x00d1ab2c      20101be5       ldr r1, [fp, -0x20]
+  │││││╎│   0x00d1ab30      04e11be5       ldr lr, [fp, -0x104]
+  │││││╎│   0x00d1ab34      00409ee5       ldr r4, [lr]
+  │││││╎│   0x00d1ab38      041081e0       add r1, r1, r4
+  │││││╎│   0x00d1ab3c      0000c1e5       strb r0, [r1]
+  │││││╎│   0x00d1ab40      20101be5       ldr r1, [fp, -0x20]
+  │││││╎│   0x00d1ab44      00411be5       ldr r4, [fp, -0x100]
+  │││││╎│   0x00d1ab48      005094e5       ldr r5, [r4]
+  │││││╎│   0x00d1ab4c      051081e0       add r1, r1, r5
+  │││││╎│   0x00d1ab50      0000c1e5       strb r0, [r1]
+  │││││╎│   0x00d1ab54      20101be5       ldr r1, [fp, -0x20]
+  │││││╎│   0x00d1ab58      e8501be5       ldr r5, [fp, -0xe8]
+  │││││╎│   0x00d1ab5c      006095e5       ldr r6, [r5]
+  │││││╎│   0x00d1ab60      061081e0       add r1, r1, r6
+  │││││╎│   0x00d1ab64      30601be5       ldr r6, [fp, -0x30]
+  │││││╎│   0x00d1ab68      006081e5       str r6, [r1]
+  │││││╎│   0x00d1ab6c      2c601be5       ldr r6, [fp, -0x2c]
+  │││││╎│   0x00d1ab70      046081e5       str r6, [r1, 4]
+  ────────> 0x00d1ab74      000000ea       b 0xd1ab7c
+  ────────> 0x00d1ab78      fd0000ea       b 0xd1af74
+  ────────< 0x00d1ab7c      ffffffea       b 0xd1ab80
+  ─└──────> 0x00d1ab80      d9045be1       ldrsb r0, [fp, -0x49]
+  │ │││╎│   0x00d1ab84      000050e3       cmp r0, 0
+  │┌──────< 0x00d1ab88      c100001a       bne 0xd1ae94
+  │││││╎│   0x00d1ab8c      021000e3       movw r1, 2
+  │││││╎│   0x00d1ab90      050000e3       movw r0, 5
+  │││││╎│   0x00d1ab94      20201be5       ldr r2, [fp, -0x20]
+  │││││╎│   0x00d1ab98      643e9fe5       ldr r3, [0x00d1ba04]        ; [0xd1ba04:4]=0xfffffcb0
+  │││││╎│   0x00d1ab9c      c8ce9fe5       ldr ip, [0x00d1ba6c]        ; [0xd1ba6c:4]=0x344f4c
+  │││││╎│   0x00d1aba0      0cc08fe0       add ip, pc, ip
+  │││││╎│   0x00d1aba4      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1aba8      003093e5       ldr r3, [r3]
+  │││││╎│   0x00d1abac      03e082e0       add lr, r2, r3
+  │││││╎│   0x00d1abb0      30401be5       ldr r4, [fp, -0x30]
+  │││││╎│   0x00d1abb4      2c501be5       ldr r5, [fp, -0x2c]
+  │││││╎│   0x00d1abb8      034082e7       str r4, [r2, r3]
+  │││││╎│   0x00d1abbc      04508ee5       str r5, [lr, 4]
+  │││││╎│   0x00d1abc0      30201be5       ldr r2, [fp, -0x30]
+  │││││╎│   0x00d1abc4      20301be5       ldr r3, [fp, -0x20]
+  │││││╎│   0x00d1abc8      4cee9fe5       ldr lr, [0x00d1ba1c]        ; [0xd1ba1c:4]=0xffffc89c
+  │││││╎│   0x00d1abcc      0ce09ee7       ldr lr, [lr, ip]
+  │││││╎│   0x00d1abd0      00e09ee5       ldr lr, [lr]
+  │││││╎│   0x00d1abd4      0ee093e7       ldr lr, [r3, lr]
+  │││││╎│   0x00d1abd8      0e2042e0       sub r2, r2, lr
+  │││││╎│   0x00d1abdc      1cee9fe5       ldr lr, [0x00d1ba00]        ; [0xd1ba00:4]=0xffffc8a0
+  │││││╎│   0x00d1abe0      0ce09ee7       ldr lr, [lr, ip]
+  │││││╎│   0x00d1abe4      00e09ee5       ldr lr, [lr]
+  │││││╎│   0x00d1abe8      0e3093e7       ldr r3, [r3, lr]
+  │││││╎│   0x00d1abec      2cee9fe5       ldr lr, [0x00d1ba20]        ; [0xd1ba20:4]=0xffe28ae4
+  │││││╎│   0x00d1abf0      0cc09ee7       ldr ip, [lr, ip]
+  │││││╎│   0x00d1abf4      18010be5       str r0, [fp, -0x118]
+  │││││╎│   0x00d1abf8      0300a0e1       mov r0, r3
+  │││││╎│   0x00d1abfc      1c110be5       str r1, [fp, -0x11c]
+  │││││╎│   0x00d1ac00      0c10a0e1       mov r1, ip
+  │││││╎│   0x00d1ac04      20210be5       str r2, [fp, -0x120]
+  │││││╎│   0x00d1ac08      039fd2eb       bl loc.imp.objc_msgSend
+  │││││╎│   0x00d1ac0c      0010a0e1       mov r1, r0
+  │││││╎│   0x00d1ac10      8002a0e1       lsl r0, r0, 5
+  │││││╎│   0x00d1ac14      1c211be5       ldr r2, [fp, -0x11c]
+  │││││╎│   0x00d1ac18      24110be5       str r1, [fp, -0x124]
+  │││││╎│   0x00d1ac1c      0210a0e1       mov r1, r2
+  │││││╎│   0x00d1ac20      c0a2d2eb       bl sym.imp.__aeabi_idiv
+  │││││╎│   0x00d1ac24      20111be5       ldr r1, [fp, -0x120]
+  │││││╎│   0x00d1ac28      000051e1       cmp r1, r0
+  ────────< 0x00d1ac2c      1b0000ba       blt 0xd1aca0
+  │││││╎│   0x00d1ac30      050000e3       movw r0, 5
+  │││││╎│   0x00d1ac34      30101be5       ldr r1, [fp, -0x30]
+  │││││╎│   0x00d1ac38      20201be5       ldr r2, [fp, -0x20]
+  │││││╎│   0x00d1ac3c      d83d9fe5       ldr r3, [0x00d1ba1c]        ; [0xd1ba1c:4]=0xffffc89c
+  │││││╎│   0x00d1ac40      30ce9fe5       ldr ip, [0x00d1ba78]        ; [0xd1ba78:4]=0x344ea8
+  │││││╎│   0x00d1ac44      0cc08fe0       add ip, pc, ip
+  │││││╎│   0x00d1ac48      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1ac4c      003093e5       ldr r3, [r3]
+  │││││╎│   0x00d1ac50      033092e7       ldr r3, [r2, r3]
+  │││││╎│   0x00d1ac54      031041e0       sub r1, r1, r3
+  │││││╎│   0x00d1ac58      a03d9fe5       ldr r3, [0x00d1ba00]        ; [0xd1ba00:4]=0xffffc8a0
+  │││││╎│   0x00d1ac5c      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1ac60      003093e5       ldr r3, [r3]
+  │││││╎│   0x00d1ac64      032092e7       ldr r2, [r2, r3]
+  │││││╎│   0x00d1ac68      b03d9fe5       ldr r3, [0x00d1ba20]        ; [0xd1ba20:4]=0xffe28ae4
+  │││││╎│   0x00d1ac6c      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1ac70      28010be5       str r0, [fp, -0x128]
+  │││││╎│   0x00d1ac74      0200a0e1       mov r0, r2
+  │││││╎│   0x00d1ac78      2c110be5       str r1, [fp, -0x12c]
+  │││││╎│   0x00d1ac7c      0310a0e1       mov r1, r3
+  │││││╎│   0x00d1ac80      e59ed2eb       bl loc.imp.objc_msgSend
+  │││││╎│   0x00d1ac84      0010a0e1       mov r1, r0
+  │││││╎│   0x00d1ac88      8002a0e1       lsl r0, r0, 5
+  │││││╎│   0x00d1ac8c      2c211be5       ldr r2, [fp, -0x12c]
+  │││││╎│   0x00d1ac90      000042e0       sub r0, r2, r0
+  │││││╎│   0x00d1ac94      30118de5       str r1, [sp, 0x130]
+  │││││╎│   0x00d1ac98      2c018de5       str r0, [sp, 0x12c]
+  ────────< 0x00d1ac9c      450000ea       b 0xd1adb8
+  ────────> 0x00d1aca0      021000e3       movw r1, 2
+  │││││╎│   0x00d1aca4      050000e3       movw r0, 5
+  │││││╎│   0x00d1aca8      30201be5       ldr r2, [fp, -0x30]
+  │││││╎│   0x00d1acac      20301be5       ldr r3, [fp, -0x20]
+  │││││╎│   0x00d1acb0      64cd9fe5       ldr ip, [0x00d1ba1c]        ; [0xd1ba1c:4]=0xffffc89c
+  │││││╎│   0x00d1acb4      b4ed9fe5       ldr lr, [0x00d1ba70]        ; [0xd1ba70:4]=0x344e34
+  │││││╎│   0x00d1acb8      0ee08fe0       add lr, pc, lr
+  │││││╎│   0x00d1acbc      0ec09ce7       ldr ip, [ip, lr]
+  │││││╎│   0x00d1acc0      00c09ce5       ldr ip, [ip]
+  │││││╎│   0x00d1acc4      0cc093e7       ldr ip, [r3, ip]
+  │││││╎│   0x00d1acc8      0c2042e0       sub r2, r2, ip
+  │││││╎│   0x00d1accc      2ccd9fe5       ldr ip, [0x00d1ba00]        ; [0xd1ba00:4]=0xffffc8a0
+  │││││╎│   0x00d1acd0      0ec09ce7       ldr ip, [ip, lr]
+  │││││╎│   0x00d1acd4      00c09ce5       ldr ip, [ip]
+  │││││╎│   0x00d1acd8      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1acdc      3ccd9fe5       ldr ip, [0x00d1ba20]        ; [0xd1ba20:4]=0xffe28ae4
+  │││││╎│   0x00d1ace0      0ec09ce7       ldr ip, [ip, lr]
+  │││││╎│   0x00d1ace4      28018de5       str r0, [sp, 0x128]
+  │││││╎│   0x00d1ace8      0300a0e1       mov r0, r3
+  │││││╎│   0x00d1acec      24118de5       str r1, [sp, 0x124]
+  │││││╎│   0x00d1acf0      0c10a0e1       mov r1, ip
+  │││││╎│   0x00d1acf4      20218de5       str r2, [sp, 0x120]
+  │││││╎│   0x00d1acf8      c79ed2eb       bl loc.imp.objc_msgSend
+  │││││╎│   0x00d1acfc      000060e2       rsb r0, r0, 0
+  │││││╎│   0x00d1ad00      8002a0e1       lsl r0, r0, 5
+  │││││╎│   0x00d1ad04      24119de5       ldr r1, [sp, 0x124]
+  │││││╎│   0x00d1ad08      86a2d2eb       bl sym.imp.__aeabi_idiv
+  │││││╎│   0x00d1ad0c      20119de5       ldr r1, [sp, 0x120]
+  │││││╎│   0x00d1ad10      000051e1       cmp r1, r0
+  ────────< 0x00d1ad14      1b0000aa       bge 0xd1ad88
+  │││││╎│   0x00d1ad18      050000e3       movw r0, 5
+  │││││╎│   0x00d1ad1c      30101be5       ldr r1, [fp, -0x30]
+  │││││╎│   0x00d1ad20      20201be5       ldr r2, [fp, -0x20]
+  │││││╎│   0x00d1ad24      f03c9fe5       ldr r3, [0x00d1ba1c]        ; [0xd1ba1c:4]=0xffffc89c
+  │││││╎│   0x00d1ad28      44cd9fe5       ldr ip, [0x00d1ba74]        ; [0xd1ba74:4]=0x344dc0
+  │││││╎│   0x00d1ad2c      0cc08fe0       add ip, pc, ip
+  │││││╎│   0x00d1ad30      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1ad34      003093e5       ldr r3, [r3]
+  │││││╎│   0x00d1ad38      033092e7       ldr r3, [r2, r3]
+  │││││╎│   0x00d1ad3c      031041e0       sub r1, r1, r3
+  │││││╎│   0x00d1ad40      b83c9fe5       ldr r3, [0x00d1ba00]        ; [0xd1ba00:4]=0xffffc8a0
+  │││││╎│   0x00d1ad44      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1ad48      003093e5       ldr r3, [r3]
+  │││││╎│   0x00d1ad4c      032092e7       ldr r2, [r2, r3]
+  │││││╎│   0x00d1ad50      c83c9fe5       ldr r3, [0x00d1ba20]        ; [0xd1ba20:4]=0xffe28ae4
+  │││││╎│   0x00d1ad54      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1ad58      1c018de5       str r0, [sp, 0x11c]
+  │││││╎│   0x00d1ad5c      0200a0e1       mov r0, r2
+  │││││╎│   0x00d1ad60      18118de5       str r1, [sp, 0x118]
+  │││││╎│   0x00d1ad64      0310a0e1       mov r1, r3
+  │││││╎│   0x00d1ad68      ab9ed2eb       bl loc.imp.objc_msgSend
+  │││││╎│   0x00d1ad6c      0010a0e1       mov r1, r0
+  │││││╎│   0x00d1ad70      8002a0e1       lsl r0, r0, 5
+  │││││╎│   0x00d1ad74      18219de5       ldr r2, [sp, 0x118]
+  │││││╎│   0x00d1ad78      000082e0       add r0, r2, r0
+  │││││╎│   0x00d1ad7c      14118de5       str r1, [sp, 0x114]
+  │││││╎│   0x00d1ad80      10018de5       str r0, [sp, 0x110]
+  ────────< 0x00d1ad84      090000ea       b 0xd1adb0
+  ────────> 0x00d1ad88      8c0c9fe5       ldr r0, [0x00d1ba1c]        ; [0xd1ba1c:4]=0xffffc89c
+  │││││╎│   0x00d1ad8c      94101be5       ldr r1, [fp, -0x94]
+  │││││╎│   0x00d1ad90      010090e7       ldr r0, [r0, r1]
+  │││││╎│   0x00d1ad94      30201be5       ldr r2, [fp, -0x30]
+  │││││╎│   0x00d1ad98      20301be5       ldr r3, [fp, -0x20]
+  │││││╎│   0x00d1ad9c      000090e5       ldr r0, [r0]
+  │││││╎│   0x00d1ada0      000083e0       add r0, r3, r0
+  │││││╎│   0x00d1ada4      000090e5       ldr r0, [r0]
+  │││││╎│   0x00d1ada8      000042e0       sub r0, r2, r0
+  │││││╎│   0x00d1adac      10018de5       str r0, [sp, 0x110]
+  ────────> 0x00d1adb0      10019de5       ldr r0, [sp, 0x110]
+  │││││╎│   0x00d1adb4      2c018de5       str r0, [sp, 0x12c]
+  ────────> 0x00d1adb8      2c019de5       ldr r0, [sp, 0x12c]
+  │││││╎│   0x00d1adbc      2e0300eb       bl 0xd1ba7c
+  │││││╎│   0x00d1adc0      020b50e3       cmp r0, 0x800
+  ────────< 0x00d1adc4      310000da       ble 0xd1ae90
+  │││││╎│   0x00d1adc8      010000e3       movw r0, 1
+  │││││╎│   0x00d1adcc      341c9fe5       ldr r1, [0x00d1ba08]        ; [0xd1ba08:4]=0xfffffcf8
+  │││││╎│   0x00d1add0      94201be5       ldr r2, [fp, -0x94]
+  │││││╎│   0x00d1add4      021091e7       ldr r1, [r1, r2]
+  │││││╎│   0x00d1add8      2c3c9fe5       ldr r3, [0x00d1ba0c]        ; [0xd1ba0c:4]=0xffffc8d8
+  │││││╎│   0x00d1addc      023093e7       ldr r3, [r3, r2]
+  │││││╎│   0x00d1ade0      00c000e3       movw ip, 0
+  │││││╎│   0x00d1ade4      24ec9fe5       ldr lr, [0x00d1ba10]        ; [0xd1ba10:4]=0xfffffce4
+  │││││╎│   0x00d1ade8      02e09ee7       ldr lr, [lr, r2]
+  │││││╎│   0x00d1adec      204c9fe5       ldr r4, [0x00d1ba14]        ; [0xd1ba14:4]=0xffffbcac
+  │││││╎│   0x00d1adf0      024094e7       ldr r4, [r4, r2]
+  │││││╎│   0x00d1adf4      1c5c9fe5       ldr r5, [0x00d1ba18]        ; [0xd1ba18:4]=0xffe28ab8
+  │││││╎│   0x00d1adf8      025085e0       add r5, r5, r2
+  │││││╎│   0x00d1adfc      006000e3       movw r6, 0
+  │││││╎│   0x00d1ae00      f47b9fe5       ldr r7, [0x00d1b9fc]        ; [0xd1b9fc:4]=0xfffffcb8
+  │││││╎│   0x00d1ae04      027097e7       ldr r7, [r7, r2]
+  │││││╎│   0x00d1ae08      20801be5       ldr r8, [fp, -0x20]
+  │││││╎│   0x00d1ae0c      007097e5       ldr r7, [r7]
+  │││││╎│   0x00d1ae10      077088e0       add r7, r8, r7
+  │││││╎│   0x00d1ae14      0060c7e5       strb r6, [r7]
+  │││││╎│   0x00d1ae18      20601be5       ldr r6, [fp, -0x20]
+  │││││╎│   0x00d1ae1c      00709ee5       ldr r7, [lr]
+  │││││╎│   0x00d1ae20      076086e0       add r6, r6, r7
+  │││││╎│   0x00d1ae24      006096e5       ldr r6, [r6]
+  │││││╎│   0x00d1ae28      005095e5       ldr r5, [r5]
+  │││││╎│   0x00d1ae2c      0c018de5       str r0, [sp, 0x10c]
+  │││││╎│   0x00d1ae30      0600a0e1       mov r0, r6
+  │││││╎│   0x00d1ae34      08118de5       str r1, [sp, 0x108]
+  │││││╎│   0x00d1ae38      0510a0e1       mov r1, r5
+  │││││╎│   0x00d1ae3c      04c18de5       str ip, [sp, 0x104]
+  │││││╎│   0x00d1ae40      00e18de5       str lr, [sp, 0x100]
+  │││││╎│   0x00d1ae44      fc308de5       str r3, [sp, 0xfc]
+  │││││╎│   0x00d1ae48      34ff2fe1       blx r4
+  │││││╎│   0x00d1ae4c      20001be5       ldr r0, [fp, -0x20]
+  │││││╎│   0x00d1ae50      00119de5       ldr r1, [sp, 0x100]
+  │││││╎│   0x00d1ae54      002091e5       ldr r2, [r1]
+  │││││╎│   0x00d1ae58      020080e0       add r0, r0, r2
+  │││││╎│   0x00d1ae5c      04219de5       ldr r2, [sp, 0x104]
+  │││││╎│   0x00d1ae60      002080e5       str r2, [r0]
+  │││││╎│   0x00d1ae64      20001be5       ldr r0, [fp, -0x20]
+  │││││╎│   0x00d1ae68      fc309de5       ldr r3, [sp, 0xfc]
+  │││││╎│   0x00d1ae6c      00c093e5       ldr ip, [r3]
+  │││││╎│   0x00d1ae70      0c0080e0       add r0, r0, ip
+  │││││╎│   0x00d1ae74      0cc19de5       ldr ip, [sp, 0x10c]
+  │││││╎│   0x00d1ae78      00c0c0e5       strb ip, [r0]
+  │││││╎│   0x00d1ae7c      20001be5       ldr r0, [fp, -0x20]
+  │││││╎│   0x00d1ae80      08e19de5       ldr lr, [sp, 0x108]
+  │││││╎│   0x00d1ae84      00409ee5       ldr r4, [lr]
+  │││││╎│   0x00d1ae88      040080e0       add r0, r0, r4
+  │││││╎│   0x00d1ae8c      00c0c0e5       strb ip, [r0]
+  ────────> 0x00d1ae90      ffffffea       b 0xd1ae94
+  ─└──────> 0x00d1ae94      310000ea       b 0xd1af60
+  │ │└────> 0x00d1ae98      010000e3       movw r0, 1
+  │ │ │╎│   0x00d1ae9c      641b9fe5       ldr r1, [0x00d1ba08]        ; [0xd1ba08:4]=0xfffffcf8
+  │ │ │╎│   0x00d1aea0      94201be5       ldr r2, [fp, -0x94]
+  │ │ │╎│   0x00d1aea4      021091e7       ldr r1, [r1, r2]
+  │ │ │╎│   0x00d1aea8      5c3b9fe5       ldr r3, [0x00d1ba0c]        ; [0xd1ba0c:4]=0xffffc8d8
+  │ │ │╎│   0x00d1aeac      023093e7       ldr r3, [r3, r2]
+  │ │ │╎│   0x00d1aeb0      00c000e3       movw ip, 0
+  │ │ │╎│   0x00d1aeb4      54eb9fe5       ldr lr, [0x00d1ba10]        ; [0xd1ba10:4]=0xfffffce4
+  │ │ │╎│   0x00d1aeb8      02e09ee7       ldr lr, [lr, r2]
+  │ │ │╎│   0x00d1aebc      504b9fe5       ldr r4, [0x00d1ba14]        ; [0xd1ba14:4]=0xffffbcac
+  │ │ │╎│   0x00d1aec0      024094e7       ldr r4, [r4, r2]
+  │ │ │╎│   0x00d1aec4      4c5b9fe5       ldr r5, [0x00d1ba18]        ; [0xd1ba18:4]=0xffe28ab8
+  │ │ │╎│   0x00d1aec8      025085e0       add r5, r5, r2
+  │ │ │╎│   0x00d1aecc      006000e3       movw r6, 0
+  │ │ │╎│   0x00d1aed0      247b9fe5       ldr r7, [0x00d1b9fc]        ; [0xd1b9fc:4]=0xfffffcb8
+  │ │ │╎│   0x00d1aed4      027097e7       ldr r7, [r7, r2]
+  │ │ │╎│   0x00d1aed8      20801be5       ldr r8, [fp, -0x20]
+  │ │ │╎│   0x00d1aedc      007097e5       ldr r7, [r7]
+  │ │ │╎│   0x00d1aee0      077088e0       add r7, r8, r7
+  │ │ │╎│   0x00d1aee4      0060c7e5       strb r6, [r7]
+  │ │ │╎│   0x00d1aee8      20601be5       ldr r6, [fp, -0x20]
+  │ │ │╎│   0x00d1aeec      00709ee5       ldr r7, [lr]
+  │ │ │╎│   0x00d1aef0      076086e0       add r6, r6, r7
+  │ │ │╎│   0x00d1aef4      006096e5       ldr r6, [r6]
+  │ │ │╎│   0x00d1aef8      005095e5       ldr r5, [r5]
+  │ │ │╎│   0x00d1aefc      f8008de5       str r0, [sp, 0xf8]
+  │ │ │╎│   0x00d1af00      0600a0e1       mov r0, r6
+  │ │ │╎│   0x00d1af04      f4108de5       str r1, [sp, 0xf4]
+  │ │ │╎│   0x00d1af08      0510a0e1       mov r1, r5
+  │ │ │╎│   0x00d1af0c      f0c08de5       str ip, [sp, 0xf0]
+  │ │ │╎│   0x00d1af10      ece08de5       str lr, [sp, 0xec]
+  │ │ │╎│   0x00d1af14      e8308de5       str r3, [sp, 0xe8]
+  │ │ │╎│   0x00d1af18      34ff2fe1       blx r4
+  │ │ │╎│   0x00d1af1c      20001be5       ldr r0, [fp, -0x20]
+  │ │ │╎│   0x00d1af20      ec109de5       ldr r1, [sp, 0xec]
+  │ │ │╎│   0x00d1af24      002091e5       ldr r2, [r1]
+  │ │ │╎│   0x00d1af28      020080e0       add r0, r0, r2
+  │ │ │╎│   0x00d1af2c      f0209de5       ldr r2, [sp, 0xf0]
+  │ │ │╎│   0x00d1af30      002080e5       str r2, [r0]
+  │ │ │╎│   0x00d1af34      20001be5       ldr r0, [fp, -0x20]
+  │ │ │╎│   0x00d1af38      e8309de5       ldr r3, [sp, 0xe8]
+  │ │ │╎│   0x00d1af3c      00c093e5       ldr ip, [r3]
+  │ │ │╎│   0x00d1af40      0c0080e0       add r0, r0, ip
+  │ │ │╎│   0x00d1af44      f8c09de5       ldr ip, [sp, 0xf8]
+  │ │ │╎│   0x00d1af48      00c0c0e5       strb ip, [r0]
+  │ │ │╎│   0x00d1af4c      20001be5       ldr r0, [fp, -0x20]
+  │ │ │╎│   0x00d1af50      f4e09de5       ldr lr, [sp, 0xf4]
+  │ │ │╎│   0x00d1af54      00409ee5       ldr r4, [lr]
+  │ │ │╎│   0x00d1af58      040080e0       add r0, r0, r4
+  │ │ │╎│   0x00d1af5c      00c0c0e5       strb ip, [r0]
+  ───┌────< 0x00d1af60      ffffffea       b 0xd1af64
+  │ │└────> 0x00d1af64      28001be5       ldr r0, [fp, -0x28]
+  │ │ │╎│   0x00d1af68      010080e2       add r0, r0, 1
+  │ │ │╎│   0x00d1af6c      28000be5       str r0, [fp, -0x28]
+  │ │ │└──< 0x00d1af70      79fdffea       b 0xd1a55c
+  └─└─└┌──< 0x00d1af74      ffffffea       b 0xd1af78
+       └└─> 0x00d1af78      ac0a9fe5       ldr r0, [0x00d1ba2c]        ; [0xd1ba2c:4]=0xfffffcb4
+            0x00d1af7c      94101be5       ldr r1, [fp, -0x94]
+            0x00d1af80      010090e7       ldr r0, [r0, r1]
+            0x00d1af84      20201be5       ldr r2, [fp, -0x20]
+            0x00d1af88      000090e5       ldr r0, [r0]
+            0x00d1af8c      000082e0       add r0, r2, r0
+            0x00d1af90      d000d0e1       ldrsb r0, [r0]
+            0x00d1af94      000050e3       cmp r0, 0
+        ┌─< 0x00d1af98      9202000a       beq 0xd1b9e8
+        │   0x00d1af9c      000000e3       movw r0, 0
+        │   0x00d1afa0      5c000be5       str r0, [fp, -0x5c]
+        │   0x00d1afa4      5c000be5       str r0, [fp, -0x5c]
+       ┌──> 0x00d1afa8      5c001be5       ldr r0, [fp, -0x5c]
+       ╎│   0x00d1afac      080050e3       cmp r0, 8
+      ┌───< 0x00d1afb0      8b0200aa       bge 0xd1b9e4
+      │╎│   0x00d1afb4      740a9fe5       ldr r0, [0x00d1ba30]        ; [0xd1ba30:4]=0xfffffcac
+      │╎│   0x00d1afb8      94101be5       ldr r1, [fp, -0x94]
+      │╎│   0x00d1afbc      010090e7       ldr r0, [r0, r1]
+      │╎│   0x00d1afc0      20201be5       ldr r2, [fp, -0x20]
+      │╎│   0x00d1afc4      003090e5       ldr r3, [r0]
+      │╎│   0x00d1afc8      032082e0       add r2, r2, r3
+      │╎│   0x00d1afcc      002092e5       ldr r2, [r2]
+      │╎│   0x00d1afd0      011082e2       add r1, r2, 1
+      │╎│   0x00d1afd4      20201be5       ldr r2, [fp, -0x20]
+      │╎│   0x00d1afd8      000090e5       ldr r0, [r0]
+      │╎│   0x00d1afdc      000082e0       add r0, r2, r0
+      │╎│   0x00d1afe0      042090e5       ldr r2, [r0, 4]
+      │╎│   0x00d1afe4      68004be2       sub r0, fp, 0x68
+      │╎│   0x00d1afe8      8366deeb       bl sym.makeIntpair_int__int_ ; makeIntpair(int, int)
+      │╎│   0x00d1afec      0c0a9fe5       ldr r0, [0x00d1ba00]        ; [0xd1ba00:4]=0xffffc8a0
+      │╎│   0x00d1aff0      94101be5       ldr r1, [fp, -0x94]
+      │╎│   0x00d1aff4      010090e7       ldr r0, [r0, r1]
+      │╎│   0x00d1aff8      68201be5       ldr r2, [fp, -0x68]
+      │╎│   0x00d1affc      64101be5       ldr r1, [fp, -0x64]
+      │╎│   0x00d1b000      20301be5       ldr r3, [fp, -0x20]
+      │╎│   0x00d1b004      000090e5       ldr r0, [r0]
+      │╎│   0x00d1b008      000083e0       add r0, r3, r0
+      │╎│   0x00d1b00c      000090e5       ldr r0, [r0]
+      │╎│   0x00d1b010      e4008de5       str r0, [sp, 0xe4]
+      │╎│   0x00d1b014      0200a0e1       mov r0, r2
+      │╎│   0x00d1b018      e4209de5       ldr r2, [sp, 0xe4]
+      │╎│   0x00d1b01c      c0dff3eb       bl sym.tileAtWorldPositionLoaded_int__int__World_ ; tileAtWorldPositionLoaded(int, int, World*)
+      │╎│   0x00d1b020      001000e3       movw r1, 0
+      │╎│   0x00d1b024      6c000be5       str r0, [fp, -0x6c]
+      │╎│   0x00d1b028      6c001be5       ldr r0, [fp, -0x6c]
+      │╎│   0x00d1b02c      010050e1       cmp r0, r1
+     ┌────< 0x00d1b030      0000001a       bne 0xd1b038
+    ┌─────< 0x00d1b034      6a0200ea       b 0xd1b9e4
+    │└────> 0x00d1b038      6c001be5       ldr r0, [fp, -0x6c]
+    │ │╎│   0x00d1b03c      0b00d0e5       ldrb r0, [r0, 0xb]
+    │ │╎│   0x00d1b040      620050e3       cmp r0, 0x62                ; 'b'
+    │┌────< 0x00d1b044      4b00000a       beq 0xd1b178
+    │││╎│   0x00d1b048      e0099fe5       ldr r0, [0x00d1ba30]        ; [0xd1ba30:4]=0xfffffcac
+    │││╎│   0x00d1b04c      94101be5       ldr r1, [fp, -0x94]
+    │││╎│   0x00d1b050      010090e7       ldr r0, [r0, r1]
+    │││╎│   0x00d1b054      20201be5       ldr r2, [fp, -0x20]
+    │││╎│   0x00d1b058      003090e5       ldr r3, [r0]
+    │││╎│   0x00d1b05c      032082e0       add r2, r2, r3
+    │││╎│   0x00d1b060      002092e5       ldr r2, [r2]
+    │││╎│   0x00d1b064      011082e2       add r1, r2, 1
+    │││╎│   0x00d1b068      20201be5       ldr r2, [fp, -0x20]
+    │││╎│   0x00d1b06c      000090e5       ldr r0, [r0]
+    │││╎│   0x00d1b070      000082e0       add r0, r2, r0
+    │││╎│   0x00d1b074      040090e5       ldr r0, [r0, 4]
+    │││╎│   0x00d1b078      012080e2       add r2, r0, 1
+    │││╎│   0x00d1b07c      78004be2       sub r0, fp, 0x78
+    │││╎│   0x00d1b080      5d66deeb       bl sym.makeIntpair_int__int_ ; makeIntpair(int, int)
+    │││╎│   0x00d1b084      74099fe5       ldr r0, [0x00d1ba00]        ; [0xd1ba00:4]=0xffffc8a0
+    │││╎│   0x00d1b088      94101be5       ldr r1, [fp, -0x94]
+    │││╎│   0x00d1b08c      010090e7       ldr r0, [r0, r1]
+    │││╎│   0x00d1b090      78201be5       ldr r2, [fp, -0x78]
+    │││╎│   0x00d1b094      68200be5       str r2, [fp, -0x68]
+    │││╎│   0x00d1b098      74201be5       ldr r2, [fp, -0x74]
+    │││╎│   0x00d1b09c      64200be5       str r2, [fp, -0x64]
+    │││╎│   0x00d1b0a0      68201be5       ldr r2, [fp, -0x68]
+    │││╎│   0x00d1b0a4      64101be5       ldr r1, [fp, -0x64]
+    │││╎│   0x00d1b0a8      20301be5       ldr r3, [fp, -0x20]
+    │││╎│   0x00d1b0ac      000090e5       ldr r0, [r0]
+    │││╎│   0x00d1b0b0      000083e0       add r0, r3, r0
+    │││╎│   0x00d1b0b4      000090e5       ldr r0, [r0]
+    │││╎│   0x00d1b0b8      e0008de5       str r0, [sp, 0xe0]
+    │││╎│   0x00d1b0bc      0200a0e1       mov r0, r2
+    │││╎│   0x00d1b0c0      e0209de5       ldr r2, [sp, 0xe0]
+    │││╎│   0x00d1b0c4      96dff3eb       bl sym.tileAtWorldPositionLoaded_int__int__World_ ; tileAtWorldPositionLoaded(int, int, World*)
+    │││╎│   0x00d1b0c8      6c000be5       str r0, [fp, -0x6c]
+    │││╎│   0x00d1b0cc      6c001be5       ldr r0, [fp, -0x6c]
+    │││╎│   0x00d1b0d0      0b00d0e5       ldrb r0, [r0, 0xb]
+    │││╎│   0x00d1b0d4      620050e3       cmp r0, 0x62                ; 'b'
+   ┌──────< 0x00d1b0d8      2000000a       beq 0xd1b160
+   ││││╎│   0x00d1b0dc      4c099fe5       ldr r0, [0x00d1ba30]        ; [0xd1ba30:4]=0xfffffcac
+   ││││╎│   0x00d1b0e0      94101be5       ldr r1, [fp, -0x94]
+   ││││╎│   0x00d1b0e4      010090e7       ldr r0, [r0, r1]
+   ││││╎│   0x00d1b0e8      20201be5       ldr r2, [fp, -0x20]
+   ││││╎│   0x00d1b0ec      003090e5       ldr r3, [r0]
+   ││││╎│   0x00d1b0f0      032082e0       add r2, r2, r3
+   ││││╎│   0x00d1b0f4      002092e5       ldr r2, [r2]
+   ││││╎│   0x00d1b0f8      011082e2       add r1, r2, 1
+   ││││╎│   0x00d1b0fc      20201be5       ldr r2, [fp, -0x20]
+   ││││╎│   0x00d1b100      000090e5       ldr r0, [r0]
+   ││││╎│   0x00d1b104      000082e0       add r0, r2, r0
+   ││││╎│   0x00d1b108      040090e5       ldr r0, [r0, 4]
+   ││││╎│   0x00d1b10c      012040e2       sub r2, r0, 1
+   ││││╎│   0x00d1b110      80004be2       sub r0, fp, 0x80
+   ││││╎│   0x00d1b114      3866deeb       bl sym.makeIntpair_int__int_ ; makeIntpair(int, int)
+   ││││╎│   0x00d1b118      e0089fe5       ldr r0, [0x00d1ba00]        ; [0xd1ba00:4]=0xffffc8a0
+   ││││╎│   0x00d1b11c      94101be5       ldr r1, [fp, -0x94]
+   ││││╎│   0x00d1b120      010090e7       ldr r0, [r0, r1]
+   ││││╎│   0x00d1b124      80201be5       ldr r2, [fp, -0x80]
+   ││││╎│   0x00d1b128      68200be5       str r2, [fp, -0x68]
+   ││││╎│   0x00d1b12c      7c201be5       ldr r2, [fp, -0x7c]
+   ││││╎│   0x00d1b130      64200be5       str r2, [fp, -0x64]
+   ││││╎│   0x00d1b134      68201be5       ldr r2, [fp, -0x68]
+   ││││╎│   0x00d1b138      64101be5       ldr r1, [fp, -0x64]
+   ││││╎│   0x00d1b13c      20301be5       ldr r3, [fp, -0x20]
+   ││││╎│   0x00d1b140      000090e5       ldr r0, [r0]
+   ││││╎│   0x00d1b144      000083e0       add r0, r3, r0
+   ││││╎│   0x00d1b148      000090e5       ldr r0, [r0]
+   ││││╎│   0x00d1b14c      dc008de5       str r0, [sp, 0xdc]
+   ││││╎│   0x00d1b150      0200a0e1       mov r0, r2
+   ││││╎│   0x00d1b154      dc209de5       ldr r2, [sp, 0xdc]
+   ││││╎│   0x00d1b158      71dff3eb       bl sym.tileAtWorldPositionLoaded_int__int__World_ ; tileAtWorldPositionLoaded(int, int, World*)
+   ││││╎│   0x00d1b15c      6c000be5       str r0, [fp, -0x6c]
+   └──────> 0x00d1b160      000000e3       movw r0, 0
+    │││╎│   0x00d1b164      6c101be5       ldr r1, [fp, -0x6c]
+    │││╎│   0x00d1b168      000051e1       cmp r1, r0
+   ┌──────< 0x00d1b16c      0000001a       bne 0xd1b174
+  ┌───────< 0x00d1b170      1b0200ea       b 0xd1b9e4
+  ─└──────> 0x00d1b174      ffffffea       b 0xd1b178
+  ─┌─└────> 0x00d1b178      ffffffea       b 0xd1b17c
+  │└──────> 0x00d1b17c      6c001be5       ldr r0, [fp, -0x6c]
+  │ │ │╎│   0x00d1b180      0b00d0e5       ldrb r0, [r0, 0xb]
+  │ │ │╎│   0x00d1b184      620050e3       cmp r0, 0x62                ; 'b'
+  │ │┌────< 0x00d1b188      de01001a       bne 0xd1b908
+  │ │││╎│   0x00d1b18c      000000e3       movw r0, 0
+  │ │││╎│   0x00d1b190      81004be5       strb r0, [fp, -0x81]
+  │ │││╎│   0x00d1b194      6c001be5       ldr r0, [fp, -0x6c]
+  │ │││╎│   0x00d1b198      0300d0e5       ldrb r0, [r0, 3]
+  │ │││╎│   0x00d1b19c      300050e3       cmp r0, 0x30                ; '0'
+  │┌──────< 0x00d1b1a0      0901001a       bne 0xd1b5cc
+  │││││╎│   0x00d1b1a4      021000e3       movw r1, 2
+  │││││╎│   0x00d1b1a8      050000e3       movw r0, 5
+  │││││╎│   0x00d1b1ac      68201be5       ldr r2, [fp, -0x68]
+  │││││╎│   0x00d1b1b0      20301be5       ldr r3, [fp, -0x20]
+  │││││╎│   0x00d1b1b4      60c89fe5       ldr ip, [0x00d1ba1c]        ; [0xd1ba1c:4]=0xffffc89c
+  │││││╎│   0x00d1b1b8      78e89fe5       ldr lr, [0x00d1ba38]        ; [0xd1ba38:4]=0x344930
+  │││││╎│   0x00d1b1bc      0ee08fe0       add lr, pc, lr
+  │││││╎│   0x00d1b1c0      0ec09ce7       ldr ip, [ip, lr]
+  │││││╎│   0x00d1b1c4      00c09ce5       ldr ip, [ip]
+  │││││╎│   0x00d1b1c8      0cc093e7       ldr ip, [r3, ip]
+  │││││╎│   0x00d1b1cc      0c2042e0       sub r2, r2, ip
+  │││││╎│   0x00d1b1d0      28c89fe5       ldr ip, [0x00d1ba00]        ; [0xd1ba00:4]=0xffffc8a0
+  │││││╎│   0x00d1b1d4      0ec09ce7       ldr ip, [ip, lr]
+  │││││╎│   0x00d1b1d8      00c09ce5       ldr ip, [ip]
+  │││││╎│   0x00d1b1dc      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1b1e0      38c89fe5       ldr ip, [0x00d1ba20]        ; [0xd1ba20:4]=0xffe28ae4
+  │││││╎│   0x00d1b1e4      0ec09ce7       ldr ip, [ip, lr]
+  │││││╎│   0x00d1b1e8      d8008de5       str r0, [sp, 0xd8]
+  │││││╎│   0x00d1b1ec      0300a0e1       mov r0, r3
+  │││││╎│   0x00d1b1f0      d4108de5       str r1, [sp, 0xd4]
+  │││││╎│   0x00d1b1f4      0c10a0e1       mov r1, ip
+  │││││╎│   0x00d1b1f8      d0208de5       str r2, [sp, 0xd0]
+  │││││╎│   0x00d1b1fc      869dd2eb       bl loc.imp.objc_msgSend
+  │││││╎│   0x00d1b200      0010a0e1       mov r1, r0
+  │││││╎│   0x00d1b204      8002a0e1       lsl r0, r0, 5
+  │││││╎│   0x00d1b208      d4209de5       ldr r2, [sp, 0xd4]
+  │││││╎│   0x00d1b20c      cc108de5       str r1, [sp, 0xcc]
+  │││││╎│   0x00d1b210      0210a0e1       mov r1, r2
+  │││││╎│   0x00d1b214      43a1d2eb       bl sym.imp.__aeabi_idiv
+  │││││╎│   0x00d1b218      d0109de5       ldr r1, [sp, 0xd0]
+  │││││╎│   0x00d1b21c      000051e1       cmp r1, r0
+  ────────< 0x00d1b220      1b0000ba       blt 0xd1b294
+  │││││╎│   0x00d1b224      050000e3       movw r0, 5
+  │││││╎│   0x00d1b228      68101be5       ldr r1, [fp, -0x68]
+  │││││╎│   0x00d1b22c      20201be5       ldr r2, [fp, -0x20]
+  │││││╎│   0x00d1b230      e4379fe5       ldr r3, [0x00d1ba1c]        ; [0xd1ba1c:4]=0xffffc89c
+  │││││╎│   0x00d1b234      08c89fe5       ldr ip, [0x00d1ba44]        ; [0xd1ba44:4]=0x3448b4
+  │││││╎│   0x00d1b238      0cc08fe0       add ip, pc, ip
+  │││││╎│   0x00d1b23c      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1b240      003093e5       ldr r3, [r3]
+  │││││╎│   0x00d1b244      033092e7       ldr r3, [r2, r3]
+  │││││╎│   0x00d1b248      031041e0       sub r1, r1, r3
+  │││││╎│   0x00d1b24c      ac379fe5       ldr r3, [0x00d1ba00]        ; [0xd1ba00:4]=0xffffc8a0
+  │││││╎│   0x00d1b250      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1b254      003093e5       ldr r3, [r3]
+  │││││╎│   0x00d1b258      032092e7       ldr r2, [r2, r3]
+  │││││╎│   0x00d1b25c      bc379fe5       ldr r3, [0x00d1ba20]        ; [0xd1ba20:4]=0xffe28ae4
+  │││││╎│   0x00d1b260      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1b264      c8008de5       str r0, [sp, 0xc8]
+  │││││╎│   0x00d1b268      0200a0e1       mov r0, r2
+  │││││╎│   0x00d1b26c      c4108de5       str r1, [sp, 0xc4]
+  │││││╎│   0x00d1b270      0310a0e1       mov r1, r3
+  │││││╎│   0x00d1b274      689dd2eb       bl loc.imp.objc_msgSend
+  │││││╎│   0x00d1b278      0010a0e1       mov r1, r0
+  │││││╎│   0x00d1b27c      8002a0e1       lsl r0, r0, 5
+  │││││╎│   0x00d1b280      c4209de5       ldr r2, [sp, 0xc4]
+  │││││╎│   0x00d1b284      000042e0       sub r0, r2, r0
+  │││││╎│   0x00d1b288      c0108de5       str r1, [sp, 0xc0]
+  │││││╎│   0x00d1b28c      bc008de5       str r0, [sp, 0xbc]
+  ────────< 0x00d1b290      490000ea       b 0xd1b3bc
+  ────────> 0x00d1b294      021000e3       movw r1, 2
+  │││││╎│   0x00d1b298      050000e3       movw r0, 5
+  │││││╎│   0x00d1b29c      68201be5       ldr r2, [fp, -0x68]
+  │││││╎│   0x00d1b2a0      20301be5       ldr r3, [fp, -0x20]
+  │││││╎│   0x00d1b2a4      70c79fe5       ldr ip, [0x00d1ba1c]        ; [0xd1ba1c:4]=0xffffc89c
+  │││││╎│   0x00d1b2a8      8ce79fe5       ldr lr, [0x00d1ba3c]        ; [0xd1ba3c:4]=0x344840
+  │││││╎│   0x00d1b2ac      0ee08fe0       add lr, pc, lr
+  │││││╎│   0x00d1b2b0      0ec09ce7       ldr ip, [ip, lr]
+  │││││╎│   0x00d1b2b4      00c09ce5       ldr ip, [ip]
+  │││││╎│   0x00d1b2b8      0cc093e7       ldr ip, [r3, ip]
+  │││││╎│   0x00d1b2bc      0c2042e0       sub r2, r2, ip
+  │││││╎│   0x00d1b2c0      38c79fe5       ldr ip, [0x00d1ba00]        ; [0xd1ba00:4]=0xffffc8a0
+  │││││╎│   0x00d1b2c4      0ec09ce7       ldr ip, [ip, lr]
+  │││││╎│   0x00d1b2c8      00c09ce5       ldr ip, [ip]
+  │││││╎│   0x00d1b2cc      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1b2d0      48c79fe5       ldr ip, [0x00d1ba20]        ; [0xd1ba20:4]=0xffe28ae4
+  │││││╎│   0x00d1b2d4      0ec09ce7       ldr ip, [ip, lr]
+  │││││╎│   0x00d1b2d8      b8008de5       str r0, [sp, 0xb8]
+  │││││╎│   0x00d1b2dc      0300a0e1       mov r0, r3
+  │││││╎│   0x00d1b2e0      b4108de5       str r1, [sp, 0xb4]
+  │││││╎│   0x00d1b2e4      0c10a0e1       mov r1, ip
+  │││││╎│   0x00d1b2e8      b0208de5       str r2, [sp, 0xb0]
+  │││││╎│   0x00d1b2ec      4a9dd2eb       bl loc.imp.objc_msgSend
+  │││││╎│   0x00d1b2f0      000060e2       rsb r0, r0, 0
+  │││││╎│   0x00d1b2f4      8002a0e1       lsl r0, r0, 5
+  │││││╎│   0x00d1b2f8      b4109de5       ldr r1, [sp, 0xb4]
+  │││││╎│   0x00d1b2fc      09a1d2eb       bl sym.imp.__aeabi_idiv
+  │││││╎│   0x00d1b300      b0109de5       ldr r1, [sp, 0xb0]
+  │││││╎│   0x00d1b304      000051e1       cmp r1, r0
+  ────────< 0x00d1b308      1f0000aa       bge 0xd1b38c
+  │││││╎│   0x00d1b30c      050000e3       movw r0, 5
+  │││││╎│   0x00d1b310      68101be5       ldr r1, [fp, -0x68]
+  │││││╎│   0x00d1b314      20201be5       ldr r2, [fp, -0x20]
+  │││││╎│   0x00d1b318      fc369fe5       ldr r3, [0x00d1ba1c]        ; [0xd1ba1c:4]=0xffffc89c
+  │││││╎│   0x00d1b31c      1cc79fe5       ldr ip, [0x00d1ba40]        ; [0xd1ba40:4]=0x3447cc
+  │││││╎│   0x00d1b320      0cc08fe0       add ip, pc, ip
+  │││││╎│   0x00d1b324      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1b328      003093e5       ldr r3, [r3]
+  │││││╎│   0x00d1b32c      033092e7       ldr r3, [r2, r3]
+  │││││╎│   0x00d1b330      031041e0       sub r1, r1, r3
+  │││││╎│   0x00d1b334      c4369fe5       ldr r3, [0x00d1ba00]        ; [0xd1ba00:4]=0xffffc8a0
+  │││││╎│   0x00d1b338      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1b33c      003093e5       ldr r3, [r3]
+  │││││╎│   0x00d1b340      032092e7       ldr r2, [r2, r3]
+  │││││╎│   0x00d1b344      d4369fe5       ldr r3, [0x00d1ba20]        ; [0xd1ba20:4]=0xffe28ae4
+  │││││╎│   0x00d1b348      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1b34c      ac008de5       str r0, [sp, 0xac]
+  │││││╎│   0x00d1b350      0200a0e1       mov r0, r2
+  │││││╎│   0x00d1b354      a8108de5       str r1, [sp, 0xa8]
+  │││││╎│   0x00d1b358      0310a0e1       mov r1, r3
+  │││││╎│   0x00d1b35c      2e9dd2eb       bl loc.imp.objc_msgSend
+  │││││╎│   0x00d1b360      0010a0e1       mov r1, r0
+  │││││╎│   0x00d1b364      8002a0e1       lsl r0, r0, 5
+  │││││╎│   0x00d1b368      a8209de5       ldr r2, [sp, 0xa8]
+  │││││╎│   0x00d1b36c      000082e0       add r0, r2, r0
+  │││││╎│   0x00d1b370      a4108de5       str r1, [sp, 0xa4]
+  │││││╎│   0x00d1b374      a0008de5       str r0, [sp, 0xa0]
+  ────────< 0x00d1b378      0d0000ea       b 0xd1b3b4
+  │││││╎│   0x00d1b37c      cc553400       eorseq r5, r4, ip, asr 11
+  │││││╎│   0x00d1b380      b8fcffff       invalid
+  │││││╎│   0x00d1b384      b0fcffff       invalid
+  │││││╎│   0x00d1b388      a0c8ffff       invalid
+  ────────> 0x00d1b38c      88069fe5       ldr r0, [0x00d1ba1c]        ; [0xd1ba1c:4]=0xffffc89c
+  │││││╎│   0x00d1b390      94101be5       ldr r1, [fp, -0x94]
+  │││││╎│   0x00d1b394      010090e7       ldr r0, [r0, r1]
+  │││││╎│   0x00d1b398      68201be5       ldr r2, [fp, -0x68]
+  │││││╎│   0x00d1b39c      20301be5       ldr r3, [fp, -0x20]
+  │││││╎│   0x00d1b3a0      000090e5       ldr r0, [r0]
+  │││││╎│   0x00d1b3a4      000083e0       add r0, r3, r0
+  │││││╎│   0x00d1b3a8      000090e5       ldr r0, [r0]
+  │││││╎│   0x00d1b3ac      000042e0       sub r0, r2, r0
+  │││││╎│   0x00d1b3b0      a0008de5       str r0, [sp, 0xa0]
+  ────────> 0x00d1b3b4      a0009de5       ldr r0, [sp, 0xa0]
+  │││││╎│   0x00d1b3b8      bc008de5       str r0, [sp, 0xbc]
+  ────────> 0x00d1b3bc      bc009de5       ldr r0, [sp, 0xbc]
+  │││││╎│   0x00d1b3c0      ad0100eb       bl 0xd1ba7c
+  │││││╎│   0x00d1b3c4      040050e3       cmp r0, 4
+  ────────< 0x00d1b3c8      7f0000da       ble 0xd1b5cc
+  │││││╎│   0x00d1b3cc      000000e3       movw r0, 0
+  │││││╎│   0x00d1b3d0      20101be5       ldr r1, [fp, -0x20]
+  │││││╎│   0x00d1b3d4      48269fe5       ldr r2, [0x00d1ba24]        ; [0xd1ba24:4]=0xffffc8b4
+  │││││╎│   0x00d1b3d8      68369fe5       ldr r3, [0x00d1ba48]        ; [0xd1ba48:4]=0x344710
+  │││││╎│   0x00d1b3dc      03308fe0       add r3, pc, r3
+  │││││╎│   0x00d1b3e0      032092e7       ldr r2, [r2, r3]
+  │││││╎│   0x00d1b3e4      002092e5       ldr r2, [r2]
+  │││││╎│   0x00d1b3e8      021091e7       ldr r1, [r1, r2]
+  │││││╎│   0x00d1b3ec      68201be5       ldr r2, [fp, -0x68]
+  │││││╎│   0x00d1b3f0      64c01be5       ldr ip, [fp, -0x64]
+  │││││╎│   0x00d1b3f4      8cc00be5       str ip, [fp, -0x8c]
+  │││││╎│   0x00d1b3f8      90200be5       str r2, [fp, -0x90]
+  │││││╎│   0x00d1b3fc      24269fe5       ldr r2, [0x00d1ba28]        ; [0xd1ba28:4]=0xffe28ae8
+  │││││╎│   0x00d1b400      032092e7       ldr r2, [r2, r3]
+  │││││╎│   0x00d1b404      90301be5       ldr r3, [fp, -0x90]
+  │││││╎│   0x00d1b408      8cc01be5       ldr ip, [fp, -0x8c]
+  │││││╎│   0x00d1b40c      9c008de5       str r0, [sp, 0x9c]
+  │││││╎│   0x00d1b410      0100a0e1       mov r0, r1
+  │││││╎│   0x00d1b414      0210a0e1       mov r1, r2
+  │││││╎│   0x00d1b418      0320a0e1       mov r2, r3
+  │││││╎│   0x00d1b41c      0c30a0e1       mov r3, ip
+  │││││╎│   0x00d1b420      fd9cd2eb       bl loc.imp.objc_msgSend
+  │││││╎│   0x00d1b424      88000be5       str r0, [fp, -0x88]
+  │││││╎│   0x00d1b428      88001be5       ldr r0, [fp, -0x88]
+  │││││╎│   0x00d1b42c      9c109de5       ldr r1, [sp, 0x9c]
+  │││││╎│   0x00d1b430      010050e1       cmp r0, r1
+  ────────< 0x00d1b434      6200000a       beq 0xd1b5c4
+  │││││╎│   0x00d1b438      d4059fe5       ldr r0, [0x00d1ba14]        ; [0xd1ba14:4]=0xffffbcac
+  │││││╎│   0x00d1b43c      94101be5       ldr r1, [fp, -0x94]
+  │││││╎│   0x00d1b440      010090e7       ldr r0, [r0, r1]
+  │││││╎│   0x00d1b444      00269fe5       ldr r2, [0x00d1ba4c]        ; [0xd1ba4c:4]=0xffe28aec
+  │││││╎│   0x00d1b448      012082e0       add r2, r2, r1
+  │││││╎│   0x00d1b44c      88301be5       ldr r3, [fp, -0x88]
+  │││││╎│   0x00d1b450      001092e5       ldr r1, [r2]
+  │││││╎│   0x00d1b454      98008de5       str r0, [sp, 0x98]
+  │││││╎│   0x00d1b458      0300a0e1       mov r0, r3
+  │││││╎│   0x00d1b45c      98209de5       ldr r2, [sp, 0x98]
+  │││││╎│   0x00d1b460      32ff2fe1       blx r2
+  │││││╎│   0x00d1b464      7000ffe6       uxth r0, r0
+  │││││╎│   0x00d1b468      060050e3       cmp r0, 6
+  ────────< 0x00d1b46c      5300001a       bne 0xd1b5c0
+  │││││╎│   0x00d1b470      d8059fe5       ldr r0, [0x00d1ba50]        ; [0xd1ba50:4]=0xfffffcd4
+  │││││╎│   0x00d1b474      94101be5       ldr r1, [fp, -0x94]
+  │││││╎│   0x00d1b478      010090e7       ldr r0, [r0, r1]
+  │││││╎│   0x00d1b47c      012000e3       movw r2, 1
+  │││││╎│   0x00d1b480      80359fe5       ldr r3, [0x00d1ba08]        ; [0xd1ba08:4]=0xfffffcf8
+  │││││╎│   0x00d1b484      013093e7       ldr r3, [r3, r1]
+  │││││╎│   0x00d1b488      7cc59fe5       ldr ip, [0x00d1ba0c]        ; [0xd1ba0c:4]=0xffffc8d8
+  │││││╎│   0x00d1b48c      01c09ce7       ldr ip, [ip, r1]
+  │││││╎│   0x00d1b490      00e000e3       movw lr, 0
+  │││││╎│   0x00d1b494      90459fe5       ldr r4, [0x00d1ba2c]        ; [0xd1ba2c:4]=0xfffffcb4
+  │││││╎│   0x00d1b498      014094e7       ldr r4, [r4, r1]
+  │││││╎│   0x00d1b49c      90559fe5       ldr r5, [0x00d1ba34]        ; [0xd1ba34:4]=0xfffffce8
+  │││││╎│   0x00d1b4a0      015095e7       ldr r5, [r5, r1]
+  │││││╎│   0x00d1b4a4      68659fe5       ldr r6, [0x00d1ba14]        ; [0xd1ba14:4]=0xffffbcac
+  │││││╎│   0x00d1b4a8      016096e7       ldr r6, [r6, r1]
+  │││││╎│   0x00d1b4ac      0670a0e1       mov r7, r6
+  │││││╎│   0x00d1b4b0      9c859fe5       ldr r8, [0x00d1ba54]        ; [0xd1ba54:4]=0xffe28a6c ; "l\x8a\xe2\xff\xf0\x8a\xe2\xff"
+  │││││╎│   0x00d1b4b4      018088e0       add r8, r8, r1
+  │││││╎│   0x00d1b4b8      06a0a0e1       mov sl, r6
+  │││││╎│   0x00d1b4bc      94159fe5       ldr r1, [0x00d1ba58]        ; [0xd1ba58:4]=0xffe28af0
+  │││││╎│   0x00d1b4c0      94008de5       str r0, [sp, 0x94]
+  │││││╎│   0x00d1b4c4      94001be5       ldr r0, [fp, -0x94]
+  │││││╎│   0x00d1b4c8      001081e0       add r1, r1, r0
+  │││││╎│   0x00d1b4cc      44059fe5       ldr r0, [0x00d1ba18]        ; [0xd1ba18:4]=0xffe28ab8
+  │││││╎│   0x00d1b4d0      90108de5       str r1, [sp, 0x90]
+  │││││╎│   0x00d1b4d4      94101be5       ldr r1, [fp, -0x94]
+  │││││╎│   0x00d1b4d8      010080e0       add r0, r0, r1
+  │││││╎│   0x00d1b4dc      20101be5       ldr r1, [fp, -0x20]
+  │││││╎│   0x00d1b4e0      8c008de5       str r0, [sp, 0x8c]
+  │││││╎│   0x00d1b4e4      000095e5       ldr r0, [r5]
+  │││││╎│   0x00d1b4e8      000081e0       add r0, r1, r0
+  │││││╎│   0x00d1b4ec      000090e5       ldr r0, [r0]
+  │││││╎│   0x00d1b4f0      8c109de5       ldr r1, [sp, 0x8c]
+  │││││╎│   0x00d1b4f4      001091e5       ldr r1, [r1]
+  │││││╎│   0x00d1b4f8      88a08de5       str sl, [sp, 0x88]
+  │││││╎│   0x00d1b4fc      84708de5       str r7, [sp, 0x84]
+  │││││╎│   0x00d1b500      80208de5       str r2, [sp, 0x80]
+  │││││╎│   0x00d1b504      7c308de5       str r3, [sp, 0x7c]
+  │││││╎│   0x00d1b508      78c08de5       str ip, [sp, 0x78]
+  │││││╎│   0x00d1b50c      74e08de5       str lr, [sp, 0x74]
+  │││││╎│   0x00d1b510      70408de5       str r4, [sp, 0x70]
+  │││││╎│   0x00d1b514      6c508de5       str r5, [sp, 0x6c]
+  │││││╎│   0x00d1b518      68808de5       str r8, [sp, 0x68]
+  │││││╎│   0x00d1b51c      36ff2fe1       blx r6
+  │││││╎│   0x00d1b520      88001be5       ldr r0, [fp, -0x88]
+  │││││╎│   0x00d1b524      90109de5       ldr r1, [sp, 0x90]
+  │││││╎│   0x00d1b528      001091e5       ldr r1, [r1]
+  │││││╎│   0x00d1b52c      88209de5       ldr r2, [sp, 0x88]
+  │││││╎│   0x00d1b530      32ff2fe1       blx r2
+  │││││╎│   0x00d1b534      68109de5       ldr r1, [sp, 0x68]
+  │││││╎│   0x00d1b538      001091e5       ldr r1, [r1]
+  │││││╎│   0x00d1b53c      84209de5       ldr r2, [sp, 0x84]
+  │││││╎│   0x00d1b540      32ff2fe1       blx r2
+  │││││╎│   0x00d1b544      20101be5       ldr r1, [fp, -0x20]
+  │││││╎│   0x00d1b548      6c209de5       ldr r2, [sp, 0x6c]
+  │││││╎│   0x00d1b54c      003092e5       ldr r3, [r2]
+  │││││╎│   0x00d1b550      031081e0       add r1, r1, r3
+  │││││╎│   0x00d1b554      000081e5       str r0, [r1]
+  │││││╎│   0x00d1b558      80009de5       ldr r0, [sp, 0x80]
+  │││││╎│   0x00d1b55c      81004be5       strb r0, [fp, -0x81]
+  │││││╎│   0x00d1b560      20101be5       ldr r1, [fp, -0x20]
+  │││││╎│   0x00d1b564      70309de5       ldr r3, [sp, 0x70]
+  │││││╎│   0x00d1b568      00c093e5       ldr ip, [r3]
+  │││││╎│   0x00d1b56c      0c1081e0       add r1, r1, ip
+  │││││╎│   0x00d1b570      74c09de5       ldr ip, [sp, 0x74]
+  │││││╎│   0x00d1b574      00c0c1e5       strb ip, [r1]
+  │││││╎│   0x00d1b578      20101be5       ldr r1, [fp, -0x20]
+  │││││╎│   0x00d1b57c      78e09de5       ldr lr, [sp, 0x78]
+  │││││╎│   0x00d1b580      00409ee5       ldr r4, [lr]
+  │││││╎│   0x00d1b584      041081e0       add r1, r1, r4
+  │││││╎│   0x00d1b588      0000c1e5       strb r0, [r1]
+  │││││╎│   0x00d1b58c      20101be5       ldr r1, [fp, -0x20]
+  │││││╎│   0x00d1b590      7c409de5       ldr r4, [sp, 0x7c]
+  │││││╎│   0x00d1b594      005094e5       ldr r5, [r4]
+  │││││╎│   0x00d1b598      051081e0       add r1, r1, r5
+  │││││╎│   0x00d1b59c      0000c1e5       strb r0, [r1]
+  │││││╎│   0x00d1b5a0      20101be5       ldr r1, [fp, -0x20]
+  │││││╎│   0x00d1b5a4      94509de5       ldr r5, [sp, 0x94]
+  │││││╎│   0x00d1b5a8      006095e5       ldr r6, [r5]
+  │││││╎│   0x00d1b5ac      061081e0       add r1, r1, r6
+  │││││╎│   0x00d1b5b0      68601be5       ldr r6, [fp, -0x68]
+  │││││╎│   0x00d1b5b4      006081e5       str r6, [r1]
+  │││││╎│   0x00d1b5b8      64601be5       ldr r6, [fp, -0x64]
+  │││││╎│   0x00d1b5bc      046081e5       str r6, [r1, 4]
+  ────────> 0x00d1b5c0      000000ea       b 0xd1b5c8
+  ────────> 0x00d1b5c4      060100ea       b 0xd1b9e4
+  ────────< 0x00d1b5c8      ffffffea       b 0xd1b5cc
+  ─└──────> 0x00d1b5cc      d1085be1       ldrsb r0, [fp, -0x81]
+  │ │││╎│   0x00d1b5d0      000050e3       cmp r0, 0
+  │┌──────< 0x00d1b5d4      c700001a       bne 0xd1b8f8
+  │││││╎│   0x00d1b5d8      021000e3       movw r1, 2
+  │││││╎│   0x00d1b5dc      050000e3       movw r0, 5
+  │││││╎│   0x00d1b5e0      20201be5       ldr r2, [fp, -0x20]
+  │││││╎│   0x00d1b5e4      44349fe5       ldr r3, [0x00d1ba30]        ; [0xd1ba30:4]=0xfffffcac
+  │││││╎│   0x00d1b5e8      6cc49fe5       ldr ip, [0x00d1ba5c]        ; [0xd1ba5c:4]=0x344500
+  │││││╎│   0x00d1b5ec      0cc08fe0       add ip, pc, ip
+  │││││╎│   0x00d1b5f0      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1b5f4      003093e5       ldr r3, [r3]
+  │││││╎│   0x00d1b5f8      03e082e0       add lr, r2, r3
+  │││││╎│   0x00d1b5fc      68401be5       ldr r4, [fp, -0x68]
+  │││││╎│   0x00d1b600      64501be5       ldr r5, [fp, -0x64]
+  │││││╎│   0x00d1b604      034082e7       str r4, [r2, r3]
+  │││││╎│   0x00d1b608      04508ee5       str r5, [lr, 4]
+  │││││╎│   0x00d1b60c      68201be5       ldr r2, [fp, -0x68]
+  │││││╎│   0x00d1b610      20301be5       ldr r3, [fp, -0x20]
+  │││││╎│   0x00d1b614      00e49fe5       ldr lr, [0x00d1ba1c]        ; [0xd1ba1c:4]=0xffffc89c
+  │││││╎│   0x00d1b618      0ce09ee7       ldr lr, [lr, ip]
+  │││││╎│   0x00d1b61c      00e09ee5       ldr lr, [lr]
+  │││││╎│   0x00d1b620      0ee093e7       ldr lr, [r3, lr]
+  │││││╎│   0x00d1b624      0e2042e0       sub r2, r2, lr
+  │││││╎│   0x00d1b628      d0e39fe5       ldr lr, [0x00d1ba00]        ; [0xd1ba00:4]=0xffffc8a0
+  │││││╎│   0x00d1b62c      0ce09ee7       ldr lr, [lr, ip]
+  │││││╎│   0x00d1b630      00e09ee5       ldr lr, [lr]
+  │││││╎│   0x00d1b634      0e3093e7       ldr r3, [r3, lr]
+  │││││╎│   0x00d1b638      e0e39fe5       ldr lr, [0x00d1ba20]        ; [0xd1ba20:4]=0xffe28ae4
+  │││││╎│   0x00d1b63c      0cc09ee7       ldr ip, [lr, ip]
+  │││││╎│   0x00d1b640      64008de5       str r0, [sp, 0x64]
+  │││││╎│   0x00d1b644      0300a0e1       mov r0, r3
+  │││││╎│   0x00d1b648      60108de5       str r1, [sp, 0x60]
+  │││││╎│   0x00d1b64c      0c10a0e1       mov r1, ip
+  │││││╎│   0x00d1b650      5c208de5       str r2, [sp, 0x5c]
+  │││││╎│   0x00d1b654      709cd2eb       bl loc.imp.objc_msgSend
+  │││││╎│   0x00d1b658      0010a0e1       mov r1, r0
+  │││││╎│   0x00d1b65c      8002a0e1       lsl r0, r0, 5
+  │││││╎│   0x00d1b660      60209de5       ldr r2, [sp, 0x60]
+  │││││╎│   0x00d1b664      58108de5       str r1, [sp, 0x58]
+  │││││╎│   0x00d1b668      0210a0e1       mov r1, r2
+  │││││╎│   0x00d1b66c      2da0d2eb       bl sym.imp.__aeabi_idiv
+  │││││╎│   0x00d1b670      5c109de5       ldr r1, [sp, 0x5c]
+  │││││╎│   0x00d1b674      000051e1       cmp r1, r0
+  ────────< 0x00d1b678      1e0000ba       blt 0xd1b6f8
+  │││││╎│   0x00d1b67c      050000e3       movw r0, 5
+  │││││╎│   0x00d1b680      68101be5       ldr r1, [fp, -0x68]
+  │││││╎│   0x00d1b684      20201be5       ldr r2, [fp, -0x20]
+  │││││╎│   0x00d1b688      8c339fe5       ldr r3, [0x00d1ba1c]        ; [0xd1ba1c:4]=0xffffc89c
+  │││││╎│   0x00d1b68c      d4c39fe5       ldr ip, [0x00d1ba68]        ; [0xd1ba68:4]=0x34445c
+  │││││╎│   0x00d1b690      0cc08fe0       add ip, pc, ip
+  │││││╎│   0x00d1b694      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1b698      003093e5       ldr r3, [r3]
+  │││││╎│   0x00d1b69c      033092e7       ldr r3, [r2, r3]
+  │││││╎│   0x00d1b6a0      031041e0       sub r1, r1, r3
+  │││││╎│   0x00d1b6a4      54339fe5       ldr r3, [0x00d1ba00]        ; [0xd1ba00:4]=0xffffc8a0
+  │││││╎│   0x00d1b6a8      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1b6ac      003093e5       ldr r3, [r3]
+  │││││╎│   0x00d1b6b0      032092e7       ldr r2, [r2, r3]
+  │││││╎│   0x00d1b6b4      64339fe5       ldr r3, [0x00d1ba20]        ; [0xd1ba20:4]=0xffe28ae4
+  │││││╎│   0x00d1b6b8      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1b6bc      54008de5       str r0, [sp, 0x54]
+  │││││╎│   0x00d1b6c0      0200a0e1       mov r0, r2
+  │││││╎│   0x00d1b6c4      50108de5       str r1, [sp, 0x50]
+  │││││╎│   0x00d1b6c8      0310a0e1       mov r1, r3
+  │││││╎│   0x00d1b6cc      529cd2eb       bl loc.imp.objc_msgSend
+  │││││╎│   0x00d1b6d0      0010a0e1       mov r1, r0
+  │││││╎│   0x00d1b6d4      8002a0e1       lsl r0, r0, 5
+  │││││╎│   0x00d1b6d8      50209de5       ldr r2, [sp, 0x50]
+  │││││╎│   0x00d1b6dc      000042e0       sub r0, r2, r0
+  │││││╎│   0x00d1b6e0      4c108de5       str r1, [sp, 0x4c]
+  │││││╎│   0x00d1b6e4      48008de5       str r0, [sp, 0x48]
+  ────────< 0x00d1b6e8      4b0000ea       b 0xd1b81c
+  │││││╎│   0x00d1b6ec      9cc8ffff       invalid
+  │││││╎│   0x00d1b6f0      6c533400       eorseq r5, r4, ip, ror 6
+  │││││╎│   0x00d1b6f4      e48ae2ff       invalid
+  ────────> 0x00d1b6f8      021000e3       movw r1, 2
+  │││││╎│   0x00d1b6fc      050000e3       movw r0, 5
+  │││││╎│   0x00d1b700      68201be5       ldr r2, [fp, -0x68]
+  │││││╎│   0x00d1b704      20301be5       ldr r3, [fp, -0x20]
+  │││││╎│   0x00d1b708      0cc39fe5       ldr ip, [0x00d1ba1c]        ; [0xd1ba1c:4]=0xffffc89c
+  │││││╎│   0x00d1b70c      4ce39fe5       ldr lr, [0x00d1ba60]        ; [0xd1ba60:4]=0x3443dc
+  │││││╎│   0x00d1b710      0ee08fe0       add lr, pc, lr
+  │││││╎│   0x00d1b714      0ec09ce7       ldr ip, [ip, lr]
+  │││││╎│   0x00d1b718      00c09ce5       ldr ip, [ip]
+  │││││╎│   0x00d1b71c      0cc093e7       ldr ip, [r3, ip]
+  │││││╎│   0x00d1b720      0c2042e0       sub r2, r2, ip
+  │││││╎│   0x00d1b724      d4c29fe5       ldr ip, [0x00d1ba00]        ; [0xd1ba00:4]=0xffffc8a0
+  │││││╎│   0x00d1b728      0ec09ce7       ldr ip, [ip, lr]
+  │││││╎│   0x00d1b72c      00c09ce5       ldr ip, [ip]
+  │││││╎│   0x00d1b730      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1b734      e4c29fe5       ldr ip, [0x00d1ba20]        ; [0xd1ba20:4]=0xffe28ae4
+  │││││╎│   0x00d1b738      0ec09ce7       ldr ip, [ip, lr]
+  │││││╎│   0x00d1b73c      44008de5       str r0, [sp, 0x44]
+  │││││╎│   0x00d1b740      0300a0e1       mov r0, r3
+  │││││╎│   0x00d1b744      40108de5       str r1, [sp, 0x40]
+  │││││╎│   0x00d1b748      0c10a0e1       mov r1, ip
+  │││││╎│   0x00d1b74c      3c208de5       str r2, [sp, 0x3c]
+  │││││╎│   0x00d1b750      319cd2eb       bl loc.imp.objc_msgSend
+  │││││╎│   0x00d1b754      000060e2       rsb r0, r0, 0
+  │││││╎│   0x00d1b758      8002a0e1       lsl r0, r0, 5
+  │││││╎│   0x00d1b75c      40109de5       ldr r1, [sp, 0x40]
+  │││││╎│   0x00d1b760      f09fd2eb       bl sym.imp.__aeabi_idiv
+  │││││╎│   0x00d1b764      3c109de5       ldr r1, [sp, 0x3c]
+  │││││╎│   0x00d1b768      000051e1       cmp r1, r0
+  ────────< 0x00d1b76c      1e0000aa       bge 0xd1b7ec
+  │││││╎│   0x00d1b770      050000e3       movw r0, 5
+  │││││╎│   0x00d1b774      68101be5       ldr r1, [fp, -0x68]
+  │││││╎│   0x00d1b778      20201be5       ldr r2, [fp, -0x20]
+  │││││╎│   0x00d1b77c      98329fe5       ldr r3, [0x00d1ba1c]        ; [0xd1ba1c:4]=0xffffc89c
+  │││││╎│   0x00d1b780      dcc29fe5       ldr ip, [0x00d1ba64]        ; [0xd1ba64:4]=0x344368 ; "hC4"
+  │││││╎│   0x00d1b784      0cc08fe0       add ip, pc, ip
+  │││││╎│   0x00d1b788      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1b78c      003093e5       ldr r3, [r3]
+  │││││╎│   0x00d1b790      033092e7       ldr r3, [r2, r3]
+  │││││╎│   0x00d1b794      031041e0       sub r1, r1, r3
+  │││││╎│   0x00d1b798      60329fe5       ldr r3, [0x00d1ba00]        ; [0xd1ba00:4]=0xffffc8a0
+  │││││╎│   0x00d1b79c      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1b7a0      003093e5       ldr r3, [r3]
+  │││││╎│   0x00d1b7a4      032092e7       ldr r2, [r2, r3]
+  │││││╎│   0x00d1b7a8      70329fe5       ldr r3, [0x00d1ba20]        ; [0xd1ba20:4]=0xffe28ae4
+  │││││╎│   0x00d1b7ac      0c3093e7       ldr r3, [r3, ip]
+  │││││╎│   0x00d1b7b0      38008de5       str r0, [sp, 0x38]
+  │││││╎│   0x00d1b7b4      0200a0e1       mov r0, r2
+  │││││╎│   0x00d1b7b8      34108de5       str r1, [sp, 0x34]
+  │││││╎│   0x00d1b7bc      0310a0e1       mov r1, r3
+  │││││╎│   0x00d1b7c0      159cd2eb       bl loc.imp.objc_msgSend
+  │││││╎│   0x00d1b7c4      0010a0e1       mov r1, r0
+  │││││╎│   0x00d1b7c8      8002a0e1       lsl r0, r0, 5
+  │││││╎│   0x00d1b7cc      34209de5       ldr r2, [sp, 0x34]
+  │││││╎│   0x00d1b7d0      000082e0       add r0, r2, r0
+  │││││╎│   0x00d1b7d4      30108de5       str r1, [sp, 0x30]
+  │││││╎│   0x00d1b7d8      2c008de5       str r0, [sp, 0x2c]
+  ────────< 0x00d1b7dc      0c0000ea       b 0xd1b814
+  │││││╎│   0x00d1b7e0      f0523400       ldrshteq r5, [r4], -r0
+  │││││╎│   0x00d1b7e4      7c523400       eorseq r5, r4, ip, ror r2
+  │││││╎│   0x00d1b7e8      08523400       eorseq r5, r4, r8, lsl 4
+  ────────> 0x00d1b7ec      28029fe5       ldr r0, [0x00d1ba1c]        ; [0xd1ba1c:4]=0xffffc89c
+  │││││╎│   0x00d1b7f0      94101be5       ldr r1, [fp, -0x94]
+  │││││╎│   0x00d1b7f4      010090e7       ldr r0, [r0, r1]
+  │││││╎│   0x00d1b7f8      68201be5       ldr r2, [fp, -0x68]
+  │││││╎│   0x00d1b7fc      20301be5       ldr r3, [fp, -0x20]
+  │││││╎│   0x00d1b800      000090e5       ldr r0, [r0]
+  │││││╎│   0x00d1b804      000083e0       add r0, r3, r0
+  │││││╎│   0x00d1b808      000090e5       ldr r0, [r0]
+  │││││╎│   0x00d1b80c      000042e0       sub r0, r2, r0
+  │││││╎│   0x00d1b810      2c008de5       str r0, [sp, 0x2c]
+  ────────> 0x00d1b814      2c009de5       ldr r0, [sp, 0x2c]
+  │││││╎│   0x00d1b818      48008de5       str r0, [sp, 0x48]
+  ────────> 0x00d1b81c      48009de5       ldr r0, [sp, 0x48]
+  │││││╎│   0x00d1b820      950000eb       bl 0xd1ba7c
+  │││││╎│   0x00d1b824      020b50e3       cmp r0, 0x800
+  ────────< 0x00d1b828      310000da       ble 0xd1b8f4
+  │││││╎│   0x00d1b82c      010000e3       movw r0, 1
+  │││││╎│   0x00d1b830      d0119fe5       ldr r1, [0x00d1ba08]        ; [0xd1ba08:4]=0xfffffcf8
+  │││││╎│   0x00d1b834      94201be5       ldr r2, [fp, -0x94]
+  │││││╎│   0x00d1b838      021091e7       ldr r1, [r1, r2]
+  │││││╎│   0x00d1b83c      c8319fe5       ldr r3, [0x00d1ba0c]        ; [0xd1ba0c:4]=0xffffc8d8
+  │││││╎│   0x00d1b840      023093e7       ldr r3, [r3, r2]
+  │││││╎│   0x00d1b844      00c000e3       movw ip, 0
+  │││││╎│   0x00d1b848      e4e19fe5       ldr lr, [0x00d1ba34]        ; [0xd1ba34:4]=0xfffffce8
+  │││││╎│   0x00d1b84c      02e09ee7       ldr lr, [lr, r2]
+  │││││╎│   0x00d1b850      bc419fe5       ldr r4, [0x00d1ba14]        ; [0xd1ba14:4]=0xffffbcac
+  │││││╎│   0x00d1b854      024094e7       ldr r4, [r4, r2]
+  │││││╎│   0x00d1b858      b8519fe5       ldr r5, [0x00d1ba18]        ; [0xd1ba18:4]=0xffe28ab8
+  │││││╎│   0x00d1b85c      025085e0       add r5, r5, r2
+  │││││╎│   0x00d1b860      006000e3       movw r6, 0
+  │││││╎│   0x00d1b864      c0719fe5       ldr r7, [0x00d1ba2c]        ; [0xd1ba2c:4]=0xfffffcb4
+  │││││╎│   0x00d1b868      027097e7       ldr r7, [r7, r2]
+  │││││╎│   0x00d1b86c      20801be5       ldr r8, [fp, -0x20]
+  │││││╎│   0x00d1b870      007097e5       ldr r7, [r7]
+  │││││╎│   0x00d1b874      077088e0       add r7, r8, r7
+  │││││╎│   0x00d1b878      0060c7e5       strb r6, [r7]
+  │││││╎│   0x00d1b87c      20601be5       ldr r6, [fp, -0x20]
+  │││││╎│   0x00d1b880      00709ee5       ldr r7, [lr]
+  │││││╎│   0x00d1b884      076086e0       add r6, r6, r7
+  │││││╎│   0x00d1b888      006096e5       ldr r6, [r6]
+  │││││╎│   0x00d1b88c      005095e5       ldr r5, [r5]
+  │││││╎│   0x00d1b890      28008de5       str r0, [sp, 0x28]
+  │││││╎│   0x00d1b894      0600a0e1       mov r0, r6
+  │││││╎│   0x00d1b898      24108de5       str r1, [sp, 0x24]
+  │││││╎│   0x00d1b89c      0510a0e1       mov r1, r5
+  │││││╎│   0x00d1b8a0      20c08de5       str ip, [sp, 0x20]
+  │││││╎│   0x00d1b8a4      1ce08de5       str lr, [sp, 0x1c]
+  │││││╎│   0x00d1b8a8      18308de5       str r3, [sp, 0x18]
+  │││││╎│   0x00d1b8ac      34ff2fe1       blx r4
+  │││││╎│   0x00d1b8b0      20001be5       ldr r0, [fp, -0x20]
+  │││││╎│   0x00d1b8b4      1c109de5       ldr r1, [sp, 0x1c]
+  │││││╎│   0x00d1b8b8      002091e5       ldr r2, [r1]
+  │││││╎│   0x00d1b8bc      020080e0       add r0, r0, r2
+  │││││╎│   0x00d1b8c0      20209de5       ldr r2, [sp, 0x20]
+  │││││╎│   0x00d1b8c4      002080e5       str r2, [r0]
+  │││││╎│   0x00d1b8c8      20001be5       ldr r0, [fp, -0x20]
+  │││││╎│   0x00d1b8cc      18309de5       ldr r3, [sp, 0x18]
+  │││││╎│   0x00d1b8d0      00c093e5       ldr ip, [r3]
+  │││││╎│   0x00d1b8d4      0c0080e0       add r0, r0, ip
+  │││││╎│   0x00d1b8d8      28c09de5       ldr ip, [sp, 0x28]
+  │││││╎│   0x00d1b8dc      00c0c0e5       strb ip, [r0]
+  │││││╎│   0x00d1b8e0      20001be5       ldr r0, [fp, -0x20]
+  │││││╎│   0x00d1b8e4      24e09de5       ldr lr, [sp, 0x24]
+  │││││╎│   0x00d1b8e8      00409ee5       ldr r4, [lr]
+  │││││╎│   0x00d1b8ec      040080e0       add r0, r0, r4
+  │││││╎│   0x00d1b8f0      00c0c0e5       strb ip, [r0]
+  ────────> 0x00d1b8f4      ffffffea       b 0xd1b8f8
+  ─└──────> 0x00d1b8f8      340000ea       b 0xd1b9d0
+  │ │││╎│   0x00d1b8fc      b4c8ffff       invalid
+  │ │││╎│   0x00d1b900      5c513400       eorseq r5, r4, ip, asr r1
+  │ │││╎│   0x00d1b904      e88ae2ff       invalid
+  │ │└────> 0x00d1b908      010000e3       movw r0, 1
+  │ │ │╎│   0x00d1b90c      f4109fe5       ldr r1, [0x00d1ba08]        ; [0xd1ba08:4]=0xfffffcf8
+  │ │ │╎│   0x00d1b910      94201be5       ldr r2, [fp, -0x94]
+  │ │ │╎│   0x00d1b914      021091e7       ldr r1, [r1, r2]
+  │ │ │╎│   0x00d1b918      ec309fe5       ldr r3, [0x00d1ba0c]        ; [0xd1ba0c:4]=0xffffc8d8
+  │ │ │╎│   0x00d1b91c      023093e7       ldr r3, [r3, r2]
+  │ │ │╎│   0x00d1b920      00c000e3       movw ip, 0
+  │ │ │╎│   0x00d1b924      08e19fe5       ldr lr, [0x00d1ba34]        ; [0xd1ba34:4]=0xfffffce8
+  │ │ │╎│   0x00d1b928      02e09ee7       ldr lr, [lr, r2]
+  │ │ │╎│   0x00d1b92c      e0409fe5       ldr r4, [0x00d1ba14]        ; [0xd1ba14:4]=0xffffbcac
+  │ │ │╎│   0x00d1b930      024094e7       ldr r4, [r4, r2]
+  │ │ │╎│   0x00d1b934      dc509fe5       ldr r5, [0x00d1ba18]        ; [0xd1ba18:4]=0xffe28ab8
+  │ │ │╎│   0x00d1b938      025085e0       add r5, r5, r2
+  │ │ │╎│   0x00d1b93c      006000e3       movw r6, 0
+  │ │ │╎│   0x00d1b940      e4709fe5       ldr r7, [0x00d1ba2c]        ; [0xd1ba2c:4]=0xfffffcb4
+  │ │ │╎│   0x00d1b944      027097e7       ldr r7, [r7, r2]
+  │ │ │╎│   0x00d1b948      20801be5       ldr r8, [fp, -0x20]
+  │ │ │╎│   0x00d1b94c      007097e5       ldr r7, [r7]
+  │ │ │╎│   0x00d1b950      077088e0       add r7, r8, r7
+  │ │ │╎│   0x00d1b954      0060c7e5       strb r6, [r7]
+  │ │ │╎│   0x00d1b958      20601be5       ldr r6, [fp, -0x20]
+  │ │ │╎│   0x00d1b95c      00709ee5       ldr r7, [lr]
+  │ │ │╎│   0x00d1b960      076086e0       add r6, r6, r7
+  │ │ │╎│   0x00d1b964      006096e5       ldr r6, [r6]
+  │ │ │╎│   0x00d1b968      005095e5       ldr r5, [r5]
+  │ │ │╎│   0x00d1b96c      14008de5       str r0, [sp, 0x14]
+  │ │ │╎│   0x00d1b970      0600a0e1       mov r0, r6
+  │ │ │╎│   0x00d1b974      10108de5       str r1, [sp, 0x10]
+  │ │ │╎│   0x00d1b978      0510a0e1       mov r1, r5
+  │ │ │╎│   0x00d1b97c      0cc08de5       str ip, [sp, 0xc]
+  │ │ │╎│   0x00d1b980      08e08de5       str lr, [sp, 8]
+  │ │ │╎│   0x00d1b984      04308de5       str r3, [sp, 4]
+  │ │ │╎│   0x00d1b988      34ff2fe1       blx r4
+  │ │ │╎│   0x00d1b98c      20001be5       ldr r0, [fp, -0x20]
+  │ │ │╎│   0x00d1b990      08109de5       ldr r1, [sp, 8]
+  │ │ │╎│   0x00d1b994      002091e5       ldr r2, [r1]
+  │ │ │╎│   0x00d1b998      020080e0       add r0, r0, r2
+  │ │ │╎│   0x00d1b99c      0c209de5       ldr r2, [sp, 0xc]
+  │ │ │╎│   0x00d1b9a0      002080e5       str r2, [r0]
+  │ │ │╎│   0x00d1b9a4      20001be5       ldr r0, [fp, -0x20]
+  │ │ │╎│   0x00d1b9a8      04309de5       ldr r3, [sp, 4]
+  │ │ │╎│   0x00d1b9ac      00c093e5       ldr ip, [r3]
+  │ │ │╎│   0x00d1b9b0      0c0080e0       add r0, r0, ip
+  │ │ │╎│   0x00d1b9b4      14c09de5       ldr ip, [sp, 0x14]
+  │ │ │╎│   0x00d1b9b8      00c0c0e5       strb ip, [r0]
+  │ │ │╎│   0x00d1b9bc      20001be5       ldr r0, [fp, -0x20]
+  │ │ │╎│   0x00d1b9c0      10e09de5       ldr lr, [sp, 0x10]
+  │ │ │╎│   0x00d1b9c4      00409ee5       ldr r4, [lr]
+  │ │ │╎│   0x00d1b9c8      040080e0       add r0, r0, r4
+  │ │ │╎│   0x00d1b9cc      00c0c0e5       strb ip, [r0]
+  ───┌────< 0x00d1b9d0      ffffffea       b 0xd1b9d4
+  │ │└────> 0x00d1b9d4      5c001be5       ldr r0, [fp, -0x5c]
+  │ │ │╎│   0x00d1b9d8      010080e2       add r0, r0, 1
+  │ │ │╎│   0x00d1b9dc      5c000be5       str r0, [fp, -0x5c]
+  │ │ │└──< 0x00d1b9e0      70fdffea       b 0xd1afa8
+  └─└─└┌──< 0x00d1b9e4      ffffffea       b 0xd1b9e8
+       └└─> 0x00d1b9e8      18d04be2       sub sp, fp, 0x18
+            0x00d1b9ec      f08dbde8       pop {r4, r5, r6, r7, r8, sl, fp, pc}
+            0x00d1b9f0      acbcffff       invalid
+            0x00d1b9f4      ec8ae2ff       invalid
+            0x00d1b9f8      d8fcffff       invalid
+            0x00d1b9fc      b8fcffff       invalid
+            0x00d1ba00      a0c8ffff       invalid
+            0x00d1ba04      b0fcffff       invalid
+            0x00d1ba08      f8fcffff       invalid
+            0x00d1ba0c      d8c8ffff       invalid
+            0x00d1ba10      e4fcffff       invalid
+            0x00d1ba14      acbcffff       invalid
+            0x00d1ba18      b88ae2ff       invalid
+            0x00d1ba1c      9cc8ffff       invalid
+            0x00d1ba20      e48ae2ff       invalid
+            0x00d1ba24      b4c8ffff       invalid
+            0x00d1ba28      e88ae2ff       invalid
+            0x00d1ba2c      b4fcffff       invalid
+            0x00d1ba30      acfcffff       invalid
+            0x00d1ba34      e8fcffff       invalid
+            0x00d1ba38      30493400       eorseq r4, r4, r0, lsr sb
+            0x00d1ba3c      40483400       eorseq r4, r4, r0, asr 16
+            0x00d1ba40      cc473400       eorseq r4, r4, ip, asr 15
+            0x00d1ba44      b4483400       ldrhteq r4, [r4], -r4
+            0x00d1ba48      10473400       eorseq r4, r4, r0, lsl r7
+            0x00d1ba4c      ec8ae2ff       invalid
+            0x00d1ba50      d4fcffff       invalid
+            0x00d1ba54      6c8ae2ff       invalid
+            0x00d1ba58      f08ae2ff       invalid
+            0x00d1ba5c      00453400       eorseq r4, r4, r0, lsl 10
+            0x00d1ba60      dc433400       ldrsbteq r4, [r4], -ip
+            0x00d1ba64      68433400       eorseq r4, r4, r8, ror 6
+            0x00d1ba68      5c443400       eorseq r4, r4, ip, asr r4
+            0x00d1ba6c      4c4f3400       eorseq r4, r4, ip, asr 30
+            0x00d1ba70      344e3400       eorseq r4, r4, r4, lsr lr
+            0x00d1ba74      c04d3400       eorseq r4, r4, r0, asr 27
+            0x00d1ba78      a84e3400       eorseq r4, r4, r8, lsr 29

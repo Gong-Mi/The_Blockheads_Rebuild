@@ -1,0 +1,591 @@
+{
+  "batch": "DynamicWorld typed accessor family A (E36): placeFireAtPosition:, objectOfType:atPos:, torchAtPos:, removeTorchAtPos:, eggAtPos:, addEggAtPos:saveDict:, removeEggAtPos:, paintingWithID:, paintingAtPos: and removePaintingAtPos:; 10 bodies",
+  "claim": "a static bounded-body map with per-instruction anchors; the wire-format markers, the NSLog key strings, the C++ container member layouts and the packet helper at 0x8b84c8 are outside these bodies",
+  "classes": [
+    {
+      "boundary": "ARM.exidx end 0x008e8320 (listing bound); next ObjC IMP 0x008e8320 DynamicWorld -[addTorchAtPos:ofType:dataA:dataB:saveDict:placedByClient:]",
+      "boundary_end": "0x008e8320",
+      "branches": [
+        {
+          "address": "0x008e8140",
+          "destination": "0x008e8150",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008e814c",
+          "destination": "0x008e82ec",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008e8160",
+          "destination": "0x008e81d0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008e81b4",
+          "destination": "0x008e81d0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x008e81cc",
+          "destination": "0x008e82ec",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008e823c",
+          "destination": "0x008e82e4",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x008e812c"
+        },
+        {
+          "callee": "0x00a13ce0",
+          "route": "bl sym.tileIsPlant_Tile_",
+          "site": "0x008e8154"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008e81a8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008e8228"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008e82b4"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x008e82e0"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008e80e4",
+      "ivars": {
+        "0x008e82f8": {
+          "offset": 4,
+          "slot": "0x0105dfd8",
+          "symbol": "OBJC_IVAR_$_DynamicWorld.world"
+        }
+      },
+      "method": "DynamicWorld -[placeFireAtPosition:]",
+      "name": "wtl_placefireatposition_",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008e82fc": {
+          "selector": "getPlantAtPos:",
+          "slot": "0x00e830d8"
+        },
+        "0x008e8304": {
+          "selector": "loadStandardDynamicObjectOfType:atPos:",
+          "slot": "0x00e830a4"
+        },
+        "0x008e830c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x008e8310": {
+          "selector": "sendNetDataIfNeededForObject:isCreation:",
+          "slot": "0x00e82d94"
+        },
+        "0x008e8314": {
+          "selector": "worldChangedAtPos:sendReliably:",
+          "slot": "0x00e830dc"
+        }
+      },
+      "semantics": "placeFireAtPosition: places fire (or burns a plant) at a position. Prologue 0x008e80e4 (frame 0x78; base 0x105faf4).\nTile probe: `tileAtWorldPositionLoaded(int, int, World*)` (C call @0x8e812c, world via ffffe4e4); the tile byte at +0x16 must be zero (@0x8e8138-0x8e8140 -> return).\nPlant branch: `tileIsPlant(Tile*)` (C call @0x8e8154): a plant -> the ffe235e4 call (@0x8e817c-0x8e81a8) and the byte [r2+0xb] cleared (`strb r1, [r2, 0xb]` @0x8e81c4) - the plant burns.\nCreate: otherwise the type **0x10 (16)** (`movw r1, 0x10`, `mov lr, 0x10` @0x8e81d4-0x8e820c) + the ffe235b0 creation call (@0x8e81ec-0x8e8228) with the pos argument.\n",
+      "types": "@16@0:4{?=ii}8",
+      "verified_words": 143
+    },
+    {
+      "boundary": "ARM.exidx end 0x008e888c (listing bound); next ObjC IMP 0x008e888c DynamicWorld -[torchAtPos:]",
+      "boundary_end": "0x008e888c",
+      "branches": [
+        {
+          "address": "0x008e878c",
+          "destination": "0x008e8858",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008e8804",
+          "destination": "0x008e8854",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x008e8850",
+          "destination": "0x008e8860",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008e8854",
+          "destination": "0x008e8858",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x00a15838",
+          "route": "bl sym.worldIndexAtWorldPos_intpair__World_",
+          "site": "0x008e8738"
+        },
+        {
+          "callee": "0x00910a74",
+          "route": "bl method.unsigned_long_std::__1::__tree_std::__1::pair_unsigned_long_long__DynamicObject___std::__1::__map_value_compare_unsigned_long_long__DynamicObject__std::__1::less_unsigned_long_long___true___std::__1::allocator_std::__1::pair_unsigned_long_long__DynamicObject_____.__count_unique_unsigned_long_long__unsigned_long_long_const__const",
+          "site": "0x008e8784"
+        },
+        {
+          "callee": "0x008bcf24",
+          "route": "bl method.std::__1::map_unsigned_long_long__DynamicObject__std::__1::less_unsigned_long_long___std::__1::allocator_std::__1::pair_unsigned_long_long_const__DynamicObject_____.operator___unsigned_long_long_",
+          "site": "0x008e87cc"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x008e87f8"
+        },
+        {
+          "callee": "0x008bcf24",
+          "route": "bl method.std::__1::map_unsigned_long_long__DynamicObject__std::__1::less_unsigned_long_long___std::__1::allocator_std::__1::pair_unsigned_long_long_const__DynamicObject_____.operator___unsigned_long_long_",
+          "site": "0x008e8844"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008e86b4",
+      "ivars": {
+        "0x008e886c": {
+          "offset": 4,
+          "slot": "0x0105dfd8",
+          "symbol": "OBJC_IVAR_$_DynamicWorld.world"
+        },
+        "0x008e8874": {
+          "offset": 1620,
+          "slot": "0x0105e048",
+          "symbol": "OBJC_IVAR_$_DynamicWorld.dynamicObjectsByWorldPosIndex"
+        }
+      },
+      "method": "DynamicWorld -[objectOfType:atPos:]",
+      "name": "wtl_objectoftype_atpos_",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008e8878": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x008e887c": {
+          "selector": "needsRemoved",
+          "slot": "0x00e82fa0"
+        }
+      },
+      "semantics": "objectOfType:atPos: resolves the dynamic object of a type at a position. Prologue 0x008e86b4 (frame 0x68; base 0x105faf4).\nLookup 1: `worldIndexAtWorldPos(intpair, World*)` (world via ffffe4e4 @0x8e86f8-0x8e8738) -> the **ffffe554 map's 12-byte segment** (`add r1, r1, r1, lsl 1` <<2 @0x8e875c) `__count_unique(u64)` (@0x8e8784): hit -> `operator[](u64&&)` (@0x8e87cc) -> the **ffe234ac gate** (@0x8e87dc): loaded -> return the object (@0x8e8804).\nLookup 2: the not-loaded / miss path continues with the second ffffe554 walk (@0x8e8808+) - the same two-registry resolver shape as E31's loadStandardDynamicObjectOfType:atPos:.\n",
+      "types": "@20@0:4i8{?=ii}12",
+      "verified_words": 118
+    },
+    {
+      "boundary": "ARM.exidx end 0x008e88fc (listing bound); next ObjC IMP 0x008e88fc DynamicWorld -[removeStandardObject:]",
+      "boundary_end": "0x008e88fc",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008e88e8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008e888c",
+      "ivars": {},
+      "method": "DynamicWorld -[torchAtPos:]",
+      "name": "wtl_torchatpos_",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008e88f4": {
+          "selector": "objectOfType:atPos:",
+          "slot": "0x00e830e4"
+        }
+      },
+      "semantics": "torchAtPos: returns the torch at a position. Prologue 0x008e888c (frame 0x28; base 0x105faf4).\nBody: the type **0x11 (17)** (`movw ip, 0x11`, `mov r2, 0x11` @0x8e8898/0x8e88e0) + the **ffe235f0 lookup** (@0x8e88c0-0x8e88e8) - the torch accessor of the typed pair.\n",
+      "types": "@16@0:4{?=ii}8",
+      "verified_words": 28
+    },
+    {
+      "boundary": "ARM.exidx end 0x008e909c (listing bound); next ObjC IMP 0x008e909c DynamicWorld -[createTreasureChestOrTrollAtTile:atPos:loadTroll:loadTreasure:]",
+      "boundary_end": "0x008e909c",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008e9050"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x008e9078"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008e8fe8",
+      "ivars": {},
+      "method": "DynamicWorld -[removeTorchAtPos:]",
+      "name": "wtl_removetorchatpos_",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008e9088": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x008e908c": {
+          "selector": "removeStandardObject:",
+          "slot": "0x00e830f4"
+        },
+        "0x008e9090": {
+          "selector": "torchAtPos:",
+          "slot": "0x00e83058"
+        }
+      },
+      "semantics": "removeTorchAtPos: removes the torch at a position. Prologue 0x008e8fe8 (frame 0x38; base 0x105faf4).\nBody: the **ffe23600 gate** (cell 0x8e908c) + the **ffe23564 remove call** (@0x8e9090-0x8e9078) with the pos - the torch removal leg.\n",
+      "types": "@16@0:4{?=ii}8",
+      "verified_words": 45
+    },
+    {
+      "boundary": "ARM.exidx end 0x008ea7a8 (listing bound); next ObjC IMP 0x008ea7a8 DynamicWorld -[addEggAtPos:saveDict:]",
+      "boundary_end": "0x008ea7a8",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008ea794"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008ea738",
+      "ivars": {},
+      "method": "DynamicWorld -[eggAtPos:]",
+      "name": "wtl_eggatpos_",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008ea7a0": {
+          "selector": "objectOfType:atPos:",
+          "slot": "0x00e830e4"
+        }
+      },
+      "semantics": "eggAtPos: returns the egg at a position. Prologue 0x008ea738 (frame 0x28; base 0x105faf4).\nBody: the type **0x1e (30)** (`movw ip, 0x1e`, `mov r2, 0x1e` @0x8ea744/0x8ea78c) + the **ffe235f0 lookup** (@0x8ea76c-0x8ea794) - the dodo-egg accessor.\n",
+      "types": "@16@0:4{?=ii}8",
+      "verified_words": 28
+    },
+    {
+      "boundary": "ARM.exidx end 0x008eaa28 (listing bound); next ObjC IMP 0x008eaa28 DynamicWorld -[removeEggAtPos:]",
+      "boundary_end": "0x008eaa28",
+      "branches": [
+        {
+          "address": "0x008ea888",
+          "destination": "0x008ea9e8",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008ea800"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008ea874"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008ea8b8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008ea8f4"
+        },
+        {
+          "callee": "0x008bcf24",
+          "route": "bl method.std::__1::map_unsigned_long_long__DynamicObject__std::__1::less_unsigned_long_long___std::__1::allocator_std::__1::pair_unsigned_long_long_const__DynamicObject_____.operator___unsigned_long_long_",
+          "site": "0x008ea908"
+        },
+        {
+          "callee": "0x00a15838",
+          "route": "bl sym.worldIndexAtWorldPos_intpair__World_",
+          "site": "0x008ea944"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008ea960"
+        },
+        {
+          "callee": "0x008bcf24",
+          "route": "bl method.std::__1::map_unsigned_long_long__DynamicObject__std::__1::less_unsigned_long_long___std::__1::allocator_std::__1::pair_unsigned_long_long_const__DynamicObject_____.operator___unsigned_long_long_",
+          "site": "0x008ea998"
+        },
+        {
+          "callee": null,
+          "route": "blx r4",
+          "site": "0x008ea9e4"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008ea7a8",
+      "ivars": {
+        "0x008ea9fc": {
+          "offset": 4,
+          "slot": "0x0105dfd8",
+          "symbol": "OBJC_IVAR_$_DynamicWorld.world"
+        },
+        "0x008eaa00": {
+          "offset": 7336,
+          "slot": "0x0105dff8",
+          "symbol": "OBJC_IVAR_$_DynamicWorld.cache"
+        },
+        "0x008eaa18": {
+          "offset": 840,
+          "slot": "0x0105e044",
+          "symbol": "OBJC_IVAR_$_DynamicWorld.dynamicObjectsToAdd"
+        },
+        "0x008eaa20": {
+          "offset": 1620,
+          "slot": "0x0105e048",
+          "symbol": "OBJC_IVAR_$_DynamicWorld.dynamicObjectsByWorldPosIndex"
+        }
+      },
+      "method": "DynamicWorld -[addEggAtPos:saveDict:]",
+      "name": "wtl_addeggatpos_savedict_",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008ea9f0": {
+          "class": "OBJC_CLASS_$_Egg",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8aa74"
+        },
+        "0x008ea9f8": {
+          "selector": "alloc",
+          "slot": "0x00e82cbc"
+        },
+        "0x008eaa04": {
+          "selector": "initWithWorld:dynamicWorld:atPosition:cache:saveDict:",
+          "slot": "0x00e83108"
+        },
+        "0x008eaa08": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x008eaa0c": {
+          "selector": "sendNetDataIfNeededForObject:isCreation:",
+          "slot": "0x00e82d94"
+        },
+        "0x008eaa10": {
+          "selector": "objectType",
+          "slot": "0x00e82e28"
+        },
+        "0x008eaa1c": {
+          "selector": "uniqueID",
+          "slot": "0x00e82e20"
+        }
+      },
+      "semantics": "addEggAtPos:saveDict: creates/loads an egg at a position. Prologue 0x008ea7a8 (frame 0x90; base 0x105faf4).\nCreate: the class **ffe2af80** alloc/init (cells ffe2af80/ffe231c8 @0x8ea7d8-0x8ea800) + the world chain (ffffe4e4/ffffe504 @0x8ea808-0x8ea83c) + the **ffe23614 add call** (@0x8ea844-0x8ea864) with the saveDict argument - the egg adder (type 30 family).\n",
+      "types": "v20@0:4{?=ii}8@16",
+      "verified_words": 160
+    },
+    {
+      "boundary": "ARM.exidx end 0x008eaadc (listing bound); next ObjC IMP 0x008eaadc DynamicWorld -[paintingWithID:]",
+      "boundary_end": "0x008eaadc",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008eaa90"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x008eaab8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008eaa28",
+      "ivars": {},
+      "method": "DynamicWorld -[removeEggAtPos:]",
+      "name": "wtl_removeeggatpos_",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008eaac8": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x008eaacc": {
+          "selector": "removeStandardObject:",
+          "slot": "0x00e830f4"
+        },
+        "0x008eaad0": {
+          "selector": "eggAtPos:",
+          "slot": "0x00e8310c"
+        }
+      },
+      "semantics": "removeEggAtPos: removes the egg at a position. Prologue 0x008eaa28 (frame 0x38; base 0x105faf4).\nBody: the **ffe23600 gate** (cell 0x8eaacc) + the **ffe23618 remove call** (@0x8eaad0-0x8eaab8) - the egg removal leg.\n",
+      "types": "@16@0:4{?=ii}8",
+      "verified_words": 45
+    },
+    {
+      "boundary": "ARM.exidx end 0x008eabf8 (listing bound); next ObjC IMP 0x008eabf8 DynamicWorld -[paintingAtPos:]",
+      "boundary_end": "0x008eabf8",
+      "branches": [
+        {
+          "address": "0x008eab38",
+          "destination": "0x008eab6c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008eab68",
+          "destination": "0x008eabe0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008eaba4",
+          "destination": "0x008eabd8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008eabd4",
+          "destination": "0x008eabe0",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x00910a74",
+          "route": "bl method.unsigned_long_std::__1::__tree_std::__1::pair_unsigned_long_long__DynamicObject___std::__1::__map_value_compare_unsigned_long_long__DynamicObject__std::__1::less_unsigned_long_long___true___std::__1::allocator_std::__1::pair_unsigned_long_long__DynamicObject_____.__count_unique_unsigned_long_long__unsigned_long_long_const__const",
+          "site": "0x008eab30"
+        },
+        {
+          "callee": "0x008bcb78",
+          "route": "bl method.std::__1::map_unsigned_long_long__DynamicObject__std::__1::less_unsigned_long_long___std::__1::allocator_std::__1::pair_unsigned_long_long_const__DynamicObject_____.operator___unsigned_long_long_const_",
+          "site": "0x008eab5c"
+        },
+        {
+          "callee": "0x00910a74",
+          "route": "bl method.unsigned_long_std::__1::__tree_std::__1::pair_unsigned_long_long__DynamicObject___std::__1::__map_value_compare_unsigned_long_long__DynamicObject__std::__1::less_unsigned_long_long___true___std::__1::allocator_std::__1::pair_unsigned_long_long__DynamicObject_____.__count_unique_unsigned_long_long__unsigned_long_long_const__const",
+          "site": "0x008eab9c"
+        },
+        {
+          "callee": "0x008bcb78",
+          "route": "bl method.std::__1::map_unsigned_long_long__DynamicObject__std::__1::less_unsigned_long_long___std::__1::allocator_std::__1::pair_unsigned_long_long_const__DynamicObject_____.operator___unsigned_long_long_const_",
+          "site": "0x008eabc8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008eaadc",
+      "ivars": {
+        "0x008eabec": {
+          "offset": 60,
+          "slot": "0x0105e040",
+          "symbol": "OBJC_IVAR_$_DynamicWorld.dynamicObjects"
+        },
+        "0x008eabf0": {
+          "offset": 840,
+          "slot": "0x0105e044",
+          "symbol": "OBJC_IVAR_$_DynamicWorld.dynamicObjectsToAdd"
+        }
+      },
+      "method": "DynamicWorld -[paintingWithID:]",
+      "name": "wtl_paintingwithid_",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "paintingWithID: resolves a painting by ID. Prologue 0x008eaadc (frame 0x38; base 0x105faf4).\nLookup 1: the **ffffe54c member's +0x270 slice** (`add r0, r0, 0x270` @0x8eab18) `__count_unique(u64)` (@0x8eab30): hit -> `operator[](u64 const&)` (@0x8eab5c) returns (@0x8eab68).\nLookup 2: miss -> the **ffffe550 member's +0x270 slice** with the same `__count_unique` (@0x8eab9c from @0x8eab6c) - the two-registry painting lookup (the same +0x270 offset E33's mute walk addresses).\n",
+      "types": "@16@0:4Q8",
+      "verified_words": 71
+    },
+    {
+      "boundary": "ARM.exidx end 0x008eac68 (listing bound); next ObjC IMP 0x008eac68 DynamicWorld -[addPaintingAtPos:ofType:saveDict:placedByClient:clientName:]",
+      "boundary_end": "0x008eac68",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008eac54"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008eabf8",
+      "ivars": {},
+      "method": "DynamicWorld -[paintingAtPos:]",
+      "name": "wtl_paintingatpos_",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008eac60": {
+          "selector": "objectOfType:atPos:",
+          "slot": "0x00e830e4"
+        }
+      },
+      "semantics": "paintingAtPos: returns the painting at a position. Prologue 0x008eabf8 (frame 0x28; base 0x105faf4).\nBody: the type **0x34 (52)** (`movw ip, 0x34`, `mov r2, 0x34` @0x8eac04/0x8eac4c) + the **ffe235f0 lookup** (@0x8eac2c-0x8eac54) - the painting-at-position accessor.\n",
+      "types": "@16@0:4{?=ii}8",
+      "verified_words": 28
+    },
+    {
+      "boundary": "ARM.exidx end 0x008eb0c0 (listing bound); next ObjC IMP 0x008eb0c0 DynamicWorld -[addStandardObjectAtPos:objectType:itemType:saveDict:placedByClient:]",
+      "boundary_end": "0x008eb0c0",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008eb074"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x008eb09c"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008eb00c",
+      "ivars": {},
+      "method": "DynamicWorld -[removePaintingAtPos:]",
+      "name": "wtl_removepaintingatpos_",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008eb0ac": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x008eb0b0": {
+          "selector": "removeStandardObject:",
+          "slot": "0x00e830f4"
+        },
+        "0x008eb0b4": {
+          "selector": "paintingAtPos:",
+          "slot": "0x00e8304c"
+        }
+      },
+      "semantics": "removePaintingAtPos: removes the painting at a position. Prologue 0x008eb00c (frame 0x38; base 0x105faf4).\nBody: the **ffe23600 gate** (cell 0x8eb0b0) + the **ffe23558 remove call** (@0x8eb0b4-0x8eb09c) - the painting removal leg.\n",
+      "types": "@16@0:4{?=ii}8",
+      "verified_words": 45
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "schema": 1
+}

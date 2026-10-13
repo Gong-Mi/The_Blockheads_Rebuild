@@ -1,0 +1,135 @@
+# Donkey -[generateBreedForChild]
+# types: i8@0:4
+# implementation: 0x006cad1c
+# ARM.exidx end: 0x006caf24
+
+            0x006cad1c      00482de9       push {fp, lr}
+            0x006cad20      0db0a0e1       mov fp, sp
+            0x006cad24      08d04de2       sub sp, sp, 8
+            0x006cad28      84209fe5       ldr r2, [0x006cadb4]        ; [0x6cadb4:4]=0x994dc0
+            0x006cad2c      02208fe0       add r2, pc, r2
+            0x006cad30      70309fe5       ldr r3, [0x006cada8]        ; [0x6cada8:4]=0xffffd1ac
+            0x006cad34      023093e7       ldr r3, [r3, r2]
+            0x006cad38      6cc09fe5       ldr ip, [0x006cadac]        ; [0x6cadac:4]=0xffffd1a4
+            0x006cad3c      02c09ce7       ldr ip, [ip, r2]
+            0x006cad40      68e09fe5       ldr lr, [0x006cadb0]        ; [0x6cadb0:4]=0xffffd1bc
+            0x006cad44      02209ee7       ldr r2, [lr, r2]
+            0x006cad48      04008de5       str r0, [sp, 4]
+            0x006cad4c      00108de5       str r1, [sp]
+            0x006cad50      04009de5       ldr r0, [sp, 4]
+            0x006cad54      001092e5       ldr r1, [r2]
+            0x006cad58      010080e0       add r0, r0, r1
+            0x006cad5c      b000d0e1       ldrh r0, [r0]
+            0x006cad60      04109de5       ldr r1, [sp, 4]
+            0x006cad64      00209ce5       ldr r2, [ip]
+            0x006cad68      021081e0       add r1, r1, r2
+            0x006cad6c      b010d1e1       ldrh r1, [r1]
+            0x006cad70      04209de5       ldr r2, [sp, 4]
+            0x006cad74      003093e5       ldr r3, [r3]
+            0x006cad78      032082e0       add r2, r2, r3
+            0x006cad7c      d020d2e1       ldrsb r2, [r2]
+            0x006cad80      000052e3       cmp r2, 0
+            0x006cad84      002000e3       movw r2, 0
+            0x006cad88      0120a013       movne r2, 1
+            0x006cad8c      7000ffe6       uxth r0, r0
+            0x006cad90      7110ffe6       uxth r1, r1
+            0x006cad94      012002e2       and r2, r2, 1
+            0x006cad98      060000eb       bl 0x6cadb8
+            0x006cad9c      7000ffe6       uxth r0, r0
+            0x006cada0      0bd0a0e1       mov sp, fp
+            0x006cada4      0088bde8       pop {fp, pc}
+            0x006cada8      acd1ffff       invalid
+            0x006cadac      a4d1ffff       invalid
+            0x006cadb0      bcd1ffff       invalid
+            0x006cadb4      c04d9900       addseq r4, sb, r0, asr 27
+            0x006cadb8      00482de9       push {fp, lr}
+            0x006cadbc      0db0a0e1       mov fp, sp
+            0x006cadc0      10d04de2       sub sp, sp, 0x10
+            0x006cadc4      b4004be1       strh r0, [fp, -4]
+            0x006cadc8      b6104be1       strh r1, [fp, -6]
+            0x006cadcc      010002e2       and r0, r2, 1
+            0x006cadd0      07004be5       strb r0, [fp, -7]
+            0x006cadd4      07005be5       ldrb r0, [fp, -7]
+            0x006cadd8      010010e3       tst r0, 1
+        ┌─< 0x006caddc      0200001a       bne 0x6cadec
+        │   0x006cade0      b4005be1       ldrh r0, [fp, -4]
+        │   0x006cade4      b2004be1       strh r0, [fp, -2]
+       ┌──< 0x006cade8      370000ea       b 0x6caecc
+       │└─> 0x006cadec      a7feffeb       bl 0x6ca890
+       │    0x006cadf0      380a9fed       vldr s0, [0x006caed8]
+       │    0x006cadf4      100a01ee       vmov s2, r0
+       │    0x006cadf8      c11ab8ee       vcvt.f32.s32 s2, s2
+       │    0x006cadfc      000a81ee       vdiv.f32 s0, s2, s0
+       │    0x006cae00      010a8ded       vstr s0, [sp, 4]
+       │    0x006cae04      b4005be1       ldrh r0, [fp, -4]
+       │    0x006cae08      b6105be1       ldrh r1, [fp, -6]
+       │    0x006cae0c      010050e1       cmp r0, r1
+       │┌─< 0x006cae10      0d00000a       beq 0x6cae4c
+       ││   0x006cae14      000bb6ee       vmov.f64 d0, 5
+       ││   0x006cae18      011a9ded       vldr s2, [sp, 4]
+       ││   0x006cae1c      c12ab7ee       vcvt.f64.f32 d2, s2
+       ││   0x006cae20      c02bb4ee       vcmpe.f64 d2, d0
+       ││   0x006cae24      10faf1ee       vmrs apsr_nzcv, fpscr
+      ┌───< 0x006cae28      020000da       ble 0x6cae38
+      │││   0x006cae2c      b4005be1       ldrh r0, [fp, -4]
+      │││   0x006cae30      00008de5       str r0, [sp]
+     ┌────< 0x006cae34      010000ea       b 0x6cae40
+     │└───> 0x006cae38      b6005be1       ldrh r0, [fp, -6]
+     │ ││   0x006cae3c      00008de5       str r0, [sp]
+     └────> 0x006cae40      00009de5       ldr r0, [sp]
+       ││   0x006cae44      b2004be1       strh r0, [fp, -2]
+      ┌───< 0x006cae48      1f0000ea       b 0x6caecc
+      ││└─> 0x006cae4c      000bb6ee       vmov.f64 d0, 5
+      ││    0x006cae50      011a9ded       vldr s2, [sp, 4]
+      ││    0x006cae54      c12ab7ee       vcvt.f64.f32 d2, s2
+      ││    0x006cae58      c02bb4ee       vcmpe.f64 d2, d0
+      ││    0x006cae5c      10faf1ee       vmrs apsr_nzcv, fpscr
+      ││┌─< 0x006cae60      100000da       ble 0x6caea8
+      │││   0x006cae64      89feffeb       bl 0x6ca890
+      │││   0x006cae68      000bb6ee       vmov.f64 d0, 5
+      │││   0x006cae6c      191a9fed       vldr s2, [0x006caed8]
+      │││   0x006cae70      100a02ee       vmov s4, r0
+      │││   0x006cae74      c22ab8ee       vcvt.f32.s32 s4, s4
+      │││   0x006cae78      011a82ee       vdiv.f32 s2, s4, s2
+      │││   0x006cae7c      c13ab7ee       vcvt.f64.f32 d3, s2
+      │││   0x006cae80      c03bb4ee       vcmpe.f64 d3, d0
+      │││   0x006cae84      10faf1ee       vmrs apsr_nzcv, fpscr
+     ┌────< 0x006cae88      0300005a       bpl 0x6cae9c
+     ││││   0x006cae8c      b4005be1       ldrh r0, [fp, -4]
+     ││││   0x006cae90      520100eb       bl 0x6cb3e0
+     ││││   0x006cae94      b2004be1       strh r0, [fp, -2]
+    ┌─────< 0x006cae98      0b0000ea       b 0x6caecc
+    │└────> 0x006cae9c      b4005be1       ldrh r0, [fp, -4]
+    │ │││   0x006caea0      b2004be1       strh r0, [fp, -2]
+    │┌────< 0x006caea4      080000ea       b 0x6caecc
+    ││││└─> 0x006caea8      b4005be1       ldrh r0, [fp, -4]
+    ││││    0x006caeac      170050e3       cmp r0, 0x17
+    ││││┌─< 0x006caeb0      030000aa       bge 0x6caec4
+    │││││   0x006caeb4      b4005be1       ldrh r0, [fp, -4]
+    │││││   0x006caeb8      010080e2       add r0, r0, 1
+    │││││   0x006caebc      b2004be1       strh r0, [fp, -2]
+   ┌──────< 0x006caec0      010000ea       b 0x6caecc
+   │││││└─> 0x006caec4      b4005be1       ldrh r0, [fp, -4]
+   │││││    0x006caec8      b2004be1       strh r0, [fp, -2]
+   └└└└└──> 0x006caecc      b2005be1       ldrh r0, [fp, -2]
+            0x006caed0      0bd0a0e1       mov sp, fp
+            0x006caed4      0088bde8       pop {fp, pc}
+            0x006caed8      0000004f       svcmi 0
+            0x006caedc      00482de9       push {fp, lr}
+            0x006caee0      0db0a0e1       mov fp, sp
+            0x006caee4      08d04de2       sub sp, sp, 8
+            0x006caee8      30209fe5       ldr r2, [0x006caf20]        ; [0x6caf20:4]=0x994c00
+            0x006caeec      02208fe0       add r2, pc, r2
+            0x006caef0      24309fe5       ldr r3, [0x006caf1c]        ; [0x6caf1c:4]=0xffffd1bc
+            0x006caef4      022093e7       ldr r2, [r3, r2]
+            0x006caef8      04008de5       str r0, [sp, 4]
+            0x006caefc      00108de5       str r1, [sp]
+            0x006caf00      04009de5       ldr r0, [sp, 4]
+            0x006caf04      001092e5       ldr r1, [r2]
+            0x006caf08      010080e0       add r0, r0, r1
+            0x006caf0c      b000d0e1       ldrh r0, [r0]
+            0x006caf10      030000eb       bl sym.nameForDonkeyBreed_DonkeyBreed_ ; nameForDonkeyBreed(DonkeyBreed)
+            0x006caf14      0bd0a0e1       mov sp, fp
+            0x006caf18      0088bde8       pop {fp, pc}
+            0x006caf1c      bcd1ffff       invalid
+            0x006caf20      004c9900       addseq r4, sb, r0, lsl 24

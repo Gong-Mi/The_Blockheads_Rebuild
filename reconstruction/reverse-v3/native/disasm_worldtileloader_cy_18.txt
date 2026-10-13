@@ -1,0 +1,54 @@
+# texCoordsForImageIndex  [C function]
+# implementation: 0x004d6820
+# ARM.exidx end: 0x004d71dc
+
+            ;-- texCoordsForImageIndex(int):
+            0x004d6820      00482de9       push {fp, lr}               ; texCoordsForImageIndex(int)
+            0x004d6824      0db0a0e1       mov fp, sp
+            0x004d6828      30d04de2       sub sp, sp, 0x30
+            0x004d682c      2b0a9fed       vldr s0, [0x004d68e0]
+            0x004d6830      261b9fed       vldr d1, [0x004d68d0]
+            0x004d6834      272b9fed       vldr d2, [0x004d68d8]
+            0x004d6838      202000e3       movw r2, 0x20
+            0x004d683c      04100be5       str r1, [fp, -4]
+            0x004d6840      04101be5       ldr r1, [fp, -4]
+            0x004d6844      10000be5       str r0, [fp, -0x10]
+            0x004d6848      0100a0e1       mov r0, r1
+            0x004d684c      0210a0e1       mov r1, r2
+            0x004d6850      14200be5       str r2, [fp, -0x14]
+            0x004d6854      042b8ded       vstr d2, [sp, 0x10]
+            0x004d6858      030a8ded       vstr s0, [sp, 0xc]
+            0x004d685c      001b8ded       vstr d1, [sp]
+            0x004d6860      eeb1f3eb       bl sym.imp.__modsi3
+            0x004d6864      08000be5       str r0, [fp, -8]
+            0x004d6868      04001be5       ldr r0, [fp, -4]
+            0x004d686c      14101be5       ldr r1, [fp, -0x14]
+            0x004d6870      acb3f3eb       bl sym.imp.__aeabi_idiv
+            0x004d6874      0c000be5       str r0, [fp, -0xc]
+            0x004d6878      08001be5       ldr r0, [fp, -8]
+            0x004d687c      100a00ee       vmov s0, r0
+            0x004d6880      c01bb8ee       vcvt.f64.s32 d1, s0
+            0x004d6884      042b9ded       vldr d2, [sp, 0x10]
+            0x004d6888      011b22ee       vmul.f64 d1, d2, d1
+            0x004d688c      003b9ded       vldr d3, [sp]
+            0x004d6890      031b31ee       vadd.f64 d1, d1, d3
+            0x004d6894      c10bb7ee       vcvt.f32.f64 s0, d1
+            0x004d6898      10001be5       ldr r0, [fp, -0x10]
+            0x004d689c      000a80ed       vstr s0, [r0]
+            0x004d68a0      030a9ded       vldr s0, [sp, 0xc]
+            0x004d68a4      020a80ed       vstr s0, [r0, 8]
+            0x004d68a8      0c101be5       ldr r1, [fp, -0xc]
+            0x004d68ac      101a04ee       vmov s8, r1
+            0x004d68b0      c41bb8ee       vcvt.f64.s32 d1, s8
+            0x004d68b4      011b22ee       vmul.f64 d1, d2, d1
+            0x004d68b8      031b31ee       vadd.f64 d1, d1, d3
+            0x004d68bc      c14bb7ee       vcvt.f32.f64 s8, d1
+            0x004d68c0      014a80ed       vstr s8, [r0, 4]
+            0x004d68c4      030a80ed       vstr s0, [r0, 0xc]
+            0x004d68c8      0bd0a0e1       mov sp, fp
+            0x004d68cc      0088bde8       pop {fp, pc}
+            0x004d68d0      00000000       andeq r0, r0, r0
+            0x004d68d4      0000403f       svclo 0x400000
+            0x004d68d8      00000000       andeq r0, r0, r0
+            0x004d68dc      0000a03f       svclo 0xa00000
+            0x004d68e0      0000f83c       ldcllo p0, c0, [r8], 0

@@ -1,0 +1,20 @@
+# ServerClient -[lightBlockIndex]
+# types: i8@0:4
+# implementation: 0x00d0baa0
+# ARM.exidx end: 0x00d0badc
+
+            0x00d0baa0      08d04de2       sub sp, sp, 8
+            0x00d0baa4      04008de5       str r0, [sp, 4]
+            0x00d0baa8      00108de5       str r1, [sp]
+            0x00d0baac      04009de5       ldr r0, [sp, 4]
+            0x00d0bab0      1c109fe5       ldr r1, [0x00d0bad4]        ; [0xd0bad4:4]=0xfffffbe8
+            0x00d0bab4      1c209fe5       ldr r2, [0x00d0bad8]        ; [0xd0bad8:4]=0x354034
+            0x00d0bab8      02208fe0       add r2, pc, r2
+            0x00d0babc      021091e7       ldr r1, [r1, r2]
+            0x00d0bac0      001091e5       ldr r1, [r1]
+            0x00d0bac4      010090e7       ldr r0, [r0, r1]
+            0x00d0bac8      5bf07ff5       dmb ish
+            0x00d0bacc      08d08de2       add sp, sp, 8
+            0x00d0bad0      1eff2fe1       bx lr
+            0x00d0bad4      e8fbffff       invalid
+            0x00d0bad8      34403500       eorseq r4, r5, r4, lsr r0

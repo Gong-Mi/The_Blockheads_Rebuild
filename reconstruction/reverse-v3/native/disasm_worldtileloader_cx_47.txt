@@ -1,0 +1,58 @@
+# tileAllowsPlacingOfSolidBlocks  [C function]
+# implementation: 0x00a12608
+# ARM.exidx end: 0x00a126dc
+
+            ;-- tileAllowsPlacingOfSolidBlocks(Tile*):
+            0x00a12608      00482de9       push {fp, lr}               ; tileAllowsPlacingOfSolidBlocks(Tile*)
+            0x00a1260c      0db0a0e1       mov fp, sp
+            0x00a12610      10d04de2       sub sp, sp, 0x10
+            0x00a12614      001000e3       movw r1, 0
+            0x00a12618      08008de5       str r0, [sp, 8]
+            0x00a1261c      08009de5       ldr r0, [sp, 8]
+            0x00a12620      010050e1       cmp r0, r1
+        ┌─< 0x00a12624      0200001a       bne 0xa12634
+        │   0x00a12628      000000e3       movw r0, 0
+        │   0x00a1262c      01004be5       strb r0, [fp, -1]
+       ┌──< 0x00a12630      260000ea       b 0xa126d0
+       │└─> 0x00a12634      08009de5       ldr r0, [sp, 8]
+       │    0x00a12638      0300d0e5       ldrb r0, [r0, 3]
+       │    0x00a1263c      670050e3       cmp r0, 0x67                ; 'g'
+       │┌─< 0x00a12640      1000001a       bne 0xa12688
+       ││   0x00a12644      08009de5       ldr r0, [sp, 8]
+       ││   0x00a12648      0b00d0e5       ldrb r0, [r0, 0xb]
+       ││   0x00a1264c      000050e3       cmp r0, 0
+      ┌───< 0x00a12650      0200001a       bne 0xa12660
+      │││   0x00a12654      010000e3       movw r0, 1
+      │││   0x00a12658      01004be5       strb r0, [fp, -1]
+     ┌────< 0x00a1265c      1b0000ea       b 0xa126d0
+     │└───> 0x00a12660      08009de5       ldr r0, [sp, 8]
+     │ ││   0x00a12664      72ffffeb       bl sym.tileForegroundContentsCanCoExistWithBlocksAndElevatorShafts_Tile_ ; tileForegroundContentsCanCoExistWithBlocksAndElevatorShafts(Tile*)
+     │ ││   0x00a12668      7000afe6       sxtb r0, r0
+     │ ││   0x00a1266c      000050e3       cmp r0, 0
+     │┌───< 0x00a12670      0200000a       beq 0xa12680
+     ││││   0x00a12674      010000e3       movw r0, 1
+     ││││   0x00a12678      01004be5       strb r0, [fp, -1]
+    ┌─────< 0x00a1267c      130000ea       b 0xa126d0
+   ┌──└───> 0x00a12680      ffffffea       b 0xa12684
+   └──┌───< 0x00a12684      0f0000ea       b 0xa126c8
+    ││││└─> 0x00a12688      000000e3       movw r0, 0
+    ││││    0x00a1268c      08109de5       ldr r1, [sp, 8]
+    ││││    0x00a12690      0b10d1e5       ldrb r1, [r1, 0xb]
+    ││││    0x00a12694      000051e3       cmp r1, 0
+    ││││    0x00a12698      04008de5       str r0, [sp, 4]
+    ││││┌─< 0x00a1269c      0500001a       bne 0xa126b8
+    │││││   0x00a126a0      08009de5       ldr r0, [sp, 8]
+    │││││   0x00a126a4      0300d0e5       ldrb r0, [r0, 3]
+    │││││   0x00a126a8      000050e3       cmp r0, 0
+    │││││   0x00a126ac      000000e3       movw r0, 0
+    │││││   0x00a126b0      0100a003       moveq r0, 1
+    │││││   0x00a126b4      04008de5       str r0, [sp, 4]
+    ││││└─> 0x00a126b8      04009de5       ldr r0, [sp, 4]
+    ││││    0x00a126bc      010000e2       and r0, r0, 1
+    ││││    0x00a126c0      01004be5       strb r0, [fp, -1]
+    ││││┌─< 0x00a126c4      010000ea       b 0xa126d0
+    ││└───> 0x00a126c8      000000e3       movw r0, 0
+    ││ ││   0x00a126cc      01004be5       strb r0, [fp, -1]
+    └└─└└─> 0x00a126d0      d1005be1       ldrsb r0, [fp, -1]
+            0x00a126d4      0bd0a0e1       mov sp, fp
+            0x00a126d8      0088bde8       pop {fp, pc}

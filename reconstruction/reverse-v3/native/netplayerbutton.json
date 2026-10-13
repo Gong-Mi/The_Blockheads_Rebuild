@@ -1,0 +1,2731 @@
+{
+  "batch": "NetPlayerButton (E156): the multiplayer player-row button; 36 bodies",
+  "claim": "'the per-player row button surface (touch cycle, button dispatch, the mute/ban/kick/report actions, the chat toggle and the player-state refresh); the surrounding player-list UI is outside these bodies'",
+  "classes": [
+    {
+      "boundary": "ARM.exidx end 0x00788818 (listing bound); next ObjC IMP 0x00788818 NetPlayerButton -[kickButtonTapped]",
+      "boundary_end": "0x00788818",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x007887f8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788798",
+      "ivars": {
+        "0x0078880c": {
+          "offset": 312,
+          "slot": "0x0105d724",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerName"
+        },
+        "0x00788810": {
+          "offset": 280,
+          "slot": "0x0105d70c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.world"
+        }
+      },
+      "method": "NetPlayerButton -[banButtonTapped]",
+      "name": "npb_00",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00788804": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00788808": {
+          "selector": "banPlayerWithNameFromPlayerButton:",
+          "slot": "0x00e8127c"
+        }
+      },
+      "semantics": "NetPlayerButton -[banButtonTapped] @0x00788798 (32 words, 0 branches, 1 call): [self->world banPlayerWithNameFromPlayerButton:self->playerName] - loads the world@280 and playerName@312 offset cells (0x00788810/0x0078880c) off the PIC base (0x00788814 -> 0x8d7344 + pc) and issues one objc_msgSend through the import cell 0x00788804 (cell 0xffffbcac) via 'blx r3'; self/_cmd only spilled, no branch, no result use.",
+      "types": "v8@0:4",
+      "verified_words": 32
+    },
+    {
+      "boundary": "ARM.exidx end 0x007884b8 (listing bound); next ObjC IMP 0x007884b8 NetPlayerButton -[textToggleButtonTapped]",
+      "boundary_end": "0x007884b8",
+      "branches": [
+        {
+          "address": "0x007881c8",
+          "destination": "0x00788264",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00788214",
+          "destination": "0x00788260",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00788260",
+          "destination": "0x00788264",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00788288",
+          "destination": "0x00788470",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00788208"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x0078825c"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00788358"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x007883c0"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x007883f0"
+        },
+        {
+          "callee": null,
+          "route": "blx r5",
+          "site": "0x00788434"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x0078846c"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788188",
+      "ivars": {
+        "0x00788478": {
+          "offset": 305,
+          "slot": "0x0105d748",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.local"
+        },
+        "0x00788484": {
+          "offset": 284,
+          "slot": "0x0105d710",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.worldUI"
+        },
+        "0x0078848c": {
+          "offset": 292,
+          "slot": "0x0105d72c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerUI"
+        },
+        "0x00788494": {
+          "offset": 280,
+          "slot": "0x0105d70c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.world"
+        },
+        "0x007884a4": {
+          "offset": 48,
+          "slot": "0x0105c624",
+          "symbol": "OBJC_IVAR_$_MJView.cache"
+        },
+        "0x007884a8": {
+          "offset": 52,
+          "slot": "0x0105c634",
+          "symbol": "OBJC_IVAR_$_MJView.windowInfo"
+        }
+      },
+      "method": "NetPlayerButton -[buttonAction:]",
+      "name": "npb_01",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x0078847c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00788480": {
+          "selector": "canZoomCameraToOtherPlayer",
+          "slot": "0x00e8125c"
+        },
+        "0x00788488": {
+          "selector": "zoomButtonTappedForButton:",
+          "slot": "0x00e81260"
+        },
+        "0x00788490": {
+          "selector": "hideChatView",
+          "slot": "0x00e8126c"
+        },
+        "0x00788498": {
+          "selector": "initWithWindowInfo:netPlayerButton:cache:localPlayerIsMod:showReportButton:",
+          "slot": "0x00e81268"
+        },
+        "0x0078849c": {
+          "selector": "isCloudGame",
+          "slot": "0x00e81264"
+        },
+        "0x007884a0": {
+          "selector": "isMod",
+          "slot": "0x00e8122c"
+        },
+        "0x007884ac": {
+          "selector": "alloc",
+          "slot": "0x00e811e8"
+        },
+        "0x007884b0": {
+          "class": "OBJC_CLASS_$_NetPlayerUI",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8a690"
+        }
+      },
+      "semantics": "NetPlayerButton -[buttonAction:] @0x00788188 (204 words, 4 branches, 7 calls): menu-open handler, ignores its argument (spilled at fp-0x24, never read; re-sends pass self). If !self->local@305 and [self->worldUI@284 canZoomCameraToOtherPlayer] (0x00788208) then [self->worldUI zoomButtonTappedForButton:self] (0x0078825c). Then, only when self->playerUI@292 is nil, it builds the row popup: [[NetPlayerUI alloc] initWithWindowInfo:self->windowInfo netPlayerButton:self cache:self->cache localPlayerIsMod:[self->world isMod] showReportButton:[self->world isCloudGame]] (0x00788430; isMod/isCloudGame BOOLs sign-extended onto the stack) and stores it to playerUI@292, then [self->world hideChatView] (0x0078846c). All calls via blx r2/r3/lr/ip/r5.",
+      "types": "v12@0:4@8",
+      "verified_words": 204
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788d30 (listing bound); next ObjC IMP 0x00788d30 NetPlayerButton -[setCloudMode:]",
+      "boundary_end": "0x00788d30",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788cf4",
+      "ivars": {
+        "0x00788d28": {
+          "offset": 324,
+          "slot": "0x0105d714",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.cloudMode"
+        }
+      },
+      "method": "NetPlayerButton -[cloudMode]",
+      "name": "npb_02",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "NetPlayerButton -[cloudMode] @0x00788cf4 (15 words, 0 calls): Apportable offset-cell getter - PIC base from cell 0x00788d2c (0x8d6de0 + pc), ivar cell 0x00788d28 (0xffffdc20) resolves OBJC_IVAR_$_NetPlayerButton.cloudMode, returns the int at self+cloudMode@324 with a 'dmb ish' before bx lr.",
+      "types": "i8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788b30 (listing bound); next ObjC IMP 0x00788b30 NetPlayerButton -[setConnected:]",
+      "boundary_end": "0x00788b30",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788af4",
+      "ivars": {
+        "0x00788b28": {
+          "offset": 317,
+          "slot": "0x0105d71c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.connected"
+        }
+      },
+      "method": "NetPlayerButton -[connected]",
+      "name": "npb_03",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "NetPlayerButton -[connected] @0x00788af4 (15 words, 0 calls): offset-cell getter for the char connected@317 (cell 0x00788b28, PIC base 0x00788b2c); ldrsb sign-extends the byte result.",
+      "types": "c8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "ARM.exidx end 0x00785598 (listing bound); next ObjC IMP 0x00785598 NetPlayerButton -[setFrame:windowInfo:alignment:]",
+      "boundary_end": "0x00785598",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r5",
+          "site": "0x007854a8"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x007854cc"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x007854f0"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00785514"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00785538"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00785560"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x007853f4",
+      "ivars": {
+        "0x00785580": {
+          "offset": 312,
+          "slot": "0x0105d724",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerName"
+        },
+        "0x00785584": {
+          "offset": 300,
+          "slot": "0x0105d728",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.mutedImage"
+        },
+        "0x00785588": {
+          "offset": 296,
+          "slot": "0x0105d704",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.avatarImage"
+        },
+        "0x0078558c": {
+          "offset": 292,
+          "slot": "0x0105d72c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerUI"
+        },
+        "0x00785590": {
+          "offset": 308,
+          "slot": "0x0105d730",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerID"
+        }
+      },
+      "method": "NetPlayerButton -[dealloc]",
+      "name": "npb_04",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x0078556c": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x00785570": {
+          "selector": "dealloc",
+          "slot": "0x00e811fc"
+        },
+        "0x00785574": {
+          "class": "OBJC_CLASS_$_NetPlayerButton",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bd30"
+        },
+        "0x00785578": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x0078557c": {
+          "selector": "release",
+          "slot": "0x00e811f8"
+        }
+      },
+      "semantics": "NetPlayerButton -[dealloc] @0x007853f4 (105 words, 0 branches, 6 calls): releases exactly five object ivars in order playerID@308, playerUI@292, avatarImage@296, mutedImage@300, playerName@312 (each via the two-stage offset cell + objc_msgSend release), then objc_msgSendSuper2({self, NetPlayerButton class cell 0x00785574}, @selector(dealloc)) at 0x00785560. standardShader@276, world@280 and worldUI@284 are NOT released (observed asymmetry with the ctor/setter paths). No branches; frame fp = sp+0x18, sub sp,#0x40.",
+      "types": "v8@0:4",
+      "verified_words": 105
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788188 (listing bound); next ObjC IMP 0x00788188 NetPlayerButton -[buttonAction:]",
+      "boundary_end": "0x00788188",
+      "branches": [
+        {
+          "address": "0x00788000",
+          "destination": "0x00788058",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0078804c",
+          "destination": "0x00788058",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x007880b0",
+          "destination": "0x00788118",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00788040"
+        },
+        {
+          "callee": "0x001c29fc",
+          "route": "bl loc.imp.objc_msgSendSuper2",
+          "site": "0x007880a4"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x007880f8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00788154"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00787fb0",
+      "ivars": {
+        "0x00788160": {
+          "offset": 292,
+          "slot": "0x0105d72c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerUI"
+        }
+      },
+      "method": "NetPlayerButton -[endTouch:]",
+      "name": "npb_05",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00788168": {
+          "selector": "touchIsInUI:",
+          "slot": "0x00e8124c"
+        },
+        "0x0078816c": {
+          "class": "OBJC_CLASS_$_NetPlayerButton",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bd30"
+        },
+        "0x00788174": {
+          "selector": "endTouch:",
+          "slot": "0x00e81258"
+        },
+        "0x00788178": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x0078817c": {
+          "selector": "autorelease",
+          "slot": "0x00e81214"
+        }
+      },
+      "semantics": "NetPlayerButton -[endTouch:] @0x00787fb0 (118 words, 3 branches, 4 calls): point in r2/r3. clear=NO (fp-0x19=0); if self->playerUI@292 != nil and ![self->playerUI touchIsInUI:point] (0x00788040) then clear=YES. Always [super endTouch:point] via objc_msgSendSuper2 with class cell 0x0078816c; if clear then playerUI is dropped: objc_msgSend(playerUI, @selector(autorelease)) (0x007880f8) followed by the inline strong store of 0 into the playerUI slot (Apportable objc_storeStrong nil form). Tail re-reads playerUI and sends [self->playerUI endTouch:point] via objc_msgSend (0x00788154).",
+      "types": "v16@0:4{CGPoint=ff}8",
+      "verified_words": 118
+    },
+    {
+      "boundary": "ARM.exidx end 0x007853a8 (listing bound); next ObjC IMP 0x007853f4 NetPlayerButton -[dealloc]",
+      "boundary_end": "0x007853a8",
+      "branches": [
+        {
+          "address": "0x00784f38",
+          "destination": "0x00784f48",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00784f44",
+          "destination": "0x007852fc",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c29fc",
+          "route": "bl loc.imp.objc_msgSendSuper2",
+          "site": "0x00784f1c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00785000"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00785018"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00785094"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x007850b4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0078510c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00785150"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00785178"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x007851b4"
+        },
+        {
+          "callee": "0x007853a8",
+          "route": "bl 0x7853a8",
+          "site": "0x00785214"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0078522c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x007852b0"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x007852f0"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00784e1c",
+      "ivars": {
+        "0x00785328": {
+          "offset": 296,
+          "slot": "0x0105d704",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.avatarImage"
+        },
+        "0x0078532c": {
+          "offset": 288,
+          "slot": "0x0105d708",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.alignment"
+        },
+        "0x00785334": {
+          "offset": 280,
+          "slot": "0x0105d70c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.world"
+        },
+        "0x00785338": {
+          "offset": 284,
+          "slot": "0x0105d710",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.worldUI"
+        },
+        "0x0078533c": {
+          "offset": 324,
+          "slot": "0x0105d714",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.cloudMode"
+        },
+        "0x00785350": {
+          "offset": 316,
+          "slot": "0x0105d718",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.textChatEnabled"
+        },
+        "0x00785354": {
+          "offset": 317,
+          "slot": "0x0105d71c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.connected"
+        },
+        "0x00785358": {
+          "offset": 48,
+          "slot": "0x0105c624",
+          "symbol": "OBJC_IVAR_$_MJView.cache"
+        },
+        "0x00785388": {
+          "offset": 276,
+          "slot": "0x0105d720",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.standardShader"
+        },
+        "0x00785390": {
+          "offset": 8,
+          "slot": "0x0105c630",
+          "symbol": "OBJC_IVAR_$_MJView.frame"
+        },
+        "0x0078539c": {
+          "offset": 52,
+          "slot": "0x0105c634",
+          "symbol": "OBJC_IVAR_$_MJView.windowInfo"
+        }
+      },
+      "method": "NetPlayerButton -[initWithFrame:cache:windowInfo:alignment:world:worldUI:]",
+      "name": "npb_06",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00785308": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90108"
+        },
+        "0x00785310": {
+          "class": "OBJC_CLASS_$_NetPlayerButton",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bd30"
+        },
+        "0x00785318": {
+          "selector": "initWithFrame:cache:windowInfo:textureName:",
+          "slot": "0x00e811cc"
+        },
+        "0x0078531c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00785320": {
+          "selector": "setTarget:action:",
+          "slot": "0x00e811f4"
+        },
+        "0x00785324": {
+          "selector": "buttonAction:",
+          "slot": "0x00e811f0"
+        },
+        "0x00785340": {
+          "class": "OBJC_CLASS_$_NSUserDefaults",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8a67c"
+        },
+        "0x00785344": {
+          "selector": "standardUserDefaults",
+          "slot": "0x00e811d0"
+        },
+        "0x00785348": {
+          "selector": "boolForKey:",
+          "slot": "0x00e811d4"
+        },
+        "0x0078534c": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90118"
+        },
+        "0x0078535c": {
+          "selector": "textureNamed:",
+          "slot": "0x00e811d8"
+        },
+        "0x00785360": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90128"
+        },
+        "0x00785364": {
+          "selector": "setBackgroundSelectedTexture:",
+          "slot": "0x00e811dc"
+        },
+        "0x00785368": {
+          "class": "OBJC_CLASS_$_NSArray",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8a680"
+        },
+        "0x0078536c": {
+          "selector": "arrayWithObjects:",
+          "slot": "0x00e811e0"
+        },
+        "0x00785370": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90148"
+        },
+        "0x00785374": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90158"
+        },
+        "0x00785378": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90168"
+        },
+        "0x0078537c": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90178"
+        },
+        "0x00785380": {
+          "selector": "shaderNamed:attributes:uniforms:",
+          "slot": "0x00e811e4"
+        },
+        "0x00785384": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90138"
+        },
+        "0x0078538c": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90188"
+        },
+        "0x00785394": {
+          "class": "OBJC_CLASS_$_MJImageView",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8a684"
+        },
+        "0x00785398": {
+          "selector": "alloc",
+          "slot": "0x00e811e8"
+        },
+        "0x007853a0": {
+          "selector": "initWithFrame:cache:windowInfo:texture:",
+          "slot": "0x00e811ec"
+        }
+      },
+      "semantics": "NetPlayerButton -[initWithFrame:cache:windowInfo:alignment:world:worldUI:] @0x00784e1c (355 words, 2 branches, 13 calls): designated initializer. Super via objc_msgSendSuper2({self,NetPlayerButton}, @selector(initWithFrame:cache:windowInfo:textureName:)) with textureName = CFString 0xf90108 'InventoryButtonBackground.png' (0x00784f1c); nil guard returns nil. Then stores alignment@288, world@280, worldUI@284 from the stack args, cloudMode@324 = 0, connected@317 = 1, and textChatEnabled@316 = ![[NSUserDefaults standardUserDefaults] boolForKey:@\"textChatDisabled\"] (CFString 0xf90118). Caches the pressed texture [self->cache textureNamed:@\"InventoryButtonBackgroundSelected.png\"] (0xf90128) -> setBackgroundSelectedTexture:. Builds standardShader@276 = [self shaderNamed:@\"StandardObject\" (0xf90138) attributes:[NSArray arrayWithObjects:@\"position\" (0xf90148), @\"texCoord\" (0xf90158), nil] uniforms:[NSArray arrayWithObjects:@\"mvp_matrix\" (0xf90168), @\"texture\" (0xf90178), nil]]. Creates avatarImage@296 = [[MJImageView alloc] initWithFrame:{x+4,y+4,w-8,h-8} cache:self->cache windowInfo:self->windowInfo texture:[self->cache textureNamed:@\"noGCAvatar.png\"]] - the inset rect is packed by the 4-float helper at 0x007853a8 (bl 0x7853a8) using vmov.f32 #16 (4.0) / #32 (8.0). Ends with [self setTarget:self action:@selector(buttonAction:)] (0x007852f0) and returns self; frame sub sp,#0xd8.",
+      "types": "@44@0:4{CGRect={CGPoint=ff}{CGSize=ff}}8@24^{WindowInfo=ffffffff}28i32@36@40",
+      "verified_words": 355
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788c30 (listing bound); next ObjC IMP 0x00788c30 NetPlayerButton -[setIsAdmin:]",
+      "boundary_end": "0x00788c30",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788bf4",
+      "ivars": {
+        "0x00788c28": {
+          "offset": 319,
+          "slot": "0x0105d73c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.isAdmin"
+        }
+      },
+      "method": "NetPlayerButton -[isAdmin]",
+      "name": "npb_07",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "NetPlayerButton -[isAdmin] @0x00788bf4 (15 words, 0 calls): offset-cell getter, char isAdmin@319 (cell 0x00788c28, base 0x00788c2c), ldrsb.",
+      "types": "c8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788cb0 (listing bound); next ObjC IMP 0x00788cb0 NetPlayerButton -[setIsMod:]",
+      "boundary_end": "0x00788cb0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788c74",
+      "ivars": {
+        "0x00788ca8": {
+          "offset": 320,
+          "slot": "0x0105d740",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.isMod"
+        }
+      },
+      "method": "NetPlayerButton -[isMod]",
+      "name": "npb_08",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "NetPlayerButton -[isMod] @0x00788c74 (15 words, 0 calls): offset-cell getter, char isMod@320 (cell 0x00788ca8, base 0x00788cac), ldrsb.",
+      "types": "c8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788bb0 (listing bound); next ObjC IMP 0x00788bb0 NetPlayerButton -[setIsOwner:]",
+      "boundary_end": "0x00788bb0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788b74",
+      "ivars": {
+        "0x00788ba8": {
+          "offset": 318,
+          "slot": "0x0105d738",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.isOwner"
+        }
+      },
+      "method": "NetPlayerButton -[isOwner]",
+      "name": "npb_09",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "NetPlayerButton -[isOwner] @0x00788b74 (15 words, 0 calls): offset-cell getter, char isOwner@318 (cell 0x00788ba8, base 0x00788bac), ldrsb.",
+      "types": "c8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788898 (listing bound); next ObjC IMP 0x00788898 NetPlayerButton -[reportButtonTapped]",
+      "boundary_end": "0x00788898",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00788878"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788818",
+      "ivars": {
+        "0x0078888c": {
+          "offset": 312,
+          "slot": "0x0105d724",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerName"
+        },
+        "0x00788890": {
+          "offset": 280,
+          "slot": "0x0105d70c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.world"
+        }
+      },
+      "method": "NetPlayerButton -[kickButtonTapped]",
+      "name": "npb_10",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00788884": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00788888": {
+          "selector": "kickPlayerWithNameFromPlayerButton:",
+          "slot": "0x00e81280"
+        }
+      },
+      "semantics": "NetPlayerButton -[kickButtonTapped] @0x00788818 (32 words, 0 branches, 1 call): [self->world kickPlayerWithNameFromPlayerButton:self->playerName] - same shape as banButtonTapped, selector cell 0x00788888, ivar cells playerName@312/0x0078888c and world@280/0x00788890, single 'blx r3' objc_msgSend.",
+      "types": "v8@0:4",
+      "verified_words": 32
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788a30 (listing bound); next ObjC IMP 0x00788a30 NetPlayerButton -[setLocal:]",
+      "boundary_end": "0x00788a30",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x007889f4",
+      "ivars": {
+        "0x00788a28": {
+          "offset": 305,
+          "slot": "0x0105d748",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.local"
+        }
+      },
+      "method": "NetPlayerButton -[local]",
+      "name": "npb_11",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "NetPlayerButton -[local] @0x007889f4 (15 words, 0 calls): offset-cell getter, char local@305 (cell 0x00788a28, base 0x00788a2c), ldrsb.",
+      "types": "c8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "ARM.exidx end 0x00787fb0 (listing bound); next ObjC IMP 0x00787fb0 NetPlayerButton -[endTouch:]",
+      "boundary_end": "0x00787fb0",
+      "branches": [
+        {
+          "address": "0x00787e3c",
+          "destination": "0x00787ef0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00787e88",
+          "destination": "0x00787ef0",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00787e7c"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00787ed0"
+        },
+        {
+          "callee": "0x001c29fc",
+          "route": "bl loc.imp.objc_msgSendSuper2",
+          "site": "0x00787f3c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00787f7c"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00787df4",
+      "ivars": {
+        "0x00787f88": {
+          "offset": 292,
+          "slot": "0x0105d72c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerUI"
+        }
+      },
+      "method": "NetPlayerButton -[moveTouch:]",
+      "name": "npb_12",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00787f90": {
+          "selector": "touchIsInUI:",
+          "slot": "0x00e8124c"
+        },
+        "0x00787f94": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00787f98": {
+          "selector": "autorelease",
+          "slot": "0x00e81214"
+        },
+        "0x00787f9c": {
+          "class": "OBJC_CLASS_$_NetPlayerButton",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bd30"
+        },
+        "0x00787fa4": {
+          "selector": "moveTouch:",
+          "slot": "0x00e81254"
+        }
+      },
+      "semantics": "NetPlayerButton -[moveTouch:] @0x00787df4 (111 words, 2 branches, 4 calls): point in r2/r3. If self->playerUI@292 != nil and ![self->playerUI touchIsInUI:point] (0x00787e7c) the row UI is dismissed: objc_msgSend(playerUI, @selector(autorelease)) (0x00787ed0) then the inline strong store of 0 into the playerUI slot. Then always [super moveTouch:point] (objc_msgSendSuper2, class cell 0x00787f9c) and finally [self->playerUI moveTouch:point] via objc_msgSend (0x00787f7c); the nil early-exit leaves playerUI alone.",
+      "types": "v16@0:4{CGPoint=ff}8",
+      "verified_words": 111
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788798 (listing bound); next ObjC IMP 0x00788798 NetPlayerButton -[banButtonTapped]",
+      "boundary_end": "0x00788798",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r8",
+          "site": "0x00788730"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00788768"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788630",
+      "ivars": {
+        "0x0078877c": {
+          "offset": 52,
+          "slot": "0x0105c634",
+          "symbol": "OBJC_IVAR_$_MJView.windowInfo"
+        },
+        "0x00788780": {
+          "offset": 292,
+          "slot": "0x0105d72c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerUI"
+        },
+        "0x00788788": {
+          "offset": 308,
+          "slot": "0x0105d730",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerID"
+        },
+        "0x0078878c": {
+          "offset": 321,
+          "slot": "0x0105d734",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.muted"
+        },
+        "0x00788790": {
+          "offset": 280,
+          "slot": "0x0105d70c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.world"
+        }
+      },
+      "method": "NetPlayerButton -[muteButtonTapped]",
+      "name": "npb_13",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00788774": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00788778": {
+          "selector": "windowInfoChanged:",
+          "slot": "0x00e81204"
+        },
+        "0x00788784": {
+          "selector": "setPlayerMuted:withID:",
+          "slot": "0x00e81278"
+        }
+      },
+      "semantics": "NetPlayerButton -[muteButtonTapped] @0x00788630 (90 words, 0 branches, 2 calls): toggles self->muted@321 = !self->muted (ldrsb/cmp/movne/eor/and, strb back at 0x007886c0), then [self->world setPlayerMuted:self->muted(new) withID:self->playerID] (0x00788730, BOOL sign-extended) and [self->playerUI windowInfoChanged:self->windowInfo] (0x00788768, MJView.windowInfo@52). Selector cells 0x00788784 (setPlayerMuted:withID:), 0x00788778 (windowInfoChanged:); 8 registers spilled to the stack between the two sends.",
+      "types": "v8@0:4",
+      "verified_words": 90
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788db0 (listing bound); next ObjC IMP 0x00788db0 NetPlayerButton -[setMuted:]",
+      "boundary_end": "0x00788db0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788d74",
+      "ivars": {
+        "0x00788da8": {
+          "offset": 321,
+          "slot": "0x0105d734",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.muted"
+        }
+      },
+      "method": "NetPlayerButton -[muted]",
+      "name": "npb_14",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "NetPlayerButton -[muted] @0x00788d74 (15 words, 0 calls): offset-cell getter, char muted@321 (cell 0x00788da8, base 0x00788dac), ldrsb.",
+      "types": "c8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "ARM.exidx end 0x007889f4; body trimmed at the next IMP 0x007889b0 NetPlayerButton -[playerName]",
+      "boundary_end": "0x007889b0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x0078896c",
+      "ivars": {
+        "0x007889a8": {
+          "offset": 308,
+          "slot": "0x0105d730",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerID"
+        }
+      },
+      "method": "NetPlayerButton -[playerID]",
+      "name": "npb_15",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "NetPlayerButton -[playerID] @0x0078896c (17 words, 0 calls): object getter for the NSString playerID@308 - offset cell 0x007889a8 + base 0x007889ac, 'dmb ish' after the load, result also spilled to [sp,8] before return (Apportable retain/return idiom).",
+      "types": "@8@0:4",
+      "verified_words": 17
+    },
+    {
+      "boundary": "ARM.exidx end 0x007889f4 (listing bound); next ObjC IMP 0x007889f4 NetPlayerButton -[local]",
+      "boundary_end": "0x007889f4",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x007889b0",
+      "ivars": {
+        "0x007889ec": {
+          "offset": 312,
+          "slot": "0x0105d724",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerName"
+        }
+      },
+      "method": "NetPlayerButton -[playerName]",
+      "name": "npb_16",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "NetPlayerButton -[playerName] @0x007889b0 (17 words, 0 calls): object getter for the NSString playerName@312 (cell 0x007889ec, base 0x007889f0); 'dmb ish' after the load, result spilled to [sp,8] and reloaded before bx lr.",
+      "types": "@8@0:4",
+      "verified_words": 17
+    },
+    {
+      "boundary": "ARM.exidx end 0x0078896c (listing bound); next ObjC IMP 0x0078896c NetPlayerButton -[playerID]",
+      "boundary_end": "0x0078896c",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788918",
+      "ivars": {
+        "0x00788964": {
+          "offset": 292,
+          "slot": "0x0105d72c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerUI"
+        }
+      },
+      "method": "NetPlayerButton -[playerUIIsVisible]",
+      "name": "npb_17",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "NetPlayerButton -[playerUIIsVisible] @0x00788918 (21 words, 0 calls): returns (self->playerUI@292 != nil) - offset cell 0x00788964, cmp against 0, movweq/movne + and r0,r0,1 + sxtb, returned as BOOL.",
+      "types": "c8@0:4",
+      "verified_words": 21
+    },
+    {
+      "boundary": "ARM.exidx end 0x0078602c (listing bound); next ObjC IMP 0x0078602c NetPlayerButton -[renderUI:projectionMatrix:]",
+      "boundary_end": "0x0078602c",
+      "branches": [
+        {
+          "address": "0x00785afc",
+          "destination": "0x00785b04",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00785b00",
+          "destination": "0x00785fd8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00785b24",
+          "destination": "0x00785e30",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00785b4c",
+          "destination": "0x00785cb0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00785e2c",
+          "destination": "0x00785fd8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00785e54",
+          "destination": "0x00785fd4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00785fd4",
+          "destination": "0x00785fd8",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c29fc",
+          "route": "bl loc.imp.objc_msgSendSuper2",
+          "site": "0x00785ad8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00785b9c"
+        },
+        {
+          "callee": "0x007853a8",
+          "route": "bl 0x7853a8",
+          "site": "0x00785bfc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00785c14"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00785c98"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00785e28"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00785fd0"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00785864",
+      "ivars": {
+        "0x00785fec": {
+          "offset": 4,
+          "slot": "0x0105c660",
+          "symbol": "OBJC_IVAR_$_MJView.hidden"
+        },
+        "0x00785ff0": {
+          "offset": 321,
+          "slot": "0x0105d734",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.muted"
+        },
+        "0x00785ff4": {
+          "offset": 296,
+          "slot": "0x0105d704",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.avatarImage"
+        },
+        "0x00785ffc": {
+          "offset": 300,
+          "slot": "0x0105d728",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.mutedImage"
+        },
+        "0x00786000": {
+          "offset": 48,
+          "slot": "0x0105c624",
+          "symbol": "OBJC_IVAR_$_MJView.cache"
+        },
+        "0x00786010": {
+          "offset": 8,
+          "slot": "0x0105c630",
+          "symbol": "OBJC_IVAR_$_MJView.frame"
+        },
+        "0x0078601c": {
+          "offset": 52,
+          "slot": "0x0105c634",
+          "symbol": "OBJC_IVAR_$_MJView.windowInfo"
+        }
+      },
+      "method": "NetPlayerButton -[renderFrame:projectionMatrix:]",
+      "name": "npb_18",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00785fe0": {
+          "class": "OBJC_CLASS_$_NetPlayerButton",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bd30"
+        },
+        "0x00785fe8": {
+          "selector": "renderFrame:projectionMatrix:",
+          "slot": "0x00e81208"
+        },
+        "0x00786008": {
+          "selector": "textureNamed:",
+          "slot": "0x00e811d8"
+        },
+        "0x0078600c": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90198"
+        },
+        "0x00786014": {
+          "class": "OBJC_CLASS_$_MJImageView",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8a684"
+        },
+        "0x00786018": {
+          "selector": "alloc",
+          "slot": "0x00e811e8"
+        },
+        "0x00786020": {
+          "selector": "initWithFrame:cache:windowInfo:texture:",
+          "slot": "0x00e811ec"
+        }
+      },
+      "semantics": "NetPlayerButton -[renderFrame:projectionMatrix:] @0x00785864 (498 words, 7 branches, 7 calls): 4KB+ frame (sub sp,#0x230, bic sp,#0xf); first [super renderFrame:proj] with the 64-byte GLKMatrix4 copied to the stack and re-passed via objc_msgSendSuper2 (class cell 0x00785fe0). If self->hidden (MJView.hidden@4) -> return. If self->muted@321: lazily create mutedImage@300 = [[MJImageView alloc] initWithFrame:CGRectInset(self->frame,4,4) cache:self->cache windowInfo:self->windowInfo texture:[self->cache textureNamed:@\"avatarMuted.png\"]] (CFString 0xf90198, rect packed by bl 0x7853a8 with vmov #16/#32 = 4.0/8.0) and then [mutedImage renderFrame:pt proj]; else if avatarImage@296 is nil return early, otherwise [avatarImage renderFrame:pt proj]. Both render calls are objc_msgSend with the matrix rebuilt on the stack (0x00785e28 / 0x00785fd0); the r2 'frame' argument is preserved in s0 across the whole body.",
+      "types": "v76@0:4f8(_GLKMatrix4={?=ffffffffffffffff}[16f])12",
+      "verified_words": 498
+    },
+    {
+      "boundary": "ARM.exidx end 0x00786298 (listing bound); next ObjC IMP 0x00786298 NetPlayerButton -[setFrame:]",
+      "boundary_end": "0x00786298",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00786280"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x0078602c",
+      "ivars": {
+        "0x0078628c": {
+          "offset": 292,
+          "slot": "0x0105d72c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerUI"
+        }
+      },
+      "method": "NetPlayerButton -[renderUI:projectionMatrix:]",
+      "name": "npb_19",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00786294": {
+          "selector": "renderFrame:projectionMatrix:",
+          "slot": "0x00e81208"
+        }
+      },
+      "semantics": "NetPlayerButton -[renderUI:projectionMatrix:] @0x0078602c (155 words, 0 branches, 1 call): pure name-mapping trampoline - copies the 64-byte matrix argument (fp+8..fp+0x44) into a fresh stack frame and issues a single objc_msgSend to [self->playerUI@292 renderFrame:r2 projectionMatrix:matrix] (0x00786280); the first argument (r2, kept in s0) is forwarded unmodified; no nil check (msgSend-to-nil). Frame sub sp,#0x120 + bic sp,#0xf.",
+      "types": "v76@0:4f8(_GLKMatrix4={?=ffffffffffffffff}[16f])12",
+      "verified_words": 155
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788918 (listing bound); next ObjC IMP 0x00788918 NetPlayerButton -[playerUIIsVisible]",
+      "boundary_end": "0x00788918",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x007888f8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788898",
+      "ivars": {
+        "0x0078890c": {
+          "offset": 312,
+          "slot": "0x0105d724",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerName"
+        },
+        "0x00788910": {
+          "offset": 280,
+          "slot": "0x0105d70c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.world"
+        }
+      },
+      "method": "NetPlayerButton -[reportButtonTapped]",
+      "name": "npb_20",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00788904": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00788908": {
+          "selector": "reportButtonTappedForPlayer:",
+          "slot": "0x00e81284"
+        }
+      },
+      "semantics": "NetPlayerButton -[reportButtonTapped] @0x00788898 (32 words, 0 branches, 1 call): [self->world reportButtonTappedForPlayer:self->playerName] - selector cell 0x00788908, ivar cells playerName@312/0x0078890c, world@280/0x00788910, one objc_msgSend via 'blx r3'.",
+      "types": "v8@0:4",
+      "verified_words": 32
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788d74 (listing bound); next ObjC IMP 0x00788d74 NetPlayerButton -[muted]",
+      "boundary_end": "0x00788d74",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788d30",
+      "ivars": {
+        "0x00788d6c": {
+          "offset": 324,
+          "slot": "0x0105d714",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.cloudMode"
+        }
+      },
+      "method": "NetPlayerButton -[setCloudMode:]",
+      "name": "npb_21",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "NetPlayerButton -[setCloudMode:] @0x00788d30 (17 words, 0 calls): plain int setter - str r2 to self+cloudMode@324 (cell 0x00788d6c, base 0x00788d70) with 'dmb ish' both before and after the store (inline atomic form).",
+      "types": "v12@0:4i8",
+      "verified_words": 17
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788b74 (listing bound); next ObjC IMP 0x00788b74 NetPlayerButton -[isOwner]",
+      "boundary_end": "0x00788b74",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788b30",
+      "ivars": {
+        "0x00788b6c": {
+          "offset": 317,
+          "slot": "0x0105d71c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.connected"
+        }
+      },
+      "method": "NetPlayerButton -[setConnected:]",
+      "name": "npb_22",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "NetPlayerButton -[setConnected:] @0x00788b30 (17 words, 0 calls): char setter - arg spilled to [sp,3], strb r2 to self+connected@317 (cell 0x00788b6c, base 0x00788b70) with 'dmb ish' around the store.",
+      "types": "v12@0:4c8",
+      "verified_words": 17
+    },
+    {
+      "boundary": "ARM.exidx end 0x007864f8 (listing bound); next ObjC IMP 0x007864f8 NetPlayerButton -[updatedPlayerIfNeeded:]",
+      "boundary_end": "0x007864f8",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x001c29fc",
+          "route": "bl loc.imp.objc_msgSendSuper2",
+          "site": "0x0078633c"
+        },
+        {
+          "callee": "0x007853a8",
+          "route": "bl 0x7853a8",
+          "site": "0x007863b8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00786424"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00786484"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x007864bc"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00786298",
+      "ivars": {
+        "0x007864dc": {
+          "offset": 52,
+          "slot": "0x0105c634",
+          "symbol": "OBJC_IVAR_$_MJView.windowInfo"
+        },
+        "0x007864e0": {
+          "offset": 292,
+          "slot": "0x0105d72c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerUI"
+        },
+        "0x007864e4": {
+          "offset": 8,
+          "slot": "0x0105c630",
+          "symbol": "OBJC_IVAR_$_MJView.frame"
+        },
+        "0x007864ec": {
+          "offset": 296,
+          "slot": "0x0105d704",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.avatarImage"
+        },
+        "0x007864f0": {
+          "offset": 300,
+          "slot": "0x0105d728",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.mutedImage"
+        }
+      },
+      "method": "NetPlayerButton -[setFrame:]",
+      "name": "npb_23",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x007864c8": {
+          "class": "OBJC_CLASS_$_NetPlayerButton",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bd30"
+        },
+        "0x007864d0": {
+          "selector": "setFrame:",
+          "slot": "0x00e81200"
+        },
+        "0x007864d4": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x007864d8": {
+          "selector": "windowInfoChanged:",
+          "slot": "0x00e81204"
+        }
+      },
+      "semantics": "NetPlayerButton -[setFrame:] @0x00786298 (152 words, 0 branches, 5 calls): CGRect in r2/r3 + stack. [super setFrame:rect] (objc_msgSendSuper2, class cell 0x007864c8); then packs self->frame (MJView.frame@8, pre-indexed ldr r1,[lr,r4]!) with bl 0x7853a8 and applies it verbatim (no inset) to avatarImage@296 and mutedImage@300 via objc_msgSend setFrame: (selector cell 0x007864d0); finally, if playerUI@292 != nil, [playerUI windowInfoChanged:self->windowInfo] (0x007864bc). No branches - straight-line 5-call layout path.",
+      "types": "v24@0:4{CGRect={CGPoint=ff}{CGSize=ff}}8",
+      "verified_words": 152
+    },
+    {
+      "boundary": "ARM.exidx end 0x00785864 (listing bound); next ObjC IMP 0x00785864 NetPlayerButton -[renderFrame:projectionMatrix:]",
+      "boundary_end": "0x00785864",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x001c29fc",
+          "route": "bl loc.imp.objc_msgSendSuper2",
+          "site": "0x0078564c"
+        },
+        {
+          "callee": "0x007853a8",
+          "route": "bl 0x7853a8",
+          "site": "0x00785720"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0078578c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x007857ec"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00785824"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00785598",
+      "ivars": {
+        "0x00785844": {
+          "offset": 52,
+          "slot": "0x0105c634",
+          "symbol": "OBJC_IVAR_$_MJView.windowInfo"
+        },
+        "0x00785848": {
+          "offset": 292,
+          "slot": "0x0105d72c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerUI"
+        },
+        "0x00785850": {
+          "offset": 288,
+          "slot": "0x0105d708",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.alignment"
+        },
+        "0x00785854": {
+          "offset": 8,
+          "slot": "0x0105c630",
+          "symbol": "OBJC_IVAR_$_MJView.frame"
+        },
+        "0x00785858": {
+          "offset": 296,
+          "slot": "0x0105d704",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.avatarImage"
+        },
+        "0x0078585c": {
+          "offset": 300,
+          "slot": "0x0105d728",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.mutedImage"
+        }
+      },
+      "method": "NetPlayerButton -[setFrame:windowInfo:alignment:]",
+      "name": "npb_24",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00785830": {
+          "class": "OBJC_CLASS_$_NetPlayerButton",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bd30"
+        },
+        "0x00785838": {
+          "selector": "setFrame:",
+          "slot": "0x00e81200"
+        },
+        "0x0078583c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00785840": {
+          "selector": "windowInfoChanged:",
+          "slot": "0x00e81204"
+        }
+      },
+      "semantics": "NetPlayerButton -[setFrame:windowInfo:alignment:] @0x00785598 (179 words, 0 branches, 5 calls): CGRect + windowInfo + int alignment (32 bytes of args, fp = sp+0x10). [super setFrame:rect] via objc_msgSendSuper2 (0x0078564c); stores windowInfo into MJView.windowInfo@52 and alignment into alignment@288; packs CGRectInset(self->frame,4,4) (x+4,y+4,w-8,h-8, vmov #16/#32 = 4.0/8.0, helper bl 0x7853a8) and applies it to avatarImage@296 and mutedImage@300; finally if playerUI@292 != nil [playerUI windowInfoChanged:self->windowInfo] (0x00785824). Same call shape as setFrame: but with the 4-point inset and the explicit windowInfo/alignment writes.",
+      "types": "v32@0:4{CGRect={CGPoint=ff}{CGSize=ff}}8^{WindowInfo=ffffffff}24i28",
+      "verified_words": 179
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788c74 (listing bound); next ObjC IMP 0x00788c74 NetPlayerButton -[isMod]",
+      "boundary_end": "0x00788c74",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788c30",
+      "ivars": {
+        "0x00788c6c": {
+          "offset": 319,
+          "slot": "0x0105d73c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.isAdmin"
+        }
+      },
+      "method": "NetPlayerButton -[setIsAdmin:]",
+      "name": "npb_25",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "NetPlayerButton -[setIsAdmin:] @0x00788c30 (17 words, 0 calls): char setter - strb r2 to self+isAdmin@319 (cell 0x00788c6c, base 0x00788c70), dmb ish around the store.",
+      "types": "v12@0:4c8",
+      "verified_words": 17
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788cf4 (listing bound); next ObjC IMP 0x00788cf4 NetPlayerButton -[cloudMode]",
+      "boundary_end": "0x00788cf4",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788cb0",
+      "ivars": {
+        "0x00788cec": {
+          "offset": 320,
+          "slot": "0x0105d740",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.isMod"
+        }
+      },
+      "method": "NetPlayerButton -[setIsMod:]",
+      "name": "npb_26",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "NetPlayerButton -[setIsMod:] @0x00788cb0 (17 words, 0 calls): char setter - strb r2 to self+isMod@320 (cell 0x00788cec, base 0x00788cf0), dmb ish around the store.",
+      "types": "v12@0:4c8",
+      "verified_words": 17
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788bf4 (listing bound); next ObjC IMP 0x00788bf4 NetPlayerButton -[isAdmin]",
+      "boundary_end": "0x00788bf4",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788bb0",
+      "ivars": {
+        "0x00788bec": {
+          "offset": 318,
+          "slot": "0x0105d738",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.isOwner"
+        }
+      },
+      "method": "NetPlayerButton -[setIsOwner:]",
+      "name": "npb_27",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "NetPlayerButton -[setIsOwner:] @0x00788bb0 (17 words, 0 calls): char setter - strb r2 to self+isOwner@318 (cell 0x00788bec, base 0x00788bf0), dmb ish around the store.",
+      "types": "v12@0:4c8",
+      "verified_words": 17
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788a74 (listing bound); next ObjC IMP 0x00788a74 NetPlayerButton -[textChatEnabled]",
+      "boundary_end": "0x00788a74",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788a30",
+      "ivars": {
+        "0x00788a6c": {
+          "offset": 305,
+          "slot": "0x0105d748",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.local"
+        }
+      },
+      "method": "NetPlayerButton -[setLocal:]",
+      "name": "npb_28",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "NetPlayerButton -[setLocal:] @0x00788a30 (17 words, 0 calls): char setter - strb r2 to self+local@305 (cell 0x00788a6c, base 0x00788a70), dmb ish around the store.",
+      "types": "v12@0:4c8",
+      "verified_words": 17
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788df4 (listing bound); next ObjC IMP 0x00788f54 ProjectileManager -[initWithWorld:cache:]",
+      "boundary_end": "0x00788df4",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788db0",
+      "ivars": {
+        "0x00788dec": {
+          "offset": 321,
+          "slot": "0x0105d734",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.muted"
+        }
+      },
+      "method": "NetPlayerButton -[setMuted:]",
+      "name": "npb_29",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "NetPlayerButton -[setMuted:] @0x00788db0 (17 words, 0 calls): char setter - strb r2 to self+muted@321 (cell 0x00788dec, base 0x00788df0), dmb ish around the store.",
+      "types": "v12@0:4c8",
+      "verified_words": 17
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788af4 (listing bound); next ObjC IMP 0x00788af4 NetPlayerButton -[connected]",
+      "boundary_end": "0x00788af4",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788ab0",
+      "ivars": {
+        "0x00788aec": {
+          "offset": 316,
+          "slot": "0x0105d718",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.textChatEnabled"
+        }
+      },
+      "method": "NetPlayerButton -[setTextChatEnabled:]",
+      "name": "npb_30",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "NetPlayerButton -[setTextChatEnabled:] @0x00788ab0 (17 words, 0 calls): char setter - strb r2 to self+textChatEnabled@316 (cell 0x00788aec, base 0x00788af0), dmb ish around the store.",
+      "types": "v12@0:4c8",
+      "verified_words": 17
+    },
+    {
+      "boundary": "ARM.exidx end 0x00787df4 (listing bound); next ObjC IMP 0x00787df4 NetPlayerButton -[moveTouch:]",
+      "boundary_end": "0x00787df4",
+      "branches": [
+        {
+          "address": "0x00787d80",
+          "destination": "0x00787dcc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00787dc8",
+          "destination": "0x00787dd4",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c29fc",
+          "route": "bl loc.imp.objc_msgSendSuper2",
+          "site": "0x00787d68"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00787dc0"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00787d04",
+      "ivars": {
+        "0x00787dec": {
+          "offset": 292,
+          "slot": "0x0105d72c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerUI"
+        }
+      },
+      "method": "NetPlayerButton -[startTouch:]",
+      "name": "npb_31",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00787de0": {
+          "class": "OBJC_CLASS_$_NetPlayerButton",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bd30"
+        },
+        "0x00787de8": {
+          "selector": "startTouch:",
+          "slot": "0x00e81250"
+        }
+      },
+      "semantics": "NetPlayerButton -[startTouch:] @0x00787d04 (60 words, 2 branches, 2 calls): point in r2/r3; r = [super startTouch:point] (objc_msgSendSuper2 with a stack-built {self, NetPlayerButton class cell 0x00787de0} struct at sp+0x10, selector cell 0x00787de8); if r == 0 it delegates: r = [self->playerUI@292 startTouch:point] via objc_msgSend (0x00787dc0). Returns r as a sign-extended byte; frame fp = sp, sub sp,#0x40.",
+      "types": "c16@0:4{CGPoint=ff}8",
+      "verified_words": 60
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788ab0 (listing bound); next ObjC IMP 0x00788ab0 NetPlayerButton -[setTextChatEnabled:]",
+      "boundary_end": "0x00788ab0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00788a74",
+      "ivars": {
+        "0x00788aa8": {
+          "offset": 316,
+          "slot": "0x0105d718",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.textChatEnabled"
+        }
+      },
+      "method": "NetPlayerButton -[textChatEnabled]",
+      "name": "npb_32",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "NetPlayerButton -[textChatEnabled] @0x00788a74 (15 words, 0 calls): offset-cell getter, char textChatEnabled@316 (cell 0x00788aa8, base 0x00788aac), ldrsb.",
+      "types": "c8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "ARM.exidx end 0x00788630 (listing bound); next ObjC IMP 0x00788630 NetPlayerButton -[muteButtonTapped]",
+      "boundary_end": "0x00788630",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x0078858c"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x007885d8"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00788600"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x007884b8",
+      "ivars": {
+        "0x00788614": {
+          "offset": 284,
+          "slot": "0x0105d710",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.worldUI"
+        },
+        "0x00788620": {
+          "offset": 316,
+          "slot": "0x0105d718",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.textChatEnabled"
+        }
+      },
+      "method": "NetPlayerButton -[textToggleButtonTapped]",
+      "name": "npb_33",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x0078860c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00788610": {
+          "selector": "textToggleButtonTappedForButton:",
+          "slot": "0x00e81274"
+        },
+        "0x00788618": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90118"
+        },
+        "0x0078861c": {
+          "selector": "setBool:forKey:",
+          "slot": "0x00e81270"
+        },
+        "0x00788624": {
+          "selector": "standardUserDefaults",
+          "slot": "0x00e811d0"
+        },
+        "0x00788628": {
+          "class": "OBJC_CLASS_$_NSUserDefaults",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8a67c"
+        }
+      },
+      "semantics": "NetPlayerButton -[textToggleButtonTapped] @0x007884b8 (94 words, 0 branches, 3 calls): flips self->textChatEnabled@316 = !value (0x00788558), then persists the inverse to NSUserDefaults: [[NSUserDefaults standardUserDefaults] setBool:!self->textChatEnabled forKey:@\"textChatDisabled\"] (CFString 0xf90118, class cell 0x00788628, selector cells 0x0078861c/0x00788624; the NOT of the freshly stored value is recomputed at 0x007885b4 and sign-extended), then notifies the list: [self->worldUI textToggleButtonTappedForButton:self] (0x00788600). All three sends go through blx on saved register copies.",
+      "types": "v8@0:4",
+      "verified_words": 94
+    },
+    {
+      "boundary": "ARM.exidx end 0x00787df4; body trimmed at the next IMP 0x00787d04 NetPlayerButton -[startTouch:]",
+      "boundary_end": "0x00787d04",
+      "branches": [
+        {
+          "address": "0x00787c90",
+          "destination": "0x00787cdc",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00787cd8",
+          "destination": "0x00787ce4",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c29fc",
+          "route": "bl loc.imp.objc_msgSendSuper2",
+          "site": "0x00787c78"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00787cd0"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00787c14",
+      "ivars": {
+        "0x00787cfc": {
+          "offset": 292,
+          "slot": "0x0105d72c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerUI"
+        }
+      },
+      "method": "NetPlayerButton -[touchIsInUI:]",
+      "name": "npb_34",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00787cf0": {
+          "class": "OBJC_CLASS_$_NetPlayerButton",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bd30"
+        },
+        "0x00787cf8": {
+          "selector": "touchIsInUI:",
+          "slot": "0x00e8124c"
+        }
+      },
+      "semantics": "NetPlayerButton -[touchIsInUI:] @0x00787c14 (60 words, 2 branches, 2 calls, body trimmed at the next IMP 0x00787d04): same delegate pattern as startTouch: - r = [super touchIsInUI:point] via objc_msgSendSuper2 ({self, class cell 0x00787cf0}, selector cell 0x00787cf8, point in r2/r3); if r == 0 then r = [self->playerUI@292 touchIsInUI:point] via objc_msgSend (0x00787cd0); returns the sign-extended byte.",
+      "types": "c16@0:4{CGPoint=ff}8",
+      "verified_words": 60
+    },
+    {
+      "boundary": "ARM.exidx end 0x00787bc8 (listing bound); next ObjC IMP 0x00787c14 NetPlayerButton -[touchIsInUI:]",
+      "boundary_end": "0x00787bc8",
+      "branches": [
+        {
+          "address": "0x0078659c",
+          "destination": "0x00786620",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x007867d0",
+          "destination": "0x007867e0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x007867dc",
+          "destination": "0x00786864",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00786854",
+          "destination": "0x00786860",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00786860",
+          "destination": "0x00786864",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x007868e0",
+          "destination": "0x0078690c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00786930",
+          "destination": "0x007869ac",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00786958",
+          "destination": "0x007869ac",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00786980",
+          "destination": "0x007869ac",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x007869a8",
+          "destination": "0x00786a28",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00786a30",
+          "destination": "0x00786bac",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00786bcc",
+          "destination": "0x00786c5c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00786c58",
+          "destination": "0x00786f78",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00786c7c",
+          "destination": "0x00786d34",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00786ca4",
+          "destination": "0x00786d34",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00786d30",
+          "destination": "0x00786f74",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00786d54",
+          "destination": "0x00786e0c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00786d7c",
+          "destination": "0x00786e0c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00786e08",
+          "destination": "0x00786f70",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00786e2c",
+          "destination": "0x00786ee4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00786e54",
+          "destination": "0x00786ee4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00786ee0",
+          "destination": "0x00786f6c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00786f6c",
+          "destination": "0x00786f70",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00786f70",
+          "destination": "0x00786f74",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00786f74",
+          "destination": "0x00786f78",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00786fc0",
+          "destination": "0x007870d4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00786fe4",
+          "destination": "0x0078707c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0078703c",
+          "destination": "0x007870d0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x007870d0",
+          "destination": "0x007870d4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x007870f4",
+          "destination": "0x00787104",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00787100",
+          "destination": "0x00787724",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x007871e8",
+          "destination": "0x00787440",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00787240",
+          "destination": "0x0078743c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x007872d4",
+          "destination": "0x00787438",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00787438",
+          "destination": "0x0078743c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0078743c",
+          "destination": "0x00787440",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00787460",
+          "destination": "0x007875ec",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00787488",
+          "destination": "0x007875ec",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x007875f4",
+          "destination": "0x007876ec",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x007876d8",
+          "destination": "0x00787720",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00787710",
+          "destination": "0x0078771c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0078771c",
+          "destination": "0x00787720",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00787720",
+          "destination": "0x00787724",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0078779c",
+          "destination": "0x007877b4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x007877e4",
+          "destination": "0x007877f0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00787824",
+          "destination": "0x00787930",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0078790c",
+          "destination": "0x00787a24",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00787a48",
+          "destination": "0x00787a9c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00787a70",
+          "destination": "0x00787a7c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00787aa4",
+          "destination": "0x00787b04",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00786560"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x0078658c"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x007865e8"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00786608"
+        },
+        {
+          "callee": null,
+          "route": "blx r4",
+          "site": "0x007866e4"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x007866f4"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00786710"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00786724"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00786740"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00786754"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00786770"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00786784"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x007867b0"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x007867c4"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00786834"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00786848"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x007868bc"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00786ae4"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00786b1c"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00786b54"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00786b8c"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00786c34"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00786c54"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00786d0c"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00786d2c"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00786de4"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00786e04"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00786ebc"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00786edc"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00786f48"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00786f68"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00786fb4"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00787038"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x007870cc"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00787184"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x007871ac"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x0078722c"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x0078729c"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x007872b0"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x007872c0"
+        },
+        {
+          "callee": "0x007853a8",
+          "route": "bl 0x7853a8",
+          "site": "0x00787368"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00787380"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00787408"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x007874d8"
+        },
+        {
+          "callee": "0x007853a8",
+          "route": "bl 0x7853a8",
+          "site": "0x00787538"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00787550"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x007875d4"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00787680"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00787698"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x007876a8"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x007876b8"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00787778"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00787788"
+        },
+        {
+          "callee": "0x00787bc8",
+          "route": "bl 0x787bc8",
+          "site": "0x00787850"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0078789c"
+        },
+        {
+          "callee": "0x00787bc8",
+          "route": "bl 0x787bc8",
+          "site": "0x007878d8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00787908"
+        },
+        {
+          "callee": "0x00787bc8",
+          "route": "bl 0x787bc8",
+          "site": "0x00787960"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x007879ac"
+        },
+        {
+          "callee": "0x00787bc8",
+          "route": "bl 0x787bc8",
+          "site": "0x007879f0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00787a20"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00787b00"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x007864f8",
+      "ivars": {
+        "0x0078704c": {
+          "offset": 308,
+          "slot": "0x0105d730",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerID"
+        },
+        "0x007876e0": {
+          "offset": 321,
+          "slot": "0x0105d734",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.muted"
+        },
+        "0x007876e8": {
+          "offset": 280,
+          "slot": "0x0105d70c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.world"
+        },
+        "0x00787910": {
+          "offset": 318,
+          "slot": "0x0105d738",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.isOwner"
+        },
+        "0x00787914": {
+          "offset": 319,
+          "slot": "0x0105d73c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.isAdmin"
+        },
+        "0x00787918": {
+          "offset": 320,
+          "slot": "0x0105d740",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.isMod"
+        },
+        "0x0078791c": {
+          "offset": 324,
+          "slot": "0x0105d714",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.cloudMode"
+        },
+        "0x00787b20": {
+          "offset": 280,
+          "slot": "0x0105d70c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.world"
+        },
+        "0x00787b24": {
+          "offset": 318,
+          "slot": "0x0105d738",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.isOwner"
+        },
+        "0x00787b28": {
+          "offset": 319,
+          "slot": "0x0105d73c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.isAdmin"
+        },
+        "0x00787b2c": {
+          "offset": 320,
+          "slot": "0x0105d740",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.isMod"
+        },
+        "0x00787b30": {
+          "offset": 324,
+          "slot": "0x0105d714",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.cloudMode"
+        },
+        "0x00787b44": {
+          "offset": 48,
+          "slot": "0x0105c624",
+          "symbol": "OBJC_IVAR_$_MJView.cache"
+        },
+        "0x00787b5c": {
+          "offset": 292,
+          "slot": "0x0105d72c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerUI"
+        },
+        "0x00787b60": {
+          "offset": 304,
+          "slot": "0x0105d744",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.hasAvatar"
+        },
+        "0x00787b64": {
+          "offset": 296,
+          "slot": "0x0105d704",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.avatarImage"
+        },
+        "0x00787b84": {
+          "offset": 8,
+          "slot": "0x0105c630",
+          "symbol": "OBJC_IVAR_$_MJView.frame"
+        },
+        "0x00787b90": {
+          "offset": 52,
+          "slot": "0x0105c634",
+          "symbol": "OBJC_IVAR_$_MJView.windowInfo"
+        },
+        "0x00787ba0": {
+          "offset": 312,
+          "slot": "0x0105d724",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.playerName"
+        },
+        "0x00787bb0": {
+          "offset": 317,
+          "slot": "0x0105d71c",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.connected"
+        },
+        "0x00787bc0": {
+          "offset": 305,
+          "slot": "0x0105d748",
+          "symbol": "OBJC_IVAR_$_NetPlayerButton.local"
+        }
+      },
+      "method": "NetPlayerButton -[updatedPlayerIfNeeded:]",
+      "name": "npb_35",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00787044": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00787048": {
+          "selector": "isEqualToString:",
+          "slot": "0x00e81210"
+        },
+        "0x00787050": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f901a8"
+        },
+        "0x00787054": {
+          "selector": "objectForKey:",
+          "slot": "0x00e8120c"
+        },
+        "0x00787058": {
+          "selector": "retain",
+          "slot": "0x00e81218"
+        },
+        "0x0078705c": {
+          "selector": "autorelease",
+          "slot": "0x00e81214"
+        },
+        "0x00787060": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90208"
+        },
+        "0x00787064": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f901f8"
+        },
+        "0x00787068": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f901c8"
+        },
+        "0x0078706c": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f901e8"
+        },
+        "0x00787070": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f901d8"
+        },
+        "0x00787074": {
+          "selector": "boolValue",
+          "slot": "0x00e8121c"
+        },
+        "0x00787078": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f901b8"
+        },
+        "0x007876dc": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90218"
+        },
+        "0x007876e4": {
+          "selector": "playerIsMuted:",
+          "slot": "0x00e81220"
+        },
+        "0x00787920": {
+          "selector": "cloudMode",
+          "slot": "0x00e81230"
+        },
+        "0x00787924": {
+          "selector": "isMod",
+          "slot": "0x00e8122c"
+        },
+        "0x00787928": {
+          "selector": "isAdmin",
+          "slot": "0x00e81228"
+        },
+        "0x0078792c": {
+          "selector": "isOwner",
+          "slot": "0x00e81224"
+        },
+        "0x00787b0c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00787b10": {
+          "selector": "objectForKey:",
+          "slot": "0x00e8120c"
+        },
+        "0x00787b14": {
+          "selector": "retain",
+          "slot": "0x00e81218"
+        },
+        "0x00787b18": {
+          "selector": "autorelease",
+          "slot": "0x00e81214"
+        },
+        "0x00787b1c": {
+          "selector": "boolValue",
+          "slot": "0x00e8121c"
+        },
+        "0x00787b34": {
+          "selector": "isMod",
+          "slot": "0x00e8122c"
+        },
+        "0x00787b38": {
+          "selector": "setBackgroundTexture:",
+          "slot": "0x00e81234"
+        },
+        "0x00787b3c": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90108"
+        },
+        "0x00787b40": {
+          "selector": "textureNamed:",
+          "slot": "0x00e811d8"
+        },
+        "0x00787b48": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90258"
+        },
+        "0x00787b4c": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90248"
+        },
+        "0x00787b50": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90238"
+        },
+        "0x00787b54": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90228"
+        },
+        "0x00787b58": {
+          "selector": "setDisableBanButtons:",
+          "slot": "0x00e81238"
+        },
+        "0x00787b68": {
+          "selector": "release",
+          "slot": "0x00e811f8"
+        },
+        "0x00787b6c": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90268"
+        },
+        "0x00787b70": {
+          "selector": "imageWithData:",
+          "slot": "0x00e8123c"
+        },
+        "0x00787b74": {
+          "class": "OBJC_CLASS_$_UIImage",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8a688"
+        },
+        "0x00787b78": {
+          "selector": "initWithUIImage:",
+          "slot": "0x00e81240"
+        },
+        "0x00787b7c": {
+          "selector": "alloc",
+          "slot": "0x00e811e8"
+        },
+        "0x00787b80": {
+          "class": "OBJC_CLASS_$_CPTexture2D",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8a68c"
+        },
+        "0x00787b8c": {
+          "class": "OBJC_CLASS_$_MJImageView",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8a684"
+        },
+        "0x00787b94": {
+          "selector": "initWithFrame:cache:windowInfo:texture:",
+          "slot": "0x00e811ec"
+        },
+        "0x00787b9c": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90188"
+        },
+        "0x00787ba4": {
+          "selector": "uppercaseString",
+          "slot": "0x00e81244"
+        },
+        "0x00787ba8": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90278"
+        },
+        "0x00787bac": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f90288"
+        },
+        "0x00787bb4": {
+          "selector": "setColor:",
+          "slot": "0x00e81248"
+        },
+        "0x00787bc4": {
+          "selector": "windowInfoChanged:",
+          "slot": "0x00e81204"
+        }
+      },
+      "semantics": "NetPlayerButton -[updatedPlayerIfNeeded:] @0x007864f8 (1460 words, 50 branches, 62 calls; [census] grade): refreshes one row from a per-player NSDictionary (arg at fp-0x28). Head: pid = [d objectForKey:@\"playerID\"] (0xf901a8); if ![self->playerID isEqualToString:pid] the ivar is replaced with the ARC strong-store form ([old autorelease] + [pid retain]). Then reads flags = [[d objectForKey:key] boolValue] for keys local/owner/admin/mod (0xf901b8/0xf901d8/0xf901e8/0xf901c8) and mode-sentinel cloudMode = 0xA8F4 if [[d objectForKey:@\"supermod\"] (0xf901f8) isEqualToString:@\"mode1\"] (0xf90208), 0x4D83 if isEqualToString:@\"mode2\"] (0xf90218), else 0. Muted sync: [self->world playerIsMuted:pid] compared with self->muted@321, on change writes muted + changed flag. Role diff: if isOwner/isAdmin/isMod/cloudMode differ from current, all four ivars (318/319/320/324) are rewritten and changed=1. Local-row block (only when local==1): re-syncs isOwner/isAdmin/isMod/cloudMode from live World sends ([self->world isOwner/isAdmin/isMod/cloudMode]) and forces changed=1. Background texture chain via [self->cache textureNamed:] + setBackgroundTexture: - owner: InventoryButtonBackgroundOwner.png (0xf90228); admin+cloudMode 0xA8F4: ...ModRed.png (0xf90238); admin otherwise: ...Admin.png (0xf90248); mod (and not cloudMode 0x4D83): ...Mod.png (0xf90258); default: InventoryButtonBackground.png (0xf90108); cloudMode 0x4D83 maps admin/mod to the default. If [self->world isMod], tells the popup [self->playerUI setDisableBanButtons:self->isMod]. Avatar: rebuilds when the playerID changed or hasAvatar@304 is false - releases and nils avatarImage@296, photo = [d objectForKey:@\"photo\"] (0xf90268) -> [UIImage imageWithData:] -> [[CPTexture2D alloc] initWithUIImage:] autoreleased -> avatarImage = [[MJImageView alloc] initWithFrame:CGRectInset(self->frame,4,4) cache/windowInfo/texture] and hasAvatar=1; when no photo exists it falls back to textureNamed:@\"noGCAvatar.png\" (0xf90188). Name: when the ID did not change it replaces playerName@312 with [[[d objectForKey:@\"alias\"] (0xf90278) uppercaseString] retain] after releasing the old value. Connected: conn = [[d objectForKey:@\"connected\"] (0xf90288) boolValue], falling back to self->local when false; writes connected@317 and colours the row with the 4-float helper 0x00787bc8 - connected: self setColor:{1,1,1,1} and avatarImage setColor:{1,1,1,1} (0x3f800000); disconnected: self {0.1,0.1,0.1,1.0} (0x3dcccccd) and avatarImage {0.2,0.2,0.2,0.5} (0x3e4ccccd/0x3f000000). Finally a local-flag diff sets changed and, when changed is set, one [self->playerUI windowInfoChanged:self->windowInfo] is sent (0x00787b00). Call histogram: 47 blx rN (indirect objc_msgSend family), 9 bl loc.imp.objc_msgSend, 4 bl 0x787bc8 (float4/colour packer), 2 bl 0x7853a8 (CGRect packer).",
+      "types": "v12@0:4@8",
+      "verified_words": 1460
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "schema": 1
+}

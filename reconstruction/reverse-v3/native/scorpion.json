@@ -1,0 +1,4748 @@
+{
+  "batch": "Scorpion (E143): the scorpion animal; 42 bodies",
+  "claim": "the scorpion animal (AI tick, tail-strike/spit combat, net round-trip)",
+  "classes": [
+    {
+      "boundary": "ARM.exidx end 0x008ac4b4 (listing bound); next ObjC IMP 0x008ac884 DynamicWorld -[initWithWorld:worldTileLoader:clientTileLoader:server:client:serverClients:cache:treeDensityNoiseFunction:seasonOffsetNoiseFunction:appDatabase:worldDatabase:dynamicObjectDatabase:]",
+      "boundary_end": "0x008ac4b4",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x008ac49c",
+      "ivars": {},
+      "method": "Scorpion -[.cxx_construct]",
+      "name": "sc_00",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[Scorpion -[.cxx_construct]] (imp 0x008ac49c, 6w): -[.cxx_construct] (0x8ac49c, 6w): empty `return self` stub (O0 sub sp/save r0/r1/reload r0); no C++ member constructor calls - no non-POD Scorpion ivars need init..\n",
+      "types": "@8@0:4",
+      "verified_words": 6
+    },
+    {
+      "boundary": "ARM.exidx end 0x008ac184 (listing bound); next ObjC IMP 0x008ac184 Scorpion -[removeRider:]",
+      "boundary_end": "0x008ac184",
+      "branches": [
+        {
+          "address": "0x008ac134",
+          "destination": "0x008ac160",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x008ac110"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008ac0b4",
+      "ivars": {
+        "0x008ac174": {
+          "offset": 128,
+          "slot": "0x0105cd10",
+          "symbol": "OBJC_IVAR_$_NPC.beingControlled"
+        },
+        "0x008ac17c": {
+          "offset": 340,
+          "slot": "0x0105dfc8",
+          "symbol": "OBJC_IVAR_$_Scorpion.riderTargetVelocity"
+        }
+      },
+      "method": "Scorpion -[addRider:]",
+      "name": "sc_01",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008ac168": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x008ac16c": {
+          "selector": "addRider:",
+          "slot": "0x00e82cac"
+        },
+        "0x008ac170": {
+          "class": "OBJC_CLASS_$_Scorpion",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bdac"
+        }
+      },
+      "semantics": "[Scorpion -[addRider:]] (imp 0x008ac0b4, 52w): -[addRider:] (0x8ac0b4, 52w): [super addRider:rider] via objc_msgSendSuper2 (superstruct {self, OBJC_CLASS_$_Scorpion}, SEL addRider:); then if (NPC.beingControlled@128 == 0) riderTargetVelocity@340 = 0.0f (pool 0x8ac178=0x0, float scalar not Vector2 - differs from Shark). Mounting clears rider velocity only when not being controlled..\n",
+      "types": "v12@0:4@8",
+      "verified_words": 52
+    },
+    {
+      "boundary": "ARM.exidx end 0x008ac388 (listing bound); next ObjC IMP 0x008ac388 Scorpion -[jumpsOnSwipe]",
+      "boundary_end": "0x008ac388",
+      "branches": [
+        {
+          "address": "0x008ac2ac",
+          "destination": "0x008ac300",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008ac2fc",
+          "destination": "0x008ac35c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008ac328",
+          "destination": "0x008ac35c",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x008ac2a0"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x008ac2e8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008ac260",
+      "ivars": {
+        "0x008ac37c": {
+          "offset": 56,
+          "slot": "0x0105cccc",
+          "symbol": "OBJC_IVAR_$_NPC.dead"
+        },
+        "0x008ac380": {
+          "offset": 48,
+          "slot": "0x0105c3c8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.needsRemoved"
+        }
+      },
+      "method": "Scorpion -[blockheadCanRide:usingItem:]",
+      "name": "sc_02",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008ac370": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x008ac374": {
+          "selector": "tamed",
+          "slot": "0x00e82c94"
+        },
+        "0x008ac378": {
+          "selector": "belongsToPlayerWithBlockhead:",
+          "slot": "0x00e82c90"
+        }
+      },
+      "semantics": "[Scorpion -[blockheadCanRide:usingItem:]] (imp 0x008ac260, 74w): -[blockheadCanRide:usingItem:] (0x8ac260, 74w): returns (![self tamed] || [self belongsToPlayerWithBlockhead:blockhead]) && !NPC.dead@56 && !DynamicObject.needsRemoved@48 (needsRemoved value eor-inverted). usingItem: arg (r3) never read; there is no age gate (unlike Shark's minRidableAge)..\n",
+      "types": "c16@0:4@8i12",
+      "verified_words": 74
+    },
+    {
+      "boundary": "ARM.exidx end 0x008ac480 (listing bound); next ObjC IMP 0x008ac480 Scorpion -[riderRidesWithArmsDown]",
+      "boundary_end": "0x008ac480",
+      "branches": [
+        {
+          "address": "0x008ac3e8",
+          "destination": "0x008ac414",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x008ac458"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008ac3a4",
+      "ivars": {
+        "0x008ac464": {
+          "offset": 132,
+          "slot": "0x0105ccf4",
+          "symbol": "OBJC_IVAR_$_NPC.rider"
+        },
+        "0x008ac46c": {
+          "offset": 340,
+          "slot": "0x0105dfc8",
+          "symbol": "OBJC_IVAR_$_Scorpion.riderTargetVelocity"
+        }
+      },
+      "method": "Scorpion -[blockheadUnloaded:]",
+      "name": "sc_03",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008ac470": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x008ac474": {
+          "selector": "blockheadUnloaded:",
+          "slot": "0x00e82cb4"
+        },
+        "0x008ac478": {
+          "class": "OBJC_CLASS_$_Scorpion",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bdac"
+        }
+      },
+      "semantics": "[Scorpion -[blockheadUnloaded:]] (imp 0x008ac3a4, 55w): -[blockheadUnloaded:] (0x8ac3a4, 55w): if (arg == NPC.rider@132) riderTargetVelocity@340 = 0.0f (pool 0x8ac468=0x0); then unconditionally [super blockheadUnloaded:arg] via objc_msgSendSuper2. No attackBlockhead release here (unlike Shark sh_03)..\n",
+      "types": "v12@0:4@8",
+      "verified_words": 55
+    },
+    {
+      "boundary": "ARM.exidx end 0x008abf10 (listing bound); next ObjC IMP 0x008abf10 Scorpion -[riderBodyYRotationForBlockhead:]",
+      "boundary_end": "0x008abf10",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x001c335c",
+          "route": "bl loc.imp.objc_msgSendSuper2_stret",
+          "site": "0x008abef8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008abeac",
+      "ivars": {},
+      "method": "Scorpion -[cameraPosForBlockhead:]",
+      "name": "sc_04",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008abf04": {
+          "selector": "cameraPosForBlockhead:",
+          "slot": "0x00e82ca8"
+        },
+        "0x008abf08": {
+          "class": "OBJC_CLASS_$_Scorpion",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bdac"
+        }
+      },
+      "semantics": "[Scorpion -[cameraPosForBlockhead:]] (imp 0x008abeac, 25w): -[cameraPosForBlockhead:] (0x8abeac, 25w): pure forward [super cameraPosForBlockhead:] via objc_msgSendSuper2_stret (Vector2 sret); the blockhead arg is passed through r3 and never read locally..\n",
+      "types": "{Vector2=[2f]}12@0:4@8",
+      "verified_words": 25
+    },
+    {
+      "boundary": "ARM.exidx end 0x008abbc8 (listing bound); next ObjC IMP 0x008abbc8 Scorpion -[cantBeCapturedTipStringForBlockhead:withItemType:]",
+      "boundary_end": "0x008abbc8",
+      "branches": [
+        {
+          "address": "0x008abb54",
+          "destination": "0x008abba8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x008abb94",
+          "destination": "0x008abba4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008abba0",
+          "destination": "0x008abbb0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008abba4",
+          "destination": "0x008abba8",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x008abb88"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008abb20",
+      "ivars": {},
+      "method": "Scorpion -[canBeCapturedByBlockhead:withItemType:]",
+      "name": "sc_05",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008abbbc": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x008abbc0": {
+          "selector": "belongsToPlayerWithBlockhead:",
+          "slot": "0x00e82c90"
+        }
+      },
+      "semantics": "[Scorpion -[canBeCapturedByBlockhead:withItemType:]] (imp 0x008abb20, 42w): -[canBeCapturedByBlockhead:withItemType:] (0x8abb20, 42w): if (itemType r3 != 0x12e/302) return 0; else return [self belongsToPlayerWithBlockhead:blockhead] (sxtb). No age check (Shark required age<4500)..\n",
+      "types": "c16@0:4@8i12",
+      "verified_words": 42
+    },
+    {
+      "boundary": "ARM.exidx end 0x008abdb8 (listing bound); next ObjC IMP 0x008abdb8 Scorpion -[riderPosForBlockhead:]",
+      "boundary_end": "0x008abdb8",
+      "branches": [
+        {
+          "address": "0x008abbfc",
+          "destination": "0x008abd80",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x008abc34",
+          "destination": "0x008abcfc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008abc74",
+          "destination": "0x008abcf8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x008abcf4",
+          "destination": "0x008abd88",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008abcf8",
+          "destination": "0x008abd7c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008abd78",
+          "destination": "0x008abd88",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008abd7c",
+          "destination": "0x008abd80",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x008abc28"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x008abc68"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x008abcc8"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x008abcec"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x008abd4c"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x008abd70"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008abbc8",
+      "ivars": {},
+      "method": "Scorpion -[cantBeCapturedTipStringForBlockhead:withItemType:]",
+      "name": "sc_06",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008abd94": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x008abd98": {
+          "selector": "tamed",
+          "slot": "0x00e82c94"
+        },
+        "0x008abd9c": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f93698"
+        },
+        "0x008abda0": {
+          "selector": "stringWithFormat:",
+          "slot": "0x00e82c74"
+        },
+        "0x008abda4": {
+          "selector": "speciesName",
+          "slot": "0x00e82ca0"
+        },
+        "0x008abda8": {
+          "class": "OBJC_CLASS_$_NSString",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8a9a0"
+        },
+        "0x008abdac": {
+          "selector": "belongsToPlayerWithBlockhead:",
+          "slot": "0x00e82c90"
+        },
+        "0x008abdb0": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f93688"
+        }
+      },
+      "semantics": "[Scorpion -[cantBeCapturedTipStringForBlockhead:withItemType:]] (imp 0x008abbc8, 124w): -[cantBeCapturedTipStringForBlockhead:withItemType:] (0x8abbc8, 124w): if (itemType != 0x12e) return nil; if (![self tamed]) return [NSString stringWithFormat:@\"%@S MUST BE TAMED\\nBEFORE YOU CAN CAPTURE THEM\", [self speciesName]] (fmt obj 0xF93698, cstr 0xF5607B); if ([self belongsToPlayerWithBlockhead:blockhead]) return nil; else return fmt @\"THAT %@ BELONGS TO\\nSOMEONE ELSE\" (obj 0xF93688, cstr 0xF55DCE)..\n",
+      "types": "@16@0:4@8i12",
+      "verified_words": 124
+    },
+    {
+      "boundary": "ARM.exidx end 0x00893224; body trimmed at the next IMP 0x008931d8 Scorpion -[getNamesArray]",
+      "boundary_end": "0x008931d8",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x008931bc",
+      "ivars": {},
+      "method": "Scorpion -[captureRequiredItemType]",
+      "name": "sc_07",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[Scorpion -[captureRequiredItemType]] (imp 0x008931bc, 7w): -[captureRequiredItemType] (0x8931bc, 7w): return 0x12e (302)..\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00893224; body trimmed at the next IMP 0x008931bc Scorpion -[captureRequiredItemType]",
+      "boundary_end": "0x008931bc",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x008931a0",
+      "ivars": {},
+      "method": "Scorpion -[capturedItemType]",
+      "name": "sc_08",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[Scorpion -[capturedItemType]] (imp 0x008931a0, 7w): -[capturedItemType] (0x8931a0, 7w): return 0x147 (327)..\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x0089483c (listing bound); next ObjC IMP 0x0089483c Scorpion -[remoteCreationDataUpdate:]",
+      "boundary_end": "0x0089483c",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00894820",
+      "ivars": {},
+      "method": "Scorpion -[creationDataStructSize]",
+      "name": "sc_09",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[Scorpion -[creationDataStructSize]] (imp 0x00894820, 7w): -[creationDataStructSize] (0x894820, 7w): return 0x80 (128)..\n",
+      "types": "L8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00894528 (listing bound); next ObjC IMP 0x00894528 Scorpion -[updateNetDataForClient:]",
+      "boundary_end": "0x00894528",
+      "branches": [
+        {
+          "address": "0x008942b4",
+          "destination": "0x008942d0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008942cc",
+          "destination": "0x008942f0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00894358",
+          "destination": "0x00894374",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00894370",
+          "destination": "0x00894394",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00894418",
+          "destination": "0x00894478",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x008942c8"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x008942ec"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x00894324"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x0089436c"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x00894390"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00894454"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x008944cc"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x008944e8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00894260",
+      "ivars": {
+        "0x00894504": {
+          "offset": 312,
+          "slot": "0x0105df94",
+          "symbol": "OBJC_IVAR_$_Scorpion.attackBlockhead"
+        },
+        "0x00894508": {
+          "offset": 328,
+          "slot": "0x0105df98",
+          "symbol": "OBJC_IVAR_$_Scorpion.spitting"
+        }
+      },
+      "method": "Scorpion -[creationNetDataForClient:]",
+      "name": "sc_10",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008944fc": {
+          "selector": "npcCreationNetDataForClient:",
+          "slot": "0x00e82ba0"
+        },
+        "0x00894500": {
+          "selector": "scorpionUpdateNetDataForClient:",
+          "slot": "0x00e82ba4"
+        },
+        "0x00894510": {
+          "selector": "uniqueID",
+          "slot": "0x00e82ba8"
+        },
+        "0x00894514": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00894518": {
+          "selector": "appendNPCCreationDataToData:",
+          "slot": "0x00e82bb0"
+        },
+        "0x0089451c": {
+          "selector": "dataWithBytes:length:",
+          "slot": "0x00e82bac"
+        },
+        "0x00894520": {
+          "class": "OBJC_CLASS_$_NSData",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8a994"
+        }
+      },
+      "semantics": "[Scorpion -[creationNetDataForClient:]] (imp 0x00894260, 178w): -[creationNetDataForClient:] (0x894260, 178w): local 0x80-byte creation buffer at fp-0xa8. 1) objc_msgSend_stret(sp+0x78, self, 'npcCreationNetDataForClient:', arg) -> 0x48 bytes (self==0 -> memset 0x48), then memcpy into buf[0..0x48). 2) objc_msgSend_stret(sp+0x50, self, 'scorpionUpdateNetDataForClient:', arg) -> 0x28 bytes (self==0 -> memset), copied (word by word) into buf[0x48..0x70). 3) if (attackBlockhead@312 != nil): buf+0x70/0x74 = [attackBlockhead uniqueID] qword; buf+0x78 = spitting@328 byte (uid qword pre-zeroed at fp-0x34/-0x38). 4) return [self appendNPCCreationDataToData:[NSData dataWithBytes:buf length:0x80]]. No isNet guard on the attackBlockhead field (unlike Shark sh_11)..\n",
+      "types": "@12@0:4@8",
+      "verified_words": 178
+    },
+    {
+      "boundary": "ARM.exidx end 0x00894820 (listing bound); next ObjC IMP 0x00894820 Scorpion -[creationDataStructSize]",
+      "boundary_end": "0x00894820",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r5",
+          "site": "0x008946e0"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00894704"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00894728"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x0089474c"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00894770"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00894794"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x008947b8"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x008947e0"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00894614",
+      "ivars": {
+        "0x00894800": {
+          "offset": 244,
+          "slot": "0x0105df48",
+          "symbol": "OBJC_IVAR_$_Scorpion.armCube"
+        },
+        "0x00894804": {
+          "offset": 240,
+          "slot": "0x0105df4c",
+          "symbol": "OBJC_IVAR_$_Scorpion.legCube"
+        },
+        "0x00894808": {
+          "offset": 236,
+          "slot": "0x0105df50",
+          "symbol": "OBJC_IVAR_$_Scorpion.tailCubeD"
+        },
+        "0x0089480c": {
+          "offset": 232,
+          "slot": "0x0105df54",
+          "symbol": "OBJC_IVAR_$_Scorpion.tailCubeC"
+        },
+        "0x00894810": {
+          "offset": 228,
+          "slot": "0x0105df58",
+          "symbol": "OBJC_IVAR_$_Scorpion.tailCubeB"
+        },
+        "0x00894814": {
+          "offset": 224,
+          "slot": "0x0105df5c",
+          "symbol": "OBJC_IVAR_$_Scorpion.tailCubeA"
+        },
+        "0x00894818": {
+          "offset": 220,
+          "slot": "0x0105df60",
+          "symbol": "OBJC_IVAR_$_Scorpion.bodyCube"
+        }
+      },
+      "method": "Scorpion -[dealloc]",
+      "name": "sc_11",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008947ec": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x008947f0": {
+          "selector": "dealloc",
+          "slot": "0x00e82bb8"
+        },
+        "0x008947f4": {
+          "class": "OBJC_CLASS_$_Scorpion",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bdac"
+        },
+        "0x008947f8": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x008947fc": {
+          "selector": "release",
+          "slot": "0x00e82bb4"
+        }
+      },
+      "semantics": "[Scorpion -[dealloc]] (imp 0x00894614, 131w): -[dealloc] (0x894614, 131w): releases 7 cubes in order bodyCube@220, tailCubeA@224, tailCubeB@228, tailCubeC@232, tailCubeD@236, legCube@240, armCube@244 (each [obj release]), then [super dealloc] via objc_msgSendSuper2. Textures (bodyTexture@212/legTexture@216), shader@208 and attackBlockhead@312 are NOT released..\n",
+      "types": "v8@0:4",
+      "verified_words": 131
+    },
+    {
+      "boundary": "ARM.exidx end 0x008a45f0 (listing bound); next ObjC IMP 0x008a45f0 Scorpion -[update:accurateDT:isSimulation:]",
+      "boundary_end": "0x008a45f0",
+      "branches": [
+        {
+          "address": "0x008a4488",
+          "destination": "0x008a45b0",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x008a45ac",
+          "destination": "0x008a45b0",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a44fc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a4514"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a4564"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x008a45a8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008a4448",
+      "ivars": {
+        "0x008a45b8": {
+          "offset": 56,
+          "slot": "0x0105cccc",
+          "symbol": "OBJC_IVAR_$_NPC.dead"
+        },
+        "0x008a45cc": {
+          "offset": 268,
+          "slot": "0x0105df78",
+          "symbol": "OBJC_IVAR_$_Scorpion.travelFraction"
+        },
+        "0x008a45e4": {
+          "offset": 24,
+          "slot": "0x0105c3d0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.floatPos"
+        }
+      },
+      "method": "Scorpion -[die:]",
+      "name": "sc_12",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008a45bc": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x008a45c0": {
+          "selector": "die:",
+          "slot": "0x00e82c0c"
+        },
+        "0x008a45c4": {
+          "class": "OBJC_CLASS_$_Scorpion",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bdac"
+        },
+        "0x008a45d0": {
+          "class": "OBJC_CLASS_$_MJSoundManager",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8a998"
+        },
+        "0x008a45d8": {
+          "selector": "instance",
+          "slot": "0x00e82c00"
+        },
+        "0x008a45dc": {
+          "selector": "multiSoundNamed:",
+          "slot": "0x00e82c04"
+        },
+        "0x008a45e0": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f93618"
+        },
+        "0x008a45e8": {
+          "selector": "playAtPosition:afterDelay:",
+          "slot": "0x00e82c08"
+        }
+      },
+      "semantics": "[Scorpion -[die:]] (imp 0x008a4448, 106w): -[die:] (0x8a4448, 106w): if (!NPC.dead@56): [MJSoundManager instance] -> multiSoundNamed:@\"scorpionAttack.wav\" (obj 0xF93618) -> playAtPosition:floatPos@24.x,.y afterDelay:0.1 (double 0x3FB99999A0000000); travelFraction@268 = 0.0f (pool 0x8a45c8=0x0); [super die:arg] via objc_msgSendSuper2 (arg passed through, not tested)..\n",
+      "types": "v12@0:4@8",
+      "verified_words": 106
+    },
+    {
+      "boundary": "ARM.exidx end 0x00895498 (listing bound); next ObjC IMP 0x00895498 Scorpion -[remoteUpdate:]",
+      "boundary_end": "0x00895498",
+      "branches": [
+        {
+          "address": "0x00895148",
+          "destination": "0x008952a8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00895170",
+          "destination": "0x008952a4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008951bc",
+          "destination": "0x008952a4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008952a4",
+          "destination": "0x00895458",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008952d4",
+          "destination": "0x00895330",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00895344",
+          "destination": "0x00895454",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0089536c",
+          "destination": "0x008953bc",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008953b8",
+          "destination": "0x00895454",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00895454",
+          "destination": "0x00895458",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x0089513c"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x008951b0"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x008951ec"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00895314"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x008953ac"
+        },
+        {
+          "callee": "0x004b49fc",
+          "route": "bl sym.makeIntpair_int__int_",
+          "site": "0x008953e8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00895080",
+      "ivars": {
+        "0x00895468": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        },
+        "0x0089546c": {
+          "offset": 132,
+          "slot": "0x0105ccf4",
+          "symbol": "OBJC_IVAR_$_NPC.rider"
+        },
+        "0x00895474": {
+          "offset": 49,
+          "slot": "0x0105c3cc",
+          "symbol": "OBJC_IVAR_$_DynamicObject.updateNeedsToBeSent"
+        },
+        "0x00895478": {
+          "offset": 248,
+          "slot": "0x0105df84",
+          "symbol": "OBJC_IVAR_$_Scorpion.movementDirection"
+        },
+        "0x0089547c": {
+          "offset": 356,
+          "slot": "0x0105df88",
+          "symbol": "OBJC_IVAR_$_Scorpion.remoteMovementDirection"
+        },
+        "0x00895480": {
+          "offset": 288,
+          "slot": "0x0105df70",
+          "symbol": "OBJC_IVAR_$_Scorpion.walkSpeed"
+        },
+        "0x00895484": {
+          "offset": 352,
+          "slot": "0x0105df8c",
+          "symbol": "OBJC_IVAR_$_Scorpion.remoteWalkSpeed"
+        },
+        "0x0089548c": {
+          "offset": 344,
+          "slot": "0x0105df90",
+          "symbol": "OBJC_IVAR_$_Scorpion.remoteGoalSquare"
+        },
+        "0x00895490": {
+          "offset": 312,
+          "slot": "0x0105df94",
+          "symbol": "OBJC_IVAR_$_Scorpion.attackBlockhead"
+        }
+      },
+      "method": "Scorpion -[doRemoteUpdate:]",
+      "name": "sc_13",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00895460": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00895464": {
+          "selector": "isClient",
+          "slot": "0x00e82bd4"
+        },
+        "0x00895470": {
+          "selector": "isNet",
+          "slot": "0x00e82bc0"
+        }
+      },
+      "semantics": "[Scorpion -[doRemoteUpdate:]] (imp 0x00895080, 262w): -[doRemoteUpdate:] (0x895080, 262w): net struct 0x28 (w0/w1 in r2/r3, w2..w9 on stack; w6/w7=toSquare pair, w8=(s16)walkSpeed*255 | (s8)movementDirection<<16). Server branch (![self.dynamicWorld@8 isClient]): if (rider@132 != nil && [rider isNet]) { remoteGoalSquare@344 = (w6,w7) via makeIntpair; remoteWalkSpeed@352 = walkSpeed@288 = (s16)w8 / 255.0f (pool 0x895488=255.0); remoteMovementDirection@356 = movementDirection@248 = (s8)(w8>>16); updateNeedsToBeSent@49 = 1; }. Client branch (isClient): if ((rider==nil || [rider isNet]) && (attackBlockhead@312==nil || [attackBlockhead isNet])) { remoteGoalSquare=(w6,w7); remoteWalkSpeed=(s16)w8/255; remoteMovementDirection=(s8)(w8>>16); } - no walkSpeed mirror, no age update..\n",
+      "types": "v48@0:4{ScorpionUpdateNetData={NPCUpdateNetData={DynamicObjectNetData=QIIC[7C]}}IIscC[4c]}8",
+      "verified_words": 262
+    },
+    {
+      "boundary": "ARM.exidx end 0x008a3164 (listing bound); next ObjC IMP 0x008a4448 Scorpion -[die:]",
+      "boundary_end": "0x008a3164",
+      "branches": [
+        {
+          "address": "0x00895a9c",
+          "destination": "0x00895b08",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x00895b04",
+          "destination": "0x00895c04",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00895b98",
+          "destination": "0x00895c00",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00895c00",
+          "destination": "0x00895c04",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00895ca4",
+          "destination": "0x00895d10",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x00895d0c",
+          "destination": "0x00895e0c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00895da0",
+          "destination": "0x00895e08",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00895e08",
+          "destination": "0x00895e0c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00895e3c",
+          "destination": "0x00895edc",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x00895e70",
+          "destination": "0x00895edc",
+          "mnemonic": "bgt"
+        },
+        {
+          "address": "0x00895ea4",
+          "destination": "0x00895edc",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x00895ed8",
+          "destination": "0x00895ee0",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00895edc",
+          "destination": "0x008a3140",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00895fc0",
+          "destination": "0x0089605c",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00896058",
+          "destination": "0x00896184",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008960f8",
+          "destination": "0x00896180",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00896180",
+          "destination": "0x00896184",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0089624c",
+          "destination": "0x00896268",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00896264",
+          "destination": "0x00896298",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00896294",
+          "destination": "0x008a3140",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008962e0",
+          "destination": "0x008962e8",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x008962e4",
+          "destination": "0x008962e8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0089638c",
+          "destination": "0x00896420",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x008963d8",
+          "destination": "0x0089641c",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00896418",
+          "destination": "0x008963a0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0089641c",
+          "destination": "0x00896668",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00896430",
+          "destination": "0x008964c4",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0089647c",
+          "destination": "0x008964c0",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x008964bc",
+          "destination": "0x00896444",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008964c0",
+          "destination": "0x00896664",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00896528",
+          "destination": "0x0089656c",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00896568",
+          "destination": "0x008964f0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0089656c",
+          "destination": "0x00896570",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008965a8",
+          "destination": "0x00896660",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x008965e8",
+          "destination": "0x00896570",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00896660",
+          "destination": "0x00896664",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00896664",
+          "destination": "0x00896668",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00896ab8",
+          "destination": "0x00897080",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00896cbc",
+          "destination": "0x00896ea8",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x00896e94",
+          "destination": "0x0089707c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0089707c",
+          "destination": "0x00897080",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008970ac",
+          "destination": "0x00897104",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008970e0",
+          "destination": "0x008971e8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00897130",
+          "destination": "0x008971c0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00897164",
+          "destination": "0x008971d8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008971d4",
+          "destination": "0x008971d8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008989b8",
+          "destination": "0x008989d8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008992dc",
+          "destination": "0x008992f0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0089b304",
+          "destination": "0x0089b320",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0089b31c",
+          "destination": "0x0089b344",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0089b3c8",
+          "destination": "0x0089b3e4",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0089b3e0",
+          "destination": "0x0089b3f8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0089b42c",
+          "destination": "0x0089b448",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0089b444",
+          "destination": "0x0089b45c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0089b490",
+          "destination": "0x0089b4dc",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x0089b728",
+          "destination": "0x0089b748",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0089b740",
+          "destination": "0x0089b75c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0089b7cc",
+          "destination": "0x0089b7e8",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0089b7e4",
+          "destination": "0x0089b7fc",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0089b86c",
+          "destination": "0x0089b8d0",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x0089b884",
+          "destination": "0x0089b8e4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x0089db3c",
+          "destination": "0x0089db54",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008a0024",
+          "destination": "0x008a0030",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00895a6c"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x00895a8c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00895adc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00895b74"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x00895b88"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00895bd8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00895c74"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x00895c94"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00895ce4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00895d7c"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x00895d90"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00895de0"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x00895f3c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00895f84"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x00895fa4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00896014"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x00896040"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x00896080"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008960c8"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x008960dc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00896144"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x00896168"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x008961fc"
+        },
+        {
+          "callee": "0x00a16e68",
+          "route": "bl sym.tileAtWorldPosition_int__int__MacroTile__World_",
+          "site": "0x00896230"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x008962f0"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x0089630c"
+        },
+        {
+          "callee": "0x008a3164",
+          "route": "bl 0x8a3164",
+          "site": "0x00896344"
+        },
+        {
+          "callee": "0x008a31d8",
+          "route": "bl 0x8a31d8",
+          "site": "0x00896840"
+        },
+        {
+          "callee": "0x008a3570",
+          "route": "bl 0x8a3570",
+          "site": "0x00896a60"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x00896a94"
+        },
+        {
+          "callee": "0x008a3908",
+          "route": "bl 0x8a3908",
+          "site": "0x00896c64"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x00896c98"
+        },
+        {
+          "callee": "0x008a3af0",
+          "route": "bl 0x8a3af0",
+          "site": "0x00896e6c"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x00896e90"
+        },
+        {
+          "callee": "0x008a3af0",
+          "route": "bl 0x8a3af0",
+          "site": "0x00897054"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x00897078"
+        },
+        {
+          "callee": "0x001c2b34",
+          "route": "bl sym.imp.sinf",
+          "site": "0x00897220"
+        },
+        {
+          "callee": "0x008a3908",
+          "route": "bl 0x8a3908",
+          "site": "0x008973d8"
+        },
+        {
+          "callee": "0x001c2b34",
+          "route": "bl sym.imp.sinf",
+          "site": "0x008974bc"
+        },
+        {
+          "callee": "0x008a31d8",
+          "route": "bl 0x8a31d8",
+          "site": "0x008975dc"
+        },
+        {
+          "callee": "0x008a3908",
+          "route": "bl 0x8a3908",
+          "site": "0x008977e0"
+        },
+        {
+          "callee": "0x001c2b34",
+          "route": "bl sym.imp.sinf",
+          "site": "0x008978ac"
+        },
+        {
+          "callee": "0x008a31d8",
+          "route": "bl 0x8a31d8",
+          "site": "0x008979c8"
+        },
+        {
+          "callee": "0x008a3908",
+          "route": "bl 0x8a3908",
+          "site": "0x00897bcc"
+        },
+        {
+          "callee": "0x001c2b34",
+          "route": "bl sym.imp.sinf",
+          "site": "0x00897c98"
+        },
+        {
+          "callee": "0x008a31d8",
+          "route": "bl 0x8a31d8",
+          "site": "0x00897db4"
+        },
+        {
+          "callee": "0x008a3908",
+          "route": "bl 0x8a3908",
+          "site": "0x00897fb8"
+        },
+        {
+          "callee": "0x001c2b34",
+          "route": "bl sym.imp.sinf",
+          "site": "0x00898084"
+        },
+        {
+          "callee": "0x008a31d8",
+          "route": "bl 0x8a31d8",
+          "site": "0x008981a0"
+        },
+        {
+          "callee": "0x001c3d4c",
+          "route": "bl sym.imp.__wrap_fmodf",
+          "site": "0x00898250"
+        },
+        {
+          "callee": "0x001c3d4c",
+          "route": "bl sym.imp.__wrap_fmodf",
+          "site": "0x008982a8"
+        },
+        {
+          "callee": "0x008a3908",
+          "route": "bl 0x8a3908",
+          "site": "0x00898524"
+        },
+        {
+          "callee": "0x008a3570",
+          "route": "bl 0x8a3570",
+          "site": "0x008986dc"
+        },
+        {
+          "callee": "0x008a3af0",
+          "route": "bl 0x8a3af0",
+          "site": "0x008988d8"
+        },
+        {
+          "callee": "0x008a3908",
+          "route": "bl 0x8a3908",
+          "site": "0x00898b20"
+        },
+        {
+          "callee": "0x008a3570",
+          "route": "bl 0x8a3570",
+          "site": "0x00898cd4"
+        },
+        {
+          "callee": "0x008a3af0",
+          "route": "bl 0x8a3af0",
+          "site": "0x00898ed0"
+        },
+        {
+          "callee": "0x008a3908",
+          "route": "bl 0x8a3908",
+          "site": "0x00899100"
+        },
+        {
+          "callee": "0x008a3af0",
+          "route": "bl 0x8a3af0",
+          "site": "0x00899278"
+        },
+        {
+          "callee": "0x008a31d8",
+          "route": "bl 0x8a31d8",
+          "site": "0x008994bc"
+        },
+        {
+          "callee": "0x008a3908",
+          "route": "bl 0x8a3908",
+          "site": "0x008996d4"
+        },
+        {
+          "callee": "0x008a3af0",
+          "route": "bl 0x8a3af0",
+          "site": "0x0089984c"
+        },
+        {
+          "callee": "0x008a31d8",
+          "route": "bl 0x8a31d8",
+          "site": "0x00899a78"
+        },
+        {
+          "callee": "0x008a3908",
+          "route": "bl 0x8a3908",
+          "site": "0x00899c98"
+        },
+        {
+          "callee": "0x008a3af0",
+          "route": "bl 0x8a3af0",
+          "site": "0x00899e10"
+        },
+        {
+          "callee": "0x008a31d8",
+          "route": "bl 0x8a31d8",
+          "site": "0x0089a03c"
+        },
+        {
+          "callee": "0x008a3908",
+          "route": "bl 0x8a3908",
+          "site": "0x0089a254"
+        },
+        {
+          "callee": "0x008a3af0",
+          "route": "bl 0x8a3af0",
+          "site": "0x0089a3cc"
+        },
+        {
+          "callee": "0x008a31d8",
+          "route": "bl 0x8a31d8",
+          "site": "0x0089a5f8"
+        },
+        {
+          "callee": "0x008a3908",
+          "route": "bl 0x8a3908",
+          "site": "0x0089a810"
+        },
+        {
+          "callee": "0x008a3af0",
+          "route": "bl 0x8a3af0",
+          "site": "0x0089a988"
+        },
+        {
+          "callee": "0x008a31d8",
+          "route": "bl 0x8a31d8",
+          "site": "0x0089abb4"
+        },
+        {
+          "callee": "0x008a3908",
+          "route": "bl 0x8a3908",
+          "site": "0x0089adcc"
+        },
+        {
+          "callee": "0x008a3af0",
+          "route": "bl 0x8a3af0",
+          "site": "0x0089af44"
+        },
+        {
+          "callee": "0x008a31d8",
+          "route": "bl 0x8a31d8",
+          "site": "0x0089b178"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x0089b1c8"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x0089b1fc"
+        },
+        {
+          "callee": "0x001c2d38",
+          "route": "bl sym.imp.__wrap_glUseProgram",
+          "site": "0x0089b200"
+        },
+        {
+          "callee": null,
+          "route": "blx r6",
+          "site": "0x0089b290"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x0089b2a4"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x0089b2b4"
+        },
+        {
+          "callee": "0x001c2de0",
+          "route": "bl sym.imp.__wrap_glUniform1i",
+          "site": "0x0089b2bc"
+        },
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x0089b318"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x0089b340"
+        },
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x0089b540"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x0089b554"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x0089b5a0"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x0089b5d4"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x0089b620"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x0089b654"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x0089b6a0"
+        },
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x0089b6e8"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x0089b6fc"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x0089b784"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x0089b7a0"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x0089b824"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x0089b840"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x0089b910"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089b95c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089b980"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089b998"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x0089b9a8"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x0089b9b8"
+        },
+        {
+          "callee": "0x004b5c08",
+          "route": "bl method.Vector.operator_float__",
+          "site": "0x0089b9c8"
+        },
+        {
+          "callee": "0x001c3d64",
+          "route": "bl sym.imp.__wrap_glUniform4f",
+          "site": "0x0089b9e8"
+        },
+        {
+          "callee": "0x001c2d5c",
+          "route": "bl sym.imp.__wrap_glEnableVertexAttribArray",
+          "site": "0x0089b9f0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089ba24"
+        },
+        {
+          "callee": "0x001c2ad4",
+          "route": "bl sym.imp.__wrap_glBindTexture",
+          "site": "0x0089ba40"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x0089bdcc"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x0089c158"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089c180"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089c19c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089c1ac"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x0089c1c0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089c1e8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089c204"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089c214"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x0089c224"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089c258"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x0089c5e8"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x0089c9f8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089caa8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089cabc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089cacc"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x0089cadc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089cb04"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089cb18"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089cb28"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x0089cb38"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089cb64"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x0089cf04"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x0089d314"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089d3cc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089d3e0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089d3f0"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x0089d400"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089d428"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089d43c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089d44c"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x0089d45c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089d488"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x0089d818"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x0089dc50"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089dd08"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089dd1c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089dd2c"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x0089dd3c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089dd64"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089dd78"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089dd88"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x0089dd98"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089ddc4"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x0089e154"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x0089e574"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089e62c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089e640"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089e650"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x0089e660"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089e688"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089e69c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089e6ac"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x0089e6bc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089e6e8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089e714"
+        },
+        {
+          "callee": "0x001c2ad4",
+          "route": "bl sym.imp.__wrap_glBindTexture",
+          "site": "0x0089e728"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x0089eab8"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x0089eed8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089ef90"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089efa4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089efb4"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x0089efc4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089efec"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089f000"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089f010"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x0089f020"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089f050"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x0089f3e0"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x0089f800"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089f8b8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089f8cc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089f8dc"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x0089f8ec"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089f914"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089f928"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089f938"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x0089f948"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x0089f970"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x0089fd00"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x008a012c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a01e4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a01f8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a0208"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x008a0218"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a0240"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a0254"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a0264"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x008a0274"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a02a4"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x008a0634"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x008a0a54"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a0b0c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a0b20"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a0b30"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x008a0b40"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a0b68"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a0b7c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a0b8c"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x008a0b9c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a0bc4"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x008a0f54"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x008a1374"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a142c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a1440"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a1450"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x008a1460"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a1488"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a149c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a14ac"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x008a14bc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a14e4"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x008a1874"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x008a1c94"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a1d4c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a1d60"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a1d70"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x008a1d80"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a1da8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a1dbc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a1dcc"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x008a1ddc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a1e04"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x008a2194"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x008a25b4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a266c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a2680"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a2690"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x008a26a0"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a26c8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a26dc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a26ec"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x008a26fc"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008a2724"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x008a2ab4"
+        },
+        {
+          "callee": "0x008a3e88",
+          "route": "bl 0x8a3e88",
+          "site": "0x008a2ed4"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x008a2f84"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x008a2fb8"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x008a2fcc"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x008a2fdc"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x008a2ffc"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x008a3098"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x008a30ac"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x008a30bc"
+        },
+        {
+          "callee": "0x001c2dd4",
+          "route": "bl sym.imp.__wrap_glUniformMatrix4fv",
+          "site": "0x008a30dc"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x008a3134"
+        },
+        {
+          "callee": "0x001c3d58",
+          "route": "bl sym.imp.__wrap_glDisableVertexAttribArray",
+          "site": "0x008a313c"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00895630",
+      "ivars": {
+        "0x008965f0": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x008965f8": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x00896e98": {
+          "offset": 24,
+          "slot": "0x0105c3d0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.floatPos"
+        },
+        "0x00897170": {
+          "offset": 252,
+          "slot": "0x0105df80",
+          "symbol": "OBJC_IVAR_$_Scorpion.fromSquare"
+        },
+        "0x00897174": {
+          "offset": 57,
+          "slot": "0x0105cd18",
+          "symbol": "OBJC_IVAR_$_NPC.visible"
+        },
+        "0x00897178": {
+          "offset": 56,
+          "slot": "0x0105cccc",
+          "symbol": "OBJC_IVAR_$_NPC.dead"
+        },
+        "0x0089717c": {
+          "offset": 248,
+          "slot": "0x0105df84",
+          "symbol": "OBJC_IVAR_$_Scorpion.movementDirection"
+        },
+        "0x00897180": {
+          "offset": 276,
+          "slot": "0x0105dfa8",
+          "symbol": "OBJC_IVAR_$_Scorpion.bodyRotation"
+        },
+        "0x00897184": {
+          "offset": 280,
+          "slot": "0x0105dfac",
+          "symbol": "OBJC_IVAR_$_Scorpion.randomGoalRotation"
+        },
+        "0x0089718c": {
+          "offset": 300,
+          "slot": "0x0105dfb0",
+          "symbol": "OBJC_IVAR_$_Scorpion.zRotation"
+        },
+        "0x00897190": {
+          "offset": 268,
+          "slot": "0x0105df78",
+          "symbol": "OBJC_IVAR_$_Scorpion.travelFraction"
+        },
+        "0x008971a0": {
+          "offset": 320,
+          "slot": "0x0105dfa0",
+          "symbol": "OBJC_IVAR_$_Scorpion.biting"
+        },
+        "0x008971a4": {
+          "offset": 324,
+          "slot": "0x0105df9c",
+          "symbol": "OBJC_IVAR_$_Scorpion.biteTimer"
+        },
+        "0x008971a8": {
+          "offset": 328,
+          "slot": "0x0105df98",
+          "symbol": "OBJC_IVAR_$_Scorpion.spitting"
+        },
+        "0x008971ac": {
+          "offset": 332,
+          "slot": "0x0105dfa4",
+          "symbol": "OBJC_IVAR_$_Scorpion.spitTimer"
+        },
+        "0x008971b8": {
+          "offset": 284,
+          "slot": "0x0105dfb4",
+          "symbol": "OBJC_IVAR_$_Scorpion.walkTimer"
+        },
+        "0x008992e0": {
+          "offset": 304,
+          "slot": "0x0105dfb8",
+          "symbol": "OBJC_IVAR_$_Scorpion.multiplierA"
+        },
+        "0x008992e4": {
+          "offset": 308,
+          "slot": "0x0105dfbc",
+          "symbol": "OBJC_IVAR_$_Scorpion.multiplierB"
+        },
+        "0x0089b890": {
+          "offset": 208,
+          "slot": "0x0105df6c",
+          "symbol": "OBJC_IVAR_$_Scorpion.shader"
+        },
+        "0x0089b8a4": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        },
+        "0x0089b8c0": {
+          "offset": 212,
+          "slot": "0x0105df68",
+          "symbol": "OBJC_IVAR_$_Scorpion.bodyTexture"
+        },
+        "0x0089b8c8": {
+          "offset": 220,
+          "slot": "0x0105df60",
+          "symbol": "OBJC_IVAR_$_Scorpion.bodyCube"
+        },
+        "0x0089db40": {
+          "offset": 224,
+          "slot": "0x0105df5c",
+          "symbol": "OBJC_IVAR_$_Scorpion.tailCubeA"
+        },
+        "0x0089db44": {
+          "offset": 228,
+          "slot": "0x0105df58",
+          "symbol": "OBJC_IVAR_$_Scorpion.tailCubeB"
+        },
+        "0x0089db48": {
+          "offset": 232,
+          "slot": "0x0105df54",
+          "symbol": "OBJC_IVAR_$_Scorpion.tailCubeC"
+        },
+        "0x0089db4c": {
+          "offset": 236,
+          "slot": "0x0105df50",
+          "symbol": "OBJC_IVAR_$_Scorpion.tailCubeD"
+        },
+        "0x0089db50": {
+          "offset": 216,
+          "slot": "0x0105df64",
+          "symbol": "OBJC_IVAR_$_Scorpion.legTexture"
+        },
+        "0x008a0028": {
+          "offset": 244,
+          "slot": "0x0105df48",
+          "symbol": "OBJC_IVAR_$_Scorpion.armCube"
+        },
+        "0x008a002c": {
+          "offset": 240,
+          "slot": "0x0105df4c",
+          "symbol": "OBJC_IVAR_$_Scorpion.legCube"
+        },
+        "0x008a3158": {
+          "offset": 208,
+          "slot": "0x0105df6c",
+          "symbol": "OBJC_IVAR_$_Scorpion.shader"
+        },
+        "0x008a3160": {
+          "offset": 240,
+          "slot": "0x0105df4c",
+          "symbol": "OBJC_IVAR_$_Scorpion.legCube"
+        }
+      },
+      "method": "Scorpion -[draw:projectionMatrix:modelViewMatrix:cameraMinXWorld:cameraMaxXWorld:cameraMinYWorld:cameraMaxYWorld:]",
+      "name": "sc_14",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008965fc": {
+          "selector": "worldWidthMacro",
+          "slot": "0x00e82bdc"
+        },
+        "0x00897168": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x0089716c": {
+          "selector": "macroTiles",
+          "slot": "0x00e82be0"
+        },
+        "0x0089b888": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x0089b88c": {
+          "selector": "program",
+          "slot": "0x00e82be4"
+        },
+        "0x0089b894": {
+          "selector": "intValue",
+          "slot": "0x00e82bf0"
+        },
+        "0x0089b898": {
+          "selector": "objectAtIndex:",
+          "slot": "0x00e82bec"
+        },
+        "0x0089b89c": {
+          "selector": "uniformLocations",
+          "slot": "0x00e82be8"
+        },
+        "0x0089b8a0": {
+          "selector": "dayColor",
+          "slot": "0x00e82bf4"
+        },
+        "0x0089b8c4": {
+          "selector": "name",
+          "slot": "0x00e82bf8"
+        },
+        "0x0089b8cc": {
+          "selector": "draw",
+          "slot": "0x00e82bfc"
+        },
+        "0x008a3148": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x008a314c": {
+          "selector": "intValue",
+          "slot": "0x00e82bf0"
+        },
+        "0x008a3150": {
+          "selector": "objectAtIndex:",
+          "slot": "0x00e82bec"
+        },
+        "0x008a3154": {
+          "selector": "uniformLocations",
+          "slot": "0x00e82be8"
+        },
+        "0x008a315c": {
+          "selector": "draw",
+          "slot": "0x00e82bfc"
+        }
+      },
+      "semantics": "[Scorpion -[draw:projectionMatrix:modelViewMatrix:cameraMinXWorld:cameraMaxXWorld:cameraMinYWorld:cameraMaxYWorld:]] (imp 0x00895630, 14029w): -[draw:projectionMatrix:modelViewMatrix:cameraMinXWorld:...cameraMaxYWorld:] (0x895630, 14029w, CENSUS 63br/255 calls): renders the scorpion. Huge O0 frame: two-stage sub sp (0x8e0 + 0x3000, bic sp,#0xf) with 4 scratch arenas (sp+0x1000/0x2000/0x3000/0x3400) + ~30 spilled args. Head: toroidal wrap of dx/dy against worldWidthMacro*32 (pairs of blt/bge wraps at 0x895a9c/0x895b98/0x895ca4/0x895da0), then visibility early-outs b 0x8a3140 (skips everything incl. glDisable; gates include dead/visible ivars + a 4-compare range chain at 0x895e3c..0x895ed8), tileAtWorldPosition@0x896230 ground check (beq/bne at 0x89624c/264), two matrix-compose loops (0x8963a0..0x8965e8), 4x conditional 64B memcpy (0x896a94/96c98/96e90/97078) with guards at 0x896ab8/96cbc, 5x sinf (0x897220/974bc/978ac/97c98/98084 - walk/tail sway phases) + 2x fmodf (0x898250/982a8: fmodf(angle,1.0f) wrap *4.0). GL setup at 0x89b200: glUseProgram([shader program]); glUniform1i([uniformLocations[1].intValue], 0); objc_msgSend_stret dayColor (0x89b318) -> glUniform4f(uniformLocations[2].intValue, dayColor.rgb,1.0f) (0x89b9e8); glEnableVertexAttribArray(2) (0x89b9f0); glBindTexture(GL_TEXTURE_2D=0xde1, [bodyTexture name]) (0x89ba40). Then 12 cube draw blocks (starts 0x89c180, caa8, d3cc, dd08, e62c, ef90, f8b8, 8a01e4, 0b0c, 142c, 1d4c, 266c): each = matrix compose (helpers 0x8a3e88 x26, 0x8a3908 x13, 0x8a31d8 x11, 0x8a3af0 x10, 0x8a3570 x3, 0x8a3164 x1) + memcpy(64B) + 3 objc_msgSend ([shader uniformLocations]/[. objectAtIndex:0]/[. intValue]) + glUniformMatrix4fv(mvp) (x26 total) + again objectAtIndex:3 -> glUniformMatrix4fv(normal_matrix) + [cube draw]. Cube identity pinned by cell loads: B1 bodyCube@220 (cell 0x89b8c8), B2-B5 tailCubeA..D@224-236 (cells 0x89db40-4c), B6 armCube@244 (cell 0x8a0028; legTexture bound at 0x89e728 just before, cell 0x89db50), B8 legCube@240 (cell 0x8a002c); B7/B9-B12 reuse stack-spilled cube pointers. Tail (0x8a2f84-0x8a313c): memcpy + 2 more glUniformMatrix4fv + draws with legCube@240 (cell 0x8a3160, x2), then glDisableVertexAttribArray(2) (0x8a313c). Float constants: vmov 0.5 (d2/s2/s6), 1.0, -0.5, 5.0, 4.0; movw/movt bit patterns 0x3eb33333(0.35) 0x3ee66666(0.45) 0x3e99999a(0.3) 0x3e851eb8(0.26) 0xbe800000(-0.25) etc; selectors used: worldWidthMacro, macroTiles, dayColor, name, draw, intValue, objectAtIndex:, uniformLocations, program..\n",
+      "types": "v156@0:4f8(_GLKMatrix4={?=ffffffffffffffff}[16f])12(_GLKMatrix4={?=ffffffffffffffff}[16f])76i140i144i148i152",
+      "verified_words": 14029
+    },
+    {
+      "boundary": "ARM.exidx end 0x00893224; body trimmed at the next IMP 0x008931a0 Scorpion -[capturedItemType]",
+      "boundary_end": "0x008931a0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00893184",
+      "ivars": {},
+      "method": "Scorpion -[foodItemType]",
+      "name": "sc_15",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[Scorpion -[foodItemType]] (imp 0x00893184, 7w): -[foodItemType] (0x893184, 7w): return 0x18 (24)..\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00893224; body trimmed at the next IMP 0x00893208 Scorpion -[getNamesArrayCount]",
+      "boundary_end": "0x00893208",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x008931d8",
+      "ivars": {},
+      "method": "Scorpion -[getNamesArray]",
+      "name": "sc_16",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Scorpion -[getNamesArray]] (imp 0x008931d8, 12w): -[getNamesArray] (0x8931d8, 12w): returns PIC-materialized pointer 0x01052148 -> 22-entry CFString table (full walk verified): Muffet, Spindra, Aragog, Fluffy, Nightmare, Sparkles, Diablo, Legs, Pincers, Claws, Aladin, Bandit, Basil, Herculies, Nero, Ringo, Spike, Snuggles, Bubbles, Venom, Pinchy, Scorpio..\n",
+      "types": "^@8@0:4",
+      "verified_words": 12
+    },
+    {
+      "boundary": "ARM.exidx end 0x00893224 (listing bound); next ObjC IMP 0x00893224 Scorpion -[loadDerivedStuff]",
+      "boundary_end": "0x00893224",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00893208",
+      "ivars": {},
+      "method": "Scorpion -[getNamesArrayCount]",
+      "name": "sc_17",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[Scorpion -[getNamesArrayCount]] (imp 0x00893208, 7w): -[getNamesArrayCount] (0x893208, 7w): return 0x16 (22)..\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x008ab858 (listing bound); next ObjC IMP 0x008ab858 Scorpion -[renderPos]",
+      "boundary_end": "0x008ab858",
+      "branches": [
+        {
+          "address": "0x008ab6cc",
+          "destination": "0x008ab814",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x008ab704",
+          "destination": "0x008ab814",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r4",
+          "site": "0x008ab6a8"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x008ab6f8"
+        },
+        {
+          "callee": "0x00893bd0",
+          "route": "bl 0x893bd0",
+          "site": "0x008ab74c"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008ab644",
+      "ivars": {
+        "0x008ab828": {
+          "offset": 56,
+          "slot": "0x0105cccc",
+          "symbol": "OBJC_IVAR_$_NPC.dead"
+        },
+        "0x008ab834": {
+          "offset": 49,
+          "slot": "0x0105c3cc",
+          "symbol": "OBJC_IVAR_$_DynamicObject.updateNeedsToBeSent"
+        },
+        "0x008ab838": {
+          "offset": 272,
+          "slot": "0x0105df74",
+          "symbol": "OBJC_IVAR_$_Scorpion.randomTimeBetweenDirectionChanges"
+        },
+        "0x008ab83c": {
+          "offset": 288,
+          "slot": "0x0105df70",
+          "symbol": "OBJC_IVAR_$_Scorpion.walkSpeed"
+        },
+        "0x008ab840": {
+          "offset": 248,
+          "slot": "0x0105df84",
+          "symbol": "OBJC_IVAR_$_Scorpion.movementDirection"
+        },
+        "0x008ab84c": {
+          "offset": 316,
+          "slot": "0x0105dfc4",
+          "symbol": "OBJC_IVAR_$_Scorpion.attackDelay"
+        },
+        "0x008ab850": {
+          "offset": 336,
+          "slot": "0x0105dfcc",
+          "symbol": "OBJC_IVAR_$_Scorpion.provoked"
+        }
+      },
+      "method": "Scorpion -[hitWithForce:blockhead:]",
+      "name": "sc_18",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008ab81c": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x008ab820": {
+          "selector": "hitWithForce:blockhead:",
+          "slot": "0x00e82c98"
+        },
+        "0x008ab824": {
+          "class": "OBJC_CLASS_$_Scorpion",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bdac"
+        },
+        "0x008ab82c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x008ab830": {
+          "selector": "isUnderLocalControl",
+          "slot": "0x00e82c68"
+        }
+      },
+      "semantics": "[Scorpion -[hitWithForce:blockhead:]] (imp 0x008ab644, 133w): -[hitWithForce:blockhead:] (0x8ab644, 133w): [super hitWithForce:force blockhead:blockhead]; if (!NPC.dead@56 && [self isUnderLocalControl]): provoked@336 = 1; attackDelay@316 = 0.0f (pool 0x8ab848=0x0); r = lrand48 wrapper 0x893bd0 (bare bl); movementDirection@248 = ((double)((float)r / 2^31f) > 0.5) ? 1 : -1 (pool 0x8ab844=2^31; gl: vmov.f64 d2,#96=0.5, mvneq r7,#0 -> -1); walkSpeed@288 = 3.0f; randomTimeBetweenDirectionChanges@272 = 5.0f; updateNeedsToBeSent@49 = 1..\n",
+      "types": "v16@0:4i8@12",
+      "verified_words": 133
+    },
+    {
+      "boundary": "ARM.exidx end 0x00893d58 (listing bound); next ObjC IMP 0x00893d58 Scorpion -[initWithWorld:dynamicWorld:saveDict:cache:]",
+      "boundary_end": "0x00893d58",
+      "branches": [
+        {
+          "address": "0x00893cf0",
+          "destination": "0x00893d00",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00893cfc",
+          "destination": "0x00893d34",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c29fc",
+          "route": "bl loc.imp.objc_msgSendSuper2",
+          "site": "0x00893cd4"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00893d28"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00893be0",
+      "ivars": {},
+      "method": "Scorpion -[initWithWorld:dynamicWorld:atPosition:cache:saveDict:isAdult:wasPlaced:placedByClient:]",
+      "name": "sc_19",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00893d40": {
+          "class": "OBJC_CLASS_$_Scorpion",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bdac"
+        },
+        "0x00893d48": {
+          "selector": "initWithWorld:dynamicWorld:atPosition:cache:saveDict:isAdult:wasPlaced:placedByClient:",
+          "slot": "0x00e82b84"
+        },
+        "0x00893d4c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00893d50": {
+          "selector": "loadDerivedStuff",
+          "slot": "0x00e82b88"
+        }
+      },
+      "semantics": "[Scorpion -[initWithWorld:dynamicWorld:atPosition:cache:saveDict:isAdult:wasPlaced:placedByClient:]] (imp 0x00893be0, 94w): -[initWithWorld:dynamicWorld:atPosition:cache:saveDict:isAdult:wasPlaced:placedByClient:] (0x893be0, 94w): re-packs the 2-word atPosition arg + 5 singles onto its stack and calls [super <same 8-arg selector>] via objc_msgSendSuper2; if (result == nil) return nil; else [self loadDerivedStuff]; return self. No terrain/water/temperature validation (unlike Shark sh_20)..\n",
+      "types": "@44@0:4@8@12{?=ii}16@24@28c32c36@40",
+      "verified_words": 94
+    },
+    {
+      "boundary": "ARM.exidx end 0x00894080 (listing bound); next ObjC IMP 0x00894080 Scorpion -[getSaveDict]",
+      "boundary_end": "0x00894080",
+      "branches": [
+        {
+          "address": "0x00893f34",
+          "destination": "0x00893f44",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00893f40",
+          "destination": "0x00894044",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r6",
+          "site": "0x00893f18"
+        },
+        {
+          "callee": null,
+          "route": "blx r7",
+          "site": "0x00893fc0"
+        },
+        {
+          "callee": null,
+          "route": "blx r5",
+          "site": "0x00894038"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00893e80",
+      "ivars": {
+        "0x00894064": {
+          "offset": 356,
+          "slot": "0x0105df88",
+          "symbol": "OBJC_IVAR_$_Scorpion.remoteMovementDirection"
+        },
+        "0x0089406c": {
+          "offset": 352,
+          "slot": "0x0105df8c",
+          "symbol": "OBJC_IVAR_$_Scorpion.remoteWalkSpeed"
+        },
+        "0x00894070": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x00894074": {
+          "offset": 344,
+          "slot": "0x0105df90",
+          "symbol": "OBJC_IVAR_$_Scorpion.remoteGoalSquare"
+        }
+      },
+      "method": "Scorpion -[initWithWorld:dynamicWorld:cache:netData:]",
+      "name": "sc_20",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00894050": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x00894054": {
+          "selector": "initWithWorld:dynamicWorld:cache:netData:",
+          "slot": "0x00e82b90"
+        },
+        "0x00894058": {
+          "class": "OBJC_CLASS_$_Scorpion",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bdac"
+        },
+        "0x0089405c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00894060": {
+          "selector": "remoteCreationDataUpdate:",
+          "slot": "0x00e82b94"
+        },
+        "0x00894078": {
+          "selector": "loadDerivedStuff",
+          "slot": "0x00e82b88"
+        }
+      },
+      "semantics": "[Scorpion -[initWithWorld:dynamicWorld:cache:netData:]] (imp 0x00893e80, 128w): -[initWithWorld:dynamicWorld:cache:netData:] (0x893e80, 128w): [super <same>]; nil -> nil; [self loadDerivedStuff]; remoteGoalSquare@344 = DynamicObject.pos@16 (2-word copy); remoteWalkSpeed@352 = 0.0f (pool 0x894068=0x0); remoteMovementDirection@356 = 0; [self remoteCreationDataUpdate:netData]; return self..\n",
+      "types": "@24@0:4@8@12@16@20",
+      "verified_words": 128
+    },
+    {
+      "boundary": "ARM.exidx end 0x008ab644 (listing bound); next ObjC IMP 0x008ab644 Scorpion -[hitWithForce:blockhead:]",
+      "boundary_end": "0x008ab644",
+      "branches": [
+        {
+          "address": "0x008ab4f8",
+          "destination": "0x008ab58c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008ab528",
+          "destination": "0x008ab618",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008ab588",
+          "destination": "0x008ab618",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x008ab5b8",
+          "destination": "0x008ab610",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x008ab574"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x008ab5f8"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008ab4bc",
+      "ivars": {
+        "0x008ab630": {
+          "offset": 52,
+          "slot": "0x0105c5c0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.isNet"
+        },
+        "0x008ab634": {
+          "offset": 132,
+          "slot": "0x0105ccf4",
+          "symbol": "OBJC_IVAR_$_NPC.rider"
+        }
+      },
+      "method": "Scorpion -[isUnderLocalControl]",
+      "name": "sc_21",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008ab638": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x008ab63c": {
+          "selector": "isNet",
+          "slot": "0x00e82bc0"
+        }
+      },
+      "semantics": "[Scorpion -[isUnderLocalControl]] (imp 0x008ab4bc, 98w): -[isUnderLocalControl] (0x8ab4bc, 98w): if (DynamicObject.isNet@52) return (NPC.rider@132 != 0 && ![rider isNet]); else return !(rider != 0 && [rider isNet]) (eor-inverted). i.e. loc rider exists XOR rider is net-bound. Same shape as Shark sh_22..\n",
+      "types": "c8@0:4",
+      "verified_words": 98
+    },
+    {
+      "boundary": "ARM.exidx end 0x008ac3a4 (listing bound); next ObjC IMP 0x008ac3a4 Scorpion -[blockheadUnloaded:]",
+      "boundary_end": "0x008ac3a4",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x008ac388",
+      "ivars": {},
+      "method": "Scorpion -[jumpsOnSwipe]",
+      "name": "sc_22",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[Scorpion -[jumpsOnSwipe]] (imp 0x008ac388, 7w): -[jumpsOnSwipe] (0x8ac388, 7w): return 0 (sxtb) - does not use swipe-jump..\n",
+      "types": "c8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00893bd0 (listing bound); next ObjC IMP 0x00893be0 Scorpion -[initWithWorld:dynamicWorld:atPosition:cache:saveDict:isAdult:wasPlaced:placedByClient:]",
+      "boundary_end": "0x00893bd0",
+      "branches": [
+        {
+          "address": "0x00893634",
+          "destination": "0x00893674",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008939dc",
+          "destination": "0x008939ec",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x008939e8",
+          "destination": "0x00893a18",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x008934c4"
+        },
+        {
+          "callee": null,
+          "route": "blx r5",
+          "site": "0x00893504"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00893530"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x0089356c"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x008935a8"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x008935dc"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00893614"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00893688"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x008936e4"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00893718"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00893770"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x008937a4"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00893800"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00893834"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00893888"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x008938bc"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00893910"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00893944"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00893998"
+        },
+        {
+          "callee": "0x00893bd0",
+          "route": "bl 0x893bd0",
+          "site": "0x008939b0"
+        },
+        {
+          "callee": "0x00893bd0",
+          "route": "bl 0x893bd0",
+          "site": "0x00893adc"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00893224",
+      "ivars": {
+        "0x00893b34": {
+          "offset": 244,
+          "slot": "0x0105df48",
+          "symbol": "OBJC_IVAR_$_Scorpion.armCube"
+        },
+        "0x00893b48": {
+          "offset": 240,
+          "slot": "0x0105df4c",
+          "symbol": "OBJC_IVAR_$_Scorpion.legCube"
+        },
+        "0x00893b4c": {
+          "offset": 236,
+          "slot": "0x0105df50",
+          "symbol": "OBJC_IVAR_$_Scorpion.tailCubeD"
+        },
+        "0x00893b54": {
+          "offset": 232,
+          "slot": "0x0105df54",
+          "symbol": "OBJC_IVAR_$_Scorpion.tailCubeC"
+        },
+        "0x00893b58": {
+          "offset": 228,
+          "slot": "0x0105df58",
+          "symbol": "OBJC_IVAR_$_Scorpion.tailCubeB"
+        },
+        "0x00893b5c": {
+          "offset": 224,
+          "slot": "0x0105df5c",
+          "symbol": "OBJC_IVAR_$_Scorpion.tailCubeA"
+        },
+        "0x00893b60": {
+          "offset": 220,
+          "slot": "0x0105df60",
+          "symbol": "OBJC_IVAR_$_Scorpion.bodyCube"
+        },
+        "0x00893b68": {
+          "offset": 216,
+          "slot": "0x0105df64",
+          "symbol": "OBJC_IVAR_$_Scorpion.legTexture"
+        },
+        "0x00893b74": {
+          "offset": 32,
+          "slot": "0x0105c3ac",
+          "symbol": "OBJC_IVAR_$_DynamicObject.cache"
+        },
+        "0x00893b78": {
+          "offset": 212,
+          "slot": "0x0105df68",
+          "symbol": "OBJC_IVAR_$_Scorpion.bodyTexture"
+        },
+        "0x00893b80": {
+          "offset": 208,
+          "slot": "0x0105df6c",
+          "symbol": "OBJC_IVAR_$_Scorpion.shader"
+        },
+        "0x00893bb0": {
+          "offset": 288,
+          "slot": "0x0105df70",
+          "symbol": "OBJC_IVAR_$_Scorpion.walkSpeed"
+        },
+        "0x00893bb4": {
+          "offset": 272,
+          "slot": "0x0105df74",
+          "symbol": "OBJC_IVAR_$_Scorpion.randomTimeBetweenDirectionChanges"
+        },
+        "0x00893bb8": {
+          "offset": 268,
+          "slot": "0x0105df78",
+          "symbol": "OBJC_IVAR_$_Scorpion.travelFraction"
+        },
+        "0x00893bbc": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x00893bc0": {
+          "offset": 260,
+          "slot": "0x0105df7c",
+          "symbol": "OBJC_IVAR_$_Scorpion.toSquare"
+        },
+        "0x00893bc4": {
+          "offset": 252,
+          "slot": "0x0105df80",
+          "symbol": "OBJC_IVAR_$_Scorpion.fromSquare"
+        },
+        "0x00893bc8": {
+          "offset": 248,
+          "slot": "0x0105df84",
+          "symbol": "OBJC_IVAR_$_Scorpion.movementDirection"
+        }
+      },
+      "method": "Scorpion -[loadDerivedStuff]",
+      "name": "sc_23",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00893b38": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00893b3c": {
+          "selector": "initWithWidth:height:depth:centerX:centerY:centerZ:calculateNormals:",
+          "slot": "0x00e82b80"
+        },
+        "0x00893b40": {
+          "selector": "alloc",
+          "slot": "0x00e82b78"
+        },
+        "0x00893b44": {
+          "class": "OBJC_CLASS_$_DrawCube",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8a990"
+        },
+        "0x00893b64": {
+          "selector": "initWithWidth:height:depth:calculateNormals:",
+          "slot": "0x00e82b7c"
+        },
+        "0x00893b6c": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f93608"
+        },
+        "0x00893b70": {
+          "selector": "textureNamed:",
+          "slot": "0x00e82b74"
+        },
+        "0x00893b7c": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f935f8"
+        },
+        "0x00893b84": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f93578"
+        },
+        "0x00893b88": {
+          "selector": "shaderNamed:attributes:uniforms:",
+          "slot": "0x00e82b70"
+        },
+        "0x00893b8c": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f935b8"
+        },
+        "0x00893b90": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f935c8"
+        },
+        "0x00893b94": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f935d8"
+        },
+        "0x00893b98": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f935e8"
+        },
+        "0x00893b9c": {
+          "selector": "arrayWithObjects:",
+          "slot": "0x00e82b6c"
+        },
+        "0x00893ba0": {
+          "class": "OBJC_CLASS_$_NSArray",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8a98c"
+        },
+        "0x00893ba4": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f93588"
+        },
+        "0x00893ba8": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f93598"
+        },
+        "0x00893bac": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f935a8"
+        }
+      },
+      "semantics": "[Scorpion -[loadDerivedStuff]] (imp 0x00893224, 619w): -[loadDerivedStuff] (0x893224, 619w, census-lite): builds all GPU resources + randomizes movement state. shader@208 = [cache@32 shaderNamed:@\"ShadedWorldObject\"(0xF93578) attributes:[NSArray arrayWithObjects:@\"position\",@\"texCoord\",@\"normal\",nil] uniforms:[NSArray arrayWithObjects:@\"mvp_matrix\",@\"texture\",@\"light\",@\"normal_matrix\",nil]]; bodyTexture@212 = [cache textureNamed:@\"scorpion.png\"(0xF935F8)]; legTexture@216 = [cache textureNamed:@\"scorpionLeg.png\"(0xF93608)]. Cubes (DrawCube alloc + init; floats passed in GPRs per tsv types): bodyCube@220 = initWithWidth:0.8 height:0.3 depth:0.4 calculateNormals:1 [4-arg]; tailCubeA@224 = (5.0, 0.2, 0.12, 0.0, 0.1, 0.175, 1); tailCubeB@228 = (0.4, 0.15, 0.3, 0.0, 0.075, 0.15, 1); tailCubeC@232 = (0.12, 0.27, 0.06, 0.0, 0.135, 0.35, 1); tailCubeD@236 = (5.0, 0.1, 0.1, 0.0, 0.05, 0.05, 1); legCube@240 = (0.1, 0.3, 0.1, 0.05, 2.0, 0.05, 1); armCube@244 = (0.4, 0.15, 0.3, 0.4, 0.075, 0.15, 1) [all 8-arg W,H,D,cx,cy,cz,calculateNormals=1]. Constants: 0.4/0.15/0.3/0.075/0.1/0.05/0.0/0.35/0.12/0.27/0.06/0.135/0.2/0.175/0.8 (pool 0x893638..0x893670), vmov 2.0/5.0. State: md = (lrand48()/2^31f > 0.75) ? 1 : ((...<0.25) ? -1 : 0) (gl: d9=0.75,d0=0.25; mvn -1) -> movementDirection@248; fromSquare@252 = toSquare@260 = pos@16 (both 2-word copies); travelFraction@268 = 1.0f; randomTimeBetweenDirectionChanges@272 = 0.0f; walkSpeed@288 = (lrand48()/2^31f + 2.0) * 2.0 = uniform in [4.0, 6.0)..\n",
+      "types": "v8@0:4",
+      "verified_words": 619
+    },
+    {
+      "boundary": "ARM.exidx end 0x00893154 (listing bound); next ObjC IMP 0x00893154 Scorpion -[speciesName]",
+      "boundary_end": "0x00893154",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00893124",
+      "ivars": {},
+      "method": "Scorpion -[maxAge]",
+      "name": "sc_24",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[Scorpion -[maxAge]] (imp 0x00893124, 12w): -[maxAge] (0x893124, 12w): return float 7200.0f (r0 bits 0x45e10000; pool 0x893150 holds the same value, plus a dead s0/spill pair - O0 triple materialization)..\n",
+      "types": "f8@0:4",
+      "verified_words": 12
+    },
+    {
+      "boundary": "ARM.exidx end 0x008aaf8c (listing bound); next ObjC IMP 0x008aaf8c Scorpion -[tapIsWithinBodyRadius:]",
+      "boundary_end": "0x008aaf8c",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x008aaf70",
+      "ivars": {},
+      "method": "Scorpion -[maxHealth]",
+      "name": "sc_25",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[Scorpion -[maxHealth]] (imp 0x008aaf70, 7w): -[maxHealth] (0x8aaf70, 7w): return 0x14 (20) (uxth)..\n",
+      "types": "S8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00893124 (listing bound); next ObjC IMP 0x00893124 Scorpion -[maxAge]",
+      "boundary_end": "0x00893124",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00893108",
+      "ivars": {},
+      "method": "Scorpion -[npcType]",
+      "name": "sc_26",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[Scorpion -[npcType]] (imp 0x00893108, 7w): -[npcType] (0x893108, 7w): return 7..\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x008abb20 (listing bound); next ObjC IMP 0x008abb20 Scorpion -[canBeCapturedByBlockhead:withItemType:]",
+      "boundary_end": "0x008abb20",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x008ab8f4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008ab978"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008ab998"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008ab9f8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008aba10"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008aba28"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008aba74"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008ab8a0",
+      "ivars": {
+        "0x008abaec": {
+          "offset": 284,
+          "slot": "0x0105dfb4",
+          "symbol": "OBJC_IVAR_$_Scorpion.walkTimer"
+        },
+        "0x008abaf0": {
+          "offset": 288,
+          "slot": "0x0105df70",
+          "symbol": "OBJC_IVAR_$_Scorpion.walkSpeed"
+        },
+        "0x008abaf4": {
+          "offset": 280,
+          "slot": "0x0105dfac",
+          "symbol": "OBJC_IVAR_$_Scorpion.randomGoalRotation"
+        },
+        "0x008abaf8": {
+          "offset": 248,
+          "slot": "0x0105df84",
+          "symbol": "OBJC_IVAR_$_Scorpion.movementDirection"
+        },
+        "0x008abb10": {
+          "offset": 24,
+          "slot": "0x0105c3d0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.floatPos"
+        }
+      },
+      "method": "Scorpion -[reactToBeingFed]",
+      "name": "sc_27",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008abadc": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x008abae0": {
+          "selector": "reactToBeingFed",
+          "slot": "0x00e82c9c"
+        },
+        "0x008abae4": {
+          "class": "OBJC_CLASS_$_Scorpion",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bdac"
+        },
+        "0x008abafc": {
+          "class": "OBJC_CLASS_$_MJSoundManager",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8a998"
+        },
+        "0x008abb04": {
+          "selector": "instance",
+          "slot": "0x00e82c00"
+        },
+        "0x008abb08": {
+          "selector": "multiSoundNamed:",
+          "slot": "0x00e82c04"
+        },
+        "0x008abb0c": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f93668"
+        },
+        "0x008abb14": {
+          "selector": "playAtPosition:afterDelay:",
+          "slot": "0x00e82c08"
+        },
+        "0x008abb18": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f93678"
+        }
+      },
+      "semantics": "[Scorpion -[reactToBeingFed]] (imp 0x008ab8a0, 160w): -[reactToBeingFed] (0x8ab8a0, 160w): [super reactToBeingFed]; [MJSoundManager instance] -> multiSoundNamed:@\"scorpionFire.wav\"(0xF93668) playAtPosition:floatPos@24 afterDelay:0.6 (0x3FE3333340000000); a second instance -> multiSoundNamed:@\"crunch.wav\"(0xF93678) playAtPosition:floatPos afterDelay:0.1; movementDirection@248 = 0; walkSpeed@288 = 0.0f (pool 0x8abae8=0x0); randomGoalRotation@280 = 1.0f; walkTimer@284 = 0.0f..\n",
+      "types": "v8@0:4",
+      "verified_words": 160
+    },
+    {
+      "boundary": "ARM.exidx end 0x008ab644; body trimmed at the next IMP 0x008ab4bc Scorpion -[isUnderLocalControl]",
+      "boundary_end": "0x008ab4bc",
+      "branches": [
+        {
+          "address": "0x008ab400",
+          "destination": "0x008ab490",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008ab424"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008ab43c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008ab48c"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008ab3c8",
+      "ivars": {
+        "0x008ab498": {
+          "offset": 56,
+          "slot": "0x0105cccc",
+          "symbol": "OBJC_IVAR_$_NPC.dead"
+        },
+        "0x008ab4b0": {
+          "offset": 24,
+          "slot": "0x0105c3d0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.floatPos"
+        }
+      },
+      "method": "Scorpion -[reactToBeingHit]",
+      "name": "sc_28",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008ab49c": {
+          "class": "OBJC_CLASS_$_MJSoundManager",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8a998"
+        },
+        "0x008ab4a4": {
+          "selector": "instance",
+          "slot": "0x00e82c00"
+        },
+        "0x008ab4a8": {
+          "selector": "multiSoundNamed:",
+          "slot": "0x00e82c04"
+        },
+        "0x008ab4ac": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f93668"
+        },
+        "0x008ab4b4": {
+          "selector": "playAtPosition:afterDelay:",
+          "slot": "0x00e82c08"
+        }
+      },
+      "semantics": "[Scorpion -[reactToBeingHit]] (imp 0x008ab3c8, 61w): -[reactToBeingHit] (0x8ab3c8, 61w): if (!NPC.dead@56): [MJSoundManager instance] -> multiSoundNamed:@\"scorpionFire.wav\" (same CFString obj 0xF93668) playAtPosition:floatPos@24 afterDelay:0.1 (0x3FB99999A0000000)..\n",
+      "types": "v8@0:4",
+      "verified_words": 61
+    },
+    {
+      "boundary": "ARM.exidx end 0x00895080 (listing bound); next ObjC IMP 0x00895080 Scorpion -[doRemoteUpdate:]",
+      "boundary_end": "0x00895080",
+      "branches": [
+        {
+          "address": "0x008948bc",
+          "destination": "0x00895008",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x0089491c",
+          "destination": "0x00894994",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00894944",
+          "destination": "0x00894a08",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00894990",
+          "destination": "0x00894a08",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x008949b8",
+          "destination": "0x00895004",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00894a04",
+          "destination": "0x00895004",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00894a18",
+          "destination": "0x00894eb4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00894a1c",
+          "destination": "0x00894a20",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00894ae8",
+          "destination": "0x00894eac",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00894b38",
+          "destination": "0x00894b44",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00894b80",
+          "destination": "0x00894e30",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00894b84",
+          "destination": "0x00894b88",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00894bb4",
+          "destination": "0x00894c80",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00894bf8",
+          "destination": "0x00894c0c",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00894bfc",
+          "destination": "0x00894c00",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00894c08",
+          "destination": "0x00894c7c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00894c7c",
+          "destination": "0x00894c80",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00894c88",
+          "destination": "0x00894e2c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00894cd8",
+          "destination": "0x00894d24",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00894d20",
+          "destination": "0x00894d68",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00894d88",
+          "destination": "0x00894dac",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00894dec",
+          "destination": "0x00894dfc",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x00894df8",
+          "destination": "0x00894e04",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00894e2c",
+          "destination": "0x00894e30",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00894e30",
+          "destination": "0x00894e34",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00894e4c",
+          "destination": "0x00894b14",
+          "mnemonic": "blo"
+        },
+        {
+          "address": "0x00894ea8",
+          "destination": "0x00894b14",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00894eac",
+          "destination": "0x00894eb0",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00894eb0",
+          "destination": "0x00894f40",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00894ed8",
+          "destination": "0x00894f3c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00894f3c",
+          "destination": "0x00894f40",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00895004",
+          "destination": "0x00895008",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00894898"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00894900"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00894984"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x008949f8"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00894a94"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x00894aac"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00894adc"
+        },
+        {
+          "callee": "0x001c2e28",
+          "route": "bl sym.imp.objc_enumerationMutation",
+          "site": "0x00894b40"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00894b64"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00894bdc"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00894c58"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00894cb8"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00894e94"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00894f20"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00895000"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x0089483c",
+      "ivars": {
+        "0x0089501c": {
+          "offset": 56,
+          "slot": "0x0105cccc",
+          "symbol": "OBJC_IVAR_$_NPC.dead"
+        },
+        "0x00895020": {
+          "offset": 52,
+          "slot": "0x0105c5c0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.isNet"
+        },
+        "0x0089502c": {
+          "offset": 132,
+          "slot": "0x0105ccf4",
+          "symbol": "OBJC_IVAR_$_NPC.rider"
+        },
+        "0x00895034": {
+          "offset": 312,
+          "slot": "0x0105df94",
+          "symbol": "OBJC_IVAR_$_Scorpion.attackBlockhead"
+        },
+        "0x00895044": {
+          "offset": 8,
+          "slot": "0x0105c3a8",
+          "symbol": "OBJC_IVAR_$_DynamicObject.dynamicWorld"
+        },
+        "0x0089505c": {
+          "offset": 324,
+          "slot": "0x0105df9c",
+          "symbol": "OBJC_IVAR_$_Scorpion.biteTimer"
+        },
+        "0x00895060": {
+          "offset": 320,
+          "slot": "0x0105dfa0",
+          "symbol": "OBJC_IVAR_$_Scorpion.biting"
+        },
+        "0x00895064": {
+          "offset": 332,
+          "slot": "0x0105dfa4",
+          "symbol": "OBJC_IVAR_$_Scorpion.spitTimer"
+        },
+        "0x00895068": {
+          "offset": 328,
+          "slot": "0x0105df98",
+          "symbol": "OBJC_IVAR_$_Scorpion.spitting"
+        },
+        "0x0089506c": {
+          "offset": 49,
+          "slot": "0x0105c3cc",
+          "symbol": "OBJC_IVAR_$_DynamicObject.updateNeedsToBeSent"
+        },
+        "0x00895070": {
+          "offset": 288,
+          "slot": "0x0105df70",
+          "symbol": "OBJC_IVAR_$_Scorpion.walkSpeed"
+        }
+      },
+      "method": "Scorpion -[remoteCreationDataUpdate:]",
+      "name": "sc_29",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00895010": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x00895014": {
+          "selector": "remoteCreationDataUpdate:",
+          "slot": "0x00e82b94"
+        },
+        "0x00895018": {
+          "class": "OBJC_CLASS_$_Scorpion",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bdac"
+        },
+        "0x00895024": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00895028": {
+          "selector": "getBytes:length:",
+          "slot": "0x00e82bbc"
+        },
+        "0x00895030": {
+          "selector": "isNet",
+          "slot": "0x00e82bc0"
+        },
+        "0x00895038": {
+          "selector": "release",
+          "slot": "0x00e82bb4"
+        },
+        "0x0089503c": {
+          "selector": "countByEnumeratingWithState:objects:count:",
+          "slot": "0x00e82bc8"
+        },
+        "0x00895040": {
+          "selector": "allBlockheadsIncludingNet",
+          "slot": "0x00e82bc4"
+        },
+        "0x00895048": {
+          "selector": "uniqueID",
+          "slot": "0x00e82ba8"
+        },
+        "0x00895054": {
+          "selector": "retain",
+          "slot": "0x00e82bcc"
+        },
+        "0x00895074": {
+          "selector": "doRemoteUpdate:",
+          "slot": "0x00e82bd0"
+        }
+      },
+      "semantics": "[Scorpion -[remoteCreationDataUpdate:]] (imp 0x0089483c, 529w): -[remoteCreationDataUpdate:] (0x89483c, 529w, census-lite): [super remoteCreationDataUpdate:arg]; if (dead@56) return; [arg getBytes:buf(fp-0xb0) length:0x80] (creation struct per sc_10). Guard: proceed iff (isNet@52 ? (rider@132==nil || [rider isNet]) : (rider!=nil && [rider isNet])) else return. If uid64 (buf+0x70) != 0: NSFastEnumeration over [self.dynamicWorld@8 allBlockheadsIncludingNet] (countByEnumeratingWithState 0x894a20/0x894e50); per blockhead with [blockhead uniqueID] == uid64: if attackBlockhead@312: same uid -> keep (flag 0); different -> [attackBlockhead release]; attackBlockhead=nil (flag 1); if flag: attackBlockhead@312 = [blockhead retain]; if (buf+0x78 spitting byte) { spitting@328 = 1; spitTimer@332 = 0.0f (pool 0x895058=0x0); } else { biting@320 = 1; biteTimer@324 = 0.0f; }; if (!isNet) updateNeedsToBeSent@49 = 1; walkSpeed@288 = max(walkSpeed, 3.0f); no break. If uid64 == 0: if attackBlockhead: [attackBlockhead release]; attackBlockhead = nil. Tail (all loop-exit paths): [self doRemoteUpdate:<buf+0x48, 0x28 bytes>] (same struct shape as sc_13)..\n",
+      "types": "v12@0:4@8",
+      "verified_words": 529
+    },
+    {
+      "boundary": "ARM.exidx end 0x00895630 (listing bound); next ObjC IMP 0x00895630 Scorpion -[draw:projectionMatrix:modelViewMatrix:cameraMinXWorld:cameraMaxXWorld:cameraMinYWorld:cameraMaxYWorld:]",
+      "boundary_end": "0x00895630",
+      "branches": [
+        {
+          "address": "0x00895518",
+          "destination": "0x00895604",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x008954f4"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00895544"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00895600"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00895498",
+      "ivars": {
+        "0x00895618": {
+          "offset": 56,
+          "slot": "0x0105cccc",
+          "symbol": "OBJC_IVAR_$_NPC.dead"
+        }
+      },
+      "method": "Scorpion -[remoteUpdate:]",
+      "name": "sc_30",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x0089560c": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x00895610": {
+          "selector": "remoteUpdate:",
+          "slot": "0x00e82bd8"
+        },
+        "0x00895614": {
+          "class": "OBJC_CLASS_$_Scorpion",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bdac"
+        },
+        "0x0089561c": {
+          "selector": "getBytes:length:",
+          "slot": "0x00e82bbc"
+        },
+        "0x00895624": {
+          "selector": "doRemoteUpdate:",
+          "slot": "0x00e82bd0"
+        }
+      },
+      "semantics": "[Scorpion -[remoteUpdate:]] (imp 0x00895498, 102w): -[remoteUpdate:] (0x895498, 102w): [super remoteUpdate:arg]; if (!NPC.dead@56): [arg getBytes:buf(sp+0x58) length:0x28]; objc_msgSend(self, 'doRemoteUpdate:', <w0/w1 in r2/r3 + w2..w9 staged on stack>) - the 0x28-byte ScorpionUpdateNetData is forwarded field-for-field. No else branch (Shark sh_34 cleared needsRemoved instead)..\n",
+      "types": "v12@0:4@8",
+      "verified_words": 102
+    },
+    {
+      "boundary": "ARM.exidx end 0x008ac260 (listing bound); next ObjC IMP 0x008ac260 Scorpion -[blockheadCanRide:usingItem:]",
+      "boundary_end": "0x008ac260",
+      "branches": [
+        {
+          "address": "0x008ac1c8",
+          "destination": "0x008ac23c",
+          "mnemonic": "bne"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x008ac210"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008ac184",
+      "ivars": {
+        "0x008ac244": {
+          "offset": 132,
+          "slot": "0x0105ccf4",
+          "symbol": "OBJC_IVAR_$_NPC.rider"
+        },
+        "0x008ac258": {
+          "offset": 340,
+          "slot": "0x0105dfc8",
+          "symbol": "OBJC_IVAR_$_Scorpion.riderTargetVelocity"
+        }
+      },
+      "method": "Scorpion -[removeRider:]",
+      "name": "sc_31",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008ac248": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x008ac24c": {
+          "selector": "removeRider:",
+          "slot": "0x00e82cb0"
+        },
+        "0x008ac250": {
+          "class": "OBJC_CLASS_$_Scorpion",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bdac"
+        }
+      },
+      "semantics": "[Scorpion -[removeRider:]] (imp 0x008ac184, 55w): -[removeRider:] (0x8ac184, 55w): if (arg == NPC.rider@132) { [super removeRider:arg] via objc_msgSendSuper2; riderTargetVelocity@340 = 0.0f (pool 0x8ac254=0x0); }. Same as Shark sh_35..\n",
+      "types": "v12@0:4@8",
+      "verified_words": 55
+    },
+    {
+      "boundary": "ARM.exidx end 0x008ab8a0 (listing bound); next ObjC IMP 0x008ab8a0 Scorpion -[reactToBeingFed]",
+      "boundary_end": "0x008ab8a0",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x008ab858",
+      "ivars": {
+        "0x008ab898": {
+          "offset": 24,
+          "slot": "0x0105c3d0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.floatPos"
+        }
+      },
+      "method": "Scorpion -[renderPos]",
+      "name": "sc_32",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Scorpion -[renderPos]] (imp 0x008ab858, 18w): -[renderPos] (0x8ab858, 18w): Vector2 sret = DynamicObject.floatPos@24 (plain 2-word copy; no offset added, unlike Shark's xOffset)..\n",
+      "types": "{Vector2=[2f]}8@0:4",
+      "verified_words": 18
+    },
+    {
+      "boundary": "ARM.exidx end 0x008ac0b4 (listing bound); next ObjC IMP 0x008ac0b4 Scorpion -[addRider:]",
+      "boundary_end": "0x008ac0b4",
+      "branches": [
+        {
+          "address": "0x008abff0",
+          "destination": "0x008ac080",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008ac020",
+          "destination": "0x008ac030",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x008ac02c",
+          "destination": "0x008ac074",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008ac07c",
+          "destination": "0x008ac088",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x008abfb8",
+      "ivars": {
+        "0x008ac0a8": {
+          "offset": 132,
+          "slot": "0x0105ccf4",
+          "symbol": "OBJC_IVAR_$_NPC.rider"
+        },
+        "0x008ac0ac": {
+          "offset": 340,
+          "slot": "0x0105dfc8",
+          "symbol": "OBJC_IVAR_$_Scorpion.riderTargetVelocity"
+        }
+      },
+      "method": "Scorpion -[rideDirection]",
+      "name": "sc_33",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Scorpion -[rideDirection]] (imp 0x008abfb8, 63w): -[rideDirection] (0x8abfb8, 63w): if (NPC.rider@132 == nil) return 0; else v = riderTargetVelocity@340: v > 0.1 -> 1; v < -0.1 -> -1; else 0 (doubles 0.1 @0x8ac098 and -0.1 @0x8ac0a0)..\n",
+      "types": "i8@0:4",
+      "verified_words": 63
+    },
+    {
+      "boundary": "ARM.exidx end 0x008abf54 (listing bound); next ObjC IMP 0x008abf54 Scorpion -[setTargetVelocity:]",
+      "boundary_end": "0x008abf54",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x008abf10",
+      "ivars": {
+        "0x008abf4c": {
+          "offset": 276,
+          "slot": "0x0105dfa8",
+          "symbol": "OBJC_IVAR_$_Scorpion.bodyRotation"
+        }
+      },
+      "method": "Scorpion -[riderBodyYRotationForBlockhead:]",
+      "name": "sc_34",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Scorpion -[riderBodyYRotationForBlockhead:]] (imp 0x008abf10, 17w): -[riderBodyYRotationForBlockhead:] (0x8abf10, 17w): return bodyRotation@276 (float moved to r0 via vmov)..\n",
+      "types": "f12@0:4@8",
+      "verified_words": 17
+    },
+    {
+      "boundary": "ARM.exidx end 0x008abeac (listing bound); next ObjC IMP 0x008abeac Scorpion -[cameraPosForBlockhead:]",
+      "boundary_end": "0x008abeac",
+      "branches": [
+        {
+          "address": "0x008abdfc",
+          "destination": "0x008abe14",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008abe10",
+          "destination": "0x008abe34",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x008abe0c"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x008abe30"
+        },
+        {
+          "callee": "0x004d0480",
+          "route": "bl method.Vector2.Vector2_float__float_",
+          "site": "0x008abe44"
+        },
+        {
+          "callee": "0x004d0418",
+          "route": "bl method.Vector2.operator_Vector2_",
+          "site": "0x008abe58"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x008abe60"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x008abe74"
+        },
+        {
+          "callee": "0x004b52ac",
+          "route": "bl method.Vector.Vector_float__float__float_",
+          "site": "0x008abe94"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008abdb8",
+      "ivars": {},
+      "method": "Scorpion -[riderPosForBlockhead:]",
+      "name": "sc_35",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008abea4": {
+          "selector": "renderPos",
+          "slot": "0x00e82ca4"
+        }
+      },
+      "semantics": "[Scorpion -[riderPosForBlockhead:]] (imp 0x008abdb8, 61w): -[riderPosForBlockhead:] (0x8abdb8, 61w): Vector3 sret: v = [self renderPos] (stret Vector2) + Vector2(0.0f, -0.15f) (ctor r1=0, r2=0xbe19999a); returns Vector3(v.x, v.y, -0.25) (gl truth: vmov.f32 s0,#208=0xbe800000=-0.25; r2 renderer mislabels it -2)..\n",
+      "types": "{Vector=[4f]}12@0:4@8",
+      "verified_words": 61
+    },
+    {
+      "boundary": "ARM.exidx end 0x008ac4b4; body trimmed at the next IMP 0x008ac49c Scorpion -[.cxx_construct]",
+      "boundary_end": "0x008ac49c",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x008ac480",
+      "ivars": {},
+      "method": "Scorpion -[riderRidesWithArmsDown]",
+      "name": "sc_36",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[Scorpion -[riderRidesWithArmsDown]] (imp 0x008ac480, 7w): -[riderRidesWithArmsDown] (0x8ac480, 7w): return 1 (true, sxtb)..\n",
+      "types": "c8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00894260 (listing bound); next ObjC IMP 0x00894260 Scorpion -[creationNetDataForClient:]",
+      "boundary_end": "0x00894260",
+      "branches": [
+        {
+          "address": "0x0089414c",
+          "destination": "0x00894168",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00894164",
+          "destination": "0x00894188",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x00894160"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x00894184"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008940fc",
+      "ivars": {
+        "0x00894248": {
+          "offset": 248,
+          "slot": "0x0105df84",
+          "symbol": "OBJC_IVAR_$_Scorpion.movementDirection"
+        },
+        "0x0089424c": {
+          "offset": 260,
+          "slot": "0x0105df7c",
+          "symbol": "OBJC_IVAR_$_Scorpion.toSquare"
+        },
+        "0x00894254": {
+          "offset": 288,
+          "slot": "0x0105df70",
+          "symbol": "OBJC_IVAR_$_Scorpion.walkSpeed"
+        }
+      },
+      "method": "Scorpion -[scorpionUpdateNetDataForClient:]",
+      "name": "sc_37",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00894244": {
+          "selector": "npcUpdateNetDataForClient:",
+          "slot": "0x00e82b9c"
+        }
+      },
+      "semantics": "[Scorpion -[scorpionUpdateNetDataForClient:]] (imp 0x008940fc, 89w): -[scorpionUpdateNetDataForClient:] (0x8940fc, 89w, sret 0x28): [0..0x18) = objc_msgSend_stret [self npcUpdateNetDataForClient:arg] (24 bytes; self==0 -> memset); +0x18/+0x1c = toSquare@260 (x,y pair); +0x20 = (s16)(walkSpeed@288 * 255.0f) (pool 0x894258=255.0); +0x22 = (s8)movementDirection@248..\n",
+      "types": "{ScorpionUpdateNetData={NPCUpdateNetData={DynamicObjectNetData=QIIC[7C]}}IIscC[4c]}12@0:4@8",
+      "verified_words": 89
+    },
+    {
+      "boundary": "ARM.exidx end 0x008abfb8 (listing bound); next ObjC IMP 0x008abfb8 Scorpion -[rideDirection]",
+      "boundary_end": "0x008abfb8",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x008abf84"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008abf54",
+      "ivars": {
+        "0x008abfb0": {
+          "offset": 340,
+          "slot": "0x0105dfc8",
+          "symbol": "OBJC_IVAR_$_Scorpion.riderTargetVelocity"
+        }
+      },
+      "method": "Scorpion -[setTargetVelocity:]",
+      "name": "sc_38",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Scorpion -[setTargetVelocity:]] (imp 0x008abf54, 25w): -[setTargetVelocity:] (0x8abf54, 25w): riderTargetVelocity@340 = arg.x (Vector2 arg; only the x component is stored - scalar float ivar)..\n",
+      "types": "v16@0:4{Vector2=[2f]}8",
+      "verified_words": 25
+    },
+    {
+      "boundary": "ARM.exidx end 0x00893224; body trimmed at the next IMP 0x00893184 Scorpion -[foodItemType]",
+      "boundary_end": "0x00893184",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00893154",
+      "ivars": {},
+      "method": "Scorpion -[speciesName]",
+      "name": "sc_39",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x0089317c": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00f93568"
+        }
+      },
+      "semantics": "[Scorpion -[speciesName]] (imp 0x00893154, 12w): -[speciesName] (0x893154, 12w): CFString \"SCORPION\" (obj 0xF93568, cstr 0xF9357B, len 8), PIC-materialized..\n",
+      "types": "@8@0:4",
+      "verified_words": 12
+    },
+    {
+      "boundary": "ARM.exidx end 0x008ab644; body trimmed at the next IMP 0x008ab3c8 Scorpion -[reactToBeingHit]",
+      "boundary_end": "0x008ab3c8",
+      "branches": [
+        {
+          "address": "0x008aafd0",
+          "destination": "0x008aafe0",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x008aafdc",
+          "destination": "0x008ab398",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008ab088",
+          "destination": "0x008ab124",
+          "mnemonic": "blt"
+        },
+        {
+          "address": "0x008ab120",
+          "destination": "0x008ab2a4",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008ab1c4",
+          "destination": "0x008ab260",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x008ab25c",
+          "destination": "0x008ab29c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x008ab2c0",
+          "destination": "0x008ab390",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x008ab2d8",
+          "destination": "0x008ab390",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x008ab32c",
+          "destination": "0x008ab390",
+          "mnemonic": "ble"
+        },
+        {
+          "address": "0x008ab380",
+          "destination": "0x008ab390",
+          "mnemonic": "bpl"
+        },
+        {
+          "address": "0x008ab38c",
+          "destination": "0x008ab398",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x008aaff8"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x008ab024"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008ab058"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x008ab070"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x008ab09c"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x008ab0c8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008ab0fc"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x008ab13c"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x008ab168"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008ab19c"
+        },
+        {
+          "callee": "0x001c3728",
+          "route": "bl sym.imp.__aeabi_idiv",
+          "site": "0x008ab1ac"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x008ab1d8"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x008ab204"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x008ab238"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x008ab264"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x008ab288"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x008ab2e0"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x008ab308"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x008ab334"
+        },
+        {
+          "callee": "0x004bdaac",
+          "route": "bl method.Vector2.operator_float__",
+          "site": "0x008ab35c"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x008aaf8c",
+      "ivars": {
+        "0x008ab3a4": {
+          "offset": 56,
+          "slot": "0x0105cccc",
+          "symbol": "OBJC_IVAR_$_NPC.dead"
+        },
+        "0x008ab3a8": {
+          "offset": 24,
+          "slot": "0x0105c3d0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.floatPos"
+        },
+        "0x008ab3b0": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        }
+      },
+      "method": "Scorpion -[tapIsWithinBodyRadius:]",
+      "name": "sc_40",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x008ab3b4": {
+          "selector": "worldWidthMacro",
+          "slot": "0x00e82bdc"
+        }
+      },
+      "semantics": "[Scorpion -[tapIsWithinBodyRadius:]] (imp 0x008aaf8c, 271w): -[tapIsWithinBodyRadius:] (0x8aaf8c, 271w): if (NPC.dead@56) return NO. Computes toroidal dx = pos.x - floatPos.x@24.x wrapped into [-W/2, W/2) with W = [world worldWidthMacro] * 32 (block units; divisor 2; wrap constants pair the sc_40 head branches). Then YES iff -0.5 < dx < 0.5 (strict; gl: d1=#96=0.5, d0=#224=-0.5) AND floatPos.y < pos.y < floatPos.y + 1.0 (both strict; gl d1=0.5 and floatPos.y+1.0 window). Dead constant 5 spills are unused O0 artifacts..\n",
+      "types": "c16@0:4{Vector2=[2f]}8",
+      "verified_words": 271
+    },
+    {
+      "boundary": "ARM.exidx end 0x00894614 (listing bound); next ObjC IMP 0x00894614 Scorpion -[dealloc]",
+      "boundary_end": "0x00894614",
+      "branches": [
+        {
+          "address": "0x00894574",
+          "destination": "0x00894590",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x0089458c",
+          "destination": "0x008945b0",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x00894588"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x008945ac"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x008945ec"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00894528",
+      "ivars": {},
+      "method": "Scorpion -[updateNetDataForClient:]",
+      "name": "sc_41",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00894600": {
+          "selector": "scorpionUpdateNetDataForClient:",
+          "slot": "0x00e82ba4"
+        },
+        "0x00894604": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00894608": {
+          "selector": "dataWithBytes:length:",
+          "slot": "0x00e82bac"
+        },
+        "0x0089460c": {
+          "class": "OBJC_CLASS_$_NSData",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8a994"
+        }
+      },
+      "semantics": "[Scorpion -[updateNetDataForClient:]] (imp 0x00894528, 59w): -[updateNetDataForClient:] (0x894528, 59w): return [NSData dataWithBytes:<stret [self scorpionUpdateNetDataForClient:arg], 0x28 bytes> length:0x28]. Same shape as Shark sh_46..\n",
+      "types": "@12@0:4@8",
+      "verified_words": 59
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "schema": 1
+}

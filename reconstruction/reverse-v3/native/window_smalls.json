@@ -1,0 +1,958 @@
+{
+  "batch": "Window + SteamTrain smalls cluster (E71): the window ctor/record/dealloc family, draw marshalling, occupiesBackgroundContents, and the steamtrain fuel/choice accessors incl. the dmb-fenced flag; 22 bodies",
+  "claim": "a static bounded-body map with per-instruction anchors; the wire-format markers, the NSLog key strings, the C++ container member layouts and the packet helper at 0x8b84c8 are outside these bodies",
+  "classes": [
+    {
+      "boundary": "ARM.exidx end 0x00c98944 (listing bound); next ObjC IMP 0x00c98944 Window -[initWithWorld:dynamicWorld:saveDict:cache:]",
+      "boundary_end": "0x00c98944",
+      "branches": [
+        {
+          "address": "0x00c98784",
+          "destination": "0x00c98794",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00c98790",
+          "destination": "0x00c9890c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00c987c0",
+          "destination": "0x00c9880c",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00c98808",
+          "destination": "0x00c988d8",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00c98854",
+          "destination": "0x00c988d4",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00c988d4",
+          "destination": "0x00c988d8",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c29fc",
+          "route": "bl loc.imp.objc_msgSendSuper2",
+          "site": "0x00c98768"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00c987f0"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00c98848"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00c988ac"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00c988bc"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00c98900"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00c986a0",
+      "ivars": {
+        "0x00c98924": {
+          "offset": 56,
+          "slot": "0x0105f3f4",
+          "symbol": "OBJC_IVAR_$_Window.itemType"
+        },
+        "0x00c98934": {
+          "offset": 36,
+          "slot": "0x0105c3a0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.ownerID"
+        }
+      },
+      "method": "Window -[initWithWorld:dynamicWorld:atPosition:cache:type:saveDict:placedByClient:]",
+      "name": "win_ctor_placed",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00c98918": {
+          "class": "OBJC_CLASS_$_Window",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bed4"
+        },
+        "0x00c98920": {
+          "selector": "initWithWorld:dynamicWorld:atPosition:cache:",
+          "slot": "0x00e879b0"
+        },
+        "0x00c98928": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00fa2f58"
+        },
+        "0x00c9892c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00c98930": {
+          "selector": "objectForKey:",
+          "slot": "0x00e879b8"
+        },
+        "0x00c98938": {
+          "selector": "retain",
+          "slot": "0x00e879b4"
+        },
+        "0x00c9893c": {
+          "selector": "initSubDerivedItems",
+          "slot": "0x00e879bc"
+        }
+      },
+      "semantics": "[Window initWithWorld:dynamicWorld:atPosition:cache:type:saveDict:placedByClient:] (imp 0x00c986a0, 169w): super2 (@0xc98768) then the nil-r check (`cmp r1, 0; bne` @0xc98780): on success the fffff900 cell + the ffffc8ac/ffffbcac cells store the placed state (str @0xc987b4) and the ffe27ec0 chain runs the post-placement hook (@0xc987f0 blx r2 = the cache insert callback). The `type:` argument (r4) is threaded through.\n",
+      "types": "@40@0:4@8@12{?=ii}16@24i28@32@36",
+      "verified_words": 169
+    },
+    {
+      "boundary": "ARM.exidx end 0x00c98e5c (listing bound); next ObjC IMP 0x00c98e80 Window -[getSaveDict]",
+      "boundary_end": "0x00c98e5c",
+      "branches": [
+        {
+          "address": "0x00c98c24",
+          "destination": "0x00c98c34",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00c98c30",
+          "destination": "0x00c98e10",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00c98cc0",
+          "destination": "0x00c98ddc",
+          "mnemonic": "bls"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r6",
+          "site": "0x00c98c08"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00c98c8c"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00c98cb8"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00c98d00"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00c98d44"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00c98d5c"
+        },
+        {
+          "callee": "0x00c98e5c",
+          "route": "bl 0xc98e5c",
+          "site": "0x00c98d60"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00c98db4"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00c98dc4"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00c98e04"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00c98b70",
+      "ivars": {
+        "0x00c98e30": {
+          "offset": 56,
+          "slot": "0x0105f3f4",
+          "symbol": "OBJC_IVAR_$_Window.itemType"
+        },
+        "0x00c98e38": {
+          "offset": 36,
+          "slot": "0x0105c3a0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.ownerID"
+        }
+      },
+      "method": "Window -[initWithWorld:dynamicWorld:cache:netData:]",
+      "name": "win_ctor_net",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00c98e1c": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x00c98e20": {
+          "selector": "initWithWorld:dynamicWorld:cache:netData:",
+          "slot": "0x00e879c8"
+        },
+        "0x00c98e24": {
+          "class": "OBJC_CLASS_$_Window",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bed4"
+        },
+        "0x00c98e28": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00c98e2c": {
+          "selector": "length",
+          "slot": "0x00e879d0"
+        },
+        "0x00c98e34": {
+          "selector": "getBytes:length:",
+          "slot": "0x00e879cc"
+        },
+        "0x00c98e3c": {
+          "selector": "retain",
+          "slot": "0x00e879b4"
+        },
+        "0x00c98e40": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00fa2f58"
+        },
+        "0x00c98e44": {
+          "selector": "objectForKey:",
+          "slot": "0x00e879b8"
+        },
+        "0x00c98e48": {
+          "selector": "gzipInflate",
+          "slot": "0x00e879d8"
+        },
+        "0x00c98e50": {
+          "selector": "subdataWithRange:",
+          "slot": "0x00e879d4"
+        },
+        "0x00c98e54": {
+          "selector": "initSubDerivedItems",
+          "slot": "0x00e879bc"
+        }
+      },
+      "semantics": "[Window initWithWorld:dynamicWorld:cache:netData:] (imp 0x00c98b70, 187w): super2-shaped entry (`blx r6` via ffffbca8 @0xc98c08) + nil gate (@0xc98c20); the netData length chain reads a **0x20 (32)-byte record** (`movw lr, 0x20` @0xc98c54, blx @0xc98c8c) and length-checks (`cmp r0, 0x20; bls` @0xc98cbc-0xc98cc0) before decoding the window-specific fields via the ffffc8ac/ffffbcac/fffff900 cells.\n",
+      "types": "@24@0:4@8@12@16@20",
+      "verified_words": 187
+    },
+    {
+      "boundary": "ARM.exidx end 0x00c99338 (listing bound); next ObjC IMP 0x00c994a4 Window -[dealloc]",
+      "boundary_end": "0x00c99338",
+      "branches": [
+        {
+          "address": "0x00c990e0",
+          "destination": "0x00c990f8",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00c990f4",
+          "destination": "0x00c99118",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00c9923c",
+          "destination": "0x00c99298",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": "0x001c2918",
+          "route": "bl loc.imp.objc_msgSend_stret",
+          "site": "0x00c990f0"
+        },
+        {
+          "callee": "0x001c2924",
+          "route": "bl sym.imp.memset",
+          "site": "0x00c99114"
+        },
+        {
+          "callee": "0x001c2894",
+          "route": "bl sym.imp.memcpy",
+          "site": "0x00c991b4"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00c991f4"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00c99218"
+        },
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00c99294"
+        },
+        {
+          "callee": "0x00c99338",
+          "route": "bl 0xc99338",
+          "site": "0x00c9929c"
+        },
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00c992d8"
+        },
+        {
+          "callee": null,
+          "route": "blx r3",
+          "site": "0x00c992f4"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00c99094",
+      "ivars": {
+        "0x00c99308": {
+          "offset": 36,
+          "slot": "0x0105c3a0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.ownerID"
+        },
+        "0x00c99320": {
+          "offset": 56,
+          "slot": "0x0105f3f4",
+          "symbol": "OBJC_IVAR_$_Window.itemType"
+        }
+      },
+      "method": "Window -[creationNetDataForClient:]",
+      "name": "win_creationdata",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00c99304": {
+          "selector": "dynamicObjectNetData",
+          "slot": "0x00e879ec"
+        },
+        "0x00c9930c": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00c99310": {
+          "selector": "dictionary",
+          "slot": "0x00e879f4"
+        },
+        "0x00c99314": {
+          "class": "OBJC_CLASS_$_NSMutableDictionary",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8b56c"
+        },
+        "0x00c99318": {
+          "selector": "dataWithBytes:length:",
+          "slot": "0x00e879f0"
+        },
+        "0x00c9931c": {
+          "class": "OBJC_CLASS_$_NSMutableData",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00e8b568"
+        },
+        "0x00c99324": {
+          "import": "__CFConstantStringClassReference",
+          "route": "ABS32 relocation symbol",
+          "slot": "0x00fa2f58"
+        },
+        "0x00c99328": {
+          "selector": "setObject:forKey:",
+          "slot": "0x00e879e4"
+        },
+        "0x00c9932c": {
+          "selector": "appendData:",
+          "slot": "0x00e879fc"
+        },
+        "0x00c99330": {
+          "selector": "gzipDeflate",
+          "slot": "0x00e879f8"
+        }
+      },
+      "semantics": "[Window creationNetDataForClient:] (imp 0x00c99094, 169w): the creation record - nil path zero-fills a **0x18 (24)-byte stret** (`movw r2, 0x18` + memset @0xc990fc-0xc99114); the live path reads the state via the ffffc8ac/ffffbcac/fffff900 cells, **memcpy**s the **0x18**-byte record (@0xc99164-0xc991b4, `movw r5, 0x20` frame arg) and stores the halfword field (`strh` @0xc991cc); the ffe27f00/ffe2ba74/ffe2ba78 call chain packs the client record.\n",
+      "types": "@12@0:4@8",
+      "verified_words": 169
+    },
+    {
+      "boundary": "ARM.exidx end 0x00c99094 (listing bound); next ObjC IMP 0x00c99094 Window -[creationNetDataForClient:]",
+      "boundary_end": "0x00c99094",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx ip",
+          "site": "0x00c9907c"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00c99040",
+      "ivars": {},
+      "method": "Window -[updateNetDataForClient:]",
+      "name": "win_updatenet",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00c99088": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00c9908c": {
+          "selector": "creationNetDataForClient:",
+          "slot": "0x00e879e8"
+        }
+      },
+      "semantics": "[Window updateNetDataForClient:] (imp 0x00c99040, 21w): the thin forwarder - ffffbcac + the ffe27ef4 chain, one `blx ip` (@0xc9907c) then return: the window update delegates to the shared net-data update.\n",
+      "types": "@12@0:4@8",
+      "verified_words": 21
+    },
+    {
+      "boundary": "ARM.exidx end 0x00c99790 (listing bound); next ObjC IMP 0x00c99790 Window -[occupiesBackgroundContents]",
+      "boundary_end": "0x00c99790",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00c99568",
+      "ivars": {},
+      "method": "Window -[draw:projectionMatrix:modelViewMatrix:cameraMinXWorld:cameraMaxXWorld:cameraMinYWorld:cameraMaxYWorld:]",
+      "name": "win_draw",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[Window draw:...] (imp 0x00c99568, roster 0x00c99568..0x00c99790): the roster region is **pure argument-frame marshalling**: push + `sub sp, 0x110` + `bic sp, sp, 0xf` (**16-byte frame alignment** - the two `_GLKMatrix4` structs by value: types line `v156@0:4f8(_GLKMatrix4={?=ffffffffffffffff}[16f])12(_GLKMatrix4={?=ffffffffffffffff}[16f])76i140i144i148i152`) then the fp->sp shuffle of all 8 arguments + the 5 int camera params into the aligned frame, ending pop. No in-region call: the draw continuation (the shared draw helper already covered in the E25/E41 draw passes) sits at the roster seam - flagged as boundary rather than invented.\n",
+      "types": "v156@0:4f8(_GLKMatrix4={?=ffffffffffffffff}[16f])12(_GLKMatrix4={?=ffffffffffffffff}[16f])76i140i144i148i152",
+      "verified_words": 138
+    },
+    {
+      "boundary": "ARM.exidx end 0x00c986a0 (listing bound); next ObjC IMP 0x00c986a0 Window -[initWithWorld:dynamicWorld:atPosition:cache:type:saveDict:placedByClient:]",
+      "boundary_end": "0x00c986a0",
+      "branches": [
+        {
+          "address": "0x00c985b4",
+          "destination": "0x00c98674",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx lr",
+          "site": "0x00c985a8"
+        },
+        {
+          "callee": "0x00a12f24",
+          "route": "bl sym.tileAtWorldPositionLoaded_int__int__World_",
+          "site": "0x00c9860c"
+        },
+        {
+          "callee": "0x001c281c",
+          "route": "bl loc.imp.objc_msgSend",
+          "site": "0x00c98670"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00c98538",
+      "ivars": {
+        "0x00c98690": {
+          "offset": 16,
+          "slot": "0x0105c390",
+          "symbol": "OBJC_IVAR_$_DynamicObject.pos"
+        },
+        "0x00c98694": {
+          "offset": 4,
+          "slot": "0x0105c394",
+          "symbol": "OBJC_IVAR_$_DynamicObject.world"
+        }
+      },
+      "method": "Window -[setNeedsRemoved:]",
+      "name": "win_setneedsremoved",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00c9867c": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x00c98680": {
+          "selector": "setNeedsRemoved:",
+          "slot": "0x00e879a8"
+        },
+        "0x00c98684": {
+          "class": "OBJC_CLASS_$_Window",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bed4"
+        },
+        "0x00c98688": {
+          "class": "OBJC_CLASS_$_WorldHelper",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8b560"
+        },
+        "0x00c98698": {
+          "selector": "updateSunLightRemovedForTile:atPos:world:",
+          "slot": "0x00e879ac"
+        }
+      },
+      "semantics": "[Window setNeedsRemoved:] (imp 0x00c98538, 90w): runs the super-class update (`blx lr` via the ffffbca8 cell @0xc985a8 with the sxtb'd flag), then the flag gate `ldrsb; cmp 0; beq` (@0xc985ac-0xc985b4): on removal the ffffc89c/ffffc8a0 chain reads the window's tile position and calls **tileAtWorldPositionLoaded** (@0xc9860c) + the ffe27eb8 caller's objc_msgSend (@0xc98670) - the window notifies its tile on removal (same family as gb_setneedsremoved's light-glow reload).\n",
+      "types": "v12@0:4c8",
+      "verified_words": 90
+    },
+    {
+      "boundary": "ARM.exidx end 0x00c99568 (listing bound); next ObjC IMP 0x00c99568 Window -[draw:projectionMatrix:modelViewMatrix:cameraMinXWorld:cameraMaxXWorld:cameraMinYWorld:cameraMaxYWorld:]",
+      "boundary_end": "0x00c99568",
+      "branches": [],
+      "calls": [
+        {
+          "callee": null,
+          "route": "blx r5",
+          "site": "0x00c99518"
+        },
+        {
+          "callee": null,
+          "route": "blx r2",
+          "site": "0x00c99540"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00c994a4",
+      "ivars": {
+        "0x00c99560": {
+          "offset": 36,
+          "slot": "0x0105c3a0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.ownerID"
+        }
+      },
+      "method": "Window -[dealloc]",
+      "name": "win_dealloc",
+      "pic_base": "0x0105faf4",
+      "selectors": {
+        "0x00c9954c": {
+          "import": "objc_msgSendSuper2",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b79c"
+        },
+        "0x00c99550": {
+          "selector": "dealloc",
+          "slot": "0x00e87a04"
+        },
+        "0x00c99554": {
+          "class": "OBJC_CLASS_$_Window",
+          "route": "dynsym entry at slot word",
+          "slot": "0x00e8bed4"
+        },
+        "0x00c99558": {
+          "import": "objc_msgSend",
+          "route": "PLT/GOT relocation (R_ARM_JUMP_SLOT / GLOB_DAT)",
+          "slot": "0x0105b7a0"
+        },
+        "0x00c9955c": {
+          "selector": "release",
+          "slot": "0x00e87a00"
+        }
+      },
+      "semantics": "[Window dealloc] (imp 0x00c994a4, 49w): the ivar-cell teardown - ffffbca8/ffffbcac/ffffc8ac cells + the ffe27f0c/ffe27f10 chain, one `blx r5` (@0xc99518) then the super dealloc `blx r2` (@0xc99540) - no branches.\n",
+      "types": "v8@0:4",
+      "verified_words": 49
+    },
+    {
+      "boundary": "ARM.exidx end 0x00c98538 (listing bound); next ObjC IMP 0x00c984e0 Window -[objectType]",
+      "boundary_end": "0x00c98538",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00c984cc",
+      "ivars": {
+        "0x00c98530": {
+          "offset": 56,
+          "slot": "0x0105f3f4",
+          "symbol": "OBJC_IVAR_$_Window.itemType"
+        }
+      },
+      "method": "Window -[initSubDerivedItems]",
+      "name": "win_initsubderived",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Window initSubDerivedItems] (imp 0x00c984cc, 27w): **empty body** - sub r8/sp-8, add sp+8, bx lr: the window derives nothing (contrast the torch/lamp sub-derived items of the E36 family). The roster neighbor at 0x00c984e0 is the tiny `movw r2, 0x1f; mov r0, r2` returner (returns **31 = the window's item type**, matching the pinned window=0x1f type code from the accessor family).\n",
+      "types": "v8@0:4",
+      "verified_words": 27
+    },
+    {
+      "boundary": "ARM.exidx end 0x00c98538 (listing bound); next ObjC IMP 0x00c98538 Window -[setNeedsRemoved:]",
+      "boundary_end": "0x00c98538",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00c984fc",
+      "ivars": {
+        "0x00c98530": {
+          "offset": 56,
+          "slot": "0x0105f3f4",
+          "symbol": "OBJC_IVAR_$_Window.itemType"
+        }
+      },
+      "method": "Window -[freeblockCreationItemType]",
+      "name": "win_fbitemtype",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[Window freeblockCreationItemType] (imp 0x00c984fc, 15w): the ivar-cell pattern - `ldr r2, [..]; add r2, pc, r2` builds the ivar-offset base (0xfffff900 cell + the class cell 0x3c75e8), then `ldr r1, [r2]; add r0, r0, r1; ldr r0, [r0]` reads the ivar - the window's creation item type comes from an ivar (the cell-id oracle of the window class).\n",
+      "types": "i8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "ARM.exidx end 0x00c997ac (listing bound); next ObjC IMP 0x00c99a14 MJColorWell -[initWithFrame:cache:windowInfo:color:]",
+      "boundary_end": "0x00c997ac",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00c99790",
+      "ivars": {},
+      "method": "Window -[occupiesBackgroundContents]",
+      "name": "win_occupiesbg",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[Window occupiesBackgroundContents] (imp 0x00c99790, 7w): returns **1** (`movw r2, 1; sxtb r0, r2`) - the window occupies background contents (the tile-pass tie of the window sprite).\n",
+      "types": "c8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d2fad8 (listing bound); next ObjC IMP 0x00d2fad8 SteamTrain -[actionTitle]",
+      "boundary_end": "0x00d2fad8",
+      "branches": [
+        {
+          "address": "0x00d2f988",
+          "destination": "0x00d2fa08",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d2f9ac",
+          "destination": "0x00d2fa08",
+          "mnemonic": "bne"
+        },
+        {
+          "address": "0x00d2fa2c",
+          "destination": "0x00d2faac",
+          "mnemonic": "beq"
+        },
+        {
+          "address": "0x00d2fa50",
+          "destination": "0x00d2faac",
+          "mnemonic": "beq"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d2f8e4",
+      "ivars": {
+        "0x00d2fab4": {
+          "offset": 272,
+          "slot": "0x0105f7d8",
+          "symbol": "OBJC_IVAR_$_SteamTrain.leftStationName"
+        },
+        "0x00d2fab8": {
+          "offset": 324,
+          "slot": "0x0105f7c4",
+          "symbol": "OBJC_IVAR_$_SteamTrain.stopAtGoalPos"
+        },
+        "0x00d2fabc": {
+          "offset": 325,
+          "slot": "0x0105f7c0",
+          "symbol": "OBJC_IVAR_$_SteamTrain.stopped"
+        },
+        "0x00d2fac0": {
+          "offset": 252,
+          "slot": "0x0105f7bc",
+          "symbol": "OBJC_IVAR_$_SteamTrain.goingRight"
+        },
+        "0x00d2fac4": {
+          "offset": 300,
+          "slot": "0x0105f7cc",
+          "symbol": "OBJC_IVAR_$_SteamTrain.leftStationGoalPos"
+        },
+        "0x00d2fac8": {
+          "offset": 316,
+          "slot": "0x0105f7d0",
+          "symbol": "OBJC_IVAR_$_SteamTrain.stationGoalPos"
+        },
+        "0x00d2facc": {
+          "offset": 276,
+          "slot": "0x0105f7dc",
+          "symbol": "OBJC_IVAR_$_SteamTrain.rightStationName"
+        },
+        "0x00d2fad0": {
+          "offset": 308,
+          "slot": "0x0105f7c8",
+          "symbol": "OBJC_IVAR_$_SteamTrain.rightStationGoalPos"
+        }
+      },
+      "method": "SteamTrain -[setWorkbenchChoiceUIOption:]",
+      "name": "st3_setwbchoice",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[SteamTrain setWorkbenchChoiceUIOption:] (imp 0x00d2f8e4, 125w): the four-cell chain - fffffce4/fcd0/fccc/fcc8 ivar cells; the flag is **inverted-booleanized** (`cmp r0, 0; movw r0, 0; movne r0, 1; eor r0, r0, 1; and r0, r0, 1` @0xc2f92c-0xc2f93c) then `strb` (@0xd2f94c) + two zero `strb` (@0xd2f95c/@0xd2f96c); the fffffcd8/fcdc cells + `movw r3, 1` follow with the choice-UI refresh gate.\n",
+      "types": "v12@0:4i8",
+      "verified_words": 125
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d2fda8 (listing bound); next ObjC IMP 0x00d2fda8 SteamTrain -[fuelItemCount]",
+      "boundary_end": "0x00d2fda8",
+      "branches": [
+        {
+          "address": "0x00d2fd34",
+          "destination": "0x00d2fd44",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00d2fd40",
+          "destination": "0x00d2fd4c",
+          "mnemonic": "b"
+        },
+        {
+          "address": "0x00d2fd70",
+          "destination": "0x00d2fd80",
+          "mnemonic": "bge"
+        },
+        {
+          "address": "0x00d2fd7c",
+          "destination": "0x00d2fd88",
+          "mnemonic": "b"
+        }
+      ],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d2fcd8",
+      "ivars": {
+        "0x00d2fda0": {
+          "offset": 260,
+          "slot": "0x0105f7b8",
+          "symbol": "OBJC_IVAR_$_SteamTrain.fuelFraction"
+        }
+      },
+      "method": "SteamTrain -[fuelCount]",
+      "name": "st3_fuelcount",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[SteamTrain fuelCount] (imp 0x00d2fcd8, 52w): the float math - `movw r3, 0xa` (10) + the fffffcc4 cell read + `vmul.f32 s2, s4, s2; vadd.f32 s0, s2, s0; vcvt.s32.f32` (@0xd2fd10-0xd2fd18: the fractional fuel accumulator to int) + the two clamp compares (`cmp r0, r1; bge` @0xd2fd30 and `cmp r0, r1; bge` @0xd2fd6c with `movw r1, 0` floors) - the fuel count integer with its [0, 10] bounds.\n",
+      "types": "i8@0:4",
+      "verified_words": 52
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d2fdf4 (listing bound); next ObjC IMP 0x00d2fdc4 SteamTrain -[fuelItems]",
+      "boundary_end": "0x00d2fdf4",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d2fda8",
+      "ivars": {},
+      "method": "SteamTrain -[fuelItemCount]",
+      "name": "st3_fuelitemcount",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[SteamTrain fuelItemCount] (imp 0x00d2fda8, 19w): returns **4** (`movw r2, 4`) - the fuel item count constant of the train.\n",
+      "types": "i8@0:4",
+      "verified_words": 19
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d2fdf4 (listing bound); next ObjC IMP 0x00d2fdf4 SteamTrain -[updateHasFuel]",
+      "boundary_end": "0x00d2fdf4",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d2fdc4",
+      "ivars": {},
+      "method": "SteamTrain -[fuelItems]",
+      "name": "st3_fuelitems",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[SteamTrain fuelItems] (imp 0x00d2fdc4, 12w): returns the address of a **global table** (the e171a8 PIC cell resolves below the scanned window @0xb46f80 = the shared data-section thunk target) - the fuel-items list pointer.\n",
+      "types": "^i8@0:4",
+      "verified_words": 12
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d30580 (listing bound); next ObjC IMP 0x00d30580 SteamTrain -[setNeedsRemoved:]",
+      "boundary_end": "0x00d30580",
+      "branches": [],
+      "calls": [
+        {
+          "callee": "0x004d0480",
+          "route": "bl method.Vector2.Vector2_float__float_",
+          "site": "0x00d30558"
+        },
+        {
+          "callee": "0x004d0418",
+          "route": "bl method.Vector2.operator_Vector2_",
+          "site": "0x00d3056c"
+        }
+      ],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d30504",
+      "ivars": {
+        "0x00d30578": {
+          "offset": 24,
+          "slot": "0x0105c3d0",
+          "symbol": "OBJC_IVAR_$_DynamicObject.floatPos"
+        }
+      },
+      "method": "SteamTrain -[fuelUIPos]",
+      "name": "st3_fueluipos",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[SteamTrain fuelUIPos] (imp 0x00d30504, 31w): returns `Vector2::operator+(Vector2::Vector2(0, 4.0f))` (@0xd30540: `movw ip, 0; movt ip, 0x4080` = **0x40800000 = 4.0f**) over the train's macro position (ffffc8dc chain) - the fuel UI anchor floats 4 units above the train.\n",
+      "types": "{Vector2=[2f]}8@0:4",
+      "verified_words": 31
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d31334 (listing bound); next ObjC IMP 0x00d31334 SteamTrain -[setNeedsToUpdateChoiceUI:]",
+      "boundary_end": "0x00d31334",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d312f8",
+      "ivars": {
+        "0x00d3132c": {
+          "offset": 326,
+          "slot": "0x0105f7ec",
+          "symbol": "OBJC_IVAR_$_SteamTrain.needsToUpdateChoiceUI"
+        }
+      },
+      "method": "SteamTrain -[needsToUpdateChoiceUI]",
+      "name": "st3_needschoice",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[SteamTrain needsToUpdateChoiceUI] (imp 0x00d312f8, 15w): `ldrsb` of the fffffcf8 cell byte - the choice-UI dirty flag read.\n",
+      "types": "c8@0:4",
+      "verified_words": 15
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d31378 (listing bound); next ObjC IMP 0x00d31378 SteamTrain -[.cxx_construct]",
+      "boundary_end": "0x00d31378",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d31334",
+      "ivars": {
+        "0x00d31370": {
+          "offset": 326,
+          "slot": "0x0105f7ec",
+          "symbol": "OBJC_IVAR_$_SteamTrain.needsToUpdateChoiceUI"
+        }
+      },
+      "method": "SteamTrain -[setNeedsToUpdateChoiceUI:]",
+      "name": "st3_setneedschoice",
+      "pic_base": "0x0105faf4",
+      "selectors": {},
+      "semantics": "[SteamTrain setNeedsToUpdateChoiceUI:] (imp 0x00d31334, 17w): the **dmb ish**-fenced store - `strb r2, [sp, 3]` then the fffffcf8 cell + **dmb ish; strb r2, [r0, r1]; dmb ish** (@0xd3135c-0xd31368): the choice-UI flag is written with explicit SMP barriers (the game's atomic-flag idiom).\n",
+      "types": "v12@0:4c8",
+      "verified_words": 17
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d30504 (listing bound); next ObjC IMP 0x00d304e8 SteamTrain -[requiresFuel]",
+      "boundary_end": "0x00d30504",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d304cc",
+      "ivars": {},
+      "method": "SteamTrain -[canDismissFuelUI]",
+      "name": "st3_candismiss",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[SteamTrain canDismissFuelUI] (imp 0x00d304cc, 14w): returns **0** (movw r2, 0; sxtb) - the fuel UI cannot be dismissed.\n",
+      "types": "c8@0:4",
+      "verified_words": 14
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d30504 (listing bound); next ObjC IMP 0x00d30504 SteamTrain -[fuelUIPos]",
+      "boundary_end": "0x00d30504",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d304e8",
+      "ivars": {},
+      "method": "SteamTrain -[requiresFuel]",
+      "name": "st3_requiresfuel",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[SteamTrain requiresFuel] (imp 0x00d304e8, 7w): returns **1**.\n",
+      "types": "c8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d31088 (listing bound); next ObjC IMP 0x00d31088 SteamTrain -[removeRider:]",
+      "boundary_end": "0x00d31088",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d3106c",
+      "ivars": {},
+      "method": "SteamTrain -[isEngine]",
+      "name": "st3_isengine",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[SteamTrain isEngine] (imp 0x00d3106c, 7w): returns **1** - the SteamTrain is an engine-class rail vehicle.\n",
+      "types": "c8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d311f8 (listing bound); next ObjC IMP 0x00d311f8 SteamTrain -[railOrStationNameChanged]",
+      "boundary_end": "0x00d311f8",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d311dc",
+      "ivars": {},
+      "method": "SteamTrain -[maxNumberOfRiders]",
+      "name": "st3_maxriders",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[SteamTrain maxNumberOfRiders] (imp 0x00d311dc, 7w): returns **1** - single rider.\n",
+      "types": "i8@0:4",
+      "verified_words": 7
+    },
+    {
+      "boundary": "ARM.exidx end 0x00d2f8c8 (listing bound); next ObjC IMP 0x00d2f8c8 SteamTrain -[itemType]",
+      "boundary_end": "0x00d2f8c8",
+      "branches": [],
+      "calls": [],
+      "disjoint_branch_rows": [],
+      "imp": "0x00d2f8ac",
+      "ivars": {},
+      "method": "SteamTrain -[setTargetVelocity:]",
+      "name": "st3_settargetvel",
+      "pic_base": null,
+      "selectors": {},
+      "semantics": "[SteamTrain setTargetVelocity:] (imp 0x00d2f8ac, 7w): **empty body** - the target-velocity setter is a no-op (the train's motion is computed, not externally set).\n",
+      "types": "v16@0:4{Vector2=[2f]}8",
+      "verified_words": 7
+    }
+  ],
+  "elf_sha256": "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+  "schema": 1
+}

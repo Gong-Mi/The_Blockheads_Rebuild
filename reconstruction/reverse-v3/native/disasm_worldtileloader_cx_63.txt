@@ -1,0 +1,87 @@
+# getWorldUpVectorForX  [C function]
+# implementation: 0x00a148b0
+# ARM.exidx end: 0x00a155dc
+
+            ;-- getWorldUpVectorForX(float, World*):
+            0x00a148b0      00482de9       push {fp, lr}               ; getWorldUpVectorForX(float, World*)
+            0x00a148b4      0db0a0e1       mov fp, sp
+            0x00a148b8      58d04de2       sub sp, sp, 0x58
+            0x00a148bc      101a00ee       vmov s0, r1
+            0x00a148c0      441b9fed       vldr d1, [0x00a149d8]
+            0x00a148c4      472a9fed       vldr s4, [0x00a149e8]
+            0x00a148c8      021000e3       movw r1, 2
+            0x00a148cc      003bb0ee       vmov.f64 d3, 2
+            0x00a148d0      424b9fed       vldr d4, [0x00a149e0]
+            0x00a148d4      053000e3       movw r3, 5
+            0x00a148d8      010a0bed       vstr s0, [fp, -4]
+            0x00a148dc      08200be5       str r2, [fp, -8]
+            0x00a148e0      010a1bed       vldr s0, [fp, -4]
+            0x00a148e4      00c19fe5       ldr ip, [0x00a149ec]        ; [0xa149ec:4]=0xffe25174
+            0x00a148e8      00e19fe5       ldr lr, [0x00a149f0]        ; [0xa149f0:4]=0x64b200
+            0x00a148ec      0ee08fe0       add lr, pc, lr
+            0x00a148f0      0ec09ce7       ldr ip, [ip, lr]
+            0x00a148f4      14000be5       str r0, [fp, -0x14]
+            0x00a148f8      0200a0e1       mov r0, r2
+            0x00a148fc      18100be5       str r1, [fp, -0x18]
+            0x00a14900      0c10a0e1       mov r1, ip
+            0x00a14904      1c300be5       str r3, [fp, -0x1c]
+            0x00a14908      0a4b0bed       vstr d4, [fp, -0x28]
+            0x00a1490c      0b0a8ded       vstr s0, [sp, 0x2c]
+            0x00a14910      081b8ded       vstr d1, [sp, 0x20]
+            0x00a14914      072a8ded       vstr s4, [sp, 0x1c]
+            0x00a14918      043b8ded       vstr d3, [sp, 0x10]
+            0x00a1491c      beb7deeb       bl loc.imp.objc_msgSend
+            0x00a14920      0010a0e1       mov r1, r0
+            0x00a14924      8002a0e1       lsl r0, r0, 5
+            0x00a14928      100a00ee       vmov s0, r0
+            0x00a1492c      c00ab8ee       vcvt.f32.s32 s0, s0
+            0x00a14930      0b2a9ded       vldr s4, [sp, 0x2c]
+            0x00a14934      000a82ee       vdiv.f32 s0, s4, s0
+            0x00a14938      c01ab7ee       vcvt.f64.f32 d1, s0
+            0x00a1493c      0a3b1bed       vldr d3, [fp, -0x28]
+            0x00a14940      031b21ee       vmul.f64 d1, d1, d3
+            0x00a14944      044b9ded       vldr d4, [sp, 0x10]
+            0x00a14948      041b21ee       vmul.f64 d1, d1, d4
+            0x00a1494c      085b9ded       vldr d5, [sp, 0x20]
+            0x00a14950      451b31ee       vsub.f64 d1, d1, d5
+            0x00a14954      c10bb7ee       vcvt.f32.f64 s0, d1
+            0x00a14958      030a0bed       vstr s0, [fp, -0xc]
+            0x00a1495c      070a9ded       vldr s0, [sp, 0x1c]
+            0x00a14960      040a0bed       vstr s0, [fp, -0x10]
+            0x00a14964      032a1bed       vldr s4, [fp, -0xc]
+            0x00a14968      c21ab7ee       vcvt.f64.f32 d1, s4
+            0x00a1496c      c51bb4ee       vcmpe.f64 d1, d5
+            0x00a14970      10faf1ee       vmrs apsr_nzcv, fpscr
+            0x00a14974      0c108de5       str r1, [sp, 0xc]
+        ┌─< 0x00a14978      080000da       ble 0xa149a0
+        │   0x00a1497c      170b9fed       vldr d0, [0x00a149e0]
+        │   0x00a14980      1b1a9fed       vldr s2, [0x00a149f4]
+        │   0x00a14984      041a0bed       vstr s2, [fp, -0x10]
+        │   0x00a14988      031a1bed       vldr s2, [fp, -0xc]
+        │   0x00a1498c      c12ab7ee       vcvt.f64.f32 d2, s2
+        │   0x00a14990      400b32ee       vsub.f64 d0, d2, d0
+        │   0x00a14994      c01bb7ee       vcvt.f32.f64 s2, d0
+        │   0x00a14998      031a0bed       vstr s2, [fp, -0xc]
+       ┌──< 0x00a1499c      020000ea       b 0xa149ac
+       │└─> 0x00a149a0      030a1bed       vldr s0, [fp, -0xc]
+       │    0x00a149a4      400ab1ee       vneg.f32 s0, s0
+       │    0x00a149a8      030a0bed       vstr s0, [fp, -0xc]
+       └──> 0x00a149ac      030a1bed       vldr s0, [fp, -0xc]
+            0x00a149b0      c01ab7ee       vcvt.f64.f32 d1, s0
+            0x00a149b4      040a1bed       vldr s0, [fp, -0x10]
+            0x00a149b8      c02ab7ee       vcvt.f64.f32 d2, s0
+            0x00a149bc      0d00a0e1       mov r0, sp
+            0x00a149c0      002b80ed       vstr d2, [r0]
+            0x00a149c4      112b53ec       vmov r2, r3, d1
+            0x00a149c8      14001be5       ldr r0, [fp, -0x14]
+            0x00a149cc      0bb9edeb       bl sym.polarToRectangular_double__double_ ; polarToRectangular(double, double)
+            0x00a149d0      0bd0a0e1       mov sp, fp
+            0x00a149d4      0088bde8       pop {fp, pc}
+            0x00a149d8      182d4454       strbpl r2, [r4], -0xd18
+            0x00a149dc      fb21f93f       svclo 0xf921fb
+            0x00a149e0      182d4454       strbpl r2, [r4], -0xd18
+            0x00a149e4      fb210940       strdmi r2, r3, [sb], -fp
+            0x00a149e8      db0fc93f       svclo 0xc90fdb
+            0x00a149ec      7451e2ff       invalid
+            0x00a149f0      00b26400       rsbeq fp, r4, r0, lsl 4
+            0x00a149f4      db0fc9bf       svclt 0xc90fdb

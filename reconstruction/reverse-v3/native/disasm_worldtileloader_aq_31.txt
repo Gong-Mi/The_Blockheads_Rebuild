@@ -1,0 +1,21 @@
+# Blockhead -[environmentTemperature]
+# types: f8@0:4
+# implementation: 0x00b8ca38
+# ARM.exidx end: 0x00b8cc0c
+
+            0x00b8ca38      08d04de2       sub sp, sp, 8
+            0x00b8ca3c      04008de5       str r0, [sp, 4]
+            0x00b8ca40      00108de5       str r1, [sp]
+            0x00b8ca44      04009de5       ldr r0, [sp, 4]
+            0x00b8ca48      20109fe5       ldr r1, [0x00b8ca70]        ; [0xb8ca70:4]=0xfffff55c
+            0x00b8ca4c      20209fe5       ldr r2, [0x00b8ca74]        ; [0xb8ca74:4]=0x4d309c
+            0x00b8ca50      02208fe0       add r2, pc, r2
+            0x00b8ca54      021091e7       ldr r1, [r1, r2]
+            0x00b8ca58      001091e5       ldr r1, [r1]
+            0x00b8ca5c      010080e0       add r0, r0, r1
+            0x00b8ca60      0f0a90ed       vldr s0, [r0, 0x3c]
+            0x00b8ca64      100a10ee       vmov r0, s0
+            0x00b8ca68      08d08de2       add sp, sp, 8
+            0x00b8ca6c      1eff2fe1       bx lr
+            0x00b8ca70      5cf5ffff       invalid
+            0x00b8ca74      9c304d00       umaaleq r3, sp, ip, r0

@@ -1,0 +1,80 @@
+# Chest -[loadInventoryItemsFromDiskIfNeeded]
+# types: v8@0:4
+# implementation: 0x00cc3bd8
+# ARM.exidx end: 0x00cc3d04
+
+            0x00cc3bd8      104c2de9       push {r4, sl, fp, lr}
+            0x00cc3bdc      08b08de2       add fp, sp, 8
+            0x00cc3be0      20d04de2       sub sp, sp, 0x20
+            0x00cc3be4      14219fe5       ldr r2, [0x00cc3d00]        ; [0xcc3d00:4]=0x39bf04
+            0x00cc3be8      02208fe0       add r2, pc, r2
+            0x00cc3bec      003000e3       movw r3, 0
+            0x00cc3bf0      ecc09fe5       ldr ip, [0x00cc3ce4]        ; [0xcc3ce4:4]=0xfffff9ec
+            0x00cc3bf4      02c09ce7       ldr ip, [ip, r2]
+            0x00cc3bf8      0c000be5       str r0, [fp, -0xc]
+            0x00cc3bfc      10100be5       str r1, [fp, -0x10]
+            0x00cc3c00      0c001be5       ldr r0, [fp, -0xc]
+            0x00cc3c04      00109ce5       ldr r1, [ip]
+            0x00cc3c08      010080e0       add r0, r0, r1
+            0x00cc3c0c      000090e5       ldr r0, [r0]
+            0x00cc3c10      030050e1       cmp r0, r3
+            0x00cc3c14      10208de5       str r2, [sp, 0x10]
+        ┌─< 0x00cc3c18      2f00001a       bne 0xcc3cdc
+        │   0x00cc3c1c      c4009fe5       ldr r0, [0x00cc3ce8]        ; [0xcc3ce8:4]=0xfffff9e8
+        │   0x00cc3c20      10109de5       ldr r1, [sp, 0x10]
+        │   0x00cc3c24      010090e7       ldr r0, [r0, r1]
+        │   0x00cc3c28      0c201be5       ldr r2, [fp, -0xc]
+        │   0x00cc3c2c      000090e5       ldr r0, [r0]
+        │   0x00cc3c30      000082e0       add r0, r2, r0
+        │   0x00cc3c34      000090e5       ldr r0, [r0]
+        │   0x00cc3c38      040050e3       cmp r0, 4
+       ┌──< 0x00cc3c3c      2600000a       beq 0xcc3cdc
+       ││   0x00cc3c40      a4009fe5       ldr r0, [0x00cc3cec]        ; [0xcc3cec:4]=0xffffcacc
+       ││   0x00cc3c44      10109de5       ldr r1, [sp, 0x10]
+       ││   0x00cc3c48      010090e7       ldr r0, [r0, r1]
+       ││   0x00cc3c4c      0c201be5       ldr r2, [fp, -0xc]
+       ││   0x00cc3c50      000090e5       ldr r0, [r0]
+       ││   0x00cc3c54      000082e0       add r0, r2, r0
+       ││   0x00cc3c58      d000d0e1       ldrsb r0, [r0]
+       ││   0x00cc3c5c      000050e3       cmp r0, 0
+      ┌───< 0x00cc3c60      1d00001a       bne 0xcc3cdc
+      │││   0x00cc3c64      84009fe5       ldr r0, [0x00cc3cf0]        ; [0xcc3cf0:4]=0xffffbcac
+      │││   0x00cc3c68      10109de5       ldr r1, [sp, 0x10]
+      │││   0x00cc3c6c      010090e7       ldr r0, [r0, r1]
+      │││   0x00cc3c70      0020a0e1       mov r2, r0
+      │││   0x00cc3c74      78309fe5       ldr r3, [0x00cc3cf4]        ; [0xcc3cf4:4]=0xffe282f4
+      │││   0x00cc3c78      013083e0       add r3, r3, r1
+      │││   0x00cc3c7c      74c09fe5       ldr ip, [0x00cc3cf8]        ; [0xcc3cf8:4]=0xffe283a4
+      │││   0x00cc3c80      01c08ce0       add ip, ip, r1
+      │││   0x00cc3c84      70e09fe5       ldr lr, [0x00cc3cfc]        ; [0xcc3cfc:4]=0xffffc8b4
+      │││   0x00cc3c88      01e09ee7       ldr lr, [lr, r1]
+      │││   0x00cc3c8c      0c401be5       ldr r4, [fp, -0xc]
+      │││   0x00cc3c90      00e09ee5       ldr lr, [lr]
+      │││   0x00cc3c94      0ee084e0       add lr, r4, lr
+      │││   0x00cc3c98      00e09ee5       ldr lr, [lr]
+      │││   0x00cc3c9c      0c401be5       ldr r4, [fp, -0xc]
+      │││   0x00cc3ca0      00109ce5       ldr r1, [ip]
+      │││   0x00cc3ca4      0c008de5       str r0, [sp, 0xc]
+      │││   0x00cc3ca8      0e00a0e1       mov r0, lr
+      │││   0x00cc3cac      08208de5       str r2, [sp, 8]
+      │││   0x00cc3cb0      0420a0e1       mov r2, r4
+      │││   0x00cc3cb4      0cc09de5       ldr ip, [sp, 0xc]
+      │││   0x00cc3cb8      04308de5       str r3, [sp, 4]
+      │││   0x00cc3cbc      3cff2fe1       blx ip
+      │││   0x00cc3cc0      14008de5       str r0, [sp, 0x14]
+      │││   0x00cc3cc4      0c001be5       ldr r0, [fp, -0xc]
+      │││   0x00cc3cc8      14209de5       ldr r2, [sp, 0x14]
+      │││   0x00cc3ccc      04109de5       ldr r1, [sp, 4]
+      │││   0x00cc3cd0      001091e5       ldr r1, [r1]
+      │││   0x00cc3cd4      08309de5       ldr r3, [sp, 8]
+      │││   0x00cc3cd8      33ff2fe1       blx r3
+      └└└─> 0x00cc3cdc      08d04be2       sub sp, fp, 8
+            0x00cc3ce0      108cbde8       pop {r4, sl, fp, pc}
+            0x00cc3ce4      ecf9ffff       invalid
+            0x00cc3ce8      e8f9ffff       invalid
+            0x00cc3cec      cccaffff       invalid
+            0x00cc3cf0      acbcffff       invalid
+            0x00cc3cf4      f482e2ff       invalid
+            0x00cc3cf8      a483e2ff       invalid
+            0x00cc3cfc      b4c8ffff       invalid
+            0x00cc3d00      04bf3900       eorseq fp, sb, r4, lsl 30

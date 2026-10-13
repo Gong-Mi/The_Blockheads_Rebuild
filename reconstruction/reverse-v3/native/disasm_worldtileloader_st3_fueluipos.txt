@@ -1,0 +1,36 @@
+# SteamTrain -[fuelUIPos]
+# types: {Vector2=[2f]}8@0:4
+# implementation: 0x00d30504
+# ARM.exidx end: 0x00d30580
+
+            0x00d30504      00482de9       push {fp, lr}
+            0x00d30508      0db0a0e1       mov fp, sp
+            0x00d3050c      18d04de2       sub sp, sp, 0x18
+            0x00d30510      04100be5       str r1, [fp, -4]
+            0x00d30514      08200be5       str r2, [fp, -8]
+            0x00d30518      04101be5       ldr r1, [fp, -4]
+            0x00d3051c      54209fe5       ldr r2, [0x00d30578]        ; [0xd30578:4]=0xffffc8dc
+            0x00d30520      54309fe5       ldr r3, [0x00d3057c]        ; [0xd3057c:4]=0x32f5c8
+            0x00d30524      03308fe0       add r3, pc, r3
+            0x00d30528      032092e7       ldr r2, [r2, r3]
+            0x00d3052c      002092e5       ldr r2, [r2]
+            0x00d30530      021081e0       add r1, r1, r2
+            0x00d30534      08208de2       add r2, sp, 8
+            0x00d30538      0030a0e3       mov r3, 0
+            0x00d3053c      00c000e3       movw ip, 0
+            0x00d30540      80c044e3       movt ip, 0x4080
+            0x00d30544      04008de5       str r0, [sp, 4]
+            0x00d30548      0200a0e1       mov r0, r2
+            0x00d3054c      00108de5       str r1, [sp]
+            0x00d30550      0310a0e1       mov r1, r3
+            0x00d30554      0c20a0e1       mov r2, ip
+            0x00d30558      c87fdeeb       bl method.Vector2.Vector2_float__float_ ; Vector2::Vector2(float, float)
+            0x00d3055c      08209de5       ldr r2, [sp, 8]
+            0x00d30560      0c309de5       ldr r3, [sp, 0xc]
+            0x00d30564      04009de5       ldr r0, [sp, 4]
+            0x00d30568      00109de5       ldr r1, [sp]
+            0x00d3056c      a97fdeeb       bl method.Vector2.operator_Vector2_ ; Vector2::operator+(Vector2)
+            0x00d30570      0bd0a0e1       mov sp, fp
+            0x00d30574      0088bde8       pop {fp, pc}
+            0x00d30578      dcc8ffff       invalid
+            0x00d3057c      c8f53200       eorseq pc, r2, r8, asr 11

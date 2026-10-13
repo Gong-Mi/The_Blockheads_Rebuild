@@ -1,0 +1,21 @@
+# itemTypeOccupiesBackgroundContents  [C function]
+# implementation: 0x00580be0
+# ARM.exidx end: 0x00580e5c
+
+            ;-- itemTypeOccupiesBackgroundContents(ItemType):
+            0x00580be0      08d04de2       sub sp, sp, 8               ; itemTypeOccupiesBackgroundContents(ItemType)
+            0x00580be4      00008de5       str r0, [sp]
+            0x00580be8      00009de5       ldr r0, [sp]
+            0x00580bec      3a0050e3       cmp r0, 0x3a                ; ':'
+        ┌─< 0x00580bf0      0200000a       beq 0x580c00
+        │   0x00580bf4      00009de5       ldr r0, [sp]
+        │   0x00580bf8      ae0050e3       cmp r0, 0xae
+       ┌──< 0x00580bfc      0200001a       bne 0x580c0c
+       │└─> 0x00580c00      010000e3       movw r0, 1
+       │    0x00580c04      0700cde5       strb r0, [sp, 7]
+       │┌─< 0x00580c08      010000ea       b 0x580c14
+       └──> 0x00580c0c      000000e3       movw r0, 0
+        │   0x00580c10      0700cde5       strb r0, [sp, 7]
+        └─> 0x00580c14      d700dde1       ldrsb r0, [sp, 7]
+            0x00580c18      08d08de2       add sp, sp, 8
+            0x00580c1c      1eff2fe1       bx lr

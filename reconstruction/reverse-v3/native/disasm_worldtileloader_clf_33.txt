@@ -1,0 +1,64 @@
+# ClownFish -[updateNetDataForClient:]
+# types: @12@0:4@8
+# implementation: 0x0078eb58
+# ARM.exidx end: 0x0078ec44
+
+            0x0078eb58      00482de9       push {fp, lr}
+            0x0078eb5c      0db0a0e1       mov fp, sp
+            0x0078eb60      58d04de2       sub sp, sp, 0x58
+            0x0078eb64      d4309fe5       ldr r3, [0x0078ec40]        ; [0x78ec40:4]=0x8d0f84
+            0x0078eb68      03308fe0       add r3, pc, r3
+            0x0078eb6c      00c000e3       movw ip, 0
+            0x0078eb70      b8e09fe5       ldr lr, [0x0078ec30]        ; [0x78ec30:4]=0xffe21838
+            0x0078eb74      03e08ee0       add lr, lr, r3
+            0x0078eb78      04000be5       str r0, [fp, -4]
+            0x0078eb7c      08100be5       str r1, [fp, -8]
+            0x0078eb80      0c200be5       str r2, [fp, -0xc]
+            0x0078eb84      04001be5       ldr r0, [fp, -4]
+            0x0078eb88      0c101be5       ldr r1, [fp, -0xc]
+            0x0078eb8c      00209ee5       ldr r2, [lr]
+            0x0078eb90      0c0050e1       cmp r0, ip
+            0x0078eb94      18308de5       str r3, [sp, 0x18]
+            0x0078eb98      14008de5       str r0, [sp, 0x14]
+            0x0078eb9c      10108de5       str r1, [sp, 0x10]
+            0x0078eba0      0c208de5       str r2, [sp, 0xc]
+        ┌─< 0x0078eba4      0500000a       beq 0x78ebc0
+        │   0x0078eba8      20008de2       add r0, sp, 0x20
+        │   0x0078ebac      14109de5       ldr r1, [sp, 0x14]
+        │   0x0078ebb0      0c209de5       ldr r2, [sp, 0xc]
+        │   0x0078ebb4      10309de5       ldr r3, [sp, 0x10]
+        │   0x0078ebb8      56cfe8eb       bl loc.imp.objc_msgSend_stret
+       ┌──< 0x0078ebbc      070000ea       b 0x78ebe0
+       │└─> 0x0078ebc0      000000e3       movw r0, 0
+       │    0x0078ebc4      282000e3       movw r2, 0x28               ; '('
+       │    0x0078ebc8      20108de2       add r1, sp, 0x20
+       │    0x0078ebcc      08008de5       str r0, [sp, 8]
+       │    0x0078ebd0      0100a0e1       mov r0, r1
+       │    0x0078ebd4      08109de5       ldr r1, [sp, 8]
+       │    0x0078ebd8      ff1001e2       and r1, r1, 0xff
+       │    0x0078ebdc      50cfe8eb       bl sym.imp.memset
+       └──> 0x0078ebe0      283000e3       movw r3, 0x28               ; '('
+            0x0078ebe4      48009fe5       ldr r0, [0x0078ec34]        ; [0x78ec34:4]=0xffffbcac
+            0x0078ebe8      18109de5       ldr r1, [sp, 0x18]
+            0x0078ebec      010090e7       ldr r0, [r0, r1]
+            0x0078ebf0      40209fe5       ldr r2, [0x0078ec38]        ; [0x78ec38:4]=0xffe2183c
+            0x0078ebf4      012082e0       add r2, r2, r1
+            0x0078ebf8      20c08de2       add ip, sp, 0x20
+            0x0078ebfc      38e09fe5       ldr lr, [0x0078ec3c]        ; [0x78ec3c:4]=0xffe2abb0
+            0x0078ec00      01e08ee0       add lr, lr, r1
+            0x0078ec04      00e09ee5       ldr lr, [lr]
+            0x0078ec08      001092e5       ldr r1, [r2]
+            0x0078ec0c      04008de5       str r0, [sp, 4]
+            0x0078ec10      0e00a0e1       mov r0, lr
+            0x0078ec14      0c20a0e1       mov r2, ip
+            0x0078ec18      04c09de5       ldr ip, [sp, 4]
+            0x0078ec1c      3cff2fe1       blx ip
+            0x0078ec20      1c008de5       str r0, [sp, 0x1c]
+            0x0078ec24      1c009de5       ldr r0, [sp, 0x1c]
+            0x0078ec28      0bd0a0e1       mov sp, fp
+            0x0078ec2c      0088bde8       pop {fp, pc}
+            0x0078ec30      3818e2ff       invalid
+            0x0078ec34      acbcffff       invalid
+            0x0078ec38      3c18e2ff       invalid
+            0x0078ec3c      b0abe2ff       invalid
+            0x0078ec40      840f8d00       addeq r0, sp, r4, lsl 31

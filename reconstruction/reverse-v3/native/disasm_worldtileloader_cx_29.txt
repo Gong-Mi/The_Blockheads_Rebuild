@@ -1,0 +1,32 @@
+# tileIsAirOrSnow  [C function]
+# implementation: 0x00a12760
+# ARM.exidx end: 0x00a127cc
+
+            ;-- tileIsAirOrSnow(Tile*):
+            0x00a12760      0cd04de2       sub sp, sp, 0xc             ; tileIsAirOrSnow(Tile*)
+            0x00a12764      001000e3       movw r1, 0
+            0x00a12768      002000e3       movw r2, 0
+            0x00a1276c      08008de5       str r0, [sp, 8]
+            0x00a12770      08009de5       ldr r0, [sp, 8]
+            0x00a12774      020050e1       cmp r0, r2
+            0x00a12778      04108de5       str r1, [sp, 4]
+        ┌─< 0x00a1277c      0d00000a       beq 0xa127b8
+        │   0x00a12780      010000e3       movw r0, 1
+        │   0x00a12784      08109de5       ldr r1, [sp, 8]
+        │   0x00a12788      0010d1e5       ldrb r1, [r1]
+        │   0x00a1278c      020051e3       cmp r1, 2
+        │   0x00a12790      00008de5       str r0, [sp]
+       ┌──< 0x00a12794      0500000a       beq 0xa127b0
+       ││   0x00a12798      08009de5       ldr r0, [sp, 8]
+       ││   0x00a1279c      0000d0e5       ldrb r0, [r0]
+       ││   0x00a127a0      050050e3       cmp r0, 5
+       ││   0x00a127a4      000000e3       movw r0, 0
+       ││   0x00a127a8      0100a003       moveq r0, 1
+       ││   0x00a127ac      00008de5       str r0, [sp]
+       └──> 0x00a127b0      00009de5       ldr r0, [sp]
+        │   0x00a127b4      04008de5       str r0, [sp, 4]
+        └─> 0x00a127b8      04009de5       ldr r0, [sp, 4]
+            0x00a127bc      010000e2       and r0, r0, 1
+            0x00a127c0      7000afe6       sxtb r0, r0
+            0x00a127c4      0cd08de2       add sp, sp, 0xc
+            0x00a127c8      1eff2fe1       bx lr

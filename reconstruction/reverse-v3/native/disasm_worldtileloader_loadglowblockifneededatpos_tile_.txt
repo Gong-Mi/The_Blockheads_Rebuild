@@ -1,0 +1,367 @@
+# DynamicWorld -[loadGlowBlockIfNeededAtPos:tile:]
+# types: v20@0:4{?=ii}8^{Tile=CCCCCCCCCCCCCSSSsCISSSSSQ[8S]}16
+# implementation: 0x008f4f88
+# ARM.exidx end: 0x008f5530
+
+            0x008f4f88      f04d2de9       push {r4, r5, r6, r7, r8, sl, fp, lr}
+            0x008f4f8c      18b08de2       add fp, sp, 0x18
+            0x008f4f90      06dd4de2       sub sp, sp, 0x180
+            0x008f4f94      90c59fe5       ldr ip, [0x008f552c]        ; [0x8f552c:4]=0x76ab54
+            0x008f4f98      0cc08fe0       add ip, pc, ip
+            0x008f4f9c      08e09be5       ldr lr, [fp, 8]
+            0x008f4fa0      48459fe5       ldr r4, [0x008f54f0]        ; [0x8f54f0:4]=0xffffe4e4
+            0x008f4fa4      0c4094e7       ldr r4, [r4, ip]
+            0x008f4fa8      c8208de5       str r2, [sp, 0xc8]
+            0x008f4fac      cc308de5       str r3, [sp, 0xcc]
+            0x008f4fb0      c4008de5       str r0, [sp, 0xc4]
+            0x008f4fb4      c0108de5       str r1, [sp, 0xc0]
+            0x008f4fb8      bce08de5       str lr, [sp, 0xbc]
+            0x008f4fbc      c8009de5       ldr r0, [sp, 0xc8]
+            0x008f4fc0      cc109de5       ldr r1, [sp, 0xcc]
+            0x008f4fc4      c4209de5       ldr r2, [sp, 0xc4]
+            0x008f4fc8      003094e5       ldr r3, [r4]
+            0x008f4fcc      032082e0       add r2, r2, r3
+            0x008f4fd0      002092e5       ldr r2, [r2]
+            0x008f4fd4      5cc08de5       str ip, [sp, 0x5c]
+            0x008f4fd8      b28104eb       bl sym.worldIndexAtWorldPosition_int__int__World_ ; worldIndexAtWorldPosition(int, int, World*)
+            0x008f4fdc      0c159fe5       ldr r1, [0x008f54f0]        ; [0x8f54f0:4]=0xffffe4e4
+            0x008f4fe0      5c209de5       ldr r2, [sp, 0x5c]
+            0x008f4fe4      021091e7       ldr r1, [r1, r2]
+            0x008f4fe8      b8008de5       str r0, [sp, 0xb8]
+            0x008f4fec      b8009de5       ldr r0, [sp, 0xb8]
+            0x008f4ff0      c4309de5       ldr r3, [sp, 0xc4]
+            0x008f4ff4      001091e5       ldr r1, [r1]
+            0x008f4ff8      011083e0       add r1, r3, r1
+            0x008f4ffc      001091e5       ldr r1, [r1]
+            0x008f5000      ef8804eb       bl sym.macroIndexAtWorldIndex_int__World_ ; macroIndexAtWorldIndex(int, World*)
+            0x008f5004      001000e3       movw r1, 0
+            0x008f5008      142000e3       movw r2, 0x14
+            0x008f500c      d4349fe5       ldr r3, [0x008f54e8]        ; [0x8f54e8:4]=0xffffbcac
+            0x008f5010      5cc09de5       ldr ip, [sp, 0x5c]
+            0x008f5014      0c3093e7       ldr r3, [r3, ip]
+            0x008f5018      cce49fe5       ldr lr, [0x008f54ec]        ; [0x8f54ec:4]=0xffe232b0
+            0x008f501c      0ce08ee0       add lr, lr, ip
+            0x008f5020      c8449fe5       ldr r4, [0x008f54f0]        ; [0x8f54f0:4]=0xffffe4e4
+            0x008f5024      0c4094e7       ldr r4, [r4, ip]
+            0x008f5028      b4008de5       str r0, [sp, 0xb4]
+            0x008f502c      b4009de5       ldr r0, [sp, 0xb4]
+            0x008f5030      c4509de5       ldr r5, [sp, 0xc4]
+            0x008f5034      004094e5       ldr r4, [r4]
+            0x008f5038      044085e0       add r4, r5, r4
+            0x008f503c      004094e5       ldr r4, [r4]
+            0x008f5040      00e09ee5       ldr lr, [lr]
+            0x008f5044      58008de5       str r0, [sp, 0x58]
+            0x008f5048      0400a0e1       mov r0, r4
+            0x008f504c      54108de5       str r1, [sp, 0x54]
+            0x008f5050      0e10a0e1       mov r1, lr
+            0x008f5054      50208de5       str r2, [sp, 0x50]
+            0x008f5058      33ff2fe1       blx r3
+            0x008f505c      58109de5       ldr r1, [sp, 0x58]
+            0x008f5060      50209de5       ldr r2, [sp, 0x50]
+            0x008f5064      910201e0       mul r1, r1, r2
+            0x008f5068      010080e0       add r0, r0, r1
+            0x008f506c      b0008de5       str r0, [sp, 0xb0]
+            0x008f5070      b0009de5       ldr r0, [sp, 0xb0]
+            0x008f5074      040090e5       ldr r0, [r0, 4]
+            0x008f5078      54109de5       ldr r1, [sp, 0x54]
+            0x008f507c      010050e1       cmp r0, r1
+        ┌─< 0x008f5080      1601000a       beq 0x8f54e0
+        │   0x008f5084      b0009de5       ldr r0, [sp, 0xb0]
+        │   0x008f5088      d200d0e1       ldrsb r0, [r0, 2]
+        │   0x008f508c      000050e3       cmp r0, 0
+       ┌──< 0x008f5090      1201000a       beq 0x8f54e0
+       ││   0x008f5094      a8008de2       add r0, sp, 0xa8
+       ││   0x008f5098      c4109de5       ldr r1, [sp, 0xc4]
+       ││   0x008f509c      50249fe5       ldr r2, [0x008f54f4]        ; [0x8f54f4:4]=0xffffe554
+       ││   0x008f50a0      50349fe5       ldr r3, [0x008f54f8]        ; [0x8f54f8:4]=0x76aa48
+       ││   0x008f50a4      03308fe0       add r3, pc, r3
+       ││   0x008f50a8      032092e7       ldr r2, [r2, r3]
+       ││   0x008f50ac      002092e5       ldr r2, [r2]
+       ││   0x008f50b0      021081e0       add r1, r1, r2
+       ││   0x008f50b4      d81081e2       add r1, r1, 0xd8
+       ││   0x008f50b8      b8209de5       ldr r2, [sp, 0xb8]
+       ││   0x008f50bc      c23fa0e1       asr r3, r2, 0x1f
+       ││   0x008f50c0      ac308de5       str r3, [sp, 0xac]
+       ││   0x008f50c4      a8208de5       str r2, [sp, 0xa8]
+       ││   0x008f50c8      c4100be5       str r1, [fp, -0xc4]
+       ││   0x008f50cc      c8000be5       str r0, [fp, -0xc8]
+       ││   0x008f50d0      c4001be5       ldr r0, [fp, -0xc4]
+       ││   0x008f50d4      c8101be5       ldr r1, [fp, -0xc8]
+       ││   0x008f50d8      656e00eb       bl method.unsigned_long_std::__1::__tree_std::__1::pair_unsigned_long_long__DynamicObject___std::__1::__map_value_compare_unsigned_long_long__DynamicObject__std::__1::less_unsigned_long_long___true___std::__1::allocator_std::__1::pair_unsigned_long_long__DynamicObject_____.__count_unique_unsigned_long_long__unsigned_long_long_const__const ; unsigned long std::__1::__tree<std::__1::pair<unsigned long long, DynamicObject*>, std::__1::__map_value_compare<unsigned long long, DynamicObject*, std::__1::less<unsigned long long>, true>, std::__1::allocator<std::__1::pair<unsigned long long, DynamicObject*> > >::__count_unique<unsigned long long>(unsigned long long const&) const
+       ││   0x008f50dc      000050e3       cmp r0, 0
+      ┌───< 0x008f50e0      fd00001a       bne 0x8f54dc
+      │││   0x008f50e4      a0008de2       add r0, sp, 0xa0
+      │││   0x008f50e8      c4109de5       ldr r1, [sp, 0xc4]
+      │││   0x008f50ec      08249fe5       ldr r2, [0x008f54fc]        ; [0x8f54fc:4]=0xffffe5cc
+      │││   0x008f50f0      08349fe5       ldr r3, [0x008f5500]        ; [0x8f5500:4]=0x76a9f8
+      │││   0x008f50f4      03308fe0       add r3, pc, r3
+      │││   0x008f50f8      032092e7       ldr r2, [r2, r3]
+      │││   0x008f50fc      002092e5       ldr r2, [r2]
+      │││   0x008f5100      021081e0       add r1, r1, r2
+      │││   0x008f5104      b8209de5       ldr r2, [sp, 0xb8]
+      │││   0x008f5108      c23fa0e1       asr r3, r2, 0x1f
+      │││   0x008f510c      a4308de5       str r3, [sp, 0xa4]
+      │││   0x008f5110      a0208de5       str r2, [sp, 0xa0]
+      │││   0x008f5114      bc100be5       str r1, [fp, -0xbc]
+      │││   0x008f5118      c0000be5       str r0, [fp, -0xc0]
+      │││   0x008f511c      bc001be5       ldr r0, [fp, -0xbc]
+      │││   0x008f5120      c0101be5       ldr r1, [fp, -0xc0]
+      │││   0x008f5124      a8000be5       str r0, [fp, -0xa8]         ; "yC#"
+      │││   0x008f5128      ac100be5       str r1, [fp, -0xac]
+      │││   0x008f512c      a8001be5       ldr r0, [fp, -0xa8]         ; "yC#"
+      │││   0x008f5130      ac101be5       ldr r1, [fp, -0xac]
+      │││   0x008f5134      4c008de5       str r0, [sp, 0x4c]
+      │││   0x008f5138      966d00eb       bl method.std::__1::__hash_const_iterator_std::__1::__hash_node_unsigned_long_long__void__const__std::__1::__hash_table_unsigned_long_long__std::__1::hash_unsigned_long_long___std::__1::equal_to_unsigned_long_long___std::__1::allocator_unsigned_long_long___.find_unsigned_long_long__unsigned_long_long_const__const ; std::__1::__hash_const_iterator<std::__1::__hash_node<unsigned long long, void*> const*> std::__1::__hash_table<unsigned long long, std::__1::hash<unsigned long long>, std::__1::equal_to<unsigned long long>, std::__1::allocator<unsigned long long> >::find<unsigned long long>(unsigned long long const&) const
+      │││   0x008f513c      b8104be2       sub r1, fp, 0xb8
+      │││   0x008f5140      b0204be2       sub r2, fp, 0xb0
+      │││   0x008f5144      003000e3       movw r3, 0
+      │││   0x008f5148      a0c04be2       sub ip, fp, 0xa0
+      │││   0x008f514c      b0000be5       str r0, [fp, -0xb0]
+      │││   0x008f5150      4c009de5       ldr r0, [sp, 0x4c]
+      │││   0x008f5154      a4000be5       str r0, [fp, -0xa4]
+      │││   0x008f5158      94c00be5       str ip, [fp, -0x94]
+      │││   0x008f515c      98300be5       str r3, [fp, -0x98]
+      │││   0x008f5160      94301be5       ldr r3, [fp, -0x94]
+      │││   0x008f5164      98c01be5       ldr ip, [fp, -0x98]
+      │││   0x008f5168      00c083e5       str ip, [r3]
+      │││   0x008f516c      a0301be5       ldr r3, [fp, -0xa0]
+      │││   0x008f5170      b8300be5       str r3, [fp, -0xb8]
+      │││   0x008f5174      8c200be5       str r2, [fp, -0x8c]
+      │││   0x008f5178      90100be5       str r1, [fp, -0x90]
+      │││   0x008f517c      8c101be5       ldr r1, [fp, -0x8c]
+      │││   0x008f5180      001091e5       ldr r1, [r1]
+      │││   0x008f5184      90201be5       ldr r2, [fp, -0x90]
+      │││   0x008f5188      002092e5       ldr r2, [r2]
+      │││   0x008f518c      020051e1       cmp r1, r2
+      │││   0x008f5190      001000e3       movw r1, 0
+      │││   0x008f5194      0110a013       movne r1, 1
+      │││   0x008f5198      011001e2       and r1, r1, 1
+      │││   0x008f519c      000051e3       cmp r1, 0
+     ┌────< 0x008f51a0      cd00001a       bne 0x8f54dc
+     ││││   0x008f51a4      9c008de2       add r0, sp, 0x9c
+     ││││   0x008f51a8      54139fe5       ldr r1, [0x008f5504]        ; [0x8f5504:4]=0xffffe5a0
+     ││││   0x008f51ac      5c209de5       ldr r2, [sp, 0x5c]
+     ││││   0x008f51b0      021091e7       ldr r1, [r1, r2]
+     ││││   0x008f51b4      c4309de5       ldr r3, [sp, 0xc4]
+     ││││   0x008f51b8      001091e5       ldr r1, [r1]
+     ││││   0x008f51bc      011083e0       add r1, r3, r1
+     ││││   0x008f51c0      5a1f81e2       add r1, r1, 0x168
+     ││││   0x008f51c4      b4309de5       ldr r3, [sp, 0xb4]
+     ││││   0x008f51c8      9c308de5       str r3, [sp, 0x9c]
+     ││││   0x008f51cc      84100be5       str r1, [fp, -0x84]
+     ││││   0x008f51d0      88000be5       str r0, [fp, -0x88]
+     ││││   0x008f51d4      84001be5       ldr r0, [fp, -0x84]
+     ││││   0x008f51d8      88101be5       ldr r1, [fp, -0x88]
+     ││││   0x008f51dc      70000be5       str r0, [fp, -0x70]
+     ││││   0x008f51e0      74100be5       str r1, [fp, -0x74]
+     ││││   0x008f51e4      70001be5       ldr r0, [fp, -0x70]
+     ││││   0x008f51e8      74101be5       ldr r1, [fp, -0x74]
+     ││││   0x008f51ec      48008de5       str r0, [sp, 0x48]
+     ││││   0x008f51f0      6b7400eb       bl method.std::__1::__hash_const_iterator_std::__1::__hash_node_unsigned_int__void__const__std::__1::__hash_table_unsigned_int__std::__1::hash_unsigned_int___std::__1::equal_to_unsigned_int___std::__1::allocator_unsigned_int___.find_unsigned_int__unsigned_int_const__const ; std::__1::__hash_const_iterator<std::__1::__hash_node<unsigned int, void*> const*> std::__1::__hash_table<unsigned int, std::__1::hash<unsigned int>, std::__1::equal_to<unsigned int>, std::__1::allocator<unsigned int> >::find<unsigned int>(unsigned int const&) const
+     ││││   0x008f51f4      80104be2       sub r1, fp, 0x80
+     ││││   0x008f51f8      78204be2       sub r2, fp, 0x78
+     ││││   0x008f51fc      003000e3       movw r3, 0
+     ││││   0x008f5200      68c04be2       sub ip, fp, 0x68
+     ││││   0x008f5204      78000be5       str r0, [fp, -0x78]
+     ││││   0x008f5208      48009de5       ldr r0, [sp, 0x48]
+     ││││   0x008f520c      6c000be5       str r0, [fp, -0x6c]
+     ││││   0x008f5210      5cc00be5       str ip, [fp, -0x5c]
+     ││││   0x008f5214      60300be5       str r3, [fp, -0x60]
+     ││││   0x008f5218      5c301be5       ldr r3, [fp, -0x5c]
+     ││││   0x008f521c      60c01be5       ldr ip, [fp, -0x60]
+     ││││   0x008f5220      00c083e5       str ip, [r3]
+     ││││   0x008f5224      68301be5       ldr r3, [fp, -0x68]
+     ││││   0x008f5228      80300be5       str r3, [fp, -0x80]
+     ││││   0x008f522c      54200be5       str r2, [fp, -0x54]
+     ││││   0x008f5230      58100be5       str r1, [fp, -0x58]
+     ││││   0x008f5234      54101be5       ldr r1, [fp, -0x54]
+     ││││   0x008f5238      001091e5       ldr r1, [r1]
+     ││││   0x008f523c      58201be5       ldr r2, [fp, -0x58]
+     ││││   0x008f5240      002092e5       ldr r2, [r2]
+     ││││   0x008f5244      020051e1       cmp r1, r2
+     ││││   0x008f5248      001000e3       movw r1, 0
+     ││││   0x008f524c      0110a013       movne r1, 1
+     ││││   0x008f5250      011001e2       and r1, r1, 1
+     ││││   0x008f5254      000051e3       cmp r1, 0
+    ┌─────< 0x008f5258      9f00001a       bne 0x8f54dc
+    │││││   0x008f525c      70008de2       add r0, sp, 0x70
+    │││││   0x008f5260      c4109de5       ldr r1, [sp, 0xc4]
+    │││││   0x008f5264      90229fe5       ldr r2, [0x008f54fc]        ; [0x8f54fc:4]=0xffffe5cc
+    │││││   0x008f5268      98329fe5       ldr r3, [0x008f5508]        ; [0x8f5508:4]=0x76a880
+    │││││   0x008f526c      03308fe0       add r3, pc, r3
+    │││││   0x008f5270      032092e7       ldr r2, [r2, r3]
+    │││││   0x008f5274      00c092e5       ldr ip, [r2]
+    │││││   0x008f5278      0c1081e0       add r1, r1, ip
+    │││││   0x008f527c      b8c09de5       ldr ip, [sp, 0xb8]
+    │││││   0x008f5280      ccefa0e1       asr lr, ip, 0x1f
+    │││││   0x008f5284      94e08de5       str lr, [sp, 0x94]
+    │││││   0x008f5288      90c08de5       str ip, [sp, 0x90]
+    │││││   0x008f528c      44100be5       str r1, [fp, -0x44]
+    │││││   0x008f5290      90108de2       add r1, sp, 0x90
+    │││││   0x008f5294      48100be5       str r1, [fp, -0x48]
+    │││││   0x008f5298      44c01be5       ldr ip, [fp, -0x44]
+    │││││   0x008f529c      40100be5       str r1, [fp, -0x40]
+    │││││   0x008f52a0      50e04be2       sub lr, fp, 0x50
+    │││││   0x008f52a4      44008de5       str r0, [sp, 0x44]
+    │││││   0x008f52a8      0e00a0e1       mov r0, lr
+    │││││   0x008f52ac      40108de5       str r1, [sp, 0x40]
+    │││││   0x008f52b0      0c10a0e1       mov r1, ip
+    │││││   0x008f52b4      40c09de5       ldr ip, [sp, 0x40]
+    │││││   0x008f52b8      3c208de5       str r2, [sp, 0x3c]
+    │││││   0x008f52bc      0c20a0e1       mov r2, ip
+    │││││   0x008f52c0      38e08de5       str lr, [sp, 0x38]
+    │││││   0x008f52c4      34308de5       str r3, [sp, 0x34]
+    │││││   0x008f52c8      a44c00eb       bl method.std::__1::pair_std::__1::__hash_iterator_std::__1::__hash_node_unsigned_long_long__void____bool__std::__1::__hash_table_unsigned_long_long__std::__1::hash_unsigned_long_long___std::__1::equal_to_unsigned_long_long___std::__1::allocator_unsigned_long_long___.__insert_unique_unsigned_long_long__unsigned_long_long_ ; std::__1::pair<std::__1::__hash_iterator<std::__1::__hash_node<unsigned long long, void*>*>, bool> std::__1::__hash_table<unsigned long long, std::__1::hash<unsigned long long>, std::__1::equal_to<unsigned long long>, std::__1::allocator<unsigned long long> >::__insert_unique<unsigned long long>(unsigned long long&&)
+    │││││   0x008f52cc      88008de2       add r0, sp, 0x88
+    │││││   0x008f52d0      34000be5       str r0, [fp, -0x34]         ; elf_phdr
+    │││││   0x008f52d4      38009de5       ldr r0, [sp, 0x38]
+    │││││   0x008f52d8      38000be5       str r0, [fp, -0x38]
+    │││││   0x008f52dc      0010a0e3       mov r1, 0
+    │││││   0x008f52e0      3c100be5       str r1, [fp, -0x3c]
+    │││││   0x008f52e4      34101be5       ldr r1, [fp, -0x34]         ; elf_phdr
+    │││││   0x008f52e8      38201be5       ldr r2, [fp, -0x38]
+    │││││   0x008f52ec      30200be5       str r2, [fp, -0x30]
+    │││││   0x008f52f0      24100be5       str r1, [fp, -0x24]
+    │││││   0x008f52f4      28200be5       str r2, [fp, -0x28]
+    │││││   0x008f52f8      24301be5       ldr r3, [fp, -0x24]
+    │││││   0x008f52fc      002092e5       ldr r2, [r2]
+    │││││   0x008f5300      002083e5       str r2, [r3]
+    │││││   0x008f5304      38201be5       ldr r2, [fp, -0x38]
+    │││││   0x008f5308      043082e2       add r3, r2, 4
+    │││││   0x008f530c      2c300be5       str r3, [fp, -0x2c]
+    │││││   0x008f5310      0420d2e5       ldrb r2, [r2, 4]
+    │││││   0x008f5314      012002e2       and r2, r2, 1
+    │││││   0x008f5318      0420c1e5       strb r2, [r1, 4]
+    │││││   0x008f531c      e8119fe5       ldr r1, [0x008f550c]        ; [0x8f550c:4]=0xffe2af9c
+    │││││   0x008f5320      34209de5       ldr r2, [sp, 0x34]
+    │││││   0x008f5324      020091e7       ldr r0, [r1, r2]
+    │││││   0x008f5328      e0119fe5       ldr r1, [0x008f5510]        ; [0x8f5510:4]=0xffe231c8
+    │││││   0x008f532c      021091e7       ldr r1, [r1, r2]
+    │││││   0x008f5330      3935e3eb       bl loc.imp.objc_msgSend
+    │││││   0x008f5334      c4109de5       ldr r1, [sp, 0xc4]
+    │││││   0x008f5338      b0219fe5       ldr r2, [0x008f54f0]        ; [0x8f54f0:4]=0xffffe4e4
+    │││││   0x008f533c      34309de5       ldr r3, [sp, 0x34]
+    │││││   0x008f5340      032092e7       ldr r2, [r2, r3]
+    │││││   0x008f5344      002092e5       ldr r2, [r2]
+    │││││   0x008f5348      022091e7       ldr r2, [r1, r2]
+    │││││   0x008f534c      c8c09de5       ldr ip, [sp, 0xc8]
+    │││││   0x008f5350      cce09de5       ldr lr, [sp, 0xcc]
+    │││││   0x008f5354      7ce08de5       str lr, [sp, 0x7c]
+    │││││   0x008f5358      78c08de5       str ip, [sp, 0x78]
+    │││││   0x008f535c      c4c09de5       ldr ip, [sp, 0xc4]
+    │││││   0x008f5360      ace19fe5       ldr lr, [0x008f5514]        ; [0x8f5514:4]=0xffffe504
+    │││││   0x008f5364      03e09ee7       ldr lr, [lr, r3]
+    │││││   0x008f5368      00e09ee5       ldr lr, [lr]
+    │││││   0x008f536c      0ec09ce7       ldr ip, [ip, lr]
+    │││││   0x008f5370      bce09de5       ldr lr, [sp, 0xbc]
+    │││││   0x008f5374      9c419fe5       ldr r4, [0x008f5518]        ; [0x8f5518:4]=0xffe236bc
+    │││││   0x008f5378      034094e7       ldr r4, [r4, r3]
+    │││││   0x008f537c      78509de5       ldr r5, [sp, 0x78]
+    │││││   0x008f5380      7c609de5       ldr r6, [sp, 0x7c]
+    │││││   0x008f5384      0d70a0e1       mov r7, sp
+    │││││   0x008f5388      0ce087e5       str lr, [r7, 0xc]
+    │││││   0x008f538c      08c087e5       str ip, [r7, 8]
+    │││││   0x008f5390      046087e5       str r6, [r7, 4]
+    │││││   0x008f5394      005087e5       str r5, [r7]
+    │││││   0x008f5398      30108de5       str r1, [sp, 0x30]
+    │││││   0x008f539c      0410a0e1       mov r1, r4
+    │││││   0x008f53a0      30309de5       ldr r3, [sp, 0x30]
+    │││││   0x008f53a4      1c35e3eb       bl loc.imp.objc_msgSend
+    │││││   0x008f53a8      84008de5       str r0, [sp, 0x84]
+    │││││   0x008f53ac      c4009de5       ldr r0, [sp, 0xc4]
+    │││││   0x008f53b0      3c109de5       ldr r1, [sp, 0x3c]
+    │││││   0x008f53b4      002091e5       ldr r2, [r1]
+    │││││   0x008f53b8      020080e0       add r0, r0, r2
+    │││││   0x008f53bc      b8209de5       ldr r2, [sp, 0xb8]
+    │││││   0x008f53c0      c23fa0e1       asr r3, r2, 0x1f
+    │││││   0x008f53c4      70208de5       str r2, [sp, 0x70]
+    │││││   0x008f53c8      74308de5       str r3, [sp, 0x74]
+    │││││   0x008f53cc      1c000be5       str r0, [fp, -0x1c]
+    │││││   0x008f53d0      44009de5       ldr r0, [sp, 0x44]
+    │││││   0x008f53d4      20000be5       str r0, [fp, -0x20]
+    │││││   0x008f53d8      1c001be5       ldr r0, [fp, -0x1c]
+    │││││   0x008f53dc      20101be5       ldr r1, [fp, -0x20]
+    │││││   0x008f53e0      ed7a00eb       bl method.unsigned_long_std::__1::__hash_table_unsigned_long_long__std::__1::hash_unsigned_long_long___std::__1::equal_to_unsigned_long_long___std::__1::allocator_unsigned_long_long___.__erase_unique_unsigned_long_long__unsigned_long_long_const_ ; unsigned long std::__1::__hash_table<unsigned long long, std::__1::hash<unsigned long long>, std::__1::equal_to<unsigned long long>, std::__1::allocator<unsigned long long> >::__erase_unique<unsigned long long>(unsigned long long const&)
+    │││││   0x008f53e4      001000e3       movw r1, 0
+    │││││   0x008f53e8      84209de5       ldr r2, [sp, 0x84]
+    │││││   0x008f53ec      010052e1       cmp r2, r1
+    │││││   0x008f53f0      2c008de5       str r0, [sp, 0x2c]
+   ┌──────< 0x008f53f4      3700000a       beq 0x8f54d8
+   ││││││   0x008f53f8      60108de2       add r1, sp, 0x60
+   ││││││   0x008f53fc      84009de5       ldr r0, [sp, 0x84]
+   ││││││   0x008f5400      14219fe5       ldr r2, [0x008f551c]        ; [0x8f551c:4]=0xffe23334
+   ││││││   0x008f5404      14319fe5       ldr r3, [0x008f5520]        ; [0x8f5520:4]=0x76a6e4
+   ││││││   0x008f5408      03308fe0       add r3, pc, r3
+   ││││││   0x008f540c      03c092e7       ldr ip, [r2, r3]
+   ││││││   0x008f5410      28008de5       str r0, [sp, 0x28]
+   ││││││   0x008f5414      24108de5       str r1, [sp, 0x24]
+   ││││││   0x008f5418      0c10a0e1       mov r1, ip
+   ││││││   0x008f541c      20208de5       str r2, [sp, 0x20]
+   ││││││   0x008f5420      1c308de5       str r3, [sp, 0x1c]
+   ││││││   0x008f5424      fc34e3eb       bl loc.imp.objc_msgSend
+   ││││││   0x008f5428      c4109de5       ldr r1, [sp, 0xc4]
+   ││││││   0x008f542c      f0209fe5       ldr r2, [0x008f5524]        ; [0x8f5524:4]=0xffffe550
+   ││││││   0x008f5430      1c309de5       ldr r3, [sp, 0x1c]
+   ││││││   0x008f5434      032092e7       ldr r2, [r2, r3]
+   ││││││   0x008f5438      002092e5       ldr r2, [r2]
+   ││││││   0x008f543c      021081e0       add r1, r1, r2
+   ││││││   0x008f5440      800080e0       add r0, r0, r0, lsl 1
+   ││││││   0x008f5444      000181e0       add r0, r1, r0, lsl 2
+   ││││││   0x008f5448      84109de5       ldr r1, [sp, 0x84]
+   ││││││   0x008f544c      d4209fe5       ldr r2, [0x008f5528]        ; [0x8f5528:4]=0xffe2332c
+   ││││││   0x008f5450      032092e7       ldr r2, [r2, r3]
+   ││││││   0x008f5454      18008de5       str r0, [sp, 0x18]
+   ││││││   0x008f5458      0100a0e1       mov r0, r1
+   ││││││   0x008f545c      0210a0e1       mov r1, r2
+   ││││││   0x008f5460      ed34e3eb       bl loc.imp.objc_msgSend
+   ││││││   0x008f5464      6c108de5       str r1, [sp, 0x6c]
+   ││││││   0x008f5468      68008de5       str r0, [sp, 0x68]
+   ││││││   0x008f546c      68108de2       add r1, sp, 0x68
+   ││││││   0x008f5470      18009de5       ldr r0, [sp, 0x18]
+   ││││││   0x008f5474      aa1effeb       bl method.std::__1::map_unsigned_long_long__DynamicObject__std::__1::less_unsigned_long_long___std::__1::allocator_std::__1::pair_unsigned_long_long_const__DynamicObject_____.operator___unsigned_long_long_ ; std::__1::map<unsigned long long, DynamicObject*, std::__1::less<unsigned long long>, std::__1::allocator<std::__1::pair<unsigned long long const, DynamicObject*> > >::operator[](unsigned long long&&)
+   ││││││   0x008f5478      28109de5       ldr r1, [sp, 0x28]
+   ││││││   0x008f547c      001080e5       str r1, [r0]
+   ││││││   0x008f5480      84009de5       ldr r0, [sp, 0x84]
+   ││││││   0x008f5484      20209de5       ldr r2, [sp, 0x20]
+   ││││││   0x008f5488      1c309de5       ldr r3, [sp, 0x1c]
+   ││││││   0x008f548c      031092e7       ldr r1, [r2, r3]
+   ││││││   0x008f5490      14008de5       str r0, [sp, 0x14]
+   ││││││   0x008f5494      e034e3eb       bl loc.imp.objc_msgSend
+   ││││││   0x008f5498      c4109de5       ldr r1, [sp, 0xc4]
+   ││││││   0x008f549c      50209fe5       ldr r2, [0x008f54f4]        ; [0x8f54f4:4]=0xffffe554
+   ││││││   0x008f54a0      1c309de5       ldr r3, [sp, 0x1c]
+   ││││││   0x008f54a4      032092e7       ldr r2, [r2, r3]
+   ││││││   0x008f54a8      002092e5       ldr r2, [r2]
+   ││││││   0x008f54ac      021081e0       add r1, r1, r2
+   ││││││   0x008f54b0      800080e0       add r0, r0, r0, lsl 1
+   ││││││   0x008f54b4      000181e0       add r0, r1, r0, lsl 2
+   ││││││   0x008f54b8      b8109de5       ldr r1, [sp, 0xb8]
+   ││││││   0x008f54bc      c12fa0e1       asr r2, r1, 0x1f
+   ││││││   0x008f54c0      60108de5       str r1, [sp, 0x60]
+   ││││││   0x008f54c4      64208de5       str r2, [sp, 0x64]
+   ││││││   0x008f54c8      24109de5       ldr r1, [sp, 0x24]
+   ││││││   0x008f54cc      941effeb       bl method.std::__1::map_unsigned_long_long__DynamicObject__std::__1::less_unsigned_long_long___std::__1::allocator_std::__1::pair_unsigned_long_long_const__DynamicObject_____.operator___unsigned_long_long_ ; std::__1::map<unsigned long long, DynamicObject*, std::__1::less<unsigned long long>, std::__1::allocator<std::__1::pair<unsigned long long const, DynamicObject*> > >::operator[](unsigned long long&&)
+   ││││││   0x008f54d0      14109de5       ldr r1, [sp, 0x14]
+   ││││││   0x008f54d4      001080e5       str r1, [r0]
+  ┌└──────> 0x008f54d8      ffffffea       b 0x8f54dc
+  └┌└└└───> 0x008f54dc      ffffffea       b 0x8f54e0
+   └───└└─> 0x008f54e0      18d04be2       sub sp, fp, 0x18
+            0x008f54e4      f08dbde8       pop {r4, r5, r6, r7, r8, sl, fp, pc}
+            0x008f54e8      acbcffff       invalid
+            0x008f54ec      b032e2ff       invalid
+            0x008f54f0      e4e4ffff       invalid
+            0x008f54f4      54e5ffff       invalid
+            0x008f54f8      48aa7600       rsbseq sl, r6, r8, asr 20
+            0x008f54fc      cce5ffff       invalid
+            0x008f5500      f8a97600       ldrshteq sl, [r6], -0x98
+            0x008f5504      a0e5ffff       invalid
+            0x008f5508      80a87600       rsbseq sl, r6, r0, lsl 17
+            0x008f550c      9cafe2ff       invalid
+            0x008f5510      c831e2ff       invalid
+            0x008f5514      04e5ffff       invalid
+            0x008f5518      bc36e2ff       invalid
+            0x008f551c      3433e2ff       invalid
+            0x008f5520      e4a67600       rsbseq sl, r6, r4, ror 13
+            0x008f5524      50e5ffff       invalid
+            0x008f5528      2c33e2ff       invalid
+            0x008f552c      54ab7600       rsbseq sl, r6, r4, asr fp

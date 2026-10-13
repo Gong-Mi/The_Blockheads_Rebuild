@@ -1,0 +1,22 @@
+# FreeBlock -[setSoundType:]
+# types: v12@0:4i8
+# implementation: 0x006349e4
+# ARM.exidx end: 0x00634a28
+
+            0x006349e4      0cd04de2       sub sp, sp, 0xc
+            0x006349e8      08008de5       str r0, [sp, 8]
+            0x006349ec      04108de5       str r1, [sp, 4]
+            0x006349f0      00208de5       str r2, [sp]
+            0x006349f4      08009de5       ldr r0, [sp, 8]
+            0x006349f8      20109fe5       ldr r1, [0x00634a20]        ; [0x634a20:4]=0xffffd100
+            0x006349fc      20309fe5       ldr r3, [0x00634a24]        ; [0x634a24:4]=0xa2b0ec
+            0x00634a00      03308fe0       add r3, pc, r3
+            0x00634a04      031091e7       ldr r1, [r1, r3]
+            0x00634a08      001091e5       ldr r1, [r1]
+            0x00634a0c      5bf07ff5       dmb ish
+            0x00634a10      012080e7       str r2, [r0, r1]
+            0x00634a14      5bf07ff5       dmb ish
+            0x00634a18      0cd08de2       add sp, sp, 0xc
+            0x00634a1c      1eff2fe1       bx lr
+            0x00634a20      00d1ffff       invalid
+            0x00634a24      ecb0a200       adceq fp, r2, ip, ror 1

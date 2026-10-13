@@ -1,0 +1,35 @@
+# reverseLinearInterpolate(float,float,float)  [C function]
+# implementation: 0x005ac12c
+# ARM.exidx end: 0x005ac1a4
+
+            ;-- reverseLinearInterpolate(float, float, float):
+            0x005ac12c      14d04de2       sub sp, sp, 0x14            ; reverseLinearInterpolate(float, float, float)
+            0x005ac130      102a00ee       vmov s0, r2
+            0x005ac134      101a01ee       vmov s2, r1
+            0x005ac138      100a02ee       vmov s4, r0
+            0x005ac13c      032a8ded       vstr s4, [sp, 0xc]
+            0x005ac140      021a8ded       vstr s2, [sp, 8]
+            0x005ac144      010a8ded       vstr s0, [sp, 4]
+            0x005ac148      010a9ded       vldr s0, [sp, 4]
+            0x005ac14c      021a9ded       vldr s2, [sp, 8]
+            0x005ac150      c10ab4ee       vcmpe.f32 s0, s2
+            0x005ac154      10faf1ee       vmrs apsr_nzcv, fpscr
+        ┌─< 0x005ac158      0400001a       bne 0x5ac170
+        │   0x005ac15c      000000e3       movw r0, 0
+        │   0x005ac160      0e0a9fed       vldr s0, [0x005ac1a0]
+        │   0x005ac164      040a8ded       vstr s0, [sp, 0x10]
+        │   0x005ac168      00008de5       str r0, [sp]
+       ┌──< 0x005ac16c      070000ea       b 0x5ac190
+       │└─> 0x005ac170      030a9ded       vldr s0, [sp, 0xc]
+       │    0x005ac174      021a9ded       vldr s2, [sp, 8]
+       │    0x005ac178      410a30ee       vsub.f32 s0, s0, s2
+       │    0x005ac17c      011a9ded       vldr s2, [sp, 4]
+       │    0x005ac180      022a9ded       vldr s4, [sp, 8]
+       │    0x005ac184      421a31ee       vsub.f32 s2, s2, s4
+       │    0x005ac188      010a80ee       vdiv.f32 s0, s0, s2
+       │    0x005ac18c      040a8ded       vstr s0, [sp, 0x10]
+       └──> 0x005ac190      040a9ded       vldr s0, [sp, 0x10]
+            0x005ac194      100a10ee       vmov r0, s0
+            0x005ac198      14d08de2       add sp, sp, 0x14
+            0x005ac19c      1eff2fe1       bx lr
+            0x005ac1a0      00000000       andeq r0, r0, r0

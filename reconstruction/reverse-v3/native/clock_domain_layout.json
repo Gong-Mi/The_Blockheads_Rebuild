@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "scope": "World clock/weather/scalar domain as of the pinned build",
+ "method": "every offset DERIVED (slot = wA + PIC base, cell = *(slot), offset = *(cell)) and cross-checked against the symbol table; the contract test re-derives and compares, so no offset here is a hand-written number",
+ "fields": [
+  {
+   "field": "worldTime",
+   "imp": "0x5d99a4",
+   "role": "elapsed world time",
+   "executed_by": "emulate_worldtime_getter.py",
+   "slot": "0x105c754",
+   "cell": "0xf328f4",
+   "offset": 648
+  },
+  {
+   "field": "sunDirection",
+   "imp": "0x5d9a08",
+   "role": "sun as a Vector (4 floats)",
+   "executed_by": "not yet - 16-byte copy loop",
+   "slot": "0x105c9ac",
+   "cell": "0xf32b6c",
+   "offset": 660
+  },
+  {
+   "field": "timeOfDayFraction",
+   "imp": "0x5d9a68",
+   "role": "day/night phase",
+   "executed_by": "emulate_float_getters.py",
+   "slot": "0x105c9c8",
+   "cell": "0xf32b78",
+   "offset": 880
+  },
+  {
+   "field": "weatherFraction",
+   "imp": "0x5d9ab0",
+   "role": "weather mix",
+   "executed_by": "emulate_float_getters.py",
+   "slot": "0x105c9c0",
+   "cell": "0xf32b7c",
+   "offset": 916
+  },
+  {
+   "field": "rainFraction",
+   "imp": "0x5d9af8",
+   "role": "rain mix",
+   "executed_by": "emulate_float_getters.py",
+   "slot": "0x105c9b8",
+   "cell": "0xf32b80",
+   "offset": 920
+  },
+  {
+   "field": "rainFractionNotIncludingSnow",
+   "imp": "0x5d9b40",
+   "role": "rain without snow",
+   "executed_by": "emulate_float_getters.py",
+   "slot": "0x105c9b4",
+   "cell": "0xf32b84",
+   "offset": 924
+  },
+  {
+   "field": "fastForward",
+   "imp": "0x5d9e50",
+   "role": "run-at-20x flag",
+   "executed_by": "emulate_worldtime_getter.py",
+   "slot": "0x105c778",
+   "cell": "0xf32930",
+   "offset": 934
+  },
+  {
+   "field": "doubleTimeUnlocked",
+   "imp": "0x5d9e8c",
+   "role": "double-time unlock flag",
+   "executed_by": "emulate_worldtime_getter.py",
+   "slot": "0x105c8d8",
+   "cell": "0xf32a98",
+   "offset": 3072
+  },
+  {
+   "field": "simulationProgress",
+   "imp": "0x56dd38",
+   "role": "simulation catch-up progress",
+   "executed_by": "emulate_float_getters.py",
+   "slot": "0x105c948",
+   "cell": "0xf32b0c",
+   "offset": 3136
+  },
+  {
+   "field": "isSimulating",
+   "imp": "0x56783c",
+   "role": "simulation active flag",
+   "executed_by": "emulate_worldtime_getter.py",
+   "slot": "0x105c93c",
+   "cell": "0xf32afc",
+   "offset": 3140
+  }
+ ],
+ "writer": {
+  "selector": "resetPauseIdleTimer",
+  "imp": "0x5ac350",
+  "kind": "writer",
+  "writes_constant": 0.0,
+  "to_offset": 3264,
+  "evidence": "0x5ac360 vldr s0,[pc,#0x28] ; 0x5ac380 vstr s0,[r0] with r0 = self+offset; the literal at 0x5ac390 is 0x00000000",
+  "grade": "static (not executed): the setter's own vldr cannot run under Unicorn, so the value comes from the literal pool and the target from the derived offset"
+ }
+}

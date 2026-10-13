@@ -1,0 +1,23 @@
+# ServerClient -[timeSinceLastHeartbeatRequest]
+# types: f8@0:4
+# implementation: 0x00d0ba0c
+# ARM.exidx end: 0x00d0baa0
+
+            0x00d0ba0c      0cd04de2       sub sp, sp, 0xc
+            0x00d0ba10      04008de5       str r0, [sp, 4]
+            0x00d0ba14      00108de5       str r1, [sp]
+            0x00d0ba18      04009de5       ldr r0, [sp, 4]
+            0x00d0ba1c      28109fe5       ldr r1, [0x00d0ba4c]        ; [0xd0ba4c:4]=0xfffffc18
+            0x00d0ba20      28209fe5       ldr r2, [0x00d0ba50]        ; [0xd0ba50:4]=0x3540c8
+            0x00d0ba24      02208fe0       add r2, pc, r2
+            0x00d0ba28      021091e7       ldr r1, [r1, r2]
+            0x00d0ba2c      001091e5       ldr r1, [r1]
+            0x00d0ba30      010090e7       ldr r0, [r0, r1]
+            0x00d0ba34      5bf07ff5       dmb ish
+            0x00d0ba38      08008de5       str r0, [sp, 8]
+            0x00d0ba3c      020a9ded       vldr s0, [sp, 8]
+            0x00d0ba40      100a10ee       vmov r0, s0
+            0x00d0ba44      0cd08de2       add sp, sp, 0xc
+            0x00d0ba48      1eff2fe1       bx lr
+            0x00d0ba4c      18fcffff       invalid
+            0x00d0ba50      c8403500       eorseq r4, r5, r8, asr 1
