@@ -1,0 +1,22 @@
+# LoadWorldUI -[hostUserPhoto]
+# types: @8@0:4
+# implementation: 0x0080876c
+# ARM.exidx end: 0x008087b0
+
+            0x0080876c      0cd04de2       sub sp, sp, 0xc
+            0x00808770      04008de5       str r0, [sp, 4]
+            0x00808774      00108de5       str r1, [sp]
+            0x00808778      04009de5       ldr r0, [sp, 4]
+            0x0080877c      24109fe5       ldr r1, [0x008087a8]        ; [0x8087a8:4]=0xffffe038
+            0x00808780      24209fe5       ldr r2, [0x008087ac]        ; [0x8087ac:4]=0x857368
+            0x00808784      02208fe0       add r2, pc, r2
+            0x00808788      021091e7       ldr r1, [r1, r2]
+            0x0080878c      001091e5       ldr r1, [r1]
+            0x00808790      010090e7       ldr r0, [r0, r1]
+            0x00808794      5bf07ff5       dmb ish
+            0x00808798      08008de5       str r0, [sp, 8]
+            0x0080879c      08009de5       ldr r0, [sp, 8]
+            0x008087a0      0cd08de2       add sp, sp, 0xc
+            0x008087a4      1eff2fe1       bx lr
+            0x008087a8      38e0ffff       invalid
+            0x008087ac      68738500       addeq r7, r5, r8, ror 6

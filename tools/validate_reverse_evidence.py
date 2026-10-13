@@ -9201,6 +9201,66 @@ def main() -> None:
     ):
         require(NATIVE / _sl_file, [_sl_imp, _sl_end])
 
+    require(
+        NATIVE / "LOADWORLDUI.md",
+        [
+            "28411",
+            'worldName',
+            'playButton',
+            'deleteWorldButton',
+        ],
+    )
+    require(
+        NATIVE / "loadworldui.json",
+        [
+            "733d821027d69de329d0ba171df2e6013d612edf5a4d327badd001acc30b94c7",
+            '"verified_words": 5492',
+            '"verified_words": 231',
+            '0x7f36d0',
+            '"lwu_34"',
+        ],
+    )
+    for _sl_file, _sl_imp, _sl_end in (
+        ("disasm_worldtileloader_lwu_00.txt", "implementation: 0x00805554", "ARM.exidx end: 0x0080609c"),
+        ("disasm_worldtileloader_lwu_01.txt", "implementation: 0x007fe59c", "ARM.exidx end: 0x007fe6ec"),
+        ("disasm_worldtileloader_lwu_02.txt", "implementation: 0x008079b8", "ARM.exidx end: 0x00807a1c"),
+        ("disasm_worldtileloader_lwu_03.txt", "implementation: 0x0080781c", "ARM.exidx end: 0x008079b8"),
+        ("disasm_worldtileloader_lwu_04.txt", "implementation: 0x008076c8", "ARM.exidx end: 0x0080781c"),
+        ("disasm_worldtileloader_lwu_05.txt", "implementation: 0x007f36d0", "ARM.exidx end: 0x007f633c"),
+        ("disasm_worldtileloader_lwu_06.txt", "implementation: 0x007edb5c", "ARM.exidx end: 0x007ee100"),
+        ("disasm_worldtileloader_lwu_07.txt", "implementation: 0x007fe6ec", "ARM.exidx end: 0x007fee78"),
+        ("disasm_worldtileloader_lwu_08.txt", "implementation: 0x007ed954", "ARM.exidx end: 0x007edb5c"),
+        ("disasm_worldtileloader_lwu_09.txt", "implementation: 0x00804c78", "ARM.exidx end: 0x008052c0"),
+        ("disasm_worldtileloader_lwu_10.txt", "implementation: 0x007ff328", "ARM.exidx end: 0x007ff8d0"),
+        ("disasm_worldtileloader_lwu_11.txt", "implementation: 0x007fff48", "ARM.exidx end: 0x00803bf4"),
+        ("disasm_worldtileloader_lwu_12.txt", "implementation: 0x0080658c", "ARM.exidx end: 0x00806934"),
+        ("disasm_worldtileloader_lwu_13.txt", "implementation: 0x00807660", "ARM.exidx end: 0x008076c8"),
+        ("disasm_worldtileloader_lwu_14.txt", "implementation: 0x00806ac0", "ARM.exidx end: 0x00806c20"),
+        ("disasm_worldtileloader_lwu_15.txt", "implementation: 0x008074c8", "ARM.exidx end: 0x00807660"),
+        ("disasm_worldtileloader_lwu_16.txt", "implementation: 0x008087b0", "ARM.exidx end: 0x00808828"),
+        ("disasm_worldtileloader_lwu_17.txt", "implementation: 0x00808728", "ARM.exidx end: 0x008087b0"),
+        ("disasm_worldtileloader_lwu_18.txt", "implementation: 0x0080876c", "ARM.exidx end: 0x008087b0"),
+        ("disasm_worldtileloader_lwu_19.txt", "implementation: 0x00806df0", "ARM.exidx end: 0x008074c8"),
+        ("disasm_worldtileloader_lwu_20.txt", "implementation: 0x00806c20", "ARM.exidx end: 0x00806df0"),
+        ("disasm_worldtileloader_lwu_21.txt", "implementation: 0x007ec070", "ARM.exidx end: 0x007ed878"),
+        ("disasm_worldtileloader_lwu_22.txt", "implementation: 0x007ff8d0", "ARM.exidx end: 0x007ffcf0"),
+        ("disasm_worldtileloader_lwu_23.txt", "implementation: 0x00804630", "ARM.exidx end: 0x008052c0"),
+        ("disasm_worldtileloader_lwu_24.txt", "implementation: 0x00807a1c", "ARM.exidx end: 0x00807db8"),
+        ("disasm_worldtileloader_lwu_25.txt", "implementation: 0x00806934", "ARM.exidx end: 0x00806a94"),
+        ("disasm_worldtileloader_lwu_26.txt", "implementation: 0x00808088", "ARM.exidx end: 0x00808728"),
+        ("disasm_worldtileloader_lwu_27.txt", "implementation: 0x007f94ec", "ARM.exidx end: 0x007fe59c"),
+        ("disasm_worldtileloader_lwu_28.txt", "implementation: 0x007f91d8", "ARM.exidx end: 0x007f94ec"),
+        ("disasm_worldtileloader_lwu_29.txt", "implementation: 0x007f6428", "ARM.exidx end: 0x007f91d8"),
+        ("disasm_worldtileloader_lwu_30.txt", "implementation: 0x00803bf4", "ARM.exidx end: 0x00804630"),
+        ("disasm_worldtileloader_lwu_31.txt", "implementation: 0x008087ec", "ARM.exidx end: 0x00808828"),
+        ("disasm_worldtileloader_lwu_32.txt", "implementation: 0x008052c0", "ARM.exidx end: 0x00805554"),
+        ("disasm_worldtileloader_lwu_33.txt", "implementation: 0x0080609c", "ARM.exidx end: 0x00806120"),
+        ("disasm_worldtileloader_lwu_34.txt", "implementation: 0x007ee100", "ARM.exidx end: 0x007f36d0"),
+        ("disasm_worldtileloader_lwu_35.txt", "implementation: 0x00806120", "ARM.exidx end: 0x0080658c"),
+    ):
+        require(NATIVE / _sl_file, [_sl_imp, _sl_end])
+
+
 
 
 
